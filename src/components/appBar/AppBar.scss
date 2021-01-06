@@ -1,0 +1,19 @@
+@import '../../themes/themes';
+
+.rsAppBar {
+	height: 64px;
+	box-sizing: border-box;
+
+	.notificationBtn {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background-color: theme-var($secondaryMainColor);
+		transition: filter 300ms;
+		margin-right: 32px;
+		&:hover {
+			cursor: pointer;
+			filter: brightness(1.2) !important;
+		}
+	}
+}

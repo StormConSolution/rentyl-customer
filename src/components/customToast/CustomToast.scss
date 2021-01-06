@@ -1,0 +1,80 @@
+@import '../../variables.scss';
+
+.rsToastContainer {
+	display: flex;
+	flex-direction: row;
+	position: fixed;
+	z-index: 1000;
+	width: 90%;
+	border-radius: 5px;
+	top: 10px;
+	right: 5px;
+	box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.8);
+	@keyframes fadeout {
+		0% {
+			opacity: 1;
+			transform: scale(1);
+		}
+		100% {
+			opacity: 0;
+			transform: scale(0.9);
+		}
+	}
+
+	@keyframes fadein {
+		0% {
+			opacity: 0;
+			transform: scale(1.1);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	&.toggleOut {
+		animation: fadeout 800ms;
+		opacity: 0;
+	}
+
+	&.toggleIn {
+		animation: fadein 800ms;
+		opacity: 1;
+	}
+
+	.content {
+		align-items: center;
+		text-align: left;
+		font-size: 15pt;
+		color: white;
+		padding: 5px 4px;
+		animation: fadeIn ease 500ms;
+		display: flex;
+		flex-direction: row;
+		.iconContainer {
+			background: white;
+			justify-content: center;
+			align-items: center;
+			border-radius: 5px;
+			padding: 4px 4px;
+			margin-right: 10px;
+			box-shadow: inset 0px 0px 6px 1px rgba(0, 0, 0, 0.8);
+		}
+	}
+
+	&.success {
+		background: green;
+	}
+
+	&.error {
+		background: $mowersRed;
+	}
+
+	&.info {
+		background: dodgerblue;
+	}
+
+	&.customToast {
+		background: radial-gradient(circle, rgba(255, 0, 0, 1) 12%, rgba(69, 69, 69, 1) 79%);
+	}
+}

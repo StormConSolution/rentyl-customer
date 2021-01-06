@@ -1,0 +1,19 @@
+.rsTestPopup {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 300px;
+	position: absolute;
+	top: 30%;
+	background: #fff;
+	border-radius: 6px;
+	box-shadow: 1px 3px 8px -4px rgba(0, 0, 0, 0.3);
+	padding: 30px;
+	z-index: 10;
+
+	.closeBtn {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+	}
+}

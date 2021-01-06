@@ -1,0 +1,8 @@
+{
+	"appId": "com.redskytech.quickstart",
+	"appName": "quickstart",
+	"bundledWebRuntime": false,
+	"npmClient": "yarn",
+	"webDir": "build",
+	"cordova": {}
+}

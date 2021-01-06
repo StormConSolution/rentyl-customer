@@ -1,0 +1,27 @@
+@import url('./fonts/Roboto/font.scss');
+@import url('./fonts/Raleway/font.scss');
+@import 'themes/themes';
+@import 'themes/label';
+
+body {
+	margin: 0;
+}
+
+.loggedInView {
+	display: flex;
+
+	#admin {
+		height: calc(100% - 64px);
+		min-height: calc(100vh - 64px);
+	}
+
+	.rs-page {
+		position: relative;
+		overflow-y: auto;
+		width: calc(100vw);
+		//@include themify($themes) {
+		//	background-color: themed($backgroundColorDefault);
+		//}
+		background-color: theme-var($backgroundColorDefault);
+	}
+}
