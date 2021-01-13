@@ -1,13 +1,13 @@
 import { Model } from '../Model';
 
 export default class UserModel extends Model {
-	private currentUser: Api.User.Res.Login | undefined;
+	private currentUser: Api.User.Res.Get | undefined;
 
 	start() {
 		this.modelName = 'user';
 	}
 
-	setCurrentUser(user: Api.User.Res.Login) {
+	setCurrentUser(user: Api.User.Res.Get) {
 		this.currentUser = user;
 	}
 
@@ -15,7 +15,7 @@ export default class UserModel extends Model {
 		return this.currentUser;
 	}
 
-	private convertDataForParams(data: any): any {
+	/*private convertDataForParams(data: any): any {
 		let convertedData: any = {};
 		for (let i in data) {
 			if (typeof data[i] === 'object') {
@@ -25,5 +25,5 @@ export default class UserModel extends Model {
 			}
 		}
 		return convertedData;
-	}
+	}*/
 }
