@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '../box/Box';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
@@ -22,7 +22,7 @@ const AppBar: React.FC = () => {
 			<Button look={'none'} className={'notificationBtn'}>
 				<Icon iconImg={'icon-notification'} size={20} color={'#fff'} />
 			</Button>
-			<UserBadge userName={`${user?.name}`} imageUrl={''} />
+			<UserBadge userName={`${user?.firstName}`} imageUrl={''} />
 		</Box>
 	);
 };
