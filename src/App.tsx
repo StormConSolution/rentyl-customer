@@ -11,7 +11,6 @@ import { useRecoilValue } from 'recoil';
 import globalState, { AvailableThemes } from './models/globalState';
 import CustomToast from './components/customToast/CustomToast';
 //import AppBar from './components/appBar/AppBar';
-//import Box from './components/box/Box';
 
 function App() {
 	//const loginStatus = useLoginState();
