@@ -10,25 +10,27 @@ import moment from 'moment';
 import Button from '@bit/redsky.framework.rs.button';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Input from '@bit/redsky.framework.rs.input';
-import rsToasts from '@bit/redsky.framework.toast';
 import ReservationsService from '../../services/reservations/reservations.service';
 import serviceFactory from '../../services/serviceFactory';
+import rsToasts from '@bit/redsky.framework.toast';
+import DestinationCardComponent from '../../components/destinationCardComponent/DestinationCardComponent';
 
 const form = new RsFormGroup([
 	new RsFormControl('adults', '', [
 		new RsValidator(RsValidatorEnum.REQ, 'Number of adults is required'),
 		new RsValidator(RsValidatorEnum.NUM, 'Must be a number')
 	]),
-	new RsFormControl('children', '', [new RsValidator(RsValidatorEnum.NUM, '')]),
-	new RsFormControl('priceRangeMin', '', [new RsValidator(RsValidatorEnum.NUM, '')]),
-	new RsFormControl('priceRangeMax', '', [new RsValidator(RsValidatorEnum.NUM, '')])
+	new RsFormControl('children', '', [new RsValidator(RsValidatorEnum.NUM, 'must enter a number')]),
+	new RsFormControl('currencyCode', '', [new RsValidator(RsValidatorEnum.MIN, 'enter valid currency code')]),
+	new RsFormControl('roomClass', '', [new RsValidator(RsValidatorEnum.MAX, 'enter valid room class')]),
+	new RsFormControl('priceRangeMin', '', [new RsValidator(RsValidatorEnum.NUM, 'must enter a number')]),
+	new RsFormControl('priceRangeMax', '', [new RsValidator(RsValidatorEnum.NUM, 'must enter a number')])
 ]);
 
 const SearchPage: React.FC = () => {
 	let reservationService: ReservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-
-	let momentObj = moment();
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(momentObj);
+	/*let momentObj = moment();*/
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [availableReservations, setAvailableReservations] = useState<Api.Reservation.Res.Availability>();
@@ -47,15 +49,16 @@ const SearchPage: React.FC = () => {
 	}
 
 	async function submit() {
-		if (!(await form.isValid())) throw rsToasts.error('Missing data');
+		if (!(await form.isValid())) return rsToasts.error('Missing data');
 		if (!startDateControl) throw rsToasts.error('Missing data');
 		if (!endDateControl) throw rsToasts.error('Missing data');
 		let data: Api.Reservation.Req.Availability = form.toModel();
 		data.startDate = startDateControl.format();
 		data.endDate = endDateControl.format();
-		if (!data.children) delete data.children;
-		if (!data.priceRangeMax) delete data.priceRangeMax;
-		if (!data.priceRangeMin) delete data.priceRangeMin;
+		let tempData: any = data;
+		for (const key in tempData) {
+			if (!tempData[key]) delete tempData[key];
+		}
 		console.log(data);
 		try {
 			let response = await reservationService.searchAvailableReservations(data);
@@ -66,108 +69,133 @@ const SearchPage: React.FC = () => {
 	}
 
 	function renderReservations() {
-		if (!availableReservations || !availableReservations.accommodations) return;
+		if (!availableReservations || !availableReservations.accommodations)
+			return (
+				<Label className="placeholder">No Reservations Available. Try changing your search parameters.</Label>
+			);
 		return availableReservations.accommodations.map((item, index) => {
 			return (
-				<Box key={index}>
-					<h1>{item.name}</h1>
-					<h3>Code: {item.code}</h3>
-					<h3>Status: {item.status}</h3>
-					<h3>Max Occupancy: {item.maxOccupancy}</h3>
-					<h3>Max Sleeps: {item.maxSleeps}</h3>
-					<h3>Room Class: {item.roomClass}</h3>
-					<h3>ADA Compliant: {item.adaCompliant}</h3>
-					<h3>Total Cost: {item.price[0].total}</h3>
-					<h3>Currency Code: {item.price[0].currencyCode}</h3>
-					<h3>Quantity Available: {item.price[0].qtyAvailable}</h3>
-				</Box>
+				<DestinationCardComponent
+					name={item.name}
+					code={item.code}
+					maxOccupancy={item.maxOccupancy}
+					maxSleeps={item.maxSleeps}
+					roomClass={item.roomClass}
+					adaCompliant={item.adaCompliant}
+					totalCost={item.price[0].total}
+					currencyCode={item.price[0].currencyCode}
+					quantityAvailable={item.price[0].qtyAvailable}
+					status={item.status}
+					key={index}
+				/>
 			);
 		});
 	}
 
 	return (
 		<Page className="rsSearchPage">
-			<Box className="searchTitleBar" display={'flex'}>
-				<Label className="spireLabel" variant={'h4'}>
-					SPIRE
-				</Label>
-			</Box>
-
-			<Box className="filters" display={'flex'}>
-				<Box className="filterBox" display={'flex'}>
-					<Label className="filterBy" variant={'h5'}>
-						Filter By
+			<Box className="pageBox">
+				<Box className="searchTitleBar" display={'flex'}>
+					<Label className="spireLabel" variant={'h4'}>
+						SPIRE
 					</Label>
 				</Box>
-				<form>
-					<input className="startDateInput" type="date" hidden={true} />
-					<Box className="filterInputs" display={'flex'}>
-						<Box className="datePicker" display={'flex'}>
-							<DateRangePicker
-								startDate={startDateControl}
-								startDateId="startDate"
-								endDate={endDateControl}
-								endDateId="endDate"
-								onDatesChange={({ startDate, endDate }) => onDatesChange(startDate, endDate)}
-								focusedInput={focusedInput}
-								onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
-							/>
+
+				<Box className="filters" display={'flex'}>
+					<Box className="filterBox" display={'flex'}>
+						<Label className="filterBy" variant={'h5'}>
+							Filter By
+						</Label>
+					</Box>
+					<form>
+						<Box className="filterInputs" display={'flex'} bgcolor={'white'} ml={20}>
+							<Box className="datePicker" display={'flex'}>
+								<DateRangePicker
+									startDate={startDateControl}
+									startDateId="startDate"
+									endDate={endDateControl}
+									endDateId="endDate"
+									onDatesChange={({ startDate, endDate }) => onDatesChange(startDate, endDate)}
+									focusedInput={focusedInput}
+									onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
+									orientation="vertical"
+									numberOfMonths={1}
+									noBorder
+								/>
+							</Box>
+							<Box className="adults" display={'flex'} bgcolor={'inherit'}>
+								<Input
+									className="adultsInput"
+									placeholder="number of adults"
+									type={'number'}
+									look={'outlined'}
+									control={form.get('adults')}
+									updateControl={updateHandler}
+								/>
+							</Box>
+							<Box className="children" display={'flex'} bgcolor={'inherit'}>
+								<Input
+									className="childrenInput"
+									placeholder="number of children"
+									type={'number'}
+									look={'outlined'}
+									control={form.get('children')}
+									updateControl={updateHandler}
+								/>
+							</Box>
+							<Box className="roomClass" display={'flex'} bgcolor={'inherit'}>
+								<Input
+									className="roomClassInput"
+									placeholder="room class"
+									type={'number'}
+									look={'outlined'}
+									control={form.get('roomClass')}
+									updateControl={updateHandler}
+								/>
+							</Box>
+							<Box className="currencyCode" display={'flex'} bgcolor={'inherit'}>
+								<Input
+									className="currencyCodeInput"
+									placeholder="currency code"
+									type={'number'}
+									look={'outlined'}
+									control={form.get('currencyCode')}
+									updateControl={updateHandler}
+								/>
+							</Box>
+							<Box className="priceRangeMin" display={'flex'} bgcolor={'inherit'}>
+								<Input
+									className="priceRangeMinInput"
+									placeholder="min price"
+									type={'number'}
+									look={'outlined'}
+									control={form.get('priceRangeMin')}
+									updateControl={updateHandler}
+								/>
+							</Box>
+							<Box className="priceRangeMax" display={'flex'} bgcolor={'inherit'}>
+								<Input
+									className="priceRangeMaxInput"
+									placeholder="max price"
+									type={'number'}
+									look={'outlined'}
+									control={form.get('priceRangeMax')}
+									updateControl={updateHandler}
+								/>
+							</Box>
 						</Box>
-						<Box className="adults" display={'flex'}>
-							<Label className="adultsLabel">number of adults</Label>
-							<Input
-								className="adultsInput"
-								placeholder="number of adults"
-								type={'number'}
-								look={'filled'}
-								control={form.get('adults')}
-								updateControl={updateHandler}
-							/>
-						</Box>
-						<Box className="children" display={'flex'}>
-							<Label className="childrenLabel">number of children</Label>
-							<Input
-								className="childrenInput"
-								type={'number'}
-								look={'filled'}
-								control={form.get('children')}
-								updateControl={updateHandler}
-							/>
-						</Box>
-						<Box className="priceRangeMin" display={'flex'}>
-							<Label className="priceRangeMinLabel">Min Price</Label>
-							<Input
-								className="priceRangeMinInput"
-								type={'number'}
-								look={'filled'}
-								control={form.get('priceRangeMin')}
-								updateControl={updateHandler}
-							/>
-						</Box>
-						<Box className="priceRangeMax" display={'flex'}>
-							<Label className="PriceRangeMaxLabel">Max Price</Label>
-							<Input
-								className="priceRangeMaxInput"
-								type={'number'}
-								look={'filled'}
-								control={form.get('priceRangeMax')}
-								updateControl={updateHandler}
-							/>
-						</Box>
-						<Box display="block">
+						<Box className="searchButtonBox" display="flex">
 							<Button
 								onClick={() => {
 									submit();
 								}}
-								look="containedPrimary"
+								look="containedSecondary"
 							>
-								Click Here
+								Search
 							</Button>
 						</Box>
-					</Box>
-				</form>
-			</Box>
-			<Box className="searchResults" display={'flex'}>
+					</form>
+				</Box>
 				{!!availableReservations && renderReservations()}
 			</Box>
 		</Page>

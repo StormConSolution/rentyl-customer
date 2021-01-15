@@ -6,7 +6,7 @@ import Box from '../../components/box/Box';
 import { useSetRecoilState } from 'recoil';
 import globalState, { AvailableThemes } from '../../models/globalState';
 import Button from '@bit/redsky.framework.rs.button';
-import rsToasts, { RsToasts } from '@bit/redsky.framework.toast';
+import rsToasts from '@bit/redsky.framework.toast';
 import TestPopup from '../../popups/testPopup/TestPopup';
 
 const DashboardPage: React.FC = () => {
