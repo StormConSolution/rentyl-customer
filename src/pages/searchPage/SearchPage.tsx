@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './SearchPage.scss';
 import Box from '../../components/box/Box';
 import { Page } from '@bit/redsky.framework.rs.996';
+import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Label from '@bit/redsky.framework.rs.label';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -33,7 +34,7 @@ const SearchPage: React.FC = () => {
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [availableReservations, setAvailableReservations] = useState<Api.Reservation.Res.Availability>();
+	const [availableReservations, setAvailableReservations] = useState<Api.Reservation.Res.Availability[]>();
 
 	useEffect(() => {
 		console.log(availableReservations);
@@ -69,11 +70,16 @@ const SearchPage: React.FC = () => {
 	}
 
 	function renderReservations() {
-		if (!availableReservations || !availableReservations.accommodations)
+		if (!availableReservations || !ObjectUtils.isArrayWithData(availableReservations))
 			return (
 				<Label className="placeholder">No Reservations Available. Try changing your search parameters.</Label>
 			);
-		return availableReservations.accommodations.map((item, index) => {
+
+		let allAccomodations: Redis.AvailabilityAccommodation[] = [];
+		for (let destination of availableReservations) {
+			for (let accommodation of destination.accommodations) allAccomodations.push(accommodation);
+		}
+		return allAccomodations.map((item) => {
 			return (
 				<DestinationCardComponent
 					name={item.name}
@@ -86,7 +92,7 @@ const SearchPage: React.FC = () => {
 					currencyCode={item.price[0].currencyCode}
 					quantityAvailable={item.price[0].qtyAvailable}
 					status={item.status}
-					key={index}
+					key={item.id}
 				/>
 			);
 		});
