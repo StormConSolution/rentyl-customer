@@ -463,7 +463,6 @@ declare namespace Model {
 		notes: string;
 		password: string;
 		token: string;
-		inactiveOn: Date | string;
 		resetPasswordOnLogin: Boolean | number;
 		role: UserRoleType;
 		permissionLogin: boolean;
@@ -512,10 +511,10 @@ declare namespace Model {
 	}
 
 	export interface UserPermission {
-		id: number;
 		userId: number;
-		allowNewsletter: boolean;
-		allowEmailNotification: boolean;
+		key: string;
+		read: boolean | number;
+		write: boolean | number;
 	}
 
 	export interface UserPoint {
