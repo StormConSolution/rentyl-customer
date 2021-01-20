@@ -39,6 +39,32 @@ declare namespace Api {
 	}
 
 	export namespace User {
+		export interface Permission {
+			key: string;
+			read: boolean | number;
+			write: boolean | number;
+		}
+
+		export interface Filtered {
+			id: number;
+			companyId: number;
+			tierId: number;
+			firstName: string;
+			lastName: string;
+			primaryEmail: string;
+			accountNumber: string;
+			phone: string;
+			notes: string;
+			token: string;
+			role: string;
+			createdOn: Date | string;
+			modifiedOn: Date | string;
+			joinedOn: Date | string;
+			birthDate: Date | string;
+			lastLoginOn: Date | string;
+			permissionLogin: boolean | number;
+			permission: Permission[];
+		}
 		export namespace Req {
 			export interface Create {
 				firstName: string;
@@ -51,6 +77,8 @@ declare namespace Api {
 			}
 
 			export interface Update {
+				id?: number;
+				ids?: number[];
 				firstName?: string;
 				lastName?: string;
 				primaryEmail?: string;
@@ -65,12 +93,15 @@ declare namespace Api {
 			}
 
 			export interface Get {
+				id?: number;
+				ids?: number[];
 				token: string;
 				userId?: number;
 			}
 
 			export interface Delete {
-				userId: number;
+				id?: number;
+				ids?: number[];
 			}
 
 			export interface ForgotPassword {
@@ -96,10 +127,8 @@ declare namespace Api {
 			}
 		}
 		export namespace Res {
-			export interface Get extends Model.User {}
-			export interface Company {
-				companyId: number;
-			}
+			export interface Get extends Filtered {}
+			export interface Login extends Filtered {}
 		}
 	}
 
@@ -317,7 +346,10 @@ declare namespace Api {
 			export interface Get {
 				id: number;
 			}
-			export interface Update extends Model.Destination {}
+			export interface Update extends Partial<Model.Destination> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
 				id: number;
 			}
@@ -501,16 +533,21 @@ declare namespace Api {
 				startDate: Date | string;
 				endDate: Date | string;
 				adults: number;
+				destinationId?: number;
 				children?: number;
 				currencyCode?: string;
 				roomClass?: 'adacompliance';
 				priceRangeMin?: number;
 				priceRangeMax?: number;
+				page?: number;
+				limit?: number;
 			}
 		}
 		export namespace Res {
 			export interface Get extends Model.Reservation {}
-			export interface Availability extends Redis.Availability {}
+			export interface Availability {
+				[key: string]: Redis.Availability;
+			}
 		}
 	}
 
