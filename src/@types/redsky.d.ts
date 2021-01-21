@@ -1,9 +1,9 @@
 type StandardOrderTypes = 'ASC' | 'DESC' | 'RAND' | 'NONE';
 type ConjunctionTypes = 'AND' | 'OR';
-type MatchTypes = 'exact' | 'fuzzy' | 'like';
+type MatchTypes = 'exact' | 'fuzzy' | 'like' | 'greaterThan' | 'greaterThanEqual' | 'lessThan' | 'lessThanEqual';
 
 export interface RsResponseData<T> {
-	data: T;
+	data: T | any;
 }
 
 export interface RsErrorData {
@@ -41,7 +41,7 @@ export interface RsPagedResponseData<T> extends RsResponseData<T> {
 
 export interface GenericCreateObjectFromRequest {
 	body: any;
-	user?: Model.User;
+	user?: Api.User.Model;
 }
 
 export interface SortQuery {
@@ -70,4 +70,10 @@ export interface PageQuery {
 	pagination: PagePagination;
 	sort?: SortQuery;
 	filter?: FilterQuery;
+}
+
+export interface IntegrationCompanyDetails extends Model.Company {
+	serviceType: string;
+	serviceName: any;
+	serviceKey: any;
 }

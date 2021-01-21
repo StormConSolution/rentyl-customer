@@ -65,6 +65,10 @@ declare namespace Api {
 			permissionLogin: boolean | number;
 			permission: Permission[];
 		}
+
+		export interface Model extends Model.User {
+			permission: Permission[];
+		}
 		export namespace Req {
 			export interface Create {
 				firstName: string;
@@ -96,7 +100,6 @@ declare namespace Api {
 				id?: number;
 				ids?: number[];
 				token: string;
-				userId?: number;
 			}
 
 			export interface Delete {
@@ -125,10 +128,23 @@ declare namespace Api {
 				userId: number;
 				status: 'APPROVED' | 'DENIED' | 'HOLD';
 			}
+
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
+			}
 		}
 		export namespace Res {
+			export interface Company {
+				companyId: number;
+			}
 			export interface Get extends Filtered {}
 			export interface Login extends Filtered {}
+			export interface GetByPage {
+				data: Filtered[];
+				total: number;
+			}
 		}
 	}
 
