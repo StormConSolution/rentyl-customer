@@ -44,6 +44,18 @@ declare namespace Api {
 			read: boolean | number;
 			write: boolean | number;
 		}
+		export interface Address {
+			id: number;
+			name: string;
+			type: Model.UserAddressType;
+			address1: string;
+			address2: string;
+			city: string;
+			state: string;
+			zip: number;
+			country: string;
+			isDefault: boolean | number;
+		}
 
 		export interface Filtered {
 			id: number;
@@ -64,10 +76,12 @@ declare namespace Api {
 			lastLoginOn: Date | string;
 			permissionLogin: boolean | number;
 			permission: Permission[];
+			address: Address[] | [];
 		}
 
 		export interface Model extends Model.User {
 			permission: Permission[];
+			address: Address[] | [];
 		}
 		export namespace Req {
 			export interface Create {
@@ -99,7 +113,6 @@ declare namespace Api {
 			export interface Get {
 				id?: number;
 				ids?: number[];
-				token: string;
 			}
 
 			export interface Delete {
@@ -141,6 +154,9 @@ declare namespace Api {
 			}
 			export interface Get extends Filtered {}
 			export interface Login extends Filtered {}
+			export interface ForgotPassword extends Filtered {}
+			export interface ResetPassword extends Filtered {}
+			export interface ValidateGuid extends Filtered {}
 			export interface GetByPage {
 				data: Filtered[];
 				total: number;
@@ -649,17 +665,41 @@ declare namespace Api {
 
 	export namespace UserAddress {
 		export namespace Req {
-			export interface Create {}
-			export interface Get {
-				id: number;
+			export interface Create {
+				name?: string;
+				type: Model.UserAddressType;
+				address1: string;
+				address2?: string;
+				city: string;
+				state: string;
+				zip: number;
+				country: string;
+				isDefault: boolean | number;
 			}
-			export interface Update extends Model.UserAddress {}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface Update {
+				id: number;
+				name?: string;
+				type?: Model.UserAddressType;
+				address1?: string;
+				address2?: string;
+				city?: string;
+				state?: string;
+				zip?: number;
+				country?: string;
+				isDefault: boolean | number;
+			}
 			export interface Delete {
 				id: number;
 			}
 		}
 		export namespace Res {
 			export interface Get extends Model.UserAddress {}
+			export interface Create extends Model.UserAddress {}
+			export interface Update extends Model.UserAddress {}
 		}
 	}
 

@@ -1,10 +1,30 @@
 declare namespace Model {
 	export type InternalResourceTypes = 'ANDROID' | 'IOS' | 'WEB';
-	export type UserRoleType = 'user' | 'admin' | 'super_admin';
+	export type UserRoleType =
+		| 'external'
+		| 'anonymous'
+		| 'self'
+		| 'customer'
+		| 'spire_admin'
+		| 'super_admin'
+		| 'customer_support'
+		| 'sales';
 	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION';
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 	export type AccommodationRoomClassType = 'Deluxe';
+	export type UserAddressType = 'SHIPPING' | 'BILLING';
+	export type UserPermissions =
+		| 'USER'
+		| 'POINTS'
+		| 'TEST'
+		| 'USER_POINTS'
+		| 'LOYALTY_CAMPAIGNS'
+		| 'LOYALTY_REWARDS'
+		| 'ADMINISTRATION'
+		| 'ORDERS'
+		| 'ANALYTICS'
+		| 'REAL_ESTATE';
 	export interface Accommodation {
 		id: number;
 		companyId: number;
@@ -488,14 +508,15 @@ declare namespace Model {
 	export interface UserAddress {
 		id: number;
 		userId: number;
-		type: string;
+		name: string;
+		type: UserAddressType;
 		address1: string;
 		address2: string;
 		city: string;
 		state: string;
 		zip: string;
 		country: string;
-		default: boolean;
+		isDefault: boolean;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 	}
@@ -524,6 +545,12 @@ declare namespace Model {
 		createdOn: Date | string;
 		type: string;
 		value: number;
+	}
+
+	export interface UserRoleAccessScope {
+		id: number;
+		role: UserRoleType;
+		accessScope: UserPermission;
 	}
 
 	export interface UserSegment {
