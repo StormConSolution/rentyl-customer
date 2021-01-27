@@ -68,7 +68,7 @@ declare namespace Api {
 			phone: string;
 			notes: string;
 			token: string;
-			role: string;
+			role: Model.UserRoleType;
 			createdOn: Date | string;
 			modifiedOn: Date | string;
 			joinedOn: Date | string;
@@ -90,8 +90,8 @@ declare namespace Api {
 				primaryEmail: string;
 				password: string;
 				role: Model.UserRoleType;
-				companyId: number;
 				phone?: string;
+				birthDate?: Date | string;
 			}
 
 			export interface Update {
@@ -101,8 +101,9 @@ declare namespace Api {
 				lastName?: string;
 				primaryEmail?: string;
 				password?: string;
-				description?: string;
 				phone?: string;
+				role?: Model.UserRoleType;
+				birthDate?: Date | string;
 			}
 
 			export interface Login {

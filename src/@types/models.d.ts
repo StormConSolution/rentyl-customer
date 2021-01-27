@@ -6,6 +6,7 @@ declare namespace Model {
 		| 'self'
 		| 'customer'
 		| 'spire_admin'
+		| 'spire_super_admin'
 		| 'super_admin'
 		| 'customer_support'
 		| 'sales';
@@ -14,7 +15,7 @@ declare namespace Model {
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 	export type AccommodationRoomClassType = 'Deluxe';
 	export type UserAddressType = 'SHIPPING' | 'BILLING';
-	export type UserPermissions =
+	export type UserAccessScopeTypes =
 		| 'USER'
 		| 'POINTS'
 		| 'TEST'
@@ -547,10 +548,16 @@ declare namespace Model {
 		value: number;
 	}
 
+	export interface UserRoleAccessScopeObj {
+		accessScope: UserAccessScopeTypes;
+		read: 1 | 0;
+		write: 1 | 0;
+	}
+
 	export interface UserRoleAccessScope {
 		id: number;
 		role: UserRoleType;
-		accessScope: UserPermission;
+		accessScope: UserRoleAccessScopeObj[];
 	}
 
 	export interface UserSegment {
