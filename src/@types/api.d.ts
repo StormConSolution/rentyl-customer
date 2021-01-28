@@ -618,7 +618,14 @@ declare namespace Api {
 
 	export namespace SystemActionLog {
 		export namespace Req {
-			export interface Create {}
+			export interface Create {
+				companyId: number;
+				userId: number;
+				action: Model.SystemActionLogActions;
+				source: string; // should be a DbTableName
+				sourceId?: number;
+				metaData?: any;
+			}
 			export interface Get {
 				id: number;
 			}
@@ -738,13 +745,22 @@ declare namespace Api {
 
 	export namespace UserPoint {
 		export namespace Req {
-			export interface Create {}
-			export interface Get {
-				id: number;
+			export interface Create {
+				userId: number;
+				campaignActionId?: number;
+				orderId?: number;
+				type: Model.PointTypes;
+				value: number;
+				status?: Model.UserPointStatusTypes;
 			}
-			export interface Update extends Model.UserPoint {}
-			export interface Delete {
-				id: number;
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
 			}
 		}
 		export namespace Res {

@@ -1,15 +1,17 @@
 declare namespace Model {
 	export type InternalResourceTypes = 'ANDROID' | 'IOS' | 'WEB';
 	export type UserRoleType =
-		| 'external'
 		| 'anonymous'
 		| 'self'
-		| 'customer'
-		| 'spire_admin'
-		| 'spire_super_admin'
 		| 'super_admin'
-		| 'customer_support'
-		| 'sales';
+		| 'spire_super_admin'
+		| 'spire_admin'
+		| 'hospitality_employee'
+		| 'loyalty_member'
+		| 'customer_service'
+		| 'customer_service_management'
+		| 'marketing_admin'
+		| 'real_estate_admin';
 	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION';
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
@@ -26,6 +28,9 @@ declare namespace Model {
 		| 'ORDERS'
 		| 'ANALYTICS'
 		| 'REAL_ESTATE';
+	export type SystemActionLogActions = 'CREATE' | 'DELETE' | 'UPDATE' | 'POINT_ADJUSTMENT';
+	export type PointTypes = 'ACTION' | 'CAMPAIGN' | 'ADMIN' | 'ORDER' | 'BOOKING' | 'RENTAL' | 'VACATION';
+	export type UserPointStatusTypes = 'PENDING' | 'RECEIVED' | 'REVOKED' | 'EXPIRED' | 'REDEEMED';
 	export interface Accommodation {
 		id: number;
 		companyId: number;
@@ -452,8 +457,8 @@ declare namespace Model {
 		id: number;
 		companyId: number;
 		userId: number;
-		action: string;
-		source: string;
+		action: SystemActionLogActions;
+		source: string; // should be a DbTableName
 		sourceId: number;
 		createdOn: Date | string;
 		metaData: string;
@@ -543,9 +548,12 @@ declare namespace Model {
 		id: number;
 		userId: number;
 		campaignActionId: number;
+		orderId: number;
 		createdOn: Date | string;
-		type: string;
+		modifiedOn: Date | string;
+		type: PointTypes;
 		value: number;
+		status: UserPointStatusTypes;
 	}
 
 	export interface UserRoleAccessScopeObj {
@@ -556,6 +564,7 @@ declare namespace Model {
 
 	export interface UserRoleAccessScope {
 		id: number;
+		companyId: number;
 		role: UserRoleType;
 		accessScope: UserRoleAccessScopeObj[];
 	}
@@ -573,5 +582,13 @@ declare namespace Model {
 		details: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+	}
+
+	export interface UserTier {
+		id: number;
+		userId: number;
+		tierId: number;
+		createdOn: Date | string;
+		expiresOn: Date | string;
 	}
 }
