@@ -77,11 +77,17 @@ declare namespace Api {
 			permissionLogin: boolean | number;
 			permission: Permission[];
 			address: Address[] | [];
+			lifeTimePoints: number;
+			availablePoints: number;
+			city: string;
+			state: string;
 		}
 
 		export interface Model extends Model.User {
 			permission: Permission[];
 			address: Address[] | [];
+			city: string;
+			state: string;
 		}
 		export namespace Req {
 			export interface Create {
@@ -641,11 +647,20 @@ declare namespace Api {
 
 	export namespace Tier {
 		export namespace Req {
-			export interface Create {}
+			export interface Create {
+				name: string;
+				description?: string;
+				isActive: 0 | 1;
+				accrualRate: number;
+				threshold: number;
+				features?: string;
+			}
 			export interface Get {
 				id: number;
 			}
-			export interface Update extends Model.Tier {}
+			export interface Update extends Partial<Omit<Model.Tier, 'companyId' | 'createdOn' | 'modifiedOn'>> {
+				id: number;
+			}
 			export interface Delete {
 				id: number;
 			}
@@ -675,6 +690,7 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {
 				name?: string;
+				userId?: number;
 				type: Model.UserAddressType;
 				address1: string;
 				address2?: string;
