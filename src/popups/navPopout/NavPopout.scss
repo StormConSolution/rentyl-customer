@@ -1,0 +1,31 @@
+@import '../../themes/themes';
+.rsNavPopout {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100vh;
+	width: 350px;
+	background-color: #fcfbf8;
+	transition: transform 300ms;
+	transform: translateX(350px);
+	box-shadow: theme-var($primaryBoxShadowColor);
+	&.opened {
+		transform: translateX(0);
+	}
+
+	.signOutBtn {
+		position: absolute;
+		top: 19px;
+		left: 25px;
+		transition: filter 300ms;
+		&:hover {
+			filter: brightness(1.2);
+		}
+	}
+
+	.rsIcon {
+		position: absolute;
+		top: 25px;
+		right: 25px;
+	}
+}

@@ -1,7 +1,7 @@
 @import 'themes';
 @import '_variables.scss';
 html {
-	font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+	font-family: 'MrsEavesXL', sans-serif;
 }
 
 //'h1'
@@ -21,91 +21,68 @@ html {
 //| 'inherit';
 
 .rsLabel {
-	font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-
+	font-family: 'MrsEavesXL', sans-serif;
 	color: theme-var($primaryTextColor);
 
-	//@include themify($themes) {
-	//	color: themed($primaryTextColor);
-	//}
-
 	&.h1 {
-		font-size: 96px;
-		line-height: 112px;
-		font-weight: $light;
-		letter-spacing: -1.5px;
+		font-size: 32px;
+		line-height: 35px;
+		font-weight: $heavy;
+		letter-spacing: 0;
 	}
 	&.h2 {
-		font-size: 60px;
-		line-height: 72px;
-		font-weight: $light;
-		letter-spacing: -0.5px;
+		font-size: 24px;
+		line-height: 28px;
+		font-weight: $heavy;
+		letter-spacing: 0;
 	}
 	&.h3 {
-		font-size: 48px;
-		line-height: 56px;
-		font-weight: $regular;
+		font-size: 20px;
+		line-height: 23px;
+		font-weight: $bold;
 		letter-spacing: 0;
 	}
 	&.h4 {
-		font-size: 34px;
-		line-height: 42px;
-		font-weight: $regular;
-		letter-spacing: 0.25px;
-	}
-	&.h5 {
-		font-size: 24px;
-		line-height: 32px;
-		font-weight: $regular;
-		letter-spacing: 0;
-	}
-	&.h6 {
-		font-size: 20px;
-		line-height: 32px;
-		font-weight: $medium;
-		letter-spacing: 0.15px;
-	}
-	&.subtitle1 {
 		font-size: 16px;
-		line-height: 28px;
-		font-weight: $regular;
-		letter-spacing: 0.15px;
-	}
-	&.subtitle2 {
-		font-size: 14px;
-		line-height: 22px;
-		font-weight: $medium;
-		letter-spacing: 0.1px;
+		line-height: 19px;
+		font-weight: $heavy;
+		letter-spacing: 0;
 	}
 	&.body1 {
 		font-size: 16px;
-		line-height: 24px;
+		line-height: 20px;
 		font-weight: $regular;
-		letter-spacing: 0.15px;
+		letter-spacing: 0;
 	}
 	&.body2 {
 		font-size: 14px;
-		line-height: 20px;
+		line-height: 18px;
 		font-weight: $regular;
-		letter-spacing: 0.15px;
+		letter-spacing: 0;
 	}
 	&.caption {
-		font-size: 12px;
-		line-height: 20px;
+		font-family: 'Mrs-Eaves-All-Petite-Caps', sans-serif;
+		font-size: 19px;
+		line-height: 12px;
 		font-weight: $regular;
-		letter-spacing: 0.4px;
-	}
-	&.overline {
-		font-size: 12px;
-		line-height: 32px;
-		font-weight: $regular;
-		letter-spacing: 1px;
+		letter-spacing: 0;
+		text-transform: uppercase;
 	}
 	&.button {
-		font-size: 14px;
-		line-height: 14px;
-		font-weight: $medium;
-		letter-spacing: 0.3px;
+		font-family: 'Mrs-Eaves-All-Petite-Caps', sans-serif;
+		font-size: 19px;
+		line-height: 12px;
+		font-weight: $regular;
+		letter-spacing: 0;
 		text-transform: uppercase;
+	}
+	&.error {
+		font-family: 'Mrs-Eaves-All-Petite-Caps', sans-serif;
+		font-size: 17px;
+		line-height: 12px;
+		font-weight: $regular;
+		letter-spacing: 0;
+		text-transform: uppercase;
+		color: theme-var($errorColor);
 	}
 }

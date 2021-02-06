@@ -1,28 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '../box/Box';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import './AppBar.scss';
-import UserBadge from '../userBadge/UserBadge';
+import { Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
-import Button from '@bit/redsky.framework.rs.button';
+import NavPopout from '../../popups/navPopout/NavPopout';
 
 const AppBar: React.FC = () => {
+	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
 	const user = serviceFactory.get<UserService>('UserService').getCurrentUser();
 
 	return (
-		<Box
-			className="rsAppBar"
-			bgcolor={'#333333'}
-			p={'12px 20px'}
-			display={'flex'}
-			justifyContent={'flex-end'}
-			alignItems={'center'}
-		>
-			<Button look={'none'} className={'notificationBtn'}>
-				<Icon iconImg={'icon-notification'} size={20} color={'#fff'} />
-			</Button>
-			<UserBadge userName={`${user?.firstName}`} imageUrl={''} />
+		<Box className="rsAppBar">
+			<Link path={'/dashboard'}>
+				<img src={require('../../images/FullLogo-StandardBlack.png')} alt={'company logo'} width={'111px'} />
+			</Link>
+
+			<Icon
+				iconImg={'icon-hamburger-menu'}
+				color={'#003A76'}
+				size={21}
+				cursorPointer
+				onClick={() => setShowSlideOutMenu(true)}
+			/>
+			<NavPopout isOpened={showSlideOutMenu} onClose={() => setShowSlideOutMenu(false)} />
 		</Box>
 	);
 };

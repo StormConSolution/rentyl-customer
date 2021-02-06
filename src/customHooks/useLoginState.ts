@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import globalState, { clearPersistentState } from '../models/globalState';
+import rsToasts from '@bit/redsky.framework.toast';
+import CustomToast from '../components/customToast/CustomToast';
 import router from '../utils/router';
 import serviceFactory from '../services/serviceFactory';
 import UserService from '../services/user/user.service';
@@ -36,6 +38,7 @@ export default function useLoginState() {
 			}
 		}
 		initialStartup().catch(console.error);
+		rsToasts.setRenderDelegate(CustomToast);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

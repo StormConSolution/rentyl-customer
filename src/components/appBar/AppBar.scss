@@ -1,19 +1,16 @@
 @import '../../themes/themes';
 
 .rsAppBar {
-	height: 64px;
+	position: fixed;
+	top: 0;
+	z-index: 99;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 80px;
 	box-sizing: border-box;
-
-	.notificationBtn {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		background-color: theme-var($secondaryMainColor);
-		transition: filter 300ms;
-		margin-right: 32px;
-		&:hover {
-			cursor: pointer;
-			filter: brightness(1.2) !important;
-		}
-	}
+	height: 80px;
+	width: 100%;
+	background-color: #fcfbf8;
+	box-shadow: theme-var($primaryBoxShadowColor);
 }
