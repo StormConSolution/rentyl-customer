@@ -1,7 +1,15 @@
 @import 'src/themes/themes';
-
 .rsDashboardPage {
 	.themeButtons {
 		border-radius: 10px; //theme-var($borderRadius);
+	}
+	div {
+		margin: 50px 0;
+	}
+	.show-on-scroll {
+		color: blue;
+		&.is-visible {
+			color: red;
+		}
 	}
 }

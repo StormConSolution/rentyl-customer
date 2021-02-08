@@ -6,10 +6,11 @@ import './AppBar.scss';
 import { Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import NavPopout from '../../popups/navPopout/NavPopout';
+import LabelButton from '../labelButton/LabelButton';
 
 const AppBar: React.FC = () => {
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
-	const user = serviceFactory.get<UserService>('UserService').getCurrentUser();
+	// const user = serviceFactory.get<UserService>('UserService').getCurrentUser();
 
 	return (
 		<Box className="rsAppBar">
@@ -17,13 +18,17 @@ const AppBar: React.FC = () => {
 				<img src={require('../../images/FullLogo-StandardBlack.png')} alt={'company logo'} width={'111px'} />
 			</Link>
 
-			<Icon
-				iconImg={'icon-hamburger-menu'}
-				color={'#003A76'}
-				size={21}
-				cursorPointer
-				onClick={() => setShowSlideOutMenu(true)}
-			/>
+			<Box display={'flex'} alignItems={'center'}>
+				<LabelButton look={'containedPrimary'} variant={'button'} label={'Learn about spire loyalty'} />
+				<Icon
+					iconImg={'icon-hamburger-menu'}
+					color={'#003A76'}
+					size={21}
+					cursorPointer
+					onClick={() => setShowSlideOutMenu(true)}
+				/>
+			</Box>
+
 			<NavPopout isOpened={showSlideOutMenu} onClose={() => setShowSlideOutMenu(false)} />
 		</Box>
 	);

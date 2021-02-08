@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?sky8k4');
-  src:  url('fonts/icomoon.eot?sky8k4#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.woff2?sky8k4') format('woff2'),
-    url('fonts/icomoon.ttf?sky8k4') format('truetype'),
-    url('fonts/icomoon.woff?sky8k4') format('woff'),
-    url('fonts/icomoon.svg?sky8k4#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?y8wfp8');
+  src:  url('fonts/icomoon.eot?y8wfp8#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff2?y8wfp8') format('woff2'),
+    url('fonts/icomoon.ttf?y8wfp8') format('truetype'),
+    url('fonts/icomoon.woff?y8wfp8') format('woff'),
+    url('fonts/icomoon.svg?y8wfp8#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -26,33 +26,54 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-spa:before {
+  content: "\e90f";
+}
+.icon-pool:before {
+  content: "\e910";
+}
+.icon-movie-theater:before {
+  content: "\e901";
+}
+.icon-hot-tub:before {
+  content: "\e902";
+}
+.icon-game-room:before {
+  content: "\e903";
+}
+.icon-pool-table:before {
+  content: "\e900";
+}
+.icon-summer-kitchen:before {
+  content: "\e90c";
+}
 .icon-close:before {
+  content: "\e908";
+}
+.icon-hamburger-menu:before {
   content: "\e909";
 }
 .icon-facebook:before {
-  content: "\e900";
-}
-.icon-instagram:before {
-  content: "\e901";
-}
-.icon-Twitter:before {
-  content: "\e902";
-}
-.icon-youtube:before {
-  content: "\e903";
-}
-.icon-chevron-right:before {
   content: "\e904";
 }
-.icon-chevron-up:before {
+.icon-instagram:before {
   content: "\e905";
 }
-.icon-chevron-down:before {
+.icon-Twitter:before {
   content: "\e906";
 }
-.icon-chevron-left:before {
+.icon-youtube:before {
   content: "\e907";
 }
-.icon-hamburger-menu:before {
-  content: "\e908";
+.icon-chevron-right:before {
+  content: "\e90a";
+}
+.icon-chevron-up:before {
+  content: "\e90b";
+}
+.icon-chevron-down:before {
+  content: "\e90e";
+}
+.icon-chevron-left:before {
+  content: "\e90d";
 }

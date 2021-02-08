@@ -1,0 +1,15 @@
+@import '../../themes/themes';
+.rsFeaturedRewardCard {
+	.mainImg {
+		width: 367px;
+		height: 280px;
+		object-fit: cover;
+		margin-bottom: 15px;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.logoImg {
+		width: 80px;
+		height: 30px;
+		border: 1px solid theme-var($greyLineColor);
+	}
+}

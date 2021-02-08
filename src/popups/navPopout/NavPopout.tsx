@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './NavPopout.scss';
 import Icon from '@bit/redsky.framework.rs.icon';
-import Box from '../../components/box/Box';
 import Button from '@bit/redsky.framework.rs.button';
 import { useEffect, useRef, useState } from 'react';
 

@@ -17,7 +17,18 @@ $defaultTheme: (
 	// Box Shadow Color
 	$primaryBoxShadowColor: 0px 5px 15px #1e180b33,
 	//Misc
-	$greyLineColor: #dedede
+	$greyLineColor: #dedede,
+	//Font Weight
+	$thin: 100,
+	$extraThin: 200,
+	$light: 300,
+	$regular: 400,
+	$medium: 500,
+	$semiBold: 600,
+	$bold: 700,
+	$extraBold: 800,
+	$heavy: 900,
+	$extraBlack: 950
 );
 
 .App {

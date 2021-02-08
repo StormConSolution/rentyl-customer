@@ -12,43 +12,49 @@ import globalState, { AvailableThemes } from './models/globalState';
 import CustomToast from './components/customToast/CustomToast';
 import Box from './components/box/Box';
 import AppBar from './components/appBar/AppBar';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function App() {
-	const loginStatus = useLoginState();
+	// const loginStatus = useLoginState();
 	const theme = useRecoilValue<AvailableThemes>(globalState.theme);
 
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
 		rsToasts.setRenderDelegate(CustomToast);
+		AOS.init();
+		//remove nav-parent element from the dom
+		document.querySelector('.nav-parent')!.remove();
 	}, []);
 
-	function renderViewsBasedOnLoginStatus() {
-		switch (loginStatus) {
-			case LoginStatus.UNKNOWN:
-				return null;
-			case LoginStatus.LOGGED_OUT:
-				return (
-					<>
-						<AppBar />
-						<View key="admin" id="admin" default initialPath="/dashboard" />
-					</>
-				);
-			case LoginStatus.LOGGED_IN:
-				return (
-					<div className="loggedInView">
-						<Box>
-							<AppBar />
-							<View key="admin" id="admin" default initialPath="/dashboard" />
-						</Box>
-					</div>
-				);
-		}
-	}
+	// function renderViewsBasedOnLoginStatus() {
+	// 	switch (loginStatus) {
+	// 		case LoginStatus.UNKNOWN:
+	// 			return null;
+	// 		case LoginStatus.LOGGED_OUT:
+	// 			return (
+	// 				<>
+	// 					<AppBar />
+	// 					<View key="login" id="login" default initialPath="/" />
+	// 				</>
+	// 			);
+	// 		case LoginStatus.LOGGED_IN:
+	// 			return (
+	// 				<div className="loggedInView">
+	// 					<Box>
+	// 						<AppBar />
+	// 						<View key="admin" id="admin" default initialPath="/dashboard" />
+	// 					</Box>
+	// 				</div>
+	// 			);
+	// 	}
+	// }
 
 	return (
 		<div className={`App theme-${theme}`}>
-			<View key="login" id="login" default initialPath="/" />
-			{renderViewsBasedOnLoginStatus()}
+			<AppBar />
+			<View key="landingPage" id="landingPage" default initialPath="/" />
+			{/*{renderViewsBasedOnLoginStatus()}*/}
 			{popupController.instance}
 			{rsToasts.instance}
 		</div>

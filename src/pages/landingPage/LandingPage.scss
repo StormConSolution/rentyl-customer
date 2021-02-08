@@ -1,0 +1,107 @@
+@import '../../themes/themes';
+.rsLandingPage {
+	.tanBox {
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 580px;
+		background-color: #f7f1db;
+	}
+
+	.heroImgAndText {
+		position: relative;
+		padding-left: 78px;
+		box-sizing: border-box;
+		background-color: #7c7c7c; //replace with image
+		width: 1257px;
+		height: 729px;
+		margin-bottom: 135px;
+		.rsLabel {
+			color: #ffffff;
+			text-shadow: theme-var($primaryBoxShadowColor);
+			span {
+				color: theme-var($iconAndHighlightTextColor);
+			}
+		}
+		.rsLabelButton {
+			margin-top: 25px;
+		}
+
+		.infoCardWrapper {
+			position: absolute;
+			bottom: -20px;
+			.rsInfoCard {
+				margin-right: 26px;
+			}
+		}
+	}
+
+	.featureRewards {
+		width: 100%;
+		margin-bottom: 220px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		.rsLabel {
+			&.h2 {
+				margin-bottom: 40px;
+				span {
+					color: theme-var($iconAndHighlightTextColor);
+				}
+			}
+		}
+		.featureRewardCardsContainer {
+			display: flex;
+			justify-content: center;
+			width: 100%;
+			margin-bottom: 40px;
+			.rsFeaturedRewardCard {
+				margin: 0 10px;
+			}
+		}
+	}
+	.vacationStays {
+		position: relative;
+		height: 586px;
+		width: 100%;
+		margin-bottom: 220px;
+		.fakeImg {
+			position: absolute;
+			width: 1106px;
+			height: 536px;
+			top: 0;
+			left: 0;
+			background-color: #7c7c7c; //replace with image
+			z-index: 10;
+		}
+		.tanBox2 {
+			position: absolute;
+			height: 450px;
+			width: 602px;
+			bottom: 0;
+			right: 0;
+			background-color: #f7f1db;
+		}
+		.rsPaper {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			align-items: flex-start;
+			position: absolute;
+			right: 78px;
+			top: 0;
+			bottom: 0;
+			margin-top: auto;
+			margin-bottom: auto;
+			z-index: 11;
+			.subHeader {
+				font-size: 32px;
+				line-height: 35px;
+				font-weight: $heavy;
+				span {
+					color: theme-var($iconAndHighlightTextColor);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,11 @@
+@import '../../themes/themes';
+.rsInfoCard {
+	display: flex;
+	align-items: center;
+	.rsLabel {
+		color: theme-var($primaryTextColor) !important;
+	}
+	.rsIcon {
+		margin-right: 18px;
+	}
+}
