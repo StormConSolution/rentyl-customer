@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?y8wfp8');
-  src:  url('fonts/icomoon.eot?y8wfp8#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.woff2?y8wfp8') format('woff2'),
-    url('fonts/icomoon.ttf?y8wfp8') format('truetype'),
-    url('fonts/icomoon.woff?y8wfp8') format('woff'),
-    url('fonts/icomoon.svg?y8wfp8#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?tvn1q1');
+  src:  url('fonts/icomoon.eot?tvn1q1#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff2?tvn1q1') format('woff2'),
+    url('fonts/icomoon.ttf?tvn1q1') format('truetype'),
+    url('fonts/icomoon.woff?tvn1q1') format('woff'),
+    url('fonts/icomoon.svg?tvn1q1#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -26,54 +26,84 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-spa:before {
-  content: "\e90f";
-}
-.icon-pool:before {
-  content: "\e910";
-}
-.icon-movie-theater:before {
-  content: "\e901";
-}
-.icon-hot-tub:before {
-  content: "\e902";
-}
-.icon-game-room:before {
-  content: "\e903";
-}
-.icon-pool-table:before {
+.icon-piggy-bank:before {
   content: "\e900";
 }
-.icon-summer-kitchen:before {
+.icon-wine:before {
+  content: "\e901";
+}
+.icon-map:before {
+  content: "\e902";
+}
+.icon-hand-shake:before {
+  content: "\e903";
+}
+.icon-tea-cup:before {
+  content: "\e904";
+}
+.icon-social:before {
+  content: "\e905";
+}
+.icon-boost:before {
+  content: "\e906";
+}
+.icon-gift:before {
+  content: "\e907";
+}
+.icon-food-plate:before {
+  content: "\e908";
+}
+.icon-chevron-down:before {
+  content: "\e909";
+}
+.icon-chevron-left:before {
+  content: "\e90a";
+}
+.icon-chevron-right:before {
+  content: "\e90b";
+}
+.icon-chevron-up:before {
   content: "\e90c";
 }
 .icon-close:before {
-  content: "\e908";
-}
-.icon-hamburger-menu:before {
-  content: "\e909";
+  content: "\e90d";
 }
 .icon-facebook:before {
-  content: "\e904";
-}
-.icon-instagram:before {
-  content: "\e905";
-}
-.icon-Twitter:before {
-  content: "\e906";
-}
-.icon-youtube:before {
-  content: "\e907";
-}
-.icon-chevron-right:before {
-  content: "\e90a";
-}
-.icon-chevron-up:before {
-  content: "\e90b";
-}
-.icon-chevron-down:before {
   content: "\e90e";
 }
-.icon-chevron-left:before {
-  content: "\e90d";
+.icon-filter:before {
+  content: "\e90f";
+}
+.icon-game-room:before {
+  content: "\e910";
+}
+.icon-hamburger-menu:before {
+  content: "\e911";
+}
+.icon-hot-tub:before {
+  content: "\e912";
+}
+.icon-instagram:before {
+  content: "\e913";
+}
+.icon-movie-theater:before {
+  content: "\e914";
+}
+.icon-pool:before {
+  content: "\e915";
+}
+.icon-pool-table:before {
+  content: "\e916";
+}
+.icon-spa:before {
+  content: "\e917";
+}
+.icon-summer-kitchen:before {
+  content: "\e918";
+}
+.icon-Twitter:before {
+  content: "\e919";
+}
+.icon-youtube:before {
+  content: "\e91a";
 }

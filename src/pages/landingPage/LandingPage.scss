@@ -12,7 +12,9 @@
 		position: relative;
 		padding-left: 78px;
 		box-sizing: border-box;
-		background-color: #7c7c7c; //replace with image
+		background-image: url('../../images/landingPage/hero-image.png');
+		background-repeat: no-repeat;
+		background-position: center;
 		width: 1257px;
 		height: 729px;
 		margin-bottom: 135px;
@@ -64,14 +66,16 @@
 		position: relative;
 		height: 586px;
 		width: 100%;
-		margin-bottom: 220px;
-		.fakeImg {
+
+		.coupleImg {
 			position: absolute;
 			width: 1106px;
 			height: 536px;
 			top: 0;
 			left: 0;
-			background-color: #7c7c7c; //replace with image
+			background-image: url('../../images/landingPage/couple-with-kid.png');
+			background-repeat: no-repeat;
+			background-position: bottom;
 			z-index: 10;
 		}
 		.tanBox2 {
@@ -100,6 +104,86 @@
 				font-weight: $heavy;
 				span {
 					color: theme-var($iconAndHighlightTextColor);
+				}
+			}
+		}
+	}
+
+	.travelingWithSpire {
+		position: relative;
+		.subHeader {
+			font-size: 32px;
+			line-height: 35px;
+			font-weight: $heavy;
+			span {
+				color: theme-var($iconAndHighlightTextColor);
+			}
+		}
+
+		.imageContainer {
+			height: 450px;
+			width: fit-content;
+			transform: translateX(420px);
+			transition: all 1000ms;
+			&.stageOne {
+				transform: translateX(160px);
+			}
+			&.stageTwo {
+				transform: translateX(-100px);
+			}
+
+			img {
+				width: 236px;
+				height: 206px;
+				background-color: red;
+				transition: all 1000ms;
+				margin: 0 12px;
+
+				&.selected {
+					background-color: blue;
+					width: 576px;
+					height: 450px;
+				}
+			}
+		}
+
+		.rsPaper {
+			position: relative;
+
+			.rsInfoCard {
+				margin: 16px 0;
+				border-bottom: 1px solid theme-var($greyLineColor);
+				transition: color 300ms;
+				.rsLabel,
+				.rsIcon {
+					transition: color 300ms;
+					color: theme-var($greyLineColor) !important;
+				}
+				&.selected {
+					.rsLabel {
+						color: theme-var($primaryTextColor) !important;
+					}
+					.rsIcon {
+						color: theme-var($iconAndHighlightTextColor) !important;
+					}
+				}
+			}
+
+			.chevronBtnWrapper {
+				position: absolute;
+				bottom: -20px;
+				left: 50px;
+				box-shadow: theme-var($primaryBoxShadowColor);
+				background-color: #fcfbf8;
+				.rsButton {
+					width: 40px;
+					height: 40px;
+				}
+				hr {
+					width: 1px;
+					border: none;
+					margin: 0;
+					background-color: theme-var($greyLineColor);
 				}
 			}
 		}

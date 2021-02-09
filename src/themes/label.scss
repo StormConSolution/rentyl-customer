@@ -26,7 +26,7 @@ html {
 	}
 	&.h3 {
 		//font-size: 20px;
-		font-size: 24px;
+		font-size: 32px;
 		//line-height: 23px;
 		line-height: 45px;
 		//font-weight: $bold;
@@ -34,8 +34,10 @@ html {
 		letter-spacing: 0;
 	}
 	&.h4 {
-		font-size: 16px;
-		line-height: 19px;
+		font-size: 24px;
+		//font-size: 16px;
+		line-height: 22px;
+		//line-height: 19px;
 		font-weight: $heavy;
 		letter-spacing: 0;
 	}

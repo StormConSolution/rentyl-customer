@@ -14,15 +14,18 @@ import Box from './components/box/Box';
 import AppBar from './components/appBar/AppBar';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import useWindowResizeChange from './customHooks/useWindowResizeChange';
 
 function App() {
 	// const loginStatus = useLoginState();
 	const theme = useRecoilValue<AvailableThemes>(globalState.theme);
-
+	const size = useWindowResizeChange();
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
 		rsToasts.setRenderDelegate(CustomToast);
-		AOS.init();
+		AOS.init({
+			duration: 1000
+		});
 		//remove nav-parent element from the dom
 		document.querySelector('.nav-parent')!.remove();
 	}, []);
@@ -51,7 +54,7 @@ function App() {
 	// }
 
 	return (
-		<div className={`App theme-${theme}`}>
+		<div className={`App ${size}`}>
 			<AppBar />
 			<View key="landingPage" id="landingPage" default initialPath="/" />
 			{/*{renderViewsBasedOnLoginStatus()}*/}
