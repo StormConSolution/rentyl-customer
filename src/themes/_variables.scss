@@ -7,143 +7,28 @@ $medium: 500;
 $semiBold: 600;
 $bold: 700;
 $extraBold: 800;
-$black: 900;
+$heavy: 900;
 $extraBlack: 950;
 
-/* Global's used in calculations (page offsets, etc) */
-$menuExpandedWidth: 250px;
-$menuCollapsedWidth: 50px;
+//Text Color
+$primaryTextColor: --primaryTextColor;
+$disableTextColor: --disableTextColor;
 
-// Map SCSS theme variables to CSS variables
+//Buttons Color
+$buttonLinkColor: --buttonLinkColor;
 
-//Primary
-$primaryLightColor: --primaryLightColor;
-$primaryMainColor: --primaryMainColor;
-$primaryDarkColor: --primaryDarkColor;
-$primaryContrastText: --primaryContrastText;
+//Icon Color
+$iconAndHighlightTextColor: --iconAndHighlightTextColor;
+
+//Background Color
 $primaryBackgroundColor: --primaryBackgroundColor;
-
-//Primary Color Ramp
-
-$primary50: --primary50;
-$primary100: --primary100;
-$primary200: --primary200;
-$primary300: --primary300;
-$primary400: --primary400;
-$primary500: --primary500;
-$primary600: --primary600;
-$primary700: --primary700;
-$primary800: --primary800;
-$primary900: --primary900;
-$primaryA100: --primaryA100;
-
-//Secondary
-$secondaryLightColor: --secondaryLightColor;
-$secondaryMainColor: --secondaryMainColor;
-$secondaryDarkColor: --secondaryDarkColor;
-$secondaryContrastText: --secondaryContrastText;
 $secondaryBackgroundColor: --secondaryBackgroundColor;
 
-//Secondary Color Ramp
-$secondary50: --secondary50;
-$secondary100: --secondary100;
-$secondary200: --secondary200;
-$secondary300: --secondary300;
-$secondary400: --secondary400;
-$secondary500: --secondary500;
-$secondary600: --secondary600;
-$secondary700: --secondary700;
-$secondary800: --secondary800;
-$secondary900: --secondary900;
+//Error Color
+$errorColor: --errorColor;
 
-//Grey Pallet
-$grey50: --grey50;
-$grey100: --grey100;
-$grey200: --grey200;
-$grey300: --grey300;
-$grey400: --grey400;
-$grey500: --grey500;
-$grey600: --grey600;
-$grey700: --grey700;
-$grey800: --grey800;
-$grey900: --grey900;
-$greyA100: --greyA100;
-$greyA200: --greyA200;
-$greyA400: --greyA400;
-$greyA700: --greyA700;
-
-//Success
-$successLightColor: --successLightColor;
-$successMainColor: --successMainColor;
-$successDarkColor: --successDarkColor;
-$successContrastText: --successContrastText;
-$successTextColor: --successTextColor;
-$successBackgroundColor: --successBackgroundColor;
-
-//Info
-$infoLightColor: --infoLightColor;
-$infoMainColor: --infoMainColor;
-$infoDarkColor: --infoDarkColor;
-$infoContrastText: --infoContrastText;
-$infoTextColor: --infoTextColor;
-$infoBackgroundColor: --infoBackgroundColor;
-
-//Warning
-$warningLightColor: --warningLightColor;
-$warningMainColor: --warningMainColor;
-$warningDarkColor: --warningDarkColor;
-$warningContrastText: --warningContrastText;
-$warningTextColor: --warningTextColor;
-$warningBackgroundColor: --warningBackgroundColor;
-
-//Error
-$errorLightColor: --errorLightColor;
-$errorMainColor: --errorMainColor;
-$errorDarkColor: --errorDarkColor;
-$errorContrastText: --errorContrastText;
-$errorTextColor: --errorTextColor;
-$errorBackgroundColor: --errorBackgroundColor;
-
-//Text
-$primaryTextColor: --primaryTextColor;
-$secondaryTextColor: --secondaryTextColor;
-$disabledTextColor: --disabledTextColor;
-$hintTextColor: --hintTextColor;
-$iconTextColor: --iconTextColor;
-
-//Action
-$active: --active;
-$hover: --hover;
-$selected: --selected;
-$disabled: --disabled;
-$disabledBackground: --disabledBackground;
-$focus: --focus;
+// Box Shadow Color
+$primaryBoxShadowColor: --primaryBoxShadowColor;
 
 //Misc
-//-Common
-$black: --black;
-$white: --white;
-// Link
-$linkBlue: --linkBlue;
-//-Background
-$backgroundColorPaper: --backgroundColorPaper;
-$backgroundColorDefault: --backgroundColorDefault;
-//-Box Shadow
-$boxShadow: --boxShadow;
-//-Divider
-$diverColor: --diverColor;
-//-Other
-$backdrop: --backdrop;
-$filledInput: --filledInput;
-$snackBar: --snackBar;
-$borderRadius: --borderRadius;
-$appBar: --appBar;
-$drawer: --drawer;
-$tooltip: --tooltip;
-//Z-Index
-$mobileStepperZIndex: --mobileStepperZIndex;
-$appBarZIndex: --appBarZIndex;
-$tooltipZIndex: --tooltipZIndex;
-$drawerZIndex: --drawerZIndex;
-$modalZIndex: --modalZIndex;
-$toastZIndex: --toastZIndex;
+$greyLineColor: --greyLineColor;

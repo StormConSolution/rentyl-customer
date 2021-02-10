@@ -1,19 +1,23 @@
 @import '../../themes/themes';
 
 .rsAppBar {
-	height: 64px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 99;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	box-sizing: border-box;
+	height: 80px;
+	max-width: 1284px;
 
-	.notificationBtn {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		background-color: theme-var($secondaryMainColor);
-		transition: filter 300ms;
-		margin-right: 32px;
-		&:hover {
-			cursor: pointer;
-			filter: brightness(1.2) !important;
+	.rsIcon {
+		&.icon-hamburger-menu {
+			margin-left: 33px;
 		}
 	}
 }

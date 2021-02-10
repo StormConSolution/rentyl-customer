@@ -1,5 +1,4 @@
-@import url('./fonts/Roboto/font.scss');
-@import url('./fonts/Raleway/font.scss');
+@import url('./fonts/MrsEavesXL/font.scss');
 @import 'themes/themes';
 @import 'themes/label';
 
@@ -8,20 +7,162 @@ body {
 }
 
 .loggedInView {
-	display: flex;
-
 	#admin {
-		height: calc(100% - 64px);
-		min-height: calc(100vh - 64px);
+		//height: calc(100% - 64px);
+		//min-height: calc(100vh - 64px);
+	}
+}
+
+//.rs-view {
+//	height: 100%;
+//	overflow: auto;
+//	background-color: theme-var($primaryBackgroundColor);
+//}
+//.rs-page {
+//	height: 100%;
+//	position: relative;
+//	overflow-y: auto;
+//	width: 1440px;
+//	margin: 0 auto;
+//	background-color: theme-var($primaryBackgroundColor);
+//}
+
+.rs-view {
+	height: 100%;
+	background-color: theme-var($primaryBackgroundColor);
+	color: theme-var($primaryTextColor);
+	.rs-page {
+		background-color: inherit;
+		color: inherit;
+		position: relative;
+		overflow-y: hidden;
+		.rs-page-content-wrapper {
+			position: relative;
+			background-color: inherit;
+			color: inherit;
+			margin: 0 auto;
+			width: 1440px;
+			overflow-x: hidden;
+		}
+	}
+}
+
+.rsButton {
+	&.contained {
+		&.primary {
+			background-color: theme-var($buttonLinkColor) !important;
+			color: #ffffff;
+			border-radius: 20px 0;
+			padding: 0 24px;
+			height: 40px;
+
+			.rsLabel {
+				color: #ffffff;
+			}
+		}
+
+		&.secondary {
+			background-color: #ffffff !important;
+			color: theme-var($buttonLinkColor);
+			border: 2px solid theme-var($buttonLinkColor);
+			border-radius: 20px 0;
+			padding: 0 24px;
+			height: 40px;
+
+			.rsLabel {
+				color: theme-var($buttonLinkColor);
+			}
+		}
+	}
+}
+
+.rsInput {
+	&.uiStyled {
+		&.outlined {
+			height: 40px;
+			padding: 0 10px;
+			border-radius: 0;
+			border: 1px solid theme-var($greyLineColor);
+
+			.label {
+				font-size: 18px;
+				//color: var(--primaryTextColor);
+				font-weight: 300;
+				left: 8px;
+				transform: translateY(0);
+			}
+
+			&:focus-within {
+				border-color: theme-var($buttonLinkColor) !important;
+				color: theme-var($buttonLinkColor) !important;
+			}
+
+			&.textarea {
+				height: fit-content;
+			}
+		}
+
+		.input {
+			color: theme-var($primaryTextColor) !important;
+			padding: 0;
+			height: 100%;
+
+			&:not(:placeholder-shown) + .label {
+				transform: scale(0.7) translateY(-29px) !important;
+			}
+		}
 	}
 
-	.rs-page {
-		position: relative;
-		overflow-y: auto;
-		width: calc(100vw);
-		//@include themify($themes) {
-		//	background-color: themed($backgroundColorDefault);
-		//}
-		background-color: theme-var($backgroundColorDefault);
+	&:focus-within {
+		.label {
+			transform: scale(0.7) translateY(-29px) !important;
+		}
+	}
+}
+
+.rsSelect {
+	&.outlined {
+		height: 40px;
+		//padding: 0 10px;
+		border-radius: 0;
+		border: 1px solid theme-var($greyLineColor);
+
+		.options {
+			background-color: #fcfbf8;
+			border: 1px solid theme-var($greyLineColor);
+			top: 20px;
+
+			li {
+				&:hover {
+					filter: brightness(1);
+					box-shadow: theme-var($primaryBoxShadowColor);
+				}
+			}
+		}
+
+		.label {
+			top: 0;
+			bottom: 0;
+			left: 11px;
+		}
+
+		.input {
+			font-family: 'MrsEavesXL', sans-serif;
+			color: theme-var($primaryTextColor) !important;
+			padding: 0;
+
+			&:not(:placeholder-shown) + .label {
+				transform: scale(0.7) translateY(-29px) !important;
+			}
+		}
+
+		&:focus-within {
+			border-color: theme-var($buttonLinkColor) !important;
+			color: theme-var($buttonLinkColor) !important;
+
+			.label {
+				transform: scale(0.8) translateY(-25px) !important;
+			}
+		}
 	}
 }

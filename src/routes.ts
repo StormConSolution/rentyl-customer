@@ -1,15 +1,14 @@
 import { RouteDetails } from '@bit/redsky.framework.rs.996';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
-import LoginPage from './pages/loginPage/LoginPage';
 import DashboardPage from './pages/dashboardPage/DashboardPage';
-import SearchPage from './pages/searchPage/SearchPage';
+import LandingPage from './pages/landingPage/LandingPage';
 
 const routes: RouteDetails[] = [
 	{
 		path: '/',
-		page: SearchPage,
+		page: LandingPage,
 		options: {
-			view: 'home'
+			view: 'landingPage'
 		}
 	},
 	{
@@ -17,13 +16,6 @@ const routes: RouteDetails[] = [
 		page: DashboardPage,
 		options: {
 			view: 'admin'
-		}
-	},
-	{
-		path: '/login',
-		page: LoginPage,
-		options: {
-			view: 'search'
 		}
 	},
 	{

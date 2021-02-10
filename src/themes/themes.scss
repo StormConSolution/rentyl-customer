@@ -1,141 +1,36 @@
-@import 'palettes';
 @import 'mixins';
 
 // Default theme used throughout
 $defaultTheme: (
-	// Primary colors
-	$primaryLightColor: color(primary, A100),
-	$primaryMainColor: color(primary, 500),
-	$primaryDarkColor: color(primary, 800),
-	$primaryContrastText: #fff,
-	$primaryBackgroundColor: rgba(255, 222, 89, 0.15),
-	// Primary Color Ramp
-	$primary50: color(primary, 50),
-	$primary100: color(primary, 100),
-	$primary200: color(primary, 200),
-	$primary300: color(primary, 300),
-	$primary400: color(primary, 400),
-	$primary500: color(primary, 500),
-	$primary600: color(primary, 600),
-	$primary700: color(primary, 700),
-	$primary800: color(primary, 800),
-	$primary900: color(primary, 900),
-	$primaryA100: color(primary, A100),
-	// Secondary colors
-	$secondaryLightColor: color(secondary, 500),
-	$secondaryMainColor: color(secondary, 700),
-	$secondaryDarkColor: color(secondary, 900),
-	$secondaryContrastText: #fff,
-	// Secondary Color Ramp
-	$secondary50: color(secondary, 50),
-	$secondary100: color(secondary, 100),
-	$secondary200: color(secondary, 200),
-	$secondary300: color(secondary, 300),
-	$secondary400: color(secondary, 400),
-	$secondary500: color(secondary, 500),
-	$secondary600: color(secondary, 600),
-	$secondary700: color(secondary, 700),
-	$secondary800: color(secondary, 800),
-	$secondary900: color(secondary, 900),
-	// Grey Colors
-	$grey50: color(grey, 50),
-	$grey100: color(grey, 100),
-	$grey200: color(grey, 200),
-	$grey300: color(grey, 300),
-	$grey400: color(grey, 400),
-	$grey500: color(grey, 500),
-	$grey600: color(grey, 600),
-	$grey700: color(grey, 700),
-	$grey800: color(grey, 800),
-	$grey900: color(grey, 900),
-	$greyA100: color(grey, A100),
-	$greyA200: color(grey, A200),
-	$greyA400: color(grey, A400),
-	$greyA700: color(grey, A700),
-	// Success colors
-	$successLightColor: #9ce0a4,
-	$successMainColor: #6cae75,
-	$successDarkColor: #3d7e49,
-	$successContrastText: #fff,
-	$successTextColor: #2e4831,
-	$successBackgroundColor: #f0f6f0,
-	// Info colors
-	$infoLightColor: #bbdefb,
-	$infoMainColor: #2196f3,
-	$infoDarkColor: #0b79d0,
-	$infoContrastText: #fff,
-	$infoTextColor: #0d3c61,
-	$infoBackgroundColor: #e8f4fd,
-	// Warning colors
-	$warningLightColor: #ffb74d,
-	$warningMainColor: #ff9800,
-	$warningDarkColor: #f57c00,
-	$warningContrastText: #fff,
-	$warningTextColor: #663c00,
-	$warningBackgroundColor: #fff4e5,
-	// Error colors
-	$errorLightColor: #e57373,
-	$errorMainColor: #bb4430,
-	$errorDarkColor: #d32f2f,
-	$errorContrastText: #fff,
-	$errorTextColor: #f44336,
-	$errorBackgroundColor: #fdebea,
-	// Text colors
-	$primaryTextColor: rgba(0, 0, 0, 0.87),
-	$secondaryTextColor: rgba(0, 0, 0, 0.54),
-	$disabledTextColor: rgba(0, 0, 0, 0.38),
-	$hintTextColor: rgba(0, 0, 0, 0.38),
-	$iconTextColor: white,
-	//Action
-	$active: rgba(0, 0, 0, 0.54),
-	$hover: rgba(0, 0, 0, 0.04),
-	$selected: rgba(0, 0, 0, 0.08),
-	$disabled: rgba(0, 0, 0, 0.26),
-	$disabledBackground: rgba(0, 0, 0, 0.12),
-	$focus: rgba(0, 0, 0, 0.12),
+	//Text Color
+	$primaryTextColor: #001933,
+	$disableTextColor: #9b9b9b,
+	//Buttons Color
+	$buttonLinkColor: #004b98,
+	//Icon Color
+	$iconAndHighlightTextColor: #cc9e0d,
+	//Background Color
+	$primaryBackgroundColor: #fcfbf8,
+	$secondaryBackgroundColor: #f0f0f0,
+	//Error Color
+	$errorColor: #cb0000,
+	// Box Shadow Color
+	$primaryBoxShadowColor: 0px 5px 15px #1e180b33,
 	//Misc
-	//-Common
-	$black: #000000,
-	$white: #ffffff,
-	//-Link
-	$linkBlue: #0066ec,
-	//-Background
-	$backgroundColorPaper: #ffffff,
-	$backgroundColorDefault: #fafafa,
-	//-Box Shadow
-	$boxShadow: (0 1px 3px 0px rgba(0, 0, 0, 0.2), 0 2px 1px -1px rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14)),
-	//-Divider
-	$diverColor: rgba(0, 0, 0, 0.12),
-	//-Other
-	$backdrop: rgba(0, 0, 0, 0.5),
-	$filledInput: rgba(0, 0, 0, 0.09),
-	$tooltip: rgba(97, 97, 97, 0.09),
-	$snackBar: #323232,
-	// Shape
-	$borderRadius: 4px,
-	// Z-index
-	$mobileStepperZIndex: 1000,
-	$appBarZIndex: 1100,
-	$drawerZIndex: 1200,
-	$modalZIndex: 1300,
-	$toastZIndex: 1400,
-	$tooltipZIndex: 1500
+	$greyLineColor: #dedede,
+	//Font Weight
+	$thin: 100,
+	$extraThin: 200,
+	$light: 300,
+	$regular: 400,
+	$medium: 500,
+	$semiBold: 600,
+	$bold: 700,
+	$extraBold: 800,
+	$heavy: 900,
+	$extraBlack: 950
 );
 
-// Other themes can overwrite any previously defined value and leave the rest to default
-$greenTheme: (
-	$primaryLightColor: color(green, 500),
-	$primaryMainColor: color(green, 600),
-	$primaryDarkColor: color(green, 700),
-	$primaryContrastText: #fff
-);
-
-// Spread default theme into App class
 .App {
 	@include spread-map($defaultTheme);
-}
-
-// Override
-.App.theme-green {
-	@include spread-map($greenTheme);
 }
