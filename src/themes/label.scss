@@ -9,35 +9,35 @@ html {
 	color: theme-var($primaryTextColor);
 
 	&.h1 {
-		//font-size: 32px;
-		font-size: 60px; //This is a temp fix
-		//line-height: 35px;
-		line-height: 70px; //This is a temp fix
+		font-size: 32px;
+		//font-size: 60px; //This is a temp fix
+		line-height: 35px;
+		//line-height: 70px; //This is a temp fix
 		font-weight: $heavy;
 		letter-spacing: 0;
 	}
 	&.h2 {
-		//font-size: 24px;
-		font-size: 40px;
-		//line-height: 28px;
-		line-height: 45px;
+		font-size: 24px;
+		//font-size: 40px;
+		line-height: 28px;
+		//line-height: 45px;
 		font-weight: $heavy;
 		letter-spacing: 0;
 	}
 	&.h3 {
-		//font-size: 20px;
-		font-size: 32px;
-		//line-height: 23px;
-		line-height: 45px;
-		//font-weight: $bold;
-		font-weight: $heavy;
+		font-size: 20px;
+		//font-size: 32px;
+		line-height: 23px;
+		//line-height: 45px;
+		font-weight: $bold;
+		//font-weight: $heavy;
 		letter-spacing: 0;
 	}
 	&.h4 {
-		font-size: 24px;
-		//font-size: 16px;
-		line-height: 22px;
-		//line-height: 19px;
+		//font-size: 24px;
+		font-size: 16px;
+		//line-height: 22px;
+		line-height: 19px;
 		font-weight: $heavy;
 		letter-spacing: 0;
 	}

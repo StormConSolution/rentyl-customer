@@ -1,0 +1,16 @@
+@import '../../themes/themes';
+.rsLabelLink {
+	display: flex;
+	align-items: center;
+	.iconLeft {
+		margin-right: 7px;
+	}
+	.iconRight {
+		margin-left: 7px;
+	}
+	.rsLabel {
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

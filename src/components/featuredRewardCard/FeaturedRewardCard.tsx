@@ -14,7 +14,7 @@ const FeaturedRewardCard: React.FC<FeaturedRewardCardProps> = (props) => {
 			<img className={'mainImg'} src={props.mainImg} alt={'Main'} />
 			{/*<img className={'logoImg'} src={props.mainImg} alt={'Company Logo'}/>*/}
 			<div className={'logoImg'} />
-			<Label variant={'h4'}>{props.title}</Label>
+			<Label variant={'h2'}>{props.title}</Label>
 		</div>
 	);
 };

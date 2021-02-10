@@ -8,6 +8,7 @@ import Box from '../box/Box';
 interface InfoCardProps {
 	title?: string;
 	body?: string;
+	bodyVariant?: 'body1' | 'body2';
 	icon?: string;
 	height?: string;
 	width?: string;
@@ -28,8 +29,8 @@ const InfoCard: React.FC<InfoCardProps> = (props) => {
 		>
 			{!!props.icon && <Icon iconImg={props.icon} size={36} color={'#cc9e0d'} />}
 			<Box>
-				{!!props.title && <Label variant={'h4'}>{props.title}</Label>}
-				{!!props.body && <Label variant={'body2'}>{props.body}</Label>}
+				{!!props.title && <Label variant={'h2'}>{props.title}</Label>}
+				{!!props.body && <Label variant={props.bodyVariant || 'body1'}>{props.body}</Label>}
 			</Box>
 		</Paper>
 	);

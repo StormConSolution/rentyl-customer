@@ -5,11 +5,12 @@
 	right: 0;
 	height: 100vh;
 	width: 0;
-	background-color: #fcfbf8;
+	background-color: theme-var($primaryTextColor);
 	transition: width 300ms;
 	transform: translateX(78px);
 	box-shadow: theme-var($primaryBoxShadowColor);
 	overflow: hidden;
+	z-index: 2;
 	&.opened {
 		width: 350px;
 	}
@@ -28,5 +29,29 @@
 		position: absolute;
 		top: 25px;
 		right: 25px;
+	}
+
+	.signInUpBtn {
+		height: 100px;
+		margin-top: auto;
+		border-top: 1px solid theme-var($greyLineColor);
+		display: flex;
+		align-items: center;
+		padding: 0 50px;
+	}
+}
+.transparentOverlay {
+	transition: opacity 200ms;
+	position: absolute;
+	background-color: rgba(89, 96, 95, 0.8);
+	width: 1440px;
+	height: 0;
+	right: -77px;
+	top: 0;
+	opacity: 0;
+	z-index: 1;
+	&.opened {
+		opacity: 1;
+		height: 100vh;
 	}
 }

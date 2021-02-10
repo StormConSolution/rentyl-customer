@@ -8,7 +8,7 @@
 	"dependencies": {
 		"@babel/plugin-syntax-jsx": "^7.12.1",
 		"@babel/preset-typescript": "^7.12.7",
-		"@bit/redsky.framework.rs.996": "0.0.19",
+		"@bit/redsky.framework.rs.996": "^0.0.23",
 		"@bit/redsky.framework.rs.accordion": "^0.0.17",
 		"@bit/redsky.framework.rs.avatar": "^0.0.1",
 		"@bit/redsky.framework.rs.button": "^0.0.36",

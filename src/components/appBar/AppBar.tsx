@@ -25,11 +25,20 @@ const AppBar: React.FC = () => {
 					color={'#003A76'}
 					size={21}
 					cursorPointer
-					onClick={() => setShowSlideOutMenu(true)}
+					onClick={() => {
+						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
+						setShowSlideOutMenu(true);
+					}}
 				/>
 			</Box>
 
-			<NavPopout isOpened={showSlideOutMenu} onClose={() => setShowSlideOutMenu(false)} />
+			<NavPopout
+				isOpened={showSlideOutMenu}
+				onClose={() => {
+					document.getElementsByTagName('body')[0].style.overflow = '';
+					setShowSlideOutMenu(false);
+				}}
+			/>
 		</Box>
 	);
 };

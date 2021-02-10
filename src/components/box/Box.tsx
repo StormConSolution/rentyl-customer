@@ -43,6 +43,9 @@ export interface BoxProps {
 	textOverflow?: 'clip' | 'ellipsis' | string | 'initial' | 'inherit';
 	visibility?: 'visible' | 'hidden' | 'collapse' | 'initial' | 'inherit';
 	whiteSpace?: string;
+	width?: string;
+	height?: string;
+	textAlign?: string;
 
 	// Border properties
 	border?: string | number;

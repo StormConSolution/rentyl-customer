@@ -1,0 +1,16 @@
+@import '../../themes/themes';
+.rsCarouselButtons {
+	display: flex;
+	box-shadow: theme-var($primaryBoxShadowColor);
+	background-color: #fcfbf8;
+	.rsButton {
+		width: 40px;
+		height: 40px;
+	}
+	hr {
+		width: 1px;
+		border: none;
+		margin: 0;
+		background-color: theme-var($greyLineColor);
+	}
+}

@@ -1,5 +1,11 @@
 @import '../../themes/themes';
 .rsLandingPage {
+	.rsLabel {
+		span {
+			color: theme-var($iconAndHighlightTextColor);
+		}
+	}
+
 	.tanBox {
 		position: absolute;
 		top: 0;
@@ -18,7 +24,10 @@
 		width: 1257px;
 		height: 729px;
 		margin-bottom: 135px;
-		.rsLabel {
+		.heroText {
+			font-size: 60px;
+			line-height: 70px;
+			font-weight: $heavy;
 			color: #ffffff;
 			text-shadow: theme-var($primaryBoxShadowColor);
 			span {
@@ -38,14 +47,14 @@
 		}
 	}
 
-	.featureRewards {
+	.sectionOne {
 		width: 100%;
 		margin-bottom: 220px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		.rsLabel {
-			&.h2 {
+			&.h1 {
 				margin-bottom: 40px;
 				span {
 					color: theme-var($iconAndHighlightTextColor);
@@ -62,7 +71,7 @@
 			}
 		}
 	}
-	.vacationStays {
+	.sectionTwo {
 		position: relative;
 		height: 586px;
 		width: 100%;
@@ -98,26 +107,20 @@
 			margin-top: auto;
 			margin-bottom: auto;
 			z-index: 11;
-			.subHeader {
-				font-size: 32px;
-				line-height: 35px;
-				font-weight: $heavy;
-				span {
-					color: theme-var($iconAndHighlightTextColor);
-				}
-			}
 		}
 	}
 
-	.travelingWithSpire {
+	.sectionThree {
 		position: relative;
-		.subHeader {
-			font-size: 32px;
-			line-height: 35px;
-			font-weight: $heavy;
-			span {
-				color: theme-var($iconAndHighlightTextColor);
+		.rsLabel {
+			&.h1 {
+				margin: 10px 0;
 			}
+		}
+
+		.imageStepper {
+			top: 197px;
+			left: 76px;
 		}
 
 		.imageContainer {
@@ -135,12 +138,10 @@
 			img {
 				width: 236px;
 				height: 206px;
-				background-color: red;
 				transition: all 1000ms;
 				margin: 0 12px;
 
 				&.selected {
-					background-color: blue;
 					width: 576px;
 					height: 450px;
 				}
@@ -168,24 +169,36 @@
 					}
 				}
 			}
+		}
 
-			.chevronBtnWrapper {
-				position: absolute;
-				bottom: -20px;
-				left: 50px;
-				box-shadow: theme-var($primaryBoxShadowColor);
-				background-color: #fcfbf8;
-				.rsButton {
-					width: 40px;
-					height: 40px;
-				}
-				hr {
-					width: 1px;
-					border: none;
-					margin: 0;
-					background-color: theme-var($greyLineColor);
-				}
+		.rsLabelButton {
+			margin: 36px auto 0;
+		}
+	}
+
+	.sectionFour {
+		img {
+			margin-right: 50px;
+		}
+		.rsLabel {
+			&.h1 {
+				margin-bottom: 30px;
 			}
+		}
+		.rsInfoCard {
+			margin: 0 20px 20px 0;
+		}
+	}
+
+	.sectionFive {
+		.rsLabel {
+			&.h1 {
+				text-align: center;
+				margin-bottom: 35px;
+			}
+		}
+		.rsFeaturedResortCard {
+			margin: 0 12px;
 		}
 	}
 }
