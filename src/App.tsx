@@ -15,6 +15,7 @@ import AppBar from './components/appBar/AppBar';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import useWindowResizeChange from './customHooks/useWindowResizeChange';
+import router from './utils/router';
 
 function App() {
 	// const loginStatus = useLoginState();
@@ -23,6 +24,7 @@ function App() {
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
 		rsToasts.setRenderDelegate(CustomToast);
+		router.tryToLoadInitialPath();
 		AOS.init({
 			duration: 1000
 		});
