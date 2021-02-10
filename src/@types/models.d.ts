@@ -1,17 +1,5 @@
 declare namespace Model {
 	export type InternalResourceTypes = 'ANDROID' | 'IOS' | 'WEB';
-	export type UserRoleType =
-		| 'anonymous'
-		| 'self'
-		| 'super_admin'
-		| 'spire_super_admin'
-		| 'spire_admin'
-		| 'hospitality_employee'
-		| 'loyalty_member'
-		| 'customer_service'
-		| 'customer_service_management'
-		| 'marketing_admin'
-		| 'real_estate_admin';
 	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION';
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
@@ -30,7 +18,13 @@ declare namespace Model {
 		| 'REAL_ESTATE';
 	export type SystemActionLogActions = 'CREATE' | 'DELETE' | 'UPDATE' | 'POINT_ADJUSTMENT';
 	export type PointTypes = 'ACTION' | 'CAMPAIGN' | 'ADMIN' | 'ORDER' | 'BOOKING' | 'RENTAL' | 'VACATION';
-	export type UserPointStatusTypes = 'PENDING' | 'RECEIVED' | 'REVOKED' | 'EXPIRED' | 'REDEEMED';
+	export type UserPointStatusTypes = 'PENDING' | 'RECEIVED' | 'REVOKED' | 'EXPIRED' | 'REDEEMED' | 'CANCELED';
+	export type PointReason =
+		| 'TECHNICAL_ERROR'
+		| 'HOTEL_STAY'
+		| 'RETAIL_TRANSACTION'
+		| 'RESTAURANT_TRANSACTION'
+		| 'GOODWILL';
 	export interface Accommodation {
 		id: number;
 		companyId: number;
@@ -208,6 +202,8 @@ declare namespace Model {
 
 	export interface CompanyVariables {
 		companyId: number;
+		ap2FaLoginTimeoutDays: number;
+		ap2FALoginVerificationTimeoutHours: number;
 	}
 
 	export interface Destination {
@@ -471,16 +467,30 @@ declare namespace Model {
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		accrualRate: number;
 		threshold: number;
-		features: string;
+		isAnnualRate: 0 | 1;
+	}
+
+	export interface TierFeature {
+		id: number;
+		companyId: number;
+		name: string;
+		createdOn: Date | string;
+		modifiedOn: Date | string;
+	}
+
+	export interface TierFeatureMap {
+		tierId: number;
+		TierFeatureId: number;
 	}
 
 	export interface User {
 		id: number;
 		companyId: number;
 		tierId: number;
+		userRoleId: number;
 		firstName: string;
 		lastName: string;
 		primaryEmail: string;
@@ -490,7 +500,6 @@ declare namespace Model {
 		password: string;
 		token: string;
 		resetPasswordOnLogin: Boolean | number;
-		role: UserRoleType;
 		permissionLogin: boolean;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
@@ -502,6 +511,11 @@ declare namespace Model {
 		gender: 'male' | 'female' | 'other';
 		ethnicity: string;
 		inactiveAfterDate: Date | string;
+		lifeTimePoints: number;
+		availablePoints: number;
+		loginExpiresOn: Date | string;
+		loginVerificationExpiresOn: Date | string;
+		loginVerificationGuid: string;
 	}
 
 	export interface UserAction {
@@ -547,26 +561,34 @@ declare namespace Model {
 	export interface UserPoint {
 		id: number;
 		userId: number;
-		campaignActionId: number;
+		userActionId: number;
 		orderId: number;
+		reservationId: number;
+		description: string;
+		status: UserPointStatusTypes;
+		pointType: PointTypes;
+		pointAmount: number;
+		reason: PointReason;
+		notes: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		type: PointTypes;
-		value: number;
-		status: UserPointStatusTypes;
+		availableOn: Date | string;
 	}
 
-	export interface UserRoleAccessScopeObj {
-		accessScope: UserAccessScopeTypes;
-		read: 1 | 0;
-		write: 1 | 0;
+	export interface UserRole {
+		id: number;
+		companyId: number;
+		name: string;
+		createdOn: Date | string;
+		modifiedOn: Date | string;
+		accessScope: UserRoleAccessScope[];
+		isAdmin: 1 | 0;
 	}
 
 	export interface UserRoleAccessScope {
-		id: number;
-		companyId: number;
-		role: UserRoleType;
-		accessScope: UserRoleAccessScopeObj[];
+		accessScope: UserAccessScopeTypes;
+		read: 1 | 0;
+		write: 1 | 0;
 	}
 
 	export interface UserSegment {
