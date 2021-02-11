@@ -21,7 +21,10 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/signin',
-		page: SignInPage
+		page: SignInPage,
+		options: {
+			view: 'signin'
+		}
 	},
 	{
 		path: '*',

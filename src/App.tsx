@@ -18,7 +18,7 @@ import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
 
 function App() {
-	// const loginStatus = useLoginState();
+	const loginStatus = useLoginState();
 	const theme = useRecoilValue<AvailableThemes>(globalState.theme);
 	const size = useWindowResizeChange();
 	// Code to setup our toast delegates (Will render CustomToast when called)
@@ -32,34 +32,34 @@ function App() {
 		document.querySelector('.nav-parent')!.remove();
 	}, []);
 
-	// function renderViewsBasedOnLoginStatus() {
-	// 	switch (loginStatus) {
-	// 		case LoginStatus.UNKNOWN:
-	// 			return null;
-	// 		case LoginStatus.LOGGED_OUT:
-	// 			return (
-	// 				<>
-	// 					<AppBar />
-	// 					<View key="login" id="login" default initialPath="/" />
-	// 				</>
-	// 			);
-	// 		case LoginStatus.LOGGED_IN:
-	// 			return (
-	// 				<div className="loggedInView">
-	// 					<Box>
-	// 						<AppBar />
-	// 						<View key="admin" id="admin" default initialPath="/dashboard" />
-	// 					</Box>
-	// 				</div>
-	// 			);
-	// 	}
-	// }
+	function renderViewsBasedOnLoginStatus() {
+		switch (loginStatus) {
+			case LoginStatus.UNKNOWN:
+				return null;
+			case LoginStatus.LOGGED_OUT:
+				return (
+					<>
+						<AppBar />
+						<View key="signin" id="signin" default initialPath="/signin" />
+					</>
+				);
+			case LoginStatus.LOGGED_IN:
+				return (
+					<div className="loggedInView">
+						<Box>
+							<AppBar />
+							<View key="landingPage" id="landingPage" default initialPath="/" />
+						</Box>
+					</div>
+				);
+		}
+	}
 
 	return (
 		<div className={`App ${size}`}>
 			<AppBar />
 			<View key="landingPage" id="landingPage" default initialPath="/" />
-			{/*{renderViewsBasedOnLoginStatus()}*/}
+			{renderViewsBasedOnLoginStatus()}
 			{popupController.instance}
 			{rsToasts.instance}
 		</div>
