@@ -30,7 +30,7 @@ const SignInPage: React.FC = () => {
 			await userService.loginUserByPassword(`${emailAddress}`, `${password}`);
 		} catch (e) {
 			if (e.message === 'INVALID_ROLE') {
-				setLoginErrorMessage('User not allowed to login.');
+				setLoginErrorMessage('User not allowed to log in.');
 				return;
 			}
 
@@ -47,7 +47,7 @@ const SignInPage: React.FC = () => {
 
 	return (
 		<Page className={'rsLoginPage'}>
-			<div className="container">
+			<div className="container" data-aos="fade-up">
 				<Box className="signInSection">
 					<Label variant="h1">Sign in</Label>
 					<form className="signInForm" action={'#'} onSubmit={signIn}>

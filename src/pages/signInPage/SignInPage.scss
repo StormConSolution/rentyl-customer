@@ -2,13 +2,13 @@
 @import '../../variables.scss';
 
 .rsLoginPage.page-current {
-	background-color: brown;
+	background: brown;
+	animation: fadeIn 1s;
 	.container {
 		width: 470px;
 		height: 478px;
 		background: #fcfbf8 0% 0% no-repeat padding-box;
 		box-shadow: 0px 5px 15px #1e180b33;
-		opacity: 1;
 		margin: 170px auto 104px auto;
 
 		.signInSection {
@@ -72,5 +72,14 @@
 				}
 			}
 		}
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
 	}
 }
