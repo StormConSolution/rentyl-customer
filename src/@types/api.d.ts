@@ -15,10 +15,12 @@ declare namespace Api {
 				website: string;
 				domainName: string;
 			}
+			export interface Role {}
 		}
 		export namespace Res {
 			export interface Create extends Model.Company {}
 			export interface Update extends Model.Company {}
+			export interface Role extends Model.UserRole {}
 		}
 	}
 
@@ -61,6 +63,7 @@ declare namespace Api {
 			id: number;
 			companyId: number;
 			tierId: number;
+			userRoleId: number;
 			firstName: string;
 			lastName: string;
 			primaryEmail: string;
@@ -68,7 +71,6 @@ declare namespace Api {
 			phone: string;
 			notes: string;
 			token: string;
-			role: Model.UserRoleType;
 			createdOn: Date | string;
 			modifiedOn: Date | string;
 			joinedOn: Date | string;
@@ -81,6 +83,8 @@ declare namespace Api {
 			availablePoints: number;
 			city: string;
 			state: string;
+			loginExpiresOn: Date | string;
+			loginVerificationExpiresOn: Date | string;
 		}
 
 		export interface Model extends Model.User {
@@ -91,11 +95,11 @@ declare namespace Api {
 		}
 		export namespace Req {
 			export interface Create {
+				userRoleId: number;
 				firstName: string;
 				lastName: string;
 				primaryEmail: string;
 				password: string;
-				role: Model.UserRoleType;
 				phone?: string;
 				birthDate?: Date | string;
 			}
@@ -103,12 +107,12 @@ declare namespace Api {
 			export interface Update {
 				id?: number;
 				ids?: number[];
+				userRoleId?: number;
 				firstName?: string;
 				lastName?: string;
 				primaryEmail?: string;
 				password?: string;
 				phone?: string;
-				role?: Model.UserRoleType;
 				birthDate?: Date | string;
 			}
 
@@ -154,6 +158,10 @@ declare namespace Api {
 				sort: string;
 				filter: string;
 			}
+
+			export interface VerifyLogin {
+				guid: string;
+			}
 		}
 		export namespace Res {
 			export interface Company {
@@ -168,6 +176,7 @@ declare namespace Api {
 				data: Filtered[];
 				total: number;
 			}
+			export interface VerifyLogin extends Filtered {}
 		}
 	}
 
@@ -176,10 +185,15 @@ declare namespace Api {
 			export interface Create {}
 			export interface Get {
 				id: number;
+				ids: number[];
 			}
-			export interface Update extends Model.Accommodation {}
+			export interface Update extends Omit<Model.Accommodation, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -207,11 +221,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Action {}
+			export interface Update extends Omit<Model.Action, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -223,11 +242,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Affiliate {}
+			export interface Update extends Omit<Model.Affiliate, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -239,11 +263,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.BookingSource {}
+			export interface Update extends Omit<Model.BookingSource, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -255,11 +284,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Campaign {}
+			export interface Update extends Omit<Model.Campaign, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -271,11 +305,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.CampaignAction {}
+			export interface Update extends Omit<Model.CampaignAction, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -287,11 +326,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Category {}
+			export interface Update extends Omit<Model.Category, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -303,11 +347,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Cms {}
+			export interface Update extends Omit<Model.Cms, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -319,11 +368,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Company {}
+			export interface Update extends Omit<Model.Company, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -335,11 +389,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.CompanyAffiliate {}
+			export interface Update extends Omit<Model.CompanyAffiliate, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -351,11 +410,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.CompanyServiceKey {}
+			export interface Update extends Omit<Model.CompanyServiceKey, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -367,11 +431,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.CompanyVariables {}
+			export interface Update extends Omit<Model.CompanyVariables, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -383,14 +452,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 			export interface Update extends Partial<Model.Destination> {
 				id?: number;
 				ids?: number[];
 			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -402,11 +473,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.MarketSegment {}
+			export interface Update extends Omit<Model.MarketSegment, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -418,11 +494,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.MediaMap {}
+			export interface Update extends Omit<Model.MediaMap, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -434,11 +515,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.OrderProduct {}
+			export interface Update extends Omit<Model.OrderProduct, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -450,11 +536,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Orders {}
+			export interface Update extends Omit<Model.Orders, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -466,11 +557,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.PaymentMethod {}
+			export interface Update extends Omit<Model.PaymentMethod, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -482,11 +578,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.PointRedemption {}
+			export interface Update extends Omit<Model.PointRedemption, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -498,11 +599,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Product {}
+			export interface Update extends Omit<Model.Product, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -514,11 +620,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.ProductCategory {}
+			export interface Update extends Omit<Model.ProductCategory, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -530,11 +641,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.ProductDestination {}
+			export interface Update extends Omit<Model.ProductDestination, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -546,11 +662,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.ReportTemplate {}
+			export interface Update extends Omit<Model.ReportTemplate, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -562,11 +683,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Reservation {}
+			export interface Update extends Omit<Model.Reservation, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 			export interface Availability {
 				startDate: Date | string;
@@ -594,11 +720,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Review {}
+			export interface Update extends Omit<Model.Review, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -610,11 +741,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.Segment {}
+			export interface Update extends Omit<Model.Segment, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -633,11 +769,16 @@ declare namespace Api {
 				metaData?: any;
 			}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.SystemActionLog {}
+			export interface Update extends Omit<Model.SystemActionLog, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -653,20 +794,42 @@ declare namespace Api {
 				isActive: 0 | 1;
 				accrualRate: number;
 				threshold: number;
-				features?: string;
+				isAnnualRate?: 0 | 1;
+				featureIds: number[];
 			}
 			export interface Get {
 				id: number;
 			}
+
 			export interface Update extends Partial<Omit<Model.Tier, 'companyId' | 'createdOn' | 'modifiedOn'>> {
 				id: number;
+				featureIds?: number[];
 			}
 			export interface Delete {
 				id: number;
 			}
+			export interface CreateFeature {
+				name: string;
+			}
+			export interface GetFeature {
+				id: number;
+			}
+			export interface UpdateFeature {
+				id: number;
+				name: string;
+			}
+			export interface DeleteFeature {
+				id: number;
+			}
 		}
 		export namespace Res {
-			export interface Get extends Model.Tier {}
+			export interface Get extends Model.Tier {
+				features: Model.TierFeature[];
+			}
+			export interface CreateFeature extends Model.TierFeature {}
+			export interface GetFeatures extends Model.TierFeature {}
+			export interface GetFeature extends Model.TierFeature {}
+			export interface UpdateFeature extends Model.TierFeature {}
 		}
 	}
 
@@ -674,11 +837,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.UserAction {}
+			export interface Update extends Omit<Model.UserAction, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -731,11 +899,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.UserCoupon {}
+			export interface Update extends Omit<Model.UserCoupon, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -747,11 +920,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.UserPermission {}
+			export interface Update extends Omit<Model.UserPermission, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -763,11 +941,12 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {
 				userId: number;
-				campaignActionId?: number;
-				orderId?: number;
-				type: Model.PointTypes;
-				value: number;
-				status?: Model.UserPointStatusTypes;
+				pointType: Model.PointTypes;
+				pointAmount: number;
+				reason: Model.PointReason;
+				description?: string;
+				notes?: string;
+				award: 0 | 1;
 			}
 			export interface Get {
 				id?: number;
@@ -781,6 +960,7 @@ declare namespace Api {
 		}
 		export namespace Res {
 			export interface Get extends Model.UserPoint {}
+			export interface Create extends Model.UserPoint {}
 		}
 	}
 
@@ -788,11 +968,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.UserSegment {}
+			export interface Update extends Omit<Model.UserSegment, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
@@ -804,11 +989,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {}
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
-			export interface Update extends Model.UserSocialMedia {}
+			export interface Update extends Omit<Model.UserSocialMedia, 'id'> {
+				id?: number;
+				ids?: number[];
+			}
 			export interface Delete {
-				id: number;
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
