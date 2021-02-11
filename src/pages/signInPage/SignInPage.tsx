@@ -80,6 +80,7 @@ const SignInPage: React.FC = () => {
 							look={'containedPrimary'}
 							variant="caption"
 							label="Sign In"
+							buttonType="submit"
 						/>
 						{!!loginErrorMessage.length && (
 							<Label className="errorText" variant={'body2'}>

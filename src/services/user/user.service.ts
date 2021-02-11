@@ -56,10 +56,6 @@ export default class UserService extends Service {
 	}
 
 	private async onAfterLogin(user: Api.User.Res.Get) {
-		// Make sure they are allowed to even login based on their role
-		let adminRoles = ['super_admin', 'support'];
-		if (!adminRoles.includes(user.role)) throw new Error('INVALID_ROLE');
-
 		let axiosConfig = http.currentConfig();
 		axiosConfig.headers = {
 			'Content-Type': 'application/json',
