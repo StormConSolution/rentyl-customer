@@ -7,10 +7,12 @@ import { Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import NavPopout from '../../popups/navPopout/NavPopout';
 import LabelButton from '../labelButton/LabelButton';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const AppBar: React.FC = () => {
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
 	// const user = serviceFactory.get<UserService>('UserService').getCurrentUser();
+	const size = useWindowResizeChange();
 
 	return (
 		<Box className="rsAppBar">
@@ -19,7 +21,9 @@ const AppBar: React.FC = () => {
 			</Link>
 
 			<Box display={'flex'} alignItems={'center'}>
-				<LabelButton look={'containedPrimary'} variant={'button'} label={'Learn about spire loyalty'} />
+				{!size && (
+					<LabelButton look={'containedPrimary'} variant={'button'} label={'Learn about spire loyalty'} />
+				)}
 				<Icon
 					iconImg={'icon-hamburger-menu'}
 					color={'#003A76'}
