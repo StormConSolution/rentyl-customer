@@ -1,0 +1,50 @@
+@import '../../themes/themes';
+.rsFooter {
+	background-color: theme-var($primaryBackgroundColor);
+	position: relative;
+	padding: 0 345px;
+	box-sizing: border-box;
+
+	img {
+		height: 60%;
+		grid-column: 1;
+		grid-row: 1 / 2;
+		margin: auto 0;
+	}
+	.rsLabel {
+		&.caption {
+			color: #9b9b9b;
+		}
+	}
+
+	.footerNavigation {
+		color: theme-var($primaryTextColor);
+		grid-template-columns: repeat(7, 1fr);
+		padding-bottom: 30px;
+		padding-top: 18px;
+
+		.rsBox {
+			grid-template-columns: repeat(4, 1fr);
+			grid-column: 2 / 6;
+			row-gap: 5px;
+			column-gap: 10px;
+
+			a {
+				font-size: small;
+				text-transform: uppercase;
+			}
+		}
+	}
+	.rsBox:last-of-type {
+		padding: 8px 0;
+
+		&.copyright {
+			border-top: 2px solid theme-var($greyLineColor);
+
+			.socialMediaLinks {
+				width: 121px;
+				justify-content: space-between;
+			}
+		}
+	}
+}

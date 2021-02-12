@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
 import './icons/style.css';
+import Footer from './components/footer/Footer';
+import { FooterLinkTestData } from './components/footer/FooterLinks';
 
 // The following components need to be added to the top level dom since they are full screen overlays
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
@@ -63,6 +65,7 @@ function App() {
 			{renderViewsBasedOnLoginStatus()}
 			{popupController.instance}
 			{rsToasts.instance}
+			<Footer links={FooterLinkTestData} />
 		</div>
 	);
 }
