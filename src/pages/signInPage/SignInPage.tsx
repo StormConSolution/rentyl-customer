@@ -46,7 +46,7 @@ const SignInPage: React.FC = () => {
 	}
 
 	return (
-		<Page className={'rsLoginPage'}>
+		<Page className={'rsSignInPage'}>
 			<div className="container" data-aos="fade-up">
 				<Box className="signInSection">
 					<Label variant="h1">Sign in</Label>
