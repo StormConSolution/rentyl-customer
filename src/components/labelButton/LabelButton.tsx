@@ -28,6 +28,7 @@ interface LabelButtonProps {
 	className?: string;
 	onClick?: () => void;
 	disabled?: boolean;
+	buttonType?: 'button' | 'submit';
 }
 
 const LabelButton: React.FC<LabelButtonProps> = (props) => {
@@ -37,6 +38,7 @@ const LabelButton: React.FC<LabelButtonProps> = (props) => {
 			look={props.look}
 			onClick={props.onClick}
 			disabled={props.disabled}
+			type={props.buttonType}
 		>
 			<Label variant={props.variant}>{props.label}</Label>
 		</Button>

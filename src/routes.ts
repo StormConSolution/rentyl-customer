@@ -2,6 +2,7 @@ import { RouteDetails } from '@bit/redsky.framework.rs.996';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LandingPage from './pages/landingPage/LandingPage';
+import SignInPage from './pages/signInPage/SignInPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -16,6 +17,13 @@ const routes: RouteDetails[] = [
 		page: DashboardPage,
 		options: {
 			view: 'admin'
+		}
+	},
+	{
+		path: '/signin',
+		page: SignInPage,
+		options: {
+			view: 'signin'
 		}
 	},
 	{
