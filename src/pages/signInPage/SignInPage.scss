@@ -3,7 +3,7 @@
 
 .rsSignInPage {
 	&.page-current {
-		background: brown;
+		background: brown; //this is a placeholder until we get the image.
 		animation: fadeIn 1s;
 	}
 	.container {
@@ -60,6 +60,14 @@
 					text-align: center;
 					margin: 25px auto 0 auto;
 				}
+			}
+			.rsErrorMessage {
+				color: theme-var($errorColor);
+				letter-spacing: 0.15px;
+				font-weight: 400;
+				line-height: 20px;
+				align-self: flex-end;
+				font-size: 14px;
 			}
 		}
 		.signUpSection {

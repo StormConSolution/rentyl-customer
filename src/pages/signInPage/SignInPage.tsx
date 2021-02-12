@@ -3,7 +3,7 @@ import './SignInPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import Input from '@bit/redsky.framework.rs.input';
-import { RsFormControl, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { axiosErrorHandler } from '../../utils/errorHandler';
@@ -16,12 +16,10 @@ const SignInPage: React.FC = () => {
 	const [emailAddress, setEmailAddress] = useState<string>();
 	const [password, setPassword] = useState<string | number | string[]>('');
 	const [loginErrorMessage, setLoginErrorMessage] = useState<string>('');
-	const [emailControl] = useState(
-		new RsFormControl('email', '', [new RsValidator(RsValidatorEnum.EMAIL, 'Email is required')])
-	);
-	const [passwordControl] = useState(
+	const loginFormGroup = new RsFormGroup([
+		new RsFormControl('email', '', [new RsValidator(RsValidatorEnum.REQ, 'Email is required')]),
 		new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')])
-	);
+	]);
 
 	async function signIn(e: FormEvent) {
 		e.preventDefault();
@@ -58,7 +56,7 @@ const SignInPage: React.FC = () => {
 							className="signInInput"
 							type="text"
 							look="outlined"
-							control={emailControl}
+							control={loginFormGroup.get('email')}
 							updateControl={(updatedControl) => {
 								setEmailAddress(updatedControl.value.toString());
 							}}
@@ -70,7 +68,7 @@ const SignInPage: React.FC = () => {
 							className="signInInput"
 							type="password"
 							look="outlined"
-							control={passwordControl}
+							control={loginFormGroup.get('password')}
 							updateControl={(updatedControl) => {
 								setPassword(updatedControl.value.toString());
 							}}
@@ -83,7 +81,7 @@ const SignInPage: React.FC = () => {
 							buttonType="submit"
 						/>
 						{!!loginErrorMessage.length && (
-							<Label className="errorText" variant={'body2'}>
+							<Label className="rsErrorMessage" variant={'body2'}>
 								{loginErrorMessage}
 							</Label>
 						)}
