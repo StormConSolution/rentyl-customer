@@ -29,13 +29,13 @@ Clean Node Modules:
 
 Prettier Check:
   stage: test
-    script:
+  script:
       - echo "Checking for prettyness"
       - yarn run prettier:check
-    cache:
-      paths:
-        - node_modules/
-      policy: pull
+  cache:
+    paths:
+      - node_modules/
+    policy: pull
 
 Build Test:
   stage: test
