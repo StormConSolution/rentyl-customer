@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './FeaturedRewardCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface FeaturedRewardCardProps {
 	mainImg: string;
@@ -9,6 +10,8 @@ interface FeaturedRewardCardProps {
 }
 
 const FeaturedRewardCard: React.FC<FeaturedRewardCardProps> = (props) => {
+	const size = useWindowResizeChange();
+
 	return (
 		<div className={'rsFeaturedRewardCard'}>
 			<img className={'mainImg'} src={props.mainImg} alt={'Main'} />

@@ -1,16 +1,28 @@
 @import '../../themes/themes';
 
-.rsFeaturedResortCard {
+.rsFeaturedDestinationCard {
 	img {
 		width: 573px;
 		height: 355px;
 		object-fit: cover;
 		margin-bottom: 10px;
 	}
-	.rsLabelLink {
+	.rsBox {
 		.rsLabel,
 		.rsIcon {
 			color: theme-var($buttonLinkColor);
+		}
+		.rsIcon {
+			margin-left: 5px;
+		}
+	}
+}
+
+.small {
+	.rsFeaturedDestinationCard {
+		img {
+			width: 335px;
+			height: 244px;
 		}
 	}
 }
