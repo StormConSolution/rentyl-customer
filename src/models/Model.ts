@@ -11,8 +11,8 @@ import {
 export class Model {
 	protected modelName = '';
 	start() {}
-	refreshData(): Promise<any> {
-		return new Promise<any>((resolve) => {
+	refreshData(): Promise<void> {
+		return new Promise<void>((resolve) => {
 			resolve();
 		});
 	}
