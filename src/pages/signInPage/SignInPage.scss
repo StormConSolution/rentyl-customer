@@ -1,9 +1,11 @@
 @import '../../themes/themes';
 @import '../../variables.scss';
 
-.rsSignInPage.page-current {
-	background: brown;
-	animation: fadeIn 1s;
+.rsSignInPage {
+	&.page-current {
+		background: brown;
+		animation: fadeIn 1s;
+	}
 	.container {
 		width: 470px;
 		height: 478px;
