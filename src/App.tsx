@@ -43,7 +43,7 @@ function App() {
 				return (
 					<>
 						<AppBar />
-						<View key="signin" id="signin" default initialPath="/signin" />
+						<View key="signin" id="signin" default initialPath="/" />
 					</>
 				);
 			case LoginStatus.LOGGED_IN:
