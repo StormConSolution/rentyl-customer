@@ -23,6 +23,7 @@ function App() {
 	const size = useWindowResizeChange();
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
+		router.tryToLoadInitialPath();
 		rsToasts.setRenderDelegate(CustomToast);
 		router.tryToLoadInitialPath();
 		AOS.init({

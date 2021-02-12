@@ -1,0 +1,38 @@
+@import '../../themes/themes';
+.rsCarousel {
+	width: 100%;
+	position: relative;
+	.carouselParent {
+		display: flex;
+		overflow: auto;
+		overflow-x: auto;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		-webkit-scroll-snap-type: mandatory;
+		scroll-snap-type: x mandatory;
+		-webkit-scroll-snap-points-x: repeat(100%);
+		scroll-snap-points-x: repeat(100%);
+		.carouselChild {
+			overflow: visible;
+			scroll-snap-align: center;
+		}
+	}
+	.clickLeft {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		background-color: #fcfbf8;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		width: 40px;
+		height: 40px;
+	}
+	.clickRight {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		background-color: #fcfbf8;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		width: 40px;
+		height: 40px;
+	}
+}

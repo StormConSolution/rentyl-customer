@@ -118,11 +118,6 @@
 			}
 		}
 
-		.imageStepper {
-			top: 197px;
-			left: 76px;
-		}
-
 		.imageContainer {
 			height: 450px;
 			width: fit-content;
@@ -149,23 +144,29 @@
 		}
 
 		.rsPaper {
-			position: relative;
+			&.imageStepper {
+				top: 197px;
+				left: 76px;
 
-			.rsInfoCard {
-				margin: 16px 0;
-				border-bottom: 1px solid theme-var($greyLineColor);
-				transition: color 300ms;
-				.rsLabel,
-				.rsIcon {
+				.rsInfoCard {
+					margin: 16px 0;
+					border-bottom: 1px solid theme-var($greyLineColor);
 					transition: color 300ms;
-					color: theme-var($greyLineColor) !important;
-				}
-				&.selected {
-					.rsLabel {
-						color: theme-var($primaryTextColor) !important;
-					}
+
+					.rsLabel,
 					.rsIcon {
-						color: theme-var($iconAndHighlightTextColor) !important;
+						transition: color 300ms;
+						color: theme-var($greyLineColor) !important;
+					}
+
+					&.selected {
+						.rsLabel {
+							color: theme-var($primaryTextColor) !important;
+						}
+
+						.rsIcon {
+							color: theme-var($iconAndHighlightTextColor) !important;
+						}
 					}
 				}
 			}
@@ -197,8 +198,161 @@
 				margin-bottom: 35px;
 			}
 		}
-		.rsFeaturedResortCard {
+		.rsFeaturedDestinationCard {
 			margin: 0 12px;
+		}
+	}
+}
+
+.small {
+	.rsLandingPage {
+		.tanBox {
+			height: 388px;
+		}
+
+		.heroImgAndText {
+			width: 321px;
+			height: 423px;
+			padding-left: 20px;
+			.heroText {
+				font-size: 30px;
+				line-height: 35px;
+			}
+			.infoCardWrapper {
+				flex-direction: column;
+				bottom: -240px;
+				.rsInfoCard {
+					width: 335px !important;
+					height: 95px !important;
+					margin-right: 0;
+					margin-bottom: 10px;
+				}
+			}
+		}
+		.sectionOne {
+			.rsFeaturedRewardCard {
+				.mainImg {
+					width: 335px;
+					height: 220px;
+				}
+			}
+			.rsLabel {
+				&.h2 {
+					margin-bottom: 30px;
+				}
+			}
+		}
+		.sectionTwo {
+			.coupleImg {
+				width: 375px;
+				height: 270px;
+				background-position: center;
+				background-size: contain;
+			}
+			.tanBox2 {
+				width: 355px;
+				height: 339px;
+			}
+			.rsPaper {
+				width: 335px !important;
+				height: 383px !important;
+				right: 0;
+				left: 0;
+				top: 158px;
+				bottom: 0;
+				margin: auto;
+				z-index: 11;
+			}
+		}
+		.sectionThree {
+			.mobileImageStepperWrapper {
+				position: relative;
+				width: 100%;
+				//margin: 20px 20px 200px;
+				margin: 20px 20px 175px;
+
+				.rsCarousel {
+					padding: 0 20px;
+					box-sizing: border-box;
+					img {
+						width: 315px;
+						height: 244px;
+						transition: all 1000ms;
+						margin-right: 20px;
+
+						&.selected {
+							//width: 576px;
+							//height: 450px;
+						}
+					}
+				}
+
+				.rsPaper {
+					&.mobileImageStepper {
+						top: 197px;
+						left: 0;
+
+						.rsInfoCard {
+							position: absolute;
+							opacity: 0;
+							top: 0;
+							bottom: 0;
+							margin: auto 0;
+							transition: color 1000ms, opacity 1000ms ease;
+
+							.rsLabel,
+							.rsIcon {
+								transition: color 1000ms;
+								color: #fcfbf8 !important;
+							}
+
+							&.selected {
+								transition: color 1000ms, opacity 1000ms ease;
+								opacity: 1;
+								.rsLabel {
+									color: theme-var($primaryTextColor) !important;
+								}
+
+								.rsIcon {
+									color: theme-var($iconAndHighlightTextColor) !important;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		.sectionFour {
+			margin: 0 auto 140px !important;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			img {
+				width: 315px;
+				height: 244px;
+				margin-right: 0;
+			}
+			.rsBox {
+				align-items: center;
+			}
+
+			.rsLabel {
+				&.h2 {
+					margin: 31px auto;
+				}
+			}
+
+			.rsInfoCard {
+				margin: 0 auto 15px;
+			}
+		}
+		.sectionFive {
+			.rsLabel {
+				&.h2 {
+					width: 266px;
+					margin: 0 auto 36px;
+				}
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@ import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Box from '../box/Box';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface InfoCardProps {
 	title?: string;
@@ -18,6 +19,8 @@ interface InfoCardProps {
 }
 
 const InfoCard: React.FC<InfoCardProps> = (props) => {
+	const size = useWindowResizeChange();
+
 	return (
 		<Paper
 			className={`rsInfoCard ${props.className || ''}`}
@@ -29,7 +32,7 @@ const InfoCard: React.FC<InfoCardProps> = (props) => {
 		>
 			{!!props.icon && <Icon iconImg={props.icon} size={36} color={'#cc9e0d'} />}
 			<Box>
-				{!!props.title && <Label variant={'h2'}>{props.title}</Label>}
+				{!!props.title && <Label variant={size === 'small' ? 'h4' : 'h2'}>{props.title}</Label>}
 				{!!props.body && <Label variant={props.bodyVariant || 'body1'}>{props.body}</Label>}
 			</Box>
 		</Paper>

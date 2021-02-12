@@ -8,14 +8,19 @@ import InfoCard from '../../components/infoCard/InfoCard';
 import FeaturedRewardCard from '../../components/featuredRewardCard/FeaturedRewardCard';
 import Paper from '../../components/paper/Paper';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
-import FeaturedResortCard from '../../components/featuredResortCard/FeaturedResortCard';
+import FeaturedDestinationCard from '../../components/featuredDestinationCard/FeaturedDestinationCard';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { replaceClassName } from '../../utils/utils';
+import Carousel from '../../components/carousel/Carousel';
+import Select from '@bit/redsky.framework.rs.select';
 
 interface LandingPageProps {}
 
 const LandingPage: React.FC<LandingPageProps> = (props) => {
 	const [activeRewards, setActiveRewards] = useState<number>(0);
+	const size = useWindowResizeChange();
 
 	function getActiveRewardsStage() {
 		if (activeRewards === 1) return 'stageOne';
@@ -27,7 +32,12 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 		<Page className={'rsLandingPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<div className={'tanBox'} />
-				<Box className={'heroImgAndText'} display={'flex'} alignItems={'center'} marginBottom={135}>
+				<Box
+					className={'heroImgAndText'}
+					display={'flex'}
+					alignItems={'center'}
+					marginBottom={size === 'small' ? 366 : 135}
+				>
 					<Box>
 						<div className={'heroText'}>
 							Rewarding the way you
@@ -67,26 +77,50 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 					</Box>
 				</Box>
 
-				<Box className={'sectionOne'} marginBottom={220}>
-					<Label variant={'h1'}>
+				<Box className={'sectionOne'} marginBottom={size === 'small' ? 80 : 220}>
+					<Label variant={size === 'small' ? 'h2' : 'h1'}>
 						<span>Feature</span> Rewards
 					</Label>
 					<Box className={'featureRewardCardsContainer'}>
-						<FeaturedRewardCard
-							mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay.png')}
-							logoImg={''}
-							title={'Margaritaville Villa Stay'}
-						/>
-						<FeaturedRewardCard
-							mainImg={require('../../images/landingPage/Margaritaville-Spa -Service.png')}
-							logoImg={''}
-							title={'Margaritaville Spa Service'}
-						/>
-						<FeaturedRewardCard
-							mainImg={require('../../images/landingPage/Margaritaville-Drinks-for-Two.png')}
-							logoImg={''}
-							title={'Margaritaville Drinks for Two'}
-						/>
+						{size === 'small' ? (
+							<Carousel
+								children={[
+									<FeaturedRewardCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay.png')}
+										logoImg={''}
+										title={'Margaritaville Villa Stay'}
+									/>,
+									<FeaturedRewardCard
+										mainImg={require('../../images/landingPage/Margaritaville-Spa -Service.png')}
+										logoImg={''}
+										title={'Margaritaville Spa Service'}
+									/>,
+									<FeaturedRewardCard
+										mainImg={require('../../images/landingPage/Margaritaville-Drinks-for-Two.png')}
+										logoImg={''}
+										title={'Margaritaville Drinks for Two'}
+									/>
+								]}
+							/>
+						) : (
+							<>
+								<FeaturedRewardCard
+									mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay.png')}
+									logoImg={''}
+									title={'Margaritaville Villa Stay'}
+								/>
+								<FeaturedRewardCard
+									mainImg={require('../../images/landingPage/Margaritaville-Spa -Service.png')}
+									logoImg={''}
+									title={'Margaritaville Spa Service'}
+								/>
+								<FeaturedRewardCard
+									mainImg={require('../../images/landingPage/Margaritaville-Drinks-for-Two.png')}
+									logoImg={''}
+									title={'Margaritaville Drinks for Two'}
+								/>
+							</>
+						)}
 					</Box>
 					<LabelButton look={'containedPrimary'} variant={'button'} label={'See all rewards'} />
 				</Box>
@@ -96,7 +130,7 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 					<div className={'tanBox2'} />
 					<Paper width={'524px'} height={'369px'} padding={'40px 50px'} boxShadow backgroundColor={'#FCFBF8'}>
 						<Label variant={'caption'}>Vacation Stays and real estate</Label>
-						<Label variant={'h1'}>
+						<Label variant={size === 'small' ? 'h2' : 'h1'}>
 							Turn your vacation <br />
 							<span data-aos="fade-up">into your next home</span>
 						</Label>
@@ -112,7 +146,7 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 				</Box>
 
 				<Box className={'sectionThree'} marginBottom={110}>
-					<Box width={'610px'} margin={'0 auto 25px'} textAlign={'center'}>
+					<Box maxWidth={'610px'} margin={'0 auto 25px'} textAlign={'center'}>
 						<Label variant={'caption'}>Traveling with spire loyalty</Label>
 						<Label variant={'h1'}>
 							Gives you access to a <span data-aos="fade-up">myriad of rewards</span>
@@ -123,90 +157,162 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 						</Label>
 					</Box>
 
-					<Box
-						display={'flex'}
-						justifyContent={'flex-start'}
-						alignItems={'flex-end'}
-						className={`imageContainer ${getActiveRewardsStage()}`}
-					>
-						<img
-							src={require(`../../images/landingPage/${activeRewards === 0 ? 'travel2x' : 'travel'}.png`)}
-							className={`${activeRewards === 0 ? 'selected' : ''}`}
-							alt={''}
-						/>
-						<img
-							src={require(`../../images/landingPage/${
-								activeRewards === 1 ? 'real-estate2x' : 'real-estate'
-							}.png`)}
-							className={`${activeRewards === 1 ? 'selected' : ''}`}
-							alt={''}
-						/>
-						<img
-							src={require(`../../images/landingPage/${
-								activeRewards === 2 ? 'hospitality2x' : 'hospitality'
-							}.png`)}
-							className={`${activeRewards === 2 ? 'selected' : ''}`}
-							alt={''}
-						/>
-					</Box>
+					{size === 'small' ? (
+						<Box className={'mobileImageStepperWrapper'}>
+							<Carousel imageIndex={activeRewards}>
+								<img
+									src={require(`../../images/landingPage/travel2x.png`)}
+									className={`${activeRewards === 0 ? 'selected' : ''}`}
+									alt={''}
+								/>
+								<img
+									src={require(`../../images/landingPage/real-estate2x.png`)}
+									className={`${activeRewards === 1 ? 'selected' : ''}`}
+									alt={''}
+								/>
+								<img
+									src={require(`../../images/landingPage/hospitality2x.png`)}
+									className={`${activeRewards === 2 ? 'selected' : ''}`}
+									alt={''}
+								/>
+							</Carousel>
 
-					<Paper
-						className={'imageStepper'}
-						width={'444px'}
-						height={'320px'}
-						padding={'10px 50px'}
-						boxShadow
-						backgroundColor={'#FCFBF8'}
-						position={'absolute'}
-					>
-						<InfoCard
-							className={activeRewards <= 0 ? 'selected' : ''}
-							padding={'0'}
-							height={'80px'}
-							width={'100%'}
-							icon={'icon-map'}
-							title={'Travel'}
-							body={'Room bookings, upgrades, and perfect getaways.'}
-						/>
-						<InfoCard
-							className={activeRewards === 1 ? 'selected' : ''}
-							padding={'0'}
-							height={'80px'}
-							width={'100%'}
-							icon={'icon-hand-shake'}
-							title={'Real Estate'}
-							body={'Future home purchases, vacation properties'}
-						/>
-						<InfoCard
-							className={activeRewards === 2 ? 'selected' : ''}
-							padding={'0'}
-							height={'80px'}
-							width={'100%'}
-							icon={'icon-wine'}
-							title={'Hospitality'}
-							body={'Free meals and beverages, and exciting excursions'}
-						/>
+							<Paper
+								className={'mobileImageStepper'}
+								width={'313px'}
+								height={'129px'}
+								padding={'10px 20px'}
+								boxShadow
+								backgroundColor={'#FCFBF8'}
+								position={'absolute'}
+							>
+								<InfoCard
+									className={activeRewards <= 0 ? 'selected' : ''}
+									padding={'0'}
+									height={'80px'}
+									width={'273px'}
+									icon={'icon-map'}
+									title={'Travel'}
+									body={'Room bookings, upgrades, and perfect getaways.'}
+								/>
+								<InfoCard
+									className={activeRewards === 1 ? 'selected' : ''}
+									padding={'0'}
+									height={'80px'}
+									width={'273px'}
+									icon={'icon-hand-shake'}
+									title={'Real Estate'}
+									body={'Future home purchases, vacation properties'}
+								/>
+								<InfoCard
+									className={activeRewards === 2 ? 'selected' : ''}
+									padding={'0'}
+									height={'80px'}
+									width={'273px'}
+									icon={'icon-wine'}
+									title={'Hospitality'}
+									body={'Free meals and beverages, and exciting excursions'}
+								/>
+								<CarouselButtons
+									position={'absolute'}
+									bottom={'-20px'}
+									left={'50px'}
+									onClickRight={() => setActiveRewards((activeRewards + 1) % 3)}
+									onClickLeft={() => setActiveRewards(!activeRewards ? 2 : activeRewards - 1)}
+								/>
+							</Paper>
+						</Box>
+					) : (
+						<>
+							<Box
+								display={'flex'}
+								justifyContent={'flex-start'}
+								alignItems={'flex-end'}
+								className={`imageContainer ${getActiveRewardsStage()}`}
+							>
+								<img
+									src={require(`../../images/landingPage/${
+										activeRewards === 0 ? 'travel2x' : 'travel'
+									}.png`)}
+									className={`${activeRewards === 0 ? 'selected' : ''}`}
+									alt={''}
+								/>
+								<img
+									src={require(`../../images/landingPage/${
+										activeRewards === 1 ? 'real-estate2x' : 'real-estate'
+									}.png`)}
+									className={`${activeRewards === 1 ? 'selected' : ''}`}
+									alt={''}
+								/>
+								<img
+									src={require(`../../images/landingPage/${
+										activeRewards === 2 ? 'hospitality2x' : 'hospitality'
+									}.png`)}
+									className={`${activeRewards === 2 ? 'selected' : ''}`}
+									alt={''}
+								/>
+							</Box>
+							<Paper
+								className={'imageStepper'}
+								width={'444px'}
+								height={'320px'}
+								padding={'10px 50px'}
+								boxShadow
+								backgroundColor={'#FCFBF8'}
+								position={'absolute'}
+							>
+								<InfoCard
+									className={activeRewards <= 0 ? 'selected' : ''}
+									padding={'0'}
+									height={'80px'}
+									width={'100%'}
+									icon={'icon-map'}
+									title={'Travel'}
+									body={'Room bookings, upgrades, and perfect getaways.'}
+								/>
+								<InfoCard
+									className={activeRewards === 1 ? 'selected' : ''}
+									padding={'0'}
+									height={'80px'}
+									width={'100%'}
+									icon={'icon-hand-shake'}
+									title={'Real Estate'}
+									body={'Future home purchases, vacation properties'}
+								/>
+								<InfoCard
+									className={activeRewards === 2 ? 'selected' : ''}
+									padding={'0'}
+									height={'80px'}
+									width={'100%'}
+									icon={'icon-wine'}
+									title={'Hospitality'}
+									body={'Free meals and beverages, and exciting excursions'}
+								/>
 
-						<CarouselButtons
-							position={'absolute'}
-							bottom={'-20px'}
-							left={'50px'}
-							onClickRight={() => setActiveRewards((activeRewards + 1) % 3)}
-							onClickLeft={() => setActiveRewards(!activeRewards ? 2 : activeRewards - 1)}
-						/>
-					</Paper>
+								<CarouselButtons
+									position={'absolute'}
+									bottom={'-20px'}
+									left={'50px'}
+									onClickRight={() => setActiveRewards((activeRewards + 1) % 3)}
+									onClickLeft={() => setActiveRewards(!activeRewards ? 2 : activeRewards - 1)}
+								/>
+							</Paper>{' '}
+						</>
+					)}
 
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'How spire loyalty benefits you'}
-					/>
+					{size !== 'small' && (
+						<LabelButton
+							look={'containedPrimary'}
+							variant={'button'}
+							label={'How spire loyalty benefits you'}
+						/>
+					)}
 				</Box>
 
 				<Box className={'sectionFour'} margin={'0 78px 170px'} width={'100%'} display={'flex'}>
 					<img src={require('../../images/landingPage/coffee.png')} alt={'coffee guy'} />
 					<Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
-						<Label variant={'h1'}>
+						<Label variant={size === 'small' ? 'h2' : 'h1'}>
 							Earning points <span>every day</span>
 						</Label>
 						<Box display={'flex'} flexWrap={'wrap'}>
@@ -245,23 +351,52 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 								boxShadow
 							/>
 						</Box>
+						{size === 'small' && (
+							<LabelButton
+								look={'containedPrimary'}
+								variant={'button'}
+								label={'How spire loyalty benefits you'}
+							/>
+						)}
 					</Box>
 				</Box>
 				<Box className={'sectionFive'}>
-					<Label variant={'h1'}>
+					<Label variant={size === 'small' ? 'h2' : 'h1'}>
 						Create an <span>unforgettable experience</span>
 					</Label>
-					<Box bgcolor={'#f7f1db'} height={'440px'} display={'flex'} justifyContent={'center'}>
-						<FeaturedResortCard
-							image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-							name={'Orlando Disney Experience'}
-							resortId={1}
-						/>
-						<FeaturedResortCard
-							image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-							name={'Island H20 Live! Water Park'}
-							resortId={2}
-						/>
+					<Box
+						bgcolor={'#f7f1db'}
+						height={size === 'small' ? '347px' : '440px'}
+						display={'flex'}
+						justifyContent={'center'}
+					>
+						{size === 'small' ? (
+							<Carousel>
+								<FeaturedDestinationCard
+									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+									name={'Orlando Disney Experience'}
+									resortId={1}
+								/>
+								<FeaturedDestinationCard
+									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+									name={'Island H20 Live! Water Park'}
+									resortId={2}
+								/>
+							</Carousel>
+						) : (
+							<>
+								<FeaturedDestinationCard
+									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+									name={'Orlando Disney Experience'}
+									resortId={1}
+								/>
+								<FeaturedDestinationCard
+									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+									name={'Island H20 Live! Water Park'}
+									resortId={2}
+								/>{' '}
+							</>
+						)}
 					</Box>
 				</Box>
 			</div>

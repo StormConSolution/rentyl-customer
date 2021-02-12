@@ -44,7 +44,9 @@ export interface BoxProps {
 	visibility?: 'visible' | 'hidden' | 'collapse' | 'initial' | 'inherit';
 	whiteSpace?: string;
 	width?: string;
+	maxWidth?: string;
 	height?: string;
+	maxHeight?: string;
 	textAlign?: string;
 
 	// Border properties
