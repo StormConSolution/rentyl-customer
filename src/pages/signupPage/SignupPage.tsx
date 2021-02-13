@@ -20,6 +20,7 @@ const SignupPage: React.FC = () => {
 					<Box className={'signupTitleBox'} marginTop={119} marginLeft={140}>
 						<Label className={'signupTitleLabel'}>Sign up for Spire Loyalty</Label>
 					</Box>
+					<Box className={'formWrapperBox'} />
 				</Box>
 			</div>
 		</Page>
