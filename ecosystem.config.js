@@ -56,7 +56,7 @@ module.exports = {
 			ref: 'origin/dev',
 			repo: 'git@gitlab.com:plvr/ndm/spire-customer.git',
 			path: '/home/dev/sand/customer',
-			'post-deploy': 'yarn && yarn build && sudo pm2 startOrReload ecosystem.config.js --only sand-customer'
+			'post-deploy': 'yarn && yarn build:debug && sudo pm2 startOrReload ecosystem.config.js --only sand-customer'
 		}
 	}
 };
