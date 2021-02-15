@@ -10,11 +10,6 @@ const SignupOptions: Array<SignupOption> = [
 		value: 'notifications',
 		text: 'Allow Spire to send email notifications',
 		defaultToChecked: false
-	},
-	{
-		value: 'test',
-		text: 'Test item',
-		defaultToChecked: false
 	}
 ];
 
