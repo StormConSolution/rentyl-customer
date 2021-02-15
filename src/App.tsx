@@ -27,7 +27,6 @@ function App() {
 	useEffect(() => {
 		router.tryToLoadInitialPath();
 		rsToasts.setRenderDelegate(CustomToast);
-		router.tryToLoadInitialPath();
 		AOS.init({
 			duration: 1000
 		});
@@ -43,7 +42,7 @@ function App() {
 				return (
 					<>
 						<AppBar />
-						<View key="signin" id="signin" default initialPath="/" />
+						<View key="signIn" id="signIn" default initialPath="/" />
 					</>
 				);
 			case LoginStatus.LOGGED_IN:
@@ -62,10 +61,9 @@ function App() {
 		<div className={`App ${size}`}>
 			<AppBar />
 			<View key="landingPage" id="landingPage" default initialPath="/" />
-			{renderViewsBasedOnLoginStatus()}
+			{/*{renderViewsBasedOnLoginStatus()}*/}
 			{popupController.instance}
 			{rsToasts.instance}
-			<Footer links={FooterLinkTestData} />
 		</div>
 	);
 }

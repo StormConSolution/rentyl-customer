@@ -1,0 +1,74 @@
+@import '../../themes/themes';
+.rsSignUpPage {
+	.rs-page-content-wrapper {
+		background-image: url('../../images/signUpPage/signUpPage-heroImg.png');
+		background-repeat: no-repeat;
+		background-size: 100% 752px;
+		animation: fadeIn 1s;
+	}
+
+	.rsBox {
+		.rsLabelInput {
+			margin: 10px 0;
+			input {
+				max-width: 100%;
+				width: 100%;
+			}
+		}
+	}
+	.rsButton {
+		margin: 20px auto;
+	}
+
+	.checkboxContainer {
+		display: flex;
+		align-items: center;
+		position: relative;
+		input {
+			width: 18px;
+			height: 18px;
+			padding: 2px;
+			box-sizing: border-box;
+			opacity: 0;
+			cursor: pointer;
+			&:checked ~ .checkbox .rsBox {
+				height: 100%;
+				width: 100%;
+				background-color: theme-var($buttonLinkColor) !important;
+			}
+			&:hover {
+			}
+		}
+
+		.checkbox {
+			position: absolute;
+			top: 4px;
+			left: 0;
+			width: 18px;
+			height: 18px;
+			cursor: pointer;
+			border: 1px solid theme-var($greyLineColor);
+			padding: 2px;
+			box-sizing: border-box;
+			.rsBox {
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	.signInBottomBox {
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+	}
+	.termsAndPrivacy {
+		text-align: center;
+		font-size: 10px;
+		line-height: 18px;
+		font-weight: $regular;
+		a {
+			color: theme-var($buttonLinkColor);
+		}
+	}
+}

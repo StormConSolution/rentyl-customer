@@ -3,6 +3,7 @@ import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
+import SignUpPage from './pages/signUpPage/SignUpPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -23,7 +24,14 @@ const routes: RouteDetails[] = [
 		path: '/signin',
 		page: SignInPage,
 		options: {
-			view: 'signin'
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/signup',
+		page: SignUpPage,
+		options: {
+			view: 'landingPage'
 		}
 	},
 	{
