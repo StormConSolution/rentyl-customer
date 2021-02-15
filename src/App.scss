@@ -77,46 +77,18 @@ body {
 }
 
 .rsInput {
-	&.uiStyled {
-		&.outlined {
-			height: 40px;
-			padding: 0 10px;
-			border-radius: 0;
-			border: 1px solid theme-var($greyLineColor);
-
-			.label {
-				font-size: 18px;
-				//color: var(--primaryTextColor);
-				font-weight: 300;
-				left: 8px;
-				transform: translateY(0);
-			}
-
-			&:focus-within {
-				border-color: theme-var($buttonLinkColor) !important;
-				color: theme-var($buttonLinkColor) !important;
-			}
-
-			&.textarea {
-				height: fit-content;
-			}
-		}
-
-		.input {
-			color: theme-var($primaryTextColor) !important;
-			padding: 0;
-			height: 100%;
-
-			&:not(:placeholder-shown) + .label {
-				transform: scale(0.7) translateY(-29px) !important;
-			}
-		}
-	}
-
-	&:focus-within {
-		.label {
-			transform: scale(0.7) translateY(-29px) !important;
-		}
+	font-family: 'MrsEavesXL', sans-serif;
+	font-size: 16px;
+	height: 40px;
+	padding: 0 10px;
+	border-radius: 0;
+	border: 1px solid theme-var($greyLineColor);
+	color: theme-var($primaryTextColor) !important;
+	outline: none !important;
+	transition: border-color 300ms;
+	&:focus-within,
+	&:hover {
+		border-color: theme-var($buttonLinkColor) !important;
 	}
 }
 

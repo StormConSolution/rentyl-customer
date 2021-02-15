@@ -1,0 +1,19 @@
+@import '../../themes/themes';
+.rsLabelInput {
+	background-color: inherit;
+	.rsLabel {
+		&.caption {
+			margin-bottom: 10px;
+		}
+	}
+	.rsInput {
+		max-width: 200px;
+		margin: 0;
+		&.invalid {
+			border-color: theme-var($errorColor) !important;
+		}
+		&.textarea {
+			max-width: fit-content;
+		}
+	}
+}

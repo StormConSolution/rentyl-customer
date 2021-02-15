@@ -18,7 +18,7 @@
 		"@bit/redsky.framework.rs.form": "^0.0.5",
 		"@bit/redsky.framework.rs.http": "^0.0.27",
 		"@bit/redsky.framework.rs.icon": "^0.0.34",
-		"@bit/redsky.framework.rs.input": "^0.0.28",
+		"@bit/redsky.framework.rs.input": "^0.0.32",
 		"@bit/redsky.framework.rs.label": "^0.0.6",
 		"@bit/redsky.framework.rs.progressbar": "^0.0.4",
 		"@bit/redsky.framework.rs.select": "^0.0.6",
