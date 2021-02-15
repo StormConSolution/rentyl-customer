@@ -16,7 +16,7 @@ const AppBar: React.FC = () => {
 
 	return (
 		<Box className="rsAppBar">
-			<Link path={'/dashboard'}>
+			<Link path={'/'}>
 				<img src={require('../../images/FullLogo-StandardBlack.png')} alt={'company logo'} width={'111px'} />
 			</Link>
 

@@ -28,11 +28,12 @@ interface LabelLinkProps {
 	iconRight?: string;
 	iconSize?: number;
 	iconColor?: string;
+	className?: string;
 }
 
 const LabelLink: React.FC<LabelLinkProps> = (props) => {
 	return (
-		<Link path={props.path} className={'rsLabelLink'} external={props.externalLink}>
+		<Link path={props.path} className={`rsLabelLink ${props.className || ''}`} external={props.externalLink}>
 			{!!props.iconLeft && (
 				<Icon
 					className={'iconLeft'}
