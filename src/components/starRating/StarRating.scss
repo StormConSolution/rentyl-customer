@@ -1,0 +1,57 @@
+@import 'src/themes/themes';
+@import '../../variables.scss';
+
+.rsStarRating {
+	display: flex;
+
+	.starRating {
+		display: flex;
+	}
+	.starRatingBorder {
+		background-color: #cc9e0d;
+		clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+	}
+	.starRatingBackground {
+		background-color: #fff;
+		margin-left: 5px;
+		margin-top: 5px;
+		position: absolute;
+		clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+	}
+
+	.halfStar {
+		background-color: #cc9e0d;
+		position: absolute;
+		clip-path: polygon(50% 0%, 51% 36%, 50% 0, 50% 0, 51% 70%, 51% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+	}
+
+	.smallStarBorder {
+		height: 16px;
+		width: 16px;
+	}
+	.smallStarBackground {
+		height: 12px;
+		width: 12px;
+		margin: 2px 0 0 2px;
+	}
+
+	.medStarBorder {
+		height: 24px;
+		width: 24px;
+	}
+	.medStarBackground {
+		height: 16px;
+		width: 16px;
+		margin: 4px 0 0 4px;
+	}
+
+	.largeStarBorder {
+		height: 32px;
+		width: 32px;
+	}
+	.largeStarBackground {
+		height: 24px;
+		width: 24px;
+		margin: 4px 0 0 4px;
+	}
+}
