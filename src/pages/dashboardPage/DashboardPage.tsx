@@ -9,7 +9,7 @@ import Button from '@bit/redsky.framework.rs.button';
 import rsToasts from '@bit/redsky.framework.toast';
 import TestPopup from '../../popups/testPopup/TestPopup';
 import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
-import DestinationLandingPageAmenitiesGalleryTabs from '../../components/tabbedImageGallery/destinationLandingPageAmenitiesGalleryTabs';
+import DestinationLandingPageAmenitiesGalleryTabs from '../../components/tabbedImageGallery/DestinationLandingPageAmenitiesGalleryTabs';
 
 const DashboardPage: React.FC = () => {
 	const setTheme = useSetRecoilState<AvailableThemes>(globalState.theme);
