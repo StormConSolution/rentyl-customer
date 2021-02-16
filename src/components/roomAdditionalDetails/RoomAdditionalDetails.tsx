@@ -14,18 +14,16 @@ interface roomAdditionalDetailsProps {
 const RoomAdditionalDetails: React.FC<roomAdditionalDetailsProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	function displayListItems() {
-		const listElements: JSX.Element[] = [];
-		for (let i in props.detailList) {
-			listElements.push(
+	function renderListItems() {
+		return props.detailList.map((item, index) => {
+			return (
 				<li>
-					<Label className={'additionalDetailsListItems'} variant={'body2'}>
-						{props.detailList[i]}
+					<Label key={index} className={'additionalDetailsListItems'} variant={'body2'}>
+						{item}
 					</Label>
 				</li>
 			);
-		}
-		return listElements;
+		});
 	}
 	return (
 		<Box className={'rsRoomAdditionalDetails'}>
@@ -38,7 +36,7 @@ const RoomAdditionalDetails: React.FC<roomAdditionalDetailsProps> = (props) => {
 			>
 				{props.description}
 			</Label>
-			<ul className={'additionalDetailsList'}>{displayListItems()}</ul>
+			<ul className={'additionalDetailsList'}>{renderListItems()}</ul>
 		</Box>
 	);
 };
