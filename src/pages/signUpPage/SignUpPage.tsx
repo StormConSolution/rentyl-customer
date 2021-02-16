@@ -7,13 +7,14 @@ import Box from '../../components/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
-import Button from '@bit/redsky.framework.rs.button';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
 
 interface SignUpPageProps {}
 
 const SignUpPage: React.FC<SignUpPageProps> = (props) => {
+	const iconSize: number = 18;
+
 	return (
 		<Page className={'rsSignUpPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -75,6 +76,8 @@ const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 										placeholder={'(  )  - '}
 										onChange={(value) => console.log(value)}
 										inputType={'tel'}
+										iconImage="icon-phone"
+										iconSize={iconSize}
 										isPhoneInput
 									/>
 									<LabelInput
@@ -82,6 +85,8 @@ const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 										placeholder={'email@address.com'}
 										onChange={(value) => console.log(value)}
 										inputType={'text'}
+										iconImage="icon-mail"
+										iconSize={iconSize}
 										isEmailInput
 									/>
 								</Box>
