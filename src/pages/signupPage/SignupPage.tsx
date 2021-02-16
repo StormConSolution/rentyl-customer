@@ -10,9 +10,7 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
 
-interface SignUpPageProps {}
-
-const SignUpPage: React.FC<SignUpPageProps> = (props) => {
+const SignUpPage: React.FC = () => {
 	return (
 		<Page className={'rsSignUpPage'}>
 			<div className={'rs-page-content-wrapper'}>

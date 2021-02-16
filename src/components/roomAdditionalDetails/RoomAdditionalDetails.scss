@@ -1,0 +1,20 @@
+@import 'src/themes/themes';
+@import '../../variables.scss';
+
+.rsRoomAdditionalDetails {
+	.additionalDetailsMobileDescription {
+		margin: 15px 0 10px 0;
+	}
+	.additionalDetailsDescription {
+		margin: 22px 0 15px 0;
+	}
+	.additionalDetailsList {
+		margin: 15px 0 0 0;
+		padding-left: 15px;
+		font-size: 11px;
+	}
+	.additionalDetailsListItems {
+		font-size: 14px;
+		margin-left: -7px;
+	}
+}
