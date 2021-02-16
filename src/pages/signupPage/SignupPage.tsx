@@ -9,8 +9,21 @@ import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
+import SignupOptionCheckboxes, { SignupOption } from '../../components/signupOptionCheckboxes/SignupOptionCheckboxes';
+import SignupOptions from '../../components/signupOptionCheckboxes/SignupOptions';
 
-const SignUpPage: React.FC = () => {
+interface SignUpPageProps {}
+
+const SignUpPage: React.FC<SignUpPageProps> = (props) => {
+	function getSignupOptions(): Array<SignupOption> {
+		return SignupOptions;
+	}
+
+	function signupOptionClickPlaceholder(e: React.MouseEvent) {
+		let inputValue = e.target as HTMLInputElement;
+		if (inputValue.checked) console.log(inputValue.value);
+	}
+
 	return (
 		<Page className={'rsSignUpPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -95,38 +108,10 @@ const SignUpPage: React.FC = () => {
 									inputType={'text'}
 								/>
 
-								<Box display={'flex'} flexDirection={'column'}>
-									<label className={'checkboxContainer'}>
-										<input
-											value={'Sign Up for newsletter'}
-											type={'checkbox'}
-											className={'checkboxInput'}
-											onClick={(e) => {
-												let inputValue = e.target as HTMLInputElement;
-												if (inputValue.checked) console.log(inputValue.value);
-											}}
-										/>
-										<span className={'checkbox'}>
-											<Box />
-										</span>
-										Sign up for newsletter
-									</label>
-									<label className={'checkboxContainer'}>
-										<input
-											value={'Sign Up for email notifications'}
-											type={'checkbox'}
-											className={'checkboxInput'}
-											onClick={(e) => {
-												let inputValue = e.target as HTMLInputElement;
-												if (inputValue.checked) console.log(inputValue.value);
-											}}
-										/>
-										<span className={'checkbox'}>
-											<Box />
-										</span>
-										Allow Spire to send email notifications
-									</label>
-								</Box>
+								<SignupOptionCheckboxes
+									options={getSignupOptions()}
+									onClick={signupOptionClickPlaceholder}
+								/>
 
 								<LabelButton
 									look={'containedPrimary'}
