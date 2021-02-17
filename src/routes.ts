@@ -29,10 +29,7 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/signup',
-		page: SignUpPage,
-		options: {
-			view: 'landingPage'
-		}
+		page: SignUpPage
 	},
 	{
 		path: '*',
