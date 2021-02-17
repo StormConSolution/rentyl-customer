@@ -1,0 +1,18 @@
+@import 'src/themes/themes';
+@import '../../variables.scss';
+
+.rsLabelImage {
+	display: flex;
+
+	.mainImg {
+		position: absolute;
+	}
+	.labelImageText {
+		position: relative;
+		color: #ffffff;
+		align-self: flex-end;
+		line-height: 16px;
+		font-weight: 900;
+		margin: 0 0 10px 10px;
+	}
+}
