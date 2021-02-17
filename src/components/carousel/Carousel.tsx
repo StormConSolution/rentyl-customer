@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './Carousel.scss';
-import { useEffect, useRef, useState } from 'react';
-import CarouselButtons from '../carouselButtons/CarouselButtons';
+import { useEffect, useRef } from 'react';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 
