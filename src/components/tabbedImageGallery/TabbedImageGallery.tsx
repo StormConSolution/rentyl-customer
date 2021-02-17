@@ -18,8 +18,8 @@ export interface TabbedImageGalleryProps {
 	tabs: Array<ImageTabProp>;
 }
 
-const TabbedImageGallery: React.FC<any> = function (props: TabbedImageGalleryProps) {
-	const [activeTabName, setActiveTabName] = useState<string>('waterpark'); //(props.tabs[0].name);
+const TabbedImageGallery: React.FC<TabbedImageGalleryProps> = function (props: TabbedImageGalleryProps) {
+	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0].name);
 
 	function renderTab(tab: ImageTabProp): JSX.Element {
 		return (
