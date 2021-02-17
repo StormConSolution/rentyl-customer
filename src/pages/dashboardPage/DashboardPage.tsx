@@ -8,6 +8,8 @@ import globalState, { AvailableThemes } from '../../models/globalState';
 import Button from '@bit/redsky.framework.rs.button';
 import rsToasts from '@bit/redsky.framework.toast';
 import TestPopup from '../../popups/testPopup/TestPopup';
+import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
+import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
 import LightboxPopupItems from './LightboxPopupItems';
@@ -71,6 +73,9 @@ const DashboardPage: React.FC = () => {
 				>
 					Popup
 				</Button>
+			</Box>
+			<Box width="1440px" height="640px">
+				<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
 			</Box>
 			<Box>
 				<LabelButton
