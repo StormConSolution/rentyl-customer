@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import './DashboardPage.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -8,6 +8,9 @@ import globalState, { AvailableThemes } from '../../models/globalState';
 import Button from '@bit/redsky.framework.rs.button';
 import rsToasts from '@bit/redsky.framework.toast';
 import TestPopup from '../../popups/testPopup/TestPopup';
+import LabelButton from '../../components/labelButton/LabelButton';
+import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
+import LightboxPopupItems from './LightboxPopupItems';
 
 const DashboardPage: React.FC = () => {
 	const setTheme = useSetRecoilState<AvailableThemes>(globalState.theme);
@@ -68,6 +71,16 @@ const DashboardPage: React.FC = () => {
 				>
 					Popup
 				</Button>
+			</Box>
+			<Box>
+				<LabelButton
+					label="Lightbox"
+					look="containedSecondary"
+					variant="sectionHeader"
+					onClick={() =>
+						popupController.open<LightboxPopupProps>(LightboxPopup, { items: LightboxPopupItems })
+					}
+				/>
 			</Box>
 			<div>
 				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias autem commodi consequatur delectus,
