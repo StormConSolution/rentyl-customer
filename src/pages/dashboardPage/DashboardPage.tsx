@@ -9,7 +9,10 @@ import Button from '@bit/redsky.framework.rs.button';
 import rsToasts from '@bit/redsky.framework.toast';
 import TestPopup from '../../popups/testPopup/TestPopup';
 import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
-import DestinationLandingPageAmenitiesGalleryTabs from './AmenitiesGalleryTabs';
+import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
+import LabelButton from '../../components/labelButton/LabelButton';
+import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
+import LightboxPopupItems from './LightboxPopupItems';
 
 const DashboardPage: React.FC = () => {
 	const setTheme = useSetRecoilState<AvailableThemes>(globalState.theme);
@@ -72,7 +75,17 @@ const DashboardPage: React.FC = () => {
 				</Button>
 			</Box>
 			<Box width="1440px" height="640px">
-				<TabbedImageGallery tabs={DestinationLandingPageAmenitiesGalleryTabs} />
+				<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
+			</Box>
+			<Box>
+				<LabelButton
+					label="Lightbox"
+					look="containedSecondary"
+					variant="sectionHeader"
+					onClick={() =>
+						popupController.open<LightboxPopupProps>(LightboxPopup, { items: LightboxPopupItems })
+					}
+				/>
 			</Box>
 			<div>
 				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias autem commodi consequatur delectus,

@@ -4,6 +4,7 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
+	overflow-y: hidden;
 
 	.tabList {
 		position: absolute;
@@ -47,6 +48,7 @@
 		&:not(.shown) {
 			display: none;
 		}
+
 		img {
 			position: absolute;
 			left: 0;

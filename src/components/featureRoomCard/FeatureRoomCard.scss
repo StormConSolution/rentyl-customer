@@ -1,0 +1,52 @@
+@import 'src/themes/themes';
+@import '../../variables.scss';
+
+.rsFeatureRoomCard {
+	height: 247px;
+	width: 278px;
+
+	.limitOfferWhiteBox {
+		height: 25px;
+		width: 114px;
+		background-color: #ffffff;
+		position: absolute;
+
+		.limitOfferLabel {
+			height: 21px;
+			font-size: 13px;
+			color: #001933;
+			font-weight: 600;
+			margin: 1px 8px 3px 8px;
+			display: flex;
+			align-items: flex-end;
+		}
+	}
+	.mainImg {
+		height: 160px;
+		width: 270px;
+	}
+	.titleLabel {
+		height: 22px;
+		font-size: 13px;
+		margin-top: 5px;
+		color: #001933;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+	.discountLabel {
+		margin-top: 9px;
+		line-height: 22px;
+		color: #001933;
+	}
+	.bookNowPathLink {
+		text-transform: uppercase;
+		margin-top: 3px;
+		font-size: 12px;
+		line-height: 31px;
+		color: #004b98 !important;
+		font-weight: 600;
+	}
+	.bookNowIcon {
+		margin-left: 5px;
+	}
+}
