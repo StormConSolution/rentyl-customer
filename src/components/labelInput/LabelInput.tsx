@@ -6,7 +6,7 @@ import Input from '@bit/redsky.framework.rs.input';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useState } from 'react';
 import rsToasts from '@bit/redsky.framework.toast';
-import validate = WebAssembly.validate;
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface LabelInputProps {
 	title: string;
@@ -21,6 +21,8 @@ interface LabelInputProps {
 	maxLength?: number;
 	textareaCols?: number;
 	textareaRows?: number;
+	iconImage?: string;
+	iconSize?: number;
 }
 
 const LabelInput: React.FC<LabelInputProps> = (props) => {
@@ -62,8 +64,13 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 	return (
 		<div className={'rsLabelInput'}>
 			<Label variant={'caption'}>{props.title}</Label>
+			{!!props.iconImage && (
+				<div className="iconHolder">
+					<Icon iconImg={props.iconImage} size={props.iconSize} />
+				</div>
+			)}
 			<Input
-				className={!isValid ? 'invalid' : ''}
+				className={`${!isValid ? 'invalid' : ''} ${!!props.iconImage ? 'hasIcon' : ''}`}
 				placeholder={props.placeholder}
 				type={props.inputType}
 				look={'none'}

@@ -1,0 +1,76 @@
+@import '../../themes/themes';
+.rsLightboxPopup {
+	position: fixed;
+	background-color: #9b9b9b;
+	.lightboxPopupContent {
+		width: 1047px;
+		position: fixed;
+		background: #fff;
+		border-radius: 6px;
+		box-shadow: 1px 3px 8px -4px rgba(0, 0, 0, 0.3);
+		z-index: 10;
+
+		.closeBtn {
+			position: absolute;
+			top: -15px;
+			right: -15px;
+		}
+
+		.rsBox.activeImage {
+			width: 1047px;
+			height: 698px;
+			position: relative;
+			img {
+				width: 100%;
+				max-width: 100%;
+				max-height: 100%;
+				margin: 0 auto;
+
+				&.hidden {
+					display: none;
+				}
+			}
+			.infoBox {
+				width: 500px;
+				background-color: rgba(#1e180b, 0.4);
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				max-height: 100%;
+				overflow-y: hidden;
+
+				&.hidden {
+					display: none;
+				}
+
+				.rsLabel {
+					color: white;
+					&.h2 {
+						margin: 30px 30px 10px 30px;
+					}
+					&.body2 {
+						margin: 0 30px 30px 30px;
+					}
+				}
+			}
+			.rsCarouselButtons {
+				position: absolute;
+				bottom: 0;
+				left: 500px;
+			}
+		}
+
+		.rsCarousel {
+			max-height: 110px;
+			margin: 0 auto;
+			.carouselParent {
+				justify-content: center;
+			}
+			img {
+				margin: 2px;
+				width: 124px;
+				height: 102px;
+			}
+		}
+	}
+}

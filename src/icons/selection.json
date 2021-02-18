@@ -32,7 +32,7 @@
 				"colorPermutations": { "2002002001204158131": [{}] }
 			},
 			"attrs": [{}],
-			"properties": { "order": 48, "id": 29, "name": "phone", "prevSize": 32, "code": 59676 },
+			"properties": { "order": 50, "id": 29, "name": "phone", "prevSize": 32, "code": 59676 },
 			"setIdx": 0,
 			"setId": 0,
 			"iconIdx": 1
