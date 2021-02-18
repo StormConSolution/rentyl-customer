@@ -1,7 +1,8 @@
 import { Box } from '@bit/redsky.framework.rs.996';
 import React, { useState } from 'react';
-import 'FloorPlanDetailCard.scss';
+import './FloorPlanDetailCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface FloorPlanDetailCardProps {
 	accomodationName: string;
@@ -15,18 +16,21 @@ export interface FloorPlanRoomDescriptionProp {
 
 const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 	const [activeRoomIndex, setActiveRoomIndex] = useState<number>(0);
+	const size = useWindowResizeChange();
 
 	function renderRoomRadioButtons(): JSX.Element[] {
 		return props.rooms.map((room, index) => {
 			return (
-				<div className="floorPlanRoomDescriptionRadio">
+				<div className="floorPlanRoomDescriptionRadio" key={index}>
 					<input
 						type="radio"
-						id={'floorplanroom' + index}
+						id={'floorPlanRoom' + index}
+						name="floorPlanRoom"
 						value={index}
 						onClick={() => setActiveRoomIndex(index)}
+						checked={activeRoomIndex === index}
 					/>
-					<label for={'floorplanroom' + index}>{room.name}</label>
+					<label htmlFor={'floorplanroom' + index}>{room.name}</label>
 				</div>
 			);
 		});
@@ -44,9 +48,9 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 	}
 
 	return (
-		<Box className="rsFloorPlanDetailCard">
+		<Box className={'rsFloorPlanDetailCard ' + (size === 'small' ? 'small' : '')}>
 			<Label variant="h1">{props.accomodationName} Layout</Label>
-			<Box>{renderRoomRadioButtons()}</Box>
+			<Box className="radioHolder">{renderRoomRadioButtons()}</Box>
 			<Box>{renderRoomDescriptions()}</Box>
 		</Box>
 	);
