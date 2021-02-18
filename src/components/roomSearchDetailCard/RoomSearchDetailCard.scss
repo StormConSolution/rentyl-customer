@@ -1,0 +1,32 @@
+@import '../../themes/themes.scss';
+
+.rsRoomSearchDetailCard {
+	position: relative;
+	div {
+		margin: 0;
+	}
+	> div {
+		position: relative;
+		margin: 20px 0 0 20px;
+	}
+	background-color: theme-var($iconAndHighlightTextColor);
+	.amenityIcons {
+		display: inline-block;
+		.rsIcon {
+			margin-left: 20px;
+			&:first-of-type {
+				margin-left: 0;
+			}
+		}
+	}
+	.stats {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		row-gap: 6px;
+		.roomStat {
+			.body2 {
+				margin-top: 2px;
+			}
+		}
+	}
+}
