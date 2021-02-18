@@ -1,0 +1,128 @@
+@import 'src/themes/themes';
+
+.rsRoomSearchCallToActionCard {
+	width: 180px;
+	height: 280px;
+	background: #fcfbf8 0 0 no-repeat padding-box;
+	box-shadow: 0 5px 15px #1e180b33;
+
+	.earnLabel {
+		text-transform: uppercase;
+		line-height: 21px;
+		font-size: 13px;
+		font-weight: 600;
+		padding-top: 13px;
+		padding-left: 56px;
+	}
+
+	.pointsLabel {
+		line-height: 24px;
+		font-weight: 900;
+		font-size: 24px;
+		padding-top: 5px;
+		padding-left: 22px;
+	}
+
+	.bookNowBtn {
+		margin-top: 53px;
+		margin-left: 25px;
+		width: 131px;
+	}
+
+	.viewDetailsBtn {
+		margin-top: 9px;
+		margin-left: 25px;
+		width: 131px;
+		height: 40px;
+		padding: 0 19px !important;
+		color: #004b98 !important;
+	}
+
+	.compareLinkDiv {
+		padding-top: 37px;
+		padding-left: 28px;
+		font-size: 13px;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	.addCompareIcon {
+		padding-left: 5px;
+	}
+}
+
+.rsRoomSearchCallToActionCardMobile {
+	width: 335px;
+	height: 117px;
+	background: #fcfbf8 0 0 no-repeat padding-box;
+	box-shadow: 0 5px 15px #1e180b33;
+
+	.roomSearchCallToActionMobileTopContents {
+		display: flex;
+		padding-top: 8px;
+		height: 36px;
+
+		.sizeBoxMobile {
+			width: 95px;
+			margin-left: 10px;
+
+			.sizeTitleLabel {
+				font-size: 13px;
+				font-weight: 600;
+			}
+			.sizeContentLabel {
+				font-size: 12px;
+			}
+		}
+
+		.bedroomsBoxMobile {
+			width: 69px;
+			margin-left: 22px;
+
+			.bedroomsTitleLabel {
+				font-size: 13px;
+				font-weight: 600;
+			}
+			.bedroomsContentLabel {
+				font-size: 12px;
+			}
+		}
+
+		.earnBoxMobile {
+			width: 90px;
+			margin-left: 15px;
+
+			.earnTitleLabel {
+				font-size: 13px;
+				font-weight: 600;
+				text-transform: uppercase;
+			}
+			.earnContentLabel {
+				font-size: 14px;
+				line-height: 18px;
+			}
+		}
+	}
+
+	.roomSearchCallToActionMobileBottomContents {
+		padding-top: 16px;
+
+		.compareBtnMobile {
+			margin-left: 10px;
+			width: 148px;
+			padding: 0 10px;
+
+			.compareBtnTextMobile {
+				font-size: 17px;
+			}
+			.addCompareIconMobile {
+				margin-left: 5px;
+			}
+		}
+
+		.bookNowBtnMobile {
+			margin-left: 12px;
+			width: 148px;
+		}
+	}
+}

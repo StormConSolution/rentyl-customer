@@ -1,0 +1,181 @@
+@import 'src/themes/themes';
+
+.rsRoomBookNowCard {
+	background: #fcfbf8 0 0 no-repeat padding-box;
+	box-shadow: 0 5px 15px #1e180b33;
+
+	.dateLabels {
+		text-transform: uppercase;
+		font-size: 14px;
+		width: 93px;
+		font-weight: 600;
+	}
+	.earnLabel {
+		text-transform: uppercase;
+		line-height: 21px;
+		font-size: 14px;
+		font-weight: 600;
+	}
+	.pointsLabel {
+		font-weight: 900;
+	}
+	.bookNowBtn {
+		display: flex;
+		justify-content: center;
+	}
+	.compareLinkDiv {
+		font-size: 13px;
+		font-weight: 600;
+		text-transform: uppercase;
+		display: flex;
+		justify-content: center;
+	}
+	.compareLink {
+		color: theme-var($buttonLinkColor);
+	}
+	.addCompareIcon {
+		padding-left: 5px;
+	}
+
+	.DateInput {
+		width: 68px;
+		height: 40px;
+		padding-right: 25px;
+		border: 1px solid theme-var($primaryTextColor);
+		background-color: theme-var($primaryBackgroundColor);
+	}
+	.DateInput_input {
+		font-size: 15px;
+		font-weight: 200;
+		line-height: 17px;
+		color: #adadad;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	.DateRangePickerInput_arrow {
+		display: none;
+	}
+	.DateInput_input__focused {
+		color: #000000;
+	}
+	.CalendarDay__selected_span {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid #ffffff;
+	}
+	.CalendarDay__selected_span:hover {
+		background: theme-var($greyLineColor);
+		color: theme-var($primaryTextColor);
+		border: 1px solid #ffffff;
+	}
+	.CalendarDay__selected {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.CalendarDay__selected:hover {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.CalendarDay__hovered_span:hover,
+	.CalendarDay__hovered_span {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.DayPickerKeyboardShortcuts_buttonReset {
+		display: none;
+	}
+}
+
+.rsRoomBookNowCardNormal {
+	margin-top: 300px;
+	width: 263px;
+	height: 248.5px;
+
+	.dateLabels {
+		margin-top: 22.5px;
+	}
+	.checkInLabel {
+		margin-left: 31px;
+	}
+	.checkOutLabel {
+		margin-left: 18px;
+	}
+	.earnLabel {
+		justify-content: center;
+		display: flex;
+		margin-top: 11px;
+	}
+	.pointsLabel {
+		display: flex;
+		justify-content: center;
+		margin-top: 5px;
+		font-size: 24px;
+		line-height: 24px;
+	}
+	.DateRangePicker {
+		margin-left: 16px;
+	}
+	.DateInput {
+		margin-left: 15px;
+	}
+	.bookNowBtn {
+		margin-top: 17px;
+		width: 201px;
+	}
+}
+.rsRoomBookNowCardMobile {
+	margin-top: 300px;
+	width: 335px;
+	height: 150px;
+
+	.roomBookNowTopContent {
+		display: flex;
+	}
+	.DateRangePickerInput {
+		display: flex;
+	}
+	.dateLabels {
+		margin-top: 10.5px;
+	}
+	.checkInLabel {
+		margin-left: 13px;
+	}
+	.checkOutLabel {
+		margin-left: 15px;
+	}
+	.earnPointsBox {
+		width: 93px;
+		margin-top: 31px;
+		margin-left: 12px;
+	}
+	.pointsLabel {
+		font-size: 16px;
+		line-height: 18px;
+	}
+	.DateInput {
+		margin-left: 13px;
+	}
+	.roomBookNowBottomContent {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+	.bookNowBtn {
+		margin-top: 17px;
+		width: 155px;
+	}
+	.compareBtnMobile {
+		width: 155px;
+		padding: 0 15px;
+	}
+	.compareBtnTextMobile {
+		font-size: 18px;
+		font-weight: 600;
+	}
+	.addCompareIconMobile {
+		margin-left: 2px;
+	}
+}
