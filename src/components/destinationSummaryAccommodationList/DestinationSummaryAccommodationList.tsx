@@ -20,7 +20,7 @@ interface AccommodationListRowProp {
 	bedrooms: number;
 	beds: number;
 	ratePerNight: number;
-	pointsEarned: number;
+	pointsPerNight: number;
 }
 
 const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
@@ -36,7 +36,7 @@ const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodati
 						{formatMoney(accommodation.ratePerNight, true)}
 					</Label>
 					<Label variant="body2" className="points">
-						{addCommasToNumber(accommodation.pointsEarned)} pts.
+						{addCommasToNumber(accommodation.pointsPerNight)} pts.
 					</Label>
 				</div>
 				<div>
