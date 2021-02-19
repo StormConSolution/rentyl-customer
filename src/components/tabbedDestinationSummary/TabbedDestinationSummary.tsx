@@ -1,10 +1,13 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React, { useState } from 'react';
+import DestinationSummaryAccomodationList, {
+	DestinationSummaryAccommodationListProps
+} from '../destinationSummaryAccommodationList/DestinationSummaryAccommodationList';
 import './TabbedDestinationSummary.scss';
 
 interface DestinationSummaryTab {
 	label: string;
-	content: string;
+	content: string | DestinationSummaryAccommodationListProps;
 }
 
 export interface TabbedDestinationSummaryProps {
@@ -30,11 +33,23 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		});
 	}
 
+	function renderAccommodationList(listProps: DestinationSummaryAccommodationListProps): JSX.Element {
+		return (
+			<DestinationSummaryAccomodationList
+				accommodationType={listProps.accommodationType}
+				accommodations={listProps.accommodations}
+				onAddCompareClick={listProps.onAddCompareClick}
+				onBookNowClick={listProps.onBookNowClick}
+				onDetailsClick={listProps.onDetailsClick}
+			/>
+		);
+	}
+
 	function renderContents(tabs: Array<DestinationSummaryTab>): Array<JSX.Element> {
 		return tabs.map((tab, index) => {
 			return (
 				<div key={index} className={'summaryContent' + (activeTabIndex === index ? ' active' : '')}>
-					{tab.content}
+					{typeof tab.content === 'string' ? tab.content : renderAccommodationList(tab.content)}
 				</div>
 			);
 		});
