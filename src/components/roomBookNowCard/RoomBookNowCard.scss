@@ -3,25 +3,45 @@
 .rsRoomBookNowCard {
 	background: #fcfbf8 0 0 no-repeat padding-box;
 	box-shadow: 0 5px 15px #1e180b33;
+	margin-top: 300px;
+	width: 263px;
+	height: 248.5px;
 
 	.dateLabels {
 		text-transform: uppercase;
 		font-size: 14px;
 		width: 93px;
 		font-weight: 600;
+		margin-top: 22.5px;
+	}
+	.checkInLabel {
+		margin-left: 31px;
+	}
+	.checkOutLabel {
+		margin-left: 18px;
 	}
 	.earnLabel {
 		text-transform: uppercase;
 		line-height: 21px;
 		font-size: 14px;
 		font-weight: 600;
+		justify-content: center;
+		display: flex;
+		margin-top: 11px;
 	}
 	.pointsLabel {
 		font-weight: 900;
+		display: flex;
+		justify-content: center;
+		margin-top: 5px;
+		font-size: 24px;
+		line-height: 24px;
 	}
 	.bookNowBtn {
 		display: flex;
 		justify-content: center;
+		margin-top: 17px;
+		width: 201px;
 	}
 	.compareLinkDiv {
 		font-size: 13px;
@@ -37,12 +57,17 @@
 		padding-left: 5px;
 	}
 
+	.DateRangePicker {
+		margin-left: 16px;
+	}
+
 	.DateInput {
 		width: 68px;
 		height: 40px;
 		padding-right: 25px;
 		border: 1px solid theme-var($primaryTextColor);
 		background-color: theme-var($primaryBackgroundColor);
+		margin-left: 15px;
 	}
 	.DateInput_input {
 		font-size: 15px;
@@ -90,44 +115,7 @@
 	}
 }
 
-.rsRoomBookNowCardNormal {
-	margin-top: 300px;
-	width: 263px;
-	height: 248.5px;
-
-	.dateLabels {
-		margin-top: 22.5px;
-	}
-	.checkInLabel {
-		margin-left: 31px;
-	}
-	.checkOutLabel {
-		margin-left: 18px;
-	}
-	.earnLabel {
-		justify-content: center;
-		display: flex;
-		margin-top: 11px;
-	}
-	.pointsLabel {
-		display: flex;
-		justify-content: center;
-		margin-top: 5px;
-		font-size: 24px;
-		line-height: 24px;
-	}
-	.DateRangePicker {
-		margin-left: 16px;
-	}
-	.DateInput {
-		margin-left: 15px;
-	}
-	.bookNowBtn {
-		margin-top: 17px;
-		width: 201px;
-	}
-}
-.rsRoomBookNowCardMobile {
+.rsRoomBookNowCard.mobile {
 	margin-top: 300px;
 	width: 335px;
 	height: 150px;
@@ -137,6 +125,9 @@
 	}
 	.DateRangePickerInput {
 		display: flex;
+	}
+	.DateRangePicker {
+		margin-left: 0;
 	}
 	.dateLabels {
 		margin-top: 10.5px;
@@ -151,6 +142,11 @@
 		width: 93px;
 		margin-top: 31px;
 		margin-left: 12px;
+	}
+	.earnLabel {
+		margin-top: 0;
+		justify-content: flex-start;
+		line-height: 19px;
 	}
 	.pointsLabel {
 		font-size: 16px;

@@ -14,7 +14,7 @@ interface FeatureRoomCardProps {
 
 const FeatureRoomCard: React.FC<FeatureRoomCardProps> = (props) => {
 	return (
-		<div className={'rsFeatureRoomCard'}>
+		<div className={`rsFeatureRoomCard ${props.className || ''}`}>
 			<Box className={'limitOfferWhiteBox'}>
 				<Label className={'limitOfferLabel'} variant={'body1'}>
 					LIMITED OFFER

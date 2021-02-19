@@ -57,7 +57,7 @@
 	background: #fcfbf8 0 0 no-repeat padding-box;
 	box-shadow: 0 5px 15px #1e180b33;
 
-	.roomSearchCallToActionMobileTopContents {
+	.mobileTopContents {
 		display: flex;
 		padding-top: 8px;
 		height: 36px;
@@ -92,19 +92,19 @@
 			width: 90px;
 			margin-left: 15px;
 
-			.earnTitleLabel {
+			.earnTitle {
 				font-size: 13px;
 				font-weight: 600;
 				text-transform: uppercase;
 			}
-			.earnContentLabel {
+			.earnContent {
 				font-size: 14px;
 				line-height: 18px;
 			}
 		}
 	}
 
-	.roomSearchCallToActionMobileBottomContents {
+	.mobileBottomContents {
 		padding-top: 16px;
 
 		.compareBtnMobile {

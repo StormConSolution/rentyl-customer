@@ -70,6 +70,6 @@ const StarRating: React.FC<starRatingProps> = (props) => {
 		);
 	}
 
-	return <Box className={'rsStarRating'}>{createStarRating()}</Box>;
+	return <Box className={`rsStarRating ${props.className || ''}`}>{createStarRating()}</Box>;
 };
 export default StarRating;

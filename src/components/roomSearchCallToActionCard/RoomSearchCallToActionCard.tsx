@@ -32,7 +32,7 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 						: 'rsRoomSearchCallToActionCardMobile'
 				}
 			>
-				<Box className={'roomSearchCallToActionMobileTopContents'}>
+				<Box className={'mobileTopContents'}>
 					<Box className={'sizeBoxMobile'}>
 						<Label className={'sizeTitleLabel'} variant={'body2'}>
 							SIZE
@@ -50,15 +50,15 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 						</Label>
 					</Box>
 					<Box className={'earnBoxMobile'}>
-						<Label className={'earnTitleLabel'} variant={'body1'}>
+						<Label className={'earnTitle'} variant={'body1'}>
 							Earn Up To
 						</Label>
-						<Label className={'earnContentLabel'} variant={'h2'}>
+						<Label className={'earnContent'} variant={'h2'}>
 							{props.points.toLocaleString('en-US', { useGrouping: true })} points
 						</Label>
 					</Box>
 				</Box>
-				<Box className={'roomSearchCallToActionMobileBottomContents'} display={'flex'}>
+				<Box className={'mobileBottomContents'} display={'flex'}>
 					<Button
 						className={'compareBtnMobile'}
 						look={'containedSecondary'}
@@ -84,13 +84,7 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 		);
 	} else {
 		return (
-			<div
-				className={
-					!!props.className
-						? `rsRoomSearchCallToActionCard ${props.className}`
-						: 'rsRoomSearchCallToActionCard'
-				}
-			>
+			<div className={`rsRoomSearchCallToActionCard ${props.className || ''}`}>
 				<Label className={'earnLabel'} variant={'body1'}>
 					Earn Up To
 				</Label>

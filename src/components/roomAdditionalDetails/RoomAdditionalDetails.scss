@@ -2,18 +2,18 @@
 @import '../../variables.scss';
 
 .rsRoomAdditionalDetails {
-	.additionalDetailsMobileDescription {
+	.description.mobile {
 		margin: 15px 0 10px;
 	}
-	.additionalDetailsDescription {
+	.description {
 		margin: 22px 0 15px;
 	}
-	.additionalDetailsList {
+	.list {
 		margin-top: 15px;
 		padding-left: 15px;
 		font-size: 11px;
 	}
-	.additionalDetailsListItems {
+	.listItems {
 		font-size: 14px;
 		text-indent: -7px;
 	}

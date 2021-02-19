@@ -18,28 +18,24 @@ interface RoomBookNowCardProps {
 	bookNowDisabled?: boolean;
 	compareOnClick?: () => void;
 	compareDisabled?: boolean;
-	onDatesChangeBN: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
-	startDateBN: moment.Moment | null;
-	endDateBN: moment.Moment | null;
-	focusedInputBN: 'startDate' | 'endDate' | null;
-	changeFocusedInputBN: (focusedInputBN: 'startDate' | 'endDate' | null) => void;
+	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
+	startDate: moment.Moment | null;
+	endDate: moment.Moment | null;
+	focusedInput: 'startDate' | 'endDate' | null;
+	changeFocusedInput: (focusedInput: 'startDate' | 'endDate' | null) => void;
 }
 
 const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	function classNameForResponsiveness() {
+	function getClassNameForResponsiveness() {
 		if (size === 'small') {
-			return !!props.className
-				? `rsRoomBookNowCard rsRoomBookNowCardMobile ${props.className}`
-				: 'rsRoomBookNowCard rsRoomBookNowCardMobile';
+			return `rsRoomBookNowCard mobile ${props.className || ''}`;
 		}
-		return !!props.className
-			? `rsRoomBookNowCard rsRoomBookNowCardNormal ${props.className}`
-			: 'rsRoomBookNowCard rsRoomBookNowCardNormal';
+		return `rsRoomBookNowCard ${props.className || ''}`;
 	}
 
-	function compareLabelOrButton() {
+	function renderCompareLabelOrButton() {
 		if (size === 'small') {
 			return (
 				<Button
@@ -67,7 +63,7 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 	}
 
 	return (
-		<div className={classNameForResponsiveness()}>
+		<div className={getClassNameForResponsiveness()}>
 			<Box className={'roomBookNowTopContent'}>
 				<Box className={'dateRangePickerBox'}>
 					<Box display={'flex'}>
@@ -79,13 +75,13 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 						</Label>
 					</Box>
 					<DateRangePicker
-						startDate={props.startDateBN}
+						startDate={props.startDate}
 						startDateId="startDate"
-						endDate={props.endDateBN}
+						endDate={props.endDate}
 						endDateId="endDate"
-						onDatesChange={({ startDate, endDate }) => props.onDatesChangeBN(startDate, endDate)}
-						focusedInput={props.focusedInputBN}
-						onFocusChange={(focusedInput) => props.changeFocusedInputBN(focusedInput)}
+						onDatesChange={({ startDate, endDate }) => props.onDatesChange(startDate, endDate)}
+						focusedInput={props.focusedInput}
+						onFocusChange={(focusedInput) => props.changeFocusedInput(focusedInput)}
 						numberOfMonths={1}
 						noBorder
 					/>
@@ -108,7 +104,7 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 					disabled={props.bookNowDisabled}
 					onClick={props.bookNowOnClick}
 				/>
-				{compareLabelOrButton()}
+				{renderCompareLabelOrButton()}
 			</Box>
 		</div>
 	);

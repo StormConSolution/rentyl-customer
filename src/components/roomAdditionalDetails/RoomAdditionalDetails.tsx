@@ -18,7 +18,7 @@ const RoomAdditionalDetails: React.FC<roomAdditionalDetailsProps> = (props) => {
 		return props.detailList.map((item, index) => {
 			return (
 				<li>
-					<Label key={index} className={'additionalDetailsListItems'} variant={'body2'}>
+					<Label key={index} className={'listItems'} variant={'body2'}>
 						{item}
 					</Label>
 				</li>
@@ -26,17 +26,14 @@ const RoomAdditionalDetails: React.FC<roomAdditionalDetailsProps> = (props) => {
 		});
 	}
 	return (
-		<Box className={'rsRoomAdditionalDetails'}>
+		<Box className={`rsRoomAdditionalDetails ${props.className || ''}`}>
 			<Label className={'additionalDetailsTitle'} variant={size === 'small' ? 'h2' : 'h1'}>
 				Additional {props.typeOfRoom} Details
 			</Label>
-			<Label
-				className={size === 'small' ? 'additionalDetailsMobileDescription' : 'additionalDetailsDescription'}
-				variant={'body2'}
-			>
+			<Label className={size === 'small' ? 'description mobile' : 'description'} variant={'body2'}>
 				{props.description}
 			</Label>
-			<ul className={'additionalDetailsList'}>{renderListItems()}</ul>
+			<ul className={'list'}>{renderListItems()}</ul>
 		</Box>
 	);
 };
