@@ -4,7 +4,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
 import './RoomSearchDetailCard.scss';
 
-interface RoomStat {
+export interface RoomStat {
 	label: string;
 	datum: string | number;
 }

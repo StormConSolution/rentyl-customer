@@ -13,4 +13,13 @@
 			color: red;
 		}
 	}
+
+	.rsAccommodationSearchResultCard {
+		width: 1160px;
+		border-bottom: 1px solid theme-var($greyLineColor);
+		height: 310px;
+		> div {
+			margin-bottom: 30px;
+		}
+	}
 }
