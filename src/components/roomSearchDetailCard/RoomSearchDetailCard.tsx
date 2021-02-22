@@ -12,6 +12,7 @@ interface RoomStat {
 export interface RoomSearchDetailCardProps {
 	amenityIconNames: Array<string>;
 	stats: Array<RoomStat>;
+	className?: string;
 }
 
 const RoomSearchDetailCard: React.FC<RoomSearchDetailCardProps> = (props) => {
@@ -31,7 +32,7 @@ const RoomSearchDetailCard: React.FC<RoomSearchDetailCardProps> = (props) => {
 	}
 
 	return (
-		<Box className="rsRoomSearchDetailCard">
+		<Box className={`rsRoomSearchDetailCard ${props.className || ''}`}>
 			{!!props.amenityIconNames.length && (
 				<Box className="amenityIcons">{renderAmenityIcons(props.amenityIconNames)}</Box>
 			)}
