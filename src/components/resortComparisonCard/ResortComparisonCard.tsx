@@ -3,7 +3,7 @@ import './ResortComparisonCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box } from '@bit/redsky.framework.rs.996';
-import Select from '@bit/redsky.framework.rs.select';
+import Select from '../Select/Select';
 
 interface ResortComparisonCardProps {
 	className?: string;
@@ -25,15 +25,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 				<Icon className={'close'} iconImg={'icon-close'} onClick={props.onClose} size={14} color={'#004b98'} />
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
-				<Select
-					look={'outlined'}
-					options={props.roomTypes}
-					onChange={props.onChange}
-					className={'selectRoomType'}
-					placeholder={'select room type'}
-					color={'#001933'}
-					backgroundColor={'inherit'}
-				/>
+				<Select onChange={props.onChange} placeHolder={'select room type'} options={props.roomTypes} />
 			</Box>
 		</div>
 	);

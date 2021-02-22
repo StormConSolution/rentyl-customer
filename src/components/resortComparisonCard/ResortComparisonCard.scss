@@ -1,7 +1,6 @@
 @import 'src/themes/themes';
 
 .rsResortComparisonCard {
-	margin: 20px;
 	height: 82px;
 	width: 278px;
 	border-bottom: 1px solid theme-var($greyLineColor);
@@ -23,20 +22,10 @@
 	.bottomContent {
 		justify-content: flex-end;
 
-		.selectRoomType {
+		.rsSelect {
 			width: 180px;
 			height: 30px;
 			margin-top: 15px;
-
-			&:focus-within {
-				.label {
-					display: none;
-				}
-			}
-
-			.input:not(:placeholder-shown) + .label {
-				display: none;
-			}
 		}
 	}
 }
