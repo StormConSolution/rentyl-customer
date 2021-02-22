@@ -1,0 +1,40 @@
+@import '../../themes/themes.scss';
+
+.rsFloorPlanDetailCard {
+	div {
+		margin: 0;
+	}
+	&.small > div {
+		margin: 20px 20px 0 20px;
+		&:last-child {
+			margin-bottom: 20px;
+		}
+	}
+	.radioHolder {
+		display: grid;
+		width: 50%;
+		grid-template-columns: 1fr 1fr;
+		row-gap: 10px;
+		margin-top: 20px;
+		.floorPlanRoomDescriptionRadio {
+			margin: 0;
+		}
+	}
+	&.small {
+		.radioHolder {
+			width: 100%;
+		}
+	}
+
+	.floorPlanRoomDescriptionContent {
+		display: none;
+		margin-top: 20px;
+		&.active {
+			display: block;
+		}
+
+		.h4 {
+			margin-bottom: 10px;
+		}
+	}
+}

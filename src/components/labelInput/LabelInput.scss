@@ -1,0 +1,35 @@
+@import '../../themes/themes';
+.rsLabelInput {
+	background-color: inherit;
+	position: relative;
+	.rsLabel {
+		&.caption {
+			margin-bottom: 10px;
+		}
+	}
+	.iconHolder {
+		height: 40px;
+		width: 40px;
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		text-align: center;
+		border-right: 1px solid theme-var($greyLineColor);
+		span {
+			line-height: 40px;
+		}
+	}
+	.rsInput {
+		max-width: 200px;
+		margin: 0;
+		&.invalid {
+			border-color: theme-var($errorColor) !important;
+		}
+		&.textarea {
+			max-width: fit-content;
+		}
+		&.hasIcon {
+			text-indent: 40px;
+		}
+	}
+}

@@ -15,6 +15,9 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { replaceClassName } from '../../utils/utils';
 import Carousel from '../../components/carousel/Carousel';
 import Select from '@bit/redsky.framework.rs.select';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import router from '../../utils/router';
 
 interface LandingPageProps {}
 
@@ -44,7 +47,14 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 							<br />
 							<span>live, work, and play</span>
 						</div>
-						<LabelButton look={'containedPrimary'} variant={'button'} label={'Get Started'} />
+						<LabelButton
+							look={'containedPrimary'}
+							variant={'button'}
+							label={'Get Started'}
+							onClick={() => {
+								router.navigate('/signup');
+							}}
+						/>
 					</Box>
 					<Box className={'infoCardWrapper'} display={'flex'}>
 						<InfoCard
@@ -399,6 +409,7 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 						)}
 					</Box>
 				</Box>
+				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>
 	);

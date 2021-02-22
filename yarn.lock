@@ -1172,10 +1172,10 @@
   dependencies:
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.input@^0.0.28":
-  version "0.0.28"
-  resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.28.tgz#331ac3e809d0e12d6978eee652279e2ae7cd513c"
-  integrity sha1-MxrD6AnQ4S1peO7mUieeKufNUTw=
+"@bit/redsky.framework.rs.input@^0.0.32":
+  version "0.0.32"
+  resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.32.tgz#a3a7cd869854b73b8a5153f18be0733e315023ae"
+  integrity sha1-o6fNhphUtzuKUVPxi+BzPjFQI64=
   dependencies:
     "@bit/redsky.framework.rs.form" "0.0.5"
     "@bit/redsky.framework.rs.icon" "0.0.34"

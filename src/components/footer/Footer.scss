@@ -2,7 +2,6 @@
 .rsFooter {
 	background-color: theme-var($primaryBackgroundColor);
 	position: relative;
-	padding: 0 345px;
 	box-sizing: border-box;
 
 	img {
@@ -30,6 +29,7 @@
 			column-gap: 10px;
 
 			a {
+				color: theme-var($buttonLinkColor) !important;
 				font-size: small;
 				text-transform: uppercase;
 			}

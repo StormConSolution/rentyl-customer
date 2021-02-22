@@ -12,20 +12,16 @@ export default class UserService extends Service {
 
 	async loginUserByPassword(username: string, password: string) {
 		password = SparkMD5.hash(password);
-		try {
-			let axiosResponse = await http.post<RsResponseData<Api.User.Res.Get>>('user/login', {
-				username,
-				password
-			});
-			// await this.onAfterLogin(axiosResponse.data.data);
-		} catch (e) {
-			console.log(e);
-		}
+		let axiosResponse = await http.post<RsResponseData<Api.User.Res.Get>>('user/login', {
+			username,
+			password
+		});
+		await this.onAfterLogin(axiosResponse.data.data);
 	}
 
 	async loginUserByToken(token: string) {
 		let axiosResponse = await http.get<RsResponseData<Api.User.Res.Get>>('user/with/token?token=' + token);
-		// await this.onAfterLogin(axiosResponse.data.data);
+		await this.onAfterLogin(axiosResponse.data.data);
 	}
 
 	getCurrentUser(): Api.User.Res.Get | undefined {
@@ -55,26 +51,20 @@ export default class UserService extends Service {
 		return res;
 	}
 
-	// private async onAfterLogin(user: Api.User.Res.Get) {
-	// 	// Make sure they are allowed to even login based on their role
-	// 	let adminRoles = ['super_admin', 'support'];
-	// 	if (!adminRoles.includes(user.role)) throw new Error('INVALID_ROLE');
-	//
-	// 	let axiosConfig = http.currentConfig();
-	// 	axiosConfig.headers = {
-	// 		'Content-Type': 'application/json',
-	// 		'Access-Control-Allow-Origin': '*',
-	// 		Accept: 'application/json, text/plain, */*',
-	// 		'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
-	// 		token: user.token
-	// 	};
-	// 	http.changeConfig(axiosConfig);
-	//
-	// 	this.userModel.setCurrentUser(user);
-	//
-	// 	await modelFactory.refreshAllModels();
-	// 	this.onLoggedInCallbacks.forEach((callback) => {
-	// 		callback(user);
-	// 	});
-	// }
+	private async onAfterLogin(user: Api.User.Res.Get) {
+		let axiosConfig = http.currentConfig();
+		axiosConfig.headers = {
+			'Content-Type': 'application/json',
+			'Access-Control-Allow-Origin': '*',
+			Accept: 'application/json, text/plain, */*',
+			'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT',
+			token: user.token
+		};
+		http.changeConfig(axiosConfig);
+		this.userModel.setCurrentUser(user);
+		await modelFactory.refreshAllModels();
+		this.onLoggedInCallbacks.forEach((callback) => {
+			callback(user);
+		});
+	}
 }

@@ -37,10 +37,10 @@ const NavPopout: React.FC<NavPopoutProps> = (props) => {
 					look={'containedPrimary'}
 					onClick={() => {
 						localStorage.clear();
-						window.location.assign('/');
+						window.location.assign('/signin');
 					}}
 				>
-					Sign Out
+					Sign In
 				</Button>
 			</div>
 			<div className={`transparentOverlay ${props.isOpened ? 'opened' : ''}`} />

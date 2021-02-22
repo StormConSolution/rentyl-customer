@@ -1,10 +1,10 @@
 {
-	"name": "volcanic-admin-f996",
-	"version": "1.0.0",
-	"main": "index.js",
+	"name": "spire-customer",
+	"version": "1.0.1",
+	"main": "src/App.tsx",
 	"license": "UNLICENSED",
 	"private": true,
-	"uri": "https://volcanicretail.com/api/v1",
+	"uri": "https://sand.spireloyalty.com/api/v1",
 	"dependencies": {
 		"@babel/plugin-syntax-jsx": "^7.12.1",
 		"@babel/preset-typescript": "^7.12.7",
@@ -18,7 +18,7 @@
 		"@bit/redsky.framework.rs.form": "^0.0.5",
 		"@bit/redsky.framework.rs.http": "^0.0.27",
 		"@bit/redsky.framework.rs.icon": "^0.0.34",
-		"@bit/redsky.framework.rs.input": "^0.0.28",
+		"@bit/redsky.framework.rs.input": "^0.0.32",
 		"@bit/redsky.framework.rs.label": "^0.0.6",
 		"@bit/redsky.framework.rs.progressbar": "^0.0.4",
 		"@bit/redsky.framework.rs.select": "^0.0.6",
@@ -129,7 +129,7 @@
 		}
 	},
 	"lint-staged": {
-		"*.{jsx,html,js,scss,json,md,tsx,ts}": [
+		"*.{ts,tsx,js,jsx,html,scss,css,md,json}": [
 			"prettier --write"
 		]
 	}
