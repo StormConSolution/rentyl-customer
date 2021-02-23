@@ -5,9 +5,9 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface LabelImageProps {
-	className?: string;
 	mainImg: string;
 	textOnImg: string;
+	className?: string;
 }
 
 const LabelImage: React.FC<LabelImageProps> = (props) => {
@@ -15,12 +15,12 @@ const LabelImage: React.FC<LabelImageProps> = (props) => {
 
 	return (
 		<Box
-			className={'rsLabelImage'}
+			className={`rsLabelImage ${props.className || ''}`}
 			height={size === 'small' ? '165px' : '160px'}
 			width={size === 'small' ? '293px' : '278px'}
 		>
 			<img className={'mainImg'} src={props.mainImg} alt={'Main'} />
-			<Label className={'labelImageText'} variant={'body1'}>
+			<Label className={'labelImageText'} variant={'h4'}>
 				{props.textOnImg}
 			</Label>
 		</Box>

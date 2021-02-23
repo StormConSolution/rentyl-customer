@@ -1,0 +1,26 @@
+@import 'src/themes/themes';
+
+.rsResortComparisonCard {
+	border-bottom: 1px solid theme-var($greyLineColor);
+
+	.topContent {
+		justify-content: space-between;
+
+		.title {
+			width: 135px;
+			align-self: flex-end;
+			font-size: 16px;
+			line-height: 16px;
+		}
+	}
+
+	.bottomContent {
+		justify-content: flex-end;
+
+		.rsSelect {
+			width: 180px;
+			height: 30px;
+			margin-top: 15px;
+		}
+	}
+}
