@@ -18,11 +18,13 @@ import Select from '@bit/redsky.framework.rs.select';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
+import AccountOverview from '../../popups/accountOverview/AccountOverview';
 
 interface LandingPageProps {}
 
 const LandingPage: React.FC<LandingPageProps> = (props) => {
 	const [activeRewards, setActiveRewards] = useState<number>(0);
+	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
 	const size = useWindowResizeChange();
 
 	function getActiveRewardsStage() {
@@ -34,6 +36,13 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 	return (
 		<Page className={'rsLandingPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<AccountOverview
+					currentPoints={15202}
+					isOpen={showAccountOverview}
+					onToggle={() => {
+						setShowAccountOverview(!showAccountOverview);
+					}}
+				/>
 				<div className={'tanBox'} />
 				<Box
 					className={'heroImgAndText'}
