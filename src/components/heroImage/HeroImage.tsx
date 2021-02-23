@@ -1,25 +1,37 @@
 import React from 'react';
 import './HeroImage.scss';
-import { Box } from '@bit/redsky.framework.rs.996';
-import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface HeroImageProps {
-	className?: string;
-	images: string[];
+	image: string;
 	height: string;
-	width: string;
 	mobileHeight: string;
-	mobileWidth: string;
+	backgroundPosition?: string;
+	className?: string;
+	position?: 'static' | 'relative' | 'absolute' | 'sticky' | 'fixed';
+	padding?: string;
+	zIndex?: number;
 }
 
 const HeroImage: React.FC<HeroImageProps> = (props) => {
-	const size = useWindowResizeChange();
+	function renderImgStyles() {
+		let styles: any = {
+			backgroundImage: `url(${props.image})`,
+			height: props.height
+		};
 
-	function renderImages() {
-		return <Box className={`rsHeroImage ${props.className || ''}`}></Box>;
+		if (!!props.backgroundPosition) styles.backgroundPosition = props.backgroundPosition;
+		if (!!props.position) styles.position = props.position;
+		if (!!props.padding) styles.padding = props.padding;
+		if (!!props.zIndex) styles.zIndex = props.zIndex;
+
+		return styles;
 	}
 
-	return renderImages();
+	return (
+		<div className={`rsHeroImage ${props.className || ''}`} style={renderImgStyles()}>
+			{props.children}
+		</div>
+	);
 };
 
 export default HeroImage;

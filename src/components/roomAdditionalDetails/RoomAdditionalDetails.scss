@@ -2,9 +2,6 @@
 @import '../../variables.scss';
 
 .rsRoomAdditionalDetails {
-	.description.mobile {
-		margin: 15px 0 10px;
-	}
 	.description {
 		margin: 22px 0 15px;
 	}
@@ -16,5 +13,13 @@
 	.listItems {
 		font-size: 14px;
 		text-indent: -7px;
+	}
+}
+
+.small {
+	.rsRoomAdditionalDetails {
+		.description {
+			margin: 15px 0 10px;
+		}
 	}
 }

@@ -11,7 +11,6 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
 import SignupOptionCheckboxes, { SignupOption } from '../../components/signupOptionCheckboxes/SignupOptionCheckboxes';
 import SignupOptions from '../../components/signupOptionCheckboxes/SignupOptions';
-import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
 
 interface SignUpPageProps {}
 
@@ -25,27 +24,9 @@ const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 		let inputValue = e.target as HTMLInputElement;
 		if (inputValue.checked) console.log(inputValue.value);
 	}
-	const roomTypes: { value: string | number; text: string | number }[] = [
-		{ value: '1', text: 'Basic Suite' },
-		{ value: '2', text: 'Full Suite' },
-		{ value: '3', text: 'Master Suite' },
-		{ value: '4', text: '3 Bedroom Villa' },
-		{ value: '5', text: '5 Bedroom Villa' },
-		{ value: '6', text: '6 Bedroom Villa' }
-	];
+
 	return (
 		<Page className={'rsSignUpPage'}>
-			<ResortComparisonCard
-				logo={require('../../images/encore-resort.png')}
-				title={'Encore Resort'}
-				roomTypes={roomTypes}
-				onChange={(value) => {
-					console.log(value);
-				}}
-				onClose={() => {
-					console.log('close');
-				}}
-			/>
 			<div className={'rs-page-content-wrapper'}>
 				<Box display={'flex'} margin={'100px 0'} justifyContent={'center'}>
 					<Box maxWidth={'480px'} marginRight={38}>

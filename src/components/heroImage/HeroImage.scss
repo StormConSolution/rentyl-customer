@@ -1,4 +1,8 @@
 @import 'src/themes/themes';
 
-.rsHroImage {
+.rsHeroImage {
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 100%;
+	box-sizing: border-box;
 }

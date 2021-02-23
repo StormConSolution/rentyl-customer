@@ -1,49 +1,36 @@
 @import 'src/themes/themes';
 
 .rsRoomSearchCallToActionCard {
-	width: 180px;
-	height: 280px;
-	background: #fcfbf8 0 0 no-repeat padding-box;
-	box-shadow: 0 5px 15px #1e180b33;
-
 	.earnLabel {
-		text-transform: uppercase;
-		line-height: 21px;
-		font-size: 13px;
-		font-weight: 600;
-		padding-top: 13px;
-		padding-left: 56px;
+		display: flex;
+		justify-content: center;
 	}
 
 	.pointsLabel {
-		line-height: 24px;
-		font-weight: 900;
-		font-size: 24px;
 		padding-top: 5px;
-		padding-left: 22px;
 	}
 
 	.bookNowBtn {
 		margin-top: 53px;
-		margin-left: 25px;
 		width: 131px;
 	}
 
 	.viewDetailsBtn {
 		margin-top: 9px;
-		margin-left: 25px;
+		margin-bottom: 0;
 		width: 131px;
 		height: 40px;
 		padding: 0 19px !important;
-		color: #004b98 !important;
 	}
 
 	.compareLinkDiv {
 		padding-top: 37px;
-		padding-left: 28px;
-		font-size: 13px;
-		font-weight: 600;
-		text-transform: uppercase;
+		display: flex;
+		justify-content: center;
+	}
+
+	.compareLink {
+		color: theme-var($buttonLinkColor);
 	}
 
 	.addCompareIcon {
@@ -51,78 +38,35 @@
 	}
 }
 
-.rsRoomSearchCallToActionCardMobile {
-	width: 335px;
-	height: 117px;
-	background: #fcfbf8 0 0 no-repeat padding-box;
-	box-shadow: 0 5px 15px #1e180b33;
-
-	.mobileTopContents {
-		display: flex;
-		padding-top: 8px;
-		height: 36px;
-
-		.sizeBoxMobile {
-			width: 95px;
-			margin-left: 10px;
-
-			.sizeTitleLabel {
-				font-size: 13px;
-				font-weight: 600;
-			}
-			.sizeContentLabel {
-				font-size: 12px;
-			}
+.small {
+	.rsRoomSearchCallToActionCard {
+		.topContents {
+			display: flex;
+			height: 36px;
+			justify-content: space-between;
 		}
 
-		.bedroomsBoxMobile {
-			width: 69px;
-			margin-left: 22px;
+		.bottomContents {
+			padding-top: 16px;
+			justify-content: center;
 
-			.bedroomsTitleLabel {
-				font-size: 13px;
-				font-weight: 600;
+			.compareBtnMobile {
+				width: 148px;
+				padding: 0 10px;
+				margin: 0;
+
+				.compareBtnTextMobile {
+					font-size: 17px;
+				}
+				.addCompareIconMobile {
+					margin-left: 5px;
+				}
 			}
-			.bedroomsContentLabel {
-				font-size: 12px;
+
+			.bookNowBtnMobile {
+				margin: 0 0 0 12px; //rsButton has margin of 20px auto I am overwriting so the 0 are for a reason
+				width: 148px;
 			}
-		}
-
-		.earnBoxMobile {
-			width: 90px;
-			margin-left: 15px;
-
-			.earnTitle {
-				font-size: 13px;
-				font-weight: 600;
-				text-transform: uppercase;
-			}
-			.earnContent {
-				font-size: 14px;
-				line-height: 18px;
-			}
-		}
-	}
-
-	.mobileBottomContents {
-		padding-top: 16px;
-
-		.compareBtnMobile {
-			margin-left: 10px;
-			width: 148px;
-			padding: 0 10px;
-
-			.compareBtnTextMobile {
-				font-size: 17px;
-			}
-			.addCompareIconMobile {
-				margin-left: 5px;
-			}
-		}
-
-		.bookNowBtnMobile {
-			margin-left: 12px;
-			width: 148px;
 		}
 	}
 }

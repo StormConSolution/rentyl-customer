@@ -6,18 +6,19 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
+import Paper from '../paper/Paper';
 
 interface RoomSearchCallToActionCardProps {
-	className?: string;
 	points: number;
+	squareFeet: string;
+	bedrooms: number;
 	bookNowOnClick?: () => void;
 	bookNowDisabled?: boolean;
 	compareOnClick?: () => void;
-	compareDisabled?: boolean;
 	viewDetailsOnClick?: () => void;
+	compareDisabled?: boolean;
 	viewDetailsDisabled?: boolean;
-	squareFeet: string;
-	bedrooms: number;
+	className?: string;
 }
 
 const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (props) => {
@@ -25,40 +26,41 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 
 	if (size === 'small') {
 		return (
-			<div
-				className={
-					!!props.className
-						? `rsRoomSearchCallToActionCardMobile ${props.className}`
-						: 'rsRoomSearchCallToActionCardMobile'
-				}
+			<Paper
+				boxShadow
+				className={`rsRoomSearchCallToActionCard ${props.className || ''}`}
+				height={'117px'}
+				width={'335px'}
+				backgroundColor={'#fcfbf8'}
+				padding={'8px 10px 15px'}
 			>
-				<Box className={'mobileTopContents'}>
+				<Box className={'topContents'}>
 					<Box className={'sizeBoxMobile'}>
-						<Label className={'sizeTitleLabel'} variant={'body2'}>
-							SIZE
+						<Label className={'sizeTitleLabel'} variant={'caption'}>
+							Size
 						</Label>
 						<Label className={'sizeContentLabel'} variant={'body2'}>
 							{props.squareFeet}
 						</Label>
 					</Box>
 					<Box className={'bedroomsBoxMobile'}>
-						<Label className={'bedroomsTitleLabel'} variant={'body2'}>
-							BEDROOMS
+						<Label className={'bedroomsTitleLabel'} variant={'caption'}>
+							Bedrooms
 						</Label>
 						<Label className={'bedroomsContentLabel'} variant={'body2'}>
 							{props.bedrooms}
 						</Label>
 					</Box>
 					<Box className={'earnBoxMobile'}>
-						<Label className={'earnTitle'} variant={'body1'}>
+						<Label className={'earnTitle'} variant={'caption'}>
 							Earn Up To
 						</Label>
-						<Label className={'earnContent'} variant={'h2'}>
+						<Label className={'earnContent'} variant={'h4'}>
 							{props.points.toLocaleString('en-US', { useGrouping: true })} points
 						</Label>
 					</Box>
 				</Box>
-				<Box className={'mobileBottomContents'} display={'flex'}>
+				<Box className={'bottomContents'} display={'flex'}>
 					<Button
 						className={'compareBtnMobile'}
 						look={'containedSecondary'}
@@ -80,12 +82,19 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 						onClick={props.bookNowOnClick}
 					/>
 				</Box>
-			</div>
+			</Paper>
 		);
 	} else {
 		return (
-			<div className={`rsRoomSearchCallToActionCard ${props.className || ''}`}>
-				<Label className={'earnLabel'} variant={'body1'}>
+			<Paper
+				boxShadow
+				className={`rsRoomSearchCallToActionCard ${props.className || ''}`}
+				height={'280px'}
+				width={'180px'}
+				backgroundColor={'#fcfbf8'}
+				padding={'13px 22px 16px'}
+			>
+				<Label className={'earnLabel'} variant={'caption'}>
 					Earn Up To
 				</Label>
 				<Label className={'pointsLabel'} variant={'h2'}>
@@ -109,12 +118,12 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 				/>
 
 				<div className={'compareLinkDiv'}>
-					<Label className={'compareLink'} onClick={props.compareOnClick}>
+					<Label className={'compareLink'} onClick={props.compareOnClick} variant={'caption'}>
 						Add To Compare
 						<Icon className={'addCompareIcon'} iconImg={'icon-plus'} size={9} color={'#004b98'} />
 					</Label>
 				</div>
-			</div>
+			</Paper>
 		);
 	}
 };

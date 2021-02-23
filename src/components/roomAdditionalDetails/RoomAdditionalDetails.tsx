@@ -5,10 +5,10 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface roomAdditionalDetailsProps {
-	className?: string;
 	typeOfRoom: string;
 	description: string;
 	detailList: string[];
+	className?: string;
 }
 
 const RoomAdditionalDetails: React.FC<roomAdditionalDetailsProps> = (props) => {
@@ -30,7 +30,7 @@ const RoomAdditionalDetails: React.FC<roomAdditionalDetailsProps> = (props) => {
 			<Label className={'additionalDetailsTitle'} variant={size === 'small' ? 'h2' : 'h1'}>
 				Additional {props.typeOfRoom} Details
 			</Label>
-			<Label className={size === 'small' ? 'description mobile' : 'description'} variant={'body2'}>
+			<Label className={'description'} variant={'body2'}>
 				{props.description}
 			</Label>
 			<ul className={'list'}>{renderListItems()}</ul>

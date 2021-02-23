@@ -5,16 +5,39 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
 
 interface IconLabelProps {
-	className?: string;
-	iconImg: string;
 	labelName: string;
+	iconImg: string;
+	iconPosition: 'top' | 'right' | 'bottom' | 'left';
+	iconSize: number;
+	className?: string;
+	labelVariant?:
+		| 'h1'
+		| 'h2'
+		| 'h3'
+		| 'h4'
+		| 'h5'
+		| 'h6'
+		| 'sectionHeader'
+		| 'title'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
+		| 'srOnly'
+		| 'inherit'
+		| 'error';
 }
 
 const IconLabel: React.FC<IconLabelProps> = (props) => {
 	return (
-		<Box className={`rsIconLabel ${props.className || ''}`} display={'flex'}>
-			<Icon iconImg={props.iconImg} size={14} />
-			<Label className={'labelClass'}>{props.labelName}</Label>
+		<Box className={`rsIconLabel ${props.className || ''} ${props.iconPosition}`}>
+			<Icon className={'icon'} iconImg={props.iconImg} size={props.iconSize} />
+			<Label variant={props.labelVariant} className={'label'}>
+				{props.labelName}
+			</Label>
 		</Box>
 	);
 };

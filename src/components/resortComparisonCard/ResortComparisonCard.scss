@@ -1,9 +1,8 @@
 @import 'src/themes/themes';
 
 .rsResortComparisonCard {
-	height: 82px;
-	width: 278px;
 	border-bottom: 1px solid theme-var($greyLineColor);
+
 	.topContent {
 		justify-content: space-between;
 
@@ -12,10 +11,6 @@
 			align-self: flex-end;
 			font-size: 16px;
 			line-height: 16px;
-		}
-
-		.close {
-			margin-left: 10px;
 		}
 	}
 
