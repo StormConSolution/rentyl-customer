@@ -1,5 +1,6 @@
 import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
+import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import React from 'react';
 import { addCommasToNumber } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
@@ -16,7 +17,7 @@ export interface DestinationSummaryAccommodationListProps {
 interface AccommodationListRowProp {
 	id: any;
 	name: string;
-	amenityIconNames: Array<string>;
+	amenityIconNames: string[];
 	bedrooms: number;
 	beds: number;
 	ratePerNight: number;
@@ -33,7 +34,7 @@ const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodati
 				<Label>{accommodation.beds}</Label>
 				<div>
 					<Label variant="h3" className="rate">
-						{formatMoney(accommodation.ratePerNight, true)}
+						{StringUtils.formatMoney(accommodation.ratePerNight)}
 					</Label>
 					<Label variant="body2" className="points">
 						{addCommasToNumber(accommodation.pointsPerNight)} pts.
@@ -71,18 +72,13 @@ const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodati
 		);
 	}
 
-	function renderIcons(iconNames: Array<string>): Array<JSX.Element> {
+	function renderIcons(iconNames: string[]): JSX.Element[] {
 		return iconNames.map((name, index: number) => {
 			return <Icon iconImg={name} key={index} />;
 		});
 	}
 
-	function formatMoney(intNum: number, includeCents: boolean = false): string {
-		const rawNumberString: string = includeCents ? intNum.toFixed(2) : intNum + '';
-		return '$' + addCommasToNumber(rawNumberString);
-	}
-
-	function renderAccommodationList(accommodations: AccommodationListRowProp[]): Array<JSX.Element> {
+	function renderAccommodationList(accommodations: AccommodationListRowProp[]): JSX.Element[] {
 		return accommodations.map(renderAccommodationListRow);
 	}
 
