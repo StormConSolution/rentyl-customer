@@ -3,9 +3,12 @@
 	background-color: theme-var($primaryBackgroundColor);
 	position: relative;
 	box-sizing: border-box;
+	&.small {
+		margin: 20px;
+	}
 
 	img {
-		height: 60%;
+		height: 40px;
 		grid-column: 1;
 		grid-row: 1 / 2;
 		margin: auto 0;
@@ -21,12 +24,21 @@
 		grid-template-columns: repeat(7, 1fr);
 		padding-bottom: 30px;
 		padding-top: 18px;
+		&.small {
+			grid-template-columns: 1fr;
+		}
 
 		.rsBox {
 			grid-template-columns: repeat(4, 1fr);
 			grid-column: 2 / 6;
 			row-gap: 5px;
 			column-gap: 10px;
+			&.small {
+				grid-template-columns: 1fr;
+				grid-column: 1;
+				row-gap: 10px;
+				margin-top: 20px;
+			}
 
 			a {
 				color: theme-var($buttonLinkColor) !important;
