@@ -1,6 +1,6 @@
 @import '../../themes/themes.scss';
 
-.rsRoomSearchDetailCard {
+.rsAccommodationSearchDetailCard {
 	position: relative;
 	div {
 		margin: 0;
@@ -9,7 +9,7 @@
 		position: relative;
 		margin: 20px 0 0 20px;
 	}
-	background-color: theme-var($iconAndHighlightTextColor);
+	background-color: theme-var($tertiaryBackgroundColor);
 	.amenityIcons {
 		display: inline-block;
 		.rsIcon {

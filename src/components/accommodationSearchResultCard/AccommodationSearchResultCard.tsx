@@ -1,27 +1,38 @@
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
+import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import React from 'react';
-import { addCommasToNumber, formatMoney } from '../../utils/utils';
+import { addCommasToNumber } from '../../utils/utils';
 import Carousel from '../carousel/Carousel';
-import RoomSearchDetailCard, { RoomStat } from '../roomSearchDetailCard/RoomSearchDetailCard';
-import StarRating from '../starRating/StarRating';
+import AccommodationSearchCallToActionCard from '../accommodationSearchCallToActionCard/AccommodationSearchCallToActionCard';
+import AccommodationSearchDetailCard, {
+	AccommodationStat
+} from '../accommodationSearchDetailCard/AccommodationSearchDetailCard';
+import StarRating, { Rating } from '../starRating/StarRating';
 import './AccommodationSearchResultCard.scss';
 
 export interface AccommodationSearchResultCardProps {
 	id: number | string;
 	name: string;
 	accommodationType: string;
+	bedrooms: number;
+	squareFeet: number | string;
 	description: string;
 	ratePerNight: number;
-	pointsPerNight: number;
-	starRating: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
-	roomStats: Array<RoomStat>;
-	carouselImagePaths: Array<string>;
-	amenityIconNames: Array<string>;
+	pointsRatePerNight: number;
+	pointsEarnable: number;
+	starRating: Rating;
+	roomStats: AccommodationStat[];
+	carouselImagePaths: string[];
+	amenityIconNames: string[];
+	onBookNowClick: () => void;
+	onCompareClick: () => void;
+	disableCompare: boolean;
+	onViewDetailsClick: () => void;
 }
 
 const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps> = (props) => {
-	function renderCarouselImages(imagePaths: Array<string>): Array<JSX.Element> {
+	function renderCarouselImages(imagePaths: string[]): JSX.Element[] {
 		return imagePaths.map((imagePath, index) => {
 			return <img className="accommodationGalleryImage" src={imagePath} key={index} alt="" />;
 		});
@@ -35,21 +46,32 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					{props.name}
 				</Label>
 				<Label variant="h4">
-					{formatMoney(props.ratePerNight)} or {addCommasToNumber(props.pointsPerNight)} points/night
+					{StringUtils.formatMoney(props.ratePerNight)} or {addCommasToNumber(props.pointsRatePerNight)}{' '}
+					points/night
 				</Label>
 				<Label variant="caption">+ taxes &amp; fees</Label>
 				<StarRating rating={props.starRating} size="large32px" />
 				<Link path="">
 					<Label variant="caption">View {props.accommodationType} Ratings</Label>
 				</Link>
-				<Label className="accommodationDescription" variant="body1">
+				<Label className="accommodationDescription" variant="body2">
 					{props.description}
 				</Label>
 			</div>
 			<div>
-				<RoomSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
+				<AccommodationSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
 			</div>
-			<div>{/* for the Book Now card */}</div>
+			<div>
+				<AccommodationSearchCallToActionCard
+					points={props.pointsEarnable}
+					bedrooms={props.bedrooms}
+					squareFeet={props.squareFeet.toString()}
+					compareDisabled={props.disableCompare}
+					bookNowOnClick={props.onBookNowClick}
+					compareOnClick={props.onCompareClick}
+					viewDetailsOnClick={props.onViewDetailsClick}
+				/>
+			</div>
 		</Box>
 	);
 };

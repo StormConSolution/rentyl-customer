@@ -2,24 +2,24 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
-import './RoomSearchDetailCard.scss';
+import './AccommodationSearchDetailCard.scss';
 
-export interface RoomStat {
+export interface AccommodationStat {
 	label: string;
 	datum: string | number;
 }
 
-export interface RoomSearchDetailCardProps {
+export interface AccommodationSearchDetailCardProps {
 	amenityIconNames: Array<string>;
-	stats: Array<RoomStat>;
+	stats: Array<AccommodationStat>;
 }
 
-const RoomSearchDetailCard: React.FC<RoomSearchDetailCardProps> = (props) => {
+const AccommodationSearchDetailCard: React.FC<AccommodationSearchDetailCardProps> = (props) => {
 	function renderAmenityIcons(iconPaths: Array<string>): Array<JSX.Element> {
 		return iconPaths.map((icon) => <Icon iconImg={icon} />);
 	}
 
-	function renderRoomStats(stats: Array<RoomStat>): Array<JSX.Element> {
+	function renderStats(stats: Array<AccommodationStat>): Array<JSX.Element> {
 		return stats.map((stat) => {
 			return (
 				<Box className="roomStat">
@@ -31,13 +31,13 @@ const RoomSearchDetailCard: React.FC<RoomSearchDetailCardProps> = (props) => {
 	}
 
 	return (
-		<Box className="rsRoomSearchDetailCard">
+		<Box className="rsAccommodationSearchDetailCard">
 			{!!props.amenityIconNames.length && (
 				<Box className="amenityIcons">{renderAmenityIcons(props.amenityIconNames)}</Box>
 			)}
-			<Box className="stats">{renderRoomStats(props.stats)}</Box>
+			<Box className="stats">{renderStats(props.stats)}</Box>
 		</Box>
 	);
 };
 
-export default RoomSearchDetailCard;
+export default AccommodationSearchDetailCard;

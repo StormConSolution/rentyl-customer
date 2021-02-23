@@ -2,9 +2,11 @@ import React from 'react';
 import './StarRating.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 
+export type Rating = 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
+
 interface starRatingProps {
 	size: 'small16px' | 'medium24px' | 'large32px';
-	rating: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
+	rating: Rating;
 	className?: string;
 }
 
