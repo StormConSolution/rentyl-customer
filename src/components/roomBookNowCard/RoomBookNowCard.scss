@@ -1,0 +1,132 @@
+@import 'src/themes/themes';
+
+.rsRoomBookNowCard {
+	.dateLabels {
+		width: 93px;
+		line-height: 21px;
+	}
+	.checkOutLabel {
+		margin-left: 18px;
+	}
+	.earnLabel {
+		line-height: 21px;
+		justify-content: center;
+		display: flex;
+		margin-top: 11px;
+	}
+	.pointsLabel {
+		display: flex;
+		justify-content: center;
+		margin-top: 5px;
+	}
+	.bookNowBtn {
+		display: flex;
+		justify-content: center;
+		margin-top: 17px;
+		width: 201px;
+	}
+	.compareLinkDiv {
+		display: flex;
+		justify-content: center;
+	}
+	.compareLink {
+		color: theme-var($buttonLinkColor);
+	}
+	.addCompareIcon {
+		padding-left: 5px;
+	}
+
+	.DateInput {
+		width: 68px;
+		height: 40px;
+		padding-right: 25px;
+		border: 1px solid theme-var($primaryTextColor);
+		background-color: theme-var($primaryBackgroundColor);
+	}
+	.DateInput:last-of-type {
+		margin-left: 13px;
+	}
+	.DateInput_input {
+		font-size: 15px;
+		font-weight: 200;
+		line-height: 17px;
+		color: #adadad;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	.DateRangePickerInput_arrow {
+		display: none;
+	}
+	.DateInput_input__focused {
+		color: #000000;
+	}
+	.CalendarDay__selected_span {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid #ffffff;
+	}
+	.CalendarDay__selected_span:hover {
+		background: theme-var($greyLineColor);
+		color: theme-var($primaryTextColor);
+		border: 1px solid #ffffff;
+	}
+	.CalendarDay__selected {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.CalendarDay__selected:hover {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.CalendarDay__hovered_span:hover,
+	.CalendarDay__hovered_span {
+		background: theme-var($buttonLinkColor);
+		color: #ffffff;
+		border: 1px solid theme-var($greyLineColor);
+	}
+	.DayPickerKeyboardShortcuts_buttonReset {
+		display: none;
+	}
+}
+
+.small {
+	.rsRoomBookNowCard {
+		.roomBookNowTopContent {
+			display: flex;
+		}
+
+		.earnPointsBox {
+			width: 93px;
+			margin-left: 12px;
+		}
+
+		.earnLabel {
+			justify-content: flex-start;
+		}
+
+		.DateInput:last-of-type {
+			margin-left: 13px;
+		}
+
+		.roomBookNowBottomContent {
+			display: flex;
+			flex-direction: row-reverse;
+		}
+
+		.bookNowBtn {
+			margin-top: 17px;
+			width: 155px;
+		}
+
+		.compareBtnMobile {
+			width: 155px;
+		}
+
+		.addCompareIconMobile {
+			margin-left: 2px;
+		}
+	}
+}
