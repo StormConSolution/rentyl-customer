@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 import DestinationSummaryAccomodationList, {
 	DestinationSummaryAccommodationListProps
 } from '../destinationSummaryAccommodationList/DestinationSummaryAccommodationList';
+import DestinationSummaryOverview, {
+	DestinationSummaryOverviewProps
+} from '../destinationSummaryOverview/DestinationSummaryOverview';
 import './TabbedDestinationSummary.scss';
 
-interface DestinationSummaryTab {
+export interface DestinationSummaryTab {
 	label: string;
-	content: string | DestinationSummaryAccommodationListProps;
+	content: string | DestinationSummaryAccommodationListProps | DestinationSummaryOverviewProps;
 }
 
 export interface TabbedDestinationSummaryProps {
-	tabs: Array<DestinationSummaryTab>;
+	tabs: DestinationSummaryTab[];
 }
 
 const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props) => {
@@ -33,6 +36,21 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		});
 	}
 
+	const isOverviewProp = (prop: object): prop is DestinationSummaryOverviewProps => prop.hasOwnProperty('text');
+	const isAccommodationListProp = (prop: object): prop is DestinationSummaryOverviewProps =>
+		prop.hasOwnProperty('accomodationType');
+
+	function renderOverview(overviewProps: DestinationSummaryOverviewProps) {
+		return (
+			<DestinationSummaryOverview
+				text={overviewProps.text}
+				amenities={overviewProps.amenities}
+				finePrint={overviewProps.finePrint}
+				className={overviewProps.className}
+			/>
+		);
+	}
+
 	function renderAccommodationList(listProps: DestinationSummaryAccommodationListProps): JSX.Element {
 		return (
 			<DestinationSummaryAccomodationList
@@ -45,11 +63,20 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		);
 	}
 
-	function renderContents(tabs: Array<DestinationSummaryTab>): Array<JSX.Element> {
+	function renderSingleContent(
+		content: string | DestinationSummaryAccommodationListProps | DestinationSummaryOverviewProps
+	) {
+		if (typeof content === 'string') return <Label variant="body2">{content}</Label>;
+		if (isOverviewProp(content)) return renderOverview(content);
+		if (isAccommodationListProp(content)) return renderAccommodationList(content);
+		return '';
+	}
+
+	function renderContents(tabs: DestinationSummaryTab[]): JSX.Element[] {
 		return tabs.map((tab, index) => {
 			return (
 				<div key={index} className={'summaryContent' + (activeTabIndex === index ? ' active' : '')}>
-					{typeof tab.content === 'string' ? tab.content : renderAccommodationList(tab.content)}
+					{renderSingleContent(tab.content)}
 				</div>
 			);
 		});

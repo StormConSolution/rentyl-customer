@@ -14,6 +14,7 @@
 			border-bottom: 1px solid theme-var($greyLineColor);
 			.rsLabel {
 				cursor: pointer;
+				margin-bottom: 8px;
 			}
 			&.active {
 				border-width: 2px;
@@ -25,6 +26,8 @@
 	.contentSection {
 		.summaryContent {
 			display: none;
+			height: 188px;
+			margin-top: 14px;
 			&.active {
 				display: block;
 			}
