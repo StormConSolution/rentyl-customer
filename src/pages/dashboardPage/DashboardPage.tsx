@@ -13,7 +13,6 @@ import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
 import LightboxPopupItems from './LightboxPopupItems';
-import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 
 const DashboardPage: React.FC = () => {
 	const emptyFunction: () => void = () => {};
@@ -28,40 +27,6 @@ const DashboardPage: React.FC = () => {
 				<Label>Dashboard</Label>
 			</Box>
 			<Label>Plots Go Here</Label>
-
-			<AccommodationSearchResultCard
-				id="1"
-				name="VIP Suite"
-				accommodationType="Suite"
-				description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
-				pointsPerNight={5300}
-				ratePerNight={982.34}
-				starRating={4.5}
-				roomStats={[
-					{
-						label: 'Sleeps',
-						datum: 12
-					},
-					{
-						label: 'Bedrooms',
-						datum: 6
-					},
-					{
-						label: 'Various Bed Types',
-						datum: '3'
-					},
-					{
-						label: 'Maximum Capacity',
-						datum: '4'
-					},
-					{
-						label: 'Size',
-						datum: '2,800-32,000 sq/ft'
-					}
-				]}
-				amenityIconNames={['icon-food-plate', 'icon-wine', 'icon-tea-cup']}
-				carouselImagePaths={['../images/dashboardPage/luxury-suite.jpg']}
-			/>
 
 			<Box>
 				<Box
