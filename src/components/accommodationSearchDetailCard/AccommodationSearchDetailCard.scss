@@ -12,6 +12,7 @@
 	background-color: theme-var($tertiaryBackgroundColor);
 	.amenityIcons {
 		display: inline-block;
+		margin-bottom: 18px;
 		.rsIcon {
 			margin-left: 20px;
 			&:first-of-type {

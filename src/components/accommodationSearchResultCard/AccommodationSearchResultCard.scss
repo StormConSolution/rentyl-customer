@@ -7,18 +7,35 @@
 	}
 	> div {
 		position: relative;
-		&:nth-of-type(2) {
+		&.description {
 			margin-left: 40px;
 			margin-right: 15px;
+			> div {
+				display: flex;
+				.rsLabel {
+					margin: auto 0;
+					&:last-of-type {
+						margin-left: 5px;
+					}
+				}
+				.rsStarRating {
+					margin-right: 15px;
+				}
+				&.accommodationDescription {
+					margin-top: 15px;
+				}
+			}
 		}
 	}
 	.rsCarousel {
 		position: relative;
 		height: 280px;
 	}
+	> div:nth-last-of-type(2) {
+		align-self: end;
+	}
 
 	.rsAccommodationSearchDetailCard {
-		margin: 85px 0 0 0;
 		width: 290px;
 		padding: 20px 0 20px 20px;
 	}

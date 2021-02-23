@@ -41,19 +41,25 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 	return (
 		<Box className="rsAccommodationSearchResultCard">
 			<Carousel showControls>{renderCarouselImages(props.carouselImagePaths)}</Carousel>
-			<div>
+			<div className="description">
 				<Label className="accommodationName" variant="h2">
 					{props.name}
 				</Label>
-				<Label variant="h4">
-					{StringUtils.formatMoney(props.ratePerNight)} or {addCommasToNumber(props.pointsRatePerNight)}{' '}
-					points/night
-				</Label>
-				<Label variant="caption">+ taxes &amp; fees</Label>
-				<StarRating rating={props.starRating} size="large32px" />
-				<Link path="">
-					<Label variant="caption">View {props.accommodationType} Ratings</Label>
-				</Link>
+				<div>
+					<Label variant="h4" className="costs">
+						{StringUtils.formatMoney(props.ratePerNight)} or {addCommasToNumber(props.pointsRatePerNight)}{' '}
+						points/night
+					</Label>
+					<Label variant="caption" className="taxAndFees">
+						+ taxes &amp; fees
+					</Label>
+				</div>
+				<div>
+					<StarRating rating={props.starRating} size="small16px" />
+					<Link path="">
+						<Label variant="caption">{`View ${props.accommodationType} Ratings >`}</Label>
+					</Link>
+				</div>
 				<Label className="accommodationDescription" variant="body2">
 					{props.description}
 				</Label>
