@@ -8,18 +8,23 @@ import LabelLink from '../../components/labelLink/LabelLink';
 import Icon from '@bit/redsky.framework.rs.icon';
 
 interface AccountOverviewProps {
-	currentPoints: number;
 	isOpen: boolean;
 	onToggle: () => void;
 }
 
 const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
+	/*
+		This Component needs to have an end point written to get back the correct data. As of right now we are blocked.
+		We need to hook this up to use the user id, once logged in, to go and fetch their upcoming reservation. There is
+		a lot of backend info that is still needing to be figured out.
+	*/
+
 	return (
 		<div className={`rsAccountOverview ${props.isOpen ? 'opened' : ''}`}>
-			<Paper height={'403px'} backgroundColor={'#FCFBF8'} padding={'20px 18px 17px'}>
+			<Paper height={'fit-content'} backgroundColor={'#FCFBF8'} padding={'20px 18px 17px'}>
 				<Label variant={'h4'}>Account Overview</Label>
 				<Box display={'flex'} marginBottom={'10px'}>
-					<Label variant={'h2'}>{addCommasToNumber(props.currentPoints)}</Label>
+					<Label variant={'h2'}>{addCommasToNumber(15202)}</Label>
 					<Label variant={'caption'}>
 						CURRENT
 						<br /> POINTS
@@ -46,12 +51,8 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 					<Label variant={'body1'}>05/25/2020 - 05/31/2020</Label>
 				</Box>
 				<Box marginBottom={15}>
-					<Label variant={'caption'}>Special Rate</Label>
-					<Label variant={'body1'}>$250</Label>
-				</Box>
-				<Box marginBottom={15}>
-					<Label variant={'caption'}>Accommodations</Label>
-					<Label variant={'body1'}>Lorem ipsum dolor sit amet...</Label>
+					<Label variant={'caption'}>Room Rate</Label>
+					<Label variant={'body1'}>$250/per night</Label>
 				</Box>
 				<LabelLink
 					path={'/'}
