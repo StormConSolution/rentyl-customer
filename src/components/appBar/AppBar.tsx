@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Box from '../box/Box';
-import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import './AppBar.scss';
 import { Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
-import NavPopout from '../../popups/navPopout/NavPopout';
+import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
@@ -36,7 +34,7 @@ const AppBar: React.FC = () => {
 				/>
 			</Box>
 
-			<NavPopout
+			<NavDrawer
 				isOpened={showSlideOutMenu}
 				onClose={() => {
 					document.getElementsByTagName('body')[0].style.overflow = '';

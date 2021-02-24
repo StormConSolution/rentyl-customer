@@ -10,7 +10,7 @@ interface FeaturedRewardCardProps {
 }
 
 const FeaturedRewardCard: React.FC<FeaturedRewardCardProps> = (props) => {
-	const size = useWindowResizeChange();
+	// const size = useWindowResizeChange();
 
 	return (
 		<div className={'rsFeaturedRewardCard'}>
