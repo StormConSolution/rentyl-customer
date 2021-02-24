@@ -1,10 +1,10 @@
 declare namespace Model {
 	export type InternalResourceTypes = 'ANDROID' | 'IOS' | 'WEB';
-	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION';
+	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION' | 'PAYMENT';
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 	export type AccommodationRoomClassType = 'Deluxe';
-	export type UserAddressType = 'SHIPPING' | 'BILLING';
+	export type UserAddressType = 'SHIPPING' | 'BILLING' | 'BOTH';
 	export type UserAccessScopeTypes =
 		| 'USER'
 		| 'POINTS'
@@ -202,8 +202,8 @@ declare namespace Model {
 
 	export interface CompanyVariables {
 		companyId: number;
-		ap2FaLoginTimeoutDays: number;
-		ap2FALoginVerificationTimeoutHours: number;
+		ap2FactorLoginTimeoutDays: number;
+		ap2FactorLoginVerificationTimeoutHours: number;
 	}
 
 	export interface Destination {
@@ -561,9 +561,9 @@ declare namespace Model {
 	export interface UserPoint {
 		id: number;
 		userId: number;
-		userActionId: number;
-		orderId: number;
-		reservationId: number;
+		userActionId: number | null;
+		orderId: number | null;
+		reservationId: number | null;
 		description: string;
 		status: UserPointStatusTypes;
 		pointType: PointTypes;
@@ -571,7 +571,7 @@ declare namespace Model {
 		reason: PointReason;
 		notes: string;
 		createdOn: Date | string;
-		modifiedOn: Date | string;
+		modifiedOn: Date | string | null;
 		availableOn: Date | string;
 	}
 
@@ -583,6 +583,7 @@ declare namespace Model {
 		modifiedOn: Date | string;
 		accessScope: UserRoleAccessScope[];
 		isAdmin: 1 | 0;
+		isCustomer: 1 | 0;
 	}
 
 	export interface UserRoleAccessScope {
@@ -595,6 +596,13 @@ declare namespace Model {
 		id: number;
 		userId: number;
 		createdOn: Date | string;
+	}
+
+	export interface UserSetting {
+		id: number;
+		userId: number;
+		allowNewsLetter: 0 | 1;
+		allowEmailNotification: 0 | 1;
 	}
 
 	export interface UserSocialMedia {
