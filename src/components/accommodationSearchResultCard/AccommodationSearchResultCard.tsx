@@ -28,7 +28,7 @@ export interface AccommodationSearchResultCardProps {
 	amenityIconNames: string[];
 	onBookNowClick: () => void;
 	onCompareClick: () => void;
-	disableCompare: boolean;
+	disableCompare?: boolean;
 	onViewDetailsClick: () => void;
 }
 

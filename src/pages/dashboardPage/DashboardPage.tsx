@@ -9,9 +9,10 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
 import LightboxPopupItems from './LightboxPopupItems';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
+import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 
 const DashboardPage: React.FC = () => {
-	const emptyFunction = () => {};
+	const emptyFunction: () => void = () => {};
 
 	return (
 		<Page className="rsDashboardPage">
@@ -53,6 +54,46 @@ const DashboardPage: React.FC = () => {
 					'../images/dashboardPage/bearsden.png',
 					'../images/dashboardPage/margaritaville.png'
 				]}
+			/>
+
+			<AccommodationSearchResultCard
+				id="1"
+				name="VIP Suite"
+				accommodationType="Suite"
+				description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+				pointsRatePerNight={5300}
+				ratePerNightInCents={98234}
+				starRating={4.5}
+				bedrooms={6}
+				squareFeet={'2.800-3,200sq/ft'}
+				pointsEarnable={2500}
+				onBookNowClick={emptyFunction}
+				onViewDetailsClick={emptyFunction}
+				onCompareClick={emptyFunction}
+				roomStats={[
+					{
+						label: 'Sleeps',
+						datum: 12
+					},
+					{
+						label: 'Bedrooms',
+						datum: 6
+					},
+					{
+						label: 'Various Bed Types',
+						datum: '3'
+					},
+					{
+						label: 'Maximum Capacity',
+						datum: '4'
+					},
+					{
+						label: 'Size',
+						datum: '2,800-32,000 sq/ft'
+					}
+				]}
+				amenityIconNames={['icon-food-plate', 'icon-wine', 'icon-tea-cup']}
+				carouselImagePaths={['../images/dashboardPage/luxury-suite.jpg']}
 			/>
 			<Box width="1440px" height="640px">
 				<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
