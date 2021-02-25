@@ -13,7 +13,7 @@ export interface SignupOption {
 }
 
 const SignupOptionCheckboxes: React.FC<SignupOptionCheckboxesProps> = (props: SignupOptionCheckboxesProps) => {
-	function renderCheckboxes(options: SignupOption, onClickFunction: (e: React.MouseEvent) => void) {
+	function renderCheckboxes(options: SignupOption[], onClickFunction: (e: React.MouseEvent) => void) {
 		return options.map((opt: SignupOption) => {
 			return (
 				<label className={'checkboxContainer'} key={opt.value}>
