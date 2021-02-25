@@ -3,79 +3,57 @@ import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import './DashboardPage.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Box from '../../components/box/Box';
-import { useSetRecoilState } from 'recoil';
-import globalState, { AvailableThemes } from '../../models/globalState';
-import Button from '@bit/redsky.framework.rs.button';
-import rsToasts from '@bit/redsky.framework.toast';
-import TestPopup from '../../popups/testPopup/TestPopup';
 import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
 import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
 import LightboxPopupItems from './LightboxPopupItems';
+import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 
 const DashboardPage: React.FC = () => {
-	const emptyFunction: () => void = () => {};
-	const setTheme = useSetRecoilState<AvailableThemes>(globalState.theme);
-	function changeTheme(theme: AvailableThemes) {
-		setTheme(theme);
-	}
+	const emptyFunction = () => {};
 
 	return (
 		<Page className="rsDashboardPage">
 			<Box>
 				<Label>Dashboard</Label>
 			</Box>
-			<Label>Plots Go Here</Label>
 
-			<Box>
-				<Box
-					className="themeButtons"
-					bgcolor={'green'}
-					color={'white'}
-					m={10}
-					p={'10px 20px'}
-					border={1}
-					display={'inline-block'}
-					onClick={() => {
-						changeTheme('green');
-					}}
-				>
-					Click Theme Green
-				</Box>
-				<Box
-					className="themeButtons"
-					bgcolor={'blue'}
-					color={'white'}
-					m={10}
-					p={'10px 20px'}
-					border={1}
-					display={'inline-block'}
-					onClick={() => {
-						changeTheme('blue');
-					}}
-				>
-					Click Theme Blue
-				</Box>
-			</Box>
-			<Box display={'flex'}>
-				<Button
-					look={'containedPrimary'}
-					onClick={() => {
-						rsToasts.error('THIS IS AN ERROR TOAST!');
-					}}
-				>
-					Toast Error
-				</Button>
-				<Button
-					look={'containedPrimary'}
-					onClick={() => {
-						popupController.open(TestPopup);
-					}}
-				>
-					Popup
-				</Button>
-			</Box>
+			<DestinationSearchResultCard
+				destinationName="Encore Resort"
+				address="7635 Fairfax Dr, Reunion, FL 34747"
+				starRating={4.5}
+				logoImagePath="src\images\spire-logo.png"
+				onAddCompareClick={emptyFunction}
+				reviewPath=""
+				destinationDetailsPath=""
+				summaryTabs={[
+					{
+						label: 'Overview',
+						content: {
+							text:
+								'Located close to Orlando’s best attractions, Encore Resort is the perfect spot for your stay in Central Florida. Each luxury vacation home rental includes a private pool, access to amazing amenities and in-home services, plus so much more! Keep your whole party under one roof so you can spend less time planning and more time taking advantage of the same service and amenities you’d get from a high-end resort.',
+							amenities: [
+								{
+									iconName: 'icon-wine',
+									label: 'Booze'
+								}
+							],
+							finePrint:
+								'By staying here, you grant parental rights to Encore Resort over any resultant children.'
+						}
+					},
+					{
+						label: 'More info',
+						content: 'Yep, this exists!'
+					}
+				]}
+				picturePaths={[
+					'../images/dashboardPage/AdobeStock_70559163.png',
+					'../images/dashboardPage/bearsden.png',
+					'../images/dashboardPage/margaritaville.png'
+				]}
+			/>
 			<Box width="1440px" height="640px">
 				<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
 			</Box>
