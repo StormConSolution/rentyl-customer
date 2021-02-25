@@ -4,7 +4,6 @@ import Box from '../box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Link } from '@bit/redsky.framework.rs.996';
-import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface FooterLink {
 	text: string;
@@ -16,8 +15,6 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = (props) => {
-	const size = useWindowResizeChange();
-
 	function renderSocialMedia() {
 		return (
 			<Box className={'socialMediaLinks'} display={'flex'}>
@@ -71,12 +68,10 @@ const Footer: React.FC<FooterProps> = (props) => {
 	}
 
 	return (
-		<Box className={`rsFooter ${size === 'small' ? 'small' : ''}`}>
-			<Box className={`footerNavigation ${size === 'small' ? 'small' : ''}`} display={'grid'}>
+		<Box className={'rsFooter'}>
+			<Box className={'footerNavigation'} display={'grid'}>
 				<img src={require('../../images/spire-logo.png')} alt={'Company Logo'} />
-				<Box display={'grid'} className={size === 'small' ? 'small' : ''}>
-					{renderLinks(props.links)}
-				</Box>
+				<Box display={'grid'}>{renderLinks(props.links)}</Box>
 			</Box>
 			<Box className="copyright" display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 				<Label variant={'caption'}>Spire &#169; 2020, all rights reserved.</Label>
