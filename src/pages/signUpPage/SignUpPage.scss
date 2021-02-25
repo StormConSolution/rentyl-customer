@@ -15,7 +15,18 @@
 				width: 100%;
 			}
 		}
+		.countryLabel {
+			margin-bottom: 10px;
+		}
+		.rsSelect {
+			width: 100%;
+			max-width: 100%;
+			.placeHolder {
+				color: theme-var($disableTextColor);
+			}
+		}
 	}
+
 	.rsButton {
 		margin: 20px auto;
 	}

@@ -24,6 +24,17 @@ export default class UserService extends Service {
 		await this.onAfterLogin(axiosResponse.data.data);
 	}
 
+	async getAllCountries(): Promise<Api.Country.ICountry[]> {
+		let res = await http.get<RsResponseData<Api.Country.Res.AllCountries>>('country/all');
+		return res.data.data.countries;
+	}
+	async createNewCustomer(customer: Api.Customer.Req.Create) {
+		customer.password = SparkMD5.hash(customer.password);
+		/*let res = await http.post('customer', customer);
+		console.log(res);
+		return res;*/
+	}
+
 	getCurrentUser(): Api.User.Res.Get | undefined {
 		return this.userModel.getCurrentUser();
 	}
