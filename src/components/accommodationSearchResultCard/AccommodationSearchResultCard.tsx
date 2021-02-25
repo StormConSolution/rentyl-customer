@@ -10,6 +10,7 @@ import AccommodationSearchDetailCard, {
 } from '../accommodationSearchDetailCard/AccommodationSearchDetailCard';
 import StarRating, { Rating } from '../starRating/StarRating';
 import './AccommodationSearchResultCard.scss';
+import LabelLink from '../labelLink/LabelLink';
 
 export interface AccommodationSearchResultCardProps {
 	id: number | string;
@@ -18,7 +19,7 @@ export interface AccommodationSearchResultCardProps {
 	bedrooms: number;
 	squareFeet: number | string;
 	description: string;
-	ratePerNight: number;
+	ratePerNightInCents: number;
 	pointsRatePerNight: number;
 	pointsEarnable: number;
 	starRating: Rating;
@@ -47,8 +48,8 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 				</Label>
 				<div>
 					<Label variant="h4" className="costs">
-						{StringUtils.formatMoney(props.ratePerNight)} or {addCommasToNumber(props.pointsRatePerNight)}{' '}
-						points/night
+						{StringUtils.formatMoney(props.ratePerNightInCents)} or{' '}
+						{addCommasToNumber(props.pointsRatePerNight)} points/night
 					</Label>
 					<Label variant="caption" className="taxAndFees">
 						+ taxes &amp; fees
@@ -56,9 +57,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 				</div>
 				<div>
 					<StarRating rating={props.starRating} size="small16px" />
-					<Link path="">
-						<Label variant="caption">{`View ${props.accommodationType} Ratings >`}</Label>
-					</Link>
+					<LabelLink variant="caption" path="" label={`View ${props.accommodationType} Ratings >`} />
 				</div>
 				<Label className="accommodationDescription" variant="body2">
 					{props.description}
