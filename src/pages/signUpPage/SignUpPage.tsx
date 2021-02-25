@@ -16,7 +16,7 @@ interface SignUpPageProps {}
 
 const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 	const iconSize: number = 18;
-	function getSignupOptions(): Array<SignupOption> {
+	function getSignupOptions(): SignupOption[] {
 		return SignupOptions;
 	}
 

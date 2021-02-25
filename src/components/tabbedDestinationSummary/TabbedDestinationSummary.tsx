@@ -11,13 +11,13 @@ interface DestinationSummaryTab {
 }
 
 export interface TabbedDestinationSummaryProps {
-	tabs: Array<DestinationSummaryTab>;
+	tabs: DestinationSummaryTab[];
 }
 
 const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props) => {
 	const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
-	function renderTabs(tabs: Array<DestinationSummaryTab>): Array<JSX.Element> {
+	function renderTabs(tabs: DestinationSummaryTab[]): JSX.Element[] {
 		return tabs.map((tab: DestinationSummaryTab, index: number) => {
 			return (
 				<div
@@ -45,7 +45,7 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		);
 	}
 
-	function renderContents(tabs: Array<DestinationSummaryTab>): Array<JSX.Element> {
+	function renderContents(tabs: DestinationSummaryTab[]): JSX.Element[] {
 		return tabs.map((tab, index) => {
 			return (
 				<div key={index} className={'summaryContent' + (activeTabIndex === index ? ' active' : '')}>
