@@ -12,6 +12,7 @@ export interface AccommodationStat {
 export interface AccommodationSearchDetailCardProps {
 	amenityIconNames: Array<string>;
 	stats: Array<AccommodationStat>;
+	className?: string;
 }
 
 const AccommodationSearchDetailCard: React.FC<AccommodationSearchDetailCardProps> = (props) => {
@@ -31,7 +32,7 @@ const AccommodationSearchDetailCard: React.FC<AccommodationSearchDetailCardProps
 	}
 
 	return (
-		<Box className="rsAccommodationSearchDetailCard">
+		<Box className={`rsAccommodationSearchDetailCard ${props.className || ''}`}>
 			{!!props.amenityIconNames.length && (
 				<Box className="amenityIcons">{renderAmenityIcons(props.amenityIconNames)}</Box>
 			)}

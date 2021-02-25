@@ -18,8 +18,3 @@ export function addCommasToNumber(intNum: any) {
 	if (isNaN(intNum)) return intNum;
 	return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
 }
-
-export function formatMoney(intNum: number, includeCents: boolean = false): string {
-	const rawNumberString: string = includeCents ? intNum.toFixed(2) : intNum + '';
-	return '$' + addCommasToNumber(rawNumberString);
-}
