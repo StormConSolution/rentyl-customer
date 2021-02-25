@@ -1,0 +1,29 @@
+@import '../../themes/themes.scss';
+
+.rsDestinationSummaryAccomodationList {
+	div {
+		margin: 0;
+	}
+	.accommodationRow {
+		display: grid;
+		grid-template-columns: 80px 130px 93px 58px 115px 110px 126px 90px;
+
+		div {
+			margin: auto 0;
+		}
+
+		&:not(.header) {
+			> div:first-child {
+				padding-left: 11px;
+			}
+		}
+
+		.rsIcon {
+			margin-right: 14px;
+		}
+
+		button.rsButton {
+			height: 28px;
+		}
+	}
+}
