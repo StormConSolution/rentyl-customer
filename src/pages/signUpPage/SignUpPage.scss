@@ -12,7 +12,7 @@
 			margin: 10px 0;
 			input {
 				max-width: 100%;
-				width: 100%;
+				width: calc(100% - 20px);
 			}
 		}
 		.countryLabel {
@@ -21,10 +21,23 @@
 		.rsSelect {
 			width: 100%;
 			max-width: 100%;
+			background-color: #ffffff;
 			.placeHolder {
 				color: theme-var($disableTextColor);
 			}
 		}
+	}
+	.rsErrorMessage {
+		font-family: 'Mrs-Eaves-All-Petite-Caps', sans-serif;
+		font-size: 19px;
+		line-height: 12px;
+		font-weight: $regular;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+	.customErrorMessage {
+		margin-bottom: 10px;
+		display: none;
 	}
 
 	.rsButton {

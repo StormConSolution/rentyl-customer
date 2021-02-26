@@ -19,41 +19,45 @@ import serviceFactory from '../../services/serviceFactory';
 import Select from '../../components/Select/Select';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import debounce from 'lodash.debounce';
+import rsToasts from '@bit/redsky.framework.toast';
+import { sign } from 'crypto';
+
+//TODO password match, fix country select formatting, mobile responsive
+const signUpForm = new RsFormGroup([
+	new RsFormControl('name', '', [new RsValidator(RsValidatorEnum.REQ, 'Name is required')]),
+	new RsFormControl('dateOfBirth', '', [new RsValidator(RsValidatorEnum.REQ, 'Date of birth is required')]),
+	new RsFormControl('address', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
+	new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
+	new RsFormControl('zipCode', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip code is required')]),
+	new RsFormControl('phone', '', [
+		new RsValidator(RsValidatorEnum.REQ, 'Phone is required'),
+		new RsValidator(RsValidatorEnum.MIN, 'Invalid phone', 10),
+		new RsValidator(RsValidatorEnum.MAX, 'Invalid phone', 10)
+	]),
+	new RsFormControl('email', '', [
+		new RsValidator(RsValidatorEnum.REQ, 'Email is required'),
+		new RsValidator(RsValidatorEnum.EMAIL, 'Invalid email')
+	]),
+	new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')]),
+	new RsFormControl('confirmPassword', '', [new RsValidator(RsValidatorEnum.REQ, 'Confirm password is required')])
+]);
 
 const SignUpPage: React.FC = () => {
 	let userService = serviceFactory.get<UserService>('UserService');
-	const signUpFormGroup = new RsFormGroup([
-		new RsFormControl('name', '', [new RsValidator(RsValidatorEnum.REQ, 'Name is required')]),
-		new RsFormControl('dateOfBirth', '', [new RsValidator(RsValidatorEnum.REQ, 'Date of birth is required')]),
-		new RsFormControl('address', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
-		new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
-		new RsFormControl('zipCode', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip code is required')]),
-		new RsFormControl('phone', '', [
-			new RsValidator(RsValidatorEnum.REQ, 'Phone is required'),
-			new RsValidator(RsValidatorEnum.MIN, 'Invalid phone', 10),
-			new RsValidator(RsValidatorEnum.MAX, 'Invalid phone', 10)
-		]),
-		new RsFormControl('email', '', [
-			new RsValidator(RsValidatorEnum.REQ, 'Email is required'),
-			new RsValidator(RsValidatorEnum.EMAIL, 'Invalid email')
-		]),
-		new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')]),
-		new RsFormControl('confirmPassword', '', [new RsValidator(RsValidatorEnum.REQ, 'Confirm password is required')])
-	]);
-	const [name, setName] = useState<string>('');
-	const [dateOfBirth, setDateOfBirth] = useState<string>('');
-	const [address, setAddress] = useState<string>('');
-	const [city, setCity] = useState<string>('');
-	const [zipCode, setZipCode] = useState<string>('');
+
+	const [form, setForm] = useState(signUpForm);
+	const [newsletter, setNewsletter] = useState<0 | 1>(0);
+	const [emailNotification, setEmailNotification] = useState<0 | 1>(0);
 	const [country, setCountry] = useState<string>('');
-	const [phone, setPhone] = useState<string>('');
-	const [email, setEmail] = useState<string>('');
-	const [password, setPassword] = useState<string>('');
-	const [confirmPassword, setConfirmPassword] = useState<string>('');
 	const [countryList, setCountryList] = useState<
 		{ value: number | string; text: number | string; selected?: boolean }[]
 	>([]);
 	const iconSize: number = 18;
+
+	let searchDebounced = debounce(async (value) => {
+		form.update(value);
+	}, 500);
 
 	useEffect(() => {
 		async function getCountries() {
@@ -70,23 +74,25 @@ const SignUpPage: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	async function signUp(e: FormEvent) {
-		e.preventDefault();
-		console.log('signup');
+	function renderPasswordError() {
+		const inputElements = document.getElementsByClassName('rsLabelInput');
+		// @ts-ignore
+		inputElements[inputElements.length - 1].style.margin = 0;
+	}
+	async function signUp() {
+		if (form.get('password').value !== form.get('confirmPassword').value) {
+			renderPasswordError();
+		}
+		if (!(await form.isValid()) && country === '') {
+			setForm(form.clone());
+		}
+		let newCustomer: any = form.toModel();
+		newCustomer.country = country;
+		newCustomer.newsLetter = newsletter;
+		newCustomer.emailNotification = emailNotification;
+
 		try {
-			await userService.createNewCustomer({
-				name: name,
-				birthDate: dateOfBirth,
-				address: address,
-				city: city,
-				zip: zipCode,
-				country: country,
-				phone: phone,
-				primaryEmail: email,
-				password: password,
-				newsLetter: 0,
-				emailNotification: 1
-			});
+			await userService.createNewCustomer(newCustomer);
 		} catch (e) {
 			axiosErrorHandler(e, {
 				[HttpStatusCode.UNAUTHORIZED]: () => {
@@ -99,6 +105,22 @@ const SignUpPage: React.FC = () => {
 		}
 	}
 
+	function getSignupOptions(): Array<SignupOption> {
+		return SignupOptions;
+	}
+
+	function toggleCheckBoxValue(inputValue: HTMLInputElement) {
+		if (inputValue.value === 'newsletter') {
+			inputValue.checked ? setNewsletter(1) : setNewsletter(0);
+		} else {
+			inputValue.checked ? setEmailNotification(1) : setEmailNotification(0);
+		}
+	}
+	function signupOptionClickPlaceholder(e: React.MouseEvent) {
+		let inputValue = e.target as HTMLInputElement;
+		toggleCheckBoxValue(inputValue);
+	}
+
 	function formatCountryListForSelect(countries: Api.Country.ICountry[] | undefined) {
 		let allCountries: { value: number | string; text: number | string; selected?: boolean }[] = [];
 		if (!!countries) {
@@ -107,14 +129,6 @@ const SignUpPage: React.FC = () => {
 			}
 			setCountryList(allCountries);
 		}
-	}
-	function getSignupOptions(): Array<SignupOption> {
-		return SignupOptions;
-	}
-
-	function signupOptionClickPlaceholder(e: React.MouseEvent) {
-		let inputValue = e.target as HTMLInputElement;
-		if (inputValue.checked) console.log(inputValue.value);
 	}
 
 	return countryList.length === 0 ? (
@@ -139,133 +153,114 @@ const SignUpPage: React.FC = () => {
 							backgroundColor={'#FCFBF8'}
 							position={'relative'}
 						>
-							<form className="signInForm" action={'#'} onSubmit={signUp}>
-								<Box padding={'48px 92px'}>
-									<Box display={'flex'} justifyContent={'space-between'}>
-										<LabelInput
-											title={'Name *'}
-											placeholder={'First and Last'}
-											inputType={'text'}
-											control={signUpFormGroup.get('name')}
-											updateControl={(updateControl) => {
-												setName(updateControl.value.toString());
-											}}
-										/>
-										<LabelInput
-											title={'Date Of Birth *'}
-											placeholder={'MM/DD/YYYY'}
-											inputType={'text'}
-											control={signUpFormGroup.get('dateOfBirth')}
-											updateControl={(updateControl) => {
-												setDateOfBirth(updateControl.value.toString());
-											}}
-										/>
-									</Box>
+							{/*<form className="signInForm" action={'#'} onSubmit={signUp}>*/}
+							<Box padding={'48px 92px'}>
+								<Box display={'flex'} justifyContent={'space-between'}>
 									<LabelInput
-										title={'Address *'}
-										placeholder={'Street, Apartment or Suite'}
+										title={'Name *'}
+										placeholder={'First and Last'}
 										inputType={'text'}
-										control={signUpFormGroup.get('address')}
-										updateControl={(updateControl) => {
-											setAddress(updateControl.value.toString());
-										}}
-									/>
-									<Box display={'flex'} justifyContent={'space-between'}>
-										<LabelInput
-											title={'City *'}
-											placeholder={'City'}
-											inputType={'text'}
-											control={signUpFormGroup.get('city')}
-											updateControl={(updateControl) => {
-												setCity(updateControl.value.toString());
-											}}
-										/>
-										<LabelInput
-											title={'Zip Code *'}
-											placeholder={'Zip Code'}
-											inputType={'text'}
-											control={signUpFormGroup.get('zipCode')}
-											updateControl={(updateControl) => {
-												setZipCode(updateControl.value.toString());
-											}}
-										/>
-									</Box>
-									<Box>
-										<Label className={'countryLabel'} variant={'caption'}>
-											Country
-										</Label>
-										<Select
-											placeHolder={'Select your country'}
-											onChange={(value) => {
-												if (value) setCountry(value.toString());
-											}}
-											options={countryList}
-										/>
-									</Box>
-									<Box display={'flex'} justifyContent={'space-between'}>
-										<LabelInput
-											title={'Phone *'}
-											placeholder={'(  )  - '}
-											inputType={'tel'}
-											iconImage="icon-phone"
-											iconSize={iconSize}
-											isPhoneInput
-											control={signUpFormGroup.get('phone')}
-											updateControl={(updateControl) => {
-												setPhone(updateControl.value.toString());
-											}}
-										/>
-										<LabelInput
-											title={'Email *'}
-											placeholder={'email@address.com'}
-											inputType={'text'}
-											iconImage="icon-mail"
-											iconSize={iconSize}
-											isEmailInput
-											control={signUpFormGroup.get('email')}
-											updateControl={(updateControl) => {
-												setEmail(updateControl.value.toString());
-											}}
-										/>
-									</Box>
-									<LabelInput
-										title={'Password *'}
-										placeholder={'Minimum 8 characters'}
-										inputType={'text'}
-										control={signUpFormGroup.get('password')}
-										updateControl={(updateControl) => {
-											setPassword(updateControl.value.toString());
-										}}
+										control={form.get('name')}
+										updateControl={(updateControl) => searchDebounced(updateControl)}
 									/>
 									<LabelInput
-										title={'Confirm Password *'}
-										placeholder={'Re-type password to confirm'}
+										title={'Date Of Birth *'}
+										placeholder={'MM/DD/YYYY'}
 										inputType={'text'}
-										control={signUpFormGroup.get('confirmPassword')}
-										updateControl={(updateControl) => {
-											setConfirmPassword(updateControl.value.toString());
-										}}
+										control={form.get('dateOfBirth')}
+										updateControl={(updateControl) => searchDebounced(updateControl)}
 									/>
-
-									<SignupOptionCheckboxes
-										options={getSignupOptions()}
-										onClick={signupOptionClickPlaceholder}
-									/>
-
-									<LabelButton
-										look={'containedPrimary'}
-										variant={'button'}
-										label={'Sign Up'}
-										onClick={() => console.log('Submit...')}
-										buttonType={'submit'}
-									/>
-
-									<div className={'termsAndPrivacy'}>
-										By signing up you are agreeing to the <a href={'/'}>Terms & Conditions</a> and{' '}
-										<a href={'/'}>Privacy Policy.</a>
-									</div>
 								</Box>
-							</form>
+								<LabelInput
+									title={'Address *'}
+									placeholder={'Street, Apartment or Suite'}
+									inputType={'text'}
+									control={form.get('address')}
+									updateControl={(updateControl) => searchDebounced(updateControl)}
+								/>
+								<Box display={'flex'} justifyContent={'space-between'}>
+									<LabelInput
+										title={'City *'}
+										placeholder={'City'}
+										inputType={'text'}
+										control={form.get('city')}
+										updateControl={(updateControl) => searchDebounced(updateControl)}
+									/>
+									<LabelInput
+										title={'Zip Code *'}
+										placeholder={'Zip Code'}
+										inputType={'text'}
+										control={form.get('zipCode')}
+										updateControl={(updateControl) => searchDebounced(updateControl)}
+									/>
+								</Box>
+								<Box>
+									<Label className={'countryLabel'} variant={'caption'}>
+										Country
+									</Label>
+									<Select
+										placeHolder={'Select your country'}
+										onChange={(value) => {
+											if (value) setCountry(value.toString());
+										}}
+										options={countryList}
+									/>
+								</Box>
+								<Box display={'flex'} justifyContent={'space-between'}>
+									<LabelInput
+										title={'Phone *'}
+										placeholder={'(  )  - '}
+										inputType={'tel'}
+										iconImage="icon-phone"
+										iconSize={iconSize}
+										isPhoneInput
+										control={form.get('phone')}
+										updateControl={(updateControl) => searchDebounced(updateControl)}
+									/>
+									<LabelInput
+										title={'Email *'}
+										placeholder={'email@address.com'}
+										inputType={'text'}
+										iconImage="icon-mail"
+										iconSize={iconSize}
+										isEmailInput
+										control={form.get('email')}
+										updateControl={(updateControl) => searchDebounced(updateControl)}
+									/>
+								</Box>
+								<LabelInput
+									title={'Password *'}
+									placeholder={'Minimum 8 characters'}
+									inputType={'text'}
+									control={form.get('password')}
+									updateControl={(updateControl) => searchDebounced(updateControl)}
+								/>
+								<LabelInput
+									title={'Confirm Password *'}
+									placeholder={'Re-type password to confirm'}
+									inputType={'text'}
+									control={form.get('confirmPassword')}
+									updateControl={(updateControl) => searchDebounced(updateControl)}
+								/>
+								<div class={'rsErrorMessage customErrorMessage'}>Password does not match</div>
+
+								<SignupOptionCheckboxes
+									options={getSignupOptions()}
+									onClick={signupOptionClickPlaceholder}
+								/>
+
+								<LabelButton
+									look={'containedPrimary'}
+									variant={'button'}
+									label={'Sign Up'}
+									onClick={signUp}
+								/>
+
+								<div className={'termsAndPrivacy'}>
+									By signing up you are agreeing to the <a href={'/'}>Terms & Conditions</a> and{' '}
+									<a href={'/'}>Privacy Policy.</a>
+								</div>
+							</Box>
 							<Box
 								className={'signInBottomBox'}
 								display={'flex'}
