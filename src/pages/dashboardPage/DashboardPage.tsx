@@ -20,6 +20,8 @@ const DashboardPage: React.FC = () => {
 				<Label>Dashboard</Label>
 			</Box>
 
+			<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
+
 			<DestinationSearchResultCard
 				destinationName="Encore Resort"
 				address="7635 Fairfax Dr, Reunion, FL 34747"
@@ -95,9 +97,7 @@ const DashboardPage: React.FC = () => {
 				amenityIconNames={['icon-food-plate', 'icon-wine', 'icon-tea-cup']}
 				carouselImagePaths={['../images/dashboardPage/luxury-suite.jpg']}
 			/>
-			<Box width="1440px" height="640px">
-				<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
-			</Box>
+
 			<Box>
 				<LabelButton
 					label="Lightbox"

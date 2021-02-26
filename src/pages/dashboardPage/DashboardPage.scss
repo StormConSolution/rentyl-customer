@@ -3,7 +3,7 @@
 .rsDashboardPage {
 	padding: 20px 100px;
 	.themeButtons {
-		border-radius: 10px; //theme-var($borderRadius);
+		border-radius: 10px;
 	}
 	div {
 		margin: 50px 0;
@@ -15,12 +15,29 @@
 		}
 	}
 
+	.rsTabbedImageGallery {
+		width: 100%;
+		height: 640px;
+		margin: 50px auto;
+	}
+
 	.rsAccommodationSearchResultCard {
 		width: 1160px;
 		border-bottom: 1px solid theme-var($greyLineColor);
 		height: 310px;
 		> div {
 			margin-bottom: 30px;
+		}
+	}
+}
+
+.small {
+	.rsDashboardPage {
+		padding: 0;
+
+		.rsTabbedImageGallery {
+			width: 375px;
+			height: 385px;
 		}
 	}
 }
