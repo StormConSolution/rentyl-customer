@@ -17,7 +17,7 @@
 		}
 	}
 
-	.description {
+	.info {
 		margin-left: 40px;
 		margin-right: 15px;
 		> div {
@@ -37,7 +37,7 @@
 		}
 	}
 
-	> div:nth-last-of-type(2) {
+	> div.detailCardHolder {
 		align-self: end;
 	}
 
@@ -54,6 +54,34 @@
 			left: 0;
 			top: 0;
 			opacity: 15%;
+		}
+	}
+}
+
+.small {
+	.rsAccommodationSearchResultCard {
+		display: grid;
+		grid-template-columns: 100px auto;
+		column-gap: 10px;
+		grid-template-rows: 145px 117px;
+		row-gap: 15px;
+		> img:first-child {
+			width: 100px;
+			height: 145px;
+		}
+		.info {
+			display: block;
+			margin: 0;
+			.taxAndFees {
+				margin-bottom: 12px;
+			}
+			.rsStarRating {
+				margin-bottom: 20px;
+			}
+			.rsLabelButton {
+				position: absolute;
+				bottom: 0;
+			}
 		}
 	}
 }

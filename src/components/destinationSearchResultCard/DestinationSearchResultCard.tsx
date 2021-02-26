@@ -35,13 +35,13 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 		});
 	}
 
+	function isSummaryOverviewTab(tab: DestinationSummaryTab) {
+		return tab.content.hasOwnProperty('amenities');
+	}
+
 	function getAmenityIcons() {
 		const overviewTab = props.summaryTabs.filter(isSummaryOverviewTab)[0];
 		return (overviewTab.content as DestinationSummaryOverviewProps).amenities;
-	}
-
-	function isSummaryOverviewTab(tab: DestinationSummaryTab) {
-		return tab.content.hasOwnProperty('amenities');
 	}
 
 	function renderSmallLayout(): JSX.Element {
@@ -73,39 +73,41 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 		);
 	}
 
-	return size === 'small' ? (
-		renderSmallLayout()
-	) : (
-		<Box className={`rsDestinationSearchResultCard ${props.className || ''}`}>
-			<Carousel showControls children={renderPictures(props.picturePaths)} />
-			<div className="info">
-				<img alt={props.destinationName} src={props.logoImagePath} className="destinationLogo" />
-				<div className="nameAndAddress">
-					<Label variant="h2">{props.destinationName}</Label>
-					<Label variant="caption">{props.address}</Label>
-				</div>
-				<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
-				<StarRating size="small16px" rating={props.starRating} />
-				<LabelLink
-					className="ratings"
-					label="View ratings >"
-					path={props.reviewPath}
-					variant="caption"
-					externalLink={false}
-				/>
-				<LabelLink
-					className="addCompare"
-					label="Add to compare +"
-					variant="caption"
-					onClick={props.onAddCompareClick}
-					path=""
-					externalLink={false}
-				/>
+	function renderLargeLayout() {
+		return (
+			<Box className={`rsDestinationSearchResultCard ${props.className || ''}`}>
+				<Carousel showControls children={renderPictures(props.picturePaths)} />
+				<div className="info">
+					<img alt={props.destinationName} src={props.logoImagePath} className="destinationLogo" />
+					<div className="nameAndAddress">
+						<Label variant="h2">{props.destinationName}</Label>
+						<Label variant="caption">{props.address}</Label>
+					</div>
+					<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
+					<StarRating size="small16px" rating={props.starRating} />
+					<LabelLink
+						className="ratings"
+						label="View ratings >"
+						path={props.reviewPath}
+						variant="caption"
+						externalLink={false}
+					/>
+					<LabelLink
+						className="addCompare"
+						label="Add to compare +"
+						variant="caption"
+						onClick={props.onAddCompareClick}
+						path=""
+						externalLink={false}
+					/>
 
-				<TabbedDestinationSummary tabs={props.summaryTabs} />
-			</div>
-		</Box>
-	);
+					<TabbedDestinationSummary tabs={props.summaryTabs} />
+				</div>
+			</Box>
+		);
+	}
+
+	return size === 'small' ? renderSmallLayout() : renderLargeLayout();
 };
 
 export default DestinationSearchResultCard;

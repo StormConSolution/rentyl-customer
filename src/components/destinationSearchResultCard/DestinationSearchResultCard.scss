@@ -79,10 +79,10 @@
 		.buttonHolder {
 			grid-column: 1/3;
 			display: flex;
-			justify-content: space-evenly;
 			.rsButton {
-				width: 165px;
+				padding: 0 20px;
 				white-space: nowrap;
+				margin: 0 6px;
 			}
 		}
 	}
