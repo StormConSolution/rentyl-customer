@@ -1,7 +1,5 @@
 import * as React from 'react';
 import './SelectOption.scss';
-import { Box } from '@bit/redsky.framework.rs.996';
-import { useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
 interface SelectOptionProps {

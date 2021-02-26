@@ -1,5 +1,5 @@
 import React from 'react';
-import './RoomSearchCallToActionCard.scss';
+import './AccommodationSearchCallToActionCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
@@ -8,7 +8,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 
-interface RoomSearchCallToActionCardProps {
+interface AccommodationSearchCallToActionCardProps {
 	points: number;
 	squareFeet: string;
 	bedrooms: number;
@@ -21,14 +21,14 @@ interface RoomSearchCallToActionCardProps {
 	className?: string;
 }
 
-const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (props) => {
+const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToActionCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
 	if (size === 'small') {
 		return (
 			<Paper
 				boxShadow
-				className={`rsRoomSearchCallToActionCard ${props.className || ''}`}
+				className={`rsAccommodationSearchCallToActionCard ${props.className || ''}`}
 				height={'117px'}
 				width={'335px'}
 				backgroundColor={'#fcfbf8'}
@@ -88,7 +88,7 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 		return (
 			<Paper
 				boxShadow
-				className={`rsRoomSearchCallToActionCard ${props.className || ''}`}
+				className={`rsAccommodationSearchCallToActionCard ${props.className || ''}`}
 				height={'280px'}
 				width={'180px'}
 				backgroundColor={'#fcfbf8'}
@@ -128,4 +128,4 @@ const RoomSearchCallToActionCard: React.FC<RoomSearchCallToActionCardProps> = (p
 	}
 };
 
-export default RoomSearchCallToActionCard;
+export default AccommodationSearchCallToActionCard;

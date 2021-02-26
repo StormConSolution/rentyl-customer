@@ -7,22 +7,28 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import InfoCard from '../../components/infoCard/InfoCard';
 import FeaturedRewardCard from '../../components/featuredRewardCard/FeaturedRewardCard';
 import Paper from '../../components/paper/Paper';
-import { useEffect, useState } from 'react';
+
+import { useState } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import FeaturedDestinationCard from '../../components/featuredDestinationCard/FeaturedDestinationCard';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { replaceClassName } from '../../utils/utils';
 import Carousel from '../../components/carousel/Carousel';
-import Select from '@bit/redsky.framework.rs.select';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
+import serviceFactory from '../../services/serviceFactory';
+import ComparisonService from '../../services/comparison/comparison.service';
+import { useRecoilState } from 'recoil';
+import globalState, { ComparisonCardInfo } from '../../models/globalState';
 
 interface LandingPageProps {}
 
 const LandingPage: React.FC<LandingPageProps> = (props) => {
 	const [activeRewards, setActiveRewards] = useState<number>(0);
 	const size = useWindowResizeChange();
+
+	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 
 	function getActiveRewardsStage() {
 		if (activeRewards === 1) return 'stageOne';
@@ -131,7 +137,22 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 							</>
 						)}
 					</Box>
-					<LabelButton look={'containedPrimary'} variant={'button'} label={'See all rewards'} />
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'See all rewards'}
+						onClick={() => {
+							comparisonService.addToComparison(recoilComparisonState, {
+								destinationId: Date.now(),
+								logo: '../../images/encore-resort.png',
+								title: 'Encore Resort',
+								roomTypes: [
+									{ value: 'villa', text: 'Villa', selected: false },
+									{ value: 'vip_suite', text: 'VIP Suite', selected: false }
+								]
+							});
+						}}
+					/>
 				</Box>
 
 				<Box className={'sectionTwo'} marginBottom={146}>
