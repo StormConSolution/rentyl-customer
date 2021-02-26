@@ -13,3 +13,8 @@ export function replaceClassName(elementClassName: string, initialValue: string,
 	}
 	return true;
 }
+
+export function addCommasToNumber(intNum: any) {
+	if (isNaN(intNum)) return intNum;
+	return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+}
