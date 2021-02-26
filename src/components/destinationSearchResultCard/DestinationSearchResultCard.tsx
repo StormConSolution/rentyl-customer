@@ -1,3 +1,4 @@
+import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
 import Carousel from '../carousel/Carousel';
@@ -28,8 +29,8 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 	}
 
 	return (
-		<div className={`rsDestinationSearchResultCard ${props.className || ''}`}>
-			<Carousel showControls>{renderPictures(props.picturePaths)}</Carousel>
+		<Box className={`rsDestinationSearchResultCard ${props.className || ''}`}>
+			<Carousel showControls children={renderPictures(props.picturePaths)} />
 			<div className="info">
 				<img alt={props.destinationName} src={props.logoImagePath} className="destinationLogo" />
 				<div className="nameAndAddress">
@@ -56,7 +57,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 
 				<TabbedDestinationSummary tabs={props.summaryTabs} />
 			</div>
-		</div>
+		</Box>
 	);
 };
 

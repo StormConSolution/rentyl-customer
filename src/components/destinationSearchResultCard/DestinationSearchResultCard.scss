@@ -1,22 +1,20 @@
 @import '../../themes/themes.scss';
 
 .rsDestinationSearchResultCard {
-	--row-height: 318px;
-	height: var(--row-height);
-	display: grid;
-	grid-template-columns: 327px 788px;
-	column-gap: 50px;
-	padding-bottom: 50px;
+	display: flex;
 	div {
 		margin: 0;
 	}
 	.rsCarousel {
-		height: var(--row-height);
-		width: 100%;
-		margin-right: 25px;
+		height: 280px;
+		width: 278px;
+		.carouselParent {
+			overflow-x: hidden;
+		}
 	}
-	div.info {
-		position: relative;
+
+	.info {
+		margin-left: 40px;
 		display: grid;
 		grid-template-columns: 102px 500px 155px;
 		grid-template-rows: 45px 40px 228px;
@@ -25,6 +23,7 @@
 			grid-row: 1 / 2;
 			grid-column: 1 / 2;
 			height: 100%;
+			max-width: 100%;
 			margin: 0 auto;
 		}
 		div.nameAndAddress {

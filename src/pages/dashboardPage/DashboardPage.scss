@@ -18,16 +18,21 @@
 	.rsTabbedImageGallery {
 		width: 100%;
 		height: 640px;
-		margin: 50px auto;
+		margin: 50px auto 150px auto;
+	}
+
+	.rsDestinationSearchResultCard {
+		width: 1160px;
+		height: 280px;
+		padding-bottom: 30px;
+		border-bottom: 1px solid theme-var($greyLineColor);
 	}
 
 	.rsAccommodationSearchResultCard {
 		width: 1160px;
+		height: 280px;
+		padding-bottom: 30px;
 		border-bottom: 1px solid theme-var($greyLineColor);
-		height: 310px;
-		> div {
-			margin-bottom: 30px;
-		}
 	}
 }
 
@@ -38,6 +43,7 @@
 		.rsTabbedImageGallery {
 			width: 375px;
 			height: 385px;
+			margin-bottom: 100px;
 		}
 	}
 }

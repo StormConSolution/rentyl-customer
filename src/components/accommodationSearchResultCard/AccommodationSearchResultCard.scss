@@ -7,36 +7,53 @@
 	}
 	> div {
 		position: relative;
-		&.description {
-			margin-left: 40px;
-			margin-right: 15px;
-			> div {
-				display: flex;
-				.rsLabel {
-					margin: auto 0;
-					&:last-of-type {
-						margin-left: 5px;
-					}
-				}
-				.rsStarRating {
-					margin-right: 15px;
-				}
-				&.accommodationDescription {
-					margin-top: 15px;
-				}
-			}
-		}
 	}
 	.rsCarousel {
 		position: relative;
 		height: 280px;
+		width: 278px;
+		.carouselParent {
+			overflow-x: hidden;
+		}
 	}
+
+	.description {
+		margin-left: 40px;
+		margin-right: 15px;
+		> div {
+			display: flex;
+			.rsLabel {
+				margin: auto 0;
+				&:last-of-type {
+					margin-left: 5px;
+				}
+			}
+			.rsStarRating {
+				margin-right: 15px;
+			}
+			&.accommodationDescription {
+				margin-top: 15px;
+			}
+		}
+	}
+
 	> div:nth-last-of-type(2) {
 		align-self: end;
 	}
 
 	.rsAccommodationSearchDetailCard {
+		position: relative;
 		width: 290px;
 		padding: 20px 0 20px 20px;
+		&:after {
+			content: '';
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			background-color: theme-var($iconAndHighlightTextColor);
+			left: 0;
+			top: 0;
+			opacity: 15%;
+		}
 	}
 }
