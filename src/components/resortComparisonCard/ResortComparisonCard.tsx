@@ -9,7 +9,7 @@ import Paper from '../paper/Paper';
 interface ResortComparisonCardProps {
 	logo: string;
 	title: string;
-	roomTypes: { value: string | number; text: string | number }[];
+	roomTypes: { value: string | number; text: string | number; selected: boolean }[];
 	onChange: (value: any) => void;
 	onClose: () => void;
 	className?: string;
@@ -17,18 +17,25 @@ interface ResortComparisonCardProps {
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	return (
-		<Paper className={`rsResortComparisonCard ${props.className || ''}`} height={'82px'} width={'278px'}>
+		<div className={`rsResortComparisonCard ${props.className || ''}`}>
 			<Box className={'topContent'} display={'flex'}>
 				<img src={props.logo} alt={'resort logo'} width={'82px'} />
 				<Label className={'title'} variant={'h2'}>
 					{props.title}
 				</Label>
-				<Icon className={'close'} iconImg={'icon-close'} onClick={props.onClose} size={14} color={'#004b98'} />
+				<Icon
+					className={'close'}
+					iconImg={'icon-close'}
+					onClick={props.onClose}
+					size={14}
+					color={'#004b98'}
+					cursorPointer
+				/>
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
 				<Select onChange={props.onChange} placeHolder={'select room type'} options={props.roomTypes} />
 			</Box>
-		</Paper>
+		</div>
 	);
 };
 
