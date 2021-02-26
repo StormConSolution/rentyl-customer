@@ -2,6 +2,7 @@ import React from 'react';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import './DashboardPage.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import Box from '../../components/box/Box';
 import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
 import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -35,8 +36,7 @@ const DashboardPage: React.FC = () => {
 		{ selected: false, value: '5', text: '5 Bedroom Villa' },
 		{ selected: false, value: '6', text: '6 Bedroom Villa' }
 	];
-
-	function emptyFunction() {}
+	const emptyFunction: () => void = () => {};
 
 	return (
 		<Page className="rsDashboardPage">
@@ -163,7 +163,7 @@ const DashboardPage: React.FC = () => {
 						destinationName="Encore Resort"
 						address="7635 Fairfax Dr, Reunion, FL 34747"
 						starRating={4.5}
-						logoImagePath="src\images\spire-logo.png"
+						logoImagePath="src\images\dashboardPage\encore-logo.png"
 						onAddCompareClick={emptyFunction}
 						reviewPath=""
 						destinationDetailsPath=""
@@ -175,8 +175,16 @@ const DashboardPage: React.FC = () => {
 										'Located close to Orlando’s best attractions, Encore Resort is the perfect spot for your stay in Central Florida. Each luxury vacation home rental includes a private pool, access to amazing amenities and in-home services, plus so much more! Keep your whole party under one roof so you can spend less time planning and more time taking advantage of the same service and amenities you’d get from a high-end resort.',
 									amenities: [
 										{
+											iconName: 'icon-food-plate',
+											label: 'dining'
+										},
+										{
 											iconName: 'icon-wine',
 											label: 'Booze'
+										},
+										{
+											iconName: 'icon-wifi',
+											label: 'intertubes'
 										}
 									],
 									finePrint:
@@ -189,9 +197,9 @@ const DashboardPage: React.FC = () => {
 							}
 						]}
 						picturePaths={[
-							'../images/dashboardPage/AdobeStock_70559163.png',
-							'../images/dashboardPage/bearsden.png',
-							'../images/dashboardPage/margaritaville.png'
+							'../images/dashboardPage/luxury-suite.jpg',
+							'../images/dashboardPage/three-bed-villa.jpg',
+							'../images/dashboardPage/five-bed-villa.jpg'
 						]}
 					/>
 				</Box>
@@ -233,7 +241,10 @@ const DashboardPage: React.FC = () => {
 							}
 						]}
 						amenityIconNames={['icon-food-plate', 'icon-wine', 'icon-tea-cup']}
-						carouselImagePaths={['../images/dashboardPage/luxury-suite.jpg']}
+						carouselImagePaths={[
+							'../images/dashboardPage/luxury-suite.jpg',
+							'../images/dashboardPage/five-bed-villa.jpg'
+						]}
 					/>
 				</Box>
 			</div>
