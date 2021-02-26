@@ -107,10 +107,6 @@ const DashboardPage: React.FC = () => {
 				]}
 			/>
 
-			<Label>Plots Go Here</Label>
-			<Box width="1440px" height="640px">
-				<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
-			</Box>
 			<Box>
 				<LabelButton
 					label="Lightbox"
