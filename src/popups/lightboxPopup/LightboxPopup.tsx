@@ -15,7 +15,7 @@ export interface LightboxItem {
 }
 
 export interface LightboxPopupProps extends PopupProps {
-	items: Array<LightboxItem>;
+	items: LightboxItem[];
 }
 
 const LightboxPopup: React.FC<LightboxPopupProps> = (props) => {

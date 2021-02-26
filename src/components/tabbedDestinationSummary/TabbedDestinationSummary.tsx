@@ -20,7 +20,7 @@ export interface TabbedDestinationSummaryProps {
 const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props) => {
 	const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
 
-	function renderTabs(tabs: Array<DestinationSummaryTab>): Array<JSX.Element> {
+	function renderTabs(tabs: DestinationSummaryTab[]): JSX.Element[] {
 		return tabs.map((tab: DestinationSummaryTab, index: number) => {
 			return (
 				<div

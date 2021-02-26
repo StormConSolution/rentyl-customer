@@ -5,8 +5,10 @@ const TabletPortrait = 600;
 const TabletLandscape = 900;
 const desktopAndUp = 1160;
 
-export default function useWindowResizeChange() {
-	const [screenSize, setScreenSize] = useState<string>('');
+type ScreenSize = 'small' | 'medSmall' | 'medium' | '';
+
+export default function useWindowResizeChange(): ScreenSize {
+	const [screenSize, setScreenSize] = useState<ScreenSize>('');
 	useEffect(() => {
 		window.addEventListener('resize', function (event) {
 			const screen = event.target as Window;

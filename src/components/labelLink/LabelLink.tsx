@@ -6,7 +6,7 @@ import { Link } from '@bit/redsky.framework.rs.996';
 
 interface LabelLinkProps {
 	path: string;
-	externalLink: boolean;
+	externalLink?: boolean;
 	label: string;
 	variant:
 		| 'h1'

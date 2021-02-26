@@ -6,7 +6,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface FloorPlanDetailCardProps {
 	accomodationName: string;
-	rooms: Array<FloorPlanRoomDescriptionProp>;
+	rooms: FloorPlanRoomDescriptionProp[];
 }
 
 export interface FloorPlanRoomDescriptionProp {

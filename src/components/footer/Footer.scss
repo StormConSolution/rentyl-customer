@@ -5,7 +5,7 @@
 	box-sizing: border-box;
 
 	img {
-		height: 60%;
+		height: 40px;
 		grid-column: 1;
 		grid-row: 1 / 2;
 		margin: auto 0;
@@ -44,6 +44,23 @@
 			.socialMediaLinks {
 				width: 121px;
 				justify-content: space-between;
+			}
+		}
+	}
+}
+
+.small {
+	.rsFooter {
+		margin: 20px;
+
+		.footerNavigation {
+			grid-template-columns: 1fr;
+
+			.rsBox {
+				grid-template-columns: 1fr;
+				grid-column: 1;
+				row-gap: 10px;
+				margin-top: 20px;
 			}
 		}
 	}

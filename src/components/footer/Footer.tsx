@@ -58,14 +58,18 @@ const Footer: React.FC<FooterProps> = (props) => {
 		);
 	}
 	function renderLinks(links: FooterLink[]) {
-		return links.map((link: FooterLink) => {
-			return <Link path={link.path}>{link.text}</Link>;
+		return links.map((link: FooterLink, index: number) => {
+			return (
+				<Link path={link.path} key={index}>
+					{link.text}
+				</Link>
+			);
 		});
 	}
 
 	return (
 		<Box className={'rsFooter'}>
-			<Box className="footerNavigation" display={'grid'}>
+			<Box className={'footerNavigation'} display={'grid'}>
 				<img src={require('../../images/spire-logo.png')} alt={'Company Logo'} />
 				<Box display={'grid'}>{renderLinks(props.links)}</Box>
 			</Box>
