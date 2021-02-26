@@ -15,6 +15,7 @@ import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/Li
 import LightboxPopupItems from './LightboxPopupItems';
 
 const DashboardPage: React.FC = () => {
+	const emptyFunction: () => void = () => {};
 	const setTheme = useSetRecoilState<AvailableThemes>(globalState.theme);
 	function changeTheme(theme: AvailableThemes) {
 		setTheme(theme);
@@ -26,6 +27,7 @@ const DashboardPage: React.FC = () => {
 				<Label>Dashboard</Label>
 			</Box>
 			<Label>Plots Go Here</Label>
+
 			<Box>
 				<Box
 					className="themeButtons"

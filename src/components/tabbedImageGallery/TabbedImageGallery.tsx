@@ -15,7 +15,7 @@ export interface ImageTabProp {
 }
 
 export interface TabbedImageGalleryProps {
-	tabs: Array<ImageTabProp>;
+	tabs: ImageTabProp[];
 }
 
 const TabbedImageGallery: React.FC<TabbedImageGalleryProps> = function (props: TabbedImageGalleryProps) {
