@@ -1,12 +1,8 @@
-@import 'src/themes/themes';
+@import '../../themes/themes.scss';
+
 .rsDashboardPage {
-	padding: 20px 100px;
-	.themeButtons {
-		border-radius: 10px; //theme-var($borderRadius);
-	}
-	div {
-		margin: 50px 0;
-	}
+	//padding: 20px 100px;
+
 	.show-on-scroll {
 		color: blue;
 		&.is-visible {
