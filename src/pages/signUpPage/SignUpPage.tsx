@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './SignUpPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import Footer from '../../components/footer/Footer';
@@ -20,10 +20,8 @@ import Select from '../../components/Select/Select';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import debounce from 'lodash.debounce';
-import rsToasts from '@bit/redsky.framework.toast';
-import { sign } from 'crypto';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
-//TODO password match, fix country select formatting, mobile responsive
 const signUpForm = new RsFormGroup([
 	new RsFormControl('name', '', [new RsValidator(RsValidatorEnum.REQ, 'Name is required')]),
 	new RsFormControl('dateOfBirth', '', [new RsValidator(RsValidatorEnum.REQ, 'Date of birth is required')]),
@@ -45,6 +43,7 @@ const signUpForm = new RsFormGroup([
 
 const SignUpPage: React.FC = () => {
 	let userService = serviceFactory.get<UserService>('UserService');
+	const size = useWindowResizeChange();
 
 	const [form, setForm] = useState(signUpForm);
 	const [newsletter, setNewsletter] = useState<0 | 1>(0);
@@ -75,10 +74,12 @@ const SignUpPage: React.FC = () => {
 	}, []);
 
 	function renderPasswordError() {
-		const inputElements = document.getElementsByClassName('rsLabelInput');
-		// @ts-ignore
-		inputElements[inputElements.length - 1].style.margin = 0;
+		const errorLabel: NodeListOf<HTMLElement> = document.querySelectorAll('.customErrorMessage');
+		errorLabel[0].style.display = 'flex';
+		const inputElements: NodeListOf<HTMLElement> = document.querySelectorAll('div.rsLabelInput');
+		inputElements[inputElements.length - 1].style.margin = '0';
 	}
+
 	async function signUp() {
 		if (form.get('password').value !== form.get('confirmPassword').value) {
 			renderPasswordError();
@@ -136,26 +137,32 @@ const SignUpPage: React.FC = () => {
 	) : (
 		<Page className={'rsSignUpPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box display={'flex'} margin={'100px 0'} justifyContent={'center'}>
-					<Box maxWidth={'480px'} marginRight={38}>
-						<Label variant={'h1'}>Sign up for spire Loyalty</Label>
-						<Label variant={'body1'}>
+				<Box
+					className={'descriptionAndFormBox'}
+					display={'flex'}
+					margin={size === 'small' ? '100px 20px' : '100px 0'}
+					justifyContent={'center'}
+				>
+					<Box maxWidth={'480px'} margin={size === 'small' ? '0 0 163px 0' : '0 38px 0 0'}>
+						<Label className={'descriptionText'} variant={size === 'small' ? 'h2' : 'h1'}>
+							Sign up for spire Loyalty
+						</Label>
+						<Label className={'descriptionText'} variant={size === 'small' ? 'body2' : 'body1'}>
 							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
 							invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
 							et justo duo dolores et
 						</Label>
 					</Box>
-					<Box marginLeft={38}>
+					<Box className={'formWrapper'} marginLeft={size === 'small' ? 0 : 38}>
 						<Paper
-							width={'604px'}
-							height={'844px'}
+							width={size === 'small' ? '335px' : '604px'}
+							height={size === 'small' ? '982px' : '884px'}
 							boxShadow
 							backgroundColor={'#FCFBF8'}
 							position={'relative'}
 						>
-							{/*<form className="signInForm" action={'#'} onSubmit={signUp}>*/}
-							<Box padding={'48px 92px'}>
-								<Box display={'flex'} justifyContent={'space-between'}>
+							<Box padding={size === 'small' ? '20px' : '48px 92px'}>
+								<Box display={size === 'small' ? 'block' : 'flex'} justifyContent={'space-between'}>
 									<LabelInput
 										title={'Name *'}
 										placeholder={'First and Last'}
@@ -180,6 +187,7 @@ const SignUpPage: React.FC = () => {
 								/>
 								<Box display={'flex'} justifyContent={'space-between'}>
 									<LabelInput
+										className={'cityLabelInput'}
 										title={'City *'}
 										placeholder={'City'}
 										inputType={'text'}
@@ -187,6 +195,7 @@ const SignUpPage: React.FC = () => {
 										updateControl={(updateControl) => searchDebounced(updateControl)}
 									/>
 									<LabelInput
+										className={'zipLabelInput'}
 										title={'Zip Code *'}
 										placeholder={'Zip Code'}
 										inputType={'text'}
@@ -206,7 +215,7 @@ const SignUpPage: React.FC = () => {
 										options={countryList}
 									/>
 								</Box>
-								<Box display={'flex'} justifyContent={'space-between'}>
+								<Box display={size === 'small' ? 'block' : 'flex'} justifyContent={'space-between'}>
 									<LabelInput
 										title={'Phone *'}
 										placeholder={'(  )  - '}
@@ -242,7 +251,7 @@ const SignUpPage: React.FC = () => {
 									control={form.get('confirmPassword')}
 									updateControl={(updateControl) => searchDebounced(updateControl)}
 								/>
-								<div class={'rsErrorMessage customErrorMessage'}>Password does not match</div>
+								<div className={'rsErrorMessage customErrorMessage'}>Password does not match</div>
 
 								<SignupOptionCheckboxes
 									options={getSignupOptions()}

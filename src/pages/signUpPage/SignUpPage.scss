@@ -1,4 +1,33 @@
 @import '../../themes/themes';
+.small {
+	.rsSignUpPage {
+		.rs-page-content-wrapper {
+			background-size: auto 400px;
+			background-position-x: 30%;
+		}
+		.descriptionAndFormBox {
+			flex-direction: column;
+			margin-bottom: 163px;
+
+			.descriptionText {
+				text-align: center;
+			}
+
+			.formWrapper {
+				display: flex;
+				justify-content: center;
+
+				.cityLabelInput {
+					margin-right: 5px;
+				}
+				.zipLabelInput {
+					margin-left: 5px;
+				}
+			}
+		}
+	}
+}
+
 .rsSignUpPage {
 	.rs-page-content-wrapper {
 		background-image: url('../../images/signUpPage/signUpPage-heroImg.png');

@@ -22,11 +22,12 @@ interface LabelInputProps {
 	textareaRows?: number;
 	iconImage?: string;
 	iconSize?: number;
+	className?: string;
 }
 
 const LabelInput: React.FC<LabelInputProps> = (props) => {
 	return (
-		<div className={'rsLabelInput'}>
+		<div className={`rsLabelInput ${props.className || ''}`}>
 			<Label variant={'caption'}>{props.title}</Label>
 			{!!props.iconImage && (
 				<div className="iconHolder">
