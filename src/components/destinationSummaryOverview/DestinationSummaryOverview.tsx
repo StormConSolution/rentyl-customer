@@ -5,9 +5,9 @@ import React from 'react';
 import './DestinationSummaryOverview.scss';
 
 export interface DestinationSummaryOverviewProps {
-	text: string;
-	amenities: AmenityIcon[];
-	finePrint: string;
+	text?: string;
+	amenities?: AmenityIcon[];
+	finePrint?: string;
 	className?: string;
 }
 
@@ -30,11 +30,13 @@ const DestinationSummaryOverview: React.FC<DestinationSummaryOverviewProps> = (p
 
 	return (
 		<div className={`rsDestinationSummaryOverview`}>
-			<Label variant="body2">{props.text}</Label>
-			<Box className="amenities">{renderAmenities(props.amenities)}</Box>
-			<div className="finePrint">
-				<Label variant="body2">{props.finePrint}</Label>
-			</div>
+			{!!props.text && <Label variant="body2">{props.text}</Label>}
+			{!!props.amenities && <Box className="amenities">{renderAmenities(props.amenities)}</Box>}
+			{!!props.finePrint && (
+				<div className="finePrint">
+					<Label variant="body2">{props.finePrint}</Label>
+				</div>
+			)}
 		</div>
 	);
 };

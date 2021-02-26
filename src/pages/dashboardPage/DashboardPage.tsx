@@ -36,8 +36,16 @@ const DashboardPage: React.FC = () => {
 								'Located close to Orlando’s best attractions, Encore Resort is the perfect spot for your stay in Central Florida. Each luxury vacation home rental includes a private pool, access to amazing amenities and in-home services, plus so much more! Keep your whole party under one roof so you can spend less time planning and more time taking advantage of the same service and amenities you’d get from a high-end resort.',
 							amenities: [
 								{
+									iconName: 'icon-food-plate',
+									label: 'dining'
+								},
+								{
 									iconName: 'icon-wine',
 									label: 'Booze'
+								},
+								{
+									iconName: 'icon-wifi',
+									label: 'intertubes'
 								}
 							],
 							finePrint:

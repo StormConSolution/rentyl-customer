@@ -54,3 +54,36 @@
 		}
 	}
 }
+
+.small {
+	.rsDestinationSearchResultCard {
+		display: grid;
+		grid-template-columns: 100px auto;
+		column-gap: 10px;
+		grid-template-rows: 145px 40px;
+		row-gap: 12px;
+		> img:first-child {
+			width: 100px;
+			height: 145px;
+		}
+		div.info {
+			display: block;
+			margin: 0;
+			.nameAndAddress {
+				margin-bottom: 5px;
+			}
+			.rsStarRating {
+				margin-bottom: 10px;
+			}
+		}
+		.buttonHolder {
+			grid-column: 1/3;
+			display: flex;
+			justify-content: space-evenly;
+			.rsButton {
+				width: 165px;
+				white-space: nowrap;
+			}
+		}
+	}
+}

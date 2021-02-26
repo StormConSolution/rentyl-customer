@@ -45,5 +45,13 @@
 			height: 385px;
 			margin-bottom: 100px;
 		}
+
+		.rsDestinationSearchResultCard {
+			margin-left: 20px;
+			width: 335px;
+			height: 193px;
+			padding-bottom: 25px;
+			border-bottom: 1px solid theme-var($greyLineColor);
+		}
 	}
 }
