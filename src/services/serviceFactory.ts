@@ -1,8 +1,9 @@
 import { Service } from './Service';
 import UserService from './user/user.service';
 import ReservationsService from './reservations/reservations.service';
+import ComparisonService from './comparison/comparison.service';
 
-type ServiceKey = 'UserService' | 'ReservationsService';
+type ServiceKey = 'UserService' | 'ReservationsService' | 'ComparisonService';
 
 class ServiceFactory {
 	private services: { [key: string]: Service } = {};
@@ -11,6 +12,7 @@ class ServiceFactory {
 		// Add new models here to the factory
 		this.services['UserService'] = new UserService();
 		this.services['ReservationsService'] = new ReservationsService();
+		this.services['ComparisonService'] = new ComparisonService();
 
 		for (let key in this.services) {
 			this.services[key].start();

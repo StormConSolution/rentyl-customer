@@ -2,15 +2,11 @@ import React, { useEffect } from 'react';
 import { View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
 import './icons/style.css';
-import Footer from './components/footer/Footer';
-import { FooterLinkTestData } from './components/footer/FooterLinks';
 
 // The following components need to be added to the top level dom since they are full screen overlays
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 import rsToasts from '@bit/redsky.framework.toast';
 import useLoginState, { LoginStatus } from './customHooks/useLoginState';
-import { useRecoilValue } from 'recoil';
-import globalState, { AvailableThemes } from './models/globalState';
 import CustomToast from './components/customToast/CustomToast';
 import Box from './components/box/Box';
 import AppBar from './components/appBar/AppBar';
@@ -18,10 +14,10 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
+import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
 
 function App() {
 	const loginStatus = useLoginState();
-	const theme = useRecoilValue<AvailableThemes>(globalState.theme);
 	const size = useWindowResizeChange();
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
@@ -62,6 +58,7 @@ function App() {
 			<AppBar />
 			<View key="landingPage" id="landingPage" default initialPath="/" />
 			{/*{renderViewsBasedOnLoginStatus()}*/}
+			<ComparisonDrawer />
 			{popupController.instance}
 			{rsToasts.instance}
 		</div>

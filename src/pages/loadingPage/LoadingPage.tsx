@@ -2,14 +2,35 @@ import * as React from 'react';
 import './LoadingPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 
-interface LoadingPageProps {}
-
-const LoadingPage: React.FC<LoadingPageProps> = (props) => {
+const LoadingPage: React.FC = () => {
 	return (
 		<Page className={'rsLoadingPage'}>
-			<span className={'loading'}>
-				<img src={require('./Spinner4.gif')} alt="" />
-			</span>
+			<div className="boxes">
+				<div className="box">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+				<div className="box">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+				<div className="box">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+				<div className="box">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
 		</Page>
 	);
 };
