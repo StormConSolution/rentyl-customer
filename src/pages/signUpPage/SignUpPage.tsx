@@ -21,19 +21,24 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import debounce from 'lodash.debounce';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { formatDateForServer, formatPhoneNumber, formatReadableDate } from '../../utils/utils';
 
 const signUpForm = new RsFormGroup([
 	new RsFormControl('name', '', [new RsValidator(RsValidatorEnum.REQ, 'Name is required')]),
-	new RsFormControl('dateOfBirth', '', [new RsValidator(RsValidatorEnum.REQ, 'Date of birth is required')]),
+	new RsFormControl('birthDate', '', [
+		new RsValidator(RsValidatorEnum.REQ, 'Date of birth is required'),
+		new RsValidator(RsValidatorEnum.MIN, 'incorrect date of birth', 7),
+		new RsValidator(RsValidatorEnum.MAX, 'incorrect date of birth', 8)
+	]),
 	new RsFormControl('address', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
 	new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
-	new RsFormControl('zipCode', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip code is required')]),
+	new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip code is required')]),
 	new RsFormControl('phone', '', [
 		new RsValidator(RsValidatorEnum.REQ, 'Phone is required'),
 		new RsValidator(RsValidatorEnum.MIN, 'Invalid phone', 10),
 		new RsValidator(RsValidatorEnum.MAX, 'Invalid phone', 10)
 	]),
-	new RsFormControl('email', '', [
+	new RsFormControl('primaryEmail', '', [
 		new RsValidator(RsValidatorEnum.REQ, 'Email is required'),
 		new RsValidator(RsValidatorEnum.EMAIL, 'Invalid email')
 	]),
@@ -44,19 +49,31 @@ const signUpForm = new RsFormGroup([
 const SignUpPage: React.FC = () => {
 	let userService = serviceFactory.get<UserService>('UserService');
 	const size = useWindowResizeChange();
-
 	const [form, setForm] = useState(signUpForm);
 	const [newsletter, setNewsletter] = useState<0 | 1>(0);
 	const [emailNotification, setEmailNotification] = useState<0 | 1>(0);
 	const [country, setCountry] = useState<string>('');
 	const [countryList, setCountryList] = useState<
-		{ value: number | string; text: number | string; selected?: boolean }[]
+		{ value: number | string; text: number | string; selected: boolean }[]
 	>([]);
 	const iconSize: number = 18;
-
 	let searchDebounced = debounce(async (value) => {
 		form.update(value);
 	}, 500);
+
+	let formatPhoneDebounced = debounce((phone) => {
+		form.update(phone);
+		let formatted = formatPhoneNumber(phone.value);
+		let element: HTMLInputElement | null = document.querySelector('.rsSignUpPage .phoneInput input');
+		if (element) element.value = formatted;
+	}, 300);
+
+	let formatDateDebounced = debounce((dob) => {
+		form.update(dob);
+		let formattedDate = formatReadableDate(dob.value);
+		let elementDate: HTMLInputElement | null = document.querySelector('.rsSignUpPage .dateInput input');
+		if (elementDate) elementDate.value = formattedDate;
+	}, 300);
 
 	useEffect(() => {
 		async function getCountries() {
@@ -73,6 +90,13 @@ const SignUpPage: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	function renderSuccessMsg() {
+		const formPaperElements: NodeListOf<HTMLElement> = document.querySelectorAll('.formPaper');
+		formPaperElements[0].style.display = 'none';
+		const successMsgPaperElements: NodeListOf<HTMLElement> = document.querySelectorAll('.successMsgPaper');
+		successMsgPaperElements[0].style.display = 'flex';
+	}
+
 	function renderPasswordError() {
 		const errorLabel: NodeListOf<HTMLElement> = document.querySelectorAll('.customErrorMessage');
 		errorLabel[0].style.display = 'flex';
@@ -88,26 +112,22 @@ const SignUpPage: React.FC = () => {
 			setForm(form.clone());
 		}
 		let newCustomer: any = form.toModel();
+		newCustomer.birthDate = new Date(formatDateForServer(newCustomer.birthDate));
 		newCustomer.country = country;
 		newCustomer.newsLetter = newsletter;
 		newCustomer.emailNotification = emailNotification;
-
+		delete newCustomer.confirmPassword;
 		try {
 			await userService.createNewCustomer(newCustomer);
+			renderSuccessMsg();
 		} catch (e) {
+			console.log(e);
 			axiosErrorHandler(e, {
-				[HttpStatusCode.UNAUTHORIZED]: () => {
-					//	setLoginErrorMessage('Invalid Username / Password');
-				},
 				[HttpStatusCode.NOT_FOUND]: () => {
-					//	setLoginErrorMessage('Invalid Username / Password');
+					console.log(e);
 				}
 			});
 		}
-	}
-
-	function getSignupOptions(): Array<SignupOption> {
-		return SignupOptions;
 	}
 
 	function toggleCheckBoxValue(inputValue: HTMLInputElement) {
@@ -121,12 +141,15 @@ const SignUpPage: React.FC = () => {
 		let inputValue = e.target as HTMLInputElement;
 		toggleCheckBoxValue(inputValue);
 	}
+	function getSignupOptions(): SignupOption[] {
+		return SignupOptions;
+	}
 
 	function formatCountryListForSelect(countries: Api.Country.ICountry[] | undefined) {
-		let allCountries: { value: number | string; text: number | string; selected?: boolean }[] = [];
+		let allCountries: { value: number | string; text: number | string; selected: boolean }[] = [];
 		if (!!countries) {
 			for (let i = 0; i < countries.length; i++) {
-				allCountries.push({ value: countries[i].isoCode, text: countries[i].name });
+				allCountries.push({ value: countries[i].isoCode, text: countries[i].name, selected: false });
 			}
 			setCountryList(allCountries);
 		}
@@ -155,6 +178,7 @@ const SignUpPage: React.FC = () => {
 					</Box>
 					<Box className={'formWrapper'} marginLeft={size === 'small' ? 0 : 38}>
 						<Paper
+							className={'formPaper'}
 							width={size === 'small' ? '335px' : '604px'}
 							height={size === 'small' ? '982px' : '884px'}
 							boxShadow
@@ -171,11 +195,12 @@ const SignUpPage: React.FC = () => {
 										updateControl={(updateControl) => searchDebounced(updateControl)}
 									/>
 									<LabelInput
+										className={'dateInput'}
 										title={'Date Of Birth *'}
 										placeholder={'MM/DD/YYYY'}
 										inputType={'text'}
-										control={form.get('dateOfBirth')}
-										updateControl={(updateControl) => searchDebounced(updateControl)}
+										control={form.get('birthDate')}
+										updateControl={(updateControl) => formatDateDebounced(updateControl)}
 									/>
 								</Box>
 								<LabelInput
@@ -199,11 +224,11 @@ const SignUpPage: React.FC = () => {
 										title={'Zip Code *'}
 										placeholder={'Zip Code'}
 										inputType={'text'}
-										control={form.get('zipCode')}
+										control={form.get('zip')}
 										updateControl={(updateControl) => searchDebounced(updateControl)}
 									/>
 								</Box>
-								<Box>
+								<Box className={'selectBox'}>
 									<Label className={'countryLabel'} variant={'caption'}>
 										Country
 									</Label>
@@ -217,6 +242,7 @@ const SignUpPage: React.FC = () => {
 								</Box>
 								<Box display={size === 'small' ? 'block' : 'flex'} justifyContent={'space-between'}>
 									<LabelInput
+										className={'phoneInput'}
 										title={'Phone *'}
 										placeholder={'(  )  - '}
 										inputType={'tel'}
@@ -224,7 +250,10 @@ const SignUpPage: React.FC = () => {
 										iconSize={iconSize}
 										isPhoneInput
 										control={form.get('phone')}
-										updateControl={(updateControl) => searchDebounced(updateControl)}
+										maxLength={10}
+										updateControl={(updateControl) => {
+											formatPhoneDebounced(updateControl);
+										}}
 									/>
 									<LabelInput
 										title={'Email *'}
@@ -233,7 +262,7 @@ const SignUpPage: React.FC = () => {
 										iconImage="icon-mail"
 										iconSize={iconSize}
 										isEmailInput
-										control={form.get('email')}
+										control={form.get('primaryEmail')}
 										updateControl={(updateControl) => searchDebounced(updateControl)}
 									/>
 								</Box>
@@ -283,6 +312,21 @@ const SignUpPage: React.FC = () => {
 								<Label variant={'body1'}>Already have an account?</Label>
 								<LabelLink path={'/signin'} externalLink={false} label={'Sign In'} variant={'button'} />
 							</Box>
+						</Paper>
+						<Paper
+							className={'successMsgPaper'}
+							width={size === 'small' ? '335px' : '604px'}
+							height={size === 'small' ? '146px' : '200px'}
+							boxShadow
+							backgroundColor={'#FFFFFF'}
+							position={'relative'}
+						>
+							<Label className={'successText'} variant={size === 'small' ? 'h2' : 'h1'}>
+								Thank you for signing up
+							</Label>
+							<Label className={'successText'} variant={'body1'}>
+								You will receive an email shortly to confirm your account.
+							</Label>
 						</Paper>
 					</Box>
 				</Box>

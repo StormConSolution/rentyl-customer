@@ -35,7 +35,7 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 				</div>
 			)}
 			<Input
-				className={`${!!props.iconImage ? 'hasIcon' : ''}`}
+				className={`${!!props.iconImage ? 'hasIcon' : ''} ${props.className || ''}`}
 				placeholder={props.placeholder}
 				type={props.inputType}
 				look={'none'}

@@ -30,9 +30,7 @@ export default class UserService extends Service {
 	}
 	async createNewCustomer(customer: Api.Customer.Req.Create) {
 		customer.password = SparkMD5.hash(customer.password);
-		/*let res = await http.post('customer', customer);
-		console.log(res);
-		return res;*/
+		return await http.post('customer', customer);
 	}
 
 	getCurrentUser(): Api.User.Res.Get | undefined {
