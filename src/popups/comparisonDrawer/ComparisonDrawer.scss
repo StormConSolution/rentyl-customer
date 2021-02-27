@@ -1,0 +1,37 @@
+@import '../../themes/themes';
+.rsComparisonDrawer {
+	position: fixed;
+	height: 120px;
+	width: 1440px;
+	margin: 0 auto;
+	padding: 20px 140px;
+	box-sizing: border-box;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: theme-var($primaryBackgroundColor);
+	box-shadow: theme-var($primaryBoxShadowColor);
+	transition: transform 300ms;
+	transform: translateY(120px);
+	z-index: 99;
+	&.show {
+		transform: translateY(0);
+	}
+
+	.rsResortComparisonCard {
+		margin-right: 16px;
+	}
+
+	.rsSelect {
+		.optionList {
+			bottom: 100%;
+			top: auto;
+		}
+	}
+
+	.rsLabelButton {
+		&.contained {
+			margin-bottom: 8px;
+		}
+	}
+}

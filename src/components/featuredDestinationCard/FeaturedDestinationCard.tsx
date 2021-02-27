@@ -2,7 +2,6 @@ import * as React from 'react';
 import './FeaturedDestinationCard.scss';
 import { Link } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
-import LabelLink from '../labelLink/LabelLink';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Box from '../box/Box';
 import Icon from '@bit/redsky.framework.rs.icon';

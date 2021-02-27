@@ -16,7 +16,7 @@ interface SignUpPageProps {}
 
 const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 	const iconSize: number = 18;
-	function getSignupOptions(): Array<SignupOption> {
+	function getSignupOptions(): SignupOption[] {
 		return SignupOptions;
 	}
 
@@ -28,7 +28,7 @@ const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 	return (
 		<Page className={'rsSignUpPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box display={'flex'} margin={'100px 0'} justifyContent={'center'}>
+				{/*<Box display={'flex'} margin={'100px 0'} justifyContent={'center'}>
 					<Box maxWidth={'480px'} marginRight={38}>
 						<Label variant={'h1'}>Sign up for spire Loyalty</Label>
 						<Label variant={'body1'}>
@@ -144,7 +144,7 @@ const SignUpPage: React.FC<SignUpPageProps> = (props) => {
 							</Box>
 						</Paper>
 					</Box>
-				</Box>
+				</Box>*/}
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

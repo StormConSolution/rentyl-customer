@@ -1,0 +1,36 @@
+@import '../../themes/themes.scss';
+
+.rsTabbedDestinationSummary {
+	background-color: rgba(0, 0, 0, 0);
+	div {
+		margin: 0;
+	}
+	.tabSection {
+		width: 100%;
+		display: flex;
+		.tab {
+			margin: 8px 0;
+			padding: 5px 30px;
+			border-bottom: 1px solid theme-var($greyLineColor);
+			.rsLabel {
+				cursor: pointer;
+				margin-bottom: 8px;
+			}
+			&.active {
+				border-width: 2px;
+				border-color: theme-var($iconAndHighlightTextColor);
+			}
+		}
+	}
+
+	.contentSection {
+		.summaryContent {
+			display: none;
+			height: 188px;
+			margin-top: 14px;
+			&.active {
+				display: block;
+			}
+		}
+	}
+}

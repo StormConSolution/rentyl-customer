@@ -2,22 +2,35 @@ import { atom, RecoilState, useRecoilTransactionObserver_UNSTABLE } from 'recoil
 import * as React from 'react';
 
 enum GlobalStateKeys {
-	ADMIN_TOKEN = 'AdminToken',
-	THEME = 'Theme'
+	COMPARISON_CARD = 'DestinationComparison',
+	ADMIN_TOKEN = 'AdminToken'
+}
+
+export interface ComparisonCardInfo {
+	destinationId: number;
+	logo: string;
+	title: string;
+	roomTypes: { value: number | string; text: number | string; selected: boolean }[];
 }
 
 // Change based on project so we don't have classing when developing on localhost (va = Volcanic Admin)
-const KEY_PREFIX = 'vadm-';
-
-export type AvailableThemes = 'green' | 'blue';
+const KEY_PREFIX = 'spireCust-';
 
 class GlobalState {
+	destinationComparison: RecoilState<ComparisonCardInfo[]>;
 	adminToken: RecoilState<string>;
-	theme: RecoilState<AvailableThemes>;
 
 	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
 
 	constructor() {
+		this.destinationComparison = atom<ComparisonCardInfo[]>({
+			key: GlobalStateKeys.COMPARISON_CARD,
+			default: this.loadFromLocalStorage<ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
+		});
+
+		// Uncomment below if you want to have it save to local storage
+		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
+
 		this.adminToken = atom<string>({
 			key: GlobalStateKeys.ADMIN_TOKEN,
 			default: this.loadFromLocalStorage<string>(GlobalStateKeys.ADMIN_TOKEN, '')
@@ -25,14 +38,6 @@ class GlobalState {
 
 		// Uncomment below if you want to have it save to local storage
 		this.saveToStorageList.push({ key: GlobalStateKeys.ADMIN_TOKEN, state: this.adminToken });
-
-		this.theme = atom<AvailableThemes>({
-			key: GlobalStateKeys.THEME,
-			default: this.loadFromLocalStorage<AvailableThemes>(GlobalStateKeys.THEME, 'blue')
-		});
-
-		// Uncomment below if you want to have it save to local storage
-		this.saveToStorageList.push({ key: GlobalStateKeys.THEME, state: this.theme });
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {

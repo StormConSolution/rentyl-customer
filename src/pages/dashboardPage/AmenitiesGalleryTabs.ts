@@ -1,6 +1,6 @@
 import { ImageTabProp } from '../../components/tabbedImageGallery/TabbedImageGallery';
 
-const DestinationLandingPageAmenitiesGalleryTabs: Array<ImageTabProp> = [
+const DestinationLandingPageAmenitiesGalleryTabs: ImageTabProp[] = [
 	{
 		name: 'Groups',
 		title: 'Groups',
