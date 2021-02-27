@@ -89,7 +89,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					</Label>
 					<div>
 						<Label variant="h4" className="costs">
-							{StringUtils.formatMoney(props.ratePerNightInCents)} or{' '}
+							${StringUtils.formatMoney(props.ratePerNightInCents)} or{' '}
 							{addCommasToNumber(props.pointsRatePerNight)} points/night
 						</Label>
 						<Label variant="caption" className="taxAndFees">
@@ -104,9 +104,9 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						{props.description}
 					</Label>
 				</div>
-				<div className="detailCardHolder">
+				<Box className="detailCardHolder" alignSelf={'flex-end'}>
 					<AccommodationSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
-				</div>
+				</Box>
 				<div>
 					<AccommodationSearchCallToActionCard
 						points={props.pointsEarnable}

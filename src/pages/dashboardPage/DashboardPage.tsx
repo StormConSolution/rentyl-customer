@@ -1,8 +1,6 @@
 import React from 'react';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import './DashboardPage.scss';
-import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Box from '../../components/box/Box';
 import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
 import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -47,7 +45,7 @@ const DashboardPage: React.FC = () => {
 					mobileHeight={'300px'}
 				/>
 
-				<Box width="1440px" height="640px" margin={'40px 0'}>
+				<Box width="1440px" height="569px" margin={'40px 0'}>
 					<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
 				</Box>
 				<Box margin={'40px 0'}>
