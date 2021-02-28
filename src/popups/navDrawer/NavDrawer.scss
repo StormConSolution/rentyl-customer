@@ -10,7 +10,7 @@
 	transform: translateX(78px);
 	box-shadow: theme-var($primaryBoxShadowColor);
 	overflow: hidden;
-	z-index: 2;
+	z-index: 99;
 	&.opened {
 		width: 350px;
 	}
@@ -57,7 +57,7 @@
 }
 
 .small {
-	.rsNavPopout {
+	.rsNavDrawer {
 		position: fixed;
 		transform: translateX(0);
 	}
