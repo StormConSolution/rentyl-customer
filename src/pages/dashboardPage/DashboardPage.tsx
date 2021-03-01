@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import './DashboardPage.scss';
 import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
@@ -21,10 +21,25 @@ import { useRecoilState } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
+import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
+import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
+import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
 
 const DashboardPage: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+
+	function onDatesChange(calendarStartDate: moment.Moment | null, calendarEndDate: moment.Moment | null) {
+		setStartDateControl(calendarStartDate);
+		setEndDateControl(calendarEndDate);
+	}
+
+	function changeFocusedInput(focusedInputBN: 'startDate' | 'endDate' | null) {
+		setFocusedInput(focusedInputBN);
+	}
 
 	const roomTypes: { value: string | number; text: string | number; selected: boolean }[] = [
 		{ selected: false, value: '1', text: 'Basic Suite' },
@@ -34,6 +49,76 @@ const DashboardPage: React.FC = () => {
 		{ selected: false, value: '5', text: '5 Bedroom Villa' },
 		{ selected: false, value: '6', text: '6 Bedroom Villa' }
 	];
+
+	const imageDataArray = [
+		{
+			title: 'Sample 1',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 2',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 3',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/luxury-suite.jpg'
+		},
+		{
+			title: 'Sample 4',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 5',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 6',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 7',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 8',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 9',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 10',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		},
+		{
+			title: 'Sample 11',
+			description:
+				'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet lorem ipsum dolor sit amet.',
+			imagePath: '../../images/dashboardPage/dining.jpg'
+		}
+	];
+
 	const emptyFunction: () => void = () => {};
 
 	return (
@@ -54,7 +139,10 @@ const DashboardPage: React.FC = () => {
 						look="containedSecondary"
 						variant="sectionHeader"
 						onClick={() =>
-							popupController.open<LightboxPopupProps>(LightboxPopup, { items: LightboxPopupItems })
+							// popupController.open<LightboxPopupProps>(LightboxPopup, { items: LightboxPopupItems })
+							popupController.open<LightBoxTwoPopupProps>(LightBoxTwoPopup, {
+								imageDataArray: imageDataArray
+							})
 						}
 					/>
 				</Box>
@@ -103,6 +191,20 @@ const DashboardPage: React.FC = () => {
 						}}
 					/>
 				</Box>
+				<Box margin={'40px 0'}>
+					<RoomBookNowCard
+						points={2500}
+						onDatesChange={onDatesChange}
+						startDate={startDateControl}
+						endDate={endDateControl}
+						focusedInput={focusedInput}
+						changeFocusedInput={changeFocusedInput}
+						bookNowOnClick={() => {
+							console.log(startDateControl);
+							console.log(endDateControl);
+						}}
+					/>
+				</Box>
 				<Box m={'40px 0'}>
 					<LabelImage
 						mainImg={require('../../images/resortLandingPage/Disney-World.jpg')}
@@ -148,10 +250,7 @@ const DashboardPage: React.FC = () => {
 								destinationId: Date.now(),
 								logo: '../../images/encore-resort.png',
 								title: 'Encore Resort',
-								roomTypes: [
-									{ value: 'villa', text: 'Villa', selected: false },
-									{ value: 'vip_suite', text: 'VIP Suite', selected: false }
-								]
+								roomTypes: roomTypes
 							});
 						}}
 					/>
@@ -238,10 +337,37 @@ const DashboardPage: React.FC = () => {
 								datum: '2,800-32,000 sq/ft'
 							}
 						]}
-						amenityIconNames={['icon-food-plate', 'icon-wine', 'icon-tea-cup']}
+						amenityIconNames={['icon-wifi1', 'icon-laundry', 'icon-no-smoking', 'icon-kitchen']}
 						carouselImagePaths={[
 							'../images/dashboardPage/luxury-suite.jpg',
 							'../images/dashboardPage/five-bed-villa.jpg'
+						]}
+					/>
+				</Box>
+				<Box margin={'40px 0'} width={'450px'}>
+					<FloorPlanDetailCard
+						accomodationName={'VIP Suite Layout'}
+						rooms={[
+							{
+								name: 'Kitchen',
+								description:
+									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
+							},
+							{
+								name: 'Bathroom',
+								description:
+									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
+							},
+							{
+								name: 'Living Room',
+								description:
+									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
+							},
+							{
+								name: 'Dining Room',
+								description:
+									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
+							}
 						]}
 					/>
 				</Box>

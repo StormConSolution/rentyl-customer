@@ -28,6 +28,10 @@
 	.compareLinkDiv {
 		display: flex;
 		justify-content: center;
+		margin-top: 5px;
+		&:hover {
+			cursor: pointer;
+		}
 	}
 	.compareLink {
 		color: theme-var($buttonLinkColor);
@@ -116,13 +120,14 @@
 			flex-direction: row-reverse;
 		}
 
-		.bookNowBtn {
+		.bookNowBtn,
+		.compareBtnMobile {
 			margin-top: 17px;
 			width: 155px;
 		}
 
 		.compareBtnMobile {
-			width: 155px;
+			margin-right: 7px;
 		}
 
 		.addCompareIconMobile {
