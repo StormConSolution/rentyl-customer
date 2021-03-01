@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
 import './icons/style.css';
@@ -14,9 +14,11 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
+import AccountOverview from './popups/accountOverview/AccountOverview';
 import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
 
 function App() {
+	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
 	// Code to setup our toast delegates (Will render CustomToast when called)
@@ -47,6 +49,12 @@ function App() {
 						<Box>
 							<AppBar />
 							<View key="landingPage" id="landingPage" default initialPath="/" />
+							<AccountOverview
+								isOpen={showAccountOverview}
+								onToggle={() => {
+									setShowAccountOverview(!showAccountOverview);
+								}}
+							/>
 						</Box>
 					</div>
 				);
@@ -57,6 +65,12 @@ function App() {
 		<div className={`App ${size}`}>
 			<AppBar />
 			<View key="landingPage" id="landingPage" default initialPath="/" />
+			<AccountOverview
+				isOpen={showAccountOverview}
+				onToggle={() => {
+					setShowAccountOverview(!showAccountOverview);
+				}}
+			/>
 			{/*{renderViewsBasedOnLoginStatus()}*/}
 			<ComparisonDrawer />
 			{popupController.instance}
