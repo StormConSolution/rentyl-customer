@@ -7,15 +7,50 @@
 		animation: fadeIn 1s;
 	}
 
+	.successMsgPaper {
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
 	.rsBox {
 		.rsLabelInput {
 			margin: 10px 0;
 			input {
 				max-width: 100%;
-				width: 100%;
+				width: calc(100% - 20px);
+			}
+		}
+		.countryLabel {
+			margin-bottom: 10px;
+		}
+		.rsSelect {
+			width: 100%;
+			max-width: 100%;
+			background-color: #ffffff;
+			.placeHolder {
+				color: theme-var($disableTextColor);
 			}
 		}
 	}
+
+	.selectBox {
+		margin: 10px 0;
+	}
+	.rsErrorMessage {
+		font-family: 'Mrs-Eaves-All-Petite-Caps', sans-serif;
+		font-size: 19px;
+		line-height: 12px;
+		font-weight: $regular;
+		letter-spacing: 0;
+		text-transform: uppercase;
+	}
+	.customErrorMessage {
+		margin-bottom: 10px;
+		display: none;
+	}
+
 	.rsButton {
 		margin: 20px auto;
 	}
@@ -67,6 +102,34 @@
 		font-weight: $regular;
 		a {
 			color: theme-var($buttonLinkColor);
+		}
+	}
+}
+.small {
+	.rsSignUpPage {
+		.rs-page-content-wrapper {
+			background-size: auto 400px;
+			background-position-x: 30%;
+		}
+		.descriptionAndFormBox {
+			flex-direction: column;
+			margin-bottom: 163px;
+
+			.descriptionText {
+				text-align: center;
+			}
+
+			.formWrapper {
+				display: flex;
+				justify-content: center;
+
+				.cityLabelInput {
+					margin-right: 5px;
+				}
+				.zipLabelInput {
+					margin-left: 5px;
+				}
+			}
 		}
 	}
 }

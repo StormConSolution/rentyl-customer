@@ -138,6 +138,86 @@ declare namespace Api {
 		}
 	}
 
+	export namespace Country {
+		interface Timezones {
+			zoneName: string;
+			gmtOffset: number;
+			gmtOffsetName: string;
+			abbreviation: string;
+			tzName: string;
+		}
+		interface ICountry {
+			name: string;
+			phonecode: string;
+			isoCode: string;
+			flag: string;
+			currency: string;
+			latitude: string;
+			longitude: string;
+			timezones?: Timezones[];
+		}
+		interface IState {
+			name: string;
+			isoCode: string;
+			countryCode: string;
+			latitude?: string | null;
+			longitude?: string | null;
+		}
+		interface ICity {
+			name: string;
+			countryCode: string;
+			stateCode: string;
+			latitude?: string | null;
+			longitude?: string | null;
+		}
+		export namespace Req {
+			export interface AllCountries {}
+			export interface Country {
+				countryCode: string;
+			}
+			export interface States {
+				countryCode: string;
+			}
+			export interface Cities {
+				countryCode: string;
+				stateCode: string;
+			}
+		}
+		export namespace Res {
+			export interface AllCountries {
+				countries: ICountry[];
+			}
+			export interface Country extends ICountry {}
+			export interface States {
+				states: IState[];
+			}
+			export interface Cities {
+				cities: ICity[];
+			}
+		}
+	}
+
+	export namespace Customer {
+		export namespace Req {
+			export interface Create {
+				name: string;
+				birthDate: Date | string;
+				address: string;
+				city: string;
+				zip: string;
+				country: string;
+				phone: string;
+				primaryEmail: string;
+				password: string;
+				newsLetter: 0 | 1;
+				emailNotification: 0 | 1;
+			}
+		}
+		export namespace Res {
+			export interface Create extends User.Filtered {}
+		}
+	}
+
 	export namespace Media {
 		export namespace Req {
 			export interface Create {
