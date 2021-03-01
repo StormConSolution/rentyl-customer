@@ -17,7 +17,7 @@ const routes: RouteDetails[] = [
 		path: '/dashboard',
 		page: DashboardPage,
 		options: {
-			view: 'admin'
+			view: 'landingPage'
 		}
 	},
 	{

@@ -26,10 +26,14 @@
 	.contentSection {
 		.summaryContent {
 			display: none;
-			height: 188px;
+			height: 130px;
 			margin-top: 14px;
 			&.active {
 				display: block;
+			}
+
+			> div {
+				height: 100%;
 			}
 		}
 	}

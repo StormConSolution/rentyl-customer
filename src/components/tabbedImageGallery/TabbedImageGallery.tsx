@@ -42,8 +42,10 @@ const TabbedImageGallery: React.FC<TabbedImageGalleryProps> = function (props: T
 	function renderContent(tab: ImageTabProp) {
 		return (
 			<Box className={'galleryItem' + (activeTabName === tab.name ? ' shown' : '')} key={tab.name}>
-				<img alt="" src={tab.imagePath} />
-				<Paper width="524px" height="274px" boxShadow>
+				<div className="imageHolder">
+					<img alt="" src={tab.imagePath} />
+				</div>
+				<Paper boxShadow>
 					<Label variant="h1">{tab.title}</Label>
 					<Label variant="body2">{tab.description}</Label>
 					{!!tab.buttonLabel && (

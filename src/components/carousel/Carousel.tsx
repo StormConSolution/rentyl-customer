@@ -9,6 +9,7 @@ interface CarouselProps {
 	showControls?: boolean;
 	carouselRefCallBack?: (ref: any) => void;
 	imageIndex?: number;
+	className?: string;
 }
 
 const Carousel: React.FC<CarouselProps> = (props) => {
@@ -30,7 +31,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 	}, [props.imageIndex]);
 
 	return (
-		<div className={'rsCarousel'}>
+		<div className={`rsCarousel ${props.className || ''}`}>
 			<div ref={parentRef} className={'carouselParent'}>
 				{renderChildren()}
 			</div>
