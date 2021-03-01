@@ -18,8 +18,7 @@ export function formatReadableDate(date: string) {
 export function formatDateForServer(date: string) {
 	let match = formatDate(date);
 	if (match) {
-		let formattedDate = `${match[3]}-${match[2]}-${match[1]}`;
-		return new Date(formattedDate);
+		return `${match[3]}-${match[1]}-${match[2]}`;
 	} else {
 		return date;
 	}
@@ -31,6 +30,7 @@ function formatDate(date: string) {
 	if (cleaned.length === 7) cleaned = '0' + cleaned;
 	return cleaned.match(/^(\d{2})(\d{2})(\d{4})$/);
 }
+
 export function replaceClassName(elementClassName: string, initialValue: string, replacedValue: string) {
 	let listOfElements = document.querySelectorAll(elementClassName);
 	for (let i = 0; i < listOfElements.length; i++) {

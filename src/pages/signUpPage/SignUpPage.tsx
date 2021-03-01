@@ -10,18 +10,19 @@ import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
-import SignupOptionCheckboxes, { SignupOption } from '../../components/signupOptionCheckboxes/SignupOptionCheckboxes';
+import SignupOptionCheckboxes from '../../components/signupOptionCheckboxes/SignupOptionCheckboxes';
 import SignupOptions from '../../components/signupOptionCheckboxes/SignupOptions';
 import { HttpStatusCode } from '../../utils/http';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import UserService from '../../services/user/user.service';
 import serviceFactory from '../../services/serviceFactory';
-import Select, { SelectOptions } from '../../components/Select/Select';
+import Select from '../../components/Select/Select';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import debounce from 'lodash.debounce';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { formatDateForServer, formatPhoneNumber, formatReadableDate } from '../../utils/utils';
+import rsToasts from '@bit/redsky.framework.toast';
 
 const signUpForm = new RsFormGroup([
 	new RsFormControl('name', '', [new RsValidator(RsValidatorEnum.REQ, 'Name is required')]),
@@ -43,7 +44,7 @@ const signUpForm = new RsFormGroup([
 		new RsValidator(RsValidatorEnum.EMAIL, 'Invalid email')
 	]),
 	new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')]),
-	new RsFormControl('confirmPassword', '', [new RsValidator(RsValidatorEnum.REQ, 'Confirm password is required')])
+	new RsFormControl('confirmPassword', '', [new RsValidator(RsValidatorEnum.REQ, '')])
 ]);
 
 const SignUpPage: React.FC = () => {
@@ -52,11 +53,12 @@ const SignUpPage: React.FC = () => {
 	const [form, setForm] = useState(signUpForm);
 	const [newsletter, setNewsletter] = useState<0 | 1>(0);
 	const [emailNotification, setEmailNotification] = useState<0 | 1>(0);
-	const [country, setCountry] = useState<string>('');
+	const [country, setCountry] = useState<string>('US');
 	const [countryList, setCountryList] = useState<
 		{ value: number | string; text: number | string; selected: boolean }[]
 	>([]);
 	const iconSize: number = 18;
+
 	let searchDebounced = debounce(async (value) => {
 		form.update(value);
 	}, 500);
@@ -66,14 +68,24 @@ const SignUpPage: React.FC = () => {
 		let formatted = formatPhoneNumber(phone.value);
 		let element: HTMLInputElement | null = document.querySelector('.rsSignUpPage .phoneInput input');
 		if (element) element.value = formatted;
-	}, 300);
+	}, 500);
 
 	let formatDateDebounced = debounce((dob) => {
 		form.update(dob);
 		let formattedDate = formatReadableDate(dob.value);
 		let elementDate: HTMLInputElement | null = document.querySelector('.rsSignUpPage .dateInput input');
 		if (elementDate) elementDate.value = formattedDate;
-	}, 300);
+	}, 500);
+
+	let checkPasswordsMatchDebounced = debounce((confirmPassword) => {
+		form.update(confirmPassword);
+		if (form.get('password').value !== confirmPassword.value) {
+			renderPasswordError();
+		} else {
+			deletePasswordError();
+		}
+		return;
+	}, 500);
 
 	useEffect(() => {
 		async function getCountries() {
@@ -81,9 +93,8 @@ const SignUpPage: React.FC = () => {
 				let countries = await userService.getAllCountries();
 				formatCountryListForSelect(countries);
 			} catch (e) {
-				axiosErrorHandler(e, {
-					[HttpStatusCode.NOT_FOUND]: () => {}
-				});
+				console.error('getCountries', e);
+				throw rsToasts.error('uh oh. Something went wrong.');
 			}
 		}
 		getCountries().catch(console.error);
@@ -104,15 +115,17 @@ const SignUpPage: React.FC = () => {
 		inputElements[inputElements.length - 1].style.margin = '0';
 	}
 
+	function deletePasswordError() {
+		const errorLabel: NodeListOf<HTMLElement> = document.querySelectorAll('.customErrorMessage');
+		errorLabel[0].style.display = 'none';
+	}
+
 	async function signUp() {
-		if (form.get('password').value !== form.get('confirmPassword').value) {
-			return renderPasswordError();
-		}
 		if (!(await form.isValid()) && country === '') {
 			setForm(form.clone());
 		}
 		let newCustomer: any = form.toModel();
-		newCustomer.birthDate = new Date(formatDateForServer(newCustomer.birthDate));
+		newCustomer.birthDate = formatDateForServer(newCustomer.birthDate);
 		newCustomer.country = country;
 		newCustomer.newsLetter = newsletter;
 		newCustomer.emailNotification = emailNotification;
@@ -121,12 +134,13 @@ const SignUpPage: React.FC = () => {
 			await userService.createNewCustomer(newCustomer);
 			renderSuccessMsg();
 		} catch (e) {
-			console.log(e);
 			axiosErrorHandler(e, {
-				[HttpStatusCode.NOT_FOUND]: () => {
-					console.log(e);
+				[HttpStatusCode.CONFLICT]: () => {
+					throw rsToasts.error('This email is already in use.');
 				}
 			});
+			console.error('Signup new customer', e);
+			throw rsToasts.error('uh oh. Something went wrong.');
 		}
 	}
 
@@ -144,8 +158,12 @@ const SignUpPage: React.FC = () => {
 
 	function formatCountryListForSelect(countries: Api.Country.ICountry[]) {
 		setCountryList(
-			countries.map((item, index) => {
-				return { value: item.isoCode, text: item.name, selected: false };
+			countries.map((item) => {
+				if (item.isoCode === 'US') {
+					return { value: item.isoCode, text: item.name, selected: true };
+				} else {
+					return { value: item.isoCode, text: item.name, selected: false };
+				}
 			})
 		);
 	}
@@ -273,7 +291,7 @@ const SignUpPage: React.FC = () => {
 									placeholder={'Re-type password to confirm'}
 									inputType={'password'}
 									control={form.get('confirmPassword')}
-									updateControl={(updateControl) => searchDebounced(updateControl)}
+									updateControl={(updateControl) => checkPasswordsMatchDebounced(updateControl)}
 								/>
 								<div className={'rsErrorMessage customErrorMessage'}>Password does not match</div>
 
