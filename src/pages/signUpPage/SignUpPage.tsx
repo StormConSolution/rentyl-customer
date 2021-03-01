@@ -16,7 +16,7 @@ import { HttpStatusCode } from '../../utils/http';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import UserService from '../../services/user/user.service';
 import serviceFactory from '../../services/serviceFactory';
-import Select from '../../components/Select/Select';
+import Select, { SelectOptions } from '../../components/Select/Select';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import debounce from 'lodash.debounce';
@@ -106,7 +106,7 @@ const SignUpPage: React.FC = () => {
 
 	async function signUp() {
 		if (form.get('password').value !== form.get('confirmPassword').value) {
-			renderPasswordError();
+			return renderPasswordError();
 		}
 		if (!(await form.isValid()) && country === '') {
 			setForm(form.clone());
@@ -141,18 +141,13 @@ const SignUpPage: React.FC = () => {
 		let inputValue = e.target as HTMLInputElement;
 		toggleCheckBoxValue(inputValue);
 	}
-	function getSignupOptions(): SignupOption[] {
-		return SignupOptions;
-	}
 
-	function formatCountryListForSelect(countries: Api.Country.ICountry[] | undefined) {
-		let allCountries: { value: number | string; text: number | string; selected: boolean }[] = [];
-		if (!!countries) {
-			for (let i = 0; i < countries.length; i++) {
-				allCountries.push({ value: countries[i].isoCode, text: countries[i].name, selected: false });
-			}
-			setCountryList(allCountries);
-		}
+	function formatCountryListForSelect(countries: Api.Country.ICountry[]) {
+		setCountryList(
+			countries.map((item, index) => {
+				return { value: item.isoCode, text: item.name, selected: false };
+			})
+		);
 	}
 
 	return countryList.length === 0 ? (
@@ -269,21 +264,21 @@ const SignUpPage: React.FC = () => {
 								<LabelInput
 									title={'Password *'}
 									placeholder={'Minimum 8 characters'}
-									inputType={'text'}
+									inputType={'password'}
 									control={form.get('password')}
 									updateControl={(updateControl) => searchDebounced(updateControl)}
 								/>
 								<LabelInput
 									title={'Confirm Password *'}
 									placeholder={'Re-type password to confirm'}
-									inputType={'text'}
+									inputType={'password'}
 									control={form.get('confirmPassword')}
 									updateControl={(updateControl) => searchDebounced(updateControl)}
 								/>
 								<div className={'rsErrorMessage customErrorMessage'}>Password does not match</div>
 
 								<SignupOptionCheckboxes
-									options={getSignupOptions()}
+									options={SignupOptions}
 									onClick={signupOptionClickPlaceholder}
 								/>
 
