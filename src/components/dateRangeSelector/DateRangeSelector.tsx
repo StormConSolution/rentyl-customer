@@ -13,7 +13,7 @@ export interface DateRangeSelectorProps {
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
 	focusedInput: 'startDate' | 'endDate' | null;
-	changeFocusedInput: (focusedInput: 'startDate' | 'endDate' | null) => void;
+	onFocusedInputChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	monthsToShow: number;
 }
 
@@ -27,7 +27,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				endDateId="endDate"
 				onDatesChange={({ startDate, endDate }) => props.onDatesChange(startDate, endDate)}
 				focusedInput={props.focusedInput}
-				onFocusChange={(focusedInput) => props.changeFocusedInput(focusedInput)}
+				onFocusChange={props.onFocusedInputChange}
 				numberOfMonths={props.monthsToShow}
 				noBorder
 			/>

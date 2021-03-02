@@ -58,3 +58,11 @@
 		}
 	}
 }
+
+.small {
+	.rsDateRangeSelector {
+		.DateInput:last-of-type {
+			margin-left: 13px;
+		}
+	}
+}
