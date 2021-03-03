@@ -3,9 +3,9 @@
 .rsDateRangeSelector {
 	.DateRangePicker {
 		.DateInput {
-			width: 68px;
+			width: 88px;
 			height: 40px;
-			padding-right: 25px;
+			padding-right: 5px;
 			border: 1px solid theme-var($primaryTextColor);
 			background-color: theme-var($primaryBackgroundColor);
 		}
@@ -15,7 +15,10 @@
 		.DateInput_input {
 			font-size: 15px;
 			font-weight: 200;
-			line-height: 17px;
+			line-height: 16px;
+			height: 16px;
+			width: 80px;
+			padding: 11px 5px;
 			color: #adadad;
 			&:hover {
 				cursor: pointer;
@@ -55,14 +58,6 @@
 		}
 		.DayPickerKeyboardShortcuts_buttonReset {
 			display: none;
-		}
-	}
-}
-
-.small {
-	.rsDateRangeSelector {
-		.DateInput:last-of-type {
-			margin-left: 13px;
 		}
 	}
 }
