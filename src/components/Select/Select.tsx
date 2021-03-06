@@ -54,7 +54,7 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 					text={item.text}
 					onSelect={(value, text) => {
 						let newOptions = [...options];
-						newOptions = newOptions.map((item, index) => {
+						newOptions = newOptions.map((item) => {
 							return {
 								selected: item.value === value,
 								value: item.value,
@@ -70,7 +70,13 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 					}}
 					onDeselect={() => {
 						let newOptions = [...options];
-						newOptions.map((item, index) => (item.selected = false));
+						newOptions = newOptions.map((item) => {
+							return {
+								selected: false,
+								value: item.value,
+								text: item.text
+							};
+						});
 						setOptions(newOptions);
 						setSelectedValue(null);
 						setSelectedText(null);

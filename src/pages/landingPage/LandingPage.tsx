@@ -23,7 +23,7 @@ import globalState, { ComparisonCardInfo } from '../../models/globalState';
 
 interface LandingPageProps {}
 
-const LandingPage: React.FC<LandingPageProps> = (props) => {
+const LandingPage: React.FC<LandingPageProps> = () => {
 	const [activeRewards, setActiveRewards] = useState<number>(0);
 	const size = useWindowResizeChange();
 
@@ -147,8 +147,8 @@ const LandingPage: React.FC<LandingPageProps> = (props) => {
 								logo: '../../images/encore-resort.png',
 								title: 'Encore Resort',
 								roomTypes: [
-									{ value: 'villa', text: 'Villa', selected: false },
-									{ value: 'vip_suite', text: 'VIP Suite', selected: false }
+									{ value: 'erVilla', text: 'Villa', selected: false },
+									{ value: 'erVipSuite', text: 'VIP Suite', selected: false }
 								]
 							});
 						}}

@@ -11,4 +11,26 @@ export default class ComparisonService extends Service {
 		let newArray: ComparisonCardInfo[] = [...comparisonItems, compareItem];
 		setComparisonItems(newArray);
 	}
+	resortComparisonCardOnChange(indexToChange: number, item: string, comparisonItems: ComparisonCardInfo[]) {
+		let newRecoilState = [...comparisonItems];
+		return newRecoilState.map((element, index) => {
+			if (index !== indexToChange) return element;
+			return {
+				destinationId: element.destinationId,
+				logo: element.logo,
+				roomTypes: element.roomTypes.map((value) => {
+					return {
+						text: value.text,
+						value: value.value,
+						selected: value.value === item
+					};
+				}),
+				title: element.title
+			};
+		});
+	}
+	resortComparisonCardOnClose(item: ComparisonCardInfo, comparisonItems: ComparisonCardInfo[]) {
+		let newRecoilState = [...comparisonItems];
+		return newRecoilState.filter((remove) => remove.destinationId !== item.destinationId);
+	}
 }

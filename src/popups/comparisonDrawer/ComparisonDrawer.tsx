@@ -5,10 +5,12 @@ import Box from '../../components/box/Box';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import router from '../../utils/router';
+import serviceFactory from '../../services/serviceFactory';
+import ComparisonService from '../../services/comparison/comparison.service';
 
-interface ComparisonDrawerProps {}
-
-const ComparisonDrawer: React.FC<ComparisonDrawerProps> = (props) => {
+const ComparisonDrawer: React.FC = () => {
+	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
 
@@ -22,13 +24,16 @@ const ComparisonDrawer: React.FC<ComparisonDrawerProps> = (props) => {
 					title={item.title}
 					roomTypes={item.roomTypes}
 					onChange={(item) => {
-						console.log('Changed: ', item);
+						let newRecoilState = comparisonService.resortComparisonCardOnChange(
+							index,
+							item,
+							comparisonItems
+						);
+						setComparisonItems(newRecoilState);
 					}}
 					onClose={() => {
-						let newRecoilState = [...comparisonItems];
-						setComparisonItems(() => {
-							return newRecoilState.filter((remove) => remove.destinationId !== item.destinationId);
-						});
+						let newComparisonItems = comparisonService.resortComparisonCardOnClose(item, comparisonItems);
+						setComparisonItems(newComparisonItems);
 					}}
 				/>
 			);
@@ -48,7 +53,7 @@ const ComparisonDrawer: React.FC<ComparisonDrawerProps> = (props) => {
 					variant={'button'}
 					label={'Compare Properties'}
 					onClick={() => {
-						console.log('Navigating to Compare all page...');
+						router.navigate('/compare');
 					}}
 				/>
 				<LabelButton
