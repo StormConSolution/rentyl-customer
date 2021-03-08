@@ -5,20 +5,17 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box } from '@bit/redsky.framework.rs.996';
-import 'react-dates/initialize';
-import { DateRangePicker } from 'react-dates';
-import 'react-dates/lib/css/_datepicker.css';
 import moment from 'moment';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
+import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 
 interface RoomBookNowCardProps {
 	points: number;
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
-	focusedInput: 'startDate' | 'endDate' | null;
-	changeFocusedInput: (focusedInput: 'startDate' | 'endDate' | null) => void;
+	focusedInput?: 'startDate' | 'endDate' | null;
 	className?: string;
 	bookNowOnClick?: () => void;
 	compareOnClick?: () => void;
@@ -75,16 +72,12 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 							Check Out
 						</Label>
 					</Box>
-					<DateRangePicker
+					<DateRangeSelector
 						startDate={props.startDate}
-						startDateId="startDate"
 						endDate={props.endDate}
-						endDateId="endDate"
-						onDatesChange={({ startDate, endDate }) => props.onDatesChange(startDate, endDate)}
+						onDatesChange={props.onDatesChange}
 						focusedInput={props.focusedInput}
-						onFocusChange={(focusedInput) => props.changeFocusedInput(focusedInput)}
-						numberOfMonths={1}
-						noBorder
+						monthsToShow={1}
 					/>
 				</Box>
 				<Box className={'earnPointsBox'}>
