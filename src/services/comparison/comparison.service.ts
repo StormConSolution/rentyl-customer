@@ -11,6 +11,7 @@ export default class ComparisonService extends Service {
 		let newArray: ComparisonCardInfo[] = [...comparisonItems, compareItem];
 		setComparisonItems(newArray);
 	}
+
 	resortComparisonCardOnChange(indexToChange: number, item: string, comparisonItems: ComparisonCardInfo[]) {
 		let newRecoilState = [...comparisonItems];
 		return newRecoilState.map((element, index) => {
@@ -29,6 +30,7 @@ export default class ComparisonService extends Service {
 			};
 		});
 	}
+
 	resortComparisonCardOnClose(item: ComparisonCardInfo, comparisonItems: ComparisonCardInfo[]) {
 		let newRecoilState = [...comparisonItems];
 		return newRecoilState.filter((remove) => remove.destinationId !== item.destinationId);

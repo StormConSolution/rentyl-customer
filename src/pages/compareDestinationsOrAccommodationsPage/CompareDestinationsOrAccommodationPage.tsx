@@ -49,7 +49,7 @@ const CompareDestinations: React.FC = () => {
 	const [renderDestinationTable, setRenderDestinationTable] = useState<boolean>(true);
 	const [tableBody, setTableBody] = useState<JSX.Element[]>([]);
 	const [tableHeaderRow, setTableHeaderRow] = useState<JSX.Element[]>([]);
-	const [compareItemsSelected, setCompareItemsSelected] = useState<boolean[]>([]);
+	const [compareItemsSelected, setCompareItemsSelected] = useState<(string | number)[]>([]);
 	let output: JSX.Element[] = [];
 	let headerOutput: JSX.Element[] = [];
 
@@ -85,13 +85,12 @@ const CompareDestinations: React.FC = () => {
 
 	useEffect(() => {
 		if (comparisonItems.length !== 0) {
+			//not using data from server yet
 			if (renderDestinationTable) {
-				//getDestinations().catch(console.error);
-				// get from server when endpoints are done (destination compare)
+				getDestinations().catch(console.error);
 				renderDestinationCompare();
 			} else {
-				//getAccommodation().catch(console.error);
-				// get from server when endpoints are done (accommodation compare)
+				getAccommodation().catch(console.error);
 				renderAccommodationCompare();
 			}
 		} else {
@@ -101,7 +100,7 @@ const CompareDestinations: React.FC = () => {
 		}
 		async function getDestinations() {
 			try {
-				let res = await destinationService.getDestinationByIds([1, 3]);
+				let res = await destinationService.getDestinationByIds([3, 1]);
 				console.log(res);
 			} catch (e) {
 				rsToasts.error('uh oh something went wrong.');
@@ -126,21 +125,25 @@ const CompareDestinations: React.FC = () => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [accommodationSelected, destinationSelected, renderDestinationTable]);
+	}, [accommodationSelected, destinationSelected, renderDestinationTable, compareItemsSelected]);
 
-	function setPageVariables() {
-		let numberOfAccommodation = 0;
-		let selectedArray: boolean[] = [];
+	function setDestinationVariables() {
 		if (comparisonItems.length === 0) {
 			setDestinationSelected(0);
 			return;
 		}
+		setDestinationSelected(comparisonItems.length);
+	}
+
+	function setAccommodationVariables() {
+		let numberOfAccommodation = 0;
+		let selectedArray: (string | number)[] = [];
 		for (let item of comparisonItems) {
 			if (item.roomTypes === undefined) continue;
-			let selected = false;
+			let selected: string | number = '';
 			for (let roomType of item.roomTypes) {
 				if (roomType.selected) {
-					selected = true;
+					selected = roomType.text;
 					numberOfAccommodation++;
 				}
 			}
@@ -152,8 +155,12 @@ const CompareDestinations: React.FC = () => {
 		} else {
 			setRenderDestinationTable(true);
 		}
-		if (destinationSelected != comparisonItems.length) setDestinationSelected(comparisonItems.length);
 		setAccommodationSelected(numberOfAccommodation);
+	}
+
+	function setPageVariables() {
+		setDestinationVariables();
+		setAccommodationVariables();
 	}
 
 	function renderComparisonCard() {
@@ -194,18 +201,11 @@ const CompareDestinations: React.FC = () => {
 			</th>
 		];
 		comparisonItems.map((item, index) => {
-			let isSelected = false;
-			for (let i = 0; i < item.roomTypes.length; i++) {
-				if (item.roomTypes[i].selected) {
-					headerOutput.push(
-						<th key={index}>
-							<Label variant={'h4'}>{item.roomTypes[i].text}</Label>
-						</th>
-					);
-					isSelected = true;
-				}
-			}
-			if (!isSelected) headerOutput.push(<th key={index} />);
+			headerOutput.push(
+				<th key={index}>
+					<Label variant={'h4'}>{compareItemsSelected[index]}</Label>
+				</th>
+			);
 		});
 		setTableHeaderRow(headerOutput);
 	}
@@ -216,7 +216,11 @@ const CompareDestinations: React.FC = () => {
 		accommodationKeys.map((itemKey, indexKey) => {
 			if (itemKey !== 'id') {
 				let res = accommodations.map((itemAccommodation, indexAccommodation) => {
-					if (!compareItemsSelected[indexAccommodation]) return <td key={indexAccommodation} />;
+					if (
+						compareItemsSelected[indexAccommodation] === '' ||
+						compareItemsSelected[indexAccommodation] === undefined
+					)
+						return <td key={indexAccommodation} />;
 					return <td key={indexAccommodation}>{itemAccommodation[itemKey as keyof AccommodationData]}</td>;
 				});
 				output.push(
@@ -257,8 +261,6 @@ const CompareDestinations: React.FC = () => {
 		destinationKeys.map((itemKey, indexKey) => {
 			if (itemKey !== 'id') {
 				let res = destinations.map((itemDestinations, indexDestinations) => {
-					console.log('compareItemsSelected[indexDestinations]', compareItemsSelected[indexDestinations]);
-					console.log('indexDestinations', indexDestinations);
 					if (
 						compareItemsSelected[indexDestinations] ||
 						compareItemsSelected[indexDestinations] === undefined
