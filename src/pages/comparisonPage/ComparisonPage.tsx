@@ -37,7 +37,7 @@ export interface DestinationData {
 	spa: string;
 }
 
-const CompareDestinations: React.FC = () => {
+const ComparisonPage: React.FC = () => {
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const size = useWindowResizeChange();
@@ -48,8 +48,6 @@ const CompareDestinations: React.FC = () => {
 	const [destinationSelected, setDestinationSelected] = useState<number>(0);
 	const [renderDestinationTable, setRenderDestinationTable] = useState<boolean>(true);
 	const [compareItemsSelected, setCompareItemsSelected] = useState<(string | number)[]>([]);
-	let output: JSX.Element[] = [];
-	let headerOutput: JSX.Element[] = [];
 
 	// destinations and accommodations will be pulled from server
 	let destinations: DestinationData[] = [
@@ -185,6 +183,7 @@ const CompareDestinations: React.FC = () => {
 	}
 
 	function renderAccommodationHeader() {
+		let headerOutput: JSX.Element[] = [];
 		headerOutput = [
 			<th className={'comparisonCardsDiv'} key={'accommodation'}>
 				<Label variant={'h4'}>Accommodation Type</Label>
@@ -201,7 +200,7 @@ const CompareDestinations: React.FC = () => {
 	}
 
 	function renderDestinationHeader() {
-		headerOutput = [
+		let headerOutput: JSX.Element[] = [
 			<th className={'comparisonCardsDiv'} key={'destination'}>
 				<Label variant={'h4'}>Destination Name</Label>
 			</th>
@@ -222,6 +221,7 @@ const CompareDestinations: React.FC = () => {
 
 	function renderAccommodationCompare() {
 		let accommodationKeys = Object.keys(accommodations[0]);
+		let output: JSX.Element[] = [];
 		accommodationKeys.map((itemKey, indexKey) => {
 			if (itemKey !== 'id') {
 				let res = accommodations.map((itemAccommodation, indexAccommodation) => {
@@ -245,6 +245,7 @@ const CompareDestinations: React.FC = () => {
 	}
 
 	function renderDestinationCompare() {
+		let output: JSX.Element[] = [];
 		let destinationKeys = Object.keys(destinations[0]);
 		destinationKeys.map((itemKey, indexKey) => {
 			if (itemKey !== 'id') {
@@ -271,7 +272,7 @@ const CompareDestinations: React.FC = () => {
 	}
 
 	return (
-		<Page className={'rsCompareDestinations'}>
+		<Page className={'rsComparisonPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<HeroImage
 					className={'heroImage'}
@@ -315,4 +316,4 @@ const CompareDestinations: React.FC = () => {
 	);
 };
 
-export default CompareDestinations;
+export default ComparisonPage;

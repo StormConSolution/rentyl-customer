@@ -4,7 +4,7 @@ import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
-import CompareDestinations from './pages/comparisonPage/ComparisonPage';
+import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -34,7 +34,7 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/compare',
-		page: CompareDestinations
+		page: ComparisonPage
 	},
 	{
 		path: '*',
