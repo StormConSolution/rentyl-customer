@@ -1,0 +1,57 @@
+@import 'src/themes/themes';
+
+.rsCompareDestinations {
+	.heroImage {
+		background-position-y: 38%;
+	}
+
+	.destinationPath {
+		color: theme-var($buttonLinkColor);
+		margin-top: 28px;
+		.rsIcon {
+			display: flex;
+			align-self: flex-end;
+		}
+		.rsLabel {
+			color: theme-var($buttonLinkColor);
+		}
+	}
+
+	.comparisonTable {
+		margin-top: 55px;
+		width: 100%;
+		border-collapse: collapse;
+
+		.blankCell {
+			width: 278px;
+		}
+		th {
+			height: 100px;
+			text-align: left;
+		}
+		td {
+			height: 40px;
+			border-spacing: unset;
+		}
+		tbody {
+			tr:nth-child(odd) {
+				background-color: #fcfbf8;
+			}
+			td:first-child {
+				padding-left: 5px;
+			}
+		}
+	}
+}
+
+.small {
+	.rsCompareDestinations {
+		.destinationPath {
+			margin-top: 18px;
+		}
+		.comparisonTable {
+			border-collapse: separate;
+			border-spacing: 10px;
+		}
+	}
+}
