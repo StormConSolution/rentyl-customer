@@ -100,7 +100,7 @@ const CompareDestinations: React.FC = () => {
 		}
 		async function getDestinations() {
 			try {
-				let res = await destinationService.getDestinationByIds([3, 1]);
+				let res = await destinationService.getDestinationDetails(1);
 				console.log(res);
 			} catch (e) {
 				rsToasts.error('uh oh something went wrong.');
@@ -113,7 +113,7 @@ const CompareDestinations: React.FC = () => {
 		}
 		async function getAccommodation() {
 			try {
-				let res = await accommodationService.getAccommodationById([1, 3]);
+				let res = await accommodationService.getAccommodationDetails(1);
 				console.log(res);
 			} catch (e) {
 				rsToasts.error('uh oh something went wrong.');
