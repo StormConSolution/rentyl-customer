@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './CompareDestinationsOrAccommodationsPage.scss';
+import './ComparisonPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Paper from '../../components/paper/Paper';
@@ -47,8 +47,6 @@ const CompareDestinations: React.FC = () => {
 	const [accommodationSelected, setAccommodationSelected] = useState<number>(0);
 	const [destinationSelected, setDestinationSelected] = useState<number>(0);
 	const [renderDestinationTable, setRenderDestinationTable] = useState<boolean>(true);
-	const [tableBody, setTableBody] = useState<JSX.Element[]>([]);
-	const [tableHeaderRow, setTableHeaderRow] = useState<JSX.Element[]>([]);
 	const [compareItemsSelected, setCompareItemsSelected] = useState<(string | number)[]>([]);
 	let output: JSX.Element[] = [];
 	let headerOutput: JSX.Element[] = [];
@@ -80,46 +78,43 @@ const CompareDestinations: React.FC = () => {
 	];
 
 	useEffect(() => {
-		setPageVariables();
+		setDestinationVariables();
+		setAccommodationVariables();
 	}, [comparisonItems]);
 
 	useEffect(() => {
-		if (comparisonItems.length !== 0) {
-			//not using data from server yet
-			if (renderDestinationTable) {
-				getDestinations().catch(console.error);
-				renderDestinationCompare();
-			} else {
-				getAccommodation().catch(console.error);
-				renderAccommodationCompare();
-			}
-		} else {
-			setTableBody([]);
-			setTableHeaderRow([]);
+		if (comparisonItems.length === 0) {
 			rsToasts.error('No destinations or accommodations selected to compare.');
 		}
+		if (renderDestinationTable) {
+			getDestinations().catch(console.error);
+		} else {
+			getAccommodation().catch(console.error);
+		}
+
 		async function getDestinations() {
 			try {
 				let res = await destinationService.getDestinationDetails(1);
 				console.log(res);
 			} catch (e) {
-				rsToasts.error('uh oh something went wrong.');
+				rsToasts.error('An unexpected error has occurred on the server.');
 				axiosErrorHandler(e, {
 					[HttpStatusCode.NOT_FOUND]: () => {
-						rsToasts.error('uh oh something went wrong.');
+						rsToasts.error('An unexpected error has occurred on the server.');
 					}
 				});
 			}
 		}
+
 		async function getAccommodation() {
 			try {
 				let res = await accommodationService.getAccommodationDetails(1);
 				console.log(res);
 			} catch (e) {
-				rsToasts.error('uh oh something went wrong.');
+				rsToasts.error('An unexpected error has occurred on the server.');
 				axiosErrorHandler(e, {
 					[HttpStatusCode.NOT_FOUND]: () => {
-						rsToasts.error('uh oh something went wrong.');
+						rsToasts.error('An unexpected error has occurred on the server.');
 					}
 				});
 			}
@@ -156,11 +151,6 @@ const CompareDestinations: React.FC = () => {
 			setRenderDestinationTable(true);
 		}
 		setAccommodationSelected(numberOfAccommodation);
-	}
-
-	function setPageVariables() {
-		setDestinationVariables();
-		setAccommodationVariables();
 	}
 
 	function renderComparisonCard() {
@@ -207,11 +197,30 @@ const CompareDestinations: React.FC = () => {
 				</th>
 			);
 		});
-		setTableHeaderRow(headerOutput);
+		return headerOutput;
+	}
+
+	function renderDestinationHeader() {
+		headerOutput = [
+			<th className={'comparisonCardsDiv'} key={'destination'}>
+				<Label variant={'h4'}>Destination Name</Label>
+			</th>
+		];
+		comparisonItems.map((item, index) => {
+			if (!compareItemsSelected[index]) {
+				headerOutput.push(
+					<th key={index}>
+						<Label variant={'h4'}>{item.title}</Label>
+					</th>
+				);
+			} else {
+				headerOutput.push(<th key={index} />);
+			}
+		});
+		return headerOutput;
 	}
 
 	function renderAccommodationCompare() {
-		renderAccommodationHeader();
 		let accommodationKeys = Object.keys(accommodations[0]);
 		accommodationKeys.map((itemKey, indexKey) => {
 			if (itemKey !== 'id') {
@@ -232,31 +241,10 @@ const CompareDestinations: React.FC = () => {
 			}
 			return output;
 		});
-		setTableBody(output);
-	}
-
-	function renderDestinationHeader() {
-		headerOutput = [
-			<th className={'comparisonCardsDiv'} key={'destination'}>
-				<Label variant={'h4'}>Destination Name</Label>
-			</th>
-		];
-		comparisonItems.map((item, index) => {
-			if (!compareItemsSelected[index]) {
-				headerOutput.push(
-					<th key={index}>
-						<Label variant={'h4'}>{item.title}</Label>
-					</th>
-				);
-			} else {
-				headerOutput.push(<th key={index} />);
-			}
-		});
-		setTableHeaderRow(headerOutput);
+		return output;
 	}
 
 	function renderDestinationCompare() {
-		renderDestinationHeader();
 		let destinationKeys = Object.keys(destinations[0]);
 		destinationKeys.map((itemKey, indexKey) => {
 			if (itemKey !== 'id') {
@@ -279,7 +267,7 @@ const CompareDestinations: React.FC = () => {
 			}
 			return output;
 		});
-		setTableBody(output);
+		return output;
 	}
 
 	return (
@@ -307,17 +295,19 @@ const CompareDestinations: React.FC = () => {
 						iconSize={8}
 						iconColor={'#004b98'}
 					/>
-					<table className={'destinationOrAccommodationTable'}>
+					<table className={'comparisonTable'}>
 						<thead>
-							<tr className={'tableHeader'} key={'trComparisonCard'}>
+							<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
 								<td className={'blankCell'} />
 								{renderComparisonCard()}
 							</tr>
 							<tr className={'tableHeader'} key={'trRow'}>
-								{tableHeaderRow}
+								{renderDestinationTable ? renderDestinationHeader() : renderAccommodationHeader()}
 							</tr>
 						</thead>
-						<tbody className={'tableBody'}>{tableBody}</tbody>
+						<tbody className={'tableBody'}>
+							{renderDestinationTable ? renderDestinationCompare() : renderAccommodationCompare()}
+						</tbody>
 					</table>
 				</Paper>
 			</div>

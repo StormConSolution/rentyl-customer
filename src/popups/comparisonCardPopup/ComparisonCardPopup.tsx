@@ -9,7 +9,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Select from '../../components/Select/Select';
 import LabelButton from '../../components/labelButton/LabelButton';
 
-interface ComparisonCardPopup extends PopupProps {
+export interface ComparisonCardPopupProps extends PopupProps {
 	logo: string;
 	title: string;
 	roomTypes: { value: string | number; text: string | number; selected: boolean }[];
@@ -18,7 +18,7 @@ interface ComparisonCardPopup extends PopupProps {
 	className?: string;
 }
 
-const ComparisonCardPopup: React.FC<ComparisonCardPopup> = (props) => {
+const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsComparisonCardPopup'}>

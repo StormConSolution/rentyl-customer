@@ -4,7 +4,7 @@ import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
-import CompareDestinations from './pages/compareDestinationsOrAccommodationsPage/CompareDestinationsOrAccommodationPage';
+import CompareDestinations from './pages/comparisonPage/ComparisonPage';
 
 const routes: RouteDetails[] = [
 	{

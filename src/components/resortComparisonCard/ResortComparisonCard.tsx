@@ -5,7 +5,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Select from '../Select/Select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import ComparisonCardPopup from '../../popups/comparisonCardPopup/ComparisonCardPopup';
+import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
 
 interface ResortComparisonCardProps {
 	logo: string;
@@ -35,7 +35,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 				<Label
 					variant={'caption'}
 					onClick={() => {
-						popupController.open<ComparisonCardPopup>(ComparisonCardPopup, {
+						popupController.open<ComparisonCardPopupProps>(ComparisonCardPopup, {
 							logo: props.logo,
 							title: props.title,
 							roomTypes: props.roomTypes,
