@@ -16,7 +16,8 @@ export enum HttpStatusCode {
 }
 
 const http = new HttpClient({
-	baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3001/api/v1' : packageJson.uri,
+	baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost/api/v1' : packageJson.uri,
+	//baseURL: process.env.NODE_ENV === 'development' ? 'http://192.168.1.115:3001/api/v1' : packageJson.uri,
 	headers: {
 		'company-id': `1`,
 		'Content-Type': 'application/json',
