@@ -1,12 +1,19 @@
 @import '../../themes/themes.scss';
 
 .rsDateRangeSelector {
+	.checkInOutLabels {
+		display: flex;
+		padding-bottom: 10px;
+		.label2 {
+			margin-left: 46px;
+		}
+	}
 	.DateRangePicker {
 		.DateInput {
 			width: 88px;
 			height: 40px;
 			padding-right: 5px;
-			border: 1px solid theme-var($primaryTextColor);
+			border: 1px solid theme-var($greyLineColor);
 			background-color: theme-var($primaryBackgroundColor);
 		}
 		.DateInput:last-of-type {

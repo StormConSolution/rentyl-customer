@@ -1,0 +1,21 @@
+@import 'src/themes/themes';
+
+.rsDestinationSearchPage {
+	.heroImage {
+		background-position-y: 38%;
+	}
+
+	.filterPaper {
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+
+		.filterLabel {
+			margin: 60px 0 17px;
+		}
+
+		.filterBar {
+			padding-bottom: 400px;
+		}
+	}
+}

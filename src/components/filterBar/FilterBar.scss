@@ -1,0 +1,101 @@
+@import '../../themes/themes.scss';
+
+.rsFilterBar {
+	div {
+		margin: 0;
+	}
+
+	.rsLabelInput input {
+		width: calc(100% - 20px);
+		height: 40px;
+		padding: 0 10px;
+	}
+
+	.moreFiltersLink {
+		.rsLabel.caption {
+			color: theme-var($buttonLinkColor);
+		}
+		.rsIcon {
+			color: theme-var($buttonLinkColor);
+		}
+	}
+
+	display: grid;
+	grid-template-columns: 206px 93px 130px auto repeat(3, min-content);
+	column-gap: 20px;
+	> div {
+		align-self: end;
+		&.moreFiltersLink {
+			margin: 30px 10px auto 10px;
+		}
+	}
+	.rsDateRangeSelector {
+		grid-column: 1 / 2;
+	}
+	.numberOfGuests {
+		grid-column: 2 / 3;
+	}
+	.moreFiltersLink {
+		grid-column: 3 / 4;
+		cursor: pointer;
+	}
+
+	.keyword {
+		grid-column: 5 / 6;
+		width: 200px;
+	}
+	.sortOption {
+		grid-column: 6 / 7;
+		width: 200px;
+	}
+	.displayOptions {
+		grid-column: 7 / 8;
+		margin: auto 0;
+		.rsIcon {
+			margin: auto 20px auto 0;
+			&:last-of-type {
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+.small {
+	.rsFilterBar {
+		input {
+			width: calc(100% - 20px);
+			height: 40px;
+			padding: 0 10px;
+		}
+
+		display: grid;
+		grid-template-columns: 103px repeat(2, min-content);
+		column-gap: 10px;
+
+		.rsDateRangeSelector,
+		.numberOfGuests,
+		.keyword {
+			display: none;
+		}
+		.moreFiltersLink {
+			grid-column: 1 / 2;
+			cursor: pointer;
+			margin: auto 0;
+		}
+
+		.sortOption {
+			grid-column: 2 / 3;
+			width: 150px;
+		}
+		.displayOptions {
+			grid-column: 3 / 4;
+			margin: auto 0;
+			.rsIcon {
+				margin: auto 20px auto 0;
+				&:last-of-type {
+					margin-right: 0;
+				}
+			}
+		}
+	}
+}

@@ -8,6 +8,7 @@ import { DateRangePicker } from 'react-dates';
 import './DateRangeSelector.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
+import Label from '@bit/redsky.framework.rs.label';
 
 export interface DateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
@@ -16,6 +17,8 @@ export interface DateRangeSelectorProps {
 	focusedInput?: 'startDate' | 'endDate' | null;
 	monthsToShow: number;
 	className?: string;
+	label1?: string;
+	label2?: string;
 }
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
@@ -23,6 +26,14 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 	const [instanceId] = useState<string>(StringUtils.generateGuid());
 	return (
 		<Box className={`rsDateRangeSelector ${props.className || ''}`}>
+			<div className={'checkInOutLabels'}>
+				<Label className={'label1'} variant={'caption'}>
+					{props.label1}
+				</Label>
+				<Label className={'label2'} variant={'caption'}>
+					{props.label2}
+				</Label>
+			</div>
 			<DateRangePicker
 				startDate={props.startDate}
 				startDateId={`startDate-${instanceId}`}

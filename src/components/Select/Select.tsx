@@ -8,6 +8,7 @@ import SelectOption from './selectOption/SelectOption';
 export type SelectOptions = { value: number | string; text: number | string; selected: boolean };
 
 interface SpireSelectProps {
+	className?: string;
 	placeHolder?: string;
 	showSelectedAsPlaceHolder?: boolean;
 	onChange: (value: string | number | null) => void;
@@ -107,7 +108,7 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 	}
 
 	return (
-		<div ref={popupRef} className={'rsSelect'}>
+		<div ref={popupRef} className={`rsSelect ${props.className || ''}`}>
 			<Box
 				className={'placeHolder'}
 				display={'flex'}
