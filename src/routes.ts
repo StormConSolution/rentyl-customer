@@ -5,6 +5,7 @@ import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
+import DestinationSearchPage from './pages/destinationSearchPage/DestinationSearchPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -31,6 +32,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/signup',
 		page: SignUpPage
+	},
+	{
+		path: '/destination-search',
+		page: DestinationSearchPage
 	},
 	{
 		path: '/compare',
