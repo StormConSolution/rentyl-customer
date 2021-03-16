@@ -1,0 +1,72 @@
+@import 'src/themes/themes';
+
+.rsAccommodationSearchCallToActionCard {
+	.earnLabel {
+		display: flex;
+		justify-content: center;
+	}
+
+	.pointsLabel {
+		padding-top: 5px;
+	}
+
+	.bookNowBtn {
+		margin-top: 53px;
+		width: 131px;
+	}
+
+	.viewDetailsBtn {
+		margin-top: 9px;
+		margin-bottom: 0;
+		width: 131px;
+		height: 40px;
+		padding: 0 19px !important;
+	}
+
+	.compareLinkDiv {
+		padding-top: 37px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.compareLink {
+		color: theme-var($buttonLinkColor);
+	}
+
+	.addCompareIcon {
+		padding-left: 5px;
+	}
+}
+
+.small {
+	.rsAccommodationSearchCallToActionCard {
+		.topContents {
+			display: flex;
+			height: 36px;
+			justify-content: space-between;
+		}
+
+		.bottomContents {
+			padding-top: 16px;
+			justify-content: center;
+
+			.compareBtnMobile {
+				width: 148px;
+				padding: 0 10px;
+				margin: 0;
+
+				.compareBtnTextMobile {
+					font-size: 17px;
+				}
+				.addCompareIconMobile {
+					margin-left: 5px;
+				}
+			}
+
+			.bookNowBtnMobile {
+				margin: 0 0 0 12px; //rsButton has margin of 20px auto I am overwriting so the 0 are for a reason
+				width: 148px;
+			}
+		}
+	}
+}

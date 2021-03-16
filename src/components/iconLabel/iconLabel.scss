@@ -1,0 +1,38 @@
+@import 'src/themes/themes';
+
+.rsIconLabel.top {
+	width: fit-content;
+	.icon {
+		display: flex;
+		justify-content: center;
+		padding-bottom: 3px;
+	}
+}
+
+.rsIconLabel.right {
+	width: fit-content;
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: center;
+	.icon {
+		padding-left: 10px;
+	}
+}
+
+.rsIconLabel.bottom {
+	width: fit-content;
+	display: flex;
+	flex-direction: column-reverse;
+	.icon {
+		align-self: center;
+		padding-top: 3px;
+	}
+}
+
+.rsIconLabel.left {
+	display: flex;
+	align-items: center;
+	.label {
+		padding-left: 10px;
+	}
+}

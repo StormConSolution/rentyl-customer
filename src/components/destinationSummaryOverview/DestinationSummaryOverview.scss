@@ -1,0 +1,29 @@
+.rsDestinationSummaryOverview {
+	height: 100%;
+	display: grid;
+	grid-template-rows: repeat(3, auto);
+	.rsBox.amenities {
+		.amenityIcon {
+			display: inline-block;
+			margin: 18px 40px;
+			text-align: center;
+			&:first-of-type {
+				margin-left: 0;
+			}
+			&:last-of-type {
+				margin-right: 0;
+			}
+			.rsIcon {
+				margin: 0 auto;
+			}
+		}
+	}
+	.finePrint {
+		position: relative;
+		.rsLabel {
+			position: absolute;
+			bottom: 0;
+			font-size: 65%;
+		}
+	}
+}

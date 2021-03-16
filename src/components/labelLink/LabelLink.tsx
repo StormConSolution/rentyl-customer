@@ -6,7 +6,7 @@ import { Link } from '@bit/redsky.framework.rs.996';
 
 interface LabelLinkProps {
 	path: string;
-	externalLink: boolean;
+	externalLink?: boolean;
 	label: string;
 	variant:
 		| 'h1'
@@ -29,11 +29,17 @@ interface LabelLinkProps {
 	iconSize?: number;
 	iconColor?: string;
 	className?: string;
+	onClick?: () => void;
 }
 
 const LabelLink: React.FC<LabelLinkProps> = (props) => {
 	return (
-		<Link path={props.path} className={`rsLabelLink ${props.className || ''}`} external={props.externalLink}>
+		<Link
+			path={props.path}
+			className={`rsLabelLink ${props.className || ''}`}
+			external={props.externalLink}
+			onClick={props.onClick}
+		>
 			{!!props.iconLeft && (
 				<Icon
 					className={'iconLeft'}

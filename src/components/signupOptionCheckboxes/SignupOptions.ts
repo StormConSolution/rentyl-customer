@@ -1,6 +1,6 @@
 import { SignupOption } from './SignupOptionCheckboxes';
 
-const SignupOptions: Array<SignupOption> = [
+const SignupOptions: SignupOption[] = [
 	{
 		value: 'newsletter',
 		text: 'Sign up for newsletter',

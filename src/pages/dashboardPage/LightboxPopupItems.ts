@@ -1,6 +1,6 @@
 import { LightboxItem } from '../../popups/lightboxPopup/LightboxPopup';
 
-const LightboxPopupItems: Array<LightboxItem> = [
+const LightboxPopupItems: LightboxItem[] = [
 	{
 		thumbnailImagePath: '../../images/dashboardPage/breakfast-in-bed-thumbnail.jpg',
 		title: 'Sample 1',

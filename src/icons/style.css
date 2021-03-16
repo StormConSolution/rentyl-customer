@@ -1,9 +1,9 @@
 @font-face {
 	font-family: 'icomoon';
-	src: url('fonts/icomoon.eot?eu6fth');
-	src: url('fonts/icomoon.eot?eu6fth#iefix') format('embedded-opentype'),
-		url('fonts/icomoon.woff2?eu6fth') format('woff2'), url('fonts/icomoon.ttf?eu6fth') format('truetype'),
-		url('fonts/icomoon.woff?eu6fth') format('woff'), url('fonts/icomoon.svg?eu6fth#icomoon') format('svg');
+	src: url('fonts/icomoon.eot?4yli6h');
+	src: url('fonts/icomoon.eot?4yli6h#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff2?4yli6h') format('woff2'), url('fonts/icomoon.ttf?4yli6h') format('truetype'),
+		url('fonts/icomoon.woff?4yli6h') format('woff'), url('fonts/icomoon.svg?4yli6h#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -25,9 +25,6 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-chevron-circle-right:before {
-	content: '\e91f';
-}
 .icon-wifi:before {
 	content: '\e91e';
 }
