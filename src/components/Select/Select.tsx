@@ -5,20 +5,20 @@ import { useEffect, useRef, useState } from 'react';
 import Icon from '@bit/redsky.framework.rs.icon';
 import SelectOption from './selectOption/SelectOption';
 
-type Options = { value: number | string; text: number | string; selected: boolean };
+export type SelectOptions = { value: number | string; text: number | string; selected: boolean };
 
 interface SpireSelectProps {
 	placeHolder?: string;
 	showSelectedAsPlaceHolder?: boolean;
 	onChange: (value: string | number | null) => void;
-	options: Options[];
+	options: SelectOptions[];
 }
 
 const Select: React.FC<SpireSelectProps> = (props) => {
 	const popupRef = useRef<HTMLElement>(null);
 	const optionContainerRef = useRef<HTMLElement>(null);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [options, setOptions] = useState<Options[]>([...props.options]);
+	const [options, setOptions] = useState<SelectOptions[]>([...props.options]);
 	const [selectedValue, setSelectedValue] = useState<number | string | null>(getInitialSelectedData('value'));
 	const [selectedText, setSelectedText] = useState<number | string | null>(getInitialSelectedData('text'));
 
@@ -54,7 +54,7 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 					text={item.text}
 					onSelect={(value, text) => {
 						let newOptions = [...options];
-						newOptions = newOptions.map((item, index) => {
+						newOptions = newOptions.map((item) => {
 							return {
 								selected: item.value === value,
 								value: item.value,
@@ -70,7 +70,13 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 					}}
 					onDeselect={() => {
 						let newOptions = [...options];
-						newOptions.map((item, index) => (item.selected = false));
+						newOptions = newOptions.map((item) => {
+							return {
+								selected: false,
+								value: item.value,
+								text: item.text
+							};
+						});
 						setOptions(newOptions);
 						setSelectedValue(null);
 						setSelectedText(null);

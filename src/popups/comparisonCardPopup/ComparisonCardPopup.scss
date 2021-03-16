@@ -1,0 +1,50 @@
+@import 'src/themes/themes';
+
+.rsComparisonCardPopup {
+	width: 346px;
+
+	.closeBtn {
+		color: #fcfbf8;
+		display: flex;
+		justify-content: flex-end;
+		padding: 5px;
+	}
+	.paperWrapper {
+		padding: 12px;
+
+		.title {
+			padding: 10px 0 20px;
+			border-bottom: 1px solid #dedede;
+			margin-bottom: 30px;
+		}
+
+		.accommodationSelect {
+			margin-top: 20px;
+			width: 100%;
+			background-color: #ffffff;
+
+			.rsSelect {
+				width: 100%;
+			}
+		}
+		.radioDiv {
+			margin-top: 20px;
+
+			.yesPin {
+				margin-top: 8px;
+			}
+			.noPin {
+				margin-top: 12px;
+			}
+		}
+		.buttonBox {
+			margin-top: 40px;
+			justify-content: center;
+
+			.popupBtn {
+				width: 97px;
+				margin: 0 9px;
+			}
+		}
+	}
+}

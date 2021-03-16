@@ -1,4 +1,35 @@
 declare namespace Api {
+	export namespace Accommodation {
+		export namespace Req {
+			export interface Details {
+				accommodationId: number;
+			}
+		}
+		export namespace Res {
+			export interface Details extends Model.Accommodation {
+				logoUrl: string;
+				accommodationType: Model.AccommodationTypes;
+				accommodationTypeCode: string;
+				accommodationTypeDescription: string;
+				media: Model.Media[];
+				layout: AccommodationLayout.Details[];
+				categories: AccommodationCategory.Details[];
+				features: Feature.Details[];
+			}
+		}
+	}
+
+	export namespace AccommodationCategory {
+		export interface Details extends Model.AccommodationCategory {
+			media: Model.Media[];
+		}
+	}
+
+	export namespace AccommodationLayout {
+		export interface Details extends Model.AccommodationLayout {
+			rooms: Model.AccommodationLayoutRoom[];
+		}
+	}
 	export namespace Company {
 		export namespace Req {
 			export interface Create {
@@ -132,9 +163,150 @@ declare namespace Api {
 				id?: number;
 				ids?: number[];
 			}
+			export interface AccommodationType {
+				destinationId?: number;
+				destinationIds?: number[];
+			}
+			export interface Features {
+				destinationId: number;
+			}
+			export interface Packages {
+				destinationId: number;
+			}
+			export interface Details {
+				destinationId: number;
+			}
 		}
 		export namespace Res {
-			export interface Get extends Model.Destination {}
+			export interface Get {
+				id: number;
+				companyId: number;
+				name: string;
+				description: string;
+				code: string;
+				status: string;
+				address1: string;
+				address2: string;
+				city: string;
+				state: string;
+				zip: string;
+				country: string;
+				logoUrl: string;
+				heroUrl: string;
+				media: Model.Media[];
+			}
+			export interface Details {
+				id: number;
+				name: string;
+				description: string;
+				code: string;
+				status: string;
+				address1: string;
+				address2: string;
+				city: string;
+				state: string;
+				zip: string;
+				country: string;
+				logoUrl: string;
+				heroUrl: string;
+				media: Model.Media[];
+				features: Feature.Details[];
+				packages: Package.Details[];
+			}
+			export interface AccommodationType {
+				id: number;
+				companyId: number;
+				destinationId: number;
+				code: string;
+				name: string;
+				description: string;
+				createdOn: Date | string;
+				modifiedOn: Date | string;
+				isActive: boolean;
+				type: 'HOTEL' | 'RENTAL';
+				metaData: string;
+				externalSystemId: string;
+			}
+		}
+	}
+
+	export namespace Country {
+		interface Timezones {
+			zoneName: string;
+			gmtOffset: number;
+			gmtOffsetName: string;
+			abbreviation: string;
+			tzName: string;
+		}
+		interface ICountry {
+			name: string;
+			phonecode: string;
+			isoCode: string;
+			flag: string;
+			currency: string;
+			latitude: string;
+			longitude: string;
+			timezones?: Timezones[];
+		}
+		interface IState {
+			name: string;
+			isoCode: string;
+			countryCode: string;
+			latitude?: string | null;
+			longitude?: string | null;
+		}
+		interface ICity {
+			name: string;
+			countryCode: string;
+			stateCode: string;
+			latitude?: string | null;
+			longitude?: string | null;
+		}
+		export namespace Req {
+			export interface AllCountries {}
+			export interface Country {
+				countryCode: string;
+			}
+			export interface States {
+				countryCode: string;
+			}
+			export interface Cities {
+				countryCode: string;
+				stateCode: string;
+			}
+		}
+		export namespace Res {
+			export interface AllCountries {
+				countries: ICountry[];
+			}
+			export interface Country extends ICountry {}
+			export interface States {
+				states: IState[];
+			}
+			export interface Cities {
+				cities: ICity[];
+			}
+		}
+	}
+
+	export namespace Customer {
+		export namespace Req {
+			export interface Create {
+				name: string;
+				birthDate: Date | string;
+				address: string;
+				city: string;
+				zip: string;
+				country: string;
+				phone: string;
+				primaryEmail: string;
+				password: string;
+				newsLetter: 0 | 1;
+				emailNotification: 0 | 1;
+			}
+		}
+		export namespace Res {
+			export interface Create extends User.Filtered {}
 		}
 	}
 

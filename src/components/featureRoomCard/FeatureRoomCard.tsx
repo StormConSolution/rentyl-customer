@@ -10,17 +10,20 @@ interface FeatureRoomCardProps {
 	title: string;
 	discountAmount: number;
 	bookNowPath: () => void;
+	limitedOffer?: boolean;
 	className?: string;
 }
 
 const FeatureRoomCard: React.FC<FeatureRoomCardProps> = (props) => {
 	return (
 		<Paper className={`rsFeatureRoomCard ${props.className || ''}`} height={'247px'} width={'278px'}>
-			<Box className={'limitOfferWhiteBox'}>
-				<Label className={'limitOfferLabel'} variant={'caption'}>
-					Limited offer
-				</Label>
-			</Box>
+			{props.limitedOffer && (
+				<Box className={'limitOfferWhiteBox'}>
+					<Label className={'limitOfferLabel'} variant={'caption'}>
+						Limited offer
+					</Label>
+				</Box>
+			)}
 			<img className={'mainImg'} src={props.mainImg} alt={'Main'} />
 			<Label className={'titleLabel'} variant={'caption'}>
 				{props.title}

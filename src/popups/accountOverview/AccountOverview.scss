@@ -1,0 +1,105 @@
+@import '../../themes/themes';
+
+.rsAccountOverview {
+	position: fixed;
+	transition: width 300ms;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto 0;
+	z-index: 98;
+	box-shadow: 0 0 15px #1e180b33;
+	width: 0;
+	height: fit-content;
+	max-height: 403px;
+	background: theme-var($primaryBackgroundColor);
+	.rsPaper {
+		white-space: nowrap;
+		overflow: hidden;
+		.rsLabel {
+			&.h2 {
+				color: theme-var($iconAndHighlightTextColor);
+				margin-right: 11px;
+			}
+			&.h4 {
+				margin-bottom: 15px;
+				&.yellow {
+					color: theme-var($iconAndHighlightTextColor);
+				}
+			}
+		}
+
+		.rsLabelLink {
+			width: fit-content;
+			.rsLabel {
+				color: theme-var($buttonLinkColor);
+			}
+		}
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 20px 0;
+		}
+		img {
+			width: 60px;
+			height: 20px;
+			object-fit: contain;
+			margin-right: 16px;
+		}
+	}
+
+	.tab {
+		position: absolute;
+		box-shadow: -6px 0 15px #1e180b33;
+		background: #fcfbf8;
+		width: 25px;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		left: -25px;
+		top: 0;
+		bottom: 0;
+		margin-top: auto;
+		margin-bottom: auto;
+		&:hover {
+			cursor: pointer;
+		}
+
+		.iconSpinUp {
+			animation-name: spinUp;
+			animation-duration: 0.4s;
+			transform: rotate(0deg);
+		}
+
+		.iconSpinDown {
+			animation-name: spinDown;
+			animation-duration: 0.4s;
+			transform: rotate(-180deg);
+		}
+	}
+
+	&.opened {
+		width: 250px;
+	}
+}
+
+@keyframes spinDown {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(-180deg);
+	}
+}
+
+@keyframes spinUp {
+	0% {
+		transform: rotate(-180deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}

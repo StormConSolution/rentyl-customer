@@ -1,0 +1,70 @@
+@import '../../themes/themes';
+.rsLightBoxTwoPopup {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	.lightBoxTwoContent {
+		display: flex;
+		flex-direction: column;
+		width: 1047px;
+		margin: 0 auto;
+		height: 600px;
+		background: white;
+		.mainImage {
+			position: relative;
+			background-color: #7c7c7c;
+			height: 100%;
+			width: 100%;
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			transition: background-image 300ms;
+			.rsCarouselButtons {
+				width: fit-content;
+				margin: 0 auto;
+			}
+			.rsImageTitleDescription {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+			}
+		}
+		.imageCarousel {
+			display: flex;
+			height: 114px;
+			width: 100%;
+			overflow-x: auto;
+			overflow-y: hidden;
+			padding: 6px 3px;
+			box-sizing: border-box;
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			img {
+				transition: border 300ms, filter 300ms;
+				width: 125px;
+				margin: 0 3px;
+				&.selected {
+					border: 4px solid theme-var($iconAndHighlightTextColor);
+					box-sizing: border-box;
+				}
+				&:hover {
+					filter: brightness(1.2);
+					cursor: pointer;
+				}
+			}
+		}
+	}
+
+	.rsIcon {
+		&.icon-close {
+			position: absolute;
+			top: -25px;
+			right: -25px;
+		}
+	}
+}
+.rs-popup.show {
+	position: fixed;
+}

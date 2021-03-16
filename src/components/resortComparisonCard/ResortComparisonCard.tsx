@@ -2,9 +2,10 @@ import React from 'react';
 import './ResortComparisonCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Select from '../Select/Select';
-import Paper from '../paper/Paper';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
 
 interface ResortComparisonCardProps {
 	logo: string;
@@ -16,7 +17,38 @@ interface ResortComparisonCardProps {
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
-	return (
+	const size = useWindowResizeChange();
+	return size === 'small' ? (
+		<div className={`rsResortComparisonCard ${props.className || ''}`}>
+			<Box className={'topContent'}>
+				<Icon
+					className={'close'}
+					iconImg={'icon-close'}
+					onClick={props.onClose}
+					size={14}
+					color={'#004b98'}
+					cursorPointer
+				/>
+				<Label className={'title'} variant={'h2'}>
+					{props.title}
+				</Label>
+				<Label
+					variant={'caption'}
+					onClick={() => {
+						popupController.open<ComparisonCardPopupProps>(ComparisonCardPopup, {
+							logo: props.logo,
+							title: props.title,
+							roomTypes: props.roomTypes,
+							onChange: props.onChange,
+							onClose: props.onClose
+						});
+					}}
+				>
+					Edit
+				</Label>
+			</Box>
+		</div>
+	) : (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
 			<Box className={'topContent'} display={'flex'}>
 				<img src={props.logo} alt={'resort logo'} width={'82px'} />
