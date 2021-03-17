@@ -14,7 +14,7 @@ interface DestinationInfoCardProps {
 	address: string;
 	city: string;
 	state: string;
-	zip: number;
+	zip: number | string;
 	rating: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
 	longDescription: string;
 }
@@ -27,7 +27,6 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 			boxShadow
 			backgroundColor={'#FCFBF8'}
 			width={'536px'}
-			height={'458px'}
 		>
 			<img src={props.destinationImage} alt={'Destination Logo'} />
 			<Label variant={'caption'}>
