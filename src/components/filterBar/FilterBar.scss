@@ -21,7 +21,7 @@
 	}
 
 	display: grid;
-	grid-template-columns: 206px 93px 130px auto repeat(3, min-content);
+	grid-template-columns: 206px 93px 130px 130px auto repeat(3, min-content);
 	column-gap: 20px;
 	> div {
 		align-self: end;
@@ -38,64 +38,23 @@
 	.moreFiltersLink {
 		grid-column: 3 / 4;
 		cursor: pointer;
-	}
-
-	.keyword {
-		grid-column: 5 / 6;
-		width: 200px;
-	}
-	.sortOption {
-		grid-column: 6 / 7;
-		width: 200px;
-	}
-	.displayOptions {
-		grid-column: 7 / 8;
-		margin: auto 0;
-		.rsIcon {
-			margin: auto 20px auto 0;
-			&:last-of-type {
-				margin-right: 0;
-			}
-		}
+		display: none;
 	}
 }
 
 .small {
 	.rsFilterBar {
-		input {
-			width: calc(100% - 20px);
-			height: 40px;
-			padding: 0 10px;
-		}
-
-		display: grid;
-		grid-template-columns: 103px repeat(2, min-content);
-		column-gap: 10px;
-
 		.rsDateRangeSelector,
 		.numberOfGuests,
-		.keyword {
+		.priceMax,
+		.priceMin {
 			display: none;
 		}
 		.moreFiltersLink {
-			grid-column: 1 / 2;
+			grid-column: 1;
 			cursor: pointer;
 			margin: auto 0;
-		}
-
-		.sortOption {
-			grid-column: 2 / 3;
-			width: 150px;
-		}
-		.displayOptions {
-			grid-column: 3 / 4;
-			margin: auto 0;
-			.rsIcon {
-				margin: auto 20px auto 0;
-				&:last-of-type {
-					margin-right: 0;
-				}
-			}
+			display: flex;
 		}
 	}
 }

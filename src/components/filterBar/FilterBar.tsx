@@ -1,13 +1,9 @@
+import React from 'react';
 import { RsFormControl } from '@bit/redsky.framework.rs.form';
-import Icon from '@bit/redsky.framework.rs.icon';
-import Label from '@bit/redsky.framework.rs.label';
-import debounce from 'lodash.debounce';
 import moment from 'moment';
-import React, { ReactText, useEffect, useState } from 'react';
 import Box from '../box/Box';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
-import Select, { SelectOptions } from '../Select/Select';
 import './FilterBar.scss';
 import IconLabel from '../iconLabel/IconLabel';
 
