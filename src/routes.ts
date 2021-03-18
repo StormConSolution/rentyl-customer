@@ -34,7 +34,7 @@ const routes: RouteDetails[] = [
 		page: SignUpPage
 	},
 	{
-		path: '/destination-search',
+		path: '/reservation-search',
 		page: ReservationSearchPage
 	},
 	{

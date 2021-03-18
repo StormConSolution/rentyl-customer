@@ -30,6 +30,7 @@ const DashboardPage: React.FC = () => {
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>('startDate');
 
 	function onDatesChange(calendarStartDate: moment.Moment | null, calendarEndDate: moment.Moment | null) {
 		setStartDateControl(calendarStartDate);
@@ -192,7 +193,10 @@ const DashboardPage: React.FC = () => {
 						onDatesChange={onDatesChange}
 						startDate={startDateControl}
 						endDate={endDateControl}
-						focusedInput={null}
+						focusedInput={focusedInput}
+						onFocusChange={(focusedInput) => {
+							setFocusedInput(focusedInput);
+						}}
 						bookNowOnClick={() => {
 							console.log(startDateControl);
 							console.log(endDateControl);

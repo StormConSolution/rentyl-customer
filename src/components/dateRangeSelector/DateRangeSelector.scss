@@ -1,10 +1,10 @@
 @import '../../themes/themes.scss';
 
 .rsDateRangeSelector {
-	.checkInOutLabels {
+	.startEndLabels {
 		display: flex;
 		padding-bottom: 10px;
-		.label2 {
+		.endDateLabel {
 			margin-left: 46px;
 		}
 	}
