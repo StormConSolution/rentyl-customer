@@ -31,15 +31,6 @@ function formatDate(date: string) {
 	return cleaned.match(/^(\d{2})(\d{2})(\d{4})$/);
 }
 
-export function replaceClassName(elementClassName: string, initialValue: string, replacedValue: string) {
-	let listOfElements = document.querySelectorAll(elementClassName);
-	for (let i = 0; i < listOfElements.length; i++) {
-		listOfElements[i].classList.remove(initialValue);
-		listOfElements[i].classList.add(replacedValue);
-	}
-	return true;
-}
-
 export function addCommasToNumber(intNum: any) {
 	if (isNaN(intNum)) return intNum;
 	return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');

@@ -24,6 +24,7 @@ import AccommodationSearchResultCard from '../../components/accommodationSearchR
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
+import DestinationInfoCard from '../../components/destinationInfoCard/DestinationInfoCard';
 
 const DashboardPage: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
@@ -367,6 +368,20 @@ const DashboardPage: React.FC = () => {
 									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
 							}
 						]}
+					/>
+				</Box>
+
+				<Box>
+					<DestinationInfoCard
+						destinationId={1}
+						destinationName={'Name'}
+						destinationImage={require('../../images/encore-resort.png')}
+						address={'123 Abc St'}
+						city={'Spanish Fork'}
+						state={'UT'}
+						zip={92392}
+						rating={2.5}
+						longDescription={'slfsjflsjflsklfjsdlkfjslkfjlskfjslkfjslkfj'}
 					/>
 				</Box>
 			</div>
