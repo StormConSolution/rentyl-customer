@@ -1,35 +1,172 @@
 declare namespace Api {
 	export namespace Accommodation {
+		export interface MediaDetails {
+			id: number;
+			isPrimary: 0 | 1;
+		}
 		export namespace Req {
 			export interface Details {
 				accommodationId: number;
 			}
+			export interface Update {
+				id: number;
+				name?: string;
+				shortDescription?: string;
+				longDescription?: string;
+				address1?: string;
+				address2?: string;
+				city?: string;
+				state?: string;
+				zip?: string;
+				country?: string;
+				status?: Model.AccommodationStatusType;
+				heroUrl?: string;
+				mediaIds?: MediaDetails[];
+			}
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
+			}
 		}
 		export namespace Res {
+			export interface Update extends Details {}
 			export interface Details extends Model.Accommodation {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
 				accommodationTypeCode: string;
 				accommodationTypeDescription: string;
-				media: Model.Media[];
+				media: Omit<Model.Media, 'storageDetails'>[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
-				features: Feature.Details[];
+				features: Omit<
+					Feature.Details,
+					'affiliateId' | 'destinationId' | 'accommodationCategoryId' | 'accommodationId'
+				>[];
+			}
+			export interface GetByPage {
+				data: Details[];
+				total: number;
 			}
 		}
 	}
 
 	export namespace AccommodationCategory {
 		export interface Details extends Model.AccommodationCategory {
-			media: Model.Media[];
+			media: Omit<Model.Media, 'storageDetails'>[];
+			features: Feature.Details[];
+		}
+		export interface MediaDetails {
+			id: number;
+			isPrimary: 0 | 1;
+		}
+		export namespace Req {
+			export interface Create {
+				accommodationId: number;
+				title: string;
+				description?: string;
+				features?: Feature.Req.Create[];
+				mediaIds?: MediaDetails[];
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface Update {
+				id: number;
+				title?: string;
+				description?: string;
+				features?: Feature.Req.Create[];
+				mediaIds?: MediaDetails[];
+			}
+			export interface GetByAccommodation {
+				accommodationId: number;
+			}
+			export interface GetByDestination {
+				destinationId: number;
+			}
+			export interface Delete {
+				id: number;
+			}
+		}
+		export namespace Res {
+			export interface Create extends Details {}
+			export interface Get extends Details {}
+			export interface Update extends Details {}
 		}
 	}
 
 	export namespace AccommodationLayout {
 		export interface Details extends Model.AccommodationLayout {
 			rooms: Model.AccommodationLayoutRoom[];
+			media: Omit<Model.Media, 'storageDetails'>;
+		}
+		export namespace Req {
+			export interface Create {
+				accommodationId: number;
+				title: string;
+				mediaId: number;
+			}
+			export interface Update {
+				id: number;
+				title?: string;
+				mediaId: number;
+			}
+			export interface Delete {
+				id: number;
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
+			}
+		}
+		export namespace Res {
+			export interface Create extends Details {}
+			export interface Update extends Details {}
+			export interface Get extends Details {}
+			export interface GetByPage {
+				data: Details[];
+				total: number;
+			}
 		}
 	}
+
+	export namespace AccommodationLayoutRoom {
+		export namespace Req {
+			export interface Create {
+				accommodationLayoutId: number;
+				title: string;
+				description: string;
+			}
+			export interface Update {
+				id: number;
+				title?: string;
+				description?: string;
+			}
+			export interface Delete {
+				id: number;
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface GetForLayout {
+				accommodationLayoutId: number;
+			}
+		}
+		export namespace Res {
+			export interface Create extends Model.AccommodationLayoutRoom {}
+			export interface Update extends Model.AccommodationLayoutRoom {}
+			export interface Get extends Model.AccommodationLayoutRoom {}
+			export interface GetForLayout extends Model.AccommodationLayoutRoom {}
+		}
+	}
+
 	export namespace Company {
 		export namespace Req {
 			export interface Create {
@@ -149,19 +286,28 @@ declare namespace Api {
 	}
 
 	export namespace Destination {
+		export interface MediaDetails {
+			id: number;
+			isPrimary: 0 | 1;
+		}
 		export namespace Req {
-			export interface Create {}
 			export interface Get {
 				id?: number;
 				ids?: number[];
 			}
-			export interface Update extends Partial<Model.Destination> {
-				id?: number;
-				ids?: number[];
-			}
-			export interface Delete {
-				id?: number;
-				ids?: number[];
+			export interface Update {
+				id: number;
+				description?: string;
+				status?: string;
+				address1?: string;
+				address2?: string;
+				city?: string;
+				state?: string;
+				zip?: string;
+				country?: string;
+				logoUrl?: string;
+				heroUrl?: string;
+				mediaIds?: MediaDetails[];
 			}
 			export interface AccommodationType {
 				destinationId?: number;
@@ -175,6 +321,12 @@ declare namespace Api {
 			}
 			export interface Details {
 				destinationId: number;
+			}
+
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
 			}
 		}
 		export namespace Res {
@@ -193,8 +345,9 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
-				media: Model.Media[];
+				media: Omit<Model.Media, 'storageDetails'>[];
 			}
+			export interface Update extends Details {}
 			export interface Details {
 				id: number;
 				name: string;
@@ -209,45 +362,41 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
-				media: Model.Media[];
-				features: Feature.Details[];
+				media: Omit<Model.Media, 'storageDetails'>[];
+				features: Omit<
+					Feature.Details,
+					'affiliateId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
+				>[];
 				packages: Package.Details[];
+				accommodations: {
+					id: number;
+					name: string;
+					shortDescription: string;
+				}[];
+				accommodationTypes: {
+					id: number;
+					name: string;
+					description: string;
+					code: string;
+				}[];
 			}
-			export interface AccommodationType {
-				id: number;
-				companyId: number;
-				destinationId: number;
-				code: string;
-				name: string;
-				description: string;
-				createdOn: Date | string;
-				modifiedOn: Date | string;
-				isActive: boolean;
-				type: 'HOTEL' | 'RENTAL';
-				metaData: string;
-				externalSystemId: string;
+			export interface AccommodationType extends Model.AccommodationType {}
+			export interface GetByPage {
+				data: Details[];
+				total: number;
 			}
 		}
 	}
 
-	export namespace Country {
-		interface Timezones {
-			zoneName: string;
-			gmtOffset: number;
-			gmtOffsetName: string;
-			abbreviation: string;
-			tzName: string;
+	export namespace Feature {
+		export interface Details extends Model.Feature {
+			media: Omit<Model.Media, 'storageDetails'>[];
 		}
-		interface ICountry {
-			name: string;
-			phonecode: string;
-			isoCode: string;
-			flag: string;
-			currency: string;
-			latitude: string;
-			longitude: string;
-			timezones?: Timezones[];
+		export interface MediaDetails {
+			id: number;
+			isPrimary: 0 | 1;
 		}
+
 		interface IState {
 			name: string;
 			isoCode: string;
@@ -292,37 +441,72 @@ declare namespace Api {
 	export namespace Customer {
 		export namespace Req {
 			export interface Create {
-				name: string;
-				birthDate: Date | string;
-				address: string;
-				city: string;
-				zip: string;
-				country: string;
-				phone: string;
-				primaryEmail: string;
-				password: string;
-				newsLetter: 0 | 1;
-				emailNotification: 0 | 1;
+				affiliateId?: number;
+				destinationId?: number;
+				accommodationId?: number;
+				accommodationCategoryId?: number;
+				title?: string;
+				description?: string;
+				mediaIds?: MediaDetails[];
+				icon?: string;
+				isActive: 0 | 1;
+				isCarousel: 0 | 1;
+			}
+			export interface Update {
+				id: number;
+				title?: string;
+				description?: string;
+				mediaIds?: MediaDetails[];
+				icon?: string;
+				isActive?: 0 | 1;
+				isCarousel?: 0 | 1;
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface Delete {
+				id?: number;
+				ids?: number[];
+			}
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
 			}
 		}
 		export namespace Res {
-			export interface Create extends User.Filtered {}
+			export interface Create extends Details {}
+			export interface Update extends Details {}
+			export interface Get extends Details {}
+			export interface Delete extends Details {}
+			export interface GetByPage {
+				data: Details[];
+				total: number;
+			}
 		}
 	}
 
 	export namespace Media {
 		export namespace Req {
-			export interface Create {
+			export interface CreateImagePyramid {
+				keepTransparency?: boolean;
 				file: any;
-				id: number;
 			}
 
 			export interface Get {
-				id: number;
+				id?: number;
+				ids?: number[];
+			}
+
+			export interface Delete {
+				id?: number;
+				ids?: number[];
 			}
 		}
 		export namespace Res {
-			export interface Get extends Model.Media {}
+			export interface Get extends Omit<Model.Media, 'storageDetails'> {}
+			export interface Delete {}
 		}
 	}
 
@@ -346,9 +530,10 @@ declare namespace Api {
 				holderName?: string;
 			}
 			export interface CreatePayment {
-				referenceId: number | string;
+				referenceId: number;
 				amount: PaymentAmount;
 				paymentMethod: CreatePaymentMethod;
+				storePaymentMethod: boolean;
 			}
 		}
 		export namespace Res {
@@ -367,7 +552,44 @@ declare namespace Api {
 			export interface PaymentMethods {
 				paymentMethods: PaymentMethod[];
 			}
-			export interface CreatePayment {}
+			export interface CreatePayment {
+				integration_info: string;
+			}
+		}
+	}
+
+	export namespace Package {
+		export interface Details extends Model.Packages {
+			media: Omit<Model.Media, 'storageDetails'>[];
+		}
+		export interface MediaDetails {
+			id: number;
+			isPrimary: 0 | 1;
+		}
+		export namespace Req {
+			export interface Update {
+				id: number;
+				title?: string;
+				description?: string;
+				mediaIds?: MediaDetails[];
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
+			}
+		}
+		export namespace Res {
+			export interface Update extends Details {}
+			export interface Get extends Details {}
+			export interface GetByPage {
+				data: Details[];
+				total: number;
+			}
 		}
 	}
 
@@ -682,6 +904,35 @@ declare namespace Api {
 		export namespace Res {
 			export interface Get extends Model.UserPoint {}
 			export interface Create extends Model.UserPoint {}
+		}
+	}
+
+	export namespace Product {
+		export namespace Req {
+			export interface Get {}
+		}
+		export namespace Res {
+			export interface Get {
+				id: number;
+				companyId: number;
+				destinationId: number | null;
+				affiliateId: number | null;
+				name: string;
+				shortDescription: string;
+				longDescription: string;
+				priceCents: number;
+				isActive: boolean;
+				createdOn: Date | string;
+				modifiedOn: Date | string;
+				sku: string;
+				upc: number;
+				reviewScore: number;
+				reviewCount: number;
+				type: string;
+				pointPrice: number;
+				pointValue: number;
+				vendorName: string;
+			}
 		}
 	}
 }

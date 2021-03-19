@@ -91,9 +91,10 @@ const ComparisonPage: React.FC = () => {
 		}
 
 		async function getDestinations() {
+			let destinationId: Api.Destination.Req.Details = { destinationId: 1 };
 			try {
-				let res = await destinationService.getDestinationDetails(1);
-				console.log(res);
+				let res = await destinationService.getDestinationDetails(destinationId);
+				console.log(res.data.data);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
 				axiosErrorHandler(e, {

@@ -13,6 +13,7 @@ declare namespace Model {
 		| 'LOYALTY_CAMPAIGNS'
 		| 'LOYALTY_REWARDS'
 		| 'ADMINISTRATION'
+		| 'MEDIA_ACCESS'
 		| 'ORDERS'
 		| 'ANALYTICS'
 		| 'REAL_ESTATE';
@@ -65,15 +66,41 @@ declare namespace Model {
 		metaData: string;
 		externalSystemId: string;
 		roomClass: AccommodationRoomClassType;
-		bedDetails: {
-			type: string;
-			isPrimary: boolean | number;
-			qty: number;
-			description: string;
-		};
+		bedDetails: AccommodationBedDetails[];
 		extraBeds: boolean | number;
 		extraBedPriceCents: number;
 		adaCompliant: boolean | number;
+		heroUrl: string;
+	}
+
+	export interface AccommodationBedDetails {
+		type: string;
+		isPrimary: boolean | number;
+		qty: number;
+		description: string;
+	}
+
+	export interface AccommodationCategory {
+		id: number;
+		companyId: number;
+		accommodationId: number;
+		title: string;
+		description: string;
+	}
+
+	export interface AccommodationLayout {
+		id: number;
+		companyId: number;
+		accommodationId: number;
+		title: string;
+	}
+
+	export interface AccommodationLayoutRoom {
+		id: number;
+		companyId: number;
+		accommodationLayoutId: number;
+		title: string;
+		description: string;
 	}
 
 	export interface AccommodationType {
@@ -219,9 +246,12 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
+		logoUrl: string;
+		heroUrl: string;
 		metaData: string;
 		externalSystemId: string;
 		modifiedOn: Date | string;
+		chainId: number;
 	}
 
 	export interface EmailLog {
@@ -246,6 +276,20 @@ declare namespace Model {
 		html: string;
 	}
 
+	export interface Feature {
+		id: number;
+		companyId: number;
+		affiliateId: number;
+		destinationId: number;
+		accommodationId: number;
+		accommodationCategoryId: number;
+		title: string;
+		description: string;
+		icon: string;
+		isActive: 0 | 1;
+		isCarousel: 0 | 1;
+	}
+
 	export interface MarketSegment {
 		id: number;
 		name: string;
@@ -256,37 +300,48 @@ declare namespace Model {
 	}
 
 	export interface MediaUrls {
-		thumb: string;
-		smallSmall: string;
-		small: string;
-		mediumSmall: string;
-		medium: string;
-		large: string;
+		thumb?: string;
+		smallSmall?: string;
+		small?: string;
+		mediumSmall?: string;
+		medium?: string;
+		large?: string;
 	}
 
 	export interface StorageDetails {
-		storageType: 'backblaze';
+		storageType: 'backblaze' | 's3';
+		filePath: string;
 	}
 
 	export interface BackblazeStorageDetails extends StorageDetails {
 		fileId: string;
-		filePath: string;
+	}
+
+	export interface S3StorageDetails extends StorageDetails {
+		bucketId: string;
 	}
 
 	export interface Media {
 		id: number;
+		companyId: number;
 		uploaderId: number;
 		type: 'image' | 'video' | 'imagePyramid';
 		urls: MediaUrls;
-		storageDetails: BackblazeStorageDetails[];
+		storageDetails: BackblazeStorageDetails[] | S3StorageDetails[];
+		title: string;
+		description: string;
+		isPrimary: 0 | 1;
 	}
 
 	export interface MediaMap {
-		mediaId: number;
-		productId: number;
-		cmsId: number;
-		destinationId: number;
 		accommodationId: number;
+		accommodationCategoryId: number;
+		accommodationLayoutId: number;
+		destinationId: number;
+		featureId: number;
+		mediaId: number;
+		packagesId: number;
+		productId: number;
 	}
 
 	export interface OrderProduct {
@@ -317,6 +372,14 @@ declare namespace Model {
 		discountPriceCents: number;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+	}
+
+	export interface Packages {
+		id: number;
+		companyId: number;
+		title: string;
+		description: string;
+		code: string;
 	}
 
 	export interface PaymentMethod {
@@ -352,6 +415,8 @@ declare namespace Model {
 	export interface Product {
 		id: number;
 		companyId: number;
+		destinationId: number | null;
+		affiliateId: number | null;
 		name: string;
 		shortDescription: string;
 		longDescription: string;
@@ -366,21 +431,14 @@ declare namespace Model {
 		type: string;
 		pointPrice: number;
 		pointValue: number;
+		destinationName: string | null;
+		affiliateName: string | null;
 	}
 
 	export interface ProductCategory {
 		productId: number;
 		categoryId: number;
 		createdOn: Date | string;
-	}
-
-	export interface ProductDestination {
-		productId: number;
-		destinationId: number;
-		quantityAvailable: number;
-		quantitySold: number;
-		createdOn: Date | string;
-		modifiedOn: Date | string;
 	}
 
 	export interface ReportTemplate {

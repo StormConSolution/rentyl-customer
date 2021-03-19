@@ -5,6 +5,7 @@ import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
+import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -35,6 +36,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/compare',
 		page: ComparisonPage
+	},
+	{
+		path: '/destination/details',
+		page: DestinationDetailsPage,
+		options: {
+			view: 'landingPage'
+		}
 	},
 	{
 		path: '*',

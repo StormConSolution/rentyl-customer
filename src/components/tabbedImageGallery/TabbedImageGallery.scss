@@ -1,7 +1,7 @@
 @import '../../themes/themes';
 
 .rsTabbedImageGallery {
-	--hangover: 235px;
+	--hangover: 258px;
 	position: relative;
 
 	div {
@@ -40,6 +40,9 @@
 			&:last-child {
 				margin-right: auto;
 			}
+			&:hover {
+				cursor: pointer;
+			}
 		}
 	}
 
@@ -61,6 +64,8 @@
 			position: relative;
 			img {
 				width: 100%;
+				height: 100%;
+				object-fit: cover;
 			}
 		}
 
