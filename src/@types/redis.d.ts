@@ -8,14 +8,15 @@ declare namespace Redis {
 		maxSleeps: number;
 		roomClass: string;
 		adaCompliant: number;
-		price: {
-			total: number;
-			currencyCode: string;
-			qtyAvailable: number;
-			rate: string;
-			maxPrice: boolean;
-			minPrice: boolean;
-		}[];
+		price: AvailabilityAccommodationPrice[];
+	}
+	export interface AvailabilityAccommodationPrice {
+		total: number;
+		currencyCode: string;
+		qtyAvailable: number;
+		rate: string;
+		maxPrice: boolean;
+		minPrice: boolean;
 	}
 	export interface Availability {
 		destinationId: number;

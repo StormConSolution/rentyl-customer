@@ -12,9 +12,9 @@ export default class ComparisonService extends Service {
 		setComparisonItems(newArray);
 	}
 
-	resortComparisonCardOnChange(indexToChange: number, item: string, comparisonItems: ComparisonCardInfo[]) {
-		let newRecoilState = [...comparisonItems];
-		return newRecoilState.map((element, index) => {
+	setSelectedAccommodation(indexToChange: number, item: string, comparisonItems: ComparisonCardInfo[]) {
+		let modifiedComparisonItems = [...comparisonItems];
+		return modifiedComparisonItems.map((element, index) => {
 			if (index !== indexToChange) return element;
 			return {
 				destinationId: element.destinationId,

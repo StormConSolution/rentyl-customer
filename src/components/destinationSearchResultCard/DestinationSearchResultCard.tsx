@@ -41,6 +41,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 
 	function getAmenityIcons() {
 		const overviewTab = props.summaryTabs.filter(isSummaryOverviewTab)[0];
+		if (!overviewTab) return;
 		return (overviewTab.content as DestinationSummaryOverviewProps).amenities;
 	}
 
