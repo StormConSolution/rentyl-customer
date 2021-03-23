@@ -5,7 +5,6 @@ import Box from '../box/Box';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
-import IconLabel from '../iconLabel/IconLabel';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
@@ -57,15 +56,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Price Max"
 				control={props.priceMaxControl}
 				updateControl={props.priceMaxUpdateControl}
-			/>
-			<IconLabel
-				className={'moreFiltersLink'}
-				labelName={'More Filters'}
-				iconImg={'icon-chevron-right'}
-				iconPosition={'right'}
-				iconSize={8}
-				labelVariant={'caption'}
-				onClick={() => {}}
 			/>
 		</Box>
 	);

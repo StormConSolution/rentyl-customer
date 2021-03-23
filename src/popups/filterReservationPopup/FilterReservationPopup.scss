@@ -1,0 +1,67 @@
+@import 'src/themes/themes';
+
+.rsFilterReservationPopup {
+	.paperWrapper {
+		padding: 20px 10px;
+
+		.formWrapper {
+			padding: 0 10px;
+		}
+
+		.filtersLabel {
+			margin-bottom: 20px;
+		}
+
+		.rsDateRangeSelector .DateRangePicker {
+			.DateInput {
+				width: 130px;
+			}
+
+			.DateInput_input {
+				width: 125px;
+			}
+		}
+
+		.rsDateRangeSelector .startEndLabels .endDateLabel {
+			margin-left: 89px;
+		}
+
+		.rsLabelInput.numberOfGuests {
+			margin: 20px 0;
+		}
+
+		.rsInput.numberOfGuests {
+			max-width: 300px;
+			width: 265px;
+		}
+
+		.minMaxDiv {
+			display: flex;
+			justify-content: space-between;
+			padding-right: 9px;
+
+			.rsInput.priceMin {
+				width: 115px;
+			}
+
+			.rsInput.priceMax {
+				width: 115px;
+			}
+		}
+
+		.buttons {
+			display: flex;
+			margin-top: 40px;
+			padding: 0 9px;
+			justify-content: center;
+
+			.cancelButton {
+				margin-right: 10px;
+			}
+
+			.applyButton {
+				margin-left: 10px;
+			}
+		}
+	}
+}

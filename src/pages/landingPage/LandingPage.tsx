@@ -147,8 +147,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 								logo: '../../images/encore-resort.png',
 								title: 'Encore Resort',
 								roomTypes: [
-									{ value: 'erVilla', text: 'Villa', selected: false },
-									{ value: 'erVipSuite', text: 'VIP Suite', selected: false }
+									{ value: '16', text: 'Villa', selected: false },
+									{ value: '2', text: 'VIP Suite', selected: false },
+									{ value: '1', text: 'Double', selected: false }
 								]
 							});
 						}}

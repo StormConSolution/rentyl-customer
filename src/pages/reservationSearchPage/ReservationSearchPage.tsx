@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './ReservationSearchPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import FilterBar from '../../components/filterBar/FilterBar';
-import { SelectOptions } from '../../components/Select/Select';
 import Label from '@bit/redsky.framework.rs.label';
-import Paper from '../../components/paper/Paper';
 import rsToasts from '@bit/redsky.framework.toast';
 import ReservationsService from '../../services/reservations/reservations.service';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import Box from '../../components/box/Box';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { addCommasToNumber } from '../../utils/utils';
+import FilterReservationPopup, {
+	FilterReservationPopupProps
+} from '../../popups/filterReservationPopup/FilterReservationPopup';
+import IconLabel from '../../components/iconLabel/IconLabel';
+import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 
 const ReservationSearchPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	let reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const [selectOptions, setSelectOptions] = useState<SelectOptions[]>([]);
-	const [checkInDate, setCheckInDate] = useState<moment.Moment | null>(null);
-	const [checkOutDate, setCheckOutDate] = useState<moment.Moment | null>(null);
+	const [checkInDate, setCheckInDate] = useState<moment.Moment | null>(moment());
+	const [checkOutDate, setCheckOutDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	//const [popupFocusedInput, setPopupFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [accommodations, setAccommodations] = useState<Redis.Availability>();
 	const [numberOfAdults, setNumberOfAdults] = useState<number>(1);
 	const [numberOfAdultsControl] = useState<RsFormControl>(new RsFormControl('numberOfAdults', numberOfAdults));
@@ -30,19 +34,29 @@ const ReservationSearchPage: React.FC = () => {
 		setNumberOfAdults(newNumber);
 		(document.querySelector('.numberOfGuests > input') as HTMLInputElement).value = newNumber.toString();
 	};
-
 	const [priceMin, setPriceMin] = useState<string>('');
 	const [priceMinControl] = useState<RsFormControl>(new RsFormControl('priceMin', priceMin));
 	const updatePriceMin = (input: RsFormControl) => {
 		setPriceMin(input.value.toString());
-		(document.querySelector('.priceMin > input') as HTMLInputElement).value = input.value.toString();
+		let formattedNum = addCommasToNumber(('' + input.value).replace(/\D/g, ''));
+		if (size === 'small') {
+			(document.querySelector(
+				'.rsFilterReservationPopup .priceMin > input'
+			) as HTMLInputElement).value = formattedNum;
+		}
+		(document.querySelector('.priceMin > input') as HTMLInputElement).value = formattedNum;
 	};
-
 	const [priceMax, setPriceMax] = useState<string>('');
 	const [priceMaxControl] = useState<RsFormControl>(new RsFormControl('priceMax', priceMax));
 	const updatePriceMax = (input: RsFormControl) => {
 		setPriceMax(input.value.toString());
-		(document.querySelector('.priceMax > input') as HTMLInputElement).value = input.value.toString();
+		let formattedNum = addCommasToNumber(('' + input.value).replace(/\D/g, ''));
+		if (size === 'small') {
+			(document.querySelector(
+				'.rsFilterReservationPopup .priceMax > input'
+			) as HTMLInputElement).value = formattedNum;
+		}
+		(document.querySelector('.priceMax > input') as HTMLInputElement).value = formattedNum;
 	};
 
 	let data: Api.Reservation.Req.Availability = {
@@ -84,6 +98,7 @@ const ReservationSearchPage: React.FC = () => {
 					<Label className={'filterLabel'} variant={'h1'}>
 						Filter by
 					</Label>
+
 					<FilterBar
 						className={'filterBar'}
 						startDate={checkInDate}
@@ -101,26 +116,69 @@ const ReservationSearchPage: React.FC = () => {
 						priceMaxControl={priceMaxControl}
 						priceMaxUpdateControl={(updateControl) => updatePriceMax(updateControl)}
 					/>
-
-					{/*{renderAccommodationSearchResultCards()}*/}
-					{/*<AccommodationSearchResultCard
-						id={1}
-						name={'test Name'}
-						accommodationType={'test'}
-						bedrooms={2}
-						squareFeet={1}
-						description={'test description'}
-						ratePerNightInCents={200}
-						pointsRatePerNight={200}
-						pointsEarnable={200}
+					<IconLabel
+						className={'moreFiltersLink'}
+						labelName={'More Filters'}
+						iconImg={'icon-chevron-right'}
+						iconPosition={'right'}
+						iconSize={8}
+						labelVariant={'caption'}
+						onClick={() => {
+							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+								onClickApply: (startDate, endDate) => {
+									setCheckInDate(startDate);
+									setCheckOutDate(endDate);
+									getReservations().catch(console.error);
+								},
+								numberOfAdultsControl: numberOfAdultsControl,
+								numberOfAdultsUpdateControl: (updateControl) => updateNumberOfAdults(updateControl),
+								priceMinControl: priceMinControl,
+								priceMinUpdateControl: (updateControl) => updatePriceMin(updateControl),
+								priceMaxControl: priceMaxControl,
+								priceMaxUpdateControl: (updateControl) => updatePriceMax(updateControl),
+								className: 'filterPopup'
+							});
+						}}
+					/>
+					<div className={'bottomBorderDiv'} />
+				</Box>
+				<Box
+					className={'searchResultsWrapper'}
+					bgcolor={'#ffffff'}
+					width={'1165px'}
+					padding={size === 'small' ? '0 30px 20px' : '0 140px 60px'}
+				>
+					{/*{renderDestinationSearchResultCards()}*/}
+					<DestinationSearchResultCard
+						destinationName={'test Name'}
+						address={'Orlando, FL'}
+						logoImagePath={'../../images/landingPage/travel2x.png'}
+						picturePaths={[`../../images/landingPage/travel2x.png`]}
 						starRating={4.5}
-						roomStats={[{label: 'label', datum: 'datum'}]}
-						carouselImagePaths={[`../../images/landingPage/travel2x.png`]}
-						amenityIconNames={['icon-laundry']}
-						onBookNowClick={() => {}}
-						onCompareClick={() => {}}
-						onViewDetailsClick={() => {}}
-					/>*/}
+						reviewPath={''}
+						destinationDetailsPath={''}
+						summaryTabs={[
+							{ label: 'Overview', content: 'Long description. Located next to ....' },
+							{ label: 'Available Suites', content: '' },
+							{ label: 'Available Villas', content: '' }
+						]}
+						onAddCompareClick={() => {}}
+					/>
+					<DestinationSearchResultCard
+						destinationName={'Resort Name'}
+						address={'Orlando, FL'}
+						logoImagePath={'../../images/landingPage/travel2x.png'}
+						picturePaths={[`../../images/landingPage/travel2x.png`]}
+						starRating={4.5}
+						reviewPath={''}
+						destinationDetailsPath={''}
+						summaryTabs={[
+							{ label: 'Overview', content: 'Long description. Located next to ....' },
+							{ label: 'Available Suites', content: '' },
+							{ label: 'Available Villas', content: '' }
+						]}
+						onAddCompareClick={() => {}}
+					/>
 				</Box>
 			</div>
 		</Page>

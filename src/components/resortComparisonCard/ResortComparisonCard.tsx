@@ -14,6 +14,7 @@ interface ResortComparisonCardProps {
 	onChange: (value: any) => void;
 	onClose: () => void;
 	className?: string;
+	placeHolder?: string;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
@@ -65,7 +66,11 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 				/>
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
-				<Select onChange={props.onChange} placeHolder={'select room type'} options={props.roomTypes} />
+				<Select
+					onChange={props.onChange}
+					placeHolder={props.placeHolder || 'select room type'}
+					options={props.roomTypes}
+				/>
 			</Box>
 		</div>
 	);

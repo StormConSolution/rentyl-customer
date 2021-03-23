@@ -9,5 +9,36 @@
 		.filterLabel {
 			padding-bottom: 17px;
 		}
+
+		.moreFiltersLink {
+			display: none;
+		}
+
+		.bottomBorderDiv {
+			padding-top: 20px;
+			border-bottom: 1px solid theme-var($greyLineColor);
+		}
+	}
+
+	.searchResultsWrapper {
+		padding-left: 20px;
+	}
+
+	.rsDestinationSearchResultCard {
+		padding-bottom: 20px;
+		padding-top: 30px;
+		border-bottom: 1px solid theme-var($greyLineColor);
+	}
+}
+
+.small {
+	.filterResultsWrapper {
+		.moreFiltersLink {
+			display: flex;
+			cursor: pointer;
+			margin: auto 0;
+		}
+	}
+	.rsDestinationSearchResultCard {
 	}
 }

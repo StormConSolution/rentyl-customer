@@ -23,7 +23,6 @@ export interface DateRangeSelectorProps {
 }
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(props.focusedInput || null);
 	const [instanceId] = useState<string>(StringUtils.generateGuid());
 	return (
 		<Box className={`rsDateRangeSelector ${props.className || ''}`}>

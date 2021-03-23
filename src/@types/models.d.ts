@@ -65,15 +65,17 @@ declare namespace Model {
 		metaData: string;
 		externalSystemId: string;
 		roomClass: AccommodationRoomClassType;
-		bedDetails: {
-			type: string;
-			isPrimary: boolean | number;
-			qty: number;
-			description: string;
-		};
+		bedDetails: AccommodationBedDetails[];
 		extraBeds: boolean | number;
 		extraBedPriceCents: number;
 		adaCompliant: boolean | number;
+	}
+
+	export interface AccommodationBedDetails {
+		type: string;
+		isPrimary: boolean | number;
+		qty: number;
+		description: string;
 	}
 
 	export interface AccommodationType {
@@ -244,6 +246,20 @@ declare namespace Model {
 		subject: string;
 		design: string;
 		html: string;
+	}
+
+	export interface Feature {
+		id: number;
+		companyId: number;
+		affiliateId: number;
+		destinationId: number;
+		accommodationId: number;
+		accommodationCategoryId: number;
+		title: string;
+		description: string;
+		icon: string;
+		isActive: 0 | 1;
+		isCarousel: 0 | 1;
 	}
 
 	export interface MarketSegment {
