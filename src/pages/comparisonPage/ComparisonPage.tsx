@@ -104,7 +104,6 @@ const ComparisonPage: React.FC = () => {
 		let modifiedComparisonItems = [...comparisonItems];
 		modifiedComparisonItems.unshift(comparisonItems[index]);
 		modifiedComparisonItems.splice(index + 1, 1);
-		console.log(modifiedComparisonItems);
 		setComparisonItems(modifiedComparisonItems);
 	}
 	function renderComparisonCard() {
