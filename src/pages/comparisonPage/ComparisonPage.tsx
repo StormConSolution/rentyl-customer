@@ -63,7 +63,6 @@ const ComparisonPage: React.FC = () => {
 	useEffect(() => {
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];
-		console.log('comparisonItems', comparisonItems);
 		for (let item of comparisonItems) {
 			let text: string | number = '';
 			let id: number = -1;
@@ -100,7 +99,14 @@ const ComparisonPage: React.FC = () => {
 		getAccommodation().catch(console.error);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [accommodationIdList]);
-
+	function pinAccommodationToFirstOfList(index: number) {
+		if (index === 0) return;
+		let modifiedComparisonItems = [...comparisonItems];
+		modifiedComparisonItems.unshift(comparisonItems[index]);
+		modifiedComparisonItems.splice(index + 1, 1);
+		console.log(modifiedComparisonItems);
+		setComparisonItems(modifiedComparisonItems);
+	}
 	function renderComparisonCard() {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
@@ -126,6 +132,11 @@ const ComparisonPage: React.FC = () => {
 								comparisonItems
 							);
 							setComparisonItems(newComparisonItems);
+						}}
+						popupOnClick={(pinToFirst) => {
+							if (pinToFirst) pinAccommodationToFirstOfList(index);
+							console.log('pinToFirst', pinToFirst);
+							console.log('index', index);
 						}}
 					/>
 				</td>
@@ -165,10 +176,10 @@ const ComparisonPage: React.FC = () => {
 			table.description.push(<td key={index}>{accommodation.accommodationType}</td>);
 			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
 			table.extraBedding.push(
-				<td key={index}>{accommodation.extraBeds === 0 ? 'false' : 'true' || accommodation.extraBeds}</td>
+				<td key={index}>{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}</td>
 			);
 			table.adaCompliant.push(
-				<td key={index}>{accommodation.adaCompliant === 0 ? 'false' : 'true' || accommodation.adaCompliant}</td>
+				<td key={index}>{accommodation.adaCompliant === 0 ? 'no' : 'yes' || accommodation.adaCompliant}</td>
 			);
 			if (!accommodation.features) return [];
 			let featureList: JSX.Element[] = [];

@@ -13,6 +13,7 @@ interface ResortComparisonCardProps {
 	roomTypes: { value: string | number; text: string | number; selected: boolean }[];
 	onChange: (value: any) => void;
 	onClose: () => void;
+	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
 	placeHolder?: string;
 }
@@ -41,7 +42,8 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 							title: props.title,
 							roomTypes: props.roomTypes,
 							onChange: props.onChange,
-							onClose: props.onClose
+							onClose: props.onClose,
+							popupOnClick: props.popupOnClick
 						});
 					}}
 				>

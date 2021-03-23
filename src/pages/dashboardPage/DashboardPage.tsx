@@ -195,9 +195,7 @@ const DashboardPage: React.FC = () => {
 						startDate={startDateControl}
 						endDate={endDateControl}
 						focusedInput={focusedInput}
-						onFocusChange={(focusedInput) => {
-							setFocusedInput(focusedInput);
-						}}
+						onFocusChange={setFocusedInput}
 						bookNowOnClick={() => {
 							console.log(startDateControl);
 							console.log(endDateControl);

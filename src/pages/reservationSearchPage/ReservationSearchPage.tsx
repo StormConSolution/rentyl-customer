@@ -105,9 +105,7 @@ const ReservationSearchPage: React.FC = () => {
 						endDate={checkOutDate}
 						onDatesChange={onDatesChange}
 						focusedInput={focusedInput}
-						onFocusChange={(focusedInput) => {
-							setFocusedInput(focusedInput);
-						}}
+						onFocusChange={setFocusedInput}
 						monthsToShow={2}
 						numberOfAdultsControl={numberOfAdultsControl}
 						numberOfAdultsUpdateControl={(updateControl) => updateNumberOfAdults(updateControl)}

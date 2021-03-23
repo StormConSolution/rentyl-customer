@@ -44,7 +44,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							onDatesChange={onDatesChange}
 							monthsToShow={1}
 							focusedInput={focusedInput}
-							onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
+							onFocusChange={setFocusedInput}
 							startDateLabel={'check in'}
 							endDateLabel={'check out'}
 						/>
