@@ -1,12 +1,10 @@
 import http from '../utils/http';
-import {
-	FilterQuery,
-	PageQuery,
-	RsPagedResponseData,
-	RsUpdateMultiple,
-	RsUpdateSingle,
-	StandardOrderTypes
-} from '../@types/redsky';
+import StandardOrderTypes = RedSky.StandardOrderTypes;
+import PageQuery = RedSky.PageQuery;
+import RsPagedResponseData = RedSky.RsPagedResponseData;
+import RsUpdateSingle = RedSky.RsUpdateSingle;
+import FilterQuery = RedSky.FilterQuery;
+import RsUpdateMultiple = RedSky.RsUpdateMultiple;
 
 export class Model {
 	protected modelName = '';

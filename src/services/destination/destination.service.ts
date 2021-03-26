@@ -18,4 +18,7 @@ export default class DestinationService extends Service {
 		});
 		return res.data.data;
 	}
+	async searchAvailableReservations(data: Api.Destination.Req.Availability) {
+		return await http.get<RsResponseData<Api.Destination.Res.Availability[]>>('destination/availability', data);
+	}
 }

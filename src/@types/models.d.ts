@@ -78,6 +78,12 @@ declare namespace Model {
 		description: string;
 	}
 
+	export interface AccommodationFeatures {
+		id: number;
+		title: string;
+		icon: string;
+	}
+
 	export interface AccommodationType {
 		id: number;
 		companyId: number;

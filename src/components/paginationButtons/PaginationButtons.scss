@@ -1,0 +1,32 @@
+@import 'src/themes/themes';
+
+.rsPaginationButtons {
+	display: flex;
+	justify-content: center;
+
+	.rsIconLabel.left {
+		padding-right: 20px;
+	}
+
+	.rsIconLabel.right {
+		padding-left: 20px;
+	}
+	.rsIconLabel {
+		.label {
+			color: theme-var($buttonLinkColor);
+		}
+		.rsIcon {
+			color: theme-var($buttonLinkColor);
+		}
+	}
+
+	.pageNumberSelection {
+		color: theme-var($buttonLinkColor);
+		margin: 0 10px;
+	}
+
+	.selected {
+		color: theme-var($iconAndHighlightTextColor);
+		border-bottom: 1px solid theme-var($iconAndHighlightTextColor);
+	}
+}
