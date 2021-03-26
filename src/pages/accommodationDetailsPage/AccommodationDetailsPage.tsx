@@ -110,7 +110,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							onDatesChange={(startDate, endDate) => {
 								onDatesChange(startDate, endDate);
 							}}
-							focusedInput={'startDate'}
+							focusedInput={focusedInput}
 							startDate={startDateControl}
 							endDate={endDateControl}
 							onFocusChange={(focusedInput) => {
