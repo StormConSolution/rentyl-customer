@@ -15,7 +15,6 @@ import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { useRecoilState } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
-import CategoryImageGalleryResponsive from '../../components/categoryImageGallery/CategoryImageGalleryResponsive';
 import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import CategoryFeatureIcons from '../../components/categoryFeatureIcons/CategoryFeatureIcons';
@@ -23,6 +22,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import CategoryImageGallery from '../../components/categoryImageGallery/CategoryImageGallery';
+import moment from 'moment';
 
 interface AccommodationDetailsPageProps {}
 
@@ -32,6 +32,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
+	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 
 	const size = useWindowResizeChange();
@@ -39,11 +42,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	const params = router.getPageUrlParams<{ accommodationId: number }>([
 		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' }
 	]);
-
-	useEffect(() => {
-		console.log('Accommodation', accommodationDetails);
-		console.log('Destination', destinationDetails);
-	}, [accommodationDetails, destinationDetails]);
 
 	useEffect(() => {
 		async function getAccommodationDetails(id: number) {
@@ -62,6 +60,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		}
 		getAccommodationDetails(params.accommodationId);
 	}, []);
+
+	function onDatesChange(calendarStartDate: moment.Moment | null, calendarEndDate: moment.Moment | null) {
+		setStartDateControl(calendarStartDate);
+		setEndDateControl(calendarEndDate);
+	}
 
 	function renderFeatureTiles() {
 		if (!accommodationDetails) return '';
@@ -105,10 +108,14 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 						<RoomBookNowCard
 							points={2500}
 							onDatesChange={(startDate, endDate) => {
-								console.log('Start Date: ', startDate, 'End Date: ', endDate);
+								onDatesChange(startDate, endDate);
 							}}
-							startDate={null}
-							endDate={null}
+							focusedInput={'startDate'}
+							startDate={startDateControl}
+							endDate={endDateControl}
+							onFocusChange={(focusedInput) => {
+								setFocusedInput(focusedInput);
+							}}
 							compareOnClick={() => {
 								comparisonService.addToComparison(recoilComparisonState, {
 									destinationId: Date.now(),

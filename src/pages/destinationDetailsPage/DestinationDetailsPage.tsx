@@ -49,10 +49,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		getDestinationDetails(params.destinationId);
 	}, []);
 
-	useEffect(() => {
-		console.log(destinationDetails);
-	}, [destinationDetails]);
-
 	let imageIndex = 0;
 
 	function moveImagesRight() {
