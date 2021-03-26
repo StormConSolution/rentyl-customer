@@ -1,6 +1,6 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React, { useState } from 'react';
-import DestinationSummaryAccomodationList, {
+import DestinationSummaryAccommodationList, {
 	DestinationSummaryAccommodationListProps
 } from '../destinationSummaryAccommodationList/DestinationSummaryAccommodationList';
 import DestinationSummaryOverview, {
@@ -38,7 +38,7 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 
 	const isOverviewProp = (prop: object): prop is DestinationSummaryOverviewProps => prop.hasOwnProperty('text');
 	const isAccommodationListProp = (prop: object): prop is DestinationSummaryOverviewProps =>
-		prop.hasOwnProperty('accomodationType');
+		prop.hasOwnProperty('accommodationType');
 
 	function renderOverview(overviewProps: DestinationSummaryOverviewProps) {
 		return (
@@ -53,7 +53,7 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 
 	function renderAccommodationList(listProps: DestinationSummaryAccommodationListProps): JSX.Element {
 		return (
-			<DestinationSummaryAccomodationList
+			<DestinationSummaryAccommodationList
 				accommodationType={listProps.accommodationType}
 				accommodations={listProps.accommodations}
 				onAddCompareClick={listProps.onAddCompareClick}

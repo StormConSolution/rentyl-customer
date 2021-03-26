@@ -15,10 +15,10 @@ const StarRating: React.FC<starRatingProps> = (props) => {
 		let htmlElement: JSX.Element[] = [];
 		for (let i = 0; i < 5; i++) {
 			if (i < props.rating) {
-				if (i + 0.5 === props.rating) htmlElement.push(halfStar());
-				else htmlElement.push(wholeStar());
+				if (i + 0.5 === props.rating) htmlElement.push(halfStar(i));
+				else htmlElement.push(wholeStar(i));
 			} else {
-				htmlElement.push(emptyStar());
+				htmlElement.push(emptyStar(i));
 			}
 		}
 		return htmlElement;
@@ -40,20 +40,20 @@ const StarRating: React.FC<starRatingProps> = (props) => {
 		return borderClassName;
 	}
 
-	function wholeStar() {
+	function wholeStar(index: number) {
 		const borderClassName = getBorderSizeClassName();
 		return (
-			<Box className={'starRating'}>
+			<Box key={index} className={'starRating'}>
 				<Box className={`starRatingBorder ${borderClassName}`} />
 			</Box>
 		);
 	}
 
-	function halfStar() {
+	function halfStar(index: number) {
 		const borderClassName = getBorderSizeClassName();
 		const backgroundClassName = getBackgroundSizeClassName();
 		return (
-			<Box className={'starRating'}>
+			<Box key={index} className={'starRating'}>
 				<Box className={`starRatingBorder ${borderClassName}`} />
 				<Box className={`starRatingBackground ${backgroundClassName}`} />
 				<Box className={`halfStar ${borderClassName}`} />
@@ -61,11 +61,11 @@ const StarRating: React.FC<starRatingProps> = (props) => {
 		);
 	}
 
-	function emptyStar() {
+	function emptyStar(index: number) {
 		const borderClassName = getBorderSizeClassName();
 		const backgroundClassName = getBackgroundSizeClassName();
 		return (
-			<Box className={'starRating'}>
+			<Box key={index} className={'starRating'}>
 				<Box className={`starRatingBorder ${borderClassName}`} />
 				<Box className={`starRatingBackground ${backgroundClassName}`} />
 			</Box>

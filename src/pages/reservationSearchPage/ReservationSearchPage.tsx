@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ReservationSearchPage.scss';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import FilterBar from '../../components/filterBar/FilterBar';
 import Label from '@bit/redsky.framework.rs.label';
 import rsToasts from '@bit/redsky.framework.toast';
-import ReservationsService from '../../services/reservations/reservations.service';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import { RsFormControl } from '@bit/redsky.framework.rs.form';
@@ -17,21 +16,36 @@ import FilterReservationPopup, {
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
+import DestinationService from '../../services/destination/destination.service';
+import LoadingPage from '../loadingPage/LoadingPage';
+import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
+import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 
 const ReservationSearchPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	let reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
+	const [page, setPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(5);
+	const [availabilityTotal, setAvailability] = useState<number>(32);
 	const [checkInDate, setCheckInDate] = useState<moment.Moment | null>(moment());
 	const [checkOutDate, setCheckOutDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	//const [popupFocusedInput, setPopupFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [accommodations, setAccommodations] = useState<Redis.Availability>();
-	const [numberOfAdults, setNumberOfAdults] = useState<number>(1);
+	const [accommodations, setAccommodations] = useState<Api.Destination.Res.Availability[]>();
+	const [numberOfAdults, setNumberOfAdults] = useState<number>(2);
 	const [numberOfAdultsControl] = useState<RsFormControl>(new RsFormControl('numberOfAdults', numberOfAdults));
 	const updateNumberOfAdults = (input: RsFormControl) => {
 		let newNumber = parseInt(input.value.toString());
 		if (isNaN(newNumber) || newNumber < 1) newNumber = 1;
 		setNumberOfAdults(newNumber);
+		(document.querySelector('.numberOfGuests > input') as HTMLInputElement).value = newNumber.toString();
+	};
+	const [numberOfChildren, setNumberOfChildren] = useState<number>(0);
+	const [numberOfChildrenControl] = useState<RsFormControl>(new RsFormControl('numberOfChildren', numberOfChildren));
+	const updateNumberOfChildren = (input: RsFormControl) => {
+		let newNumber = parseInt(input.value.toString());
+		if (isNaN(newNumber) || newNumber < 1) newNumber = 1;
+		setNumberOfChildren(newNumber);
 		(document.querySelector('.numberOfGuests > input') as HTMLInputElement).value = newNumber.toString();
 	};
 	const [priceMin, setPriceMin] = useState<string>('');
@@ -59,28 +73,91 @@ const ReservationSearchPage: React.FC = () => {
 		(document.querySelector('.priceMax > input') as HTMLInputElement).value = formattedNum;
 	};
 
-	let data: Api.Reservation.Req.Availability = {
-		startDate: new Date('2021-03-20'),
-		endDate: new Date('2021-03-22'),
-		adults: 1
+	let data: Api.Destination.Req.Availability = {
+		startDate: new Date('2021-03-20').toString(),
+		endDate: new Date('2021-03-22').toString(),
+		adults: 2,
+		children: 0,
+		pagination: { page: 1, perPage: 5 }
 	};
 
-	async function getReservations() {
-		try {
-			let res = await reservationService.searchAvailableReservations(data);
-			console.log('res', res.data.data);
-			setAccommodations(res.data.data[0].accommodations);
-		} catch (e) {
-			rsToasts.error('An unexpected error has occurred on the server.');
+	useEffect(() => {
+		async function getReservations() {
+			try {
+				let res = await destinationService.searchAvailableReservations(data);
+				setAccommodations(res.data.data);
+			} catch (e) {
+				rsToasts.error('An unexpected error has occurred on the server.');
+			}
+			setWaitToLoad(false);
 		}
-	}
+		getReservations().catch(console.error);
+	}, []);
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setCheckInDate(startDate);
 		setCheckOutDate(endDate);
 	}
 
-	return (
+	function renderDestinationSearchResultCards() {
+		if (!accommodations) return;
+		console.log('accommodations', accommodations);
+		let accommodationsHtml = accommodations.map((accommodation, index) => {
+			let urls: string[] = getImageUrls(accommodation);
+			let summaryTabs = getSummaryTabs(accommodation);
+			return (
+				<DestinationSearchResultCard
+					key={index}
+					destinationName={accommodation.name}
+					address={`${accommodation.city}, ${accommodation.state}`}
+					logoImagePath={accommodation.logoUrl}
+					picturePaths={urls}
+					starRating={4.5}
+					reviewPath={''}
+					destinationDetailsPath={`/destination?di=${accommodation.id}`}
+					summaryTabs={summaryTabs}
+					onAddCompareClick={() => {}}
+				/>
+			);
+		});
+		console.log('accommodationHtml', accommodationsHtml);
+		return accommodationsHtml;
+	}
+
+	function getSummaryTabs(accommodation: Api.Destination.Res.Availability): DestinationSummaryTab[] {
+		return [{ label: 'Overview', content: { text: accommodation.description } }];
+		// 		{
+		// 			label: 'Available Suites',
+		// 			content: {
+		// 				accommodationType: 'Suites',
+		// 				accommodations: [{
+		// 					id: accommodation.accommodationTypes[0].id,
+		// 					name: accommodation.accommodationTypes[0].name,
+		// 					amenityIconNames: [],
+		// 					bedrooms: 1,
+		// 					beds: 1,
+		// 					ratePerNight: 200,
+		// 					pointsPerNight: 3000
+		// 				}],
+		// 				onDetailsClick: (accommodationId) => {},
+		// 		onBookNowClick: (accommodationId) => {},
+		// 		onAddCompareClick: (accommodationId) => {}
+		// }
+		// },
+	}
+
+	function getImageUrls(accommodation: Api.Destination.Res.Availability): string[] {
+		if (accommodation.media) {
+			return accommodation.media.map((urlObj, index) => {
+				return urlObj.urls.small.toString();
+			});
+		}
+		return [];
+	}
+
+	return waitToLoad ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsReservationSearchPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<HeroImage
@@ -109,6 +186,8 @@ const ReservationSearchPage: React.FC = () => {
 						monthsToShow={2}
 						numberOfAdultsControl={numberOfAdultsControl}
 						numberOfAdultsUpdateControl={(updateControl) => updateNumberOfAdults(updateControl)}
+						numberOfChildrenControl={numberOfChildrenControl}
+						numberOfChildrenUpdateControl={(updateControl) => updateNumberOfChildren(updateControl)}
 						priceMinControl={priceMinControl}
 						priceMinUpdateControl={(updateControl) => updatePriceMin(updateControl)}
 						priceMaxControl={priceMaxControl}
@@ -126,7 +205,7 @@ const ReservationSearchPage: React.FC = () => {
 								onClickApply: (startDate, endDate) => {
 									setCheckInDate(startDate);
 									setCheckOutDate(endDate);
-									getReservations().catch(console.error);
+									//getReservations().catch(console.error);
 								},
 								numberOfAdultsControl: numberOfAdultsControl,
 								numberOfAdultsUpdateControl: (updateControl) => updateNumberOfAdults(updateControl),
@@ -146,38 +225,17 @@ const ReservationSearchPage: React.FC = () => {
 					width={'1165px'}
 					padding={size === 'small' ? '0 30px 20px' : '0 140px 60px'}
 				>
-					{/*{renderDestinationSearchResultCards()}*/}
-					<DestinationSearchResultCard
-						destinationName={'test Name'}
-						address={'Orlando, FL'}
-						logoImagePath={'../../images/landingPage/travel2x.png'}
-						picturePaths={[`../../images/landingPage/travel2x.png`]}
-						starRating={4.5}
-						reviewPath={''}
-						destinationDetailsPath={''}
-						summaryTabs={[
-							{ label: 'Overview', content: 'Long description. Located next to ....' },
-							{ label: 'Available Suites', content: '' },
-							{ label: 'Available Villas', content: '' }
-						]}
-						onAddCompareClick={() => {}}
-					/>
-					<DestinationSearchResultCard
-						destinationName={'Resort Name'}
-						address={'Orlando, FL'}
-						logoImagePath={'../../images/landingPage/travel2x.png'}
-						picturePaths={[`../../images/landingPage/travel2x.png`]}
-						starRating={4.5}
-						reviewPath={''}
-						destinationDetailsPath={''}
-						summaryTabs={[
-							{ label: 'Overview', content: 'Long description. Located next to ....' },
-							{ label: 'Available Suites', content: '' },
-							{ label: 'Available Villas', content: '' }
-						]}
-						onAddCompareClick={() => {}}
-					/>
+					{renderDestinationSearchResultCards()}
 				</Box>
+				<div className={'paginationDiv'}>
+					<PaginationButtons
+						selectedRowsPerPage={perPage}
+						currentPageNumber={page}
+						index={[(page - 1) * perPage + 1, page * perPage]}
+						setSelectedPage={(page) => setPage(page)}
+						total={availabilityTotal}
+					/>
+				</div>
 			</div>
 		</Page>
 	);

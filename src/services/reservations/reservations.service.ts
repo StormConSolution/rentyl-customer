@@ -6,8 +6,4 @@ import ReservationsModel from '../../models/reservations/reservations.model';
 
 export default class ReservationsService extends Service {
 	reservationsModel: ReservationsModel = modelFactory.get<ReservationsModel>('ReservationsModel');
-
-	searchAvailableReservations(data: Api.Reservation.Req.Availability) {
-		return http.get<RsResponseData<Api.Reservation.Res.Availability[]>>('reservation/availability', data);
-	}
 }

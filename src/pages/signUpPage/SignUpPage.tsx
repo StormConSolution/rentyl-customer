@@ -94,7 +94,7 @@ const SignUpPage: React.FC = () => {
 				formatCountryListForSelect(countries);
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('uh oh. Something went wrong.');
+				throw rsToasts.error('An unexpected error occurred on the server.');
 			}
 		}
 		getCountries().catch(console.error);
@@ -140,7 +140,7 @@ const SignUpPage: React.FC = () => {
 				}
 			});
 			console.error('Signup new customer', e);
-			throw rsToasts.error('uh oh. Something went wrong.');
+			throw rsToasts.error('An unexpected error occurred on the server.');
 		}
 	}
 

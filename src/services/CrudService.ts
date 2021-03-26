@@ -1,7 +1,9 @@
-import { StandardOrderTypes, FilterQuery, PageQuery } from '../@types/redsky';
 import http from '../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import { AxiosResponse } from 'axios';
+import StandardOrderTypes = RedSky.StandardOrderTypes;
+import PageQuery = RedSky.PageQuery;
+import FilterQuery = RedSky.FilterQuery;
 
 class CrudService<T> {
 	tableName: string;

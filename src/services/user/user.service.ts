@@ -4,7 +4,8 @@ import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import modelFactory from '../../models/modelFactory';
 import { Service } from '../Service';
 import UserModel from '../../models/user/user.model';
-import { FilterQuery, StandardOrderTypes } from '../../@types/redsky';
+import StandardOrderTypes = RedSky.StandardOrderTypes;
+import FilterQuery = RedSky.FilterQuery;
 
 export default class UserService extends Service {
 	userModel: UserModel = modelFactory.get<UserModel>('UserModel');

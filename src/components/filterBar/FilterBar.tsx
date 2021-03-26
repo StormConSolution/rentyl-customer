@@ -15,6 +15,8 @@ export interface FilterBarProps {
 	monthsToShow: number;
 	numberOfAdultsControl: RsFormControl;
 	numberOfAdultsUpdateControl: (updateControl: RsFormControl) => void;
+	numberOfChildrenControl: RsFormControl;
+	numberOfChildrenUpdateControl: (updateControl: RsFormControl) => void;
 	priceMinControl: RsFormControl;
 	priceMinUpdateControl: (updateControl: RsFormControl) => void;
 	priceMaxControl: RsFormControl;
@@ -36,12 +38,20 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				endDateLabel={'check out'}
 			/>
 			<LabelInput
-				className="numberOfGuests"
+				className="numberOfAdults"
 				inputType="number"
-				title="# of Guests"
-				initialValue={1}
+				title="# of Adults"
+				initialValue={2}
 				control={props.numberOfAdultsControl}
 				updateControl={props.numberOfAdultsUpdateControl}
+			/>
+			<LabelInput
+				className="numberOfChildren"
+				inputType="number"
+				title="# of Children"
+				initialValue={0}
+				control={props.numberOfChildrenControl}
+				updateControl={props.numberOfChildrenUpdateControl}
 			/>
 			<LabelInput
 				className="priceMin"

@@ -24,10 +24,10 @@ interface AccommodationListRowProp {
 	pointsPerNight: number;
 }
 
-const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
-	function renderAccommodationListRow(accommodation: AccommodationListRowProp): JSX.Element {
+const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
+	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
 		return (
-			<div class="accommodationRow">
+			<div className="accommodationRow" key={index}>
 				<Label>{accommodation.name}</Label>
 				<Label>{renderIcons(accommodation.amenityIconNames)}</Label>
 				<Label>{accommodation.bedrooms}</Label>
@@ -78,8 +78,8 @@ const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodati
 		});
 	}
 
-	function renderAccommodationList(accommodations: AccommodationListRowProp[]): JSX.Element[] {
-		return accommodations.map(renderAccommodationListRow);
+	function renderAccommodationList(accommodations: AccommodationListRowProp[], index: number): JSX.Element[] {
+		return accommodations.map(renderAccommodationListRow, index);
 	}
 
 	return (
@@ -102,9 +102,9 @@ const DestinationSummaryAccomodationList: React.FC<DestinationSummaryAccommodati
 				</div>
 				<div>&nbsp;</div>
 			</div>
-			{renderAccommodationList(props.accommodations)}
+			{renderAccommodationList(props.accommodations, 0)}
 		</div>
 	);
 };
 
-export default DestinationSummaryAccomodationList;
+export default DestinationSummaryAccommodationList;

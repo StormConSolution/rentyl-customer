@@ -151,18 +151,23 @@ declare namespace Api {
 
 	export namespace Destination {
 		export namespace Req {
-			export interface Create {}
 			export interface Get {
 				id?: number;
 				ids?: number[];
 			}
-			export interface Update extends Partial<Model.Destination> {
-				id?: number;
-				ids?: number[];
-			}
-			export interface Delete {
-				id?: number;
-				ids?: number[];
+			export interface Update {
+				id: number;
+				description?: string;
+				status?: string;
+				address1?: string;
+				address2?: string;
+				city?: string;
+				state?: string;
+				zip?: string;
+				country?: string;
+				logoUrl?: string;
+				heroUrl?: string;
+				mediaIds?: MediaDetails[];
 			}
 			export interface AccommodationType {
 				destinationId?: number;
@@ -177,6 +182,21 @@ declare namespace Api {
 			export interface Details {
 				destinationId: number;
 			}
+
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
+			}
+
+			export interface Availability extends RedSky.PageQuery {
+				startDate: Date | string;
+				endDate: Date | string;
+				adults: number;
+				children: number;
+				priceRangeMin?: number;
+				priceRangeMax?: number;
+			}
 		}
 		export namespace Res {
 			export interface Get {
@@ -194,8 +214,9 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
-				media: Model.Media[];
+				media: Omit<Model.Media[], 'storageDetails'>;
 			}
+			export interface Update extends Details {}
 			export interface Details {
 				id: number;
 				name: string;
@@ -210,72 +231,67 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
-				media: Model.Media[];
-				features: Feature.Details[];
+				media: Omit<Model.Media[], 'storageDetails'>;
+				features: Omit<
+					Feature.Details[],
+					'affiliateId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
+				>;
 				packages: Package.Details[];
+				accommodations: {
+					id: number;
+					name: string;
+					shortDescription: string;
+				}[];
+				accommodationTypes: {
+					id: number;
+					name: string;
+					description: string;
+					code: string;
+				}[];
 			}
-			export interface AccommodationType {
+			export interface Availability {
 				id: number;
-				companyId: number;
-				destinationId: number;
-				code: string;
 				name: string;
 				description: string;
-				createdOn: Date | string;
-				modifiedOn: Date | string;
-				isActive: boolean;
-				type: 'HOTEL' | 'RENTAL';
-				metaData: string;
-				externalSystemId: string;
+				code: string;
+				status: string;
+				address1: string;
+				address2: string;
+				city: string;
+				state: string;
+				zip: string;
+				country: string;
+				logoUrl: string;
+				media: {
+					id: number;
+					type: string;
+					urls: string;
+					title: string;
+					isPrimary: boolean;
+				}[];
+				features: {
+					id: number;
+					title: string;
+					icon: string;
+				}[];
+				accommodationTypes: {
+					id: number;
+					name: string;
+				}[];
+				accommodations: {
+					id: number;
+					name: string;
+					roomCount: number;
+					bedDetails: any;
+					priceCents: number;
+					features: {
+						id: number;
+						title: string;
+						icon: string;
+					}[];
+				}[];
 			}
-		}
-	}
-
-	export namespace Feature {
-		export interface Details extends Model.Feature {
-			media: Omit<Model.Media[], 'storageDetails'>;
-		}
-		export namespace Req {
-			export interface Create {
-				affiliateId?: number;
-				destinationId?: number;
-				accommodationId?: number;
-				accommodationCategoryId?: number;
-				title?: string;
-				description?: string;
-				mediaIds?: MediaDetails[];
-				icon?: string;
-				isActive: 0 | 1;
-				isCarousel: 0 | 1;
-			}
-			export interface Update {
-				id: number;
-				title?: string;
-				description?: string;
-				mediaIds?: MediaDetails[];
-				icon?: string;
-				isActive?: 0 | 1;
-				isCarousel?: 0 | 1;
-			}
-			export interface Get {
-				id?: number;
-				ids?: number[];
-			}
-			export interface Delete {
-				id?: number;
-				ids?: number[];
-			}
-			export interface GetByPage {
-				pagination: string;
-				sort: string;
-				filter: string;
-			}
-		}
-		export namespace Res {
-			export interface Create extends Details {}
-			export interface Update extends Details {}
-			export interface Get extends Details {}
-			export interface Delete extends Details {}
+			export interface AccommodationType extends Model.AccommodationType {}
 			export interface GetByPage {
 				data: Details[];
 				total: number;

@@ -30,9 +30,15 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 	const size = useWindowResizeChange();
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string, index: number) => {
-			return <img src={path} alt="" />;
+		let pictureArray = picturePaths.map((path: string, index: number) => {
+			return (
+				<Box className={'imageWrapper'}>
+					<img src={path} alt="" />
+				</Box>
+			);
 		});
+		console.log('pictureArray', pictureArray);
+		return pictureArray;
 	}
 
 	function isSummaryOverviewTab(tab: DestinationSummaryTab) {
