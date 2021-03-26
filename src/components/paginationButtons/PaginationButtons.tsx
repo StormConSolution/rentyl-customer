@@ -6,14 +6,13 @@ import IconLabel from '../iconLabel/IconLabel';
 interface PaginationButtonsProps {
 	className?: string;
 	selectedRowsPerPage: number;
-	index: number[];
 	total: number;
 	setSelectedPage: (page: number) => void;
 	currentPageNumber: number;
 }
 
 const PaginationButtons: React.FC<PaginationButtonsProps> = (props) => {
-	const { selectedRowsPerPage, index, total, setSelectedPage, currentPageNumber } = props;
+	const { selectedRowsPerPage, total, setSelectedPage, currentPageNumber } = props;
 
 	const totalAvailablePages = Math.ceil(total / selectedRowsPerPage);
 
@@ -97,9 +96,9 @@ const PaginationButtons: React.FC<PaginationButtonsProps> = (props) => {
 	}
 
 	return totalAvailablePages < 1 ? (
-		<div className={`rsPaginationButtons {props.className | ''}`} />
+		<div className={`rsPaginationButtons ${props.className || ''}`} />
 	) : (
-		<div className={`rsPaginationButtons {props.className | ''}`}>
+		<div className={`rsPaginationButtons ${props.className || ''}`}>
 			<IconLabel
 				className={props.currentPageNumber - 1 >= 1 ? 'pageNumberSelection' : 'notSelectable'}
 				labelName={'back'}

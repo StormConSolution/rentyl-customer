@@ -20,13 +20,14 @@ import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import AccommodationFeatures = Model.AccommodationFeatures;
 
 const ReservationSearchPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
-	const [perPage, setPerPage] = useState<number>(5);
+	const [perPage] = useState<number>(5);
 	const [availabilityTotal, setAvailability] = useState<number>(32);
 	const [checkInDate, setCheckInDate] = useState<moment.Moment | null>(moment());
 	const [checkOutDate, setCheckOutDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
@@ -73,16 +74,9 @@ const ReservationSearchPage: React.FC = () => {
 		(document.querySelector('.priceMax > input') as HTMLInputElement).value = formattedNum;
 	};
 
-	let data: Api.Destination.Req.Availability = {
-		startDate: new Date('2021-03-20').toString(),
-		endDate: new Date('2021-03-22').toString(),
-		adults: 2,
-		children: 0,
-		pagination: { page: 1, perPage: 5 }
-	};
-
 	useEffect(() => {
 		async function getReservations() {
+			let data: Api.Destination.Req.Availability = getDataForSearchQuery();
 			try {
 				let res = await destinationService.searchAvailableReservations(data);
 				setAccommodations(res.data.data);
@@ -94,6 +88,26 @@ const ReservationSearchPage: React.FC = () => {
 		getReservations().catch(console.error);
 	}, []);
 
+	function getDataForSearchQuery() {
+		let startDate: string = '';
+		let endDate: string = '';
+		if (checkInDate) {
+			startDate = checkInDate.format('YYYY-MM-DD');
+		}
+		if (checkOutDate) {
+			endDate = checkOutDate.format('YYYY-MM-DD');
+		}
+		return {
+			startDate: startDate,
+			endDate: endDate,
+			adults: numberOfAdults,
+			children: numberOfChildren,
+			pagination: {
+				page: page,
+				perPage: perPage
+			}
+		};
+	}
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setCheckInDate(startDate);
 		setCheckOutDate(endDate);
@@ -101,8 +115,7 @@ const ReservationSearchPage: React.FC = () => {
 
 	function renderDestinationSearchResultCards() {
 		if (!accommodations) return;
-		console.log('accommodations', accommodations);
-		let accommodationsHtml = accommodations.map((accommodation, index) => {
+		return accommodations.map((accommodation, index) => {
 			let urls: string[] = getImageUrls(accommodation);
 			let summaryTabs = getSummaryTabs(accommodation);
 			return (
@@ -120,35 +133,49 @@ const ReservationSearchPage: React.FC = () => {
 				/>
 			);
 		});
-		console.log('accommodationHtml', accommodationsHtml);
-		return accommodationsHtml;
 	}
 
 	function getSummaryTabs(accommodation: Api.Destination.Res.Availability): DestinationSummaryTab[] {
-		return [{ label: 'Overview', content: { text: accommodation.description } }];
-		// 		{
-		// 			label: 'Available Suites',
-		// 			content: {
-		// 				accommodationType: 'Suites',
-		// 				accommodations: [{
-		// 					id: accommodation.accommodationTypes[0].id,
-		// 					name: accommodation.accommodationTypes[0].name,
-		// 					amenityIconNames: [],
-		// 					bedrooms: 1,
-		// 					beds: 1,
-		// 					ratePerNight: 200,
-		// 					pointsPerNight: 3000
-		// 				}],
-		// 				onDetailsClick: (accommodationId) => {},
-		// 		onBookNowClick: (accommodationId) => {},
-		// 		onAddCompareClick: (accommodationId) => {}
-		// }
-		// },
+		let accommodationsList = getAccommodationList(accommodation);
+		return [
+			{ label: 'Overview', content: { text: accommodation.description } },
+			{
+				label: 'Available Suites',
+				content: {
+					accommodationType: 'Suites',
+					accommodations: accommodationsList,
+					onDetailsClick: (accommodationId) => {},
+					onBookNowClick: (accommodationId) => {},
+					onAddCompareClick: (accommodationId) => {}
+				}
+			}
+		];
+	}
+
+	function getAccommodationList(accommodation: Api.Destination.Res.Availability) {
+		return accommodation.accommodations.map((accommodationDetails) => {
+			let amenityIconNames: string[] = getAmenityIconNames(accommodationDetails.features);
+			return {
+				id: accommodationDetails.id,
+				name: accommodationDetails.name,
+				amenityIconNames: amenityIconNames,
+				bedrooms: accommodationDetails.roomCount,
+				beds: accommodationDetails.bedDetails.length,
+				ratePerNight: 0,
+				pointsPerNight: 0
+			};
+		});
+	}
+
+	function getAmenityIconNames(features: AccommodationFeatures[]): string[] {
+		return features.map((feature) => {
+			return feature.icon;
+		});
 	}
 
 	function getImageUrls(accommodation: Api.Destination.Res.Availability): string[] {
 		if (accommodation.media) {
-			return accommodation.media.map((urlObj, index) => {
+			return accommodation.media.map((urlObj) => {
 				return urlObj.urls.small.toString();
 			});
 		}
@@ -231,7 +258,6 @@ const ReservationSearchPage: React.FC = () => {
 					<PaginationButtons
 						selectedRowsPerPage={perPage}
 						currentPageNumber={page}
-						index={[(page - 1) * perPage + 1, page * perPage]}
 						setSelectedPage={(page) => setPage(page)}
 						total={availabilityTotal}
 					/>
