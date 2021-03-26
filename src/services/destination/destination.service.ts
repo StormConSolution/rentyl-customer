@@ -10,7 +10,7 @@ export default class DestinationService extends Service {
 	async getDestinationByIds(ids: Api.Destination.Req.Get[]) {
 		return await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
 	}
-	async getDestinationDetails(destinationId: Api.Destination.Req.Details) {
+	async getDestinationDetails(destinationId: number) {
 		return await http.get<RsResponseData<Api.Destination.Res.Details>>('destination/details', { destinationId });
 	}
 }

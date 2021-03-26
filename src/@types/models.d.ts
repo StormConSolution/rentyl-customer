@@ -300,12 +300,9 @@ declare namespace Model {
 	}
 
 	export interface MediaUrls {
-		thumb?: string;
-		smallSmall?: string;
-		small?: string;
-		mediumSmall?: string;
-		medium?: string;
-		large?: string;
+		thumb: string;
+		small: string;
+		large: string;
 	}
 
 	export interface StorageDetails {

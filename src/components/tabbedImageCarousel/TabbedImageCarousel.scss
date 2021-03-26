@@ -1,6 +1,6 @@
 @import '../../themes/themes';
 
-.rsTabbedImageGallery {
+.rsTabbedImageCarousel {
 	--hangover: 258px;
 	position: relative;
 
@@ -97,7 +97,7 @@
 }
 
 .small {
-	.rsTabbedImageGallery {
+	.rsTabbedImageCarousel {
 		--hangover: 160px;
 
 		.tabList {

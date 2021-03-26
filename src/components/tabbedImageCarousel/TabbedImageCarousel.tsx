@@ -1,4 +1,4 @@
-import './TabbedImageGallery.scss';
+import './TabbedImageCarousel.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import React, { useState } from 'react';
@@ -14,11 +14,11 @@ export interface ImageTabProp {
 	onButtonClick?: () => void;
 }
 
-export interface TabbedImageGalleryProps {
+export interface TabbedImageCarouselProps {
 	tabs: ImageTabProp[];
 }
 
-const TabbedImageGallery: React.FC<TabbedImageGalleryProps> = function (props: TabbedImageGalleryProps) {
+const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props: TabbedImageCarouselProps) {
 	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0].name);
 
 	function renderTab(tab: ImageTabProp): JSX.Element {
@@ -66,11 +66,11 @@ const TabbedImageGallery: React.FC<TabbedImageGalleryProps> = function (props: T
 	}
 
 	return (
-		<Box className="rsTabbedImageGallery">
+		<Box className="rsTabbedImageCarousel">
 			<div className="tabList">{renderAllTabs()}</div>
 			{renderAllTabContent()}
 		</Box>
 	);
 };
 
-export default TabbedImageGallery;
+export default TabbedImageCarousel;

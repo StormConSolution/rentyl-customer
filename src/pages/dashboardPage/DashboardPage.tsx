@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import './DashboardPage.scss';
-import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
+import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import AmenitiesGalleryTabs from './AmenitiesGalleryTabs';
 import LabelButton from '../../components/labelButton/LabelButton';
-import LightboxPopup, { LightboxPopupProps } from '../../popups/lightboxPopup/LightboxPopup';
-import LightboxPopupItems from './LightboxPopupItems';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
@@ -126,9 +124,7 @@ const DashboardPage: React.FC = () => {
 					mobileHeight={'300px'}
 				/>
 
-				<Box width="1440px" height="569px" margin={'40px 0'}>
-					<TabbedImageGallery tabs={AmenitiesGalleryTabs} />
-				</Box>
+				<Box width="1440px" height="569px" margin={'40px 0'}></Box>
 				<Box margin={'40px 0'}>
 					<LabelButton
 						label="Lightbox"
@@ -339,33 +335,7 @@ const DashboardPage: React.FC = () => {
 						]}
 					/>
 				</Box>
-				<Box margin={'40px 0'} width={'450px'}>
-					<FloorPlanDetailCard
-						accomodationName={'VIP Suite Layout'}
-						rooms={[
-							{
-								name: 'Kitchen',
-								description:
-									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
-							},
-							{
-								name: 'Bathroom',
-								description:
-									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
-							},
-							{
-								name: 'Living Room',
-								description:
-									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
-							},
-							{
-								name: 'Dining Room',
-								description:
-									'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi debitis dolore tdoloribus fugit numquam odio voluptate voluptatibus! Accusamus culpa ea ipsa obcaecati porro sed, tveniam. A qui quidem velit?'
-							}
-						]}
-					/>
-				</Box>
+				<Box margin={'40px 0'} width={'450px'}></Box>
 
 				<Box>
 					<DestinationInfoCard

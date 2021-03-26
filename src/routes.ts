@@ -6,6 +6,7 @@ import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
+import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -40,6 +41,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/destination/details',
 		page: DestinationDetailsPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/accommodation/details',
+		page: AccommodationDetailsPage,
 		options: {
 			view: 'landingPage'
 		}

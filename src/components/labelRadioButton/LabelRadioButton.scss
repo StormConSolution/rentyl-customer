@@ -1,0 +1,45 @@
+@import '../../themes/themes';
+.rsLabelRadioButton {
+	display: flex;
+	align-items: center;
+
+	.radioButtonContainer {
+		position: relative;
+
+		input {
+			width: 18px;
+			height: 18px;
+			padding: 2px;
+			box-sizing: border-box;
+			opacity: 0;
+			cursor: pointer;
+
+			&:checked ~ .radioButton .rsBox {
+				height: 100%;
+				width: 100%;
+				background-color: theme-var($buttonLinkColor) !important;
+			}
+
+			&:hover {
+			}
+		}
+	}
+
+	.radioButton {
+		position: absolute;
+		top: 4px;
+		left: 0;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		cursor: pointer;
+		border: 1px solid theme-var($greyLineColor);
+		padding: 2px;
+		box-sizing: border-box;
+		.rsBox {
+			width: 100%;
+			height: 100%;
+			border-radius: 50%;
+		}
+	}
+}

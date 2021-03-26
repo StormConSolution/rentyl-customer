@@ -1,40 +1,85 @@
 @import '../../themes/themes.scss';
 
 .rsFloorPlanDetailCard {
-	div {
-		margin: 0;
-	}
-	&.small > div {
-		margin: 20px 20px 0 20px;
-		&:last-child {
-			margin-bottom: 20px;
+	.floorPlanDetails {
+		width: 550px;
+		height: 360px;
+
+		.rsLabel {
+			&.h1 {
+				margin-bottom: 22px;
+			}
 		}
-	}
-	.radioHolder {
-		display: grid;
-		width: 50%;
-		grid-template-columns: 1fr 1fr;
-		row-gap: 10px;
-		margin-top: 20px;
-		.floorPlanRoomDescriptionRadio {
+		.tab {
+			display: flex;
+			justify-content: center;
+			height: 30px;
+			padding: 0 30px;
+			box-sizing: border-box;
+			transition: border-bottom 300ms ease;
+			border-bottom: 1px solid theme-var($greyLineColor);
+			&.rsLabelButton {
+				.rsLabel {
+					margin-bottom: 10px;
+				}
+			}
+			&.selected {
+				border-bottom: 2px solid theme-var($iconAndHighlightTextColor);
+				border-bottom-width: 3px;
+			}
+		}
+
+		div {
 			margin: 0;
 		}
+
+		.radioHolder {
+			display: grid;
+			grid-template-columns: fit-content(100%) fit-content(100%);
+			row-gap: 10px;
+			column-gap: 10px;
+			margin-top: 20px;
+			.floorPlanRoomDescriptionRadio {
+				margin: 0;
+			}
+		}
+
+		.floorPlanRoomDescriptionContent {
+			margin-top: 20px;
+
+			.h4 {
+				margin-bottom: 10px;
+			}
+		}
 	}
-	&.small {
+
+	.layoutImg {
+		width: 400px;
+		height: 500px;
+		img {
+			height: 100%;
+			width: 100%;
+			object-fit: contain;
+		}
+	}
+}
+
+.small {
+	.rsFloorPlanDetailCard {
 		.radioHolder {
 			width: 100%;
 		}
-	}
 
-	.floorPlanRoomDescriptionContent {
-		display: none;
-		margin-top: 20px;
-		&.active {
-			display: block;
+		.floorPlanDetails {
+			margin-right: 0 !important;
 		}
 
-		.h4 {
-			margin-bottom: 10px;
+		& > div {
+			margin: 20px 20px 0 20px;
+
+			&:last-child {
+				margin-bottom: 20px;
+			}
 		}
 	}
 }

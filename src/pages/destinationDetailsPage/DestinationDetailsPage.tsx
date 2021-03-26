@@ -16,9 +16,11 @@ import FeatureRoomCard from '../../components/featureRoomCard/FeatureRoomCard';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelImage from '../../components/labelImage/LabelImage';
-import TabbedImageGallery from '../../components/tabbedImageGallery/TabbedImageGallery';
+import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import Carousel from '../../components/carousel/Carousel';
 
 interface DestinationDetailsPageProps {}
 
@@ -28,12 +30,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 
-	const params = router.getPageUrlParams<{ destinationId: Api.Destination.Req.Details }>([
+	const size = useWindowResizeChange();
+
+	const params = router.getPageUrlParams<{ destinationId: number }>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
 	]);
 
 	useEffect(() => {
-		async function getDestinationDetails(id: Api.Destination.Req.Details) {
+		async function getDestinationDetails(id: number) {
 			try {
 				let response = await destinationService.getDestinationDetails(id);
 				if (response.data.data) setDestinationDetails(response.data.data);
@@ -41,6 +45,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				rsToasts.error(e.message);
 			}
 		}
+
 		getDestinationDetails(params.destinationId);
 	}, []);
 
@@ -67,8 +72,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	}
 
 	function renderFeatures() {
-		if (!destinationDetails) return;
-		return destinationDetails.features.map((item, index) => {
+		if (!destinationDetails || !destinationDetails.features) return;
+		let featureArray: any = [];
+		destinationDetails.features.forEach((item, index) => {
 			if (!item.isActive || item.isCarousel) return false;
 			let primaryMedia: any = '';
 			for (let value of item.media) {
@@ -77,12 +83,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				break;
 			}
 			if (primaryMedia === '') return false;
-			return <LabelImage key={item.id} mainImg={primaryMedia} textOnImg={item.title} />;
+			featureArray.push(<LabelImage key={item.id} mainImg={primaryMedia} textOnImg={item.title} />);
 		});
+		return featureArray;
 	}
 
 	function renderFeatureCarousel() {
-		if (!destinationDetails) return;
+		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.features)) return;
 		let carouselItems: any = [];
 		for (let item of destinationDetails.features) {
 			if (!item.isActive || !item.isCarousel) continue;
@@ -95,7 +102,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				buttonLabel: 'View Photos'
 			});
 		}
-		return <TabbedImageGallery tabs={carouselItems} />;
+		return <TabbedImageCarousel tabs={carouselItems} />;
 	}
 
 	function renderMapSource() {
@@ -110,97 +117,162 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<HeroImage image={destinationDetails.heroUrl} height={'420px'} mobileHeight={'420px'} />
 				<Box className={'sectionOne'}>
-					<Box className={'destinationInfoCardWrapper'}>
-						<DestinationInfoCard
-							destinationId={destinationDetails.id}
-							destinationName={destinationDetails.name}
-							destinationImage={destinationDetails.logoUrl}
-							address={destinationDetails.address1}
-							city={destinationDetails.city}
-							state={destinationDetails.state}
-							zip={destinationDetails.zip}
-							rating={4.5}
-							longDescription={destinationDetails.description}
-						/>
-						<CarouselButtons
-							onClickLeft={() => {
-								moveImagesLeft();
-							}}
-							onClickRight={() => {
-								moveImagesRight();
-							}}
-							position={'absolute'}
-							bottom={'0'}
-							right={'-40px'}
-						/>
-					</Box>
-					<Box overflow={'hidden'}>
-						<div ref={parentRef} className={'featureSlider'}>
-							<div ref={childRef}>
-								<FeatureRoomCard
-									mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									title={'8 bedroom villa'}
-									discountAmount={150}
-									limitedOffer
-									bookNowPath={() => {
-										console.log('book now');
+					<HeroImage image={destinationDetails.heroUrl} height={'420px'} mobileHeight={'420px'} />
+					<Box className={'headerWrapper'}>
+						<Box className={'destinationInfoCardWrapper'}>
+							<DestinationInfoCard
+								destinationId={destinationDetails.id}
+								destinationName={destinationDetails.name}
+								destinationImage={destinationDetails.logoUrl}
+								address={destinationDetails.address1}
+								city={destinationDetails.city}
+								state={destinationDetails.state}
+								zip={destinationDetails.zip}
+								rating={4.5}
+								longDescription={destinationDetails.description}
+							/>
+							{size !== 'small' && (
+								<CarouselButtons
+									onClickLeft={() => {
+										moveImagesLeft();
 									}}
+									onClickRight={() => {
+										moveImagesRight();
+									}}
+									position={'absolute'}
+									bottom={'0'}
+									right={'-40px'}
 								/>
-							</div>
+							)}
+						</Box>
+						{size !== 'small' ? (
+							<Box overflow={'hidden'}>
+								<div ref={parentRef} className={'featureSlider'}>
+									<div ref={childRef}>
+										<FeatureRoomCard
+											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+											title={'8 bedroom villa'}
+											discountAmount={150}
+											limitedOffer
+											bookNowPath={() => {
+												console.log('book now');
+											}}
+										/>
+									</div>
 
-							<div>
-								<FeatureRoomCard
-									mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									title={'8 bedroom villa'}
-									discountAmount={150}
-									limitedOffer
-									bookNowPath={() => {
-										console.log('book now');
-									}}
-								/>
-							</div>
-							<div>
-								<FeatureRoomCard
-									mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									title={'8 bedroom villa'}
-									discountAmount={150}
-									limitedOffer
-									bookNowPath={() => {
-										console.log('book now');
-									}}
-								/>
-							</div>
-							<div>
-								<FeatureRoomCard
-									mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									title={'8 bedroom villa'}
-									discountAmount={150}
-									limitedOffer
-									bookNowPath={() => {
-										console.log('book now');
-									}}
-								/>
-							</div>
-							<div>
-								<FeatureRoomCard
-									mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									title={'8 bedroom villa'}
-									discountAmount={150}
-									limitedOffer
-									bookNowPath={() => {
-										console.log('book now');
-									}}
-								/>
-							</div>
-						</div>
+									<div>
+										<FeatureRoomCard
+											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+											title={'8 bedroom villa'}
+											discountAmount={150}
+											limitedOffer
+											bookNowPath={() => {
+												console.log('book now');
+											}}
+										/>
+									</div>
+									<div>
+										<FeatureRoomCard
+											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+											title={'8 bedroom villa'}
+											discountAmount={150}
+											limitedOffer
+											bookNowPath={() => {
+												console.log('book now');
+											}}
+										/>
+									</div>
+									<div>
+										<FeatureRoomCard
+											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+											title={'8 bedroom villa'}
+											discountAmount={150}
+											limitedOffer
+											bookNowPath={() => {
+												console.log('book now');
+											}}
+										/>
+									</div>
+									<div>
+										<FeatureRoomCard
+											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+											title={'8 bedroom villa'}
+											discountAmount={150}
+											limitedOffer
+											bookNowPath={() => {
+												console.log('book now');
+											}}
+										/>
+									</div>
+								</div>
+							</Box>
+						) : (
+							<Carousel
+								children={[
+									<FeatureRoomCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+										title={'8 bedroom villa'}
+										discountAmount={150}
+										limitedOffer
+										bookNowPath={() => {
+											console.log('book now');
+										}}
+									/>,
+									<FeatureRoomCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+										title={'8 bedroom villa'}
+										discountAmount={150}
+										limitedOffer
+										bookNowPath={() => {
+											console.log('book now');
+										}}
+									/>,
+									<FeatureRoomCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+										title={'8 bedroom villa'}
+										discountAmount={150}
+										limitedOffer
+										bookNowPath={() => {
+											console.log('book now');
+										}}
+									/>,
+									<FeatureRoomCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+										title={'8 bedroom villa'}
+										discountAmount={150}
+										limitedOffer
+										bookNowPath={() => {
+											console.log('book now');
+										}}
+									/>,
+									<FeatureRoomCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+										title={'8 bedroom villa'}
+										discountAmount={150}
+										limitedOffer
+										bookNowPath={() => {
+											console.log('book now');
+										}}
+									/>,
+									<FeatureRoomCard
+										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
+										title={'8 bedroom villa'}
+										discountAmount={150}
+										limitedOffer
+										bookNowPath={() => {
+											console.log('book now');
+										}}
+									/>
+								]}
+							/>
+						)}
 					</Box>
 				</Box>
 				<Box className={'sectionTwo'} marginBottom={'160px'}>
 					<Label variant={'h1'}>Features</Label>
 					<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
-						{renderFeatures()}
+						{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
 					</Box>
 				</Box>
 				<Box className={'sectionThree'} marginBottom={'190px'}>
@@ -213,8 +285,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					display={'flex'}
 					justifyContent={'center'}
 					alignItems={'center'}
+					flexWrap={'wrap'}
 				>
-					<Box width={'420px'} marginRight={'100px'}>
+					<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
 						<Label variant={'h1'}>Location</Label>
 						<Label variant={'body2'}>
 							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
@@ -227,7 +300,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							{destinationDetails.zip}
 						</Label>
 					</Box>
-					<Box width={'570px'} height={'450px'}>
+					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
 						<iframe frameBorder="0" src={renderMapSource()}></iframe>
 					</Box>
 				</Box>

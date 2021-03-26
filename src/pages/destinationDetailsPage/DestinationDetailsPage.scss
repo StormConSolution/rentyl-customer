@@ -1,25 +1,21 @@
 @import '../../themes/themes';
 .rsDestinationDetailsPage {
 	.sectionOne {
-		display: flex;
-		align-items: flex-end;
 		position: relative;
-		top: -170px;
-		padding-left: 80px;
-		box-sizing: border-box;
+		margin-bottom: 386px;
 
-		.destinationInfoCardWrapper {
-			position: relative;
-			margin-right: 60px;
-			.rsDestinationInfoCard {
-			}
-		}
+		.headerWrapper {
+			position: absolute;
+			display: flex;
+			align-items: flex-end;
+			bottom: -270px;
+			left: 80px;
 
-		.rsCarousel {
-			width: 776px;
-			//width: 100%;
-			.carouselParent {
-				overflow: hidden;
+			.destinationInfoCardWrapper {
+				position: relative;
+				margin-right: 60px;
+				.rsDestinationInfoCard {
+				}
 			}
 		}
 		.featureSlider {
@@ -41,7 +37,7 @@
 	}
 	.sectionThree {
 		position: relative;
-		.rsTabbedImageGallery {
+		.rsTabbedImageCarousel {
 			position: relative;
 			z-index: 10;
 			height: 570px;
@@ -73,6 +69,40 @@
 			}
 			.rsIcon {
 				margin-right: 14px;
+			}
+		}
+	}
+}
+.small {
+	.rsDestinationDetailsPage {
+		.sectionOne {
+			margin-bottom: 425px;
+			.headerWrapper {
+				left: 0;
+				width: 100%;
+				flex-wrap: wrap;
+				bottom: -370px;
+			}
+
+			.destinationInfoCardWrapper {
+				margin: 0 auto 25px !important;
+			}
+
+			.headerWrapper {
+				.destinationInfoCardWrapper {
+					position: relative;
+					margin-right: 60px;
+					.rsDestinationInfoCard {
+					}
+				}
+
+				.rsCarousel {
+					.carouselParent {
+						.carouselChild {
+							margin: 0 10px;
+						}
+					}
+				}
 			}
 		}
 	}

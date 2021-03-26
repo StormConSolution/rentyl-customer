@@ -1,4 +1,4 @@
-import { ImageTabProp } from '../../components/tabbedImageGallery/TabbedImageGallery';
+import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 
 const DestinationLandingPageAmenitiesGalleryTabs: ImageTabProp[] = [
 	{
