@@ -24,11 +24,7 @@ const ComparisonDrawer: React.FC = () => {
 					title={item.title}
 					roomTypes={item.roomTypes}
 					onChange={(item) => {
-						let newRecoilState = comparisonService.resortComparisonCardOnChange(
-							index,
-							item,
-							comparisonItems
-						);
+						let newRecoilState = comparisonService.setSelectedAccommodation(index, item, comparisonItems);
 						setComparisonItems(newRecoilState);
 					}}
 					onClose={() => {

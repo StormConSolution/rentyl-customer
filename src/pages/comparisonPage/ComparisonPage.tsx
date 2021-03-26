@@ -14,100 +14,79 @@ import ComparisonService from '../../services/comparison/comparison.service';
 import rsToasts from '@bit/redsky.framework.toast';
 import { HttpStatusCode } from '../../utils/http';
 import { axiosErrorHandler } from '../../utils/errorHandler';
-import DestinationService from '../../services/destination/destination.service';
 import AccommodationService from '../../services/accommodation/accommodation.service';
+import IconLabel from '../../components/iconLabel/IconLabel';
+import LoadingPage from '../loadingPage/LoadingPage';
 
-// these will live in api when the endpoints are done
-export interface AccommodationData {
-	id: string;
-	totalRooms: number;
-	bedrooms: number;
-	kitchens: number;
-	beds: number;
-	wifi: string;
-	tv: number;
-}
-
-export interface DestinationData {
-	id: string;
-	pool: number;
-	roomService: string;
-	rating: number;
-	numberOfFloors: number;
-	spa: string;
+export interface TableData {
+	description: JSX.Element[];
+	guestLimit: JSX.Element[];
+	extraBedding: JSX.Element[];
+	features: JSX.Element[];
+	adaCompliant: JSX.Element[];
 }
 
 const ComparisonPage: React.FC = () => {
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const size = useWindowResizeChange();
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
-	const [accommodationSelected, setAccommodationSelected] = useState<number>(0);
-	const [destinationSelected, setDestinationSelected] = useState<number>(0);
-	const [renderDestinationTable, setRenderDestinationTable] = useState<boolean>(true);
-	const [compareItemsSelected, setCompareItemsSelected] = useState<(string | number)[]>([]);
-
-	// destinations and accommodations will be pulled from server
-	let destinations: DestinationData[] = [
-		{ id: '1', pool: 4, roomService: 'available 24/7', rating: 4, numberOfFloors: 7, spa: 'hours 8am-10pm' },
-		{
-			id: '2',
-			pool: 3,
-			roomService: 'available from 5am-11pm',
-			rating: 3,
-			numberOfFloors: 5,
-			spa: 'hours 9am-9pm'
-		},
-		{
-			id: '3',
-			pool: 2,
-			roomService: 'available from 4am-10pm',
-			rating: 3,
-			numberOfFloors: 4,
-			spa: 'hours 10am-7pm'
-		}
-	];
-	let accommodations: AccommodationData[] = [
-		{ id: '1', totalRooms: 1, bedrooms: 0, kitchens: 1, beds: 2, wifi: 'free', tv: 1 },
-		{ id: '2', totalRooms: 2, bedrooms: 1, kitchens: 1, beds: 3, wifi: 'available for purchase', tv: 2 },
-		{ id: '3', totalRooms: 3, bedrooms: 2, kitchens: 1, beds: 4, wifi: 'free', tv: 3 }
-	];
+	const [accommodationTextList, setAccommodationTextList] = useState<(string | number)[]>([]);
+	const [accommodationIdList, setAccommodationIdList] = useState<number[]>([]);
+	const [accommodationDetailList, setAccommodationDetailList] = useState<Api.Accommodation.Res.Details[]>([]);
+	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
 	useEffect(() => {
-		setDestinationVariables();
-		setAccommodationVariables();
+		let modifiedComparisonItems = [...comparisonItems];
+		let wasModified = false;
+		for (let index = 0; index < comparisonItems.length; index++) {
+			let selected = false;
+			for (let roomType of comparisonItems[index].roomTypes) {
+				if (roomType.selected) {
+					selected = true;
+				}
+			}
+			if (!selected) {
+				wasModified = true;
+				modifiedComparisonItems = comparisonService.setSelectedAccommodation(
+					index,
+					comparisonItems[index].roomTypes[0].value.toString(),
+					modifiedComparisonItems
+				);
+			}
+		}
+		if (wasModified) setComparisonItems(modifiedComparisonItems);
+		setWaitToLoad(false);
+	}, []);
+
+	useEffect(() => {
+		let accommodationTextArray: (string | number)[] = [];
+		let accommodationIdArray: number[] = [];
+		for (let item of comparisonItems) {
+			let text: string | number = '';
+			let id: number = -1;
+			for (let roomType of item.roomTypes) {
+				if (roomType.selected) {
+					text = roomType.text;
+					id = parseInt(String(roomType.value as number));
+				}
+			}
+			accommodationTextArray.push(text);
+			if (id !== -1) accommodationIdArray.push(id);
+		}
+		setAccommodationTextList(accommodationTextArray);
+		setAccommodationIdList(accommodationIdArray);
 	}, [comparisonItems]);
 
 	useEffect(() => {
 		if (comparisonItems.length === 0) {
 			rsToasts.error('No destinations or accommodations selected to compare.');
 		}
-		if (renderDestinationTable) {
-			getDestinations().catch(console.error);
-		} else {
-			getAccommodation().catch(console.error);
-		}
-
-		async function getDestinations() {
-			try {
-				let res = await destinationService.getDestinationDetails(1);
-				console.log(res.data.data);
-			} catch (e) {
-				rsToasts.error('An unexpected error has occurred on the server.');
-				axiosErrorHandler(e, {
-					[HttpStatusCode.NOT_FOUND]: () => {
-						rsToasts.error('An unexpected error has occurred on the server.');
-					}
-				});
-			}
-		}
-
 		async function getAccommodation() {
 			try {
-				let res = await accommodationService.getAccommodationDetails(1);
-				console.log(res);
+				let res = await accommodationService.getManyAccommodationDetails(accommodationIdList);
+				setAccommodationDetailList(res);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
 				axiosErrorHandler(e, {
@@ -117,40 +96,16 @@ const ComparisonPage: React.FC = () => {
 				});
 			}
 		}
+		getAccommodation().catch(console.error);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [accommodationSelected, destinationSelected, renderDestinationTable, compareItemsSelected]);
-
-	function setDestinationVariables() {
-		if (comparisonItems.length === 0) {
-			setDestinationSelected(0);
-			return;
-		}
-		setDestinationSelected(comparisonItems.length);
+	}, [accommodationIdList]);
+	function pinAccommodationToFirstOfList(index: number) {
+		if (index === 0) return;
+		let modifiedComparisonItems = [...comparisonItems];
+		modifiedComparisonItems.unshift(comparisonItems[index]);
+		modifiedComparisonItems.splice(index + 1, 1);
+		setComparisonItems(modifiedComparisonItems);
 	}
-
-	function setAccommodationVariables() {
-		let numberOfAccommodation = 0;
-		let selectedArray: (string | number)[] = [];
-		for (let item of comparisonItems) {
-			if (item.roomTypes === undefined) continue;
-			let selected: string | number = '';
-			for (let roomType of item.roomTypes) {
-				if (roomType.selected) {
-					selected = roomType.text;
-					numberOfAccommodation++;
-				}
-			}
-			selectedArray.push(selected);
-		}
-		setCompareItemsSelected(selectedArray);
-		if (numberOfAccommodation === comparisonItems.length || numberOfAccommodation >= 2) {
-			setRenderDestinationTable(false);
-		} else {
-			setRenderDestinationTable(true);
-		}
-		setAccommodationSelected(numberOfAccommodation);
-	}
-
 	function renderComparisonCard() {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
@@ -160,9 +115,10 @@ const ComparisonPage: React.FC = () => {
 						key={index}
 						logo={item.logo}
 						title={item.title}
+						placeHolder={accommodationTextList[index].toString()}
 						roomTypes={item.roomTypes}
 						onChange={(item) => {
-							let newRecoilState = comparisonService.resortComparisonCardOnChange(
+							let newRecoilState = comparisonService.setSelectedAccommodation(
 								index,
 								item,
 								comparisonItems
@@ -175,6 +131,11 @@ const ComparisonPage: React.FC = () => {
 								comparisonItems
 							);
 							setComparisonItems(newComparisonItems);
+						}}
+						popupOnClick={(pinToFirst) => {
+							if (pinToFirst) pinAccommodationToFirstOfList(index);
+							console.log('pinToFirst', pinToFirst);
+							console.log('index', index);
 						}}
 					/>
 				</td>
@@ -192,86 +153,64 @@ const ComparisonPage: React.FC = () => {
 		comparisonItems.map((item, index) => {
 			headerOutput.push(
 				<th key={index}>
-					<Label variant={'h4'}>{compareItemsSelected[index]}</Label>
+					<Label variant={'h4'}>{accommodationTextList[index]}</Label>
 				</th>
 			);
 		});
 		return headerOutput;
 	}
 
-	function renderDestinationHeader() {
-		let headerOutput: JSX.Element[] = [
-			<th className={'comparisonCardsDiv'} key={'destination'}>
-				<Label variant={'h4'}>Destination Name</Label>
-			</th>
-		];
-		comparisonItems.map((item, index) => {
-			if (!compareItemsSelected[index]) {
-				headerOutput.push(
-					<th key={index}>
-						<Label variant={'h4'}>{item.title}</Label>
-					</th>
-				);
-			} else {
-				headerOutput.push(<th key={index} />);
-			}
-		});
-		return headerOutput;
-	}
-
 	function renderAccommodationCompare() {
-		let accommodationKeys = Object.keys(accommodations[0]);
 		let output: JSX.Element[] = [];
-		accommodationKeys.map((itemKey, indexKey) => {
-			if (itemKey !== 'id') {
-				let res = accommodations.map((itemAccommodation, indexAccommodation) => {
-					if (
-						compareItemsSelected[indexAccommodation] === '' ||
-						compareItemsSelected[indexAccommodation] === undefined
-					)
-						return <td key={indexAccommodation} />;
-					return <td key={indexAccommodation}>{itemAccommodation[itemKey as keyof AccommodationData]}</td>;
-				});
-				output.push(
-					<tr key={indexKey}>
-						<td key={`rowDescription${indexKey}`}>{itemKey}</td>
-						{res}
-					</tr>
+		let table: TableData = {
+			description: [<td key={'titleDescription'}>Description</td>],
+			guestLimit: [<td key={'titleGuestLimit'}>Guest Limit</td>],
+			extraBedding: [<td key={'titleExtraBedding'}>Extra Bedding</td>],
+			features: [<td key={'titleFeatures'}>Features</td>],
+			adaCompliant: [<td key={'titleAdaCompliant'}>Ada Compliant</td>]
+		};
+
+		if (!accommodationDetailList) return [];
+		accommodationDetailList.map((accommodation, index) => {
+			table.description.push(<td key={index}>{accommodation.accommodationType}</td>);
+			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
+			table.extraBedding.push(
+				<td key={index}>{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}</td>
+			);
+			table.adaCompliant.push(
+				<td key={index}>{accommodation.adaCompliant === 0 ? 'no' : 'yes' || accommodation.adaCompliant}</td>
+			);
+			if (!accommodation.features) return [];
+			let featureList: JSX.Element[] = [];
+			for (let feature of accommodation.features) {
+				featureList.push(
+					<IconLabel
+						key={feature.title}
+						className={'featureIconLabel'}
+						labelName={feature.title || ''}
+						iconImg={'icon-' + feature.icon}
+						iconPosition={'left'}
+						iconSize={11}
+					/>
 				);
 			}
-			return output;
+			table.features.push(
+				<td className={'features'} key={index}>
+					{featureList}
+				</td>
+			);
+		});
+
+		const tableKeys = Object.keys(table);
+		tableKeys.map((row, index) => {
+			output.push(<tr key={index}>{table[row as keyof TableData]}</tr>);
 		});
 		return output;
 	}
 
-	function renderDestinationCompare() {
-		let output: JSX.Element[] = [];
-		let destinationKeys = Object.keys(destinations[0]);
-		destinationKeys.map((itemKey, indexKey) => {
-			if (itemKey !== 'id') {
-				let res = destinations.map((itemDestinations, indexDestinations) => {
-					if (
-						compareItemsSelected[indexDestinations] ||
-						compareItemsSelected[indexDestinations] === undefined
-					) {
-						return <td key={indexDestinations} />;
-					} else {
-						return <td key={indexDestinations}>{itemDestinations[itemKey as keyof DestinationData]}</td>;
-					}
-				});
-				output.push(
-					<tr key={indexKey}>
-						<td key={`rowDescription${indexKey}`}>{itemKey}</td>
-						{res}
-					</tr>
-				);
-			}
-			return output;
-		});
-		return output;
-	}
-
-	return (
+	return waitToLoad ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsComparisonPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<HeroImage
@@ -303,12 +242,10 @@ const ComparisonPage: React.FC = () => {
 								{renderComparisonCard()}
 							</tr>
 							<tr className={'tableHeader'} key={'trRow'}>
-								{renderDestinationTable ? renderDestinationHeader() : renderAccommodationHeader()}
+								{renderAccommodationHeader()}
 							</tr>
 						</thead>
-						<tbody className={'tableBody'}>
-							{renderDestinationTable ? renderDestinationCompare() : renderAccommodationCompare()}
-						</tbody>
+						<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
 					</table>
 				</Paper>
 			</div>

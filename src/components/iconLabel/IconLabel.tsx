@@ -9,7 +9,6 @@ interface IconLabelProps {
 	iconImg: string;
 	iconPosition: 'top' | 'right' | 'bottom' | 'left';
 	iconSize: number;
-	className?: string;
 	labelVariant?:
 		| 'h1'
 		| 'h2'
@@ -29,11 +28,13 @@ interface IconLabelProps {
 		| 'srOnly'
 		| 'inherit'
 		| 'error';
+	className?: string;
+	onClick?: () => void;
 }
 
 const IconLabel: React.FC<IconLabelProps> = (props) => {
 	return (
-		<Box className={`rsIconLabel ${props.className || ''} ${props.iconPosition}`}>
+		<Box className={`rsIconLabel ${props.className || ''} ${props.iconPosition}`} onClick={props.onClick}>
 			<Icon className={'icon'} iconImg={props.iconImg} size={props.iconSize} />
 			<Label variant={props.labelVariant} className={'label'}>
 				{props.labelName}

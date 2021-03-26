@@ -15,7 +15,8 @@ interface RoomBookNowCardProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
-	focusedInput?: 'startDate' | 'endDate' | null;
+	focusedInput: 'startDate' | 'endDate' | null;
+	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	className?: string;
 	bookNowOnClick?: () => void;
 	compareOnClick?: () => void;
@@ -77,6 +78,7 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 						endDate={props.endDate}
 						onDatesChange={props.onDatesChange}
 						focusedInput={props.focusedInput}
+						onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 						monthsToShow={1}
 					/>
 				</Box>

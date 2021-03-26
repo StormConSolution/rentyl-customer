@@ -6,10 +6,11 @@
 		margin: 0;
 	}
 	.rsCarousel {
-		height: 280px;
+		height: 318px;
 		width: 278px;
 		.carouselParent {
 			overflow-x: hidden;
+			max-height: 318px;
 		}
 	}
 

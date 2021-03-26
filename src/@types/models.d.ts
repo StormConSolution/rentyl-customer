@@ -103,6 +103,13 @@ declare namespace Model {
 		description: string;
 	}
 
+	export interface AccommodationBedDetails {
+		type: string;
+		isPrimary: boolean | number;
+		qty: number;
+		description: string;
+	}
+
 	export interface AccommodationType {
 		id: number;
 		companyId: number;
