@@ -323,6 +323,15 @@ declare namespace Api {
 				destinationId: number;
 			}
 
+			export interface Availability extends RedSky.PageQuery {
+				startDate: Date | string;
+				endDate: Date | string;
+				adults: number;
+				children: number;
+				priceRangeMin?: number;
+				priceRangeMax?: number;
+			}
+
 			export interface GetByPage {
 				pagination: string;
 				sort: string;
@@ -378,6 +387,49 @@ declare namespace Api {
 					name: string;
 					description: string;
 					code: string;
+				}[];
+			}
+
+			export interface Availability {
+				id: number;
+				name: string;
+				description: string;
+				code: string;
+				status: string;
+				address1: string;
+				address2: string;
+				city: string;
+				state: string;
+				zip: string;
+				country: string;
+				logoUrl: string;
+				media: {
+					id: number;
+					type: string;
+					urls: string;
+					title: string;
+					isPrimary: boolean;
+				}[];
+				features: {
+					id: number;
+					title: string;
+					icon: string;
+				}[];
+				accommodationTypes: {
+					id: number;
+					name: string;
+				}[];
+				accommodations: {
+					id: number;
+					name: string;
+					roomCount: number;
+					bedDetails: any;
+					priceCents: number;
+					features: {
+						id: number;
+						title: string;
+						icon: string;
+					}[];
 				}[];
 			}
 			export interface AccommodationType extends Model.AccommodationType {}

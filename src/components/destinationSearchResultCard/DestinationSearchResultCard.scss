@@ -12,6 +12,15 @@
 			overflow-x: hidden;
 			max-height: 318px;
 		}
+		.imageWrapper {
+			width: 278px;
+			height: 318px;
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
 	}
 
 	.info {

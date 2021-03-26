@@ -31,7 +31,11 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
 		return picturePaths.map((path: string, index: number) => {
-			return <img src={path} alt="" />;
+			return (
+				<Box className={'imageWrapper'}>
+					<img src={path} alt="" />
+				</Box>
+			);
 		});
 	}
 
