@@ -1,0 +1,141 @@
+@font-face {
+	font-family: 'icomoon';
+	src: url('fonts/icomoon.eot?jwy1bg');
+	src: url('fonts/icomoon.eot?jwy1bg#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff2?jwy1bg') format('woff2'), url('fonts/icomoon.ttf?jwy1bg') format('truetype'),
+		url('fonts/icomoon.woff?jwy1bg') format('woff'), url('fonts/icomoon.svg?jwy1bg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
+[class^='icon-'],
+[class*=' icon-'] {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'icomoon' !important;
+	speak: never;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-map-solid:before {
+	content: '\e925';
+}
+.icon-wifi1:before {
+	content: '\e920';
+}
+.icon-laundry:before {
+	content: '\e921';
+}
+.icon-no-smoking:before {
+	content: '\e922';
+}
+.icon-kitchen:before {
+	content: '\e924';
+}
+.icon-chevron-circle-right:before {
+	content: '\e91f';
+}
+.icon-wifi:before {
+	content: '\e91e';
+}
+.icon-plus:before {
+	content: '\e91d';
+}
+.icon-phone:before {
+	content: '\e91c';
+}
+.icon-mail:before {
+	content: '\e91b';
+}
+.icon-star:before {
+	content: '\e923';
+}
+.icon-piggy-bank:before {
+	content: '\e900';
+}
+.icon-wine:before {
+	content: '\e901';
+}
+.icon-map:before {
+	content: '\e902';
+}
+.icon-hand-shake:before {
+	content: '\e903';
+}
+.icon-tea-cup:before {
+	content: '\e904';
+}
+.icon-social:before {
+	content: '\e905';
+}
+.icon-boost:before {
+	content: '\e906';
+}
+.icon-gift:before {
+	content: '\e907';
+}
+.icon-food-plate:before {
+	content: '\e908';
+}
+.icon-chevron-down:before {
+	content: '\e909';
+}
+.icon-chevron-left:before {
+	content: '\e90a';
+}
+.icon-chevron-right:before {
+	content: '\e90b';
+}
+.icon-chevron-up:before {
+	content: '\e90c';
+}
+.icon-close:before {
+	content: '\e90d';
+}
+.icon-facebook:before {
+	content: '\e90e';
+}
+.icon-filter:before {
+	content: '\e90f';
+}
+.icon-game-room:before {
+	content: '\e910';
+}
+.icon-hamburger-menu:before {
+	content: '\e911';
+}
+.icon-hot-tub:before {
+	content: '\e912';
+}
+.icon-instagram:before {
+	content: '\e913';
+}
+.icon-movie-theater:before {
+	content: '\e914';
+}
+.icon-pool:before {
+	content: '\e915';
+}
+.icon-pool-table:before {
+	content: '\e916';
+}
+.icon-spa:before {
+	content: '\e917';
+}
+.icon-summer-kitchen:before {
+	content: '\e918';
+}
+.icon-Twitter:before {
+	content: '\e919';
+}
+.icon-youtube:before {
+	content: '\e91a';
+}

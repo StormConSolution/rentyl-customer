@@ -30,7 +30,3 @@ $defaultTheme: (
 	$heavy: 900,
 	$extraBlack: 950
 );
-
-.App {
-	@include spread-map($defaultTheme);
-}

@@ -1,0 +1,109 @@
+@import '../../themes/themes';
+.rsDestinationDetailsPage {
+	.sectionOne {
+		position: relative;
+		margin-bottom: 386px;
+
+		.headerWrapper {
+			position: absolute;
+			display: flex;
+			align-items: flex-end;
+			bottom: -270px;
+			left: 80px;
+
+			.destinationInfoCardWrapper {
+				position: relative;
+				margin-right: 60px;
+				.rsDestinationInfoCard {
+				}
+			}
+		}
+		.featureSlider {
+			display: flex;
+			transition: transform 300ms;
+		}
+	}
+
+	.sectionTwo {
+		.rsLabel {
+			&.h1 {
+				text-align: center;
+				margin-bottom: 32px;
+			}
+		}
+		.rsLabelImage {
+			margin: 0 8px 16px;
+		}
+	}
+	.sectionThree {
+		position: relative;
+		.rsTabbedImageCarousel {
+			position: relative;
+			z-index: 10;
+			height: 570px;
+		}
+		.yellowSquare {
+			width: 532px;
+			height: 80px;
+			position: absolute;
+			background: #f7f1db;
+			bottom: -80px;
+			left: 0;
+			z-index: 9;
+		}
+	}
+	.sectionFour {
+		iframe {
+			box-shadow: theme-var($primaryBoxShadowColor);
+			height: 100%;
+			width: 100%;
+			border: 0;
+		}
+
+		.rsLabel {
+			&.h1 {
+				margin-bottom: 22px;
+			}
+			&.body2 {
+				margin-bottom: 30px;
+			}
+			.rsIcon {
+				margin-right: 14px;
+			}
+		}
+	}
+}
+.small {
+	.rsDestinationDetailsPage {
+		.sectionOne {
+			margin-bottom: 425px;
+			.headerWrapper {
+				left: 0;
+				width: 100%;
+				flex-wrap: wrap;
+				bottom: -370px;
+			}
+
+			.destinationInfoCardWrapper {
+				margin: 0 auto 25px !important;
+			}
+
+			.headerWrapper {
+				.destinationInfoCardWrapper {
+					position: relative;
+					margin-right: 60px;
+					.rsDestinationInfoCard {
+					}
+				}
+
+				.rsCarousel {
+					.carouselParent {
+						.carouselChild {
+							margin: 0 10px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

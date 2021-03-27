@@ -1,0 +1,20 @@
+@import '../../themes/themes.scss';
+
+.rsAccommodationInfoCard {
+	position: relative;
+	img {
+		width: 180px;
+		height: 60px;
+		object-fit: contain;
+		margin-bottom: 40px;
+	}
+
+	.rsLabel {
+		&.h2 {
+			margin-bottom: 10px;
+		}
+		&.h1 {
+			margin-bottom: 30px;
+		}
+	}
+}

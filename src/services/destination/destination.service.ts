@@ -3,20 +3,15 @@ import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 
 export default class DestinationService extends Service {
-	async getDestinationById(id: number) {
-		let res = await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', { id });
-		return res.data.data;
+	async getDestinationById(id: Api.Destination.Req.Get) {
+		return await http.get<RsResponseData<Api.Destination.Res.Get>>('destination', id);
 	}
 
-	async getDestinationByIds(ids: number[]) {
-		let res = await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', { ids });
-		return res.data.data;
+	async getDestinationByIds(ids: Api.Destination.Req.Get[]) {
+		return await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
 	}
 	async getDestinationDetails(destinationId: number) {
-		let res = await http.get<RsResponseData<Api.Destination.Res.Details[]>>('destination/details', {
-			destinationId
-		});
-		return res.data.data;
+		return await http.get<RsResponseData<Api.Destination.Res.Details>>('destination/details', { destinationId });
 	}
 	async searchAvailableReservations(data: Api.Destination.Req.Availability) {
 		return await http.get<RsResponseData<Api.Destination.Res.Availability[]>>('destination/availability', data);

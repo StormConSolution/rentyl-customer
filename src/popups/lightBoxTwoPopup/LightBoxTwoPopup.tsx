@@ -11,11 +11,12 @@ import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
 export interface LightBoxTwoPopupProps extends PopupProps {
 	imageDataArray: { title: string; description: string; imagePath: string }[];
+	imageIndex?: number;
 }
 
 const LightBoxTwoPopup: React.FC<LightBoxTwoPopupProps> = (props) => {
 	const parentRef = useRef<HTMLElement>(null);
-	const [imageIndex, setImageIndex] = useState<number>(0);
+	const [imageIndex, setImageIndex] = useState<number>(props.imageIndex || 0);
 	const [mainImage, setMainImage] = useState<string>('');
 	const [imageDescription, setImageDescription] = useState<React.ReactNode>();
 	const imageContainerWidth = 131.5;

@@ -6,6 +6,7 @@ import StarRating from '../starRating/StarRating';
 import Box from '../box/Box';
 import LabelLink from '../labelLink/LabelLink';
 import LabelButton from '../labelButton/LabelButton';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface DestinationInfoCardProps {
 	destinationId: number;
@@ -20,19 +21,20 @@ interface DestinationInfoCardProps {
 }
 
 const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	return (
 		<Paper
 			className={'rsDestinationInfoCard'}
-			padding={'50px'}
+			padding={size === 'small' ? '20px' : '50px'}
 			boxShadow
 			backgroundColor={'#FCFBF8'}
-			width={'536px'}
+			width={size === 'small' ? '335px' : '536px'}
 		>
 			<img src={props.destinationImage} alt={'Destination Logo'} />
 			<Label variant={'caption'}>
 				{props.address}, {props.state}, {props.city} {props.zip}
 			</Label>
-			<Label variant={'h1'}>{props.destinationName}</Label>
+			<Label variant={size === 'small' ? 'h2' : 'h1'}>{props.destinationName}</Label>
 			<Box display={'flex'} marginBottom={'15px'}>
 				<StarRating size={'small16px'} rating={props.rating} />
 				<LabelLink

@@ -1,5 +1,6 @@
 import React from 'react';
 import './HeroImage.scss';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface HeroImageProps {
 	image: string;
@@ -13,10 +14,11 @@ interface HeroImageProps {
 }
 
 const HeroImage: React.FC<HeroImageProps> = (props) => {
+	const size = useWindowResizeChange();
 	function renderImgStyles() {
 		let styles: any = {
 			backgroundImage: `url(${props.image})`,
-			height: props.height
+			height: size === 'small' ? props.mobileHeight : props.height
 		};
 
 		if (!!props.backgroundPosition) styles.backgroundPosition = props.backgroundPosition;

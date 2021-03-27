@@ -1,0 +1,19 @@
+@import '../../themes/themes';
+
+.rsCategoryFeatureIcons {
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 10px 0;
+	}
+	.featureIconWrapper {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(150px, 1fr));
+		grid-gap: 15px;
+		.rsIcon {
+			margin-right: 15px;
+		}
+	}
+}
