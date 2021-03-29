@@ -69,6 +69,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
 				<Select
+					className={'selectRoomType'}
 					onChange={props.onChange}
 					placeHolder={props.placeHolder || 'select room type'}
 					options={props.roomTypes}

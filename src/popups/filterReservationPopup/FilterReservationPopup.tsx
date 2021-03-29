@@ -14,6 +14,8 @@ import LabelButton from '../../components/labelButton/LabelButton';
 export interface FilterReservationPopupProps extends PopupProps {
 	numberOfAdultsControl: RsFormControl;
 	numberOfAdultsUpdateControl: (updateControl: RsFormControl) => void;
+	numberOfChildrenControl: RsFormControl;
+	numberOfChildrenUpdateControl: (updateControl: RsFormControl) => void;
 	priceMinControl: RsFormControl;
 	priceMinUpdateControl: (updateControl: RsFormControl) => void;
 	priceMaxControl: RsFormControl;
@@ -48,14 +50,22 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							startDateLabel={'check in'}
 							endDateLabel={'check out'}
 						/>
-						<LabelInput
-							className="numberOfGuests"
-							inputType="number"
-							title="# of Guests"
-							control={props.numberOfAdultsControl}
-							updateControl={props.numberOfAdultsUpdateControl}
-						/>
-
+						<div className={'numberOfGuestDiv'}>
+							<LabelInput
+								className="numberOfAdults"
+								inputType="text"
+								title="# of Adults"
+								control={props.numberOfAdultsControl}
+								updateControl={props.numberOfAdultsUpdateControl}
+							/>
+							<LabelInput
+								className="numberOfChildren"
+								inputType="text"
+								title="# of Children"
+								control={props.numberOfChildrenControl}
+								updateControl={props.numberOfChildrenUpdateControl}
+							/>
+						</div>
 						<div className={'minMaxDiv'}>
 							<LabelInput
 								className="priceMin"
@@ -87,6 +97,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								label={'Apply'}
 								onClick={() => {
 									props.onClickApply(startDate, endDate);
+									popupController.close(FilterReservationPopup);
 								}}
 							/>
 						</div>

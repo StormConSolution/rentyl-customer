@@ -39,7 +39,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			/>
 			<LabelInput
 				className="numberOfAdults"
-				inputType="number"
+				inputType="text"
 				title="# of Adults"
 				initialValue={2}
 				control={props.numberOfAdultsControl}
@@ -47,7 +47,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			/>
 			<LabelInput
 				className="numberOfChildren"
-				inputType="number"
+				inputType="text"
 				title="# of Children"
 				initialValue={0}
 				control={props.numberOfChildrenControl}
