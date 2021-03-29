@@ -110,12 +110,12 @@ module.exports = {
 		publicPath: '/'
 	},
 	devServer: {
-		port: 3002,
+		port: 3000,
 		compress: true,
 		liveReload: !noRefresh,
 		hot: !noRefresh,
 		open: true,
-		openPage: 'http://localhost:3002',
+		openPage: 'http://localhost:3000',
 		overlay: true,
 		historyApiFallback: true,
 		host: '0.0.0.0',
