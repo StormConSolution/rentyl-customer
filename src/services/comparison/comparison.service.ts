@@ -31,6 +31,28 @@ export default class ComparisonService extends Service {
 		});
 	}
 
+	setDefaultAccommodations(comparisonItems: ComparisonCardInfo[]): ComparisonCardInfo[] {
+		let modifiedComparisonItems = [...comparisonItems];
+		return modifiedComparisonItems.map((element) => {
+			let selected = false;
+			let modifiedRoomTypes = element.roomTypes.map((value) => {
+				if (value.selected) selected = true;
+				return {
+					text: value.text,
+					value: value.value,
+					selected: value.selected
+				};
+			});
+			if (!selected) modifiedRoomTypes[0].selected = true;
+			return {
+				destinationId: element.destinationId,
+				logo: element.logo,
+				roomTypes: modifiedRoomTypes,
+				title: element.title
+			};
+		});
+	}
+
 	resortComparisonCardOnClose(item: ComparisonCardInfo, comparisonItems: ComparisonCardInfo[]) {
 		let newRecoilState = [...comparisonItems];
 		return newRecoilState.filter((remove) => remove.destinationId !== item.destinationId);

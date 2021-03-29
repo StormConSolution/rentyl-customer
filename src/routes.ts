@@ -5,9 +5,9 @@ import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
+import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
-import ReservationSearchPage from './pages/reservationSearchPage/ReservationSearchPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -36,8 +36,8 @@ const routes: RouteDetails[] = [
 		page: SignUpPage
 	},
 	{
-		path: '/reservation-search',
-		page: ReservationSearchPage
+		path: '/reservation/availability',
+		page: ReservationAvailabilityPage
 	},
 	{
 		path: '/compare',

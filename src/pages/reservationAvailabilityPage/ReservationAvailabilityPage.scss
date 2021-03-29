@@ -1,6 +1,11 @@
 @import 'src/themes/themes';
 
-.rsReservationSearchPage {
+.rsReservationAvailabilityPage {
+	.rs-page-content-wrapper {
+		height: 100%;
+		min-height: 1000px;
+	}
+
 	.heroImage {
 		background-position-y: 38%;
 	}

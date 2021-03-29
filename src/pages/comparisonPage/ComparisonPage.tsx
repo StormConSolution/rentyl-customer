@@ -38,25 +38,8 @@ const ComparisonPage: React.FC = () => {
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
 	useEffect(() => {
-		let modifiedComparisonItems = [...comparisonItems];
-		let wasModified = false;
-		for (let index = 0; index < comparisonItems.length; index++) {
-			let selected = false;
-			for (let roomType of comparisonItems[index].roomTypes) {
-				if (roomType.selected) {
-					selected = true;
-				}
-			}
-			if (!selected) {
-				wasModified = true;
-				modifiedComparisonItems = comparisonService.setSelectedAccommodation(
-					index,
-					comparisonItems[index].roomTypes[0].value.toString(),
-					modifiedComparisonItems
-				);
-			}
-		}
-		if (wasModified) setComparisonItems(modifiedComparisonItems);
+		let modifiedComparisonItems: ComparisonCardInfo[] = comparisonService.setDefaultAccommodations(comparisonItems);
+		setComparisonItems(modifiedComparisonItems);
 		setWaitToLoad(false);
 	}, []);
 
@@ -99,6 +82,7 @@ const ComparisonPage: React.FC = () => {
 		getAccommodation().catch(console.error);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [accommodationIdList]);
+
 	function pinAccommodationToFirstOfList(index: number) {
 		if (index === 0) return;
 		let modifiedComparisonItems = [...comparisonItems];
@@ -106,6 +90,7 @@ const ComparisonPage: React.FC = () => {
 		modifiedComparisonItems.splice(index + 1, 1);
 		setComparisonItems(modifiedComparisonItems);
 	}
+
 	function renderComparisonCard() {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
@@ -228,7 +213,7 @@ const ComparisonPage: React.FC = () => {
 				>
 					<LabelLink
 						className={'destinationPath'}
-						path={'/'}
+						path={'/reservation/availability'}
 						label={'back to destination results'}
 						variant={'caption'}
 						iconLeft={'icon-chevron-left'}
