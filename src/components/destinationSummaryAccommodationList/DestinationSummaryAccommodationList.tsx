@@ -61,6 +61,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 					/>
 				</div>
 				<Label
+					className={'comparePlusText'}
 					variant="caption"
 					onClick={() => {
 						props.onAddCompareClick(accommodation.id);

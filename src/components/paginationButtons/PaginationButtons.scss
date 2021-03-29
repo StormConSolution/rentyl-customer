@@ -30,3 +30,15 @@
 		border-bottom: 1px solid theme-var($iconAndHighlightTextColor);
 	}
 }
+
+.small {
+	.rsPaginationButtons {
+		.rsIconLabel.left {
+			padding-right: 10px;
+		}
+
+		.rsIconLabel.right {
+			padding-left: 10px;
+		}
+	}
+}

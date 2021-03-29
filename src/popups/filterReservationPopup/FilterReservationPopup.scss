@@ -26,13 +26,20 @@
 			margin-left: 89px;
 		}
 
-		.rsLabelInput.numberOfGuests {
-			margin: 20px 0;
-		}
+		.numberOfGuestDiv {
+			display: flex;
 
-		.rsInput.numberOfGuests {
-			max-width: 300px;
-			width: 265px;
+			.rsLabelInput {
+				margin: 20px 0;
+			}
+			.numberOfAdults {
+				margin-right: 7px;
+			}
+
+			.rsInput {
+				max-width: 125px;
+				width: 115px;
+			}
 		}
 
 		.minMaxDiv {

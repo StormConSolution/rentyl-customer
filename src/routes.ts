@@ -5,7 +5,7 @@ import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
-import ReservationSearchPage from './pages/reservationSearchPage/ReservationSearchPage';
+import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -34,8 +34,8 @@ const routes: RouteDetails[] = [
 		page: SignUpPage
 	},
 	{
-		path: '/reservation-search',
-		page: ReservationSearchPage
+		path: '/reservation/availability',
+		page: ReservationAvailabilityPage
 	},
 	{
 		path: '/compare',
