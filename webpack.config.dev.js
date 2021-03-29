@@ -29,12 +29,19 @@ module.exports = {
 			{
 				test: /\.s[ac]ss$/i,
 				use: [
-					// Creates `style` nodes from JS strings
 					'style-loader',
-					// Translates CSS into CommonJS
-					'css-loader',
-					// Compiles Sass to CSS
-					'sass-loader'
+					{
+						loader: 'css-loader',
+						options: {
+							sourceMap: true
+						}
+					},
+					{
+						loader: 'sass-loader',
+						options: {
+							sourceMap: true
+						}
+					}
 				]
 			},
 			{
@@ -103,12 +110,12 @@ module.exports = {
 		publicPath: '/'
 	},
 	devServer: {
-		port: 3000,
+		port: 3002,
 		compress: true,
 		liveReload: !noRefresh,
 		hot: !noRefresh,
 		open: true,
-		openPage: 'http://localhost:3000',
+		openPage: 'http://localhost:3002',
 		overlay: true,
 		historyApiFallback: true,
 		host: '0.0.0.0',

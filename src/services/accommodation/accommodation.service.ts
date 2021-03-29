@@ -7,6 +7,12 @@ import modelFactory from '../../models/modelFactory';
 export default class AccommodationService extends Service {
 	accommodationsModel: AccommodationsModel = modelFactory.get<AccommodationsModel>('AccommodationsModel');
 
+	async getAccommodationDetails(accommodationId: number) {
+		return await http.get<RsResponseData<Api.Accommodation.Res.Details>>('accommodation/details', {
+			accommodationId
+		});
+	}
+
 	async getManyAccommodationDetails(accommodationIds: number[]) {
 		return this.accommodationsModel.getManyAccommodationDetails(accommodationIds);
 	}

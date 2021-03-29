@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
-import './icons/style.css';
+import './icons/siteIcons/style.css';
+import './icons/cmsIcons/style.css';
 
 // The following components need to be added to the top level dom since they are full screen overlays
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
