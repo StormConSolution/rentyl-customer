@@ -1,5 +1,4 @@
 @import '../../themes/themes';
-@import '../../variables.scss';
 
 .rsSignInPage {
 	.rs-page-content-wrapper {
@@ -43,7 +42,7 @@
 					}
 
 					&:focus-within {
-						border-bottom: 1px solid $blue !important;
+						border-bottom: 1px solid theme-var($buttonLinkColor) !important;
 					}
 
 					& .input {

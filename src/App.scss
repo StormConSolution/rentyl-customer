@@ -70,11 +70,15 @@ body {
 	font-size: 16px;
 	height: 40px;
 	padding: 0 10px;
+	box-sizing: border-box;
 	border-radius: 0;
 	border: 1px solid theme-var($greyLineColor);
 	color: theme-var($primaryTextColor) !important;
 	outline: none !important;
 	transition: border-color 300ms;
+	input {
+		height: 100%;
+	}
 	&:focus-within,
 	&:hover {
 		border-color: theme-var($buttonLinkColor) !important;

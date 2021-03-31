@@ -1,0 +1,100 @@
+@import '../../themes/themes';
+.rsAccountPersonalInfoPage {
+	.personalInfoHeader {
+		position: relative;
+		padding: 45px 280px 0;
+		box-sizing: border-box;
+		background-color: theme-var($secondaryBackgroundColor);
+		height: 230px;
+		width: 100%;
+		margin-bottom: 205px;
+		.fakeImg {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 20px;
+			border-radius: 50px;
+			width: 46px;
+			height: 46px;
+			background: linear-gradient(180deg, #775334 0%, #361a0f 100%);
+
+			img {
+				width: 60%;
+				height: 60%;
+				object-fit: contain;
+			}
+		}
+
+		.rsLabel {
+			&.h1 {
+				font-size: 40px;
+				line-height: 45px;
+				&.yellow {
+					color: theme-var($iconAndHighlightTextColor);
+				}
+				&.grey {
+					color: #9b9b9b;
+				}
+			}
+		}
+		.rewardPointsContainer {
+			margin: 0 auto;
+			left: 0;
+			right: 0;
+			bottom: -140px;
+			background-color: theme-var($primaryBackgroundColor);
+			> .rsBox:first-of-type {
+				width: 100%;
+				height: 100%;
+				grid-template-columns: 150px 150px auto;
+				grid-template-rows: 20px 40px 20px;
+
+				.loadingBarContainer {
+					align-self: center;
+					width: 100%;
+					height: 20px;
+					background: theme-var($secondaryBackgroundColor);
+					.loadingBar {
+						position: relative;
+						transition: width 300ms ease;
+						width: 80%;
+						height: 100%;
+						background: theme-var($iconAndHighlightTextColor);
+						clip-path: polygon(0 0, 97% 0, 100% 100%, 0% 100%);
+					}
+				}
+			}
+			.rsLabelLink {
+				.rsLabel {
+					color: theme-var($buttonLinkColor);
+				}
+			}
+			.pointsExpireContainer {
+				display: flex;
+				align-items: center;
+				padding-left: 30px;
+				box-sizing: border-box;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				background: theme-var($secondaryBackgroundColor);
+				width: 100%;
+				height: 30px;
+			}
+		}
+	}
+	.rsLabelInput {
+		margin-top: 20px;
+	}
+
+	.accountNameInput {
+		max-width: 100%;
+		input {
+			width: 100%;
+		}
+	}
+
+	.rsLabelButton {
+		margin-top: 50px;
+	}
+}
