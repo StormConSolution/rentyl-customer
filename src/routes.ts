@@ -5,9 +5,9 @@ import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
+import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
-import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 
 const routes: RouteDetails[] = [
 	{
