@@ -8,6 +8,7 @@
 	.rsCarousel {
 		height: 318px;
 		width: 278px;
+		min-width: 278px;
 		.carouselParent {
 			overflow-x: hidden;
 			max-height: 318px;
@@ -65,7 +66,7 @@
 	}
 	.summaryContent.active {
 		height: 174px;
-		overflow-y: hidden;
+		overflow-y: auto;
 	}
 }
 
