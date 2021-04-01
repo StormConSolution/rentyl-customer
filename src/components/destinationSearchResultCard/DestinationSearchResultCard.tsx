@@ -9,7 +9,7 @@ import DestinationSummaryOverview, {
 } from '../destinationSummaryOverview/DestinationSummaryOverview';
 import LabelLink from '../labelLink/LabelLink';
 import LinkButton from '../linkButton/LinkButton';
-import StarRating, { Rating } from '../starRating/StarRating';
+import { Rating } from '../starRating/StarRating';
 import TabbedDestinationSummary, { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import './DestinationSearchResultCard.scss';
 
@@ -30,7 +30,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 	const size = useWindowResizeChange();
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string, index: number) => {
+		return picturePaths.map((path: string) => {
 			return (
 				<Box className={'imageWrapper'}>
 					<img src={path} alt="" />
@@ -61,7 +61,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 							{props.address}
 						</Label>
 					</div>
-					<StarRating size="small16px" rating={props.starRating} />
+					{/*<StarRating size="small16px" rating={props.starRating} />  we don't have this information in the database yet*/}
 					<DestinationSummaryOverview finePrint="" amenities={getAmenityIcons()} />
 				</div>
 				<div className="buttonHolder">
@@ -89,7 +89,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 						<Label variant="caption">{props.address}</Label>
 					</div>
 					<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
-					<StarRating size="small16px" rating={props.starRating} />
+					{/*<StarRating size="small16px" rating={props.starRating} /> we don't have this information in the database yet*/}
 					<LabelLink
 						className="ratings"
 						label="View ratings >"
