@@ -8,6 +8,11 @@
 		display: grid;
 		grid-template-columns: 80px 130px 93px 58px 115px 110px 126px 90px;
 
+		.rsLabel {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 		div {
 			margin: auto 0;
 		}

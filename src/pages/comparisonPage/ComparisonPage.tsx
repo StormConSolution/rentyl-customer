@@ -40,6 +40,7 @@ const ComparisonPage: React.FC = () => {
 	useEffect(() => {
 		let modifiedComparisonItems: ComparisonCardInfo[] = comparisonService.setDefaultAccommodations(comparisonItems);
 		setComparisonItems(modifiedComparisonItems);
+		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 		setWaitToLoad(false);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 	}, []);

@@ -23,6 +23,18 @@
 			width: 180px;
 			height: 30px;
 			margin-top: 15px;
+
+			.primaryTextColor {
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+		}
+
+		.rsLabel.body2 {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 	}
 }
