@@ -18,12 +18,14 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { formatPhoneNumber } from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
+import rsToasts from '@bit/redsky.framework.toast';
 
 interface AccountPersonalInfoPageProps {}
 
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useState<Api.User.Res.Get>();
+	const [updateUser, setUpdateUser] = useState<Api.User.Req.Update>();
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
 	const [passwordMatch, setPasswordMatch] = useState<boolean>(false);
 	const loginStatus = useLoginState();
@@ -39,7 +41,26 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		console.log(user);
 	}, [user]);
 
-	function saveAccountInfo() {}
+	function updateUserObj(key: 'firstName' | 'lastName' | 'primaryEmail' | 'phone', value: any) {
+		setUpdateUser((prev) => {
+			let createAddressObj: any = { ...prev };
+			createAddressObj[key] = value;
+			return createAddressObj;
+		});
+	}
+
+	async function saveAccountInfo() {
+		if (!user) return;
+		let newUpdatedUserObj: any = { ...updateUser };
+		newUpdatedUserObj.id = user.id;
+		try {
+			let response = await userService.update(newUpdatedUserObj);
+			if (response.data.data) rsToasts.success('Update Successful!!!');
+			setUser(response.data.data);
+		} catch (e) {
+			rsToasts.error(e.message);
+		}
+	}
 
 	function updatePassword() {}
 
@@ -123,9 +144,11 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							title={'Name'}
 							inputType={'text'}
 							onChange={(value) => {
-								console.log('Name', value);
 								if (value === `${user?.firstName} ${user?.lastName}`) setAccountInfoChanged(false);
 								else setAccountInfoChanged(true);
+								let splitValue = value.split(' ');
+								updateUserObj('firstName', splitValue[0]);
+								updateUserObj('lastName', splitValue[1]);
 							}}
 							initialValue={`${user.firstName} ${user.lastName}`}
 						/>
@@ -134,9 +157,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 								title={'Phone'}
 								inputType={'tel'}
 								onChange={(value) => {
-									console.log('tel', value);
 									if (value === user?.phone) setAccountInfoChanged(false);
 									else setAccountInfoChanged(true);
+									updateUserObj('phone', value);
 								}}
 								iconImage={'icon-phone'}
 								iconSize={18}
@@ -148,9 +171,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 								title={'Email'}
 								inputType={'text'}
 								onChange={(value) => {
-									console.log('primaryEmail', value);
 									if (value === user?.primaryEmail) setAccountInfoChanged(false);
 									else setAccountInfoChanged(true);
+									updateUserObj('primaryEmail', value);
 								}}
 								isEmailInput
 								iconImage={'icon-mail'}
@@ -162,7 +185,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							look={accountInfoChanged ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={accountInfoChanged}
+							disabled={!accountInfoChanged}
 							onClick={() => {
 								saveAccountInfo();
 							}}
@@ -198,7 +221,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							look={passwordMatch ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={passwordMatch}
+							disabled={!passwordMatch}
 							onClick={() => {
 								updatePassword();
 							}}
