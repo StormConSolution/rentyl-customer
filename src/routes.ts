@@ -10,6 +10,7 @@ import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDe
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
+import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -62,6 +63,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/account/address',
 		page: AccountAddressPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/payment-methods',
+		page: AccountPaymentMethodsPage,
 		options: {
 			view: 'landingPage'
 		}

@@ -81,10 +81,6 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 		getStates().catch(console.error);
 	}, [countryList]);
 
-	useEffect(() => {
-		console.log(user);
-	}, [user]);
-
 	function renderAddresses() {
 		if (!addressList || !ObjectUtils.isArrayWithData(addressList)) return;
 		return addressList.map((item) => {

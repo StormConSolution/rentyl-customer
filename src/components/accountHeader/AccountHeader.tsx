@@ -46,7 +46,7 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 						className={`tab ${props.selected === 'PAYMENT_METHODS' ? 'selected' : ''}`}
 						label={'Payment Methods'}
 						onClick={() => {
-							router.navigate('/');
+							router.navigate('/account/payment-methods');
 						}}
 					/>
 					<LabelButton
