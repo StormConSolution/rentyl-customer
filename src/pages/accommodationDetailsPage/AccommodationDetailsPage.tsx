@@ -10,7 +10,7 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import LoadingPage from '../loadingPage/LoadingPage';
 import DestinationService from '../../services/destination/destination.service';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import AccommodationInfoCard from '../../components/AccommodationInfoCard/AccommodationInfoCard';
+import AccommodationInfoCard from '../../components/accommodationInfoCard/AccommodationInfoCard';
 import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { useRecoilState } from 'recoil';

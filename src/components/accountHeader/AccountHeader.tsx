@@ -55,7 +55,7 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 						className={`tab ${props.selected === 'NOTIFICATION_PREFERENCES' ? 'selected' : ''}`}
 						label={'Notification Preferences'}
 						onClick={() => {
-							router.navigate('/');
+							router.navigate('/account/notification-preferences');
 						}}
 					/>
 					<LabelButton
