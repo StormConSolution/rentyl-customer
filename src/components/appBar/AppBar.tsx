@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Box from '../box/Box';
 import './AppBar.scss';
 import { Link } from '@bit/redsky.framework.rs.996';
@@ -6,14 +6,16 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 
 const AppBar: React.FC = () => {
+	const appBarRef = useRef<HTMLElement>(null);
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
-	// const user = serviceFactory.get<UserService>('UserService').getCurrentUser();
 	const size = useWindowResizeChange();
+	let scrollDirection = useWindowScrollChange();
 
 	return (
-		<Box className="rsAppBar">
+		<div ref={appBarRef} className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'}`}>
 			<Link path={'/'}>
 				<img src={require('../../images/FullLogo-StandardBlack.png')} alt={'company logo'} width={'111px'} />
 			</Link>
@@ -41,7 +43,7 @@ const AppBar: React.FC = () => {
 					setShowSlideOutMenu(false);
 				}}
 			/>
-		</Box>
+		</div>
 	);
 };
 
