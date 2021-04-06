@@ -46,3 +46,7 @@ export function formatPhoneNumber(phone: string | number) {
 		return cleaned;
 	}
 }
+
+export function validateEmail(mail: string) {
+	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail);
+}

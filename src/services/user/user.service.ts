@@ -64,6 +64,7 @@ export default class UserService extends Service {
 	private async onAfterLogin(user: Api.User.Res.Get) {
 		let axiosConfig = http.currentConfig();
 		axiosConfig.headers = {
+			'company-id': 1,
 			'Content-Type': 'application/json',
 			'Access-Control-Allow-Origin': '*',
 			Accept: 'application/json, text/plain, */*',

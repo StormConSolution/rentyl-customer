@@ -8,6 +8,7 @@ import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
+import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -46,6 +47,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/destination/details',
 		page: DestinationDetailsPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/personal-info',
+		page: AccountPersonalInfoPage,
 		options: {
 			view: 'landingPage'
 		}
