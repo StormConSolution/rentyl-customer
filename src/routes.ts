@@ -9,6 +9,7 @@ import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/Res
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
+import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -54,6 +55,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/account/personal-info',
 		page: AccountPersonalInfoPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/address',
+		page: AccountAddressPage,
 		options: {
 			view: 'landingPage'
 		}

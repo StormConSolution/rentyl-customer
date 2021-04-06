@@ -42,6 +42,7 @@ const ComparisonPage: React.FC = () => {
 		setComparisonItems(modifiedComparisonItems);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 		setWaitToLoad(false);
+		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 	}, []);
 
 	useEffect(() => {

@@ -38,6 +38,10 @@ export default class UserService extends Service {
 		return this.userModel.getCurrentUser();
 	}
 
+	async update(data: Api.User.Req.Update) {
+		return await http.put<RsResponseData<Api.User.Res.Get>>('user', data);
+	}
+
 	subscribeToLoggedIn(callback: (user: Api.User.Res.Get) => void) {
 		this.onLoggedInCallbacks.push(callback);
 	}

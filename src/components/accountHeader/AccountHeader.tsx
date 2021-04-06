@@ -28,7 +28,7 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 						className={`tab ${props.selected === 'PERSONAL_INFO' ? 'selected' : ''}`}
 						label={'Personal Info'}
 						onClick={() => {
-							router.navigate('/');
+							router.navigate('/account/personal-info');
 						}}
 					/>
 					<LabelButton
@@ -37,7 +37,7 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 						className={`tab ${props.selected === 'ADDRESSES' ? 'selected' : ''}`}
 						label={'Addresses'}
 						onClick={() => {
-							router.navigate('/');
+							router.navigate('/account/address');
 						}}
 					/>
 					<LabelButton

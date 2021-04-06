@@ -762,7 +762,7 @@ declare namespace Api {
 			state: string;
 			zip: number;
 			country: string;
-			isDefault: boolean | number;
+			isDefault: boolean | 1 | 0;
 		}
 
 		export interface Filtered {
@@ -783,8 +783,8 @@ declare namespace Api {
 			birthDate: Date | string;
 			lastLoginOn: Date | string;
 			permissionLogin: boolean | number;
-			permission: Permission[] | [];
-			address: Address[] | [];
+			permission: Permission[];
+			address: Address[];
 			lifeTimePoints: number;
 			availablePoints: number;
 			city: string;

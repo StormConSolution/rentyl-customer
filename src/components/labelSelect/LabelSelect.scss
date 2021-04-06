@@ -1,0 +1,15 @@
+@import '../../themes/themes';
+.rsLabelSelect {
+	background-color: inherit;
+	position: relative;
+	.rsLabel {
+		&.caption {
+			margin-bottom: 10px;
+		}
+	}
+
+	.rsSelect {
+		max-width: 200px;
+		margin: 0;
+	}
+}
