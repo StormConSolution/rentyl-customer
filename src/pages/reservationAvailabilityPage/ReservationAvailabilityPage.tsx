@@ -124,6 +124,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (priceMax) dataQuery.priceRangeMax = parseInt(priceMax);
 		return dataQuery;
 	}
+
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setCheckInDate(startDate);
 		setCheckOutDate(endDate);

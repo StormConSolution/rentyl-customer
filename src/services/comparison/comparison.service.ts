@@ -55,6 +55,6 @@ export default class ComparisonService extends Service {
 
 	resortComparisonCardOnClose(item: ComparisonCardInfo, comparisonItems: ComparisonCardInfo[]) {
 		let newRecoilState = [...comparisonItems];
-		return newRecoilState.filter((remove) => remove.destinationId !== item.destinationId);
+		return newRecoilState.filter((remove) => remove !== item);
 	}
 }
