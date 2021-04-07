@@ -1,4 +1,11 @@
 @import 'src/themes/themes';
 
 .rsRedeemableRewardsPage {
+	.rs-page-content-wrapper {
+		background-image: url('../../images/redeemableRewardPage/Kayak.jpg');
+		background-repeat: no-repeat;
+		background-size: 100% 752px;
+		animation: fadeIn 1s;
+		height: 710px;
+	}
 }
