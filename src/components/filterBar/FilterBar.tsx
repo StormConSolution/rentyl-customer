@@ -1,10 +1,10 @@
 import React from 'react';
-import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import moment from 'moment';
 import Box from '../box/Box';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
+import debounce from 'lodash.debounce';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
@@ -13,14 +13,12 @@ export interface FilterBarProps {
 	focusedInput: 'startDate' | 'endDate' | null;
 	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	monthsToShow: number;
-	numberOfAdultsControl: RsFormControl;
-	numberOfAdultsUpdateControl: (updateControl: RsFormControl) => void;
-	numberOfChildrenControl: RsFormControl;
-	numberOfChildrenUpdateControl: (updateControl: RsFormControl) => void;
-	priceMinControl: RsFormControl;
-	priceMinUpdateControl: (updateControl: RsFormControl) => void;
-	priceMaxControl: RsFormControl;
-	priceMaxUpdateControl: (updateControl: RsFormControl) => void;
+	onChangeAdults: (value: any) => void;
+	onChangeChildren: (value: any) => void;
+	onChangePriceMin: (value: any) => void;
+	onChangePriceMax: (value: any) => void;
+	adultsInitialInput?: string;
+	childrenInitialInput?: string;
 	className?: string;
 }
 
@@ -41,31 +39,35 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className="numberOfAdults"
 				inputType="text"
 				title="# of Adults"
-				initialValue={2}
-				control={props.numberOfAdultsControl}
-				updateControl={props.numberOfAdultsUpdateControl}
+				initialValue={props.adultsInitialInput || '2'}
+				onChange={debounce(async (value) => {
+					props.onChangeAdults(value);
+				}, 300)}
 			/>
 			<LabelInput
 				className="numberOfChildren"
 				inputType="text"
 				title="# of Children"
-				initialValue={0}
-				control={props.numberOfChildrenControl}
-				updateControl={props.numberOfChildrenUpdateControl}
+				initialValue={props.childrenInitialInput || '0'}
+				onChange={debounce(async (value) => {
+					props.onChangeChildren(value);
+				}, 300)}
 			/>
 			<LabelInput
 				className="priceMin"
 				inputType="text"
 				title="Price Min"
-				control={props.priceMinControl}
-				updateControl={props.priceMinUpdateControl}
+				onChange={debounce(async (value) => {
+					props.onChangePriceMin(value);
+				}, 300)}
 			/>
 			<LabelInput
 				className="priceMax"
 				inputType="text"
 				title="Price Max"
-				control={props.priceMaxControl}
-				updateControl={props.priceMaxUpdateControl}
+				onChange={debounce(async (value) => {
+					props.onChangePriceMax(value);
+				}, 300)}
 			/>
 		</Box>
 	);
