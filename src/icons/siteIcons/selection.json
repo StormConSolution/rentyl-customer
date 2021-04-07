@@ -4,6 +4,68 @@
 		{
 			"icon": {
 				"paths": [
+					"M215.244 15.649h867.508c108.864 0 197.316 88.452 197.316 197.316v598.751c0 108.864-88.452 197.316-197.316 197.316h-867.508c-108.864 0-197.316-88.452-197.316-197.316v-598.751c-0-108.864 88.452-197.316 197.316-197.316z",
+					"M1082.752 1026.041h-867.508c-119.070 0-214.326-95.256-214.326-214.326v-598.751c0-119.070 95.256-214.326 214.326-214.326h867.508c119.070 0 214.326 95.256 214.326 214.326v598.751c0 119.070-95.256 214.326-214.326 214.326zM215.244 32.659c-98.658 0-180.306 81.648-180.306 180.306v598.751c0 98.658 81.648 180.306 180.306 180.306h867.508c98.658 0 180.306-81.648 180.306-180.306v-598.751c0-98.658-81.648-180.306-180.306-180.306h-867.508z",
+					"M525.778 384.765h-510.299v-34.020h476.279v-149.688l-166.698-74.844 13.608-34.020 187.11 85.050z",
+					"M338.668 932.486l-13.608-30.618 166.698-78.246v-149.688h-476.279v-34.020h510.299v207.522z",
+					"M267.227 367.755h34.020v292.571h-34.020v-292.571z",
+					"M1277.551 384.765h-510.299v-207.522l190.512-85.050 13.608 34.020-170.1 74.844v149.688h476.279z",
+					"M957.763 932.486l-190.512-85.050v-207.522h510.299v34.020h-476.279v149.688l170.1 78.246z",
+					"M995.185 367.755h34.020v292.571h-34.020v-292.571z"
+				],
+				"attrs": [
+					{ "fill": "rgb(222, 222, 222)" },
+					{ "fill": "rgb(255, 255, 255)" },
+					{ "fill": "rgb(255, 255, 255)" },
+					{ "fill": "rgb(255, 255, 255)" },
+					{ "fill": "rgb(255, 255, 255)" },
+					{ "fill": "rgb(255, 255, 255)" },
+					{ "fill": "rgb(255, 255, 255)" },
+					{ "fill": "rgb(255, 255, 255)" }
+				],
+				"width": 1296,
+				"isMulticolor": true,
+				"isMulticolor2": false,
+				"grid": 32,
+				"tags": ["Card Chip"],
+				"colorPermutations": {
+					"22222222212552552551": [
+						{ "f": 0 },
+						{ "f": 1 },
+						{ "f": 1 },
+						{ "f": 1 },
+						{ "f": 1 },
+						{ "f": 1 },
+						{ "f": 1 },
+						{ "f": 1 }
+					]
+				}
+			},
+			"attrs": [
+				{ "fill": "rgb(222, 222, 222)" },
+				{ "fill": "rgb(255, 255, 255)" },
+				{ "fill": "rgb(255, 255, 255)" },
+				{ "fill": "rgb(255, 255, 255)" },
+				{ "fill": "rgb(255, 255, 255)" },
+				{ "fill": "rgb(255, 255, 255)" },
+				{ "fill": "rgb(255, 255, 255)" },
+				{ "fill": "rgb(255, 255, 255)" }
+			],
+			"properties": {
+				"order": 59,
+				"id": 38,
+				"name": "card-chip",
+				"prevSize": 32,
+				"code": 59686,
+				"codes": [59686, 59687, 59688, 59689, 59690, 59691, 59692, 59693]
+			},
+			"setIdx": 0,
+			"setId": 0,
+			"iconIdx": 0
+		},
+		{
+			"icon": {
+				"paths": [
 					"M292.571 0c9.714 0 18.286 8.571 18.286 18.286v841.142c0 6.857-4 13.143-9.714 16l-274.286 146.286c-2.857 1.714-5.714 2.286-8.571 2.286-9.714 0-18.286-8.571-18.286-18.286v-841.142c0-6.857 4-13.143 9.714-16l274.286-146.286c2.857-1.714 5.714-2.286 8.571-2.286zM1005.714 0c9.714 0 18.286 8.571 18.286 18.286v841.142c0 6.857-4 13.143-9.714 16l-274.286 146.286c-2.857 1.714-5.714 2.286-8.571 2.286-9.714 0-18.286-8.571-18.286-18.286v-841.142c0-6.857 4-13.143 9.714-16l274.286-146.286c2.857-1.714 5.714-2.286 8.571-2.286zM365.714 0c2.857 0 5.714 0.571 8 1.714l292.571 146.286c6.286 3.429 10.286 9.714 10.286 16.571v841.142c0 9.714-8.571 18.286-18.286 18.286-2.857 0-5.714-0.571-8-1.714l-292.571-146.286c-6.286-3.429-10.286-9.714-10.286-16.571v-841.142c0-9.714 8.571-18.286 18.286-18.286z"
 				],
 				"attrs": [],
@@ -11,13 +73,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["map-solid"],
-				"colorPermutations": {}
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 57, "id": 37, "name": "map-solid", "prevSize": 32, "code": 59685 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 0
+			"iconIdx": 1
 		},
 		{
 			"icon": {
@@ -31,13 +93,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["wifi"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 53, "id": 36, "name": "wifi1", "prevSize": 32, "code": 59680 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 1
+			"iconIdx": 2
 		},
 		{
 			"icon": {
@@ -49,13 +111,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["laundry"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 54, "id": 35, "name": "laundry", "prevSize": 32, "code": 59681 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 2
+			"iconIdx": 3
 		},
 		{
 			"icon": {
@@ -67,13 +129,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["no-smoking"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 55, "id": 34, "name": "no-smoking", "prevSize": 32, "code": 59682 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 3
+			"iconIdx": 4
 		},
 		{
 			"icon": {
@@ -85,13 +147,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["kitchen"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 56, "id": 33, "name": "kitchen", "prevSize": 32, "code": 59684 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 4
+			"iconIdx": 5
 		},
 		{
 			"icon": {
@@ -103,13 +165,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["chevron-circle-right"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 52, "id": 32, "name": "chevron-circle-right", "prevSize": 32, "code": 59679 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 5
+			"iconIdx": 6
 		},
 		{
 			"icon": {
@@ -121,13 +183,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["wifi"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 51, "id": 31, "name": "wifi", "prevSize": 32, "code": 59678 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 6
+			"iconIdx": 7
 		},
 		{
 			"icon": {
@@ -139,13 +201,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["plus"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 49, "id": 30, "name": "plus", "prevSize": 32, "code": 59677 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 7
+			"iconIdx": 8
 		},
 		{
 			"icon": {
@@ -157,13 +219,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["phone"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 50, "id": 29, "name": "phone", "prevSize": 32, "code": 59676 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 8
+			"iconIdx": 9
 		},
 		{
 			"icon": {
@@ -175,13 +237,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["mail"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 47, "id": 28, "name": "mail", "prevSize": 32, "code": 59675 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 9
+			"iconIdx": 10
 		},
 		{
 			"icon": {
@@ -193,13 +255,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["star"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 45, "id": 27, "name": "star", "prevSize": 32, "code": 59683 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 10
+			"iconIdx": 11
 		},
 		{
 			"icon": {
@@ -221,13 +283,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["piggy-bank"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 12, "id": 26, "name": "piggy-bank", "prevSize": 32, "code": 59648 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 11
+			"iconIdx": 12
 		},
 		{
 			"icon": {
@@ -252,13 +314,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["wine"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 13, "id": 25, "name": "wine", "prevSize": 32, "code": 59649 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 12
+			"iconIdx": 13
 		},
 		{
 			"icon": {
@@ -275,13 +337,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["map"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 14, "id": 24, "name": "map", "prevSize": 32, "code": 59650 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 13
+			"iconIdx": 14
 		},
 		{
 			"icon": {
@@ -313,13 +375,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["hand-shake"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 15, "id": 23, "name": "hand-shake", "prevSize": 32, "code": 59651 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 14
+			"iconIdx": 15
 		},
 		{
 			"icon": {
@@ -337,13 +399,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["tea-cup"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 16, "id": 22, "name": "tea-cup", "prevSize": 32, "code": 59652 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 15
+			"iconIdx": 16
 		},
 		{
 			"icon": {
@@ -361,13 +423,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["social"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 17, "id": 21, "name": "social", "prevSize": 32, "code": 59653 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 16
+			"iconIdx": 17
 		},
 		{
 			"icon": {
@@ -380,13 +442,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["boost"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 46, "id": 20, "name": "boost", "prevSize": 32, "code": 59654 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 17
+			"iconIdx": 18
 		},
 		{
 			"icon": {
@@ -404,13 +466,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["gift"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 19, "id": 19, "name": "gift", "prevSize": 32, "code": 59655 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 18
+			"iconIdx": 19
 		},
 		{
 			"icon": {
@@ -430,13 +492,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["food-plate"],
-				"colorPermutations": { "2002002001204158131": [] }
+				"colorPermutations": { "2002002001204158131": [], "22222222212552552551": [] }
 			},
 			"attrs": [],
 			"properties": { "order": 20, "id": 18, "name": "food-plate", "prevSize": 32, "code": 59656 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 19
+			"iconIdx": 20
 		},
 		{
 			"icon": {
@@ -448,13 +510,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["chevron-down"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 21, "id": 17, "name": "chevron-down", "prevSize": 32, "code": 59657 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 20
+			"iconIdx": 21
 		},
 		{
 			"icon": {
@@ -466,13 +528,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["chevron-left"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 22, "id": 16, "name": "chevron-left", "prevSize": 32, "code": 59658 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 21
+			"iconIdx": 22
 		},
 		{
 			"icon": {
@@ -484,13 +546,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["chevron-right"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 23, "id": 15, "name": "chevron-right", "prevSize": 32, "code": 59659 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 22
+			"iconIdx": 23
 		},
 		{
 			"icon": {
@@ -502,13 +564,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["chevron-up"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 24, "id": 14, "name": "chevron-up", "prevSize": 32, "code": 59660 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 23
+			"iconIdx": 24
 		},
 		{
 			"icon": {
@@ -521,13 +583,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["close"],
-				"colorPermutations": { "2002002001204158131": [{}, {}] }
+				"colorPermutations": { "2002002001204158131": [{}, {}], "22222222212552552551": [{}, {}] }
 			},
 			"attrs": [{}, {}],
 			"properties": { "order": 25, "id": 13, "name": "close", "prevSize": 32, "code": 59661 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 24
+			"iconIdx": 25
 		},
 		{
 			"icon": {
@@ -539,13 +601,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["facebook"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 39, "id": 12, "name": "facebook", "prevSize": 32, "code": 59662 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 25
+			"iconIdx": 26
 		},
 		{
 			"icon": {
@@ -557,13 +619,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["filter"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 27, "id": 11, "name": "filter", "prevSize": 32, "code": 59663 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 26
+			"iconIdx": 27
 		},
 		{
 			"icon": {
@@ -583,13 +645,16 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["game-room"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}] }
+				"colorPermutations": {
+					"2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}, {}, {}, {}, {}]
+				}
 			},
 			"attrs": [{}, {}, {}, {}, {}, {}, {}, {}],
 			"properties": { "order": 28, "id": 10, "name": "game-room", "prevSize": 32, "code": 59664 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 27
+			"iconIdx": 28
 		},
 		{
 			"icon": {
@@ -603,13 +668,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["hamburger-menu"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}] }
+				"colorPermutations": { "2002002001204158131": [{}, {}, {}], "22222222212552552551": [{}, {}, {}] }
 			},
 			"attrs": [{}, {}, {}],
 			"properties": { "order": 29, "id": 9, "name": "hamburger-menu", "prevSize": 32, "code": 59665 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 28
+			"iconIdx": 29
 		},
 		{
 			"icon": {
@@ -627,13 +692,16 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["hot-tub"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}, {}, {}, {}] }
+				"colorPermutations": {
+					"2002002001204158131": [{}, {}, {}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}, {}, {}]
+				}
 			},
 			"attrs": [{}, {}, {}, {}, {}, {}],
 			"properties": { "order": 30, "id": 8, "name": "hot-tub", "prevSize": 32, "code": 59666 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 29
+			"iconIdx": 30
 		},
 		{
 			"icon": {
@@ -645,13 +713,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["instagram"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 31, "id": 7, "name": "instagram", "prevSize": 32, "code": 59667 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 30
+			"iconIdx": 31
 		},
 		{
 			"icon": {
@@ -676,13 +744,16 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["movie-theater"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}] }
+				"colorPermutations": {
+					"2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+				}
 			},
 			"attrs": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 			"properties": { "order": 32, "id": 6, "name": "movie-theater", "prevSize": 32, "code": 59668 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 31
+			"iconIdx": 32
 		},
 		{
 			"icon": {
@@ -698,13 +769,16 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["pool"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}, {}] }
+				"colorPermutations": {
+					"2002002001204158131": [{}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}]
+				}
 			},
 			"attrs": [{}, {}, {}, {}],
 			"properties": { "order": 33, "id": 5, "name": "pool", "prevSize": 32, "code": 59669 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 32
+			"iconIdx": 33
 		},
 		{
 			"icon": {
@@ -720,13 +794,16 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["pool-table"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}, {}] }
+				"colorPermutations": {
+					"2002002001204158131": [{}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}]
+				}
 			},
 			"attrs": [{}, {}, {}, {}],
 			"properties": { "order": 34, "id": 4, "name": "pool-table", "prevSize": 32, "code": 59670 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 33
+			"iconIdx": 34
 		},
 		{
 			"icon": {
@@ -749,13 +826,16 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["spa"],
-				"colorPermutations": { "2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}] }
+				"colorPermutations": {
+					"2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+				}
 			},
 			"attrs": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 			"properties": { "order": 35, "id": 3, "name": "spa", "prevSize": 32, "code": 59671 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 34
+			"iconIdx": 35
 		},
 		{
 			"icon": {
@@ -785,14 +865,15 @@
 				"grid": 32,
 				"tags": ["summer-kitchen"],
 				"colorPermutations": {
-					"2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+					"2002002001204158131": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+					"22222222212552552551": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
 				}
 			},
 			"attrs": [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 			"properties": { "order": 36, "id": 2, "name": "summer-kitchen", "prevSize": 32, "code": 59672 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 35
+			"iconIdx": 36
 		},
 		{
 			"icon": {
@@ -804,13 +885,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["Twitter"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 37, "id": 1, "name": "Twitter", "prevSize": 32, "code": 59673 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 36
+			"iconIdx": 37
 		},
 		{
 			"icon": {
@@ -822,13 +903,13 @@
 				"isMulticolor2": false,
 				"grid": 32,
 				"tags": ["youtube"],
-				"colorPermutations": { "2002002001204158131": [{}] }
+				"colorPermutations": { "2002002001204158131": [{}], "22222222212552552551": [{}] }
 			},
 			"attrs": [{}],
 			"properties": { "order": 38, "id": 0, "name": "youtube", "prevSize": 32, "code": 59674 },
 			"setIdx": 0,
 			"setId": 0,
-			"iconIdx": 37
+			"iconIdx": 38
 		}
 	],
 	"height": 1024,

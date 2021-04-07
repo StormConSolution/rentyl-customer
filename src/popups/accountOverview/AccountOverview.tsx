@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import './AccountOverview.scss';
 import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
@@ -6,6 +7,9 @@ import Box from '../../components/box/Box';
 import { addCommasToNumber } from '../../utils/utils';
 import LabelLink from '../../components/labelLink/LabelLink';
 import Icon from '@bit/redsky.framework.rs.icon';
+import serviceFactory from '../../services/serviceFactory';
+import UserService from '../../services/user/user.service';
+import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 
 interface AccountOverviewProps {
 	isOpen: boolean;
@@ -13,6 +17,13 @@ interface AccountOverviewProps {
 }
 
 const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
+	const userService = serviceFactory.get<UserService>('UserService');
+	const [user, setUser] = useState<Api.User.Res.Get>();
+	const loginStatus = useLoginState();
+
+	useEffect(() => {
+		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
+	}, [loginStatus]);
 	/*
 		This Component needs to have an end point written to get back the correct data. As of right now we are blocked.
 		We need to hook this up to use the user id, once logged in, to go and fetch their upcoming reservation. There is
@@ -24,14 +35,14 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 			<Paper height={'fit-content'} backgroundColor={'#FCFBF8'} padding={'20px 18px 17px'}>
 				<Label variant={'h4'}>Account Overview</Label>
 				<Box display={'flex'} marginBottom={'10px'}>
-					<Label variant={'h2'}>{addCommasToNumber(15202)}</Label>
+					<Label variant={'h2'}>{addCommasToNumber(user?.availablePoints)}</Label>
 					<Label variant={'caption'}>
 						CURRENT
 						<br /> POINTS
 					</Label>
 				</Box>
 				<LabelLink
-					path={'/'}
+					path={`/account/personal-info`}
 					externalLink={false}
 					label={'My Account'}
 					variant={'button'}

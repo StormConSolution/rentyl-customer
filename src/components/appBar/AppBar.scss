@@ -14,6 +14,10 @@
 	box-sizing: border-box;
 	height: 80px;
 	max-width: 1284px;
+	transition: top 300ms;
+	&.hide {
+		top: -80px;
+	}
 
 	.rsIcon {
 		&.icon-hamburger-menu {

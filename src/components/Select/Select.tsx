@@ -19,9 +19,9 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 	const popupRef = useRef<HTMLElement>(null);
 	const optionContainerRef = useRef<HTMLElement>(null);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
-	const [options, setOptions] = useState<SelectOptions[]>([...props.options]);
-	const [selectedValue, setSelectedValue] = useState<number | string | null>(getInitialSelectedData('value'));
-	const [selectedText, setSelectedText] = useState<number | string | null>(getInitialSelectedData('text'));
+	const [options, setOptions] = useState<SelectOptions[]>([]);
+	const [selectedValue, setSelectedValue] = useState<number | string | null>('');
+	const [selectedText, setSelectedText] = useState<number | string | null>('');
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
@@ -36,8 +36,14 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 		};
 	}, []);
 
-	function getInitialSelectedData(type: 'value' | 'text') {
-		return options
+	useEffect(() => {
+		setOptions([...props.options]);
+		setSelectedValue(getInitialSelectedData('value', [...props.options]));
+		setSelectedText(getInitialSelectedData('text', [...props.options]));
+	}, [props.options]);
+
+	function getInitialSelectedData(type: 'value' | 'text', arrayOptions: SelectOptions[]) {
+		return arrayOptions
 			.filter((item) => {
 				return item.selected;
 			})
@@ -50,7 +56,7 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 		return options.map((item, index) => {
 			return (
 				<SelectOption
-					key={index}
+					key={item.value}
 					value={item.value}
 					text={item.text}
 					onSelect={(value, text) => {

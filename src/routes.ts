@@ -9,6 +9,10 @@ import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/Res
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
 import RedeemableRewardsPage from './pages/redeemableRewardsPage/RedeemableRewardsPage';
+import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
+import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
+import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
+import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 
 const routes: RouteDetails[] = [
 	{
@@ -51,6 +55,34 @@ const routes: RouteDetails[] = [
 	{
 		path: '/destination/details',
 		page: DestinationDetailsPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/personal-info',
+		page: AccountPersonalInfoPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/address',
+		page: AccountAddressPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/payment-methods',
+		page: AccountPaymentMethodsPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account/notification-preferences',
+		page: AccountNotificationPreferences,
 		options: {
 			view: 'landingPage'
 		}

@@ -1,0 +1,30 @@
+@import '../../themes/themes';
+
+.rsAccountAddressPage {
+	.rsLabel {
+		&.h2 {
+			margin-bottom: 25px;
+		}
+	}
+	.rsAccountAddressTile {
+		margin-left: 80px;
+		margin-bottom: 20px;
+	}
+
+	.rsLabelInput,
+	.rsLabelSelect,
+	.rsLabelCheckbox {
+		margin-bottom: 20px;
+		&.inputStretched {
+			input {
+				min-width: 100%;
+			}
+		}
+	}
+
+	.rsLabelSelect {
+		.rsSelect {
+			max-width: 191px;
+		}
+	}
+}

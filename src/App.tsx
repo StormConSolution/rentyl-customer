@@ -46,18 +46,16 @@ function App() {
 				);
 			case LoginStatus.LOGGED_IN:
 				return (
-					<div className="loggedInView">
-						<Box>
-							<AppBar />
-							<View key="landingPage" id="landingPage" default initialPath="/" />
-							<AccountOverview
-								isOpen={showAccountOverview}
-								onToggle={() => {
-									setShowAccountOverview(!showAccountOverview);
-								}}
-							/>
-						</Box>
-					</div>
+					<>
+						<AppBar />
+						<View key="landingPage" id="landingPage" default initialPath="/" />
+						<AccountOverview
+							isOpen={showAccountOverview}
+							onToggle={() => {
+								setShowAccountOverview(!showAccountOverview);
+							}}
+						/>
+					</>
 				);
 		}
 	}
@@ -66,13 +64,14 @@ function App() {
 		<div className={`App ${size}`}>
 			<AppBar />
 			<View key="landingPage" id="landingPage" default initialPath="/" />
-			<AccountOverview
-				isOpen={showAccountOverview}
-				onToggle={() => {
-					setShowAccountOverview(!showAccountOverview);
-				}}
-			/>
-			{/*{renderViewsBasedOnLoginStatus()}*/}
+			{loginStatus === LoginStatus.LOGGED_IN && (
+				<AccountOverview
+					isOpen={showAccountOverview}
+					onToggle={() => {
+						setShowAccountOverview(!showAccountOverview);
+					}}
+				/>
+			)}
 			<ComparisonDrawer />
 			{popupController.instance}
 			{rsToasts.instance}
