@@ -33,16 +33,6 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 		<>
 			<div ref={popupRef} className={props.isOpened ? `rsNavDrawer opened` : 'rsNavDrawer'}>
 				<Icon iconImg={'icon-close'} onClick={props.onClose} size={21} color={'#ffffff'} cursorPointer />
-				{/*<Button*/}
-				{/*	className={'signOutBtn'}*/}
-				{/*	look={'containedPrimary'}*/}
-				{/*	onClick={() => {*/}
-				{/*		localStorage.clear();*/}
-				{/*		window.location.assign('/signin');*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	Sign In*/}
-				{/*</Button>*/}
 				<Box
 					display={'flex'}
 					alignItems={'center'}
