@@ -3,6 +3,8 @@ import './RedeemableRewardsPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelLinkImage from '../../components/labelLinkImage/LabelLinkImage';
+import { SelectOptions } from '../../components/Select/Select';
+import CheckboxList from '../../components/checkboxList/CheckboxList';
 
 const RedeemableRewardsPage: React.FC = () => {
 	const [featuredCategory, setFeaturedCategory] = useState<{ imgPath: string; name: string; localPath: string }[]>();
@@ -28,16 +30,16 @@ const RedeemableRewardsPage: React.FC = () => {
 		{ id: 9, text: 'Merchandise', imgPath: '../../images/redeemableRewardPage/perfume.jpg' }
 	];
 
-	const hardCategorySelectList = [
-		{ id: 1, text: 'Popular Items', selected: false },
-		{ id: 2, text: 'Electronics', selected: false },
-		{ id: 3, text: 'Travel Accessories', selected: false },
-		{ id: 4, text: 'Lyft Credit', selected: false },
-		{ id: 5, text: 'Merchandise', selected: false },
-		{ id: 6, text: 'Merchandise', selected: false },
-		{ id: 7, text: 'Merchandise', selected: false },
-		{ id: 8, text: 'Merchandise', selected: false },
-		{ id: 9, text: 'Merchandise', selected: false }
+	const hardCategorySelectList: SelectOptions[] = [
+		{ value: 1, text: 'Popular Items', selected: false },
+		{ value: 2, text: 'Electronics', selected: false },
+		{ value: 3, text: 'Travel Accessories', selected: false },
+		{ value: 4, text: 'Lyft Credit', selected: false },
+		{ value: 5, text: 'Merchandise', selected: false },
+		{ value: 6, text: 'Merchandise', selected: false },
+		{ value: 7, text: 'Merchandise', selected: false },
+		{ value: 8, text: 'Merchandise', selected: false },
+		{ value: 9, text: 'Merchandise', selected: false }
 	];
 
 	function renderFeaturedCategory() {
@@ -64,7 +66,10 @@ const RedeemableRewardsPage: React.FC = () => {
 					<div className={'pageWrapper'}>
 						<div className={'querySideBar'}>
 							<Label variant={'h4'}>Reward Categories</Label>
-							renderCategoryList();
+							<CheckboxList
+								onChange={(value) => console.log('RedeemableRewardsPage value', value)}
+								options={hardCategorySelectList}
+							/>
 						</div>
 						<div className={'pagedCategoryTiles'}></div>
 					</div>
