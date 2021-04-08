@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './NavDrawer.scss';
 import Icon from '@bit/redsky.framework.rs.icon';
-import Button from '@bit/redsky.framework.rs.button';
 import { useEffect, useRef, useState } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../../components/labelLink/LabelLink';
