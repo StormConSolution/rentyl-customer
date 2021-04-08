@@ -28,6 +28,18 @@ const RedeemableRewardsPage: React.FC = () => {
 		{ id: 9, text: 'Merchandise', imgPath: '../../images/redeemableRewardPage/perfume.jpg' }
 	];
 
+	const hardCategorySelectList = [
+		{ id: 1, text: 'Popular Items', selected: false },
+		{ id: 2, text: 'Electronics', selected: false },
+		{ id: 3, text: 'Travel Accessories', selected: false },
+		{ id: 4, text: 'Lyft Credit', selected: false },
+		{ id: 5, text: 'Merchandise', selected: false },
+		{ id: 6, text: 'Merchandise', selected: false },
+		{ id: 7, text: 'Merchandise', selected: false },
+		{ id: 8, text: 'Merchandise', selected: false },
+		{ id: 9, text: 'Merchandise', selected: false }
+	];
+
 	function renderFeaturedCategory() {
 		return hardFeatureCategory.map((category, index) => {
 			return (
