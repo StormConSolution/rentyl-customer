@@ -1,11 +1,37 @@
 @import 'src/themes/themes';
 
 .rsRedeemableRewardsPage {
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
+
 	.rs-page-content-wrapper {
-		background-image: url('../../images/redeemableRewardPage/Kayak.jpg');
-		background-repeat: no-repeat;
-		background-size: 100% 752px;
-		animation: fadeIn 1s;
-		height: 710px;
+		.heroImgTextFeatured {
+			position: relative;
+			box-sizing: border-box;
+			background-image: url('../../images/redeemableRewardPage/Kayak2x.jpg');
+			background-repeat: no-repeat;
+			background-size: 100% auto;
+			background-position-y: -245px;
+			animation: fadeIn 1s;
+			height: 300px;
+			margin-bottom: 135px;
+
+			.pageTitle {
+				padding-top: 130px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.featuredCategories {
+				display: flex;
+				justify-content: center;
+				padding-top: 60px;
+
+				.rsLabelLinkImage {
+					margin: 0 12px;
+				}
+			}
+		}
 	}
 }

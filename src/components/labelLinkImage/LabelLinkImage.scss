@@ -1,0 +1,25 @@
+@import 'src/themes/themes';
+
+.rsLabelLinkImage {
+	background-repeat: no-repeat;
+
+	.textLinkDiv {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		height: 100%;
+		color: #ffffff;
+
+		.labelText {
+			padding-left: 15px;
+			padding-bottom: 5px;
+		}
+		.linkText {
+			padding-bottom: 20px;
+			padding-left: 15px;
+		}
+		.rsLabel {
+			color: #ffffff;
+		}
+	}
+}
