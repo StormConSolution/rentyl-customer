@@ -53,6 +53,9 @@ function App() {
 							onToggle={() => {
 								setShowAccountOverview(!showAccountOverview);
 							}}
+							onClose={() => {
+								setShowAccountOverview(false);
+							}}
 						/>
 					</>
 				);
@@ -68,6 +71,9 @@ function App() {
 					isOpen={showAccountOverview}
 					onToggle={() => {
 						setShowAccountOverview(!showAccountOverview);
+					}}
+					onClose={() => {
+						setShowAccountOverview(false);
 					}}
 				/>
 			)}
