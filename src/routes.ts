@@ -12,6 +12,7 @@ import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPers
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
+import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -46,6 +47,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/compare',
 		page: ComparisonPage
+	},
+	{
+		path: '/booking',
+		page: BookingFlowPage,
+		options: {
+			view: 'landingPage'
+		}
 	},
 	{
 		path: '/destination/details',

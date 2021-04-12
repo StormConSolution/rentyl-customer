@@ -1,0 +1,9 @@
+@import '../../themes/themes';
+
+.rsBookingFlowPage {
+	.packagesAccordion {
+		background-color: theme-var($primaryBackgroundColor);
+		box-shadow: theme-var($primaryBoxShadowColor);
+		width: 80%;
+	}
+}

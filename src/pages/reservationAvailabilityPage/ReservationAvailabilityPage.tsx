@@ -26,12 +26,17 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
+import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
+import LoginOrCreateAccountPopup, {
+	LoginOrCreateAccountPopupProps
+} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import AccommodationFeatures = Model.AccommodationFeatures;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	const loginStatus = useLoginState();
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
@@ -145,7 +150,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					picturePaths={urls}
 					starRating={4.5}
 					reviewPath={''}
-					destinationDetailsPath={`/destination?di=${destination.id}`}
+					destinationDetailsPath={`/destination/details?di=${destination.id}`}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
 						comparisonService.addToComparison(recoilComparisonState, {
@@ -183,9 +188,22 @@ const ReservationAvailabilityPage: React.FC = () => {
 					accommodationType: 'Suites',
 					accommodations: accommodationsList,
 					onDetailsClick: (accommodationId) => {
-						router.navigate(`/accommodation?ai=${accommodationId}`).catch(console.error);
+						router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
 					},
-					onBookNowClick: (accommodationId) => {},
+					onBookNowClick: (accommodationId) => {
+						let data: any = getDataForSearchQuery();
+						data.accommodationId = accommodationId;
+						delete data.pagination;
+						data = JSON.stringify(data);
+
+						if (loginStatus === LoginStatus.LOGGED_OUT || loginStatus === LoginStatus.UNKNOWN) {
+							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+								query: data
+							});
+						} else {
+							router.navigate(`/booking?data=${data}`).catch(console.error);
+						}
+					},
 					onAddCompareClick: (accommodationId) => {
 						let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
 						comparisonService.addToComparison(recoilComparisonState, {
