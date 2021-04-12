@@ -7,8 +7,6 @@ import Label from '@bit/redsky.framework.rs.label';
 import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
-import debounce from 'lodash.debounce';
-import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
 import Box from '../../components/box/Box';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
@@ -39,59 +37,22 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const loginStatus = useLoginState();
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
-	const [page, setPage] = useState<number>(1);
-	const [perPage] = useState<number>(5);
-	const [availabilityTotal, setAvailability] = useState<number>(32);
-	const [checkInDate, setCheckInDate] = useState<moment.Moment | null>(moment());
-	const [checkOutDate, setCheckOutDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
+	const [availabilityTotal, setAvailability] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
-	const [numberOfAdults, setNumberOfAdults] = useState<string>('2');
-	const [numberOfAdultsControl] = useState<RsFormControl>(new RsFormControl('numberOfAdults', numberOfAdults));
-	const updateNumberOfAdults = debounce(async (input: RsFormControl) => {
-		let newNumber = parseInt(input.value.toString());
-		if (isNaN(newNumber) || newNumber < 1) newNumber = 1;
-		setNumberOfAdults(newNumber.toString());
-		(document.querySelector('.numberOfAdults > input') as HTMLInputElement).value = newNumber.toString();
-	}, 1000);
-	const [numberOfChildren, setNumberOfChildren] = useState<string>('0');
-	const [numberOfChildrenControl] = useState<RsFormControl>(new RsFormControl('numberOfChildren', numberOfChildren));
-	const updateNumberOfChildren = debounce(async (input: RsFormControl) => {
-		let newNumber = parseInt(input.value.toString());
-		if (isNaN(newNumber) || newNumber < 1) newNumber = 0;
-		setNumberOfChildren(newNumber.toString());
-		(document.querySelector('.numberOfChildren > input') as HTMLInputElement).value = newNumber.toString();
-	}, 1000);
-	const [priceMin, setPriceMin] = useState<string>('');
-	const [priceMinControl] = useState<RsFormControl>(new RsFormControl('priceMin', priceMin));
-	const updatePriceMin = debounce(async (input: RsFormControl) => {
-		setPriceMin(input.value.toString());
-		let formattedNum = addCommasToNumber(('' + input.value).replace(/\D/g, ''));
-		if (size === 'small') {
-			(document.querySelector(
-				'.rsFilterReservationPopup .priceMin > input'
-			) as HTMLInputElement).value = formattedNum;
-		}
-		(document.querySelector('.priceMin > input') as HTMLInputElement).value = formattedNum;
-	}, 1000);
-	const [priceMax, setPriceMax] = useState<string>('');
-	const [priceMaxControl] = useState<RsFormControl>(new RsFormControl('priceMax', priceMax));
-	const updatePriceMax = debounce(async (input: RsFormControl) => {
-		setPriceMax(input.value.toString());
-		let formattedNum = addCommasToNumber(('' + input.value).replace(/\D/g, ''));
-		if (size === 'small') {
-			(document.querySelector(
-				'.rsFilterReservationPopup .priceMax > input'
-			) as HTMLInputElement).value = formattedNum;
-		}
-		(document.querySelector('.priceMax > input') as HTMLInputElement).value = formattedNum;
-	}, 1000);
+	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
+		startDate: moment().format('YYYY-MM-DD'),
+		endDate: moment().add(1, 'day').format('YYYY-MM-DD'),
+		adults: 2,
+		children: 0,
+		pagination: { page: 1, perPage: 5 }
+	});
 
 	useEffect(() => {
 		async function getReservations() {
-			let data: Api.Destination.Req.Availability = getDataForSearchQuery();
+			console.log('searchQueryObj', searchQueryObj);
 			try {
-				let res = await destinationService.searchAvailableReservations(data);
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
 				if (res.data.data) setAvailability(res.data.data.length);
 			} catch (e) {
@@ -100,39 +61,57 @@ const ReservationAvailabilityPage: React.FC = () => {
 			setWaitToLoad(false);
 		}
 		getReservations().catch(console.error);
-	}, [checkInDate, checkOutDate, numberOfAdults, numberOfChildren, priceMin, priceMax, page]);
+	}, [searchQueryObj]);
 
-	function getDataForSearchQuery() {
-		let startDate: string;
-		let endDate: string;
-		if (checkInDate) {
-			startDate = checkInDate.format('YYYY-MM-DD');
+	function updateSearchQueryObj(
+		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
+		value: any
+	) {
+		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
+		setSearchQueryObj((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			createSearchQueryObj[key] = value;
+			return createSearchQueryObj;
+		});
+	}
+
+	function formatDateForServer(date: moment.Moment | null, startOrEnd: 'start' | 'end'): string {
+		if (date) {
+			return date.format('YYYY-MM-DD');
 		} else {
-			startDate = moment().format('YYYY-MM-DD');
+			if (startOrEnd === 'end') return moment().add(1, 'day').format('YYYY-MM-DD');
+			else return moment().format('YYYY-MM-DD');
 		}
-		if (checkOutDate) {
-			endDate = checkOutDate.format('YYYY-MM-DD');
-		} else {
-			endDate = moment().add(1, 'day').format('YYYY-MM-DD');
-		}
-		let dataQuery: Api.Destination.Req.Availability = {
-			startDate: startDate,
-			endDate: endDate,
-			adults: parseInt(numberOfAdults),
-			children: parseInt(numberOfChildren),
-			pagination: {
-				page: page,
-				perPage: perPage
+	}
+	function popupSearch(
+		checkinDate: moment.Moment | null,
+		checkoutDate: moment.Moment | null,
+		adults: string,
+		children: string,
+		priceRangeMin: string,
+		priceRangeMax: string
+	) {
+		setSearchQueryObj((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			createSearchQueryObj['startDate'] = formatDateForServer(checkinDate, 'start');
+			createSearchQueryObj['endDate'] = formatDateForServer(checkoutDate, 'end');
+			createSearchQueryObj['adults'] = parseInt(adults);
+			if (children !== '') {
+				createSearchQueryObj['children'] = parseInt(children);
 			}
-		};
-		if (priceMin) dataQuery.priceRangeMin = parseInt(priceMin);
-		if (priceMax) dataQuery.priceRangeMax = parseInt(priceMax);
-		return dataQuery;
+			if (priceRangeMax !== '') {
+				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
+			}
+			if (priceRangeMax !== '') {
+				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			}
+			return createSearchQueryObj;
+		});
 	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		setCheckInDate(startDate);
-		setCheckOutDate(endDate);
+		updateSearchQueryObj('startDate', formatDateForServer(startDate, 'start'));
+		updateSearchQueryObj('endDate', formatDateForServer(endDate, 'end'));
 	}
 
 	function renderDestinationSearchResultCards() {
@@ -271,20 +250,32 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 					<FilterBar
 						className={'filterBar'}
-						startDate={checkInDate}
-						endDate={checkOutDate}
+						startDate={moment(searchQueryObj.startDate)}
+						endDate={moment(searchQueryObj.endDate)}
 						onDatesChange={onDatesChange}
 						focusedInput={focusedInput}
 						onFocusChange={setFocusedInput}
 						monthsToShow={2}
-						numberOfAdultsControl={numberOfAdultsControl}
-						numberOfAdultsUpdateControl={(updateControl) => updateNumberOfAdults(updateControl)}
-						numberOfChildrenControl={numberOfChildrenControl}
-						numberOfChildrenUpdateControl={(updateControl) => updateNumberOfChildren(updateControl)}
-						priceMinControl={priceMinControl}
-						priceMinUpdateControl={(updateControl) => updatePriceMin(updateControl)}
-						priceMaxControl={priceMaxControl}
-						priceMaxUpdateControl={(updateControl) => updatePriceMax(updateControl)}
+						onChangeAdults={(value) => {
+							updateSearchQueryObj('adults', parseInt(value));
+						}}
+						onChangeChildren={(value) => {
+							updateSearchQueryObj('children', parseInt(value));
+						}}
+						onChangePriceMin={(value) => {
+							updateSearchQueryObj('priceRangeMin', value);
+							(document.querySelector('.priceMin > input') as HTMLInputElement).value = addCommasToNumber(
+								('' + value).replace(/\D/g, '')
+							);
+						}}
+						onChangePriceMax={(value) => {
+							updateSearchQueryObj('priceRangeMax', value);
+							(document.querySelector('.priceMax > input') as HTMLInputElement).value = addCommasToNumber(
+								('' + value).replace(/\D/g, '')
+							);
+						}}
+						adultsInitialInput={searchQueryObj.adults.toString()}
+						childrenInitialInput={searchQueryObj.children.toString()}
 					/>
 					<IconLabel
 						className={'moreFiltersLink'}
@@ -295,18 +286,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (startDate, endDate) => {
-									setCheckInDate(startDate);
-									setCheckOutDate(endDate);
+								onClickApply: (startDate, endDate, adults, children, priceRangeMin, priceRangeMax) => {
+									popupSearch(startDate, endDate, adults, children, priceRangeMin, priceRangeMax);
 								},
-								numberOfAdultsControl: numberOfAdultsControl,
-								numberOfAdultsUpdateControl: (updateControl) => updateNumberOfAdults(updateControl),
-								numberOfChildrenControl: numberOfChildrenControl,
-								numberOfChildrenUpdateControl: (updateControl) => updateNumberOfChildren(updateControl),
-								priceMinControl: priceMinControl,
-								priceMinUpdateControl: (updateControl) => updatePriceMin(updateControl),
-								priceMaxControl: priceMaxControl,
-								priceMaxUpdateControl: (updateControl) => updatePriceMax(updateControl),
 								className: 'filterPopup'
 							});
 						}}
@@ -323,9 +305,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				</Box>
 				<div className={'paginationDiv'}>
 					<PaginationButtons
-						selectedRowsPerPage={perPage}
-						currentPageNumber={page}
-						setSelectedPage={(page) => setPage(page)}
+						selectedRowsPerPage={searchQueryObj.pagination.perPage}
+						currentPageNumber={searchQueryObj.pagination.page}
+						setSelectedPage={(page) => updateSearchQueryObj('pagination', { page: page, perPage: 5 })}
 						total={availabilityTotal}
 					/>
 				</div>

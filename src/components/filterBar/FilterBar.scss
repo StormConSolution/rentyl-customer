@@ -21,7 +21,7 @@
 	}
 
 	display: grid;
-	grid-template-columns: 206px 93px 93px 130px 130px auto repeat(3, min-content);
+	grid-template-columns: 206px 93px 115px 130px 130px auto repeat(3, min-content);
 	column-gap: 20px;
 	> div {
 		align-self: end;
