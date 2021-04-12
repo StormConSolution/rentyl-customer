@@ -1091,10 +1091,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bit/redsky.framework.rs.996@^0.0.26":
-  version "0.0.26"
-  resolved "https://node.bit.dev/redsky.framework.rs.996/-/redsky.framework.rs.996-0.0.26.tgz#0bfb223c77691ee91395ff2c6902621966d7acf7"
-  integrity sha1-C/siPHdpHukTlf8saQJiGWbXrPc=
+"@bit/redsky.framework.rs.996@^0.0.28":
+  version "0.0.28"
+  resolved "https://node.bit.dev/redsky.framework.rs.996/-/redsky.framework.rs.996-0.0.28.tgz#a1b5d740cc69cf815888e797d0e1bc5234c5375f"
+  integrity sha1-obXXQMxpz4FYiOeX0OG8UjTFN18=
   dependencies:
     react "^16.12.0"
 
@@ -1175,10 +1175,10 @@
     lodash.clone "4.5.0"
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.label@^0.0.9":
-  version "0.0.9"
-  resolved "https://node.bit.dev/redsky.framework.rs.label/-/redsky.framework.rs.label-0.0.9.tgz#bb14df3574162b81575d42e36a199d6dc75c3697"
-  integrity sha1-uxTfNXQWK4FXXULjahmdbcdcNpc=
+"@bit/redsky.framework.rs.label@^0.0.11":
+  version "0.0.11"
+  resolved "https://node.bit.dev/redsky.framework.rs.label/-/redsky.framework.rs.label-0.0.11.tgz#b93fc58b485bab0d0d3badec1ca672fe2b5fb5f4"
+  integrity sha1-uT/Fi0hbqw0NO63sHKZy/itftfQ=
   dependencies:
     react "^16.12.0"
 

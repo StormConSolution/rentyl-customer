@@ -164,7 +164,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 					onDetailsClick: (accommodationId) => {
 						router.navigate(`/accommodation?ai=${accommodationId}`).catch(console.error);
 					},
-					onBookNowClick: (accommodationId) => {},
+					onBookNowClick: (accommodationId) => {
+						alert('I was clicked');
+					},
 					onAddCompareClick: (accommodationId) => {
 						let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
 						comparisonService.addToComparison(recoilComparisonState, {
