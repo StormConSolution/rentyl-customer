@@ -36,7 +36,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
 	const [perPage] = useState<number>(5);
-	const [availabilityTotal, setAvailability] = useState<number>(32);
+	const [availabilityTotal, setAvailability] = useState<number>(0);
 	const [checkInDate, setCheckInDate] = useState<moment.Moment | null>(moment());
 	const [checkOutDate, setCheckOutDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);

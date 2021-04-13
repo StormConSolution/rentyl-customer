@@ -37,6 +37,99 @@
 	}
 
 	.pageWrapper {
-		height: 2000px;
+		display: flex;
+		margin: 50px 140px;
+
+		.querySideBar {
+			width: 240px;
+			margin-right: 50px;
+			margin-top: 36px;
+
+			.queryTitle {
+				padding-bottom: 10px;
+				border-bottom: 2px solid theme-var($greyLineColor);
+			}
+			.resortTitle {
+				margin-top: 30px;
+				margin-bottom: 8px;
+			}
+
+			.radioButtonContainer {
+				margin-left: 5px;
+			}
+
+			.seeAllDestinations {
+				margin-top: 10px;
+				cursor: pointer;
+			}
+
+			.pointCostFilters {
+				margin-top: 30px;
+
+				.minMaxContainer {
+					display: flex;
+
+					:nth-child(2) {
+						margin-left: 3px;
+					}
+				}
+				.rsInput {
+					width: 112px;
+				}
+			}
+
+			.minMaxContainer {
+				margin-top: 30px;
+			}
+
+			.filterButtonContainer {
+				margin-top: 30px;
+			}
+		}
+
+		.pagedCategoryCards {
+			width: 865px;
+
+			.rightSideHeaderContainer {
+				display: flex;
+				padding-bottom: 10px;
+				border-bottom: 2px solid theme-var($greyLineColor);
+				justify-content: space-between;
+
+				.categoriesTitle {
+					display: flex;
+					align-items: flex-end;
+				}
+
+				.availablePendingPointsContainer {
+					display: flex;
+					align-content: flex-end;
+					.availablePointsNumber {
+						color: theme-var($iconAndHighlightTextColor);
+					}
+
+					.pendingPointsNumber {
+						color: theme-var($disableTextColor);
+					}
+					.pendingPointsContainer {
+						margin-left: 40px;
+					}
+				}
+			}
+		}
+
+		.cardContainer {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+
+			.rsRewardCategoryCard {
+				margin-top: 40px;
+			}
+		}
+
+		.paginationContainer {
+			margin-top: 50px;
+		}
 	}
 }
