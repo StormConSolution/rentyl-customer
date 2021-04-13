@@ -170,7 +170,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
 					},
 					onBookNowClick: (accommodationId) => {
-						let data: any = getDataForSearchQuery();
+						let data: any = { ...searchQueryObj };
 						data.accommodationId = accommodationId;
 						delete data.pagination;
 						data = JSON.stringify(data);

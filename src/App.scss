@@ -20,18 +20,18 @@ body {
 	height: 100%;
 	background-color: #ffffff;
 	color: theme-var($primaryTextColor);
+	overflow: visible;
 	.rs-page {
 		background-color: inherit;
 		color: inherit;
 		position: relative;
-		overflow-y: hidden;
+		overflow-y: visible;
 		.rs-page-content-wrapper {
 			position: relative;
 			background-color: inherit;
 			color: inherit;
 			margin: 0 auto;
 			max-width: 1440px;
-			overflow-x: hidden;
 		}
 	}
 }

@@ -4,6 +4,27 @@
 	.packagesAccordion {
 		background-color: theme-var($primaryBackgroundColor);
 		box-shadow: theme-var($primaryBoxShadowColor);
-		width: 80%;
+		width: 50%;
+	}
+
+	.cartDisplay {
+		position: sticky;
+		height: fit-content;
+		background: theme-var($primaryBackgroundColor);
+		top: 80px;
+		.rsAccordion {
+			margin-bottom: 10px;
+			.articleItemHeader {
+				padding: 0;
+			}
+		}
+	}
+
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 20px 0;
 	}
 }
