@@ -7,26 +7,29 @@ import Paper from '../../components/paper/Paper';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import LabelInput from '../../components/labelInput/LabelInput';
 import moment from 'moment';
-import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import { useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
+import { addCommasToNumber } from '../../utils/utils';
 
 export interface FilterReservationPopupProps extends PopupProps {
-	numberOfAdultsControl: RsFormControl;
-	numberOfAdultsUpdateControl: (updateControl: RsFormControl) => void;
-	numberOfChildrenControl: RsFormControl;
-	numberOfChildrenUpdateControl: (updateControl: RsFormControl) => void;
-	priceMinControl: RsFormControl;
-	priceMinUpdateControl: (updateControl: RsFormControl) => void;
-	priceMaxControl: RsFormControl;
-	priceMaxUpdateControl: (updateControl: RsFormControl) => void;
-	onClickApply: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
+	onClickApply: (
+		startDate: moment.Moment | null,
+		endDate: moment.Moment | null,
+		adults: string,
+		children: string,
+		priceRangeMin: string,
+		priceRangeMax: string
+	) => void;
 	className?: string;
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
 	const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
 	const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
+	const [adults, setAdults] = useState<string>('2');
+	const [children, setChildren] = useState<string>('');
+	const [priceRangeMin, setPriceRangeMin] = useState<string>('');
+	const [priceRangeMax, setPriceRangeMax] = useState<string>('');
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setStartDate(startDate);
@@ -35,7 +38,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
-				<Paper className={'paperWrapper'} height={'430px'} width={'335px'} backgroundColor={'#fcfbf8'}>
+				<Paper className={'paperWrapper'} height={'430px'} width={'330px'} backgroundColor={'#fcfbf8'}>
 					<Label className={'filtersLabel'} variant={'h2'}>
 						Filters
 					</Label>
@@ -55,15 +58,13 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								className="numberOfAdults"
 								inputType="text"
 								title="# of Adults"
-								control={props.numberOfAdultsControl}
-								updateControl={props.numberOfAdultsUpdateControl}
+								onChange={(value) => setAdults(value)}
 							/>
 							<LabelInput
 								className="numberOfChildren"
 								inputType="text"
 								title="# of Children"
-								control={props.numberOfChildrenControl}
-								updateControl={props.numberOfChildrenUpdateControl}
+								onChange={(value) => setChildren(value)}
 							/>
 						</div>
 						<div className={'minMaxDiv'}>
@@ -71,15 +72,23 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								className="priceMin"
 								inputType="text"
 								title="Price Min"
-								control={props.priceMinControl}
-								updateControl={props.priceMinUpdateControl}
+								onChange={(value) => {
+									setPriceRangeMin(value);
+									(document.querySelector(
+										'.rsFilterReservationPopup .priceMin > input'
+									) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+								}}
 							/>
 							<LabelInput
 								className="priceMax"
 								inputType="text"
 								title="Price Max"
-								control={props.priceMaxControl}
-								updateControl={props.priceMaxUpdateControl}
+								onChange={(value) => {
+									setPriceRangeMax(value);
+									(document.querySelector(
+										'.rsFilterReservationPopup .priceMax > input'
+									) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+								}}
 							/>
 						</div>
 						<div className={'buttons'}>
@@ -96,7 +105,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								variant={'button'}
 								label={'Apply'}
 								onClick={() => {
-									props.onClickApply(startDate, endDate);
+									props.onClickApply(
+										startDate,
+										endDate,
+										adults,
+										children,
+										priceRangeMin,
+										priceRangeMax
+									);
 									popupController.close(FilterReservationPopup);
 								}}
 							/>

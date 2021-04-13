@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './AccountOverview.scss';
 import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
@@ -14,16 +14,29 @@ import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 interface AccountOverviewProps {
 	isOpen: boolean;
 	onToggle: () => void;
+	onClose: () => void;
 }
 
 const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	const popupRef = useRef<HTMLElement>(null);
 	const [user, setUser] = useState<Api.User.Res.Get>();
 	const loginStatus = useLoginState();
 
 	useEffect(() => {
 		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
+		function handleClickOutside(event: any) {
+			if (popupRef && popupRef.current && !popupRef.current.contains(event.target)) {
+				document.getElementsByTagName('body')[0].style.overflow = '';
+				props.onClose();
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
 	}, [loginStatus]);
+
 	/*
 		This Component needs to have an end point written to get back the correct data. As of right now we are blocked.
 		We need to hook this up to use the user id, once logged in, to go and fetch their upcoming reservation. There is
@@ -31,7 +44,7 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 	*/
 
 	return (
-		<div className={`rsAccountOverview ${props.isOpen ? 'opened' : ''}`}>
+		<div ref={popupRef} className={`rsAccountOverview ${props.isOpen ? 'opened' : ''}`}>
 			<Paper height={'fit-content'} backgroundColor={'#FCFBF8'} padding={'20px 18px 17px'}>
 				<Label variant={'h4'}>Account Overview</Label>
 				<Box display={'flex'} marginBottom={'10px'}>

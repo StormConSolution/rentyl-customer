@@ -9,7 +9,6 @@ import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 import rsToasts from '@bit/redsky.framework.toast';
 import useLoginState, { LoginStatus } from './customHooks/useLoginState';
 import CustomToast from './components/customToast/CustomToast';
-import Box from './components/box/Box';
 import AppBar from './components/appBar/AppBar';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -54,6 +53,9 @@ function App() {
 							onToggle={() => {
 								setShowAccountOverview(!showAccountOverview);
 							}}
+							onClose={() => {
+								setShowAccountOverview(false);
+							}}
 						/>
 					</>
 				);
@@ -69,6 +71,9 @@ function App() {
 					isOpen={showAccountOverview}
 					onToggle={() => {
 						setShowAccountOverview(!showAccountOverview);
+					}}
+					onClose={() => {
+						setShowAccountOverview(false);
 					}}
 				/>
 			)}
