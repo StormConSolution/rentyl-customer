@@ -1,0 +1,133 @@
+@import 'src/themes/themes';
+
+.rsRedeemableRewardsPage {
+	width: 100%;
+	height: 100%;
+
+	.rs-page-content-wrapper {
+		.heroImgTextFeatured {
+			position: relative;
+			box-sizing: border-box;
+			background-image: url('../../images/redeemableRewardPage/Kayak2x.jpg');
+			background-repeat: no-repeat;
+			background-size: 100% auto;
+			background-position-y: -245px;
+			animation: fadeIn 1s;
+			height: 300px;
+			margin-bottom: 135px;
+
+			.pageTitle {
+				padding-top: 130px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.featuredCategories {
+				display: flex;
+				justify-content: center;
+				padding-top: 60px;
+
+				.rsLabelLinkImage {
+					margin: 0 12px;
+				}
+			}
+		}
+	}
+
+	.pageWrapper {
+		display: flex;
+		margin: 50px 140px;
+
+		.querySideBar {
+			width: 240px;
+			margin-right: 50px;
+			margin-top: 36px;
+
+			.queryTitle {
+				padding-bottom: 10px;
+				border-bottom: 2px solid theme-var($greyLineColor);
+			}
+			.resortTitle {
+				margin-top: 30px;
+				margin-bottom: 8px;
+			}
+
+			.radioButtonContainer {
+				margin-left: 5px;
+			}
+
+			.seeAllDestinations {
+				margin-top: 10px;
+				cursor: pointer;
+			}
+
+			.pointCostFilters {
+				margin-top: 30px;
+
+				.minMaxContainer {
+					display: flex;
+
+					:nth-child(2) {
+						margin-left: 3px;
+					}
+				}
+				.rsInput {
+					width: 112px;
+				}
+			}
+
+			.minMaxContainer {
+				margin-top: 30px;
+			}
+
+			.filterButtonContainer {
+				margin-top: 30px;
+			}
+		}
+
+		.pagedCategoryCards {
+			width: 865px;
+
+			.rightSideHeaderContainer {
+				display: flex;
+				padding-bottom: 10px;
+				border-bottom: 2px solid theme-var($greyLineColor);
+				justify-content: space-between;
+
+				.categoriesTitle {
+					display: flex;
+					align-items: flex-end;
+				}
+
+				.availablePendingPointsContainer {
+					display: flex;
+					align-content: flex-end;
+					.availablePointsNumber {
+						color: theme-var($iconAndHighlightTextColor);
+					}
+
+					.pendingPointsNumber {
+						color: theme-var($disableTextColor);
+					}
+					.pendingPointsContainer {
+						margin-left: 40px;
+					}
+				}
+			}
+		}
+
+		.cardContainer {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+
+			.rsRewardCategoryCard {
+				margin-top: 40px;
+			}
+		}
+
+		.paginationContainer {
+			margin-top: 50px;
+		}
+	}
+}

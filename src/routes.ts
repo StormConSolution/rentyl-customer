@@ -8,6 +8,7 @@ import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
+import RedeemableRewardsPage from './pages/redeemableRewardsPage/RedeemableRewardsPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
@@ -46,6 +47,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/compare',
 		page: ComparisonPage
+	},
+	{
+		path: '/rewards',
+		page: RedeemableRewardsPage
 	},
 	{
 		path: '/destination/details',

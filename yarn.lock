@@ -1197,10 +1197,10 @@
     "@bit/redsky.framework.rs.icon" "0.0.37"
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.switch@^0.0.9":
-  version "0.0.9"
-  resolved "https://node.bit.dev/redsky.framework.rs.switch/-/redsky.framework.rs.switch-0.0.9.tgz#06b62b35549e3bb7d00cb46b1cadb833ac9a1268"
-  integrity sha1-BrYrNVSeO7fQDLRrHK24M6yaEmg=
+"@bit/redsky.framework.rs.switch@^0.0.10":
+  version "0.0.10"
+  resolved "https://node.bit.dev/redsky.framework.rs.switch/-/redsky.framework.rs.switch-0.0.10.tgz#ed8c297d2e82f1828aeb20498b0db5f5d9d53008"
+  integrity sha1-7YwpfS6C8YKK6yBJiw219dnVMAg=
   dependencies:
     react "^16.12.0"
 

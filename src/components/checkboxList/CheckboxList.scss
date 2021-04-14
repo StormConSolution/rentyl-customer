@@ -1,0 +1,9 @@
+@import 'src/themes/themes';
+
+.rsCheckboxList {
+	.seeAll {
+		color: theme-var($buttonLinkColor);
+		margin-top: 8px;
+		cursor: pointer;
+	}
+}
