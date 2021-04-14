@@ -97,7 +97,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 	}
 
 	return (
-		<div className={`rsSelectList ${props.className || ''}`}>
+		<div className={`rsCheckboxList ${props.className || ''}`}>
 			{renderSelectOptions()}
 			{renderSeeAllIcon()}
 		</div>
