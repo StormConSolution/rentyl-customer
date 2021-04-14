@@ -49,6 +49,11 @@
 				padding-bottom: 10px;
 				border-bottom: 2px solid theme-var($greyLineColor);
 			}
+
+			.resortAndPointFilters {
+				display: none;
+			}
+
 			.resortTitle {
 				margin-top: 30px;
 				margin-bottom: 8px;
@@ -113,6 +118,14 @@
 					}
 					.pendingPointsContainer {
 						margin-left: 40px;
+					}
+				}
+
+				.signinButtonContainer {
+					display: flex;
+
+					.signupButton {
+						margin-left: 10px;
 					}
 				}
 			}
