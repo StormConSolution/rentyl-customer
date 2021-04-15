@@ -1,0 +1,26 @@
+@import '../../../themes/themes';
+
+.rsContactInfoAndPaymentCard {
+	background-color: theme-var($primaryBackgroundColor);
+	.contactInfo {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+	}
+	.rsLabelInput {
+		.rsInput {
+			&.textarea {
+				max-width: 100%;
+				width: 100%;
+				height: 150px;
+				padding: 10px;
+			}
+		}
+	}
+
+	.creditCardExpInput {
+		input {
+			text-align: center;
+		}
+	}
+}

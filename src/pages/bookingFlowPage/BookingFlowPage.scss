@@ -1,23 +1,9 @@
 @import '../../themes/themes';
 
 .rsBookingFlowPage {
-	.packagesAccordion {
-		background-color: theme-var($primaryBackgroundColor);
-		box-shadow: theme-var($primaryBoxShadowColor);
-		width: 50%;
-	}
-
-	.cartDisplay {
+	.rsBookingCartTotalsCard {
 		position: sticky;
-		height: fit-content;
-		background: theme-var($primaryBackgroundColor);
-		top: 80px;
-		.rsAccordion {
-			margin-bottom: 10px;
-			.articleItemHeader {
-				padding: 0;
-			}
-		}
+		top: 20px;
 	}
 
 	hr {
@@ -26,5 +12,30 @@
 		background: theme-var($greyLineColor);
 		border: none;
 		margin: 20px 0;
+	}
+
+	.colOne {
+		.packagesAccordion {
+			background-color: theme-var($primaryBackgroundColor);
+			box-shadow: theme-var($primaryBoxShadowColor);
+			margin-bottom: 20px;
+			.rsDestinationPackageTile {
+				margin: 10px 0;
+			}
+		}
+
+		.rsContactInfoAndPaymentCard {
+			margin-bottom: 20px;
+		}
+
+		.acknowledgementSection {
+			.rsLabelCheckbox {
+				padding: 0;
+			}
+		}
+
+		.completeBookingBtn {
+			margin: 20px auto 120px;
+		}
 	}
 }
