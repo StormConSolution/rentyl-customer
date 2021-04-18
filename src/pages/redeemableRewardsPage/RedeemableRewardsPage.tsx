@@ -43,6 +43,10 @@ const RedeemableRewardsPage: React.FC = () => {
 	const [rewardCardTotal, setRewardCardTotal] = useState<number>(12);
 
 	useEffect(() => {
+		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
+	}, []);
+
+	useEffect(() => {
 		async function getAllCategories() {
 			try {
 				let data = await rewardService.getAllForRedeemableRewardsPage();
@@ -56,10 +60,6 @@ const RedeemableRewardsPage: React.FC = () => {
 			}
 		}
 		getAllCategories().catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
 	}, []);
 
 	function buildFilterQuery(): FilterQuery {
@@ -119,6 +119,7 @@ const RedeemableRewardsPage: React.FC = () => {
 	}
 
 	function renderPointsOrLoginButton() {
+		console.log('user', loginStatus);
 		if (user) {
 			return (
 				<div className={'availablePendingPointsContainer'}>
