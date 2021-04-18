@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './RedeemableRewardsPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelLinkImage from '../../components/labelLinkImage/LabelLinkImage';
+import FeaturedCategoryCard from '../../components/featureCategoryCard/FeaturedCategoryCard';
 import { SelectOptions } from '../../components/Select/Select';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -13,79 +13,109 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
-import router from '../../utils/router';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
+import LabelLink from '../../components/labelLink/LabelLink';
+import RewardService from '../../services/reward/reward.service';
+import LoadingPage from '../loadingPage/LoadingPage';
+import RewardItemCard from '../../components/rewardItemCard/RewardItemCard';
+import FilterQueryValue = RedSky.FilterQueryValue;
+import FilterQuery = RedSky.FilterQuery;
+import FeaturedCategory = Model.FeaturedCategory;
 
 const RedeemableRewardsPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	const rewardService = serviceFactory.get<RewardService>('RewardService');
+	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [user, setUser] = useState<Api.User.Res.Get>();
 	const loginStatus = useLoginState();
-	const [featuredCategory, setFeaturedCategory] = useState<{ imgPath: string; name: string; localPath: string }[]>();
+	const [showCategoryCards, setShowCategoryCards] = useState<boolean>(true);
+	const [featuredCategory, setFeaturedCategory] = useState<FeaturedCategory[]>();
+	const [categoryList, setCategoryList] = useState<Api.Reward.Category.Res.Get[]>([]);
 	const [selectedCategoryIds, setSelectedCategoryIds] = useState<(string | number)[]>([]);
+	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
 	const [selectedDestinationIds, setSelectedDestinationIds] = useState<(string | number)[]>([]);
+	const [destinationSelectList, setDestinationSelectList] = useState<SelectOptions[]>([]);
+	const [rewardList, setRewardList] = useState<Api.Reward.Res.Get[]>([]);
+	const [pointCostMin, setPointCostMin] = useState<number>();
+	const [pointCostMax, setPointCostMax] = useState<number>();
 	const [page, setPage] = useState<number>(1);
 	const perPage = 9;
-	const [categoryTotal, setCategory] = useState<number>(12);
+	const [rewardCardTotal, setRewardCardTotal] = useState<number>(12);
 
-	// this info will come from database
-	const hardFeatureCategory = [
-		{ imagePath: '../../images/redeemableRewardPage/manicure.jpg', name: 'Check out other perks', localPath: '/' },
-		{
-			imagePath: '../../images/redeemableRewardPage/glassBuilding.jpg',
-			name: 'Use points for resort stays',
-			localPath: '/'
-		},
-		{ imagePath: '../../images/redeemableRewardPage/house.jpg', name: 'Buy a house with points', localPath: '/' }
-	];
-	const hardCategoryList = [
-		{ value: 1, title: 'Popular Items', imgPath: '../../images/redeemableRewardPage/poolDrink.jpg' },
-		{ value: 2, title: 'Electronics', imgPath: '../../images/redeemableRewardPage/electronics.jpg' },
-		{ value: 3, title: 'Travel Accessories', imgPath: '../../images/redeemableRewardPage/luggage.jpg' },
-		{ value: 4, title: 'Lyft Credit', imgPath: '../../images/redeemableRewardPage/rideService.jpg' },
-		{ value: 5, title: 'Merchandise', imgPath: '../../images/redeemableRewardPage/watches.jpg' },
-		{ value: 6, title: 'Merchandise1', imgPath: '../../images/redeemableRewardPage/bags.jpg' },
-		{ value: 7, title: 'Merchandise2', imgPath: '../../images/redeemableRewardPage/suitCoat.jpg' },
-		{ value: 8, title: 'Merchandise3', imgPath: '../../images/redeemableRewardPage/earbuds.jpg' },
-		{ value: 9, title: 'Merchandise4', imgPath: '../../images/redeemableRewardPage/perfume.jpg' },
-		{ value: 10, title: 'Merchandise5', imgPath: '../../images/redeemableRewardPage/perfume.jpg' },
-		{ value: 11, title: 'Merchandise6', imgPath: '../../images/redeemableRewardPage/perfume.jpg' },
-		{ value: 12, title: 'Merchandise7', imgPath: '../../images/redeemableRewardPage/perfume.jpg' }
-	];
-	const [hardCategorySelectList, setHardCategorySelectList] = useState<SelectOptions[]>([
-		{ value: 1, text: 'Popular Items', selected: false },
-		{ value: 2, text: 'Electronics', selected: false },
-		{ value: 3, text: 'Travel Accessories', selected: false },
-		{ value: 4, text: 'Lyft Credit', selected: false },
-		{ value: 5, text: 'Merchandise', selected: false },
-		{ value: 6, text: 'Merchandise', selected: false },
-		{ value: 7, text: 'Merchandise', selected: false },
-		{ value: 8, text: 'Merchandise', selected: false },
-		{ value: 9, text: 'Merchandise', selected: false },
-		{ value: 9, text: 'Merchandise', selected: false }
-	]);
-	const [hardDestinationList, setHardDestinationList] = useState<SelectOptions[]>([
-		{ value: 'd1', text: 'Resort1', selected: false },
-		{ value: 'd2', text: 'Resort2', selected: false },
-		{ value: 'a3', text: 'Resort3', selected: false },
-		{ value: 'd4', text: 'Resort4', selected: false },
-		{ value: 'a5', text: 'Resort5', selected: false },
-		{ value: 'a6', text: 'Resort6', selected: false },
-		{ value: 'd7', text: 'Resort7', selected: false },
-		{ value: 'a8', text: 'Resort8', selected: false }
-	]);
+	useEffect(() => {
+		async function getAllCategories() {
+			try {
+				let data = await rewardService.getAllForRedeemableRewardsPage();
+				setCategorySelectList(data.selectCategories);
+				setCategoryList(data.allCategories);
+				setFeaturedCategory(data.featuredCategories);
+				setDestinationSelectList(data.destinationSelect);
+				setWaitToLoad(false);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		getAllCategories().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
-	}, [loginStatus]);
+	}, []);
 
-	function applyFilters() {
-		if (!ObjectUtils.isArrayWithData(selectedCategoryIds)) {
-			rsToasts.error('please select at least one category.');
-			return;
+	function buildFilterQuery(): FilterQuery {
+		if (!ObjectUtils.isArrayWithData(selectedDestinationIds)) return { matchType: 'like', searchTerm: [] };
+		let filter: FilterQueryValue[] = [];
+		let isFirst: boolean = true;
+		for (let destination of selectedDestinationIds) {
+			const aOrD = destination.toString().slice(0, 1);
+			const vendorId: number = parseInt(destination.toString().slice(1));
+			if (isFirst) {
+				filter.push({
+					column: aOrD === 'd' ? 'destinationId' : 'affiliateId',
+					value: vendorId,
+					matchType: 'exact'
+				});
+				isFirst = false;
+			} else {
+				filter.push({
+					column: aOrD === 'd' ? 'destinationId' : 'affiliateId',
+					value: vendorId,
+					conjunction: 'OR',
+					matchType: 'exact'
+				});
+			}
 		}
+		return { matchType: 'exact', searchTerm: filter };
+	}
+
+	async function getRedeemableRewards() {
+		let data: Api.Reward.Req.Paged = {
+			categories: selectedCategoryIds as number[],
+			pagination: { page: page, perPage: perPage }
+		};
+		if (selectedDestinationIds) {
+			data.filter = buildFilterQuery();
+		}
+		if (pointCostMin) data.pointCostMin = pointCostMin;
+		if (pointCostMax) data.pointCostMax = pointCostMax;
+		try {
+			let res = await rewardService.getPagedRewards(data);
+			// console.log('res', res.data);
+			setShowCategoryCards(false);
+			setRewardList(res.data.data);
+		} catch (e) {
+			console.log(e.message);
+		}
+	}
+
+	function applyFilters(newFilters: SelectOptions[]) {
+		if (!ObjectUtils.isArrayWithData(selectedCategoryIds) && !ObjectUtils.isArrayWithData(newFilters)) {
+			rsToasts.error('please select at least one category.');
+			return false;
+		}
+		setShowCategoryCards(false);
 		document.querySelector<HTMLElement>('.resortAndPointFilters')!.style.display = 'block';
-		console.log('selected Category Ids', selectedCategoryIds);
-		// todo call the endpoint for the reward
+		getRedeemableRewards().catch(console.error);
 	}
 
 	function renderPointsOrLoginButton() {
@@ -108,52 +138,87 @@ const RedeemableRewardsPage: React.FC = () => {
 			);
 		} else {
 			return (
-				<div className={'signinButtonContainer'}>
-					<LabelButton
-						look={'containedSecondary'}
-						variant={'button'}
-						label={'Sign In'}
-						onClick={() => router.navigate('/signin')}
-					/>
-					<LabelButton
-						className={'signupButton'}
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Sign Up'}
-						onClick={() => router.navigate('/signup')}
-					/>
+				<div className={'signinContainer'}>
+					<LabelLink className={'signinLink'} path={'/signin'} label={'Sign in'} variant={'body1'} />
+					<Label variant={'body1'}>&nbsp;to redeem your points.</Label>
 				</div>
 			);
 		}
 	}
 
+	function getPrimaryRewardImg(medias: Model.Media[]): string {
+		if (!ObjectUtils.isArrayWithData(medias)) return '';
+		let primary = medias.find((item) => item.isPrimary);
+		if (primary) return primary.urls.small;
+		else return medias[0].urls.small;
+	}
+
 	function renderCards() {
-		return hardCategoryList.map((category, index) => {
+		console.log('renderCards showCategoryCards', showCategoryCards);
+		if (showCategoryCards) {
+			return categoryList.map((category, index) => {
+				return (
+					<RewardCategoryCard
+						key={index}
+						value={category.id}
+						title={category.name}
+						imgPath={category.media[0].urls.small}
+					/>
+				);
+			});
+		}
+		// console.log('renderCards function rewardList', rewardList);
+		if (!ObjectUtils.isArrayWithData(rewardList)) return;
+		return rewardList.map((reward, index) => {
+			let primaryImg = getPrimaryRewardImg(reward.media);
 			return (
-				<RewardCategoryCard
+				<RewardItemCard
 					key={index}
-					value={category.value}
-					title={category.title}
-					imgPath={category.imgPath}
+					imgPath={primaryImg}
+					title={reward.name}
+					points={reward.pointCost}
+					description={reward.description}
+					rewardId={reward.id}
 				/>
 			);
 		});
+	}
+
+	function renderRewardCards(categoryId: number | string) {
+		setSelectedCategoryIds(selectedCategoryIds.concat([categoryId]));
+		let selectedCategories = [...categorySelectList];
+		selectedCategories = selectedCategories.map((category) => {
+			if (category.value === categoryId) {
+				return { value: category.value, text: category.text, selected: true };
+			}
+			return category;
+		});
+		setCategorySelectList(selectedCategories);
+		applyFilters(selectedCategories);
 	}
 
 	function renderFeaturedCategory() {
-		return hardFeatureCategory.map((category, index) => {
+		if (!featuredCategory) return;
+		return featuredCategory.map((category, index) => {
 			return (
-				<LabelLinkImage
+				<FeaturedCategoryCard
 					key={index}
-					mainImg={category.imagePath}
-					textOnImg={category.name}
-					linkPath={category.localPath}
+					category={{
+						categoryId: category.categoryId,
+						imagePath: category.imagePath,
+						name: category.name
+					}}
+					onClick={(categoryId) => {
+						renderRewardCards(categoryId);
+					}}
 				/>
 			);
 		});
 	}
 
-	return (
+	return waitToLoad ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsRedeemableRewardsPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<div className={'heroImgTextFeatured'}>
@@ -161,7 +226,10 @@ const RedeemableRewardsPage: React.FC = () => {
 						Redeem Your Points
 					</Label>
 					<div className={'featuredCategories'}>{renderFeaturedCategory()}</div>
-					<div className={'pageWrapper'}>
+					<Box
+						className={'pageWrapper'}
+						padding={ObjectUtils.isArrayWithData(featuredCategory) ? ' 50px 140px' : '120px 140px 50px'}
+					>
 						<div className={'querySideBar'}>
 							<div className={'rewardCategoryCheckboxList'}>
 								<Label className={'queryTitle'} variant={'h4'}>
@@ -170,10 +238,11 @@ const RedeemableRewardsPage: React.FC = () => {
 								<CheckboxList
 									onChange={(value, options) => {
 										setSelectedCategoryIds(value);
-										setHardCategorySelectList(options);
+										setCategorySelectList(options);
 									}}
-									options={hardCategorySelectList}
+									options={categorySelectList}
 									name={'categories'}
+									className={'categoryCheckboxList'}
 								/>
 							</div>
 							<div className={'resortAndPointFilters'}>
@@ -184,9 +253,9 @@ const RedeemableRewardsPage: React.FC = () => {
 									<CheckboxList
 										onChange={(value, options) => {
 											setSelectedDestinationIds(value);
-											setHardDestinationList(options);
+											setDestinationSelectList(options);
 										}}
-										options={hardDestinationList}
+										options={destinationSelectList}
 										name={'resorts'}
 									/>
 								</div>
@@ -195,8 +264,16 @@ const RedeemableRewardsPage: React.FC = () => {
 										Point Cost
 									</Label>
 									<div className={'minMaxContainer'}>
-										<LabelInput title={'MIN'} inputType={'text'} />
-										<LabelInput title={'MAX'} inputType={'text'} />
+										<LabelInput
+											title={'MIN'}
+											inputType={'text'}
+											onChange={(value) => setPointCostMin(value)}
+										/>
+										<LabelInput
+											title={'MAX'}
+											inputType={'text'}
+											onChange={(value) => setPointCostMax(value)}
+										/>
 									</div>
 								</div>
 							</div>
@@ -205,11 +282,11 @@ const RedeemableRewardsPage: React.FC = () => {
 									look={'containedPrimary'}
 									variant={'button'}
 									label={'Apply Filters'}
-									onClick={() => applyFilters()}
+									onClick={() => applyFilters([])}
 								/>
 							</div>
 						</div>
-						<div className={'pagedCategoryCards'}>
+						<Box className={'pagedCategoryCards'} marginTop={user ? 0 : 35}>
 							<div className={'rightSideHeaderContainer'}>
 								<Label className={'categoriesTitle'} variant={'h4'}>
 									Categories
@@ -222,11 +299,11 @@ const RedeemableRewardsPage: React.FC = () => {
 									selectedRowsPerPage={perPage}
 									currentPageNumber={page}
 									setSelectedPage={(page) => setPage(page)}
-									total={categoryTotal}
+									total={rewardCardTotal}
 								/>
 							</div>
-						</div>
-					</div>
+						</Box>
+					</Box>
 				</div>
 			</div>
 		</Page>

@@ -33,6 +33,9 @@ export default class RewardService extends Service {
 	async getAllCategories(): Promise<Api.Reward.Category.Res.Get[]> {
 		return this.rewardModel.getAllCategories();
 	}
+	async getPagedRewards(data: Api.Reward.Req.Paged) {
+		return this.rewardModel.getRedeemableRewards(data);
+	}
 
 	async getAllVendorsInSelectFormat() {
 		return this.rewardModel.getVendorsInSelectFormat();
@@ -41,6 +44,9 @@ export default class RewardService extends Service {
 		return this.rewardModel.getAllVendors();
 	}
 
+	async getAllForRedeemableRewardsPage() {
+		return this.rewardModel.getAllForRedeemableRewardsPage();
+	}
 	async getAllVouchers(
 		page: number,
 		perPage: number,

@@ -49,7 +49,7 @@ const routes: RouteDetails[] = [
 		page: ComparisonPage
 	},
 	{
-		path: '/rewards',
+		path: '/reward',
 		page: RedeemableRewardsPage
 	},
 	{

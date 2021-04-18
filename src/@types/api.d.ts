@@ -677,6 +677,11 @@ declare namespace Api {
 				id?: number;
 				ids?: number[];
 			}
+			export interface Paged extends RedSky.PageQuery {
+				pointCostMin?: number;
+				pointCostMax?: number;
+				categories?: number[];
+			}
 			export interface Create {
 				name: string;
 				pointCost: number;
@@ -696,13 +701,6 @@ declare namespace Api {
 			export interface Delete {
 				id: number;
 			}
-			export interface RedeemableRewards {
-				categoryIds: (number | string)[];
-				affiliateIds?: number[];
-				destinationIds?: number[];
-				pointCostMin?: number;
-				pointCostMax?: number;
-			}
 		}
 		export namespace Res {
 			export interface Get {
@@ -718,16 +716,12 @@ declare namespace Api {
 				createdOn: Date | string;
 				modifiedOn: Date | string;
 				vendorName: string;
-				media: Omit<Model.Media, 'storageDetails'>[];
+				media: Media[];
 				categoryIds: number[];
 			}
 			export interface Create extends Omit<Get, 'modifiedOn'> {}
 			export interface Update extends Get {}
-			export interface RedeemableRewards extends Get {
-				voucherIds: string[];
-			}
 		}
-
 		export namespace Voucher {
 			export namespace Req {
 				export interface Create {
@@ -767,7 +761,7 @@ declare namespace Api {
 			}
 			export namespace Res {
 				export interface Get extends Omit<Model.RewardCategory, 'companyId'> {
-					media: MediaDetails[];
+					media: Media[];
 				}
 				export interface Create extends Get {}
 				export interface Update extends Get {}

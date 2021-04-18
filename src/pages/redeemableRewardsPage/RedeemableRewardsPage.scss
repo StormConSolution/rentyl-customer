@@ -27,7 +27,7 @@
 				justify-content: center;
 				padding-top: 60px;
 
-				.rsLabelLinkImage {
+				.rsFeaturedCategoryCard {
 					margin: 0 12px;
 				}
 			}
@@ -36,7 +36,7 @@
 
 	.pageWrapper {
 		display: flex;
-		margin: 50px 140px;
+		padding: 50px 140px;
 
 		.querySideBar {
 			width: 240px;
@@ -119,11 +119,12 @@
 					}
 				}
 
-				.signinButtonContainer {
+				.signinContainer {
 					display: flex;
-
-					.signupButton {
-						margin-left: 10px;
+					.signinLink {
+						.rsLabel {
+							color: theme-var($buttonLinkColor) !important;
+						}
 					}
 				}
 			}

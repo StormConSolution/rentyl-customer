@@ -3,37 +3,40 @@ import './RewardItemCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import IconLabel from '../iconLabel/IconLabel';
 import router from '../../utils/router';
+import { ObjectUtils } from '@bit/redsky.framework.rs.http/dist/Utils';
+import { addCommasToNumber, capitalize } from '../../utils/utils';
 
 interface RewardItemCardProps {
 	imgPath: string;
 	title: string;
-	points: number;
+	points: number | string;
 	description: string;
 	rewardId: number | string;
 	className?: string;
 }
 
 const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
-	function renderStyles() {
-		let styles: any = {
-			backgroundImage: `url(${props.imgPath})`,
-			height: '250px',
-			width: '278px'
-		};
-		return styles;
-	}
-
 	return (
 		<div className={`rsRewardItemCard ${props.className || ''}`}>
-			<div className={'itemImgContainer'} style={renderStyles()} />
-			<Label variant={'h3'}>{props.title}</Label>
-			<Label variant={'h5'}>{props.points} Points</Label>
-			<Label variant={'subtitle1'}>{props.description}</Label>
+			<div className={'imageContainer'}>
+				<img className={'rewardImg'} src={props.imgPath} alt={'rewardImage'} height={'250px'} width={'278px'} />
+			</div>
+			<Label className={'rewardName'} variant={'h2'}>
+				{capitalize(props.title)}
+			</Label>
+			<Label className={'rewardPoints'} variant={'h3'}>
+				{addCommasToNumber(props.points as number)} Points
+			</Label>
+			<Label className={'rewardDescription'} variant={'body1'}>
+				{props.description}
+			</Label>
 			<IconLabel
+				className={'rewardDetails'}
 				labelName={'View Details'}
 				iconImg={'icon-chevron-right'}
 				iconPosition={'right'}
 				iconSize={7}
+				labelVariant={'caption'}
 				onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}`)}
 			/>
 		</div>
