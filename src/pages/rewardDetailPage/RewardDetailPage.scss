@@ -6,33 +6,6 @@
 		margin: 0 140px;
 	}
 
-	.headerBar {
-		min-height: 50px;
-		margin: 0 140px;
-		border-bottom: 1px solid theme-var($greyLineColor);
-		display: flex;
-		justify-content: space-between;
-
-		.rsIconLabel {
-			cursor: pointer;
-		}
-		.rsIconLabel.left .label {
-			color: theme-var($buttonLinkColor);
-		}
-		.rsIconLabel.left .icon {
-			color: theme-var($buttonLinkColor);
-		}
-		.headerTitle {
-			margin-top: 24px;
-			margin-bottom: 5px;
-		}
-		.headerBarRight {
-			display: flex;
-			align-items: flex-end;
-			margin-bottom: 5px;
-		}
-	}
-
 	.rewardDetails {
 		padding-bottom: 140px;
 		padding-top: 45px;

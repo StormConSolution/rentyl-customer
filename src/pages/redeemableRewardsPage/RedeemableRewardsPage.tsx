@@ -10,7 +10,6 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from '../../components/rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
@@ -18,18 +17,19 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import RewardItemCard from '../../components/rewardItemCard/RewardItemCard';
+import router from '../../utils/router';
+
 import FilterQueryValue = RedSky.FilterQueryValue;
 import FilterQuery = RedSky.FilterQuery;
-import FeaturedCategory = Model.FeaturedCategory;
 
 const RedeemableRewardsPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	let user = userService.getCurrentUser();
+
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
-	const [user, setUser] = useState<Api.User.Res.Get>();
-	const loginStatus = useLoginState();
 	const [showCategoryCards, setShowCategoryCards] = useState<boolean>(true);
-	const [featuredCategory, setFeaturedCategory] = useState<FeaturedCategory[]>();
+	const [featuredCategory, setFeaturedCategory] = useState<Model.FeaturedCategory[]>();
 	const [categoryList, setCategoryList] = useState<Api.Reward.Category.Res.Get[]>([]);
 	const [selectedCategoryIds, setSelectedCategoryIds] = useState<(string | number)[]>([]);
 	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
@@ -42,14 +42,26 @@ const RedeemableRewardsPage: React.FC = () => {
 	const perPage = 9;
 	const [rewardCardTotal, setRewardCardTotal] = useState<number>(12);
 
-	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
-	}, []);
+	const params = router.getPageUrlParams<{ categories: string }>([
+		{ key: 'cids', default: 0, type: 'string', alias: 'categories' }
+	]);
 
 	useEffect(() => {
 		async function getAllCategories() {
 			try {
+				let urlSelectedCategories: number[] = [];
+				try {
+					if (params.categories) urlSelectedCategories = JSON.parse(params.categories);
+				} catch (e) {}
+
 				let data = await rewardService.getAllForRedeemableRewardsPage();
+				data.selectCategories = data.selectCategories.map((category) => {
+					return {
+						value: category.value,
+						selected: urlSelectedCategories.includes(Number(category.value)),
+						text: category.text
+					};
+				});
 				setCategorySelectList(data.selectCategories);
 				setCategoryList(data.allCategories);
 				setFeaturedCategory(data.featuredCategories);
@@ -104,7 +116,7 @@ const RedeemableRewardsPage: React.FC = () => {
 			setShowCategoryCards(false);
 			setRewardList(res.data.data);
 		} catch (e) {
-			console.log(e.message);
+			console.error(e.message);
 		}
 	}
 
@@ -126,7 +138,7 @@ const RedeemableRewardsPage: React.FC = () => {
 	}
 
 	function renderCards() {
-		console.log('renderCards showCategoryCards', showCategoryCards);
+		// console.log('renderCards showCategoryCards', showCategoryCards);
 		if (showCategoryCards) {
 			return categoryList.map((category, index) => {
 				return (
@@ -156,14 +168,16 @@ const RedeemableRewardsPage: React.FC = () => {
 		});
 	}
 
-	function renderRewardCards(categoryId: number | string) {
-		setSelectedCategoryIds(selectedCategoryIds.concat([categoryId]));
+	function selectFeaturedCategory(categoryId: number | string) {
+		router.updateUrlParams({ cids: JSON.stringify([categoryId]) });
+		setSelectedCategoryIds([categoryId]);
 		let selectedCategories = [...categorySelectList];
 		selectedCategories = selectedCategories.map((category) => {
 			if (category.value === categoryId) {
 				return { value: category.value, text: category.text, selected: true };
+			} else {
+				return { value: category.value, text: category.text, selected: false };
 			}
-			return category;
 		});
 		setCategorySelectList(selectedCategories);
 		applyFilters(selectedCategories);
@@ -181,7 +195,7 @@ const RedeemableRewardsPage: React.FC = () => {
 						name: category.name
 					}}
 					onClick={(categoryId) => {
-						renderRewardCards(categoryId);
+						selectFeaturedCategory(categoryId);
 					}}
 				/>
 			);
@@ -209,6 +223,9 @@ const RedeemableRewardsPage: React.FC = () => {
 								</Label>
 								<CheckboxList
 									onChange={(value, options) => {
+										// console.log(value);
+										// console.log(options);
+										router.updateUrlParams({ cids: JSON.stringify(value) });
 										setSelectedCategoryIds(value);
 										setCategorySelectList(options);
 									}}

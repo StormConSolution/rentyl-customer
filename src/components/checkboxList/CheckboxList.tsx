@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './CheckboxList.scss';
 import { SelectOptions } from '../Select/Select';
-import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
 import IconLabel from '../iconLabel/IconLabel';
+import LabelCheckboxControlled from '../labelCheckboxControlled/LabelCheckboxControlled';
 
 interface CheckboxListProps {
-	onChange: (value: (string | number)[], options: SelectOptions[]) => void;
+	onChange: (selectedValues: (string | number)[], options: SelectOptions[]) => void;
 	options: SelectOptions[];
 	selectedIds?: (number | string)[];
 	name: string;
@@ -14,23 +14,19 @@ interface CheckboxListProps {
 
 const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 	const [showAll, setShowAll] = useState<boolean>(false);
-	const [options, setOptions] = useState<SelectOptions[]>(props.options);
-	const [selectedIds, setSelectedIds] = useState<(string | number)[]>(props.selectedIds ? props.selectedIds : []);
 
-	function setSelectedCategories(value: string | number) {
-		let index = selectedIds.indexOf(value);
-		let newSelectedIds = [...selectedIds];
-		if (index === -1) {
-			newSelectedIds.push(value);
-		} else {
-			newSelectedIds.splice(index, 1);
-		}
-		setSelectedIds(newSelectedIds);
-		return newSelectedIds;
+	function getSelectedValues(options: SelectOptions[]): (string | number)[] {
+		return options
+			.filter((option) => {
+				return option.selected;
+			})
+			.map((option) => {
+				return option.value;
+			});
 	}
 
 	function onSelectCheckbox(value: string | number) {
-		let newOptions = [...options];
+		let newOptions = [...props.options];
 		newOptions = newOptions.map((item) => {
 			if (value === item.value) {
 				return {
@@ -42,11 +38,11 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 				return item;
 			}
 		});
-		setOptions(newOptions);
-		props.onChange(setSelectedCategories(value), newOptions);
+		props.onChange(getSelectedValues(newOptions), newOptions);
 	}
+
 	function onDeselectCheckbox(value: string | number) {
-		let newOptions = [...options];
+		let newOptions = [...props.options];
 		newOptions = newOptions.map((item) => {
 			if (value === item.value) {
 				return {
@@ -58,8 +54,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 				return item;
 			}
 		});
-		setOptions(newOptions);
-		props.onChange(setSelectedCategories(value), newOptions);
+		props.onChange(getSelectedValues(newOptions), newOptions);
 	}
 
 	function renderSelectOptions() {
@@ -67,15 +62,15 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 		let displayAmount = showAll ? props.options.length : 5;
 		for (let i = 0; i < displayAmount; i++) {
 			categories.push(
-				<LabelCheckbox
+				<LabelCheckboxControlled
 					key={i}
 					value={props.options[i].value}
 					text={props.options[i].text}
 					selected={props.options[i].selected}
-					onSelect={(value, text) => {
+					onSelect={(value) => {
 						onSelectCheckbox(value);
 					}}
-					onDeselect={(value, text) => {
+					onDeselect={(value) => {
 						onDeselectCheckbox(value);
 					}}
 				/>
