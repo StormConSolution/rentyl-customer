@@ -10,7 +10,6 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from '../../components/rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
@@ -24,10 +23,9 @@ import FeaturedCategory = Model.FeaturedCategory;
 
 const RedeemableRewardsPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	const user = userService.getCurrentUser();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
-	const [user, setUser] = useState<Api.User.Res.Get>();
-	const loginStatus = useLoginState();
 	const [showCategoryCards, setShowCategoryCards] = useState<boolean>(true);
 	const [featuredCategory, setFeaturedCategory] = useState<FeaturedCategory[]>();
 	const [categoryList, setCategoryList] = useState<Api.Reward.Category.Res.Get[]>([]);
@@ -41,10 +39,6 @@ const RedeemableRewardsPage: React.FC = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 9;
 	const [rewardCardTotal, setRewardCardTotal] = useState<number>(12);
-
-	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
-	}, []);
 
 	useEffect(() => {
 		async function getAllCategories() {
