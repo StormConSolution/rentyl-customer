@@ -7,13 +7,15 @@ import IconLabel from '../iconLabel/IconLabel';
 interface CheckboxListProps {
 	onChange: (value: (string | number)[], options: SelectOptions[]) => void;
 	options: SelectOptions[];
+	selectedIds?: (number | string)[];
+	name: string;
 	className?: string;
 }
 
 const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 	const [showAll, setShowAll] = useState<boolean>(false);
 	const [options, setOptions] = useState<SelectOptions[]>(props.options);
-	const [selectedIds, setSelectedIds] = useState<(string | number)[]>([]);
+	const [selectedIds, setSelectedIds] = useState<(string | number)[]>(props.selectedIds ? props.selectedIds : []);
 
 	function setSelectedCategories(value: string | number) {
 		let index = selectedIds.indexOf(value);
@@ -86,7 +88,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 		return (
 			<IconLabel
 				className={'seeAll'}
-				labelName={showAll ? 'see less categories' : 'see all categories'}
+				labelName={showAll ? `see less ${props.name}` : `see all ${props.name}`}
 				iconImg={'icon-chevron-right'}
 				iconPosition={'right'}
 				iconSize={7}

@@ -6,7 +6,6 @@ interface RewardCategoryCardProps {
 	value: number | string;
 	title: string;
 	imgPath: string;
-	onClick: (value: string) => void;
 	className?: string;
 }
 
@@ -21,7 +20,7 @@ const RewardCategoryCard: React.FC<RewardCategoryCardProps> = (props) => {
 	}
 
 	return (
-		<div className={`rsRewardCategoryCard ${props.className || ''}`} onClick={props.value}>
+		<div className={`rsRewardCategoryCard ${props.className || ''}`}>
 			<div className={'image'} style={renderStyles()} />
 			<Label className={'title'} variant={'h2'}>
 				{props.title}

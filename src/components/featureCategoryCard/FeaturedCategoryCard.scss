@@ -1,9 +1,9 @@
 @import 'src/themes/themes';
 
-.rsLabelLinkImage {
+.rsFeaturedCategoryCard {
 	background-repeat: no-repeat;
 
-	.textLinkDiv {
+	.textSeeCategoryDiv {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
@@ -14,9 +14,10 @@
 			padding-left: 15px;
 			padding-bottom: 5px;
 		}
-		.linkText {
+		.seeCategoryText {
 			padding-bottom: 20px;
 			padding-left: 15px;
+			cursor: pointer;
 		}
 		.rsLabel {
 			color: #ffffff;

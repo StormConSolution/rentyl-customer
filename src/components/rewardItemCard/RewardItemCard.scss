@@ -1,0 +1,31 @@
+@import 'src/themes/themes';
+
+.rsRewardItemCard {
+	min-height: 420px;
+
+	.imageContainer {
+		width: 278px;
+		height: 250px;
+	}
+	.rewardName {
+		padding-top: 20px;
+		width: 278px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.rewardPoints {
+		padding-top: 5px;
+	}
+
+	.rewardDescription {
+		padding-top: 8px;
+		width: 278px;
+		max-height: 60px;
+		overflow: hidden;
+	}
+
+	.rewardDetails {
+	}
+}
