@@ -11,10 +11,10 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from '../../components/rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
+import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
-import LabelLink from '../../components/labelLink/LabelLink';
 import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import RewardItemCard from '../../components/rewardItemCard/RewardItemCard';
@@ -116,35 +116,6 @@ const RedeemableRewardsPage: React.FC = () => {
 		setShowCategoryCards(false);
 		document.querySelector<HTMLElement>('.resortAndPointFilters')!.style.display = 'block';
 		getRedeemableRewards().catch(console.error);
-	}
-
-	function renderPointsOrLoginButton() {
-		console.log('user', loginStatus);
-		if (user) {
-			return (
-				<div className={'availablePendingPointsContainer'}>
-					<div className={'availablePointsContainer'}>
-						<Label variant={'h4'}>Available Points</Label>
-						<Label className={'availablePointsNumber'} variant={'h1'}>
-							{user.availablePoints}
-						</Label>
-					</div>
-					<div className={'pendingPointsContainer'}>
-						<Label variant={'h4'}>Points Pending</Label>
-						<Label className={'pendingPointsNumber'} variant={'h1'}>
-							951
-						</Label>
-					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div className={'signinContainer'}>
-					<LabelLink className={'signinLink'} path={'/signin'} label={'Sign in'} variant={'body1'} />
-					<Label variant={'body1'}>&nbsp;to redeem your points.</Label>
-				</div>
-			);
-		}
 	}
 
 	function getPrimaryRewardImg(medias: Model.Media[]): string {
@@ -292,7 +263,9 @@ const RedeemableRewardsPage: React.FC = () => {
 								<Label className={'categoriesTitle'} variant={'h4'}>
 									Categories
 								</Label>
-								<div className={'pointOrLoginContainer'}>{renderPointsOrLoginButton()}</div>
+								<div className={'pointOrLoginContainer'}>
+									<PointsOrLogin user={user} />
+								</div>
 							</div>
 							<div className={'cardContainer'}>{renderCards()}</div>
 							<div className={'paginationContainer'}>
