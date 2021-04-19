@@ -89,9 +89,6 @@ const RewardPurchasePage: React.FC = () => {
 											value={'termsAndConditions'}
 											type={'checkbox'}
 											onChange={() => {
-												// let inputValue = e.target as HTMLInputElement;
-												// if (inputValue.checked) onSelect();
-												// else onDeselect();
 												setTermsAndConditionsIsChecked(!termsAndConditionsIsChecked);
 											}}
 											checked={termsAndConditionsIsChecked}
