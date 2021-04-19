@@ -10,11 +10,10 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from '../../components/rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
+import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
-import LabelLink from '../../components/labelLink/LabelLink';
 import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import RewardItemCard from '../../components/rewardItemCard/RewardItemCard';
@@ -24,11 +23,10 @@ import FeaturedCategory = Model.FeaturedCategory;
 
 const RedeemableRewardsPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	const user = userService.getCurrentUser();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const filterRef = useRef<HTMLElement>(null);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
-	const [user, setUser] = useState<Api.User.Res.Get>();
-	const loginStatus = useLoginState();
 	const [showCategoryCards, setShowCategoryCards] = useState<boolean>(true);
 	const [featuredCategory, setFeaturedCategory] = useState<FeaturedCategory[]>();
 	const [categoryList, setCategoryList] = useState<Api.Reward.Category.Res.Get[]>([]);
@@ -42,10 +40,6 @@ const RedeemableRewardsPage: React.FC = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 9;
 	const [rewardCardTotal, setRewardCardTotal] = useState<number>(12);
-
-	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
-	}, []);
 
 	useEffect(() => {
 		async function getAllCategories() {
@@ -117,35 +111,6 @@ const RedeemableRewardsPage: React.FC = () => {
 		setShowCategoryCards(false);
 		if (filterRef.current) filterRef.current.style.display = 'block';
 		getRedeemableRewards().catch(console.error);
-	}
-
-	function renderPointsOrLoginButton() {
-		console.log('user', loginStatus);
-		if (user) {
-			return (
-				<div className={'availablePendingPointsContainer'}>
-					<div className={'availablePointsContainer'}>
-						<Label variant={'h4'}>Available Points</Label>
-						<Label className={'availablePointsNumber'} variant={'h1'}>
-							{user.availablePoints}
-						</Label>
-					</div>
-					<div className={'pendingPointsContainer'}>
-						<Label variant={'h4'}>Points Pending</Label>
-						<Label className={'pendingPointsNumber'} variant={'h1'}>
-							951
-						</Label>
-					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div className={'signinContainer'}>
-					<LabelLink className={'signinLink'} path={'/signin'} label={'Sign in'} variant={'body1'} />
-					<Label variant={'body1'}>&nbsp;to redeem your points.</Label>
-				</div>
-			);
-		}
 	}
 
 	function getPrimaryRewardImg(medias: Model.Media[]): string {
@@ -293,7 +258,9 @@ const RedeemableRewardsPage: React.FC = () => {
 								<Label className={'categoriesTitle'} variant={'h4'}>
 									Categories
 								</Label>
-								<div className={'pointOrLoginContainer'}>{renderPointsOrLoginButton()}</div>
+								<div className={'pointOrLoginContainer'}>
+									<PointsOrLogin user={user} />
+								</div>
 							</div>
 							<div className={'cardContainer'}>{renderCards()}</div>
 							<div className={'paginationContainer'}>

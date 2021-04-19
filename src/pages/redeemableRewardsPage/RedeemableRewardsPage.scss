@@ -103,30 +103,6 @@
 					display: flex;
 					align-items: flex-end;
 				}
-
-				.availablePendingPointsContainer {
-					display: flex;
-					align-content: flex-end;
-					.availablePointsNumber {
-						color: theme-var($iconAndHighlightTextColor);
-					}
-
-					.pendingPointsNumber {
-						color: theme-var($disableTextColor);
-					}
-					.pendingPointsContainer {
-						margin-left: 40px;
-					}
-				}
-
-				.signinContainer {
-					display: flex;
-					.signinLink {
-						.rsLabel {
-							color: theme-var($buttonLinkColor) !important;
-						}
-					}
-				}
 			}
 		}
 

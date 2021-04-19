@@ -1,0 +1,99 @@
+@import 'src/themes/themes';
+
+.rsRewardDetailPage {
+	.rs-page-content-wrapper {
+		padding-top: 120px;
+		margin: 0 140px;
+	}
+
+	.headerBar {
+		min-height: 50px;
+		margin: 0 140px;
+		border-bottom: 1px solid theme-var($greyLineColor);
+		display: flex;
+		justify-content: space-between;
+
+		.rsIconLabel {
+			cursor: pointer;
+		}
+		.rsIconLabel.left .label {
+			color: theme-var($buttonLinkColor);
+		}
+		.rsIconLabel.left .icon {
+			color: theme-var($buttonLinkColor);
+		}
+		.headerTitle {
+			margin-top: 24px;
+			margin-bottom: 5px;
+		}
+		.headerBarRight {
+			display: flex;
+			align-items: flex-end;
+			margin-bottom: 5px;
+		}
+	}
+
+	.rewardDetails {
+		padding-bottom: 140px;
+		padding-top: 45px;
+		margin: 0 140px;
+		display: flex;
+
+		.carouselContainer {
+			width: 530px;
+
+			.rsCarousel {
+				height: 450px;
+				width: 450px;
+				min-width: 278px;
+
+				.carouselParent {
+					overflow-x: hidden;
+					max-height: 530px;
+				}
+
+				.imageWrapper {
+					width: 530px;
+					height: 450px;
+
+					img {
+						width: 100%;
+						height: 100%;
+						object-fit: cover;
+					}
+				}
+			}
+		}
+
+		.rewardDetailsRight {
+			padding-left: 60px;
+			padding-top: 5px;
+
+			.rewardUpc {
+				padding-top: 15px;
+			}
+			.rewardDescription {
+				padding-top: 15px;
+			}
+			.pointCostContainer {
+				padding-top: 30px;
+
+				.pointCost {
+					padding-top: 5px;
+					color: theme-var($iconAndHighlightTextColor);
+				}
+			}
+			.buyButton {
+				margin-top: 35px;
+			}
+			.disabledButton {
+				margin-top: 35px;
+				background-color: theme-var($disableTextColor);
+				cursor: none;
+			}
+			.blankMorePoints {
+				padding-top: 15px;
+			}
+		}
+	}
+}
