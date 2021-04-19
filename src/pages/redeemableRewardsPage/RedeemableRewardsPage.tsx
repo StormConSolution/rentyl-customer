@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RedeemableRewardsPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -25,6 +25,7 @@ import FeaturedCategory = Model.FeaturedCategory;
 const RedeemableRewardsPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
+	const filterRef = useRef<HTMLElement>(null);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [user, setUser] = useState<Api.User.Res.Get>();
 	const loginStatus = useLoginState();
@@ -114,7 +115,7 @@ const RedeemableRewardsPage: React.FC = () => {
 			return false;
 		}
 		setShowCategoryCards(false);
-		document.querySelector<HTMLElement>('.resortAndPointFilters')!.style.display = 'block';
+		if (filterRef.current) filterRef.current.style.display = 'block';
 		getRedeemableRewards().catch(console.error);
 	}
 
@@ -246,7 +247,7 @@ const RedeemableRewardsPage: React.FC = () => {
 									className={'categoryCheckboxList'}
 								/>
 							</div>
-							<div className={'resortAndPointFilters'}>
+							<div ref={filterRef} className={'resortAndPointFilters'}>
 								<div className={'resortSelectFilter'}>
 									<Label className={'resortTitle queryTitle'} variant={'h4'}>
 										Resort
