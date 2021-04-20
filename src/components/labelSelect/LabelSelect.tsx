@@ -1,8 +1,6 @@
 import * as React from 'react';
 import './LabelSelect.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import Icon from '@bit/redsky.framework.rs.icon';
-import Input from '@bit/redsky.framework.rs.input';
 import Select, { SelectOptions } from '../Select/Select';
 
 interface LabelSelectProps {

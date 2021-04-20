@@ -8,10 +8,12 @@ import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
+import RedeemableRewardsPage from './pages/redeemableRewardsPage/RedeemableRewardsPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
+import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
 
 const routes: RouteDetails[] = [
@@ -54,6 +56,14 @@ const routes: RouteDetails[] = [
 		options: {
 			view: 'landingPage'
 		}
+	},
+	{
+		path: '/reward',
+		page: RedeemableRewardsPage
+	},
+	{
+		path: '/reward/details',
+		page: RewardDetailPage
 	},
 	{
 		path: '/destination/details',

@@ -303,6 +303,12 @@ declare namespace Model {
 		isCarousel: 0 | 1;
 	}
 
+	export interface FeaturedCategory {
+		categoryId: number | string;
+		imagePath: string;
+		name: string;
+	}
+
 	export interface MarketSegment {
 		id: number;
 		name: string;
@@ -451,6 +457,13 @@ declare namespace Model {
 		createdOn: Date | string;
 	}
 
+	export interface RedeemableRewards {
+		selectCategories: SelectOptions[];
+		allCategories: Api.Reward.Category.Res.Get[];
+		featuredCategories: FeaturedCategory[];
+		destinationSelect: SelectOptions[];
+	}
+
 	export interface ReportTemplate {
 		id: number;
 		companyId: number;
@@ -500,6 +513,22 @@ declare namespace Model {
 		verifyUserId: number;
 		verifiedOn: Date | string;
 		status: string;
+	}
+
+	export interface RewardCategory {
+		id: number;
+		companyId: number;
+		name: string;
+		isActive: boolean;
+		isFeatured: boolean;
+		createdOn: Date | string;
+		modifiedOn: Date | string;
+	}
+
+	export interface SelectOptions {
+		value: number | string;
+		text: number | string;
+		selected: boolean;
 	}
 
 	export interface Segment {

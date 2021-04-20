@@ -1,0 +1,26 @@
+@import 'src/themes/themes';
+
+.rsFeaturedCategoryCard {
+	background-repeat: no-repeat;
+
+	.textSeeCategoryDiv {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		height: 100%;
+		color: #ffffff;
+
+		.labelText {
+			padding-left: 15px;
+			padding-bottom: 5px;
+		}
+		.seeCategoryText {
+			padding-bottom: 20px;
+			padding-left: 15px;
+			cursor: pointer;
+		}
+		.rsLabel {
+			color: #ffffff;
+		}
+	}
+}

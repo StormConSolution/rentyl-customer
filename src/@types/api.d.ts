@@ -671,6 +671,104 @@ declare namespace Api {
 		}
 	}
 
+	export namespace Reward {
+		export namespace Req {
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			export interface Paged extends RedSky.PageQuery {
+				pointCostMin?: number;
+				pointCostMax?: number;
+				categories?: number[];
+			}
+			export interface Create {
+				name: string;
+				pointCost: number;
+				monetaryValueInCents: number;
+				destinationId?: number;
+				affiliateId?: number;
+				description: string;
+				upc: number;
+				mediaDetails?: MediaDetails[];
+				categoryIds: number[];
+			}
+			export interface Update extends Partial<Omit<Model.Reward, 'id' | 'companyId'>> {
+				id: number;
+				mediaDetails?: MediaDetails[];
+				categoryIds?: number[];
+			}
+			export interface Delete {
+				id: number;
+			}
+		}
+		export namespace Res {
+			export interface Get {
+				id: number;
+				name: string;
+				pointCost: number;
+				monetaryValueInCents: number;
+				destinationId?: number;
+				affiliateId?: number;
+				description: string;
+				upc: number;
+				isActive: boolean;
+				createdOn: Date | string;
+				modifiedOn: Date | string;
+				vendorName: string;
+				media: Media[];
+				categoryIds: number[];
+			}
+			export interface Create extends Omit<Get, 'modifiedOn'> {}
+			export interface Update extends Get {}
+		}
+		export namespace Voucher {
+			export namespace Req {
+				export interface Create {
+					rewardId: number;
+					codes: string[];
+				}
+				export interface Delete {
+					rewardId: number;
+					code: string;
+				}
+			}
+			export namespace Res {
+				export interface Get extends Omit<Model.RewardVoucher, 'companyId'> {}
+				export interface Create extends Get {}
+				export interface Delete {
+					rewardId: number;
+					code: string;
+				}
+			}
+		}
+		export namespace Category {
+			export namespace Req {
+				export interface Create {
+					name: string;
+					mediaDetails?: MediaDetails[];
+				}
+				export interface Delete {
+					id: number;
+				}
+				export interface Update {
+					id: number;
+					name?: string;
+					isActive?: boolean;
+					isFeatured?: boolean;
+					mediaDetails?: MediaDetails[];
+				}
+			}
+			export namespace Res {
+				export interface Get extends Omit<Model.RewardCategory, 'companyId'> {
+					media: Media[];
+				}
+				export interface Create extends Get {}
+				export interface Update extends Get {}
+			}
+		}
+	}
+
 	export namespace SystemActionLog {
 		export namespace Req {
 			export interface Create {
@@ -984,6 +1082,20 @@ declare namespace Api {
 				pointPrice: number;
 				pointValue: number;
 				vendorName: string;
+			}
+		}
+	}
+
+	export namespace Vendor {
+		export namespace Res {
+			export interface Get {
+				name: string;
+				destinationId: number | null;
+				affiliateId: number | null;
+			}
+			export interface GetByPage {
+				data: Get[];
+				total: number;
 			}
 		}
 	}

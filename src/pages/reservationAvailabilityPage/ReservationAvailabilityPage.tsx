@@ -37,6 +37,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const loginStatus = useLoginState();
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
+	const [page, setPage] = useState<number>(1);
+	const [perPage] = useState<number>(5);
 	const [availabilityTotal, setAvailability] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();

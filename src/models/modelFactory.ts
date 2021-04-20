@@ -2,8 +2,9 @@ import { Model } from './Model';
 import UserModel from './user/user.model';
 import ReservationsModel from './reservations/reservations.model';
 import AccommodationsModel from './accommodations/accommodations.model';
+import RewardModel from './reward/reward.model';
 
-type ModelKey = 'UserModel' | 'ReservationsModel' | 'AccommodationsModel';
+type ModelKey = 'UserModel' | 'ReservationsModel' | 'AccommodationsModel' | 'RewardModel';
 
 class ModelFactory {
 	private models: { [key: string]: Model } = {};
@@ -13,6 +14,7 @@ class ModelFactory {
 		this.models['UserModel'] = new UserModel();
 		this.models['ReservationsModel'] = new ReservationsModel();
 		this.models['AccommodationsModel'] = new AccommodationsModel();
+		this.models['RewardModel'] = new RewardModel();
 
 		for (let key in this.models) {
 			this.models[key].start();

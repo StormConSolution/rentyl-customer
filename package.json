@@ -22,7 +22,7 @@
 		"@bit/redsky.framework.rs.label": "^0.0.11",
 		"@bit/redsky.framework.rs.progressbar": "^0.0.7",
 		"@bit/redsky.framework.rs.select": "^0.0.9",
-		"@bit/redsky.framework.rs.switch": "^0.0.9",
+		"@bit/redsky.framework.rs.switch": "^0.0.10",
 		"@bit/redsky.framework.rs.utils": "^0.0.33",
 		"@bit/redsky.framework.toast": "^0.0.5",
 		"@jest/types": "^26.6.2",

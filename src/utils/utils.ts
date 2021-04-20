@@ -50,3 +50,9 @@ export function formatPhoneNumber(phone: string | number) {
 export function validateEmail(mail: string) {
 	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail);
 }
+
+export function capitalize(s: string) {
+	return s.toLowerCase().replace(/\b./g, function (a) {
+		return a.toUpperCase();
+	});
+}
