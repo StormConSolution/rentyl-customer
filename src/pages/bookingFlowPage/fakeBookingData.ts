@@ -2,6 +2,10 @@ export namespace Booking {
 	export interface BookingPackageDetails extends Api.Package.Details {
 		priceCents: number;
 	}
+	export interface Policies {
+		guaranteePolicy: string;
+		cancelPolicy: string;
+	}
 
 	export namespace Req {
 		export interface details {
@@ -25,6 +29,7 @@ export namespace Booking {
 			costPerNight: { date: string; priceCents: number }[];
 			accommodationName: string;
 			destinationPackages: BookingPackageDetails[];
+			policies: Policies;
 		}
 	}
 }
@@ -124,5 +129,10 @@ export let FakeBookingData: Booking.Res.Details = {
 	taxAndFees: [
 		{ title: 'Sales and Tourist Tax', priceCents: 21248 },
 		{ title: 'Resort Fee', priceCents: 40860 }
-	]
+	],
+	policies: {
+		guaranteePolicy: '10% of the total price is required at the time of booking to guarantee the reservation.',
+		cancelPolicy:
+			'Reservations for 4 to 8-Bedroom Homes must be canceled at least 15 days prior to arrival and 9 to 13-Bedroom Homes at least 31 days prior to arrival or guest will be charged for all nights of the reservation. Changes may be permitted based on availability.'
+	}
 };

@@ -29,9 +29,15 @@
 		}
 
 		.acknowledgementSection {
+			background-color: theme-var($primaryBackgroundColor);
 			.rsLabelCheckbox {
 				padding: 0;
 			}
+		}
+
+		.policiesSection {
+			background-color: theme-var($primaryBackgroundColor);
+			margin-bottom: 20px;
 		}
 
 		.completeBookingBtn {

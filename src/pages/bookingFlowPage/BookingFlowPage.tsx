@@ -7,10 +7,8 @@ import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import Paper from '../../components/paper/Paper';
 import { Booking, FakeBookingData } from './fakeBookingData';
-import LabelInput from '../../components/labelInput/LabelInput';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
 import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationPackageTile from './destinationPackageTile/DestinationPackageTile';
@@ -45,7 +43,9 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 
 	function renderDestinationPackages() {
 		return fakeData.destinationPackages.map((item, index) => {
-			let defaultImage = item.media.find((item) => item.isPrimary);
+			let defaultImage = item.media.find((value) => value.isPrimary);
+			let isAdded = addedPackages.find((value) => value.id === item.id);
+			if (isAdded) return false;
 
 			return (
 				<DestinationPackageTile
@@ -98,12 +98,38 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 								console.log('Credit Card Form: ', value);
 							}}
 						/>
+						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
+							<Label variant={'h2'} mb={10}>
+								Policies:
+							</Label>
+							<Box display={'flex'} mb={10}>
+								<Box marginRight={'50px'}>
+									<Label variant={'h4'}>Check-in</Label>
+									<Label variant={'body1'}>After {fakeData.checkInTime}</Label>
+								</Box>
+								<Box>
+									<Label variant={'h4'}>Check-out</Label>
+									<Label variant={'body1'}>Before {fakeData.checkoutTime}</Label>
+								</Box>
+							</Box>
+							<Label variant={'body1'} mb={10}>
+								{fakeData.accommodationName}
+							</Label>
+							<Label variant={'h4'}>Guarantee Policy</Label>
+							<Label variant={'body1'} mb={10}>
+								{fakeData.policies.guaranteePolicy}
+							</Label>
+							<Label variant={'h4'}>Cancel Policy</Label>
+							<Label variant={'body1'} mb={10}>
+								{fakeData.policies.cancelPolicy}
+							</Label>
+						</Paper>
 						<Paper className={'acknowledgementSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'}>Acknowledgement</Label>
 							<LabelCheckbox
 								value={1}
 								text={'* I agree with the Privacy Terms.'}
-								selected={false}
+								isChecked={false}
 								onSelect={() => {
 									console.log('I agree');
 								}}

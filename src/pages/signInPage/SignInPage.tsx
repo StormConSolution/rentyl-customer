@@ -31,7 +31,7 @@ const SignInPage: React.FC = () => {
 		try {
 			setLoginErrorMessage('');
 			await userService.loginUserByPassword(`${emailAddress}`, `${password}`);
-			if (params.data.includes('startDate')) {
+			if (params.data !== 0 && params.data.includes('startDate')) {
 				await router.navigate(`/booking?data=${params.data}`);
 			} else {
 				await router.navigate('/');
