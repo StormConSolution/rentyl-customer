@@ -71,7 +71,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 					key={i}
 					value={props.options[i].value}
 					text={props.options[i].text}
-					selected={props.options[i].selected}
+					isChecked={props.options[i].selected}
 					onSelect={(value, text) => {
 						onSelectCheckbox(value);
 					}}

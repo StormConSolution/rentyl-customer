@@ -127,7 +127,7 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 						<LabelCheckbox
 							value={'isPrimary'}
 							text={'Set as primary'}
-							selected={false}
+							isChecked={false}
 							onSelect={(value, text) => {
 								setFormChanged(true);
 								console.log(value, true);
