@@ -15,6 +15,7 @@ import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/Account
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
+import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -106,6 +107,10 @@ const routes: RouteDetails[] = [
 		options: {
 			view: 'landingPage'
 		}
+	},
+	{
+		path: '/about-spire-points',
+		page: AboutSpirePointsPage
 	},
 	{
 		path: '*',

@@ -1,0 +1,138 @@
+@import '../../themes/themes';
+
+.rsAboutSpirePointsPage {
+	h1 {
+		font-size: 40px;
+		font-weight: 900;
+		line-height: 45px;
+		margin: 0;
+	}
+
+	.rsHeroImage {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 120px;
+		h1 {
+			color: #ffffff;
+			position: absolute;
+		}
+	}
+	.sectionOne {
+		width: clamp(335px, 90%, 545px);
+	}
+
+	.rsCarousel {
+		margin: 0 auto 120px;
+		max-width: 1173px;
+		.carouselChild {
+			margin: 0 8px;
+		}
+	}
+
+	.sectionTwo {
+		h1 {
+			text-align: center;
+		}
+		.infoCardWrapper {
+			display: grid;
+			grid-template-columns: 367px 367px;
+			grid-template-rows: 120px 120px;
+			row-gap: 22px;
+			column-gap: 16px;
+			margin: 40px auto 0;
+			width: fit-content;
+
+			.rsInfoCard {
+				.rsLabel {
+					&.h2,
+					&.h4 {
+						margin-bottom: 10px;
+					}
+				}
+			}
+		}
+	}
+	.sectionThree {
+		img {
+			position: absolute;
+			width: 1106px;
+			height: 536px;
+			object-fit: cover;
+			top: 0;
+			right: 0;
+		}
+		.tanBox {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			background-color: #f7f1db;
+			width: 600px;
+			height: 450px;
+			.rsPaper {
+				width: clamp(335px, 90%, 524px);
+				position: absolute;
+				right: 0;
+				z-index: 1;
+				background: theme-var($primaryBackgroundColor);
+				padding: 42px 52px;
+				.iconLink {
+					.rsLabelLink {
+						margin-left: 20px;
+					}
+				}
+			}
+		}
+	}
+
+	.rsLabelLink {
+		color: theme-var($buttonLinkColor) !important;
+		.rsLabel {
+			color: theme-var($buttonLinkColor) !important;
+		}
+	}
+}
+
+.small {
+	.rsAboutSpirePointsPage {
+		.rsHeroImage {
+			margin-bottom: 55px;
+		}
+
+		h1 {
+			font-size: 24px;
+			font-weight: 900;
+			line-height: 45px;
+			margin: 0;
+		}
+
+		.infoCardWrapper {
+			grid-template-columns: 335px;
+			grid-template-rows: auto auto auto auto;
+		}
+
+		.sectionThree {
+			width: 100vw;
+			img {
+				width: 100%;
+				height: 270px;
+			}
+
+			.tanBox {
+				width: 355px;
+				height: 315px;
+				bottom: 15px;
+				.rsPaper {
+					padding: 20px;
+					right: 0;
+					bottom: 40px;
+					.iconLink {
+						.rsLabelLink {
+							margin-left: 20px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
