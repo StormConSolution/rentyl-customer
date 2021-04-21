@@ -28,14 +28,14 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 	const [updateUser, setUpdateUser] = useState<Api.User.Req.Update>();
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
 	const [passwordMatch, setPasswordMatch] = useState<boolean>(false);
-	const loginStatus = useLoginState();
 
 	const newPassword: string = '';
 	const newRetypedPassword: string = '';
 
 	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
-	}, [loginStatus]);
+		let currentUser = userService.getCurrentUser();
+		if (currentUser) setUser(currentUser);
+	}, []);
 
 	useEffect(() => {
 		console.log(user);

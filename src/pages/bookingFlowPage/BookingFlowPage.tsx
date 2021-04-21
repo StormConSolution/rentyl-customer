@@ -21,6 +21,9 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
+	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
+	const [isFormValid, setIsFormValid] = useState<boolean>(false);
+	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodation, setAccommodation] = useState<Api.Accommodation.Res.Details>();
 	const [fakeData, setFakeData] = useState(FakeBookingData);
 	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
@@ -40,6 +43,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		}
 		getAccommodationDetails().catch(console.error);
 	}, []);
+
+	useEffect(() => {
+		setIsDisabled(!hasAgreedToTerms || !isFormValid);
+	}, [hasAgreedToTerms, isFormValid]);
 
 	function renderDestinationPackages() {
 		return fakeData.destinationPackages.map((item, index) => {
@@ -97,6 +104,9 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							onCreditCardChange={(value) => {
 								console.log('Credit Card Form: ', value);
 							}}
+							isValidForms={(isValid) => {
+								setIsFormValid(isValid);
+							}}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'} mb={10}>
@@ -131,10 +141,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 								text={'* I agree with the Privacy Terms.'}
 								isChecked={false}
 								onSelect={() => {
-									console.log('I agree');
+									setHasAgreedToTerms(true);
 								}}
 								onDeselect={() => {
-									console.log('I disagree');
+									setHasAgreedToTerms(false);
 								}}
 							/>
 							<Label variant={'h4'}>
@@ -143,12 +153,13 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 						</Paper>
 						<LabelButton
 							className={'completeBookingBtn'}
-							look={'containedPrimary'}
+							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
 							variant={'button'}
 							label={'complete booking'}
 							onClick={() => {
 								console.log('Do stuff to complete booking');
 							}}
+							disabled={isDisabled}
 						/>
 					</Box>
 					<BookingCartTotalsCard

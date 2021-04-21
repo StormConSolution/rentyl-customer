@@ -47,6 +47,11 @@ export function formatPhoneNumber(phone: string | number) {
 	}
 }
 
+export function removeAllExceptNumbers(string: string): string {
+	if (!string) return '';
+	return string.replace(/\D+/g, '');
+}
+
 export function validateEmail(mail: string) {
 	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail);
 }
