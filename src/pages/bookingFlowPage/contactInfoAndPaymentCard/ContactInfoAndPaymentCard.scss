@@ -24,3 +24,25 @@
 		}
 	}
 }
+
+.small {
+	.rsContactInfoAndPaymentCard {
+		.contactInfo {
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		.creditCardInfo {
+			flex-wrap: wrap;
+			justify-content: center !important;
+		}
+
+		.rsLabelInput {
+			width: 100%;
+			margin-bottom: 15px;
+			.rsInput {
+				max-width: 100%;
+				width: 100%;
+			}
+		}
+	}
+}

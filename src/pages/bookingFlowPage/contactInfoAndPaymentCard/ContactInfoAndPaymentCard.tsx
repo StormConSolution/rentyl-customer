@@ -36,7 +36,11 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
 					let month = parseInt(control.value.toString().slice(0, 2));
 					let year = parseInt(control.value.toString().slice(3, 5)) + 2000;
-					return year >= new Date().getFullYear() && month >= new Date().getMonth() + 1;
+					let currentYear = new Date().getFullYear();
+					let currentMonth = new Date().getMonth() + 1;
+
+					if (year === currentYear) return year >= currentYear && month >= currentMonth;
+					else return year > currentYear;
 				})
 			])
 		])
@@ -143,7 +147,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					Payment Information
 				</Label>
 
-				<Box display={'flex'} justifyContent={'space-between'}>
+				<Box className={'creditCardInfo'} display={'flex'} justifyContent={'space-between'}>
 					<LabelInput
 						title={'Name on Card'}
 						inputType={'text'}

@@ -14,11 +14,13 @@ import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAn
 import DestinationPackageTile from './destinationPackageTile/DestinationPackageTile';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface BookingFlowPageProps {}
 
 const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
@@ -72,12 +74,12 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	return (
 		<Page className={'rsBookingFlowPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Label marginTop={80} variant={'h1'}>
+				<Label marginTop={80} marginLeft={size === 'small' ? '15px' : ''} variant={'h1'}>
 					Booking
 				</Label>
 				<hr />
 				<Box
-					padding={'0 25px'}
+					padding={size === 'small' ? '0 15px' : '0 25px'}
 					boxSizing={'border-box'}
 					display={'flex'}
 					width={'100%'}
@@ -86,7 +88,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 					position={'relative'}
 					height={'fit-content'}
 				>
-					<Box width={'50%'} className={'colOne'}>
+					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<Paper
 							className={'packagesAccordion'}
 							backgroundColor={'#f0f0f0'}
@@ -134,6 +136,27 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 								{fakeData.policies.cancelPolicy}
 							</Label>
 						</Paper>
+						{size === 'small' && (
+							<BookingCartTotalsCard
+								checkInTime={fakeData.checkInTime}
+								checkoutTime={fakeData.checkoutTime}
+								checkInDate={fakeData.checkInDate}
+								checkoutDate={fakeData.checkoutDate}
+								accommodationName={fakeData.accommodationName}
+								taxAndFees={fakeData.taxAndFees}
+								costPerNight={fakeData.costPerNight}
+								adults={fakeData.adults}
+								children={fakeData.children}
+								costTotalCents={fakeData.costTotalCents}
+								packages={addedPackages}
+								onDeletePackage={(packageId) => {
+									let newPackages = [...addedPackages];
+									newPackages = newPackages.filter((item) => item.id !== packageId);
+									setAddedPackages(newPackages);
+								}}
+							/>
+						)}
+
 						<Paper className={'acknowledgementSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'}>Acknowledgement</Label>
 							<LabelCheckbox
@@ -162,24 +185,26 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							disabled={isDisabled}
 						/>
 					</Box>
-					<BookingCartTotalsCard
-						checkInTime={fakeData.checkInTime}
-						checkoutTime={fakeData.checkoutTime}
-						checkInDate={fakeData.checkInDate}
-						checkoutDate={fakeData.checkoutDate}
-						accommodationName={fakeData.accommodationName}
-						taxAndFees={fakeData.taxAndFees}
-						costPerNight={fakeData.costPerNight}
-						adults={fakeData.adults}
-						children={fakeData.children}
-						costTotalCents={fakeData.costTotalCents}
-						packages={addedPackages}
-						onDeletePackage={(packageId) => {
-							let newPackages = [...addedPackages];
-							newPackages = newPackages.filter((item) => item.id !== packageId);
-							setAddedPackages(newPackages);
-						}}
-					/>
+					{size !== 'small' && (
+						<BookingCartTotalsCard
+							checkInTime={fakeData.checkInTime}
+							checkoutTime={fakeData.checkoutTime}
+							checkInDate={fakeData.checkInDate}
+							checkoutDate={fakeData.checkoutDate}
+							accommodationName={fakeData.accommodationName}
+							taxAndFees={fakeData.taxAndFees}
+							costPerNight={fakeData.costPerNight}
+							adults={fakeData.adults}
+							children={fakeData.children}
+							costTotalCents={fakeData.costTotalCents}
+							packages={addedPackages}
+							onDeletePackage={(packageId) => {
+								let newPackages = [...addedPackages];
+								newPackages = newPackages.filter((item) => item.id !== packageId);
+								setAddedPackages(newPackages);
+							}}
+						/>
+					)}
 				</Box>
 			</div>
 		</Page>
