@@ -8,7 +8,7 @@ import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
-import RedeemableRewardsPage from './pages/redeemableRewardsPage/RedeemableRewardsPage';
+import RewardItemPage from './pages/rewardItemPage/RewardItemPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
@@ -52,7 +52,7 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/reward',
-		page: RedeemableRewardsPage
+		page: RewardItemPage
 	},
 	{
 		path: '/reward/details',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './RewardPurchasePage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
@@ -11,13 +11,41 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
+import RewardService from '../../services/reward/reward.service';
+import router from '../../utils/router';
+import rsToasts from '@bit/redsky.framework.toast';
+import LoadingPage from '../loadingPage/LoadingPage';
+import { addCommasToNumber } from '../../utils/utils';
 
 const RewardPurchasePage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const user = userService.getCurrentUser();
+	const [reward, setReward] = useState<Api.Reward.Res.Get>();
 	const [termsAndConditionsIsChecked, setTermsAndConditionsIsChecked] = useState<boolean>(true);
+	const params = router.getPageUrlParams<{ reward: string }>([
+		{ key: 'ri', default: '', type: 'string', alias: 'reward' }
+	]);
 
-	return (
+	useEffect(() => {
+		async function getRewardDetails() {
+			if (!params.reward) {
+				router.navigate('/reward').catch(console.error);
+			}
+			try {
+				let res = await rewardService.getRewardById(Number(params.reward));
+				console.log('res', res);
+				setReward(res);
+			} catch (e) {
+				rsToasts.error('An unexpected error occurred on the server.');
+			}
+		}
+		getRewardDetails().catch(console.error);
+	}, []);
+
+	return !reward ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsRewardPurchasePage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<div className={'headerBar'}>
@@ -40,23 +68,23 @@ const RewardPurchasePage: React.FC = () => {
 						</div>
 						<div className={'reward'}>
 							<div className={'imageContainer'}>
-								<img src={'../../images/redeemableRewardPage/suitCoat.jpg'} alt={''} height={'130px'} />
+								<img src={reward.media[0].urls.thumb} alt={''} height={'130px'} />
 							</div>
 							<div className={'rewardText'}>
 								<div className={'rewardName'}>
 									<Label className={'name'} variant={'h3'}>
-										Reward Name
+										{reward.name}
 									</Label>
 									<Label className={'description'} variant={'body1'}>
-										Item Integer sagittis elit tortor, vel dignissim orci imperdiet nec.
+										{reward.description}
 									</Label>
 									<Label className={'number'} variant={'body1'}>
-										Item #94030-2030
+										Item # {reward.upc}
 									</Label>
 								</div>
 								<div className={'rewardPoints'}>
 									<Label className={'points'} variant={'h3'}>
-										1,420
+										{addCommasToNumber(reward.pointCost)}
 									</Label>
 								</div>
 							</div>
@@ -76,7 +104,7 @@ const RewardPurchasePage: React.FC = () => {
 								</Label>
 								<div className={'pointNumberAndLabel'}>
 									<Label className={'pointNumberLabel'} variant={'h1'}>
-										4,260
+										{addCommasToNumber(reward.pointCost)}
 									</Label>
 									<Label className={'pointsLabel'} variant={'h2'}>
 										points
@@ -111,7 +139,8 @@ const RewardPurchasePage: React.FC = () => {
 							</div>
 							<div className={'pointsAfterPurchase'}>
 								<Label className={'pointsAfterPurchaseLabel'} variant={'body1'}>
-									Point total after purchase: 9,905
+									Point total after purchase:{' '}
+									{addCommasToNumber((user ? user.availablePoints : 0) - reward.pointCost)}
 								</Label>
 							</div>
 						</Paper>

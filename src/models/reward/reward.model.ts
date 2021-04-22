@@ -1,6 +1,7 @@
 import { Model } from '../Model';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
+import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import StandardOrderTypes = RedSky.StandardOrderTypes;
 import MatchTypes = RedSky.MatchTypes;
 import FilterQueryValue = RedSky.FilterQueryValue;
@@ -24,7 +25,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/poolDrink.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/poolDrink.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -43,7 +44,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/electronics.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/electronics.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -64,7 +65,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/luggage.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/luggage.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -85,7 +86,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/rideService.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/rideService.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -106,7 +107,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/watches.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/watches.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -127,7 +128,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/bags.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/bags.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -148,7 +149,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/suitCoat.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/suitCoat.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -169,7 +170,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/earbuds.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/earbuds.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -190,7 +191,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/perfume.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/perfume.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -211,7 +212,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/perfume.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/perfume.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -232,7 +233,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/perfume.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/perfume.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -253,7 +254,7 @@ export default class RewardModel extends Model {
 					companyId: 1,
 					uploaderId: 1,
 					type: 'imagePyramid',
-					urls: { thumb: '', small: '../../images/redeemableRewardPage/perfume.jpg', large: '' },
+					urls: { thumb: '', small: '../../images/rewardItemPage/perfume.jpg', large: '' },
 					storageDetails: [],
 					title: '',
 					description: '',
@@ -275,6 +276,7 @@ export default class RewardModel extends Model {
 		{ name: 'Affiliate 4', affiliateId: 4, destinationId: null },
 		{ name: 'Affiliate 5', affiliateId: 5, destinationId: null }
 	];
+
 	async getAllRewards(
 		page: number,
 		perPage: number,
@@ -287,50 +289,45 @@ export default class RewardModel extends Model {
 		return this.getPaginatedList(page, perPage, sortField, sortOrder, filterQuery, 'reward/paged');
 	}
 
-	async getCategoriesInSelectFormat(): Promise<Model.SelectOptions[]> {
-		return this.categoryList.map((categories) => {
-			return { value: categories.id, text: categories.name, selected: false };
-		});
-		// if (!this.allCategory) {
-		// 	await this.getAllCategories();
-		// }
-		// if (!this.allCategory) return [];
-		// return this.allCategory.map((categories) => {
-		// 	return { value: categories.id, text: categories.name, selected: false };
-		// });
-	}
 	async getAllCategories(): Promise<Api.Reward.Category.Res.Get[]> {
-		// if (!this.allCategory) {
-		// 	const response = await http.get<RsResponseData<Api.Reward.Category.Res.Get[]>>('reward/category/paged');
-		// 	this.allCategory = response.data.data;
-		// 	console.log(this.allCategory);
-		// }
-		// return this.allCategory;
-		return this.categoryList;
+		if (!this.allCategory) {
+			const response = await http.get<RsResponseData<Api.Reward.Category.Res.Get[]>>('reward/category/paged');
+			this.allCategory = response.data.data;
+			console.log('paged response total', response.data);
+		}
+		return this.allCategory;
 	}
 
 	async getFeaturedCategories(): Promise<FeaturedCategory[]> {
 		let featured: Model.FeaturedCategory[] = [];
-		for (let category of this.categoryList) {
-			if (category.isFeatured) {
-				featured.push({
-					categoryId: category.id,
-					imagePath: category.media[0].urls.small,
-					name: category.name
-				});
+		if (ObjectUtils.isArrayWithData(this.allCategory) && this.allCategory) {
+			for (let category of this.allCategory) {
+				if (category.isFeatured) {
+					featured.push({
+						categoryId: category.id,
+						imagePath: category.media[0].urls.small,
+						name: category.name
+					});
+				}
 			}
+			if (featured.length < 2) return [];
+			return featured.slice(0, 3);
+		} else {
+			return [];
 		}
-		if (featured.length < 2) return [];
-		return featured.slice(0, 3);
 	}
 
 	async getRedeemableRewards(data: Api.Reward.Req.Paged) {
-		const res = await http.get<RsResponseData<Api.Reward.Res.Get[]>>('reward/paged');
+		console.log('data', data);
+		//let res = await this.getPaginatedList(data.pagination.page, data.pagination.perPage, '', 'NONE', data.filter,'reward/paged');
+		const res = await http.get<RsResponseData<Api.Reward.Res.Get[]>>('reward/paged', data);
+		console.log('res', res);
 		return res;
 	}
 
 	async getVendorsInSelectFormat() {
-		return this.vendors.map((vendor) => {
+		let vendors = await this.getAllVendors();
+		return vendors.map((vendor) => {
 			if (vendor.destinationId) {
 				return { value: 'd' + vendor.destinationId, text: vendor.name, selected: false };
 			} else if (vendor.affiliateId) {
@@ -338,15 +335,6 @@ export default class RewardModel extends Model {
 			}
 			return { value: 0, text: '', selected: false };
 		});
-		// let vendors = await this.getAllVendors();
-		// return vendors.map((vendor) => {
-		// 	if (vendor.destinationId) {
-		// 		return { value: 'd' + vendor.destinationId, text: vendor.name, selected: false };
-		// 	} else if (vendor.affiliateId) {
-		// 		return { value: 'a' + vendor.affiliateId, text: vendor.name, selected: false };
-		// 	}
-		// 	return { value: 0, text: '', selected: false };
-		// });
 	}
 
 	async getAllVendors(): Promise<Api.Vendor.Res.Get[]> {
@@ -366,13 +354,11 @@ export default class RewardModel extends Model {
 		return this.getPaginatedList(page, perPage, sortField, sortOrder, filterQuery, 'reward/voucher/paged');
 	}
 
-	async getAllForRedeemableRewardsPage(): Promise<Model.RedeemableRewards> {
-		let res: Model.RedeemableRewards = {
-			selectCategories: await this.getCategoriesInSelectFormat(),
+	async getAllForRewardItemPage(): Promise<Model.RedeemableRewards> {
+		return {
 			allCategories: await this.getAllCategories(),
 			featuredCategories: await this.getFeaturedCategories(),
 			destinationSelect: await this.getVendorsInSelectFormat()
 		};
-		return res;
 	}
 }

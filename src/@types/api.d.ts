@@ -721,6 +721,10 @@ declare namespace Api {
 			}
 			export interface Create extends Omit<Get, 'modifiedOn'> {}
 			export interface Update extends Get {}
+			export interface GetByPage {
+				data: Get[];
+				total: number;
+			}
 		}
 		export namespace Voucher {
 			export namespace Req {
@@ -735,6 +739,10 @@ declare namespace Api {
 			}
 			export namespace Res {
 				export interface Get extends Omit<Model.RewardVoucher, 'companyId'> {}
+				export interface GetByPage {
+					data: Get[];
+					total: number;
+				}
 				export interface Create extends Get {}
 				export interface Delete {
 					rewardId: number;
@@ -762,6 +770,10 @@ declare namespace Api {
 			export namespace Res {
 				export interface Get extends Omit<Model.RewardCategory, 'companyId'> {
 					media: Media[];
+				}
+				export interface GetByPage {
+					data: Get[];
+					total: number;
 				}
 				export interface Create extends Get {}
 				export interface Update extends Get {}

@@ -14,7 +14,10 @@ const RewardCategoryCard: React.FC<RewardCategoryCardProps> = (props) => {
 		let styles: any = {
 			backgroundImage: `url(${props.imgPath})`,
 			height: '250px',
-			width: '278px'
+			width: '278px',
+			backgroundPosition: 'center',
+			backgroundSize: 'cover',
+			backgroundRepeat: 'no-repeat'
 		};
 		return styles;
 	}

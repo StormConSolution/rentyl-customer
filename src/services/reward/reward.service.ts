@@ -23,16 +23,13 @@ export default class RewardService extends Service {
 
 	async getRewardById(id: number): Promise<Api.Reward.Res.Get | undefined> {
 		const response = await http.get<RsResponseData<Api.Reward.Res.Get>>('reward', { id });
-		console.log('response in service', response.data.data);
 		return response.data.data;
 	}
 
-	async getAllCategoriesInSelectFormat() {
-		return this.rewardModel.getCategoriesInSelectFormat();
-	}
 	async getAllCategories(): Promise<Api.Reward.Category.Res.Get[]> {
 		return this.rewardModel.getAllCategories();
 	}
+
 	async getPagedRewards(data: Api.Reward.Req.Paged) {
 		return this.rewardModel.getRedeemableRewards(data);
 	}
@@ -44,8 +41,8 @@ export default class RewardService extends Service {
 		return this.rewardModel.getAllVendors();
 	}
 
-	async getAllForRedeemableRewardsPage() {
-		return this.rewardModel.getAllForRedeemableRewardsPage();
+	async getAllForRewardItemPage() {
+		return this.rewardModel.getAllForRewardItemPage();
 	}
 	async getAllVouchers(
 		page: number,

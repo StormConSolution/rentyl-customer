@@ -3,6 +3,7 @@ import './CheckboxList.scss';
 import { SelectOptions } from '../Select/Select';
 import IconLabel from '../iconLabel/IconLabel';
 import LabelCheckboxControlled from '../labelCheckboxControlled/LabelCheckboxControlled';
+import { capitalize } from '../../utils/utils';
 
 interface CheckboxListProps {
 	onChange: (selectedValues: (string | number)[], options: SelectOptions[]) => void;
@@ -59,13 +60,16 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 
 	function renderSelectOptions() {
 		let categories = [];
-		let displayAmount = showAll ? props.options.length : 5;
+		let displayAmount = props.options.length;
+		if (props.options.length > 5 && !showAll) {
+			displayAmount = 5;
+		}
 		for (let i = 0; i < displayAmount; i++) {
 			categories.push(
 				<LabelCheckboxControlled
 					key={i}
 					value={props.options[i].value}
-					text={props.options[i].text}
+					text={capitalize(props.options[i].text.toString())}
 					selected={props.options[i].selected}
 					onSelect={(value) => {
 						onSelectCheckbox(value);
@@ -80,6 +84,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 	}
 
 	function renderSeeAllIcon() {
+		if (props.options.length <= 5) return;
 		return (
 			<IconLabel
 				className={'seeAll'}

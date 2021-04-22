@@ -1,21 +1,23 @@
 import React from 'react';
 import './FeaturedCategoryCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import IconLabel from '../iconLabel/IconLabel';
+import IconLabel from '../../components/iconLabel/IconLabel';
 import FeaturedCategory = Model.FeaturedCategory;
 
-interface LabelLinkImageProps {
+interface FeaturedCategoryCardProps {
 	category: FeaturedCategory;
 	onClick: (categoryId: number | string) => void;
 	className?: string;
 }
 
-const FeaturedCategoryCard: React.FC<LabelLinkImageProps> = (props) => {
+const FeaturedCategoryCard: React.FC<FeaturedCategoryCardProps> = (props) => {
 	function renderStyles() {
 		let styles: any = {
 			backgroundImage: `url(${props.category.imagePath})`,
 			height: '160px',
-			width: '278px'
+			width: '278px',
+			backgroundSize: 'cover',
+			backgroundRepeat: 'no-repeat'
 		};
 		return styles;
 	}

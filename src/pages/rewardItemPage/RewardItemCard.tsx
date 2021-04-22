@@ -1,9 +1,8 @@
 import React from 'react';
 import './RewardItemCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import IconLabel from '../iconLabel/IconLabel';
+import IconLabel from '../../components/iconLabel/IconLabel';
 import router from '../../utils/router';
-import { ObjectUtils } from '@bit/redsky.framework.rs.http/dist/Utils';
 import { addCommasToNumber, capitalize } from '../../utils/utils';
 
 interface RewardItemCardProps {
