@@ -10,6 +10,7 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from './RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';

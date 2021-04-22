@@ -1,0 +1,47 @@
+@import '../../themes/themes';
+
+.rsBookingFlowPage {
+	.rsBookingCartTotalsCard {
+		position: sticky;
+		top: 20px;
+	}
+
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 20px 0;
+	}
+
+	.colOne {
+		.packagesAccordion {
+			background-color: theme-var($primaryBackgroundColor);
+			box-shadow: theme-var($primaryBoxShadowColor);
+			margin-bottom: 20px;
+			.rsDestinationPackageTile {
+				margin: 10px 0;
+			}
+		}
+
+		.rsContactInfoAndPaymentCard {
+			margin-bottom: 20px;
+		}
+
+		.acknowledgementSection {
+			background-color: theme-var($primaryBackgroundColor);
+			.rsLabelCheckbox {
+				padding: 0;
+			}
+		}
+
+		.policiesSection {
+			background-color: theme-var($primaryBackgroundColor);
+			margin-bottom: 20px;
+		}
+
+		.completeBookingBtn {
+			margin: 20px auto 120px;
+		}
+	}
+}

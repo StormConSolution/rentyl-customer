@@ -15,6 +15,7 @@ import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/Account
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
+import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -49,6 +50,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/compare',
 		page: ComparisonPage
+	},
+	{
+		path: '/booking',
+		page: BookingFlowPage,
+		options: {
+			view: 'landingPage'
+		}
 	},
 	{
 		path: '/reward',

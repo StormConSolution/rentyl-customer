@@ -278,7 +278,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 						<LabelCheckbox
 							value={'isDefault'}
 							text={'Set as primary'}
-							selected={false}
+							isChecked={false}
 							onSelect={(value, text) => {
 								setFormChanged(true);
 								updateAddressObj('isDefault', 1);
