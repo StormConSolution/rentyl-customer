@@ -52,7 +52,9 @@ const RedeemableRewardsPage: React.FC = () => {
 				let urlSelectedCategories: number[] = [];
 				try {
 					if (params.categories) urlSelectedCategories = JSON.parse(params.categories);
-				} catch (e) {}
+				} catch (e) {
+					rsToasts.error('An unexpected error has occurred on the server.');
+				}
 
 				let data = await rewardService.getAllForRedeemableRewardsPage();
 				data.selectCategories = data.selectCategories.map((category) => {
@@ -138,7 +140,6 @@ const RedeemableRewardsPage: React.FC = () => {
 	}
 
 	function renderCards() {
-		// console.log('renderCards showCategoryCards', showCategoryCards);
 		if (showCategoryCards) {
 			return categoryList.map((category, index) => {
 				return (
@@ -223,8 +224,6 @@ const RedeemableRewardsPage: React.FC = () => {
 								</Label>
 								<CheckboxList
 									onChange={(value, options) => {
-										// console.log(value);
-										// console.log(options);
 										router.updateUrlParams({ cids: JSON.stringify(value) });
 										setSelectedCategoryIds(value);
 										setCategorySelectList(options);

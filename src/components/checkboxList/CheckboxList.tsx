@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './CheckboxList.scss';
 import { SelectOptions } from '../Select/Select';
 import IconLabel from '../iconLabel/IconLabel';
-import LabelCheckboxControlled from '../labelCheckboxControlled/LabelCheckboxControlled';
+import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
 
 interface CheckboxListProps {
 	onChange: (selectedValues: (string | number)[], options: SelectOptions[]) => void;
@@ -62,7 +62,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 		let displayAmount = showAll ? props.options.length : 5;
 		for (let i = 0; i < displayAmount; i++) {
 			categories.push(
-				<LabelCheckboxControlled
+				<LabelCheckbox
 					key={i}
 					value={props.options[i].value}
 					text={props.options[i].text}
