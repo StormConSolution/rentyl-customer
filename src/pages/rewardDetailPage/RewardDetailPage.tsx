@@ -15,6 +15,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { addCommasToNumber, capitalize } from '../../utils/utils';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
+import rsToasts from '@bit/redsky.framework.toast';
 
 const RewardDetailPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
