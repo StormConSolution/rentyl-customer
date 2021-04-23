@@ -14,7 +14,7 @@ type CreditCardForm = { name: string; cardNumber: string; expDate: string };
 interface ContactInfoAndPaymentCardProps {
 	onContactChange: (value: ContactInfoForm) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
-	isValidForms: (isValid: boolean) => void;
+	isValidForm: (isValid: boolean) => void;
 }
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
@@ -39,7 +39,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					let currentYear = new Date().getFullYear();
 					let currentMonth = new Date().getMonth() + 1;
 
-					if (year === currentYear) return year >= currentYear && month >= currentMonth;
+					if (year === currentYear) return month >= currentMonth;
 					else return year > currentYear;
 				})
 			])
@@ -58,7 +58,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	);
 
 	useEffect(() => {
-		props.isValidForms(isValid);
+		props.isValidForm(isValid);
 	}, [isValid]);
 
 	async function updateCreditCardObj(control: RsFormControl) {

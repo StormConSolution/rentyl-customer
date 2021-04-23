@@ -106,7 +106,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							onCreditCardChange={(value) => {
 								console.log('Credit Card Form: ', value);
 							}}
-							isValidForms={(isValid) => {
+							isValidForm={(isValid) => {
 								setIsFormValid(isValid);
 							}}
 						/>
