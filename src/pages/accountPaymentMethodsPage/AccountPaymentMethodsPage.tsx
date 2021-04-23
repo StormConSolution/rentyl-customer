@@ -17,20 +17,18 @@ import LoadingPage from '../loadingPage/LoadingPage';
 interface AccountPaymentMethodsPageProps {}
 
 const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (props) => {
-	const loginStatus = useLoginState();
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useState<Api.User.Res.Get>();
 	const [formChanged, setFormChanged] = useState<boolean>(false);
 	const [creditCardObj, setCreditCardObj] = useState();
 
 	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) {
-			let userObj = userService.getCurrentUser();
-			if (!userObj) return;
+		let userObj = userService.getCurrentUser();
+		if (userObj) {
 			setUser(userObj);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loginStatus]);
+	}, []);
 
 	useEffect(() => {
 		console.log(user);

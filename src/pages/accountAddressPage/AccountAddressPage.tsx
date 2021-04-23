@@ -24,7 +24,6 @@ import UserAddressService from '../../services/userAddress/userAddress.service';
 interface AccountAddressPageProps {}
 
 const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
-	const loginStatus = useLoginState();
 	const userService = serviceFactory.get<UserService>('UserService');
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
@@ -38,17 +37,15 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 	const [stateList, setStateList] = useState<{ value: number | string; text: number | string; selected: boolean }[]>(
 		[]
 	);
-	const [reloadPage, setReloadPage] = useState<number>(0);
 
 	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) {
-			let userObj = userService.getCurrentUser();
-			if (!userObj) return;
+		let userObj = userService.getCurrentUser();
+		if (userObj) {
 			setAddressList(userObj.address);
 			setUser(userObj);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loginStatus]);
+	}, []);
 
 	useEffect(() => {
 		async function getCountries() {

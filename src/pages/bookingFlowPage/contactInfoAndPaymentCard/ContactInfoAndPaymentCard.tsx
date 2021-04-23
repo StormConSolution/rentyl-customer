@@ -5,38 +5,104 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../../../components/labelInput/LabelInput';
 import Paper from '../../../components/paper/Paper';
 import { useEffect, useState } from 'react';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import luhn from 'luhn';
+import { formatPhoneNumber, removeAllExceptNumbers } from '../../../utils/utils';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
 type CreditCardForm = { name: string; cardNumber: string; expDate: string };
 interface ContactInfoAndPaymentCardProps {
 	onContactChange: (value: ContactInfoForm) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
+	isValidForm: (isValid: boolean) => void;
 }
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
-	const [creditCardObj, setCreditCardObj] = useState<CreditCardForm>();
-	const [contactInfoForm, setContactInfoForm] = useState<ContactInfoForm>();
+	const [isValid, setIsValid] = useState<boolean>(false);
+	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('fullName', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
+			new RsFormControl('creditCard', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Credit Card is required'),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Credit Card', (control) => {
+					return luhn.validate(control.value.toString());
+				})
+			]),
+
+			new RsFormControl('expDate', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
+				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 5),
+				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 5),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
+					let month = parseInt(control.value.toString().slice(0, 2));
+					let year = parseInt(control.value.toString().slice(3, 5)) + 2000;
+					let currentYear = new Date().getFullYear();
+					let currentMonth = new Date().getMonth() + 1;
+
+					if (year === currentYear) return month >= currentMonth;
+					else return year > currentYear;
+				})
+			])
+		])
+	);
+	const [contactInfoForm, setContactInfoForm] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('firstName', '', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
+			new RsFormControl('lastName', '', [new RsValidator(RsValidatorEnum.REQ, 'Last name is required')]),
+			new RsFormControl('phone', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Phone number required'),
+				new RsValidator(RsValidatorEnum.MIN, 'Phone number too short', 10)
+			]),
+			new RsFormControl('data', '', [])
+		])
+	);
 
 	useEffect(() => {
-		console.log('Credit Card', creditCardObj);
-		console.log('Contact Form', contactInfoForm);
-	}, [creditCardObj, contactInfoForm]);
+		props.isValidForm(isValid);
+	}, [isValid]);
 
-	function updateCreditCardObj(key: 'fullName' | 'cardNumber' | 'expDate', value: any) {
-		setCreditCardObj((prev) => {
-			let createCreditCardObj: any = { ...prev };
-			createCreditCardObj[key] = value;
-			return createCreditCardObj;
-		});
+	async function updateCreditCardObj(control: RsFormControl) {
+		if (
+			control.key === 'expDate' &&
+			!control.value.toString().includes('/') &&
+			control.value.toString().length === 4
+		) {
+			let newValue = control.value.toString().slice(0, 2) + '/' + control.value.toString().slice(2, 4);
+			control.value = newValue;
+		}
+		creditCardObj.update(control);
+		let isFormValid = await creditCardObj.isValid();
+		props.onCreditCardChange(creditCardObj.toModel());
+		setIsValid(isFormFilledOut() && isFormValid);
+		setCreditCardObj(creditCardObj.clone());
 	}
 
-	function updateContactInfoForm(key: 'firstName' | 'lastName' | 'phone' | 'data', value: any) {
-		setContactInfoForm((prev) => {
-			let createCreditCardObj: any = { ...prev };
-			createCreditCardObj[key] = value;
-			return createCreditCardObj;
-		});
+	async function updateContactInfoForm(control: RsFormControl) {
+		if (control.key === 'phone' && control.value.toString().length === 10) {
+			let newValue = formatPhoneNumber(control.value.toString());
+			control.value = newValue;
+		} else if (control.key === 'phone' && control.value.toString().length > 10) {
+			let newValue = removeAllExceptNumbers(control.value.toString());
+			control.value = newValue;
+		}
+		contactInfoForm.update(control);
+		let isFormValid = await contactInfoForm.isValid();
+		props.onContactChange(contactInfoForm.toModel());
+		setIsValid(isFormFilledOut() && isFormValid);
+		setContactInfoForm(contactInfoForm.clone());
 	}
+
+	function isFormFilledOut(): boolean {
+		return (
+			!!contactInfoForm.get('firstName').value.toString().length &&
+			!!contactInfoForm.get('lastName').value.toString().length &&
+			!!contactInfoForm.get('phone').value.toString().length &&
+			!!creditCardObj.get('fullName').value.toString().length &&
+			!!creditCardObj.get('creditCard').value.toString().length &&
+			!!creditCardObj.get('expDate').value.toString().length
+		);
+	}
+
 	return (
 		<Paper className={'rsContactInfoAndPaymentCard'} borderRadius={'4px'} boxShadow padding={'16px'}>
 			<Label variant={'h2'} marginBottom={'10px'}>
@@ -46,16 +112,14 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				<LabelInput
 					title={'First Name'}
 					inputType={'text'}
-					onChange={(value) => {
-						updateContactInfoForm('firstName', value);
-					}}
+					control={contactInfoForm.get('firstName')}
+					updateControl={updateContactInfoForm}
 				/>
 				<LabelInput
 					title={'Last Name'}
 					inputType={'text'}
-					onChange={(value) => {
-						updateContactInfoForm('lastName', value);
-					}}
+					control={contactInfoForm.get('lastName')}
+					updateControl={updateContactInfoForm}
 				/>
 				<LabelInput
 					title={'Phone'}
@@ -63,9 +127,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					maxLength={10}
 					isPhoneInput
 					iconImage={'icon-phone'}
-					onChange={(value) => {
-						updateContactInfoForm('phone', value);
-					}}
+					control={contactInfoForm.get('phone')}
+					updateControl={updateContactInfoForm}
 				/>
 			</Box>
 			<hr />
@@ -75,9 +138,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			<LabelInput
 				title={''}
 				inputType={'textarea'}
-				onChange={(value) => {
-					updateContactInfoForm('data', value);
-				}}
+				control={contactInfoForm.get('data')}
+				updateControl={updateContactInfoForm}
 			/>
 			<hr />
 			<Box>
@@ -85,31 +147,27 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					Payment Information
 				</Label>
 
-				<Box display={'flex'} justifyContent={'space-between'}>
+				<Box className={'creditCardInfo'} display={'flex'} justifyContent={'space-between'}>
 					<LabelInput
 						title={'Name on Card'}
 						inputType={'text'}
-						onChange={(value) => {
-							updateCreditCardObj('fullName', value);
-						}}
+						control={creditCardObj.get('fullName')}
+						updateControl={updateCreditCardObj}
 					/>
 					<LabelInput
 						title={'Card Number'}
 						inputType={'text'}
-						onChange={(value) => {
-							updateCreditCardObj('cardNumber', value);
-						}}
+						control={creditCardObj.get('creditCard')}
+						updateControl={updateCreditCardObj}
 					/>
 
 					<LabelInput
 						className={'creditCardExpInput'}
-						maxLength={4}
+						maxLength={5}
 						title={'Expiration Date'}
 						inputType={'text'}
-						onChange={(value) => {
-							let newValue = value.slice(0, 2) + '/' + value.slice(2, 4);
-							updateCreditCardObj('expDate', newValue);
-						}}
+						control={creditCardObj.get('expDate')}
+						updateControl={updateCreditCardObj}
 						placeholder={'MM/YY'}
 					/>
 				</Box>
