@@ -112,7 +112,6 @@
 
 	.sectionThree {
 		position: relative;
-		overflow-x: hidden;
 		.rsLabel {
 			&.h1 {
 				margin: 10px 0;
@@ -179,10 +178,6 @@
 	}
 
 	.sectionFour {
-		.sectionFourCardsWrapper {
-			grid-template-columns: auto auto;
-		}
-
 		img {
 			margin-right: 50px;
 		}
@@ -332,11 +327,6 @@
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
-
-			.sectionFourCardsWrapper {
-				grid-template-columns: auto;
-			}
-
 			img {
 				width: 315px;
 				height: 244px;

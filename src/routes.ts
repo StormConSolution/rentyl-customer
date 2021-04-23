@@ -14,8 +14,7 @@ import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
-import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
-import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
+import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
 
 const routes: RouteDetails[] = [
 	{
@@ -52,19 +51,16 @@ const routes: RouteDetails[] = [
 		page: ComparisonPage
 	},
 	{
-		path: '/booking',
-		page: BookingFlowPage,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
 		path: '/reward',
 		page: RedeemableRewardsPage
 	},
 	{
 		path: '/reward/details',
 		page: RewardDetailPage
+	},
+	{
+		path: '/reward/purchase',
+		page: RewardPurchasePage
 	},
 	{
 		path: '/destination/details',
@@ -107,10 +103,6 @@ const routes: RouteDetails[] = [
 		options: {
 			view: 'landingPage'
 		}
-	},
-	{
-		path: '/about-spire-points',
-		page: AboutSpirePointsPage
 	},
 	{
 		path: '*',

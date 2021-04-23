@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import './SignInPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
@@ -24,18 +24,12 @@ const SignInPage: React.FC = () => {
 		new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')])
 	]);
 
-	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
-
 	async function signIn(e: FormEvent) {
 		e.preventDefault();
 		try {
 			setLoginErrorMessage('');
 			await userService.loginUserByPassword(`${emailAddress}`, `${password}`);
-			if (params.data !== 0 && params.data.includes('startDate')) {
-				await router.navigate(`/booking?data=${params.data}`);
-			} else {
-				await router.navigate('/');
-			}
+			await router.navigate('/');
 		} catch (e) {
 			if (e.message === 'INVALID_ROLE') {
 				setLoginErrorMessage('User not allowed to log in.');

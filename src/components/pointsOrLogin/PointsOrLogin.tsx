@@ -2,6 +2,7 @@ import React from 'react';
 import './PointsOrLogin.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
+import useLoginState from '../../customHooks/useLoginState';
 
 interface PointsOrLoginProps {
 	className?: string;
@@ -9,7 +10,10 @@ interface PointsOrLoginProps {
 }
 
 const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
+	const loginStatus = useLoginState();
+
 	function renderPointsOrLoginButton() {
+		console.log('user', loginStatus);
 		if (props.user) {
 			return (
 				<div className={'availablePendingPointsContainer'}>

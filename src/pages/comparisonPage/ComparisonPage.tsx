@@ -66,7 +66,7 @@ const ComparisonPage: React.FC = () => {
 
 	useEffect(() => {
 		if (comparisonItems.length === 0) {
-			rsToasts.error('No destinations or accommodations are selected to compare.');
+			rsToasts.error('No destinations or accommodations selected to compare.');
 		}
 		async function getAccommodation() {
 			try {

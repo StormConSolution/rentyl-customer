@@ -5,7 +5,6 @@ import { Page } from '@bit/redsky.framework.rs.996';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
-import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';

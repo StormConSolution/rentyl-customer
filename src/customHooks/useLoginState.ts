@@ -13,6 +13,7 @@ export enum LoginStatus {
 	LOGGED_IN
 }
 
+/* This should ONLY ever be used in App.tsx */
 export default function useLoginState() {
 	const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.UNKNOWN);
 	const [adminToken, setAdminToken] = useRecoilState<string>(globalState.adminToken);
