@@ -5,13 +5,6 @@
 body {
 	margin: 0;
 }
-
-.loggedInView {
-	#admin {
-		//height: calc(100% - 64px);
-		//min-height: calc(100vh - 64px);
-	}
-}
 .App {
 	@include spread-map($defaultTheme);
 }
@@ -88,7 +81,6 @@ body {
 .rsSelect {
 	&.outlined {
 		height: 40px;
-		//padding: 0 10px;
 		border-radius: 0;
 		border: 1px solid theme-var($greyLineColor);
 
@@ -131,9 +123,3 @@ body {
 		}
 	}
 }
-
-//.small {
-//	.rsAppBar {
-//		width: 335px;
-//	}
-//}

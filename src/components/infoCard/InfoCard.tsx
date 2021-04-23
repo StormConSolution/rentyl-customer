@@ -37,7 +37,7 @@ const InfoCard: React.FC<InfoCardProps> = (props) => {
 				{!!props.body && !props.bodyReactNode && (
 					<Label variant={props.bodyVariant || 'body1'}>{props.body}</Label>
 				)}
-				{!props.body && props.bodyReactNode && props.bodyReactNode}
+				{!props.body && !!props.bodyReactNode && props.bodyReactNode}
 			</Box>
 		</Paper>
 	);
