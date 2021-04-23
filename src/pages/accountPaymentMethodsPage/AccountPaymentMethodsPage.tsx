@@ -5,7 +5,6 @@ import { Page } from '@bit/redsky.framework.rs.996';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
-import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -127,7 +126,7 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 						<LabelCheckbox
 							value={'isPrimary'}
 							text={'Set as primary'}
-							selected={false}
+							isChecked={false}
 							onSelect={(value, text) => {
 								setFormChanged(true);
 								console.log(value, true);

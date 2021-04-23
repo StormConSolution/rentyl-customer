@@ -1,19 +1,23 @@
 import * as React from 'react';
 import './LabelCheckbox.scss';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
 interface LabelCheckboxProps {
 	value: string | number;
 	text: string | number;
-	selected: boolean;
+	isChecked?: boolean;
 	onSelect: (value: string | number, text: string | number) => void;
 	onDeselect: (value: string | number, text: string | number) => void;
 }
 
 const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
-	const [isChecked, setIsChecked] = useState<boolean>(props.selected);
+	const [isChecked, setIsChecked] = useState<boolean>(props.isChecked || false);
+
+	useEffect(() => {
+		setIsChecked(props.isChecked || false);
+	}, [props.isChecked]);
 
 	return (
 		<div className={'rsLabelCheckbox'}>
