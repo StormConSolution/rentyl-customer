@@ -1,0 +1,16 @@
+@import '../../themes/themes';
+.rsImageTitleLink {
+	img {
+		width: 375px;
+		height: 220px;
+		object-fit: cover;
+	}
+}
+.small {
+	.rsImageTitleLink {
+		img {
+			width: 260px;
+			height: 170px;
+		}
+	}
+}
