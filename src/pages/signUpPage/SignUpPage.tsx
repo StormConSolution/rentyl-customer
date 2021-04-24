@@ -121,8 +121,8 @@ const SignUpPage: React.FC = () => {
 	}
 
 	async function signUp() {
-		if (!(await form.isValid()) && country === '') {
-			setForm(form.clone());
+		if (!(await form.isValid()) && country !== '') {
+			return setForm(form.clone());
 		}
 		let newCustomer: any = form.toModel();
 		newCustomer.birthDate = formatDateForServer(newCustomer.birthDate);
