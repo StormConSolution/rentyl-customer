@@ -9,6 +9,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 interface InfoCardProps {
 	title?: string;
 	body?: string;
+	bodyReactNode?: React.ReactNode;
 	bodyVariant?: 'body1' | 'body2';
 	icon?: string;
 	height?: string;
@@ -33,7 +34,10 @@ const InfoCard: React.FC<InfoCardProps> = (props) => {
 			{!!props.icon && <Icon iconImg={props.icon} size={36} color={'#cc9e0d'} />}
 			<Box>
 				{!!props.title && <Label variant={size === 'small' ? 'h4' : 'h2'}>{props.title}</Label>}
-				{!!props.body && <Label variant={props.bodyVariant || 'body1'}>{props.body}</Label>}
+				{!!props.body && !props.bodyReactNode && (
+					<Label variant={props.bodyVariant || 'body1'}>{props.body}</Label>
+				)}
+				{!props.body && !!props.bodyReactNode && props.bodyReactNode}
 			</Box>
 		</Paper>
 	);

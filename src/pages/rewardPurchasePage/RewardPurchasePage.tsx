@@ -59,12 +59,7 @@ const RewardPurchasePage: React.FC = () => {
 		<Page className={'rsRewardPurchasePage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<div className={'headerBar'}>
-					<RewardHeaderBar
-						className={'rewardPurchaseHeader'}
-						user={user}
-						title={'Order Summary'}
-						titleVariant={'h2'}
-					/>
+					<RewardHeaderBar className={'rewardPurchaseHeader'} title={'Order Summary'} titleVariant={'h2'} />
 				</div>
 				<div className={'mainContentContainer'}>
 					<div className={'rewardDetailsContainer'}>
@@ -101,13 +96,7 @@ const RewardPurchasePage: React.FC = () => {
 						</div>
 					</div>
 					<div className={'purchaseDetails'}>
-						<Paper
-							className={'rewardPurchasePaper'}
-							min-height={'260px'}
-							width={'278px'}
-							backgroundColor={'#fcfbf8'}
-							boxShadow
-						>
+						<Paper className={'rewardPurchasePaper'} width={'278px'} backgroundColor={'#fcfbf8'} boxShadow>
 							<div className={'totalPurchaseCost'}>
 								<Label className={'totalCostLabel'} variant={'h4'}>
 									Total Cost

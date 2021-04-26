@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './CheckboxList.scss';
 import { SelectOptions } from '../Select/Select';
-import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
 import IconLabel from '../iconLabel/IconLabel';
+import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
 import { capitalize } from '../../utils/utils';
 
 interface CheckboxListProps {
@@ -15,8 +15,6 @@ interface CheckboxListProps {
 
 const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 	const [showAll, setShowAll] = useState<boolean>(false);
-	// const [options, setOptions] = useState<SelectOptions[]>(props.options);
-	// const [selectedIds, setSelectedIds] = useState<(string | number)[]>(props.selectedIds ? props.selectedIds : []);
 
 	function getSelectedValues(options: SelectOptions[]): (string | number)[] {
 		return options

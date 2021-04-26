@@ -9,7 +9,7 @@ import { formatPhoneNumber, validateEmail } from '../../utils/utils';
 import { useState } from 'react';
 
 interface LabelInputProps {
-	title: string | React.ReactNode;
+	title: string;
 	onChange?: (value: any) => void;
 	control?: RsFormControl;
 	updateControl?: (updateControl: RsFormControl) => void;

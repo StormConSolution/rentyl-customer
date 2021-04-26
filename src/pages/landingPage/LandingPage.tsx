@@ -331,19 +331,13 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 					)}
 				</Box>
 
-				<Box
-					className={'sectionFour'}
-					margin={'0 auto 170px'}
-					width={'100%'}
-					display={'flex'}
-					justifyContent={'center'}
-				>
+				<Box className={'sectionFour'} margin={'0 78px 170px'} width={'100%'} display={'flex'}>
 					<img src={require('../../images/landingPage/coffee.png')} alt={'coffee guy'} />
 					<Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
 						<Label variant={size === 'small' ? 'h2' : 'h1'}>
 							Earning points <span>every day</span>
 						</Label>
-						<Box display={'grid'} className={'sectionFourCardsWrapper'}>
+						<Box display={'flex'} flexWrap={'wrap'}>
 							<InfoCard
 								icon={'icon-tea-cup'}
 								body={

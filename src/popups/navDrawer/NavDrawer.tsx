@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../../components/labelLink/LabelLink';
 import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
+import router from '../../utils/router';
 
 interface NavPopoutProps {
 	onClose: () => void;
@@ -50,6 +51,10 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								label={'Sign Up'}
 								variant={'button'}
 								iconRight={'icon-chevron-right'}
+								onClick={() => {
+									props.onClose();
+									router.navigate('/signup');
+								}}
 								iconSize={7}
 								iconColor={'#ffffff'}
 							/>
@@ -58,6 +63,10 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								label={'Log in'}
 								variant={'button'}
 								iconRight={'icon-chevron-right'}
+								onClick={() => {
+									props.onClose();
+									router.navigate('/signin');
+								}}
 								iconSize={7}
 								iconColor={'#ffffff'}
 							/>

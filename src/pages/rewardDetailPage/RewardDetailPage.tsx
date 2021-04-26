@@ -94,7 +94,6 @@ const RewardDetailPage: React.FC = () => {
 			<div className={'rs-page-content-wrapper'}>
 				<RewardHeaderBar
 					className={'detailPageHeader'}
-					user={user}
 					title={'Categories/Rewards/Details'}
 					titleVariant={'h4'}
 				/>

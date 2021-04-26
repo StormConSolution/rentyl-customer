@@ -44,6 +44,7 @@
 		"html-webpack-plugin": "^4.0.1",
 		"lodash.clonedeep": "^4.5.0",
 		"lodash.debounce": "^4.0.8",
+		"luhn": "^2.4.1",
 		"node-sass": "^4.13.1",
 		"react": "^16.13.1",
 		"react-dates": "^21.8.0",

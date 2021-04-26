@@ -229,6 +229,7 @@ const RewardItemPage: React.FC = () => {
 				);
 			});
 		}
+		// console.log('renderCards function rewardList', rewardList);
 		if (!ObjectUtils.isArrayWithData(rewardList)) return;
 		return rewardList.map((reward, index) => {
 			let primaryImg = getPrimaryRewardImg(reward.media);

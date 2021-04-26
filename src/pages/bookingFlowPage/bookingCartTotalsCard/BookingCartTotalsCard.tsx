@@ -7,6 +7,7 @@ import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Paper from '../../../components/paper/Paper';
 import { Booking } from '../fakeBookingData';
 import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -24,6 +25,7 @@ interface BookingCartTotalsCardProps {
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	function getRoomTotal() {
 		let cost = 0;
 		props.costPerNight.forEach((item) => (cost += item.priceCents));
@@ -111,7 +113,13 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	return (
-		<Paper width={'410px'} className={'rsBookingCartTotalsCard'} borderRadius={'4px'} boxShadow padding={'16px'}>
+		<Paper
+			width={size === 'small' ? '100%' : '410px'}
+			className={'rsBookingCartTotalsCard'}
+			borderRadius={'4px'}
+			boxShadow
+			padding={'16px'}
+		>
 			<Label variant={'h2'} marginBottom={'10px'}>
 				Your Stay
 			</Label>
