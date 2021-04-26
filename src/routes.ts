@@ -16,6 +16,8 @@ import AccountNotificationPreferences from './pages/accountNotificationPreferenc
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
+import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
+import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
 
 const routes: RouteDetails[] = [
 	{
@@ -104,6 +106,14 @@ const routes: RouteDetails[] = [
 		options: {
 			view: 'landingPage'
 		}
+	},
+	{
+		path: '/about-spire-points',
+		page: AboutSpirePointsPage
+	},
+	{
+		path: '/about-spire',
+		page: AboutSpirePage
 	},
 	{
 		path: '/features-and-benefits',
