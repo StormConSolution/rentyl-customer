@@ -11,6 +11,7 @@ interface RewardItemCardProps {
 	points: number | string;
 	description: string;
 	rewardId: number | string;
+	voucherCode: number | string;
 	className?: string;
 }
 
@@ -36,7 +37,7 @@ const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
 				iconPosition={'right'}
 				iconSize={7}
 				labelVariant={'caption'}
-				onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}`)}
+				onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}&vc=${props.voucherCode}`)}
 			/>
 		</div>
 	);

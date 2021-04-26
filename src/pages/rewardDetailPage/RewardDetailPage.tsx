@@ -6,8 +6,6 @@ import UserService from '../../services/user/user.service';
 import RewardService from '../../services/reward/reward.service';
 import router from '../../utils/router';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import IconLabel from '../../components/iconLabel/IconLabel';
-import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import Carousel from '../../components/carousel/Carousel';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardHeaderBar from '../../components/rewardHeaderBar/RewardHeaderBar';
@@ -22,8 +20,9 @@ const RewardDetailPage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const user = userService.getCurrentUser();
 	const [reward, setReward] = useState<Api.Reward.Res.Get>();
-	const params = router.getPageUrlParams<{ reward: string }>([
-		{ key: 'ri', default: '', type: 'string', alias: 'reward' }
+	const params = router.getPageUrlParams<{ reward: string; voucherCode: string }>([
+		{ key: 'ri', default: '', type: 'string', alias: 'reward' },
+		{ key: 'vc', default: '', type: 'string', alias: 'voucherCode' }
 	]);
 
 	useEffect(() => {
@@ -33,7 +32,6 @@ const RewardDetailPage: React.FC = () => {
 			}
 			try {
 				let res = await rewardService.getRewardById(Number(params.reward));
-				console.log(res);
 				setReward(res);
 			} catch (e) {
 				rsToasts.error('An unexpected error occurred on the server.');
@@ -60,7 +58,9 @@ const RewardDetailPage: React.FC = () => {
 					look={'containedPrimary'}
 					variant={'button'}
 					label={'buy with points'}
-					onClick={() => router.navigate(`/reward/purchase?ri=${reward ? reward.id : ''}`)}
+					onClick={() =>
+						router.navigate(`/reward/purchase?ri=${reward ? reward.id : ''}&vc=${params.voucherCode}`)
+					}
 				/>
 			);
 		} else {

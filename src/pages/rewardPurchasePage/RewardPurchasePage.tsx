@@ -23,8 +23,9 @@ const RewardPurchasePage: React.FC = () => {
 	const user = userService.getCurrentUser();
 	const [reward, setReward] = useState<Api.Reward.Res.Get>();
 	const [termsAndConditionsIsChecked, setTermsAndConditionsIsChecked] = useState<boolean>(true);
-	const params = router.getPageUrlParams<{ reward: string }>([
-		{ key: 'ri', default: '', type: 'string', alias: 'reward' }
+	const params = router.getPageUrlParams<{ reward: number; voucherCode: string }>([
+		{ key: 'ri', default: '', type: 'string', alias: 'reward' },
+		{ key: 'vc', default: '', type: 'string', alias: 'voucherCode' }
 	]);
 
 	useEffect(() => {
@@ -34,7 +35,6 @@ const RewardPurchasePage: React.FC = () => {
 			}
 			try {
 				let res = await rewardService.getRewardById(Number(params.reward));
-				console.log('res', res);
 				setReward(res);
 			} catch (e) {
 				rsToasts.error('An unexpected error occurred on the server.');
@@ -42,6 +42,16 @@ const RewardPurchasePage: React.FC = () => {
 		}
 		getRewardDetails().catch(console.error);
 	}, []);
+
+	async function claimRewardVoucher() {
+		try {
+			await rewardService.claimRewardVoucher({ rewardId: Number(params.reward), code: params.voucherCode });
+			rsToasts.success('You have claimed your voucher');
+			router.navigate('/reward').catch(console.error);
+		} catch (e) {
+			rsToasts.error('An unexpected error occurred on the server.');
+		}
+	}
 
 	return !reward ? (
 		<LoadingPage />
@@ -150,6 +160,7 @@ const RewardPurchasePage: React.FC = () => {
 								look={'containedPrimary'}
 								variant={'button'}
 								label={'Place Order'}
+								onClick={claimRewardVoucher}
 							/>
 						</div>
 						<div className={'policyContainer'}>

@@ -10,41 +10,20 @@ import FilterQueryValue = RedSky.FilterQueryValue;
 export default class RewardService extends Service {
 	rewardModel: RewardModel = modelFactory.get<RewardModel>('RewardModel');
 
-	async getAllRewards(
-		page: number,
-		perPage: number,
-		sortField: string,
-		sortOrder: StandardOrderTypes,
-		matchType: MatchTypes,
-		filter: FilterQueryValue[]
-	) {
-		return this.rewardModel.getAllRewards(page, perPage, sortField, sortOrder, matchType, filter);
-	}
-
 	async getRewardById(id: number): Promise<Api.Reward.Res.Get | undefined> {
 		const response = await http.get<RsResponseData<Api.Reward.Res.Get>>('reward', { id });
 		return response.data.data;
 	}
 
-	async getAllCategories(): Promise<Api.Reward.Category.Res.Get[]> {
-		return this.rewardModel.getAllCategories();
-	}
-
-	async getPagedRewards(data: Api.Reward.Req.Paged) {
+	async getPagedRewards(data: Api.Reward.Req.Paged): Promise<Api.Reward.Res.GetByPage> {
 		return this.rewardModel.getRedeemableRewards(data);
 	}
 
-	async getAllVendorsInSelectFormat() {
-		return this.rewardModel.getVendorsInSelectFormat();
-	}
-	async getAllVendors() {
-		return this.rewardModel.getAllVendors();
+	async getAllActiveCategories(): Promise<Api.Reward.Category.Res.Get[]> {
+		return this.rewardModel.getAllActiveCategories();
 	}
 
-	async getAllForRewardItemPage() {
-		return this.rewardModel.getAllForRewardItemPage();
-	}
-	async getAllVouchers(
+	async getPagedCategories(
 		page: number,
 		perPage: number,
 		sortField: string,
@@ -52,6 +31,15 @@ export default class RewardService extends Service {
 		matchType: MatchTypes,
 		filter: FilterQueryValue[]
 	) {
-		return this.rewardModel.getAllVouchers(page, perPage, sortField, sortOrder, matchType, filter);
+		return this.rewardModel.getPagedCategories(page, perPage, sortField, sortOrder, matchType, filter);
+	}
+
+	async claimRewardVoucher(data: Api.Reward.Voucher.Req.Claim) {
+		const res = await http.put<RsResponseData<Api.Reward.Voucher.Res.Claim>>('reward/voucher/claim', data);
+		return res.data.data;
+	}
+
+	async getAllForRewardItemPage() {
+		return this.rewardModel.getAllForRewardItemPage();
 	}
 }

@@ -10,7 +10,6 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from './RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
@@ -23,7 +22,6 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 
 import FilterQueryValue = RedSky.FilterQueryValue;
-import FilterQuery = RedSky.FilterQuery;
 
 const RewardItemPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
@@ -35,7 +33,7 @@ const RewardItemPage: React.FC = () => {
 
 	const [showCategoryOrRewardCards, setShowCategoryOrRewardCards] = useState<'category' | 'reward'>('category');
 	const [featuredCategory, setFeaturedCategory] = useState<Model.FeaturedCategory[]>();
-	const [categoryList, setCategoryList] = useState<Api.Reward.Category.Res.Get[]>([]);
+	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
 	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
 	const [destinationSelectList, setDestinationSelectList] = useState<SelectOptions[]>([]);
 	const [rewardList, setRewardList] = useState<Api.Reward.Res.Get[]>([]);
@@ -43,7 +41,8 @@ const RewardItemPage: React.FC = () => {
 	const [pointCostMax, setPointCostMax] = useState<number>();
 	const [page, setPage] = useState<number>(1);
 	const perPage = 9;
-	const [cardTotal, setCardTotal] = useState<number>(12);
+	const [cardTotal, setCardTotal] = useState<number>(0);
+	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
 
 	const params = router.getPageUrlParams<{ categories: string }>([
 		{ key: 'cids', default: '', type: 'string', alias: 'categories' }
@@ -58,9 +57,9 @@ const RewardItemPage: React.FC = () => {
 				} catch (e) {
 					rsToasts.error('An unexpected error occurred on the server.');
 				}
-
+				let allActiveCategories = await rewardService.getAllActiveCategories();
 				let data = await rewardService.getAllForRewardItemPage();
-				let selectCategories = data.allCategories.map((category) => {
+				let selectCategories = allActiveCategories.map((category) => {
 					return {
 						value: category.id,
 						selected: urlSelectedCategories.includes(Number(category.id)),
@@ -68,7 +67,6 @@ const RewardItemPage: React.FC = () => {
 					};
 				});
 				setCategorySelectList(selectCategories);
-				setCategoryList(data.allCategories);
 				setFeaturedCategory(data.featuredCategories);
 				setDestinationSelectList(data.destinationSelect);
 				setWaitToLoad(false);
@@ -79,31 +77,107 @@ const RewardItemPage: React.FC = () => {
 		getAllCategories().catch(console.error);
 	}, []);
 
-	function formatFilterQuery(): FilterQuery {
-		let selectedDestinationIds = getSelectedIds([...destinationSelectList]);
-		if (!ObjectUtils.isArrayWithData(selectedDestinationIds)) return { matchType: 'like', searchTerm: [] };
-		let filter: FilterQueryValue[] = [];
-		let isFirst: boolean = true;
-		for (let destination of selectedDestinationIds) {
-			const aOrD = destination.toString().slice(0, 1);
-			const vendorId: number = parseInt(destination.toString().slice(1));
-			if (isFirst) {
-				filter.push({
-					column: aOrD === 'd' ? 'destinationId' : 'affiliateId',
-					value: vendorId,
-					matchType: 'exact'
-				});
-				isFirst = false;
+	useEffect(() => {
+		async function getCategoriesOrRewardItems() {
+			if (ObjectUtils.isArrayWithData(params.categories) || params.categories === '') {
+				try {
+					let pagedCategories = await rewardService.getPagedCategories(
+						page,
+						perPage,
+						'name',
+						'ASC',
+						'exact',
+						[
+							{
+								column: 'isActive',
+								value: 1
+							}
+						]
+					);
+					setCategoryPagedList(pagedCategories.data.data);
+					setCardTotal(pagedCategories.data.total ? pagedCategories.data.total : 0);
+				} catch (e) {
+					rsToasts.error('An unexpected error occurred on the server.');
+				}
 			} else {
+				let filter = formatFilterQuery();
+				try {
+					let res = await rewardService.getPagedRewards({
+						pagination: { page: page, perPage: perPage },
+						filter: { matchType: 'exact', searchTerm: filter }
+					});
+					setShowCategoryOrRewardCards('reward');
+					setCardTotal(res.total ? res.total : 1);
+					setRewardList(res.data);
+				} catch (e) {
+					console.error(e.message);
+				}
+			}
+		}
+		getCategoriesOrRewardItems().catch(console.error);
+	}, [page, applyFilterToggle]);
+
+	function formatFilterQuery(): FilterQueryValue[] {
+		let selectedDestinationIds = getSelectedIds([...destinationSelectList]);
+		let filter: FilterQueryValue[] = [];
+		if (ObjectUtils.isArrayWithData(selectedDestinationIds)) {
+			let destinationIds: number[] = [];
+			let affiliateIds: number[] = [];
+			for (let destination of selectedDestinationIds) {
+				const aOrD = destination.toString().slice(0, 1);
+				const vendorId: number = parseInt(destination.toString().slice(1));
+				if (aOrD === 'd') destinationIds.push(vendorId);
+				if (aOrD === 'a') affiliateIds.push(vendorId);
+			}
+			if (ObjectUtils.isArrayWithData(destinationIds)) {
 				filter.push({
-					column: aOrD === 'd' ? 'destinationId' : 'affiliateId',
-					value: vendorId,
+					column: 'destinationId',
+					value: destinationIds,
+					matchType: 'exact',
+					conjunction: 'OR'
+				});
+			}
+			if (ObjectUtils.isArrayWithData(affiliateIds)) {
+				filter.push({
+					column: 'affiliateId',
+					value: affiliateIds,
 					conjunction: 'OR',
 					matchType: 'exact'
 				});
 			}
 		}
-		return { matchType: 'exact', searchTerm: filter };
+		let selectedCategoryIds = JSON.parse(params.categories);
+		if (ObjectUtils.isArrayWithData(selectedCategoryIds)) {
+			filter.push({
+				column: 'map.CategoryId',
+				value: selectedCategoryIds,
+				matchType: 'exact',
+				conjunction: 'AND'
+			});
+		}
+		if (pointCostMin) {
+			filter.push({
+				column: 'pointCost',
+				value: pointCostMin,
+				matchType: 'greaterThanEqual',
+				conjunction: 'AND'
+			});
+		}
+		if (pointCostMax) {
+			filter.push({
+				column: 'pointCost',
+				value: pointCostMax,
+				matchType: 'lessThanEqual',
+				conjunction: 'AND'
+			});
+		}
+		filter.push({
+			column: 'isActive',
+			value: 1,
+			matchType: 'exact',
+			conjunction: 'AND'
+		});
+		return filter;
 	}
 
 	function getSelectedIds(options: SelectOptions[]): (string | number)[] {
@@ -116,32 +190,14 @@ const RewardItemPage: React.FC = () => {
 			});
 	}
 
-	async function getRewardItem() {
-		let data: Api.Reward.Req.Paged = {
-			categories: JSON.parse(params.categories),
-			pagination: { page: page, perPage: perPage }
-		};
-		data.filter = formatFilterQuery();
-		if (pointCostMin) data.pointCostMin = pointCostMin;
-		if (pointCostMax) data.pointCostMax = pointCostMax;
-		try {
-			let res = await rewardService.getPagedRewards(data);
-			setShowCategoryOrRewardCards('reward');
-			// setCardTotal(res.data.total);
-			setRewardList(res.data.data);
-		} catch (e) {
-			console.error(e.message);
-		}
-	}
-
 	function handleSidebarFilters(selectedFromCategoryTile: boolean) {
 		if (!params.categories && !selectedFromCategoryTile) {
 			rsToasts.error('Must have at least one category selected.');
 			return;
 		}
 		setShowCategoryOrRewardCards('reward');
+		setApplyFilterToggle(!applyFilterToggle);
 		if (filterRef.current) filterRef.current.style.display = 'block';
-		getRewardItem().catch(console.error);
 	}
 
 	function getPrimaryRewardImg(medias: Model.Media[]): string {
@@ -151,9 +207,18 @@ const RewardItemPage: React.FC = () => {
 		else return medias[0].urls.small;
 	}
 
+	function getRedeemableVoucherCode(vouchers: Api.Reward.Voucher.Res.Get[]) {
+		for (let i in vouchers) {
+			if (vouchers[i].isActive === 1 && vouchers[i].isRedeemed === 0 && vouchers[i].customerUserId === 0) {
+				return vouchers[i].code;
+			}
+		}
+		return 'noneAvailable';
+	}
+
 	function renderCards() {
 		if (showCategoryOrRewardCards === 'category') {
-			return categoryList.map((category, index) => {
+			return categoryPagedList.map((category, index) => {
 				return (
 					<RewardCategoryCard
 						key={index}
@@ -167,6 +232,8 @@ const RewardItemPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(rewardList)) return;
 		return rewardList.map((reward, index) => {
 			let primaryImg = getPrimaryRewardImg(reward.media);
+			let voucherCode = getRedeemableVoucherCode(reward.vouchers);
+			if (voucherCode === 'noneAvailable') return;
 			return (
 				<RewardItemCard
 					key={index}
@@ -175,6 +242,7 @@ const RewardItemPage: React.FC = () => {
 					points={reward.pointCost}
 					description={reward.description}
 					rewardId={reward.id}
+					voucherCode={voucherCode}
 				/>
 			);
 		});
@@ -269,7 +337,9 @@ const RewardItemPage: React.FC = () => {
 										<LabelInput
 											title={'MIN'}
 											inputType={'text'}
-											onChange={(value) => setPointCostMin(value)}
+											onChange={(value) => {
+												setPointCostMin(value);
+											}}
 										/>
 										<LabelInput
 											title={'MAX'}

@@ -40,7 +40,10 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 
 	let searchDebounced = debounce(async (value) => {
 		if (!props.onChange) return;
-		if (value.value.length === 0) return;
+		if (value.value.length === 0) {
+			props.onChange(value.value);
+			return;
+		}
 		if (props.isEmailInput && !validateEmail(value.value)) return setIsValid(false);
 		else setIsValid(true);
 		if (props.inputType === 'tel') return props.onChange(formatPhoneNumber(value.value));
