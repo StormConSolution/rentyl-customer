@@ -365,7 +365,7 @@ const RewardItemPage: React.FC = () => {
 									Categories
 								</Label>
 								<div className={'pointOrLoginContainer'}>
-									<PointsOrLogin user={user} />
+									<PointsOrLogin />
 								</div>
 							</div>
 							<div className={'cardContainer'}>{renderCards()}</div>
