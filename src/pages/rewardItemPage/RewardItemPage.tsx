@@ -75,6 +75,7 @@ const RewardItemPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getCategoriesOrRewardItems() {
+			setCardTotal(0);
 			if (ObjectUtils.isArrayWithData(params.categories) || params.categories === '') {
 				try {
 					let pagedCategories = await rewardService.getPagedCategories(
