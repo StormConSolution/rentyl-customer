@@ -27,7 +27,7 @@ export const FooterLinkTestData: FooterLink[] = [
 	},
 	{
 		text: 'Redeem Points',
-		path: '#'
+		path: '/reward'
 	},
 	{
 		text: 'Terms And Conditions',

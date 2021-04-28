@@ -458,7 +458,6 @@ declare namespace Model {
 	}
 
 	export interface RedeemableRewards {
-		selectCategories: SelectOptions[];
 		allCategories: Api.Reward.Category.Res.Get[];
 		featuredCategories: FeaturedCategory[];
 		destinationSelect: SelectOptions[];

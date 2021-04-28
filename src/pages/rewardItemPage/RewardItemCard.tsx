@@ -1,9 +1,8 @@
 import React from 'react';
 import './RewardItemCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import IconLabel from '../iconLabel/IconLabel';
+import IconLabel from '../../components/iconLabel/IconLabel';
 import router from '../../utils/router';
-import { ObjectUtils } from '@bit/redsky.framework.rs.http/dist/Utils';
 import { addCommasToNumber, capitalize } from '../../utils/utils';
 
 interface RewardItemCardProps {
@@ -12,6 +11,7 @@ interface RewardItemCardProps {
 	points: number | string;
 	description: string;
 	rewardId: number | string;
+	voucherCode: number | string;
 	className?: string;
 }
 
@@ -37,7 +37,7 @@ const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
 				iconPosition={'right'}
 				iconSize={7}
 				labelVariant={'caption'}
-				onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}`)}
+				onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}&vc=${props.voucherCode}`)}
 			/>
 		</div>
 	);

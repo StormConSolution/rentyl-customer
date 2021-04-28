@@ -2,25 +2,25 @@ import React from 'react';
 import './PointsOrLogin.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
-import useLoginState from '../../customHooks/useLoginState';
+import { addCommasToNumber } from '../../utils/utils';
+import serviceFactory from '../../services/serviceFactory';
+import UserService from '../../services/user/user.service';
 
 interface PointsOrLoginProps {
 	className?: string;
-	user: Api.User.Res.Get | undefined;
 }
 
 const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
-	const loginStatus = useLoginState();
-
+	let userService = serviceFactory.get<UserService>('UserService');
+	const user = userService.getCurrentUser();
 	function renderPointsOrLoginButton() {
-		console.log('user', loginStatus);
-		if (props.user) {
+		if (user) {
 			return (
 				<div className={'availablePendingPointsContainer'}>
 					<div className={'availablePointsContainer'}>
 						<Label variant={'h4'}>Available Points</Label>
 						<Label className={'availablePointsNumber'} variant={'h1'}>
-							{props.user.availablePoints}
+							{addCommasToNumber(user.availablePoints)}
 						</Label>
 					</div>
 					<div className={'pendingPointsContainer'}>

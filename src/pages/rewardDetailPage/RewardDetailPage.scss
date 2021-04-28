@@ -61,8 +61,8 @@
 			}
 			.disabledButton {
 				margin-top: 35px;
-				background-color: theme-var($disableTextColor);
-				cursor: none;
+				background-color: theme-var($disableTextColor) !important;
+				cursor: inherit;
 			}
 			.blankMorePoints {
 				padding-top: 15px;

@@ -677,11 +677,7 @@ declare namespace Api {
 				id?: number;
 				ids?: number[];
 			}
-			export interface Paged extends RedSky.PageQuery {
-				pointCostMin?: number;
-				pointCostMax?: number;
-				categories?: number[];
-			}
+			export interface Paged extends RedSky.PageQuery {}
 			export interface Create {
 				name: string;
 				pointCost: number;
@@ -703,6 +699,12 @@ declare namespace Api {
 			}
 		}
 		export namespace Res {
+			export interface Voucher {
+				customerUserId: number;
+				isActive: 0 | 1;
+				isRedeemed: 0 | 1;
+				code: string;
+			}
 			export interface Get {
 				id: number;
 				name: string;
@@ -718,6 +720,11 @@ declare namespace Api {
 				vendorName: string;
 				media: Media[];
 				categoryIds: number[];
+				vouchers: Voucher[];
+			}
+			export interface GetByPage {
+				data: Get[];
+				total?: number | undefined;
 			}
 			export interface Create extends Omit<Get, 'modifiedOn'> {}
 			export interface Update extends Get {}
@@ -732,6 +739,10 @@ declare namespace Api {
 					rewardId: number;
 					code: string;
 				}
+				export interface Claim {
+					code: string;
+					rewardId: number;
+				}
 			}
 			export namespace Res {
 				export interface Get extends Omit<Model.RewardVoucher, 'companyId'> {}
@@ -740,6 +751,7 @@ declare namespace Api {
 					rewardId: number;
 					code: string;
 				}
+				export interface Claim extends Model.RewardVoucher {}
 			}
 		}
 		export namespace Category {
@@ -747,6 +759,8 @@ declare namespace Api {
 				export interface Create {
 					name: string;
 					mediaDetails?: MediaDetails[];
+					isFeatured?: 0 | 1;
+					isActive?: 0 | 1;
 				}
 				export interface Delete {
 					id: number;
@@ -754,13 +768,17 @@ declare namespace Api {
 				export interface Update {
 					id: number;
 					name?: string;
-					isActive?: boolean;
-					isFeatured?: boolean;
+					isActive?: 0 | 1;
+					isFeatured?: 0 | 1;
 					mediaDetails?: MediaDetails[];
+				}
+				export interface Get {
+					id?: number;
+					ids?: number[];
 				}
 			}
 			export namespace Res {
-				export interface Get extends Omit<Model.RewardCategory, 'companyId'> {
+				export interface Get extends Model.RewardCategory {
 					media: Media[];
 				}
 				export interface Create extends Get {}

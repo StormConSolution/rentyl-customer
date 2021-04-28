@@ -1,4 +1,4 @@
-@import 'src/themes/themes';
+@import '../../themes/themes';
 
 .rsRewardItemCard {
 	min-height: 420px;
@@ -27,5 +27,7 @@
 	}
 
 	.rewardDetails {
+		padding-top: 10px;
+		cursor: pointer;
 	}
 }

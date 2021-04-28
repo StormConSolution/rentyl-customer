@@ -142,16 +142,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						variant={'button'}
 						label={'See all rewards'}
 						onClick={() => {
-							comparisonService.addToComparison(recoilComparisonState, {
-								destinationId: Date.now(),
-								logo: '../../images/encore-resort.png',
-								title: 'Encore Resort',
-								roomTypes: [
-									{ value: '16', text: 'Villa', selected: false },
-									{ value: '2', text: 'VIP Suite', selected: false },
-									{ value: '1', text: 'Double', selected: false }
-								]
-							});
+							router.navigate('/reward');
 						}}
 					/>
 				</Box>

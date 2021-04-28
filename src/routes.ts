@@ -8,13 +8,14 @@ import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
-import RedeemableRewardsPage from './pages/redeemableRewardsPage/RedeemableRewardsPage';
+import RewardItemPage from './pages/rewardItemPage/RewardItemPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
+import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
 import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
@@ -54,8 +55,15 @@ const routes: RouteDetails[] = [
 		page: ComparisonPage
 	},
 	{
+		path: '/booking',
+		page: BookingFlowPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
 		path: '/reward',
-		page: RedeemableRewardsPage
+		page: RewardItemPage
 	},
 	{
 		path: '/reward/details',

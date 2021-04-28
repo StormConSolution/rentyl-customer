@@ -13,7 +13,7 @@ const CategoryFeatureIcons: React.FC<CategoryFeatureIconsProps> = (props) => {
 	function renderFeatures() {
 		return props.features.map((item, index) => {
 			return (
-				<Box display={'flex'} alignItems={'center'} marginBottom={'25px'}>
+				<Box key={index} display={'flex'} alignItems={'center'} marginBottom={'25px'}>
 					<Icon iconImg={item.icon} size={24} />
 					<Label variant={'caption'}>{item.title}</Label>
 				</Box>
