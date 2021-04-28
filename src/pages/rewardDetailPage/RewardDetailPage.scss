@@ -13,7 +13,7 @@
 		display: flex;
 
 		.carouselContainer {
-			width: 530px;
+			width: clamp(278px, 530px, 530px);
 
 			.rsCarousel {
 				height: 450px;
@@ -66,6 +66,31 @@
 			}
 			.blankMorePoints {
 				padding-top: 15px;
+			}
+		}
+	}
+}
+
+.small {
+	.rsRewardDetailPage {
+		.rewardDetails {
+			margin: 0 20px;
+			flex-direction: column;
+
+			.rewardDetailsRight {
+				padding-top: 20px;
+				padding-left: 0;
+			}
+
+			.carouselContainer {
+				width: 278px;
+				height: 278px;
+				overflow-y: hidden;
+
+				.rsCarousel {
+					width: 278px;
+					height: 278px;
+				}
 			}
 		}
 	}

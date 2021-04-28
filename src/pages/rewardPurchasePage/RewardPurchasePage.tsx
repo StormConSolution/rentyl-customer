@@ -58,7 +58,7 @@ const RewardPurchasePage: React.FC = () => {
 	) : (
 		<Page className={'rsRewardPurchasePage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<div className={'headerBar'}>
+				<div className={'headerBarPageContainer'}>
 					<RewardHeaderBar className={'rewardPurchaseHeader'} title={'Order Summary'} titleVariant={'h2'} />
 				</div>
 				<div className={'mainContentContainer'}>
@@ -73,7 +73,7 @@ const RewardPurchasePage: React.FC = () => {
 						</div>
 						<div className={'reward'}>
 							<div className={'imageContainer'}>
-								<img src={reward.media[0].urls.thumb} alt={''} height={'130px'} />
+								<img src={reward.media[0].urls.thumb} alt={''} />
 							</div>
 							<div className={'rewardText'}>
 								<div className={'rewardName'}>

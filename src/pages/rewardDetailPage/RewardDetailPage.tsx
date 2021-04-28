@@ -20,6 +20,7 @@ const RewardDetailPage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const user = userService.getCurrentUser();
 	const [reward, setReward] = useState<Api.Reward.Res.Get>();
+	const [imageCount, setImageCount] = useState<number>(0);
 	const params = router.getPageUrlParams<{ reward: string; voucherCode: string }>([
 		{ key: 'ri', default: '', type: 'string', alias: 'reward' },
 		{ key: 'vc', default: '', type: 'string', alias: 'voucherCode' }
@@ -31,8 +32,9 @@ const RewardDetailPage: React.FC = () => {
 				router.navigate('/reward').catch(console.error);
 			}
 			try {
-				let res = await rewardService.getRewardById(Number(params.reward));
+				let res: Api.Reward.Res.Get = await rewardService.getRewardById(Number(params.reward));
 				setReward(res);
+				if (res.media) setImageCount(res.media.length);
 			} catch (e) {
 				rsToasts.error('An unexpected error occurred on the server.');
 			}
@@ -99,7 +101,7 @@ const RewardDetailPage: React.FC = () => {
 				/>
 				<div className={'rewardDetails'}>
 					<div className={'carouselContainer'}>
-						<Carousel children={renderPictures()} showControls />
+						<Carousel children={renderPictures()} showControls={imageCount > 1} />
 					</div>
 					<div className={'rewardDetailsRight'}>
 						<Label className={'rewardName'} variant={'h1'}>

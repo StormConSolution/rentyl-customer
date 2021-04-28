@@ -10,7 +10,7 @@ import FilterQueryValue = RedSky.FilterQueryValue;
 export default class RewardService extends Service {
 	rewardModel: RewardModel = modelFactory.get<RewardModel>('RewardModel');
 
-	async getRewardById(id: number): Promise<Api.Reward.Res.Get | undefined> {
+	async getRewardById(id: number): Promise<Api.Reward.Res.Get> {
 		const response = await http.get<RsResponseData<Api.Reward.Res.Get>>('reward', { id });
 		return response.data.data;
 	}

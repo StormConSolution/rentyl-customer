@@ -13,7 +13,7 @@ interface PointsOrLoginProps {
 const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
 	let userService = serviceFactory.get<UserService>('UserService');
 	const user = userService.getCurrentUser();
-	function renderPointsOrLoginButton() {
+	function renderPointsOrLogin() {
 		if (user) {
 			return (
 				<div className={'availablePendingPointsContainer'}>
@@ -41,7 +41,7 @@ const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
 		}
 	}
 
-	return <div className={`rsPointsOrLogin ${props.className || ''}`}>{renderPointsOrLoginButton()}</div>;
+	return <div className={`rsPointsOrLogin ${props.className || ''}`}>{renderPointsOrLogin()}</div>;
 };
 
 export default PointsOrLogin;
