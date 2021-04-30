@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './RewardItemPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -20,18 +20,16 @@ import RewardItemCard from './rewardItemCard/RewardItemCard';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
-
-import FilterQueryValue = RedSky.FilterQueryValue;
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const RewardItemPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	let user = userService.getCurrentUser();
-
+	const size = useWindowResizeChange();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
-	const filterRef = useRef<HTMLElement>(null);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
-
 	const [showCategoryOrRewardCards, setShowCategoryOrRewardCards] = useState<'category' | 'reward'>('category');
+	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
 	const [featuredCategory, setFeaturedCategory] = useState<Model.FeaturedCategory[]>();
 	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
 	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
@@ -42,8 +40,6 @@ const RewardItemPage: React.FC = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 9;
 	const [cardTotal, setCardTotal] = useState<number>(0);
-	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
-
 	const params = router.getPageUrlParams<{ categories: string }>([
 		{ key: 'cids', default: '', type: 'string', alias: 'categories' }
 	]);
@@ -79,6 +75,7 @@ const RewardItemPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getCategoriesOrRewardItems() {
+			setCardTotal(0);
 			if (ObjectUtils.isArrayWithData(params.categories) || params.categories === '') {
 				try {
 					let pagedCategories = await rewardService.getPagedCategories(
@@ -107,7 +104,7 @@ const RewardItemPage: React.FC = () => {
 						filter: { matchType: 'exact', searchTerm: filter }
 					});
 					setShowCategoryOrRewardCards('reward');
-					setCardTotal(res.total ? res.total : 1);
+					setCardTotal(res.total ? res.total : 0);
 					setRewardList(res.data);
 				} catch (e) {
 					console.error(e.message);
@@ -117,9 +114,9 @@ const RewardItemPage: React.FC = () => {
 		getCategoriesOrRewardItems().catch(console.error);
 	}, [page, applyFilterToggle]);
 
-	function formatFilterQuery(): FilterQueryValue[] {
+	function formatFilterQuery(): RedSky.FilterQueryValue[] {
 		let selectedDestinationIds = getSelectedIds([...destinationSelectList]);
-		let filter: FilterQueryValue[] = [];
+		let filter: RedSky.FilterQueryValue[] = [];
 		if (ObjectUtils.isArrayWithData(selectedDestinationIds)) {
 			let destinationIds: number[] = [];
 			let affiliateIds: number[] = [];
@@ -197,7 +194,6 @@ const RewardItemPage: React.FC = () => {
 		}
 		setShowCategoryOrRewardCards('reward');
 		setApplyFilterToggle(!applyFilterToggle);
-		if (filterRef.current) filterRef.current.style.display = 'block';
 	}
 
 	function getPrimaryRewardImg(medias: Model.Media[]): string {
@@ -229,7 +225,6 @@ const RewardItemPage: React.FC = () => {
 				);
 			});
 		}
-		// console.log('renderCards function rewardList', rewardList);
 		if (!ObjectUtils.isArrayWithData(rewardList)) return;
 		return rewardList.map((reward, index) => {
 			let primaryImg = getPrimaryRewardImg(reward.media);
@@ -282,8 +277,113 @@ const RewardItemPage: React.FC = () => {
 		});
 	}
 
+	function renderPaginationOrNoRewardsMsg() {
+		if (cardTotal === 0) {
+			return <Label variant={'body1'}>There are no rewards available matching your filters.</Label>;
+		} else {
+			return (
+				<PaginationButtons
+					selectedRowsPerPage={perPage}
+					currentPageNumber={page}
+					setSelectedPage={(page) => setPage(page)}
+					total={cardTotal}
+				/>
+			);
+		}
+	}
+
+	function renderQuerySidebar() {
+		return (
+			<div className={'querySideBar'}>
+				<div className={'rewardCategoryCheckboxList'}>
+					<Label className={'queryTitle'} variant={'h4'}>
+						Reward Categories
+					</Label>
+					<CheckboxList
+						onChange={(value, options) => {
+							if (value.length === 0) {
+								router.updateUrlParams({});
+								setShowCategoryOrRewardCards('category');
+							} else {
+								router.updateUrlParams({
+									cids: JSON.stringify(value)
+								});
+							}
+							setCategorySelectList(options);
+						}}
+						options={categorySelectList}
+						name={'categories'}
+						className={'categoryCheckboxList'}
+					/>
+				</div>
+				<Box
+					className={'resortAndPointFilters'}
+					display={showCategoryOrRewardCards === 'category' ? 'none' : 'block'}
+				>
+					<div className={'resortSelectFilter'}>
+						<Label className={'resortTitle queryTitle'} variant={'h4'}>
+							Resort
+						</Label>
+						<CheckboxList
+							onChange={(value, options) => {
+								setDestinationSelectList(options);
+							}}
+							options={destinationSelectList}
+							name={'resorts'}
+						/>
+					</div>
+					<div className={'pointCostFilters'}>
+						<Label className={'queryTitle'} variant={'h4'}>
+							Point Cost
+						</Label>
+						<div className={'minMaxContainer'}>
+							<LabelInput
+								title={'MIN'}
+								inputType={'text'}
+								onChange={(value) => {
+									setPointCostMin(value);
+								}}
+							/>
+							<LabelInput title={'MAX'} inputType={'text'} onChange={(value) => setPointCostMax(value)} />
+						</div>
+					</div>
+				</Box>
+				<div className={'filterButtonContainer'}>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Apply Filters'}
+						onClick={() => handleSidebarFilters(false)}
+					/>
+				</div>
+			</div>
+		);
+	}
+
 	return waitToLoad ? (
 		<LoadingPage />
+	) : size === 'small' ? (
+		<Page className={'rsRewardItemPage'}>
+			<div className={'rs-page-content-wrapper'}>
+				<div className={'heroImgTextFeatured'}>
+					<Label className={'pageTitle'} variant={'h2'}>
+						Redeem Your Points
+					</Label>
+				</div>
+				<Box className={'pageWrapper'}>
+					<div className={'pointOrLoginContainer'}>
+						<PointsOrLogin />
+					</div>
+					{renderQuerySidebar()}
+					<Label className={'categoriesTitle'} variant={'h4'}>
+						{showCategoryOrRewardCards === 'category' ? 'Categories' : 'Available Rewards'}
+					</Label>
+					<div className={'cardContainer'}>{renderCards()}</div>
+					<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
+				</Box>
+				<Footer links={FooterLinkTestData} />
+			</div>
+		</Page>
 	) : (
 		<Page className={'rsRewardItemPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -300,83 +400,18 @@ const RewardItemPage: React.FC = () => {
 								: '50px 140px'
 						}
 					>
-						<div className={'querySideBar'}>
-							<div className={'rewardCategoryCheckboxList'}>
-								<Label className={'queryTitle'} variant={'h4'}>
-									Reward Categories
-								</Label>
-								<CheckboxList
-									onChange={(value, options) => {
-										router.updateUrlParams({
-											cids: JSON.stringify(value)
-										});
-										setCategorySelectList(options);
-									}}
-									options={categorySelectList}
-									name={'categories'}
-									className={'categoryCheckboxList'}
-								/>
-							</div>
-							<div ref={filterRef} className={'resortAndPointFilters'}>
-								<div className={'resortSelectFilter'}>
-									<Label className={'resortTitle queryTitle'} variant={'h4'}>
-										Resort
-									</Label>
-									<CheckboxList
-										onChange={(value, options) => {
-											setDestinationSelectList(options);
-										}}
-										options={destinationSelectList}
-										name={'resorts'}
-									/>
-								</div>
-								<div className={'pointCostFilters'}>
-									<Label className={'queryTitle'} variant={'h4'}>
-										Point Cost
-									</Label>
-									<div className={'minMaxContainer'}>
-										<LabelInput
-											title={'MIN'}
-											inputType={'text'}
-											onChange={(value) => {
-												setPointCostMin(value);
-											}}
-										/>
-										<LabelInput
-											title={'MAX'}
-											inputType={'text'}
-											onChange={(value) => setPointCostMax(value)}
-										/>
-									</div>
-								</div>
-							</div>
-							<div className={'filterButtonContainer'}>
-								<LabelButton
-									look={'containedPrimary'}
-									variant={'button'}
-									label={'Apply Filters'}
-									onClick={() => handleSidebarFilters(false)}
-								/>
-							</div>
-						</div>
+						{renderQuerySidebar()}
 						<Box className={'pagedCategoryCards'} marginTop={user ? 0 : 35}>
 							<div className={'rightSideHeaderContainer'}>
 								<Label className={'categoriesTitle'} variant={'h4'}>
-									Categories
+									{showCategoryOrRewardCards === 'category' ? 'Categories' : 'Available Rewards'}
 								</Label>
 								<div className={'pointOrLoginContainer'}>
 									<PointsOrLogin />
 								</div>
 							</div>
 							<div className={'cardContainer'}>{renderCards()}</div>
-							<div className={'paginationContainer'}>
-								<PaginationButtons
-									selectedRowsPerPage={perPage}
-									currentPageNumber={page}
-									setSelectedPage={(page) => setPage(page)}
-									total={cardTotal}
-								/>
-							</div>
+							<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 						</Box>
 					</Box>
 					<Footer links={FooterLinkTestData} />
