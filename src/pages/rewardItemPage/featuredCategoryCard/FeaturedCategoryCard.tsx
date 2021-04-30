@@ -1,7 +1,7 @@
 import React from 'react';
 import './FeaturedCategoryCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import IconLabel from '../../components/iconLabel/IconLabel';
+import IconLabel from '../../../components/iconLabel/IconLabel';
 import FeaturedCategory = Model.FeaturedCategory;
 
 interface FeaturedCategoryCardProps {

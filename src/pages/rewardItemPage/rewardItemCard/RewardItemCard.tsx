@@ -1,9 +1,9 @@
 import React from 'react';
 import './RewardItemCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import IconLabel from '../../components/iconLabel/IconLabel';
-import router from '../../utils/router';
-import { addCommasToNumber, capitalize } from '../../utils/utils';
+import IconLabel from '../../../components/iconLabel/IconLabel';
+import router from '../../../utils/router';
+import { addCommasToNumber, capitalize } from '../../../utils/utils';
 
 interface RewardItemCardProps {
 	imgPath: string;
