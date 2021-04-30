@@ -6,6 +6,7 @@
 
 	.rs-page-content-wrapper {
 		height: 100%;
+
 		.heroImgTextFeatured {
 			position: relative;
 			box-sizing: border-box;
@@ -33,99 +34,154 @@
 				}
 			}
 		}
-	}
 
-	.pageWrapper {
-		display: flex;
-		padding: 50px 140px;
+		.pageWrapper {
+			display: flex;
+			padding: 50px 140px;
 
-		.querySideBar {
-			width: 240px;
-			margin-right: 50px;
-			margin-top: 36px;
+			.querySideBar {
+				width: 240px;
+				margin-right: 50px;
+				margin-top: 36px;
 
-			.queryTitle {
-				padding-bottom: 10px;
-				border-bottom: 2px solid theme-var($greyLineColor);
-			}
+				.queryTitle {
+					padding-bottom: 10px;
+					border-bottom: 2px solid theme-var($greyLineColor);
+				}
 
-			.categoryCheckboxList {
-				padding-top: 25px;
-			}
+				.categoryCheckboxList {
+					padding-top: 25px;
+				}
 
-			.resortAndPointFilters {
-				display: none;
-			}
+				.resortTitle {
+					margin-top: 30px;
+					margin-bottom: 8px;
+				}
 
-			.resortTitle {
-				margin-top: 30px;
-				margin-bottom: 8px;
-			}
+				.radioButtonContainer {
+					margin-left: 5px;
+				}
 
-			.radioButtonContainer {
-				margin-left: 5px;
-			}
+				.seeAllDestinations {
+					margin-top: 10px;
+					cursor: pointer;
+				}
 
-			.seeAllDestinations {
-				margin-top: 10px;
-				cursor: pointer;
-			}
+				.pointCostFilters {
+					margin-top: 30px;
 
-			.pointCostFilters {
-				margin-top: 30px;
+					.minMaxContainer {
+						display: flex;
 
-				.minMaxContainer {
-					display: flex;
-
-					:nth-child(2) {
-						margin-left: 3px;
+						:nth-child(2) {
+							margin-left: 3px;
+						}
+					}
+					.rsInput {
+						width: 112px;
 					}
 				}
-				.rsInput {
-					width: 112px;
+
+				.minMaxContainer {
+					margin-top: 30px;
+				}
+
+				.filterButtonContainer {
+					margin-top: 30px;
 				}
 			}
 
-			.minMaxContainer {
-				margin-top: 30px;
+			.pagedCategoryCards {
+				width: 865px;
+
+				.rightSideHeaderContainer {
+					display: flex;
+					padding-bottom: 10px;
+					border-bottom: 2px solid theme-var($greyLineColor);
+					justify-content: space-between;
+
+					.categoriesTitle {
+						display: flex;
+						align-items: flex-end;
+					}
+				}
 			}
 
-			.filterButtonContainer {
-				margin-top: 30px;
-			}
-		}
-
-		.pagedCategoryCards {
-			width: 865px;
-
-			.rightSideHeaderContainer {
+			.cardContainer {
 				display: flex;
-				padding-bottom: 10px;
-				border-bottom: 2px solid theme-var($greyLineColor);
+				flex-wrap: wrap;
 				justify-content: space-between;
 
-				.categoriesTitle {
-					display: flex;
-					align-items: flex-end;
+				.rsRewardCategoryCard {
+					margin-top: 40px;
+				}
+				.rsRewardItemCard {
+					margin-top: 40px;
 				}
 			}
-		}
 
-		.cardContainer {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-between;
-
-			.rsRewardCategoryCard {
-				margin-top: 40px;
-			}
-			.rsRewardItemCard {
-				margin-top: 40px;
+			.paginationContainer {
+				margin-top: 50px;
 			}
 		}
+	}
+}
 
-		.paginationContainer {
-			margin-top: 50px;
+.small {
+	.rsRewardItemPage {
+		.rs-page-content-wrapper {
+			.heroImgTextFeatured {
+				background-position-y: 10%;
+				margin-bottom: 0;
+				height: 100%;
+				.pageTitle {
+					padding-top: 120px;
+				}
+			}
+
+			.pageWrapper {
+				padding: 20px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				.querySideBar {
+					margin-right: 0;
+					margin-top: 20px;
+
+					.categoryCheckboxList {
+						padding-top: 10px;
+					}
+				}
+
+				.categoriesTitle {
+					padding-top: 30px;
+					width: 240px;
+					border-bottom: 2px solid theme-var($greyLineColor);
+					padding-bottom: 10px;
+				}
+
+				.cardContainer {
+					justify-content: space-around;
+
+					.rsRewardCategoryCard {
+						margin-top: 20px;
+						padding: 0 5px;
+
+						.title {
+							margin-top: 10px;
+						}
+					}
+
+					.rsRewardItemCard {
+						margin-top: 20px;
+
+						.rewardName {
+							padding-top: 10px;
+						}
+					}
+				}
+			}
 		}
 	}
 }
