@@ -24,12 +24,18 @@ const SignInPage: React.FC = () => {
 		new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')])
 	]);
 
+	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
+
 	async function signIn(e: FormEvent) {
 		e.preventDefault();
 		try {
 			setLoginErrorMessage('');
 			await userService.loginUserByPassword(`${emailAddress}`, `${password}`);
-			await router.navigate('/');
+			if (params.data !== 0 && params.data.includes('arrivalDate')) {
+				await router.navigate(`/booking?data=${params.data}`);
+			} else {
+				await router.navigate('/');
+			}
 		} catch (e) {
 			if (e.message === 'INVALID_ROLE') {
 				setLoginErrorMessage('User not allowed to log in.');
