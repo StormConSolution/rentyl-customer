@@ -44,6 +44,10 @@ const RewardPurchasePage: React.FC = () => {
 	}, []);
 
 	async function claimRewardVoucher() {
+		if (!termsAndConditionsIsChecked) {
+			rsToasts.error('You must agree to the terms and conditions.');
+			return;
+		}
 		try {
 			await rewardService.claimRewardVoucher({ rewardId: Number(params.reward), code: params.voucherCode });
 			rsToasts.success('You have claimed your voucher');

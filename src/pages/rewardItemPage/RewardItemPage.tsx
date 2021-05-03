@@ -229,7 +229,6 @@ const RewardItemPage: React.FC = () => {
 		return rewardList.map((reward, index) => {
 			let primaryImg = getPrimaryRewardImg(reward.media);
 			let voucherCode = getRedeemableVoucherCode(reward.vouchers);
-			if (voucherCode === 'noneAvailable') return;
 			return (
 				<RewardItemCard
 					key={index}
