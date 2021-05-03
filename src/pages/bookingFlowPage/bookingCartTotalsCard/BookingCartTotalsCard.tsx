@@ -12,11 +12,11 @@ import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
 	checkoutTime: string;
-	checkInDate: string;
-	checkoutDate: string;
+	checkInDate: string | Date;
+	checkoutDate: string | Date;
 	accommodationName: string;
 	taxAndFees: { title: string; priceCents: number }[];
-	costPerNight: { date: string; priceCents: number }[];
+	costPerNight: { [date: string]: Api.Reservation.Res.CostPerNight }[];
 	costTotalCents: number;
 	adults: number;
 	children: number;
@@ -28,7 +28,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	function getRoomTotal() {
 		let cost = 0;
-		props.costPerNight.forEach((item) => (cost += item.priceCents));
+		props.costPerNight.forEach((item, index) => (cost += item[index].totalInCents));
 		return StringUtils.formatMoney(cost);
 	}
 
@@ -45,7 +45,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			return (
 				<Box display={'flex'} alignItems={'center'} key={index}>
 					<Label variant={'body2'} width={'170px'}>
-						{new Date(item.date).toDateString()}
+						{new Date(item).toDateString()}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
 						${StringUtils.formatMoney(item.priceCents)}

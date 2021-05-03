@@ -1,9 +1,10 @@
 declare namespace Api {
+	export interface MediaDetails {
+		id: number;
+		isPrimary: 0 | 1;
+	}
+	export interface Media extends Omit<Model.Media, 'storageDetails'> {}
 	export namespace Accommodation {
-		export interface MediaDetails {
-			id: number;
-			isPrimary: 0 | 1;
-		}
 		export namespace Req {
 			export interface Details {
 				accommodationId: number;
@@ -36,7 +37,7 @@ declare namespace Api {
 				accommodationType: Model.AccommodationTypes;
 				accommodationTypeCode: string;
 				accommodationTypeDescription: string;
-				media: Omit<Model.Media, 'storageDetails'>[];
+				media: Media[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
 				features: Omit<
@@ -53,12 +54,8 @@ declare namespace Api {
 
 	export namespace AccommodationCategory {
 		export interface Details extends Model.AccommodationCategory {
-			media: Omit<Model.Media, 'storageDetails'>[];
+			media: Media[];
 			features: Feature.Details[];
-		}
-		export interface MediaDetails {
-			id: number;
-			isPrimary: 0 | 1;
 		}
 		export namespace Req {
 			export interface Create {
@@ -99,7 +96,7 @@ declare namespace Api {
 	export namespace AccommodationLayout {
 		export interface Details extends Model.AccommodationLayout {
 			rooms: Model.AccommodationLayoutRoom[];
-			media: Omit<Model.Media, 'storageDetails'>;
+			media: Media;
 		}
 		export namespace Req {
 			export interface Create {
@@ -164,6 +161,110 @@ declare namespace Api {
 			export interface Update extends Model.AccommodationLayoutRoom {}
 			export interface Get extends Model.AccommodationLayoutRoom {}
 			export interface GetForLayout extends Model.AccommodationLayoutRoom {}
+		}
+	}
+
+	export namespace Action {
+		export namespace Req {
+			export interface Create {
+				name: string;
+				description?: string;
+				isActive?: boolean | number;
+				type: string;
+				pointValue: number;
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+
+			export interface Update {
+				id: number;
+				name?: string;
+				description?: string;
+				isActive?: boolean | number;
+				type?: string;
+				pointValue?: number;
+			}
+			export interface Delete {
+				id: number;
+			}
+		}
+
+		export namespace Res {
+			export interface Create extends Model.Action {}
+			export interface Get extends Model.Action {}
+			export interface GetByPage {
+				data: Model.Action[];
+				total: number;
+			}
+			export interface Update extends Model.Action {}
+		}
+	}
+
+	export namespace Campaign {
+		export interface Action extends Omit<Model.Action, 'companyId'> {
+			actionCount: number;
+		}
+		export interface Detail extends Model.Campaign {
+			actions: Action[];
+		}
+		export namespace Req {
+			export interface Create {
+				segmentId?: number;
+				name: string;
+				description?: string;
+				isActive?: 0 | 1;
+				maxReward: number;
+				type: string;
+				startOn: Date | string;
+				endOn: Date | string;
+				pointValueMultiplier: number;
+				actions: CampaignAction.CreateMany[];
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+
+			export interface Update {
+				id: number;
+				segmentId?: number;
+				name?: string;
+				description?: string;
+				isActive?: 0 | 1;
+				maxReward?: number;
+				type?: string;
+				startOn?: Date | string;
+				endOn?: Date | string;
+				pointValueMultiplier?: number;
+				actions?: CampaignAction.CreateMany[];
+			}
+			export interface Delete {
+				id: number;
+			}
+		}
+
+		export namespace Res {
+			export interface Create extends Detail {}
+			export interface Get extends Detail {}
+			export interface GetByPage {
+				data: Detail[];
+				total: number;
+			}
+			export interface Update extends Detail {}
+		}
+	}
+
+	export namespace CampaignAction {
+		export interface Create {
+			campaignId: number;
+			actionId: number;
+			actionCount?: number;
+		}
+		export interface CreateMany {
+			actionId: number;
+			actionCount?: number;
 		}
 	}
 
@@ -279,17 +380,22 @@ declare namespace Api {
 				newsLetter: 0 | 1;
 				emailNotification: 0 | 1;
 			}
+			export interface Get {}
 		}
 		export namespace Res {
 			export interface Create extends User.Filtered {}
+			export interface Get extends User.Filtered {
+				tierTitle: string;
+				tierBadge: Media;
+				pendingPoints: number;
+				nextTierThreshold: number;
+				pointsExpiring: number | null;
+				pointsExpiringOn: Date | string | null;
+			}
 		}
 	}
 
 	export namespace Destination {
-		export interface MediaDetails {
-			id: number;
-			isPrimary: 0 | 1;
-		}
 		export namespace Req {
 			export interface Get {
 				id?: number;
@@ -323,6 +429,12 @@ declare namespace Api {
 				destinationId: number;
 			}
 
+			export interface GetByPage {
+				pagination: string;
+				sort: string;
+				filter: string;
+			}
+
 			export interface Availability extends RedSky.PageQuery {
 				startDate: Date | string;
 				endDate: Date | string;
@@ -330,12 +442,6 @@ declare namespace Api {
 				children: number;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
-			}
-
-			export interface GetByPage {
-				pagination: string;
-				sort: string;
-				filter: string;
 			}
 		}
 		export namespace Res {
@@ -354,7 +460,7 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
-				media: Omit<Model.Media, 'storageDetails'>[];
+				media: Media[];
 			}
 			export interface Update extends Details {}
 			export interface Details {
@@ -371,7 +477,7 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
-				media: Omit<Model.Media, 'storageDetails'>[];
+				media: Media[];
 				features: Omit<
 					Feature.Details,
 					'affiliateId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
@@ -388,8 +494,8 @@ declare namespace Api {
 					description: string;
 					code: string;
 				}[];
+				policies: Record<Model.DestinationPolicyType, string>;
 			}
-
 			export interface Availability {
 				id: number;
 				name: string;
@@ -403,13 +509,7 @@ declare namespace Api {
 				zip: string;
 				country: string;
 				logoUrl: string;
-				media: {
-					id: number;
-					type: string;
-					urls: string;
-					title: string;
-					isPrimary: boolean;
-				}[];
+				media: Media[];
 				features: {
 					id: number;
 					title: string;
@@ -442,55 +542,8 @@ declare namespace Api {
 
 	export namespace Feature {
 		export interface Details extends Model.Feature {
-			media: Omit<Model.Media, 'storageDetails'>[];
+			media: Media[];
 		}
-		export interface MediaDetails {
-			id: number;
-			isPrimary: 0 | 1;
-		}
-
-		interface IState {
-			name: string;
-			isoCode: string;
-			countryCode: string;
-			latitude?: string | null;
-			longitude?: string | null;
-		}
-		interface ICity {
-			name: string;
-			countryCode: string;
-			stateCode: string;
-			latitude?: string | null;
-			longitude?: string | null;
-		}
-		export namespace Req {
-			export interface AllCountries {}
-			export interface Country {
-				countryCode: string;
-			}
-			export interface States {
-				countryCode: string;
-			}
-			export interface Cities {
-				countryCode: string;
-				stateCode: string;
-			}
-		}
-		export namespace Res {
-			export interface AllCountries {
-				countries: ICountry[];
-			}
-			export interface Country extends ICountry {}
-			export interface States {
-				states: IState[];
-			}
-			export interface Cities {
-				cities: ICity[];
-			}
-		}
-	}
-
-	export namespace Customer {
 		export namespace Req {
 			export interface Create {
 				affiliateId?: number;
@@ -551,13 +604,21 @@ declare namespace Api {
 				ids?: number[];
 			}
 
+			export interface Update {
+				id: number;
+				title?: string;
+				description?: string;
+				isPrimary?: 0 | 1;
+			}
+
 			export interface Delete {
 				id?: number;
 				ids?: number[];
 			}
 		}
 		export namespace Res {
-			export interface Get extends Omit<Model.Media, 'storageDetails'> {}
+			export interface Get extends Media {}
+			export interface Update extends Media {}
 			export interface Delete {}
 		}
 	}
@@ -612,11 +673,7 @@ declare namespace Api {
 
 	export namespace Package {
 		export interface Details extends Model.Packages {
-			media: Omit<Model.Media, 'storageDetails'>[];
-		}
-		export interface MediaDetails {
-			id: number;
-			isPrimary: 0 | 1;
+			media: Media[];
 		}
 		export namespace Req {
 			export interface Update {
@@ -661,6 +718,14 @@ declare namespace Api {
 				limit?: number;
 			}
 			export interface Paged extends RedSky.PageQuery {}
+			export interface Verification {
+				accommodationId: number;
+				adults: number;
+				children: number;
+				arrivalDate: string | Date;
+				departureDate: string | Date;
+				numberOfAccommodations: number;
+			}
 		}
 		export namespace Res {
 			export interface Get extends Model.Reservation {}
@@ -668,6 +733,33 @@ declare namespace Api {
 				[key: string]: Redis.Availability;
 			}
 			export interface Paged {}
+			export interface Verification {
+				checkInTime: string | Date;
+				checkInDate: string | Date;
+				checkoutTime: string | Date;
+				checkoutDate: string | Date;
+				adults: number;
+				children: number;
+				costTotalCents: number;
+				costsPerNight: { [date: string]: CostPerNight };
+				accommodationName: string;
+				destinationPackages: BookingPackageDetails[];
+				policies: Record<Model.DestinationPolicyType, string>;
+			}
+
+			export interface CostPerNight {
+				accommodationCostInCents: number;
+				taxesAndFeesInCents: number;
+				totalInCents: number;
+			}
+
+			export interface BookingPackageDetails extends Api.Package.Details {
+				priceCents: number;
+			}
+			export interface Policies {
+				guaranteePolicy: string;
+				cancelPolicy: string;
+			}
 		}
 	}
 
@@ -700,6 +792,7 @@ declare namespace Api {
 		}
 		export namespace Res {
 			export interface Voucher {
+				id: number;
 				customerUserId: number;
 				isActive: 0 | 1;
 				isRedeemed: 0 | 1;
@@ -820,11 +913,11 @@ declare namespace Api {
 			export interface Create {
 				name: string;
 				description?: string;
-				isActive: 0 | 1;
 				accrualRate: number;
 				threshold: number;
 				isAnnualRate?: 0 | 1;
 				featureIds: number[];
+				mediaDetails?: MediaDetails[];
 			}
 			export interface Get {
 				id: number;
@@ -833,6 +926,7 @@ declare namespace Api {
 			export interface Update extends Partial<Omit<Model.Tier, 'companyId' | 'createdOn' | 'modifiedOn'>> {
 				id: number;
 				featureIds?: number[];
+				mediaDetails?: MediaDetails[];
 			}
 			export interface Delete {
 				id: number;
@@ -852,8 +946,9 @@ declare namespace Api {
 			}
 		}
 		export namespace Res {
-			export interface Get extends Model.Tier {
+			export interface Get extends Omit<Model.Tier, 'companyId'> {
 				features: Model.TierFeature[];
+				mediaDetails: MediaDetails[];
 			}
 			export interface CreateFeature extends Model.TierFeature {}
 			export interface GetFeatures extends Model.TierFeature {}
@@ -878,7 +973,7 @@ declare namespace Api {
 			state: string;
 			zip: number;
 			country: string;
-			isDefault: boolean | 1 | 0;
+			isDefault: 1 | 0 | boolean;
 		}
 
 		export interface Filtered {
@@ -899,8 +994,8 @@ declare namespace Api {
 			birthDate: Date | string;
 			lastLoginOn: Date | string;
 			permissionLogin: boolean | number;
-			permission: Permission[];
-			address: Address[];
+			permission: Permission[] | [];
+			address: Address[] | [];
 			lifeTimePoints: number;
 			availablePoints: number;
 			city: string;
@@ -933,7 +1028,6 @@ declare namespace Api {
 				firstName?: string;
 				lastName?: string;
 				primaryEmail?: string;
-				password?: string;
 				phone?: string;
 				birthDate?: Date | string;
 			}
@@ -960,6 +1054,11 @@ declare namespace Api {
 			export interface ResetPassword {
 				passwordResetGuid: string;
 				newPassword: string;
+			}
+
+			export interface UpdatePassword {
+				old: string;
+				new: string;
 			}
 
 			export interface ValidateGuid {
@@ -994,7 +1093,9 @@ declare namespace Api {
 				companyId: number;
 			}
 			export interface Get extends Filtered {}
-			export interface Login extends Filtered {}
+			export interface Login extends Filtered {
+				pendingPoints: number;
+			}
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
@@ -1016,7 +1117,7 @@ declare namespace Api {
 				address1: string;
 				address2?: string;
 				city: string;
-				state: string;
+				state?: string;
 				zip: number;
 				country: string;
 				isDefault: boolean | number;

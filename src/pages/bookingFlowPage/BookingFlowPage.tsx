@@ -15,11 +15,14 @@ import DestinationPackageTile from './destinationPackageTile/DestinationPackageT
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import ReservationsService from '../../services/reservations/reservations.service';
+import LoadingPage from '../loadingPage/LoadingPage';
 
 interface BookingFlowPageProps {}
 
 const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
@@ -27,17 +30,20 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodation, setAccommodation] = useState<Api.Accommodation.Res.Details>();
-	const [fakeData, setFakeData] = useState(FakeBookingData);
+	const [fakeData, setFakeData] = useState<Api.Reservation.Res.Verification>();
 	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
 
 	useEffect(() => {
 		if (!params) return;
 		async function getAccommodationDetails() {
+			params.data.numberOfAccommodations = 1;
 			try {
-				let response = await accommodationService.getAccommodationDetails(params.data.accommodationId);
+				console.log(params.data);
+				let response = await reservationService.verifyAvailability(params.data);
 				if (response.data.data) {
 					console.log(response.data.data);
-					setAccommodation(response.data.data);
+					setFakeData(response.data.data);
+					// setAccommodation(response.data.data);
 				}
 			} catch (e) {
 				rsToasts.error(e.message);
@@ -71,7 +77,9 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		});
 	}
 
-	return (
+	return !fakeData ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsBookingFlowPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<Label marginTop={80} marginLeft={size === 'small' ? '15px' : ''} variant={'h1'}>
@@ -187,13 +195,13 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 					</Box>
 					{size !== 'small' && (
 						<BookingCartTotalsCard
-							checkInTime={fakeData.checkInTime}
-							checkoutTime={fakeData.checkoutTime}
+							checkInTime={'4:00 pm'}
+							checkoutTime={'11:00 am'}
 							checkInDate={fakeData.checkInDate}
 							checkoutDate={fakeData.checkoutDate}
 							accommodationName={fakeData.accommodationName}
 							taxAndFees={fakeData.taxAndFees}
-							costPerNight={fakeData.costPerNight}
+							costPerNight={fakeData.costsPerNight}
 							adults={fakeData.adults}
 							children={fakeData.children}
 							costTotalCents={fakeData.costTotalCents}

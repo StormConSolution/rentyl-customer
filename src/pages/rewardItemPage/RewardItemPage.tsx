@@ -196,7 +196,7 @@ const RewardItemPage: React.FC = () => {
 		setApplyFilterToggle(!applyFilterToggle);
 	}
 
-	function getPrimaryRewardImg(medias: Model.Media[]): string {
+	function getPrimaryRewardImg(medias: Api.Media[]): string {
 		if (!ObjectUtils.isArrayWithData(medias)) return '';
 		let primary = medias.find((item) => item.isPrimary);
 		if (primary) return primary.urls.small;
