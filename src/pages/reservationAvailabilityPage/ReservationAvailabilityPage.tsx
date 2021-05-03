@@ -24,12 +24,17 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
+import LoginOrCreateAccountPopup, {
+	LoginOrCreateAccountPopupProps
+} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
+import UserService from '../../services/user/user.service';
 import AccommodationFeatures = Model.AccommodationFeatures;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	let userService = serviceFactory.get<UserService>('UserService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
@@ -167,7 +172,22 @@ const ReservationAvailabilityPage: React.FC = () => {
 						router.navigate(`/accommodation?ai=${accommodationId}`).catch(console.error);
 					},
 					onBookNowClick: (accommodationId) => {
-						alert('I was clicked');
+						let data: any = { ...searchQueryObj };
+						data.accommodationId = accommodationId;
+						data.arrivalDate = data.startDate;
+						data.departureDate = data.endDate;
+						delete data.pagination;
+						delete data.startDate;
+						delete data.endDate;
+						data = JSON.stringify(data);
+
+						if (!userService.getCurrentUser()) {
+							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+								query: data
+							});
+						} else {
+							router.navigate(`/booking?data=${data}`).catch(console.error);
+						}
 					},
 					onAddCompareClick: (accommodationId) => {
 						let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
