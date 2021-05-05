@@ -255,6 +255,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 						</Box>
 						<LabelButton
 							key={2}
+							className={'saveBtn'}
 							look={passwordFormValid ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
