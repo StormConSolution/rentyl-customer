@@ -220,6 +220,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							updateControl={updateUserObjForm}
 						/>
 						<LabelButton
+							className={'saveBtn'}
 							look={accountInfoChanged ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
