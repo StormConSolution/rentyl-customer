@@ -17,6 +17,8 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface BookingFlowPageProps {}
 
@@ -57,6 +59,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	}, [hasAgreedToTerms, isFormValid]);
 
 	function renderDestinationPackages() {
+		if (!fakeData) return;
 		return fakeData.destinationPackages.map((item, index) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
 			let isAdded = addedPackages.find((value) => value.id === item.id);
@@ -146,13 +149,16 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 						</Paper>
 						{size === 'small' && (
 							<BookingCartTotalsCard
-								checkInTime={fakeData.checkInTime}
-								checkoutTime={fakeData.checkoutTime}
+								checkInTime={'4:00 pm'}
+								checkoutTime={'11:00 am'}
 								checkInDate={fakeData.checkInDate}
 								checkoutDate={fakeData.checkoutDate}
 								accommodationName={fakeData.accommodationName}
-								taxAndFees={fakeData.taxAndFees}
-								costPerNight={fakeData.costPerNight}
+								taxAndFees={[
+									{ title: 'Sales and Tourist Tax', priceCents: 21248 },
+									{ title: 'Resort Fee', priceCents: 40860 }
+								]}
+								costPerNight={fakeData.costsPerNight}
 								adults={fakeData.adults}
 								children={fakeData.children}
 								costTotalCents={fakeData.costTotalCents}
@@ -200,7 +206,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							checkInDate={fakeData.checkInDate}
 							checkoutDate={fakeData.checkoutDate}
 							accommodationName={fakeData.accommodationName}
-							taxAndFees={fakeData.taxAndFees}
+							taxAndFees={[
+								{ title: 'Sales and Tourist Tax', priceCents: 21248 },
+								{ title: 'Resort Fee', priceCents: 40860 }
+							]}
 							costPerNight={fakeData.costsPerNight}
 							adults={fakeData.adults}
 							children={fakeData.children}

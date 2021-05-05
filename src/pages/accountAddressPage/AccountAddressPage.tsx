@@ -5,7 +5,6 @@ import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { useEffect, useState } from 'react';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -20,6 +19,8 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import CountryService from '../../services/country/country.service';
 import UserAddressService from '../../services/userAddress/userAddress.service';
+import { useRecoilState } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface AccountAddressPageProps {}
 
@@ -27,7 +28,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
-	const [user, setUser] = useState<Api.User.Res.Get>();
+	const [user, setUser] = useRecoilState<Api.User.Res.Get | undefined>(globalState.user);
 	const [addressList, setAddressList] = useState<Api.User.Address[]>([]);
 	const [formChanged, setFormChanged] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<Api.User.Address>();
@@ -39,11 +40,9 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 	);
 
 	useEffect(() => {
-		let userObj = userService.getCurrentUser();
-		if (userObj) {
-			setAddressList(userObj.address);
-			setUser(userObj);
-		}
+		if (!user) return;
+		setAddressList(user.address);
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -96,7 +95,9 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 					onDelete={() => {
 						deleteAddress(item.id);
 					}}
-					onPrimaryChange={(addressId) => {}}
+					onPrimaryChange={(addressId) => {
+						updateAddressToDefault(addressId);
+					}}
 				/>
 			);
 		});
@@ -106,6 +107,22 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 		return statesOrCountries.map((item) => {
 			return { value: item.isoCode, text: item.name, selected: item.isoCode === 'US' };
 		});
+	}
+
+	async function updateAddressToDefault(addressId: number) {
+		let data = { id: addressId, isDefault: 1 };
+		try {
+			let response = await userAddressService.update(data);
+			if (response.data.data) rsToasts.success('Update Successful');
+
+			let addresses = [...addressList];
+			addresses = addresses.map((item) => {
+				return { ...item, isDefault: item.id === addressId ? 1 : 0 };
+			});
+			setAddressList(addresses);
+		} catch (e) {
+			rsToasts.error(e.message);
+		}
 	}
 
 	function updateAddressObj(

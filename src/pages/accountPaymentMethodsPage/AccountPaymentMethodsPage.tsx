@@ -9,7 +9,6 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useEffect, useState } from 'react';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import LoadingPage from '../loadingPage/LoadingPage';
