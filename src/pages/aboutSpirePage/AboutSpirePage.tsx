@@ -80,7 +80,7 @@ const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
 								variant={'button'}
 								label={'Features and benefits'}
 								onClick={() => {
-									router.navigate('/').catch(console.error);
+									router.navigate('/features-and-benefits').catch(console.error);
 								}}
 							/>
 						</Box>

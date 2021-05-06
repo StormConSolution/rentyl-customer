@@ -43,8 +43,12 @@
 	}
 
 	.rsLabelLink {
+		margin-bottom: 15px;
 		.rsLabel {
 			color: #ffffff;
+			&.h4 {
+				text-indent: 40px;
+			}
 		}
 	}
 }
