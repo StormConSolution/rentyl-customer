@@ -4,9 +4,12 @@
 	div {
 		margin: 0;
 	}
+	div.accommodationRow:nth-child(even) {
+		background-color: #fcfbf8;
+	}
 	.accommodationRow {
 		display: grid;
-		grid-template-columns: 80px 130px 93px 58px 115px 110px 126px 90px;
+		grid-template-columns: 162px 134px 84px 51px 93px 90px 110px 88px;
 
 		.rsLabel {
 			overflow: hidden;
@@ -24,7 +27,7 @@
 		}
 
 		.rsIcon {
-			margin-right: 14px;
+			margin-right: 5px;
 		}
 
 		.comparePlusText {
@@ -33,6 +36,7 @@
 
 		button.rsButton {
 			height: 28px;
+			padding: 0 12px;
 		}
 	}
 }
