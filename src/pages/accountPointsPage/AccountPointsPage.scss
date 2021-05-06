@@ -21,17 +21,43 @@
 			}
 		}
 
-		.rsPointsHeaderCard {
-			display: flex;
-			margin-bottom: 40px;
-			justify-content: center;
-
-			.pointsHeaderPaper {
+		.pointButtonsContainer {
+			.rsButton {
+				margin: 0 10px;
 			}
 		}
 
+		.headerAndFilterContainer {
+			margin-bottom: 20px;
+			margin-top: 80px;
+		}
+
+		.pointHistoryContainer {
+			margin: 0 140px;
+		}
+
+		.pointTableHeader {
+			margin-top: 20px;
+			padding-bottom: 12px;
+			border-bottom: 2px solid theme-var($greyLineColor);
+
+			.transactionType {
+				width: 55%;
+			}
+			.dateReceived {
+				width: 35%;
+			}
+			.pointAmount {
+				width: 20%;
+			}
+		}
+
+		.pointTableContainer {
+			padding: 50px 0;
+		}
+
 		.rsFooter {
-			margin-top: 250px;
+			margin: 120px 140px 0;
 		}
 	}
 }
