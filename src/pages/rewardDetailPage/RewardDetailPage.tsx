@@ -80,7 +80,7 @@ const RewardDetailPage: React.FC = () => {
 
 	function renderPictures(): JSX.Element[] {
 		if (!reward) return [];
-		return reward.media.map((newMedia: Model.Media) => {
+		return reward.media.map((newMedia: Api.Media) => {
 			return (
 				<Box className={'imageWrapper'}>
 					<img src={newMedia.urls.small} alt="" />

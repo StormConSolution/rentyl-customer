@@ -1,52 +1,49 @@
 import { useEffect, useState } from 'react';
 import globalState, { clearPersistentState } from '../models/globalState';
-import rsToasts from '@bit/redsky.framework.toast';
-import CustomToast from '../components/customToast/CustomToast';
-import router from '../utils/router';
 import serviceFactory from '../services/serviceFactory';
 import UserService from '../services/user/user.service';
 import { useRecoilState } from 'recoil';
-
 export enum LoginStatus {
 	UNKNOWN,
 	LOGGED_OUT,
 	LOGGED_IN
 }
 
-/* This should ONLY ever be used in App.tsx */
+/* Can only be used in App.tsx */
 export default function useLoginState() {
 	const [loginStatus, setLoginStatus] = useState<LoginStatus>(LoginStatus.UNKNOWN);
-	const [adminToken, setAdminToken] = useRecoilState<string>(globalState.adminToken);
+	const [userToken, setUserToken] = useRecoilState<string>(globalState.userToken);
 	const userService = serviceFactory.get<UserService>('UserService');
-
 	useEffect(() => {
-		userService.subscribeToLoggedIn((user) => {
+		let loggedInSubscribeId = userService.subscribeToLoggedIn((user) => {
 			setLoginStatus(LoginStatus.LOGGED_IN);
-			setAdminToken(user.token);
+			setUserToken(user.token);
+		});
+
+		let loggedOutSubscribeId = userService.subscribeToLoggedOut(() => {
+			setLoginStatus(LoginStatus.LOGGED_OUT);
+			setUserToken('');
 		});
 
 		async function initialStartup() {
-			if (!adminToken) {
+			if (!userToken) {
 				setLoginStatus(LoginStatus.LOGGED_OUT);
 				return;
 			}
-
 			try {
-				await userService.loginUserByToken(adminToken);
+				await userService.loginUserByToken(userToken);
 			} catch (e) {
 				clearPersistentState();
 				setLoginStatus(LoginStatus.LOGGED_OUT);
 			}
 		}
+
 		initialStartup().catch(console.error);
-		rsToasts.setRenderDelegate(CustomToast);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+
+		return () => {
+			userService.unsubscribeToLoggedIn(loggedInSubscribeId);
+			userService.unsubscribeToLoggedOut(loggedOutSubscribeId);
+		};
 	}, []);
-
-	useEffect(() => {
-		if (loginStatus === LoginStatus.UNKNOWN) return;
-		router.tryToLoadInitialPath();
-	}, [loginStatus]);
-
 	return loginStatus;
 }
