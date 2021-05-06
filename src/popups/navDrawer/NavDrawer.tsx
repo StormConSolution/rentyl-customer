@@ -67,7 +67,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 							}}
 						/>
 					</Box>
-					{
+					{user && (
 						<Box mb={30}>
 							<LabelLink
 								path={'/account/personal-info'}
@@ -97,7 +97,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								}}
 							/>
 						</Box>
-					}
+					)}
 					<LabelLink
 						path={'/about-spire'}
 						label={'About Spire Loyalty'}

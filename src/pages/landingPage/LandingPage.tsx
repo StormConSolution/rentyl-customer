@@ -18,7 +18,7 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import RewardService from '../../services/reward/reward.service';
 
@@ -27,6 +27,7 @@ interface LandingPageProps {}
 const LandingPage: React.FC<LandingPageProps> = () => {
 	const size = useWindowResizeChange();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [activeRewards, setActiveRewards] = useState<number>(0);
 	const [featuredRewards, setFeaturedRewards] = useState<Model.FeaturedCategory[]>();
 
@@ -83,9 +84,10 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						<LabelButton
 							look={'containedPrimary'}
 							variant={'button'}
-							label={'Get Started'}
+							label={user ? 'Browse Destinations' : 'Get Started'}
 							onClick={() => {
-								router.navigate('/signup');
+								if (user) router.navigate('/reservation/availability').catch(console.error);
+								else router.navigate('/signup').catch(console.error);
 							}}
 						/>
 					</Box>
@@ -128,24 +130,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						{size === 'small' ? (
 							<Carousel children={renderFeatureRewards()} />
 						) : (
-							<>
-								{renderFeatureRewards()}
-								{/*<FeaturedRewardCard*/}
-								{/*	mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay.png')}*/}
-								{/*	logoImg={''}*/}
-								{/*	title={'Margaritaville Villa Stay'}*/}
-								{/*/>*/}
-								{/*<FeaturedRewardCard*/}
-								{/*	mainImg={require('../../images/landingPage/Margaritaville-Spa -Service.png')}*/}
-								{/*	logoImg={''}*/}
-								{/*	title={'Margaritaville Spa Service'}*/}
-								{/*/>*/}
-								{/*<FeaturedRewardCard*/}
-								{/*	mainImg={require('../../images/landingPage/Margaritaville-Drinks-for-Two.png')}*/}
-								{/*	logoImg={''}*/}
-								{/*	title={'Margaritaville Drinks for Two'}*/}
-								{/*/>*/}
-							</>
+							<>{renderFeatureRewards()}</>
 						)}
 					</Box>
 					<LabelButton
@@ -174,7 +159,15 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 							Loyalty network of vacation properties allows you to use your Spire points on the perfect
 							vacation.
 						</Label>
-						<LabelButton look={'containedPrimary'} variant={'button'} label={'Get started'} />
+						<LabelButton
+							look={'containedPrimary'}
+							variant={'button'}
+							label={user ? 'Browse Destinations' : 'Get Started'}
+							onClick={() => {
+								if (user) router.navigate('/reservation/availability').catch(console.error);
+								else router.navigate('/signup').catch(console.error);
+							}}
+						/>
 					</Paper>
 				</Box>
 
