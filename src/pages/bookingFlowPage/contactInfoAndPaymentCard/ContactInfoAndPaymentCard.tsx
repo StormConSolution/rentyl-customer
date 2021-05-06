@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import luhn from 'luhn';
 import { formatPhoneNumber, removeAllExceptNumbers } from '../../../utils/utils';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../../models/globalState';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
 type CreditCardForm = { name: string; cardNumber: string; expDate: string };
@@ -18,6 +20,7 @@ interface ContactInfoAndPaymentCardProps {
 }
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
@@ -47,9 +50,13 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	);
 	const [contactInfoForm, setContactInfoForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('firstName', '', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
-			new RsFormControl('lastName', '', [new RsValidator(RsValidatorEnum.REQ, 'Last name is required')]),
-			new RsFormControl('phone', '', [
+			new RsFormControl('firstName', user?.firstName || '', [
+				new RsValidator(RsValidatorEnum.REQ, 'First name is required')
+			]),
+			new RsFormControl('lastName', user?.lastName || '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
+			]),
+			new RsFormControl('phone', user?.phone || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Phone number required'),
 				new RsValidator(RsValidatorEnum.MIN, 'Phone number too short', 10)
 			]),

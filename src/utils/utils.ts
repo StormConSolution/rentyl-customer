@@ -56,6 +56,12 @@ export function validateEmail(mail: string) {
 	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail);
 }
 
+export function removeExtraSpacesReturnsTabs(string: string) {
+	let strippedString = string.replace(/\r?\n|\t|\r/g, ' ').match(/[^ ]+/g);
+	if (strippedString) return strippedString.join(' ');
+	else return '';
+}
+
 export function capitalize(s: string) {
 	return s.toLowerCase().replace(/\b./g, function (a) {
 		return a.toUpperCase();
