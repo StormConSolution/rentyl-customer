@@ -5,7 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import './routes';
 import { Capacitor } from '@capacitor/core';
 import { RecoilRoot } from 'recoil';
-import { GlobalStateObserver } from './models/globalState';
+import { GlobalStateObserver, GlobalStateInfluencer } from './models/globalState';
 import router from './utils/router';
 import routes from './routes';
 import modelFactory from './models/modelFactory';
@@ -26,6 +26,7 @@ ReactDOM.render(
 	<RecoilRoot>
 		<App />
 		<GlobalStateObserver />
+		<GlobalStateInfluencer />
 	</RecoilRoot>,
 	document.getElementById('root')
 );

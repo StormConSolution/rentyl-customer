@@ -41,6 +41,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			try {
 				let response = await destinationService.getDestinationDetails(id);
 				if (response.data.data) setDestinationDetails(response.data.data);
+				console.log('Destination Details: ', response.data.data);
 			} catch (e) {
 				rsToasts.error(e.message);
 			}
@@ -300,6 +301,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						<iframe frameBorder="0" src={renderMapSource()}></iframe>
 					</Box>
 				</Box>
+				<Box className={'sectionFive'}></Box>
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

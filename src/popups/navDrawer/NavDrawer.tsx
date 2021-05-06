@@ -4,8 +4,11 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { useEffect, useRef, useState } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../../components/labelLink/LabelLink';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import router from '../../utils/router';
+import serviceFactory from '../../services/serviceFactory';
+import UserService from '../../services/user/user.service';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface NavPopoutProps {
 	onClose: () => void;
@@ -13,8 +16,9 @@ interface NavPopoutProps {
 }
 
 const NavDrawer: React.FC<NavPopoutProps> = (props) => {
+	const userService = serviceFactory.get<UserService>('UserService');
 	const popupRef = useRef<HTMLElement>(null);
-	const loginStatus = useLoginState();
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
@@ -115,7 +119,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 					height={62}
 					width={'100%'}
 				>
-					{loginStatus === LoginStatus.LOGGED_OUT ? (
+					{!user ? (
 						<>
 							<LabelLink
 								path={'/signup'}
@@ -151,8 +155,9 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 							iconSize={7}
 							iconColor={'#ffffff'}
 							onClick={() => {
-								localStorage.clear();
-								window.location.assign('/');
+								userService.logout();
+								props.onClose();
+								router.navigate('/');
 							}}
 						/>
 					)}

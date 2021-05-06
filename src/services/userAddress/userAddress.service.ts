@@ -7,6 +7,10 @@ export default class UserAddressService extends Service {
 		return await http.post<RsResponseData<Api.UserAddress.Res.Create>>('userAddress', data);
 	}
 
+	async update(data: Api.UserAddress.Req.Update) {
+		return await http.put<RsResponseData<Api.UserAddress.Res.Update>>('userAddress', data);
+	}
+
 	async delete(id: number) {
 		return await http.delete<RsResponseData<number>>('userAddress', { id });
 	}

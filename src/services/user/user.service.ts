@@ -4,12 +4,15 @@ import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import modelFactory from '../../models/modelFactory';
 import { Service } from '../Service';
 import UserModel from '../../models/user/user.model';
-import StandardOrderTypes = RedSky.StandardOrderTypes;
-import FilterQuery = RedSky.FilterQuery;
+import globalState, { setRecoilExternalValue } from '../../models/globalState';
 
 export default class UserService extends Service {
 	userModel: UserModel = modelFactory.get<UserModel>('UserModel');
-	onLoggedInCallbacks: ((user: Api.User.Res.Get) => void)[] = [];
+
+	private loggedInCallbackIdCounter = 0;
+	private onLoggedInCallbacks: { id: number; callback: (user: Api.User.Res.Get) => void }[] = [];
+	private loggedOutCallbackIdCounter = 0;
+	private onLoggedOutCallbacks: { id: number; callback: () => void }[] = [];
 
 	async loginUserByPassword(username: string, password: string) {
 		password = SparkMD5.hash(password);
@@ -42,16 +45,49 @@ export default class UserService extends Service {
 		return await http.put<RsResponseData<Api.User.Res.Get>>('user', data);
 	}
 
-	subscribeToLoggedIn(callback: (user: Api.User.Res.Get) => void) {
-		this.onLoggedInCallbacks.push(callback);
+	logout() {
+		this.onLoggedOutCallbacks.forEach((callback) => {
+			callback.callback();
+		});
+
+		setRecoilExternalValue<Api.User.Res.Get | undefined>(globalState.user, undefined);
 	}
 
+	async updatePassword(data: Api.User.Req.UpdatePassword) {
+		data.old = SparkMD5.hash(data.old);
+		data.new = SparkMD5.hash(data.new);
+		return await http.put<RsResponseData<boolean>>('user/password', data);
+	}
+
+	subscribeToLoggedIn(callback: (user: Api.User.Res.Get) => void): number {
+		let id = ++this.loggedInCallbackIdCounter;
+		this.onLoggedInCallbacks.push({ id, callback });
+		return id;
+	}
+
+	unsubscribeToLoggedIn(id: number) {
+		this.onLoggedInCallbacks = this.onLoggedInCallbacks.filter((item) => {
+			return item.id !== id;
+		});
+	}
+
+	subscribeToLoggedOut(callback: () => void): number {
+		let id = ++this.loggedOutCallbackIdCounter;
+		this.onLoggedOutCallbacks.push({ id, callback });
+		return id;
+	}
+
+	unsubscribeToLoggedOut(id: number) {
+		this.onLoggedOutCallbacks = this.onLoggedOutCallbacks.filter((item) => {
+			return item.id !== id;
+		});
+	}
 	async getPaginatedList(
 		page: number,
 		perPage: number,
 		sortField?: string,
-		sortOrder?: StandardOrderTypes,
-		filter?: FilterQuery | null,
+		sortOrder?: RedSky.StandardOrderTypes,
+		filter?: RedSky.FilterQuery | null,
 		alternatePath?: string
 	) {
 		let res = await this.userModel.getPaginatedList<any>(
@@ -78,8 +114,9 @@ export default class UserService extends Service {
 		http.changeConfig(axiosConfig);
 		this.userModel.setCurrentUser(user);
 		await modelFactory.refreshAllModels();
+		setRecoilExternalValue<Api.User.Res.Get | undefined>(globalState.user, user);
 		this.onLoggedInCallbacks.forEach((callback) => {
-			callback(user);
+			callback.callback(user);
 		});
 	}
 }

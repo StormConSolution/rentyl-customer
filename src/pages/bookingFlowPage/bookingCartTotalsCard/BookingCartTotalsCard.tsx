@@ -8,15 +8,16 @@ import Paper from '../../../components/paper/Paper';
 import { Booking } from '../fakeBookingData';
 import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
+import { useState } from 'react';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
 	checkoutTime: string;
-	checkInDate: string;
-	checkoutDate: string;
+	checkInDate: string | Date;
+	checkoutDate: string | Date;
 	accommodationName: string;
 	taxAndFees: { title: string; priceCents: number }[];
-	costPerNight: { date: string; priceCents: number }[];
+	costPerNight: { [date: string]: Api.Reservation.Res.CostPerNight };
 	costTotalCents: number;
 	adults: number;
 	children: number;
@@ -26,9 +27,12 @@ interface BookingCartTotalsCardProps {
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const size = useWindowResizeChange();
+
 	function getRoomTotal() {
 		let cost = 0;
-		props.costPerNight.forEach((item) => (cost += item.priceCents));
+		for (let i in props.costPerNight) {
+			cost += props.costPerNight[i].totalInCents;
+		}
 		return StringUtils.formatMoney(cost);
 	}
 
@@ -41,18 +45,20 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderItemizedCostPerNight() {
-		return props.costPerNight.map((item, index) => {
-			return (
-				<Box display={'flex'} alignItems={'center'} key={index}>
+		let itemizedCostPerNight: React.ReactNodeArray = [];
+		for (let i in props.costPerNight) {
+			itemizedCostPerNight.push(
+				<Box display={'flex'} alignItems={'center'} key={i}>
 					<Label variant={'body2'} width={'170px'}>
-						{new Date(item.date).toDateString()}
+						{new Date(i).toDateString()}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(item.priceCents)}
+						${StringUtils.formatMoney(props.costPerNight[i].totalInCents)}
 					</Label>
 				</Box>
 			);
-		});
+		}
+		return itemizedCostPerNight;
 	}
 
 	function renderTaxesAndFees() {
@@ -139,7 +145,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					{new Date(props.checkInDate).toDateString()} - {new Date(props.checkoutDate).toDateString()}
 				</Label>
 				<Label variant={'body1'}>{props.adults} Adults</Label>
-				{props.children && <Label variant={'body1'}>{props.children} Children</Label>}
+				<Label variant={'body1'}>{props.children} Children</Label>
 			</Box>
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h4'} width={'170px'}>
