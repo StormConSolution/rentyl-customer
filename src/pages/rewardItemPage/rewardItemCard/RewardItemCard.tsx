@@ -16,6 +16,28 @@ interface RewardItemCardProps {
 }
 
 const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
+	function renderViewDetails() {
+		if (props.voucherCode !== 'noneAvailable') {
+			return (
+				<IconLabel
+					className={'rewardDetails'}
+					labelName={'View Details'}
+					iconImg={'icon-chevron-right'}
+					iconPosition={'right'}
+					iconSize={7}
+					labelVariant={'caption'}
+					onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}&vc=${props.voucherCode}`)}
+				/>
+			);
+		} else {
+			return (
+				<Label className={'rewardDetails'} variant={'caption'}>
+					currently unavailable
+				</Label>
+			);
+		}
+	}
+
 	return (
 		<div className={`rsRewardItemCard ${props.className || ''}`}>
 			<div className={'imageContainer'}>
@@ -30,15 +52,7 @@ const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
 			<Label className={'rewardDescription'} variant={'body1'}>
 				{props.description}
 			</Label>
-			<IconLabel
-				className={'rewardDetails'}
-				labelName={'View Details'}
-				iconImg={'icon-chevron-right'}
-				iconPosition={'right'}
-				iconSize={7}
-				labelVariant={'caption'}
-				onClick={() => router.navigate(`/reward/details?ri=${props.rewardId}&vc=${props.voucherCode}`)}
-			/>
+			{renderViewDetails()}
 		</div>
 	);
 };
