@@ -369,16 +369,9 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {
 				name: string;
-				birthDate: Date | string;
-				address: string;
-				city: string;
-				zip: string;
-				country: string;
 				phone: string;
 				primaryEmail: string;
 				password: string;
-				newsLetter: 0 | 1;
-				emailNotification: 0 | 1;
 			}
 			export interface Get {}
 		}
