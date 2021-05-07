@@ -7,6 +7,7 @@ import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
+import router from '../../utils/router';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
@@ -22,7 +23,14 @@ const AppBar: React.FC = () => {
 
 			<Box display={'flex'} alignItems={'center'}>
 				{!size && (
-					<LabelButton look={'containedPrimary'} variant={'button'} label={'Learn about spire loyalty'} />
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Learn about spire loyalty'}
+						onClick={() => {
+							router.navigate('/about-spire').catch(console.error);
+						}}
+					/>
 				)}
 				<Icon
 					iconImg={'icon-hamburger-menu'}
