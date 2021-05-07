@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './AccountPointsPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import UserPointService from '../../services/userPoint/userPoint.service';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
@@ -15,24 +14,31 @@ import Paper from '../../components/paper/Paper';
 import MultiSelect from '../../components/multiSelect/MultiSelect';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
+import globalState from '../../models/globalState';
+import { useRecoilValue } from 'recoil';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { SelectOptions } from '../../components/Select/Select';
 
 const AccountPointsPage: React.FC = () => {
-	const userService = serviceFactory.get<UserService>('UserService');
+	const size = useWindowResizeChange();
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const userPointService = serviceFactory.get<UserPointService>('UserPointService');
-	const user = userService.getCurrentUser();
-	const [filterBy, setFilterBy] = useState<Model.SelectOptions[]>([
-		{ value: 1, text: 'Home Purchase', selected: false },
-		{ value: 2, text: 'Rental', selected: false },
-		{ value: 3, text: 'Point Redemption', selected: false },
-		{ value: 4, text: 'Vacation Stay', selected: false }
-	]);
 	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Get[]>();
+	const pointTypeFilters: SelectOptions[] = [
+		{ value: 'ACTION', text: 'Action', selected: false },
+		{ value: 'CAMPAIGN', text: 'Campaign', selected: false },
+		{ value: 'ADMIN', text: 'Admin', selected: false },
+		{ value: 'ORDER', text: 'Order', selected: false },
+		{ value: 'BOOKING', text: 'Booking', selected: false },
+		{ value: 'RENTAL', text: 'Rental', selected: false },
+		{ value: 'VACATION', text: 'Vacation', selected: false }
+	];
 
 	useEffect(() => {
 		async function getUserPoints() {
 			try {
 				if (user) {
-					let res = await userPointService.getPointTransactionsByUserId();
+					let res = await userPointService.getPointTransactionsByUserId(user.id);
 					console.log('get user point res', res);
 					setPointHistory(res);
 				}
@@ -45,7 +51,34 @@ const AccountPointsPage: React.FC = () => {
 
 	function renderPendingPoints() {
 		if (!pointHistory) return;
-		return pointHistory.map((point, index) => {});
+		return pointHistory.map((point, index) => {
+			return (
+				<Box className={'pointItemContainer pendingPointItemContainer'}>
+					<img
+						className={'pointImage'}
+						src={
+							'https://spire-media-public.s3.us-east-2.amazonaws.com/images/media-service-test-image_S.jpg'
+						}
+						alt={''}
+					/>
+					<Box className={'pendingPointsDetailsContainer'}>
+						<Label variant={'h3'}>Encore Town Home Rental</Label>
+						<Label className={'pointType'} variant={'caption'}>
+							Rental
+						</Label>
+						<Label className={'extraInfo'} variant={'body1'}>
+							ReservationDates: 3/5/21 - 12/18/21
+						</Label>
+					</Box>
+					<Label className={'date'} variant={'h2'}>
+						1/05/22
+					</Label>
+					<Label className={'points'} variant={'h2'}>
+						13,429
+					</Label>
+				</Box>
+			);
+		});
 	}
 
 	function renderCompletedPoints() {
@@ -88,19 +121,25 @@ const AccountPointsPage: React.FC = () => {
 						className={'headerAndFilterContainer'}
 						display={'flex'}
 						justifyContent={'space-between'}
-						padding={'0 140px'}
+						padding={size === 'small' ? '0 20px' : '0 140px'}
 					>
 						<Label variant={'h1'}>Your Point History</Label>
 						<MultiSelect
+							placeHolder={'filter by'}
 							onChange={(value) => console.log('multiSelect Value', value)}
-							options={filterBy}
+							options={pointTypeFilters}
 							showSelectedAsPlaceHolder
 						/>
 					</Box>
-					<Paper className={'pointHistoryContainer'} backgroundColor={'#fbfcf8'} padding={'40px'} boxShadow>
+					<Paper
+						className={'pointHistoryContainer'}
+						backgroundColor={'#fbfcf8'}
+						padding={size === 'small' ? '10px' : '40px'}
+						boxShadow
+					>
 						<div className={'pendingPointsContainer'}>
 							<Label variant={'h2'}>Pending Points</Label>
-							<Box className={'pending pointTableHeader'} display={'flex'}>
+							<Box className={'pending pointTableHeader'}>
 								<Label className={'transactionType'} variant={'body1'}>
 									Transaction type
 								</Label>
@@ -115,7 +154,7 @@ const AccountPointsPage: React.FC = () => {
 						</div>
 						<div className={'completedTransactionsContainer'}>
 							<Label variant={'h2'}>Completed Transactions</Label>
-							<Box className={'completed pointTableHeader'} display={'flex'}>
+							<Box className={'completed pointTableHeader'}>
 								<Label className={'transactionType'} variant={'body1'}>
 									Transaction type
 								</Label>
