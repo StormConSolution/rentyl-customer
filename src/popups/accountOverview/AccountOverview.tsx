@@ -7,9 +7,8 @@ import Box from '../../components/box/Box';
 import { addCommasToNumber } from '../../utils/utils';
 import LabelLink from '../../components/labelLink/LabelLink';
 import Icon from '@bit/redsky.framework.rs.icon';
-import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface AccountOverviewProps {
 	isOpen: boolean;
@@ -18,13 +17,10 @@ interface AccountOverviewProps {
 }
 
 const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
-	const userService = serviceFactory.get<UserService>('UserService');
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const popupRef = useRef<HTMLElement>(null);
-	const [user, setUser] = useState<Api.User.Res.Get>();
-	const loginStatus = useLoginState();
 
 	useEffect(() => {
-		if (loginStatus === LoginStatus.LOGGED_IN) setUser(userService.getCurrentUser());
 		function handleClickOutside(event: any) {
 			if (popupRef && popupRef.current && !popupRef.current.contains(event.target)) {
 				document.getElementsByTagName('body')[0].style.overflow = '';
@@ -35,7 +31,7 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [loginStatus]);
+	}, []);
 
 	/*
 		This Component needs to have an end point written to get back the correct data. As of right now we are blocked.

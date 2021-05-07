@@ -21,16 +21,19 @@ function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
+
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
-		router.tryToLoadInitialPath();
 		rsToasts.setRenderDelegate(CustomToast);
 		AOS.init({
 			duration: 1000
 		});
-		//remove nav-parent element from the dom
-		document.querySelector('.nav-parent')!.remove();
 	}, []);
+
+	useEffect(() => {
+		if (loginStatus === LoginStatus.UNKNOWN) return;
+		router.tryToLoadInitialPath();
+	}, [loginStatus]);
 
 	function renderViewsBasedOnLoginStatus() {
 		switch (loginStatus) {
@@ -40,7 +43,8 @@ function App() {
 				return (
 					<>
 						<AppBar />
-						<View key="signIn" id="signIn" default initialPath="/" />
+						<View key="landingPage" id="landingPage" default initialPath="/" />
+						<ComparisonDrawer />
 					</>
 				);
 			case LoginStatus.LOGGED_IN:
@@ -57,6 +61,7 @@ function App() {
 								setShowAccountOverview(false);
 							}}
 						/>
+						<ComparisonDrawer />
 					</>
 				);
 		}
@@ -64,20 +69,7 @@ function App() {
 
 	return (
 		<div className={`App ${size}`}>
-			<AppBar />
-			<View key="landingPage" id="landingPage" default initialPath="/" />
-			{loginStatus === LoginStatus.LOGGED_IN && (
-				<AccountOverview
-					isOpen={showAccountOverview}
-					onToggle={() => {
-						setShowAccountOverview(!showAccountOverview);
-					}}
-					onClose={() => {
-						setShowAccountOverview(false);
-					}}
-				/>
-			)}
-			<ComparisonDrawer />
+			{renderViewsBasedOnLoginStatus()}
 			{popupController.instance}
 			{rsToasts.instance}
 		</div>

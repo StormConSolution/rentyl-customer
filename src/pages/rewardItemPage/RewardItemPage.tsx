@@ -221,6 +221,9 @@ const RewardItemPage: React.FC = () => {
 						value={category.id}
 						title={category.name}
 						imgPath={category.media[0] ? category.media[0].urls.small : ''}
+						onClick={(categoryId) => {
+							handleCategoryOnClick(categoryId);
+						}}
 					/>
 				);
 			});
@@ -243,7 +246,7 @@ const RewardItemPage: React.FC = () => {
 		});
 	}
 
-	function handleFeaturedCategoryOnClick(categoryId: number | string) {
+	function handleCategoryOnClick(categoryId: number | string) {
 		router.updateUrlParams({ cids: JSON.stringify([categoryId]) });
 		let selectedCategories = [...categorySelectList];
 		selectedCategories = selectedCategories.map((category) => {
@@ -269,7 +272,7 @@ const RewardItemPage: React.FC = () => {
 						name: category.name
 					}}
 					onClick={(categoryId) => {
-						handleFeaturedCategoryOnClick(categoryId);
+						handleCategoryOnClick(categoryId);
 					}}
 				/>
 			);

@@ -1,9 +1,17 @@
-import { atom, RecoilState, useRecoilTransactionObserver_UNSTABLE } from 'recoil';
+import {
+	atom,
+	Loadable,
+	RecoilState,
+	RecoilValue,
+	useRecoilCallback,
+	useRecoilTransactionObserver_UNSTABLE
+} from 'recoil';
 import * as React from 'react';
 
 enum GlobalStateKeys {
 	COMPARISON_CARD = 'DestinationComparison',
-	ADMIN_TOKEN = 'AdminToken'
+	USER_TOKEN = 'UserToken',
+	USER = 'User'
 }
 
 export interface ComparisonCardInfo {
@@ -18,7 +26,8 @@ const KEY_PREFIX = 'spireCust-';
 
 class GlobalState {
 	destinationComparison: RecoilState<ComparisonCardInfo[]>;
-	adminToken: RecoilState<string>;
+	userToken: RecoilState<string>;
+	user: RecoilState<Api.User.Res.Get | undefined>;
 
 	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
 
@@ -28,16 +37,19 @@ class GlobalState {
 			default: this.loadFromLocalStorage<ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
 		});
 
-		// Uncomment below if you want to have it save to local storage
-		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
-
-		this.adminToken = atom<string>({
-			key: GlobalStateKeys.ADMIN_TOKEN,
-			default: this.loadFromLocalStorage<string>(GlobalStateKeys.ADMIN_TOKEN, '')
+		this.user = atom<Api.User.Res.Get | undefined>({
+			key: GlobalStateKeys.USER,
+			default: undefined
 		});
 
-		// Uncomment below if you want to have it save to local storage
-		this.saveToStorageList.push({ key: GlobalStateKeys.ADMIN_TOKEN, state: this.adminToken });
+		this.userToken = atom<string>({
+			key: GlobalStateKeys.USER_TOKEN,
+			default: this.loadFromLocalStorage<string>(GlobalStateKeys.USER_TOKEN, '')
+		});
+
+		// The following is stored in local storage automatically
+		this.saveToStorageList.push({ key: GlobalStateKeys.USER_TOKEN, state: this.userToken });
+		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {
@@ -59,15 +71,75 @@ export function clearPersistentState() {
 export const GlobalStateObserver: React.FC = () => {
 	useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
 		for (let storageItems of globalState.saveToStorageList) {
-			localStorage.setItem(
-				KEY_PREFIX + storageItems.key,
-				JSON.stringify(snapshot.getLoadable(storageItems.state).contents)
-			);
+			let state = snapshot.getLoadable(storageItems.state).contents;
+			if (typeof state === 'object') state = JSON.stringify(state);
+			localStorage.setItem(KEY_PREFIX + storageItems.key, state);
+		}
+
+		if (process.env.NODE_ENV === 'development') {
+			for (const item of snapshot.getNodes_UNSTABLE({ isModified: true })) {
+				console.log('Recoil item changed: ', item.key);
+				console.log('Value: ', snapshot.getLoadable(item).contents);
+			}
 		}
 	});
-
 	return null;
 };
 
 const globalState = new GlobalState();
 export default globalState;
+
+/**
+ * Returns a Recoil state value, from anywhere in the app.
+ *
+ * Can be used outside of the React tree (outside a React component), such as in utility scripts, etc.
+
+ * <GlobalStateInfluencer> must have been previously loaded in the React tree, or it won't work.
+ * Initialized as a dummy function "() => null", it's reference is updated to a proper Recoil state mutator when GlobalStateInfluencer is loaded.
+ *
+ * @example const lastCreatedUser = getRecoilExternalValue(lastCreatedUserState);
+ *
+  */
+export let getRecoilExternalLoadable: <T>(recoilValue: RecoilValue<T>) => Loadable<T> = () => null as any;
+
+/**
+ * Retrieves the value from the loadable. More information about loadables are here:
+ * https://recoiljs.org/docs/api-reference/core/Loadable
+ * @param recoilValue Recoil value to retrieve its base value
+ */
+export function getRecoilExternalValue<T>(recoilValue: RecoilValue<T>): T {
+	return getRecoilExternalLoadable<T>(recoilValue).getValue();
+}
+
+/**
+ * Sets a Recoil state value, from anywhere in the app.
+ *
+ * Can be used outside of the React tree (outside a React component), such as in utility scripts, etc.
+ *
+ * <RecoilExternalStatePortal> must have been previously loaded in the React tree, or it won't work.
+ * Initialized as a dummy function "() => null", it's reference is updated to a proper Recoil state mutator when GlobalStateInfluencer is loaded.
+ *
+ * NOTE - Recoil value isn't fully changed until some time later.
+ *
+ * @example setRecoilExternalState(lastCreatedUserState, newUser)
+ */
+export let setRecoilExternalValue: <T>(
+	recoilState: RecoilState<T>,
+	valOrUpdater: ((currVal: T) => T) | T
+) => void = () => null as any;
+
+export const GlobalStateInfluencer: React.FC = () => {
+	useRecoilCallback(({ set, snapshot }) => {
+		setRecoilExternalValue = set;
+		getRecoilExternalLoadable = snapshot.getLoadable;
+		return async () => {};
+	})();
+
+	// We need to update the getRecoilExternalLoadable every time there's a new snapshot
+	// Otherwise we will load old values from when the component was mounted
+	useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
+		getRecoilExternalLoadable = snapshot.getLoadable;
+	});
+
+	return null;
+};

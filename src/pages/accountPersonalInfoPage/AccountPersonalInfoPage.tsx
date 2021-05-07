@@ -1,11 +1,10 @@
 import * as React from 'react';
+import { useState } from 'react';
 import './AccountPersonalInfoPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
-import { useEffect, useState } from 'react';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
-import useLoginState, { LoginStatus } from '../../customHooks/useLoginState';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -16,53 +15,119 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import { formatPhoneNumber } from '../../utils/utils';
+import { formatPhoneNumber, removeAllExceptNumbers, removeExtraSpacesReturnsTabs } from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
 import rsToasts from '@bit/redsky.framework.toast';
+import { useRecoilState } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface AccountPersonalInfoPageProps {}
 
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
-	const [user, setUser] = useState<Api.User.Res.Get>();
-	const [updateUser, setUpdateUser] = useState<Api.User.Req.Update>();
+	const [user, setUser] = useRecoilState<Api.User.Res.Get | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
-	const [passwordMatch, setPasswordMatch] = useState<boolean>(false);
+	const [passwordFormValid, setPasswordFormValid] = useState<boolean>(false);
+	const [updateUserObj, setUpdateUserObj] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('fullName', user?.firstName + ' ' + user?.lastName || '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Full name is required')
+			]),
+			new RsFormControl('phone', user?.phone || '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Phone number required'),
+				new RsValidator(RsValidatorEnum.MIN, 'Phone number too short', 10)
+			])
+		])
+	);
 
-	const newPassword: string = '';
-	const newRetypedPassword: string = '';
+	const [updateUserPassword, setUpdateUserPassword] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('old', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Please provide your current password here')
+			]),
+			new RsFormControl('new', '', [new RsValidator(RsValidatorEnum.REQ, 'Please provide a new password')]),
+			new RsFormControl('retypeNewPassword', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Please retype your new password'),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Password does not match', (control) => {
+					let newPassword: any = updateUserPassword.get('new').value.toString();
+					return control.value === newPassword;
+				})
+			])
+		])
+	);
 
-	useEffect(() => {
-		let currentUser = userService.getCurrentUser();
-		if (currentUser) setUser(currentUser);
-	}, []);
+	function isAccountFormFilledOut(): boolean {
+		return (
+			!!updateUserObj.get('fullName').value.toString().length &&
+			!!updateUserObj.get('primaryEmail').value.toString().length &&
+			!!updateUserObj.get('phone').value.toString().length
+		);
+	}
 
-	useEffect(() => {
-		console.log(user);
-	}, [user]);
+	function isPasswordFormFilledOut(): boolean {
+		return (
+			!!updateUserPassword.get('old').value.toString().length &&
+			!!updateUserPassword.get('new').value.toString().length &&
+			!!updateUserPassword.get('retypeNewPassword').value.toString().length
+		);
+	}
 
-	function updateUserObj(key: 'firstName' | 'lastName' | 'primaryEmail' | 'phone', value: any) {
-		setUpdateUser((prev) => {
-			let createAddressObj: any = { ...prev };
-			createAddressObj[key] = value;
-			return createAddressObj;
-		});
+	async function updateUserObjForm(control: RsFormControl) {
+		if (control.key === 'phone' && control.value.toString().length === 10) {
+			let newValue = formatPhoneNumber(control.value.toString());
+			control.value = newValue;
+		} else if (control.key === 'phone' && control.value.toString().length > 10) {
+			let newValue = removeAllExceptNumbers(control.value.toString());
+			control.value = newValue;
+		} else if (control.key === 'fullName') {
+			let newValue = removeExtraSpacesReturnsTabs(control.value.toString());
+			control.value = newValue;
+		}
+		updateUserObj.update(control);
+		let isFormValid = await updateUserObj.isValid();
+		setAccountInfoChanged(isAccountFormFilledOut() && isFormValid);
+		setUpdateUserObj(updateUserObj.clone());
+	}
+
+	async function updateUserPasswordForm(control: RsFormControl) {
+		updateUserPassword.update(control);
+		let isFormValid = await updateUserPassword.isValid();
+		setPasswordFormValid(isPasswordFormFilledOut() && isFormValid);
+		setUpdateUserPassword(updateUserPassword.clone());
 	}
 
 	async function saveAccountInfo() {
 		if (!user) return;
-		let newUpdatedUserObj: any = { ...updateUser };
+		let newUpdatedUserObj: any = updateUserObj.toModel();
+		let splitName = newUpdatedUserObj.fullName.split(' ');
+		newUpdatedUserObj.firstName = splitName[0];
+		newUpdatedUserObj.lastName = splitName[1];
 		newUpdatedUserObj.id = user.id;
+		delete newUpdatedUserObj.fullName;
+
 		try {
 			let response = await userService.update(newUpdatedUserObj);
-			if (response.data.data) rsToasts.success('Update Successful!!!');
-			setUser(response.data.data);
+			if (response.data.data) {
+				rsToasts.success('Update Successful!!!');
+				setUser(response.data.data);
+			}
 		} catch (e) {
 			rsToasts.error(e.message);
 		}
 	}
 
-	function updatePassword() {}
+	async function updatePassword() {
+		if (!user) return;
+		let newPasswordForm: any = updateUserPassword.toModel();
+		delete newPasswordForm.retypeNewPassword;
+		setPasswordFormValid(false);
+		try {
+			let response = await userService.updatePassword(newPasswordForm);
+			if (response.data.data) rsToasts.success('Password Updated!');
+		} catch (e) {
+			rsToasts.error(e.message);
+		}
+	}
 
 	return !user ? (
 		<LoadingPage />
@@ -95,7 +160,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<Label variant={'h4'}>Points Earned</Label>
 							<Label variant={'h4'}>Points Pending</Label>
 							<Label variant={'body1'}>
-								You're 45,835 Points until you reach Silver Member Status, or pay to level up now
+								You're 45,835 Points until you reach <b>Silver Member</b> Status, or pay to level up now
 							</Label>
 							<Label className={'yellow'} variant={'h1'}>
 								{user.availablePoints}
@@ -140,47 +205,20 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 					<Box width={'420px'} margin={'0 20px'}>
 						<Label variant={'h2'}>Account Info</Label>
 						<LabelInput
-							className={'accountNameInput'}
 							title={'Name'}
 							inputType={'text'}
-							onChange={(value) => {
-								if (value === `${user?.firstName} ${user?.lastName}`) setAccountInfoChanged(false);
-								else setAccountInfoChanged(true);
-								let splitValue = value.split(' ');
-								updateUserObj('firstName', splitValue[0]);
-								updateUserObj('lastName', splitValue[1]);
-							}}
-							initialValue={`${user.firstName} ${user.lastName}`}
+							control={updateUserObj.get('fullName')}
+							updateControl={updateUserObjForm}
 						/>
-						<Box display={'flex'} justifyContent={'space-between'}>
-							<LabelInput
-								title={'Phone'}
-								inputType={'tel'}
-								onChange={(value) => {
-									if (value === user?.phone) setAccountInfoChanged(false);
-									else setAccountInfoChanged(true);
-									updateUserObj('phone', value);
-								}}
-								iconImage={'icon-phone'}
-								iconSize={18}
-								maxLength={10}
-								isPhoneInput
-								initialValue={formatPhoneNumber(user.phone)}
-							/>
-							<LabelInput
-								title={'Email'}
-								inputType={'text'}
-								onChange={(value) => {
-									if (value === user?.primaryEmail) setAccountInfoChanged(false);
-									else setAccountInfoChanged(true);
-									updateUserObj('primaryEmail', value);
-								}}
-								isEmailInput
-								iconImage={'icon-mail'}
-								iconSize={18}
-								initialValue={user.primaryEmail}
-							/>
-						</Box>
+						<LabelInput
+							title={'Phone'}
+							inputType={'tel'}
+							maxLength={10}
+							isPhoneInput
+							iconImage={'icon-phone'}
+							control={updateUserObj.get('phone')}
+							updateControl={updateUserObjForm}
+						/>
 						<LabelButton
 							className={'saveBtn'}
 							look={accountInfoChanged ? 'containedPrimary' : 'containedSecondary'}
@@ -198,32 +236,30 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							className={'accountNameInput'}
 							title={'Current Password'}
 							inputType={'password'}
-							onChange={(value) => {
-								console.log('Current Password', value);
-							}}
+							control={updateUserPassword.get('old')}
+							updateControl={updateUserPasswordForm}
 						/>
 						<Box display={'flex'} justifyContent={'space-between'}>
 							<LabelInput
 								title={'New Password'}
 								inputType={'password'}
-								onChange={(value) => {
-									console.log('New Password', value);
-								}}
+								control={updateUserPassword.get('new')}
+								updateControl={updateUserPasswordForm}
 							/>
 							<LabelInput
 								title={'Retype new password'}
 								inputType={'password'}
-								onChange={(value) => {
-									console.log('Retype new password', value);
-								}}
+								control={updateUserPassword.get('retypeNewPassword')}
+								updateControl={updateUserPasswordForm}
 							/>
 						</Box>
 						<LabelButton
+							key={2}
 							className={'saveBtn'}
-							look={passwordMatch ? 'containedPrimary' : 'containedSecondary'}
+							look={passwordFormValid ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={!passwordMatch}
+							disabled={!passwordFormValid}
 							onClick={() => {
 								updatePassword();
 							}}

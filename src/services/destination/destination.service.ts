@@ -14,6 +14,6 @@ export default class DestinationService extends Service {
 		return await http.get<RsResponseData<Api.Destination.Res.Details>>('destination/details', { destinationId });
 	}
 	async searchAvailableReservations(data: Api.Destination.Req.Availability) {
-		return await http.get<RsResponseData<Api.Destination.Res.Availability[]>>('destination/availability', data);
+		return await http.get<Api.Destination.Res.GetByPageAvailability>('destination/availability', data);
 	}
 }
