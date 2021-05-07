@@ -1,9 +1,14 @@
 import './TabbedImageCarousel.scss';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import React, { useState } from 'react';
 import Paper from '../paper/Paper';
 import LabelButton from '../labelButton/LabelButton';
+import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import MobileLightBoxTwoPopup, {
+	MobileLightBoxTwoPopupProps
+} from '../../popups/mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
 
 export interface ImageTabProp {
 	name: string;
@@ -11,7 +16,7 @@ export interface ImageTabProp {
 	imagePath: string;
 	description: string;
 	buttonLabel?: string;
-	onButtonClick?: () => void;
+	otherMedia?: Api.Media[];
 }
 
 export interface TabbedImageCarouselProps {
@@ -20,6 +25,7 @@ export interface TabbedImageCarouselProps {
 
 const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props: TabbedImageCarouselProps) {
 	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0].name);
+	const size = useWindowResizeChange();
 
 	function renderTab(tab: ImageTabProp): JSX.Element {
 		return (
@@ -53,7 +59,32 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 							look="containedPrimary"
 							variant="button"
 							label={tab.buttonLabel}
-							onClick={tab.onButtonClick}
+							onClick={() => {
+								if (!tab.otherMedia) return;
+								if (size === 'small') {
+									popupController.open<MobileLightBoxTwoPopupProps>(MobileLightBoxTwoPopup, {
+										imageIndex: 0,
+										imageDataArray: tab.otherMedia.map((value) => {
+											return {
+												title: value.title,
+												description: value.description,
+												imagePath: value.urls.large
+											};
+										})
+									});
+								} else {
+									popupController.open<LightBoxTwoPopupProps>(LightBoxTwoPopup, {
+										imageIndex: 0,
+										imageDataArray: tab.otherMedia.map((value) => {
+											return {
+												title: value.title,
+												description: value.description,
+												imagePath: value.urls.large
+											};
+										})
+									});
+								}
+							}}
 						/>
 					)}
 				</Paper>

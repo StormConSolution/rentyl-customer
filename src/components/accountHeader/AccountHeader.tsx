@@ -58,26 +58,6 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 							router.navigate('/account/notification-preferences');
 						}}
 					/>
-					<LabelButton
-						look={'none'}
-						variant={'button'}
-						className={`tab ${props.selected === 'DIGITAL_REWARDS' ? 'selected' : ''}`}
-						label={'Digital Rewards'}
-						onClick={() => {
-							router.navigate('/');
-						}}
-						disabled
-					/>
-					<LabelButton
-						look={'none'}
-						variant={'button'}
-						className={`tab ${props.selected === 'SOCIAL_MEDIA' ? 'selected' : ''}`}
-						label={'Social Media'}
-						onClick={() => {
-							router.navigate('/');
-						}}
-						disabled
-					/>
 				</Box>
 			</Box>
 		</div>

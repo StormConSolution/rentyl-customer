@@ -21,6 +21,11 @@ interface DestinationInfoCardProps {
 }
 
 const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
+	/**
+	 * Commented out code will be implemented at a later date. Daniel wants us to commented it out for now
+	 * This was done on 5/7/2021 - Ticket #192
+	 */
+
 	const size = useWindowResizeChange();
 	return (
 		<Paper
@@ -35,26 +40,26 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 				{props.address}, {props.state}, {props.city} {props.zip}
 			</Label>
 			<Label variant={size === 'small' ? 'h2' : 'h1'}>{props.destinationName}</Label>
-			<Box display={'flex'} marginBottom={'15px'}>
-				<StarRating size={'small16px'} rating={props.rating} />
-				<LabelLink
-					path={`/ratings?ri=${props.destinationId}`}
-					externalLink={false}
-					label={'view ratings'}
-					variant={'button'}
-				/>
-			</Box>
+			{/*<Box display={'flex'} marginBottom={'15px'}>*/}
+			{/*	<StarRating size={'small16px'} rating={props.rating} />*/}
+			{/*	<LabelLink*/}
+			{/*		path={`/ratings?ri=${props.destinationId}`}*/}
+			{/*		externalLink={false}*/}
+			{/*		label={'view ratings'}*/}
+			{/*		variant={'button'}*/}
+			{/*	/>*/}
+			{/*</Box>*/}
 			<Label variant={'body2'}>{props.longDescription}</Label>
 			<Box display={'flex'} marginTop={'30px'}>
 				<LabelButton look={'containedPrimary'} variant={'button'} label={'View Available Stays'} />
-				<LabelLink
-					path={'/'}
-					externalLink={false}
-					label={'Watch video'}
-					variant={'button'}
-					iconRight={'icon-chevron-circle-right'}
-					iconSize={12}
-				/>
+				{/*<LabelLink*/}
+				{/*	path={'/'}*/}
+				{/*	externalLink={false}*/}
+				{/*	label={'Watch video'}*/}
+				{/*	variant={'button'}*/}
+				{/*	iconRight={'icon-chevron-circle-right'}*/}
+				{/*	iconSize={12}*/}
+				{/*/>*/}
 			</Box>
 		</Paper>
 	);
