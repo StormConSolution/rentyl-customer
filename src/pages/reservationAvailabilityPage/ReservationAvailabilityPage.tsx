@@ -38,8 +38,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
-	const [perPage] = useState<number>(5);
-	const [availabilityTotal, setAvailability] = useState<number>(0);
+	const perPage = 5;
+	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
@@ -56,7 +56,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			try {
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
-				if (res.data.data) setAvailability(res.data.data.length);
+				setAvailabilityTotal(res.data.total);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
 			}
@@ -70,6 +70,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 		value: any
 	) {
 		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
+		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
+		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
+		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
+		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj[key] = value;
@@ -85,6 +89,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			else return moment().format('YYYY-MM-DD');
 		}
 	}
+
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
@@ -263,22 +268,27 @@ const ReservationAvailabilityPage: React.FC = () => {
 						onFocusChange={setFocusedInput}
 						monthsToShow={2}
 						onChangeAdults={(value) => {
+							if (value === '') value = 0;
 							updateSearchQueryObj('adults', parseInt(value));
 						}}
 						onChangeChildren={(value) => {
-							updateSearchQueryObj('children', parseInt(value));
+							if (value !== '') updateSearchQueryObj('children', parseInt(value));
 						}}
 						onChangePriceMin={(value) => {
-							updateSearchQueryObj('priceRangeMin', value);
-							(document.querySelector('.priceMin > input') as HTMLInputElement).value = addCommasToNumber(
-								('' + value).replace(/\D/g, '')
-							);
+							if (value !== '') {
+								updateSearchQueryObj('priceRangeMin', value);
+								(document.querySelector(
+									'.priceMin > input'
+								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+							}
 						}}
 						onChangePriceMax={(value) => {
-							updateSearchQueryObj('priceRangeMax', value);
-							(document.querySelector('.priceMax > input') as HTMLInputElement).value = addCommasToNumber(
-								('' + value).replace(/\D/g, '')
-							);
+							if (value !== '') {
+								updateSearchQueryObj('priceRangeMax', value);
+								(document.querySelector(
+									'.priceMax > input'
+								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+							}
 						}}
 						adultsInitialInput={searchQueryObj.adults.toString()}
 						childrenInitialInput={searchQueryObj.children.toString()}
@@ -311,9 +321,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 				</Box>
 				<div className={'paginationDiv'}>
 					<PaginationButtons
-						selectedRowsPerPage={searchQueryObj.pagination.perPage}
-						currentPageNumber={searchQueryObj.pagination.page}
-						setSelectedPage={(page) => updateSearchQueryObj('pagination', { page: page, perPage: 5 })}
+						selectedRowsPerPage={perPage}
+						currentPageNumber={page}
+						setSelectedPage={(newPage) => {
+							updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
+							setPage(newPage);
+						}}
 						total={availabilityTotal}
 					/>
 				</div>

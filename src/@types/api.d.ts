@@ -525,6 +525,10 @@ declare namespace Api {
 					}[];
 				}[];
 			}
+			export interface GetByPageAvailability {
+				data: Availability[];
+				total: number;
+			}
 			export interface AccommodationType extends Model.AccommodationType {}
 			export interface GetByPage {
 				data: Details[];
