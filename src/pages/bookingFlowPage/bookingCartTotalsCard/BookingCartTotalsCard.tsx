@@ -9,6 +9,7 @@ import { Booking } from '../fakeBookingData';
 import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import { useState } from 'react';
+import { convertTwentyFourHourTime } from '../../../utils/utils';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -16,9 +17,13 @@ interface BookingCartTotalsCardProps {
 	checkInDate: string | Date;
 	checkoutDate: string | Date;
 	accommodationName: string;
-	taxAndFees: { title: string; priceCents: number }[];
+	// taxAndFees: { title: string; priceCents: number }[];
+	feeTotalsInCents: { [feeName: string]: number };
+	taxTotalsInCents: { [taxName: string]: number };
 	costPerNight: { [date: string]: number };
-	costTotalCents: number;
+	grandTotalCents: number;
+	taxAndFeeTotalInCent: number;
+	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
 	packages?: Booking.BookingPackageDetails[];
@@ -27,22 +32,6 @@ interface BookingCartTotalsCardProps {
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const size = useWindowResizeChange();
-
-	function getRoomTotal() {
-		let cost = 0;
-		for (let i in props.costPerNight) {
-			cost += props.costPerNight[i];
-		}
-		return StringUtils.formatMoney(cost);
-	}
-
-	function getTaxesAndFeesTotal() {
-		let cost = 0;
-		props.taxAndFees.forEach((item) => {
-			cost += item.priceCents;
-		});
-		return StringUtils.formatMoney(cost);
-	}
 
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
@@ -62,18 +51,46 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderTaxesAndFees() {
-		return props.taxAndFees.map((item, index) => {
-			return (
-				<Box display={'flex'} alignItems={'center'} key={index}>
+		let taxAndFees: React.ReactNodeArray = [];
+		let key = 0;
+		for (let i in props.feeTotalsInCents) {
+			taxAndFees.push(
+				<Box display={'flex'} alignItems={'center'} key={++key}>
 					<Label variant={'body2'} width={'170px'}>
-						{item.title}
+						{i}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(item.priceCents)}
+						${StringUtils.formatMoney(props.feeTotalsInCents[i])}
 					</Label>
 				</Box>
 			);
-		});
+		}
+
+		for (let i in props.taxTotalsInCents) {
+			taxAndFees.push(
+				<Box display={'flex'} alignItems={'center'} key={++key}>
+					<Label variant={'body2'} width={'170px'}>
+						{i}
+					</Label>
+					<Label variant={'body2'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(props.taxTotalsInCents[i])}
+					</Label>
+				</Box>
+			);
+		}
+		return taxAndFees;
+		// return props.taxAndFees.map((item, index) => {
+		// 	return (
+		// 		<Box display={'flex'} alignItems={'center'} key={index}>
+		// 			<Label variant={'body2'} width={'170px'}>
+		// 				{item.title}
+		// 			</Label>
+		// 			<Label variant={'body2'} marginLeft={'auto'}>
+		// 				${StringUtils.formatMoney(item.priceCents)}
+		// 			</Label>
+		// 		</Box>
+		// 	);
+		// });
 	}
 
 	function getPackageTotal() {
@@ -84,10 +101,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function getCartTotal() {
-		if (props.costTotalCents && !ObjectUtils.isArrayWithData(props.packages)) {
-			return `${StringUtils.formatMoney(props.costTotalCents)}`;
+		if (props.grandTotalCents && !ObjectUtils.isArrayWithData(props.packages)) {
+			return `${StringUtils.formatMoney(props.grandTotalCents)}`;
 		} else if (props.packages && ObjectUtils.isArrayWithData(props.packages)) {
-			let packagesTotals = props.costTotalCents;
+			let packagesTotals = props.grandTotalCents;
 			props.packages.forEach((item) => (packagesTotals += item.priceCents));
 			return `${StringUtils.formatMoney(packagesTotals)}`;
 		}
@@ -132,11 +149,11 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			<Box display={'flex'}>
 				<Box marginRight={'50px'}>
 					<Label variant={'h4'}>Check-in</Label>
-					<Label variant={'body1'}>After {props.checkInTime}</Label>
+					<Label variant={'body1'}>After {convertTwentyFourHourTime(props.checkInTime)}</Label>
 				</Box>
 				<Box>
 					<Label variant={'h4'}>Check-out</Label>
-					<Label variant={'body1'}>Before {props.checkoutTime}</Label>
+					<Label variant={'body1'}>Before {convertTwentyFourHourTime(props.checkoutTime)}</Label>
 				</Box>
 			</Box>
 			<hr />
@@ -152,10 +169,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					{props.accommodationName}
 				</Label>
 				<Label variant={'h4'} marginLeft={'auto'}>
-					${getRoomTotal()}
+					${StringUtils.formatMoney(props.accommodationTotalInCents)}
 				</Label>
 			</Box>
-			<Accordion titleReact={<Label variant={'body1'}>{props.costPerNight.length} Nights</Label>}>
+			<Accordion titleReact={<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>}>
 				{renderItemizedCostPerNight()}
 			</Accordion>
 			{ObjectUtils.isArrayWithData(props.packages) && (
@@ -176,7 +193,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					Taxes and Fees
 				</Label>
 				<Label variant={'h4'} marginLeft={'auto'}>
-					${getTaxesAndFeesTotal()}
+					${StringUtils.formatMoney(props.taxAndFeeTotalInCent)}
 				</Label>
 			</Box>
 			<Accordion titleReact={<Label variant={'body1'}>Details</Label>}>{renderTaxesAndFees()}</Accordion>

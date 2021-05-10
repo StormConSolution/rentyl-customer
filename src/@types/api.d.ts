@@ -749,9 +749,9 @@ declare namespace Api {
 			}
 			export interface Paged {}
 			export interface Verification {
-				checkInTime: string | Date;
+				checkInTime: string;
 				checkInDate: string | Date;
-				checkoutTime: string | Date;
+				checkoutTime: string;
 				checkoutDate: string | Date;
 				adults: number;
 				children: number;

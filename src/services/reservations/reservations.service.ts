@@ -10,4 +10,8 @@ export default class ReservationsService extends Service {
 	async verifyAvailability(data: Api.Reservation.Req.Verification) {
 		return await http.get<RsResponseData<Api.Reservation.Res.Verification>>('reservation/verification', data);
 	}
+
+	async create(data: Api.Reservation.Req.Create) {
+		return await http.post<RsResponseData<Api.Reservation.Res.Create>>('reservation', data);
+	}
 }

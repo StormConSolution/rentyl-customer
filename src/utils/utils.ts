@@ -87,3 +87,34 @@ export function capitalize(s: string) {
 		return a.toUpperCase();
 	});
 }
+
+export function convertTwentyFourHourTime(time: string | number): string {
+	if (!time) return '';
+
+	let sanitizedTime: number = parseInt(removeAllExceptNumbers(time.toString()));
+	if (sanitizedTime > 1259) {
+		sanitizedTime = sanitizedTime - 1200;
+		if (sanitizedTime.toString().length === 3) {
+			let minutes = sanitizedTime.toString().slice(-2);
+			let hour = sanitizedTime.toString().slice(0, 1);
+			return `${hour}:${minutes} PM`;
+		} else if (sanitizedTime.toString().length === 4) {
+			let minutes = sanitizedTime.toString().slice(-2);
+			let hours = sanitizedTime.toString().slice(0, 2);
+			return `${hours}:${minutes} PM`;
+		} else {
+			return '';
+		}
+	}
+	if (sanitizedTime.toString().length === 3) {
+		let minutes = sanitizedTime.toString().slice(-2);
+		let hour = sanitizedTime.toString().slice(0, 1);
+		return `${hour}:${minutes} AM`;
+	} else if (sanitizedTime.toString().length === 4) {
+		let minutes = sanitizedTime.toString().slice(-2);
+		let hours = sanitizedTime.toString().slice(0, 2);
+		return `${hours}:${minutes} ${hours === '12' ? 'PM' : 'AM'}`;
+	} else {
+		return '';
+	}
+}
