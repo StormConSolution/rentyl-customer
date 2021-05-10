@@ -27,15 +27,6 @@ Clean Node Modules:
       - node_modules/
     policy: push
 
-Prettier Check:
-  stage: test
-  script:
-      - echo "Checking for prettyness"
-      - yarn run prettier:check
-  cache:
-    paths:
-      - node_modules/
-    policy: pull
 
 Build Test:
   stage: test
