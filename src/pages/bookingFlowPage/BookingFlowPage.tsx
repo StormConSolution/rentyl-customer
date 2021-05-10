@@ -99,7 +99,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 
 	async function completeBooking() {
 		if (!reservationData) return;
-		setIsDisabled(true);
+		if (!isDisabled && !isFormValid) return;
 		let data = {
 			accommodationId: params.data.accommodationId,
 			adults: reservationData.adults,

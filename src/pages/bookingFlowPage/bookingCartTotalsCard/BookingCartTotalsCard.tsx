@@ -65,7 +65,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				</Box>
 			);
 		}
-
 		for (let i in props.taxTotalsInCents) {
 			taxAndFees.push(
 				<Box display={'flex'} alignItems={'center'} key={++key}>

@@ -1001,7 +1001,7 @@ declare namespace Api {
 			state: string;
 			zip: number;
 			country: string;
-			isDefault: 1 | 0 | boolean;
+			isDefault: 1 | 0;
 		}
 
 		export interface Filtered {
@@ -1210,35 +1210,6 @@ declare namespace Api {
 		export namespace Res {
 			export interface Get extends Model.UserPoint {}
 			export interface Create extends Model.UserPoint {}
-		}
-	}
-
-	export namespace Product {
-		export namespace Req {
-			export interface Get {}
-		}
-		export namespace Res {
-			export interface Get {
-				id: number;
-				companyId: number;
-				destinationId: number | null;
-				affiliateId: number | null;
-				name: string;
-				shortDescription: string;
-				longDescription: string;
-				priceCents: number;
-				isActive: boolean;
-				createdOn: Date | string;
-				modifiedOn: Date | string;
-				sku: string;
-				upc: number;
-				reviewScore: number;
-				reviewCount: number;
-				type: string;
-				pointPrice: number;
-				pointValue: number;
-				vendorName: string;
-			}
 		}
 	}
 
