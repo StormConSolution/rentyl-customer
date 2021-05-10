@@ -96,7 +96,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				title: item.title,
 				imagePath: ObjectUtils.isArrayWithData(img) ? img[0].urls.large : '',
 				description: item.description,
-				buttonLabel: 'View Photos'
+				buttonLabel: 'View Photos',
+				otherMedia: item.media
 			});
 		}
 		return <TabbedImageCarousel tabs={carouselItems} />;
