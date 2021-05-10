@@ -158,10 +158,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 									{ title: 'Sales and Tourist Tax', priceCents: 21248 },
 									{ title: 'Resort Fee', priceCents: 40860 }
 								]}
-								costPerNight={fakeData.costsPerNight}
+								costPerNight={fakeData.prices.accommodationDailyCostsInCents}
 								adults={fakeData.adults}
 								children={fakeData.children}
-								costTotalCents={fakeData.costTotalCents}
+								costTotalCents={fakeData.prices.accommodationTotalInCents}
 								packages={addedPackages}
 								onDeletePackage={(packageId) => {
 									let newPackages = [...addedPackages];
@@ -210,10 +210,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 								{ title: 'Sales and Tourist Tax', priceCents: 21248 },
 								{ title: 'Resort Fee', priceCents: 40860 }
 							]}
-							costPerNight={fakeData.costsPerNight}
+							costPerNight={fakeData.prices.accommodationDailyCostsInCents}
 							adults={fakeData.adults}
 							children={fakeData.children}
-							costTotalCents={fakeData.costTotalCents}
+							costTotalCents={fakeData.prices.accommodationTotalInCents}
 							packages={addedPackages}
 							onDeletePackage={(packageId) => {
 								let newPackages = [...addedPackages];

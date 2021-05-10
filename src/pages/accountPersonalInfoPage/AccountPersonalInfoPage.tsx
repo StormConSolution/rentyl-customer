@@ -143,7 +143,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<img src={require('../../images/white-spire.png')} />
 						</div>
 						<Box>
-							<Label variant={'caption'}>Bronze Member</Label>
+							<Label variant={'caption'}>{}</Label>
 							<Label variant={'body1'}>Account #{user.id}</Label>
 						</Box>
 					</Box>

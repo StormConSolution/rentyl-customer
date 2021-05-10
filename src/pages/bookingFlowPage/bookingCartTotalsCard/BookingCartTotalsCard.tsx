@@ -17,7 +17,7 @@ interface BookingCartTotalsCardProps {
 	checkoutDate: string | Date;
 	accommodationName: string;
 	taxAndFees: { title: string; priceCents: number }[];
-	costPerNight: { [date: string]: Api.Reservation.Res.CostPerNight };
+	costPerNight: { [date: string]: number };
 	costTotalCents: number;
 	adults: number;
 	children: number;
@@ -31,7 +31,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	function getRoomTotal() {
 		let cost = 0;
 		for (let i in props.costPerNight) {
-			cost += props.costPerNight[i].totalInCents;
+			cost += props.costPerNight[i];
 		}
 		return StringUtils.formatMoney(cost);
 	}
@@ -53,7 +53,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						{new Date(i).toDateString()}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(props.costPerNight[i].totalInCents)}
+						${StringUtils.formatMoney(props.costPerNight[i])}
 					</Label>
 				</Box>
 			);

@@ -54,7 +54,7 @@ declare namespace Api {
 
 	export namespace AccommodationCategory {
 		export interface Details extends Model.AccommodationCategory {
-			media: Media[];
+			media: Omit<Model.Media[], 'storageDetails'>;
 			features: Feature.Details[];
 		}
 		export namespace Req {
@@ -62,7 +62,7 @@ declare namespace Api {
 				accommodationId: number;
 				title: string;
 				description?: string;
-				features?: Feature.Req.Create[];
+				features?: number[];
 				mediaIds?: MediaDetails[];
 			}
 			export interface Get {
@@ -189,6 +189,10 @@ declare namespace Api {
 			export interface Delete {
 				id: number;
 			}
+
+			export interface Fulfill {
+				actionId: number;
+			}
 		}
 
 		export namespace Res {
@@ -199,6 +203,13 @@ declare namespace Api {
 				total: number;
 			}
 			export interface Update extends Model.Action {}
+			export interface Details extends Model.Action {
+				campaigns: CampaignDetails[];
+			}
+			export interface CampaignDetails extends Omit<Model.Campaign, 'companyId'> {
+				campaignActionId: number;
+				actionCount: number;
+			}
 		}
 	}
 
@@ -242,6 +253,10 @@ declare namespace Api {
 			}
 			export interface Delete {
 				id: number;
+			}
+
+			export interface Consolidate {
+				userId?: number;
 			}
 		}
 
@@ -369,29 +384,16 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {
 				name: string;
-				birthDate: Date | string;
-				address: string;
-				city: string;
-				zip: string;
-				country: string;
 				phone: string;
 				primaryEmail: string;
 				password: string;
-				newsLetter: 0 | 1;
-				emailNotification: 0 | 1;
 			}
+
 			export interface Get {}
 		}
 		export namespace Res {
 			export interface Create extends User.Filtered {}
-			export interface Get extends User.Filtered {
-				tierTitle: string;
-				tierBadge: Media;
-				pendingPoints: number;
-				nextTierThreshold: number;
-				pointsExpiring: number | null;
-				pointsExpiringOn: Date | string | null;
-			}
+			export interface Get extends User.Res.Detail {}
 		}
 	}
 
@@ -546,7 +548,7 @@ declare namespace Api {
 
 	export namespace Feature {
 		export interface Details extends Model.Feature {
-			media: Media[];
+			media: Omit<Model.Media, 'storageDetails'>[];
 		}
 		export namespace Req {
 			export interface Create {
@@ -730,6 +732,15 @@ declare namespace Api {
 				departureDate: string | Date;
 				numberOfAccommodations: number;
 			}
+			export interface Create {
+				accommodationId: number;
+				adults: number;
+				children: number;
+				arrivalDate: Date | string;
+				departureDate: Date | string;
+				rateCode: string;
+				numberOfAccommodations: number;
+			}
 		}
 		export namespace Res {
 			export interface Get extends Model.Reservation {}
@@ -744,13 +755,26 @@ declare namespace Api {
 				checkoutDate: string | Date;
 				adults: number;
 				children: number;
-				costTotalCents: number;
-				costsPerNight: { [date: string]: CostPerNight };
 				accommodationName: string;
+				rateCode: string;
 				destinationPackages: BookingPackageDetails[];
 				policies: Record<Model.DestinationPolicyType, string>;
+				prices: PriceDetail;
 			}
 
+			interface PriceDetail {
+				accommodationDailyCostsInCents: { [date: string]: number };
+				accommodationTotalInCents: number;
+				feeTotalsInCents: { [feeName: string]: number };
+				taxTotalsInCents: { [taxName: string]: number };
+				taxAndFeeTotalInCents: number;
+				grandTotalCents: number;
+			}
+
+			export interface Create {
+				id?: string;
+				confirmationCode?: string;
+			}
 			export interface CostPerNight {
 				accommodationCostInCents: number;
 				taxesAndFeesInCents: number;
@@ -890,7 +914,7 @@ declare namespace Api {
 				companyId: number;
 				userId: number;
 				action: Model.SystemActionLogActions;
-				source: string; // should be a DbTableName
+				source: string; // should be a DbTableName or service
 				sourceId?: number;
 				metaData?: any;
 			}
@@ -1016,13 +1040,16 @@ declare namespace Api {
 		}
 		export namespace Req {
 			export interface Create {
-				userRoleId: number;
+				userRoleId?: number;
 				firstName: string;
 				lastName: string;
 				primaryEmail: string;
 				password: string;
 				phone?: string;
 				birthDate?: Date | string;
+				address?: Api.UserAddress.Req.Create;
+				newsLetter?: 0 | 1;
+				emailNotification?: 0 | 1;
 			}
 
 			export interface Update {
@@ -1097,9 +1124,15 @@ declare namespace Api {
 				companyId: number;
 			}
 			export interface Get extends Filtered {}
-			export interface Login extends Filtered {
+			export interface Detail extends Get {
+				tierTitle: string;
+				tierBadge: Media;
 				pendingPoints: number;
+				nextTierThreshold: number;
+				pointsExpiring: number | null;
+				pointsExpiringOn: Date | string | null;
 			}
+			export interface Login extends Detail {}
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
