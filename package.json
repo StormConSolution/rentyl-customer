@@ -1,6 +1,6 @@
 {
 	"name": "spire-customer",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"main": "src/App.tsx",
 	"license": "UNLICENSED",
 	"private": true,
