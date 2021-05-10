@@ -17,78 +17,16 @@
 
 	.rsBox {
 		.rsLabelInput {
-			margin: 10px 0;
+			margin-bottom: 15px;
 			input {
 				max-width: 100%;
 				width: calc(100% - 20px);
 			}
 		}
-		.countryLabel {
-			margin-bottom: 10px;
-		}
-		.rsSelect {
-			width: 100%;
-			max-width: 100%;
-			background-color: #ffffff;
-			.placeHolder {
-				color: theme-var($disableTextColor);
-			}
-		}
-	}
-
-	.selectBox {
-		margin: 10px 0;
-	}
-	.rsErrorMessage {
-		font-family: 'Mrs-Eaves-All-Petite-Caps', sans-serif;
-		font-size: 19px;
-		line-height: 12px;
-		font-weight: $regular;
-		letter-spacing: 0;
-		text-transform: uppercase;
-	}
-	.customErrorMessage {
-		margin-bottom: 10px;
-		display: none;
 	}
 
 	.rsButton {
 		margin: 20px auto;
-	}
-
-	.checkboxContainer {
-		display: flex;
-		align-items: center;
-		position: relative;
-		input {
-			width: 18px;
-			height: 18px;
-			padding: 2px;
-			box-sizing: border-box;
-			opacity: 0;
-			cursor: pointer;
-			&:checked ~ .checkbox .rsBox {
-				height: 100%;
-				width: 100%;
-				background-color: theme-var($buttonLinkColor) !important;
-			}
-		}
-
-		.checkbox {
-			position: absolute;
-			top: 4px;
-			left: 0;
-			width: 18px;
-			height: 18px;
-			cursor: pointer;
-			border: 1px solid theme-var($greyLineColor);
-			padding: 2px;
-			box-sizing: border-box;
-			.rsBox {
-				width: 100%;
-				height: 100%;
-			}
-		}
 	}
 
 	.signInBottomBox {

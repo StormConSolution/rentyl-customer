@@ -7,6 +7,8 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import Icon from '@bit/redsky.framework.rs.icon';
 import { formatPhoneNumber, validateEmail } from '../../utils/utils';
 import { useState } from 'react';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 interface LabelInputProps {
 	title: string;
@@ -71,23 +73,33 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 					<Icon iconImg={props.iconImage} size={props.iconSize} />
 				</div>
 			)}
-			<Input
-				className={renderClassNames()}
-				placeholder={props.placeholder}
-				type={props.inputType}
-				look={'none'}
-				color={'#858585'}
-				control={props.control || form.get('value')}
-				updateControl={
-					props.updateControl ? props.updateControl : (updateControl) => searchDebounced(updateControl)
-				}
-				disabled={props.disabled}
-				minLength={props.minLength}
-				maxLength={props.maxLength}
-				rows={props.textareaRows}
-				cols={props.textareaCols}
-				unStyled
-			/>
+			{!props.isPhoneInput ? (
+				<Input
+					className={renderClassNames()}
+					placeholder={props.placeholder}
+					type={props.inputType}
+					look={'none'}
+					color={'#858585'}
+					control={props.control || form.get('value')}
+					updateControl={
+						props.updateControl ? props.updateControl : (updateControl) => searchDebounced(updateControl)
+					}
+					disabled={props.disabled}
+					minLength={props.minLength}
+					maxLength={props.maxLength}
+					rows={props.textareaRows}
+					cols={props.textareaCols}
+					unStyled
+				/>
+			) : (
+				<PhoneInput
+					inputClass={'phoneInput'}
+					country={'us'}
+					onChange={(value) => {
+						if (props.onChange) props.onChange(value);
+					}}
+				/>
+			)}
 		</div>
 	);
 };
