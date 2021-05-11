@@ -39,7 +39,7 @@ const AccountPointsPage: React.FC = () => {
 		async function getUserPoints() {
 			try {
 				if (user) {
-					let res = await userPointService.getPointTransactionsByUserId(user.id);
+					let res = await userPointService.getPointTransactionsByUserId();
 					console.log('get user point res', res);
 					setPointHistory(res);
 				}
