@@ -1,0 +1,23 @@
+@import '../../themes/themes';
+
+.rsSuccessPage {
+	.contentWrapper {
+		height: calc(100vh - 150px);
+		margin: 0 auto;
+		max-width: 600px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		.rsLabel {
+			span {
+				color: theme-var($iconAndHighlightTextColor) !important;
+			}
+			a {
+				color: theme-var($buttonLinkColor) !important;
+				text-decoration: underline;
+			}
+		}
+	}
+}

@@ -54,7 +54,7 @@ declare namespace Api {
 
 	export namespace AccommodationCategory {
 		export interface Details extends Model.AccommodationCategory {
-			media: Omit<Model.Media[], 'storageDetails'>;
+			media: Media[];
 			features: Feature.Details[];
 		}
 		export namespace Req {
@@ -548,7 +548,7 @@ declare namespace Api {
 
 	export namespace Feature {
 		export interface Details extends Model.Feature {
-			media: Omit<Model.Media, 'storageDetails'>[];
+			media: Media[];
 		}
 		export namespace Req {
 			export interface Create {
@@ -756,6 +756,7 @@ declare namespace Api {
 				adults: number;
 				children: number;
 				accommodationName: string;
+				destinationName: string;
 				rateCode: string;
 				destinationPackages: BookingPackageDetails[];
 				policies: Record<Model.DestinationPolicyType, string>;
@@ -1116,7 +1117,7 @@ declare namespace Api {
 			}
 
 			export interface UserPoints {
-				userId: number;
+				userId?: number;
 			}
 		}
 		export namespace Res {
@@ -1210,6 +1211,12 @@ declare namespace Api {
 		export namespace Res {
 			export interface Get extends Model.UserPoint {}
 			export interface Create extends Model.UserPoint {}
+			export interface Verbose extends Model.UserPoint {
+				title: string;
+				arrivalDate: Date | string;
+				departureDate: Date | string;
+				media: Media[];
+			}
 		}
 	}
 

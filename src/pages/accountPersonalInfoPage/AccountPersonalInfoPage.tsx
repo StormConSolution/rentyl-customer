@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './AccountPersonalInfoPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
@@ -23,6 +23,8 @@ import globalState from '../../models/globalState';
 
 interface AccountPersonalInfoPageProps {}
 
+let phoneNumber = '';
+
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Get | undefined>(globalState.user);
@@ -32,10 +34,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		new RsFormGroup([
 			new RsFormControl('fullName', user?.firstName + ' ' + user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Full name is required')
-			]),
-			new RsFormControl('phone', user?.phone || '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Phone number required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Phone number too short', 10)
 			])
 		])
 	);
@@ -56,11 +54,13 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		])
 	);
 
+	useEffect(() => {
+		if (!user) return;
+		phoneNumber = user.phone;
+	}, [user]);
+
 	function isAccountFormFilledOut(): boolean {
-		return (
-			!!updateUserObj.get('fullName').value.toString().length &&
-			!!updateUserObj.get('phone').value.toString().length
-		);
+		return !!updateUserObj.get('fullName').value.toString().length && !!phoneNumber.length;
 	}
 
 	function isPasswordFormFilledOut(): boolean {
@@ -72,13 +72,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 	}
 
 	async function updateUserObjForm(control: RsFormControl) {
-		if (control.key === 'phone' && control.value.toString().length === 10) {
-			let newValue = formatPhoneNumber(control.value.toString());
-			control.value = newValue;
-		} else if (control.key === 'phone' && control.value.toString().length > 10) {
-			let newValue = removeAllExceptNumbers(control.value.toString());
-			control.value = newValue;
-		} else if (control.key === 'fullName') {
+		if (control.key === 'fullName') {
 			let newValue = removeExtraSpacesReturnsTabs(control.value.toString());
 			control.value = newValue;
 		}
@@ -101,6 +95,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		let splitName = newUpdatedUserObj.fullName.split(' ');
 		newUpdatedUserObj.firstName = splitName[0];
 		newUpdatedUserObj.lastName = splitName[1];
+		newUpdatedUserObj.phone = phoneNumber;
 		newUpdatedUserObj.id = user.id;
 		delete newUpdatedUserObj.fullName;
 
@@ -210,13 +205,15 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							updateControl={updateUserObjForm}
 						/>
 						<LabelInput
-							title={'Phone'}
 							inputType={'tel'}
-							maxLength={10}
+							title={'Phone'}
 							isPhoneInput
-							iconImage={'icon-phone'}
-							control={updateUserObj.get('phone')}
-							updateControl={updateUserObjForm}
+							onChange={async (value) => {
+								phoneNumber = value;
+								let isFormValid = await updateUserObj.isValid();
+								setAccountInfoChanged(isAccountFormFilledOut() && isFormValid);
+							}}
+							initialValue={user?.phone}
 						/>
 						<LabelButton
 							className={'saveBtn'}

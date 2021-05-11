@@ -40,7 +40,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 				<Box mt={100} ml={40}>
 					<Box mb={30}>
 						<LabelLink
-							path={'/'}
+							path={'/reward'}
 							label={'Redeem Points'}
 							variant={'h2'}
 							onClick={() => {

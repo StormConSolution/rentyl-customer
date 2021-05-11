@@ -48,6 +48,8 @@ const SignUpPage: React.FC = () => {
 		])
 	);
 
+	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
+
 	function isSignUpFormFilledOut(): boolean {
 		return (
 			!!signUpForm.get('firstName').value.toString().length &&
@@ -90,7 +92,11 @@ const SignUpPage: React.FC = () => {
 			let res = await userService.createNewCustomer(newCustomer);
 			if (res.data) {
 				rsToasts.success('Account Created');
-				router.navigate('/signin').catch(console.error);
+				if (params.data !== 0 && params.data.includes('arrivalDate')) {
+					router.navigate(`/signin?data=${params.data}`).catch(console.error);
+				} else {
+					router.navigate(`/signin`).catch(console.error);
+				}
 			}
 		} catch (e) {
 			axiosErrorHandler(e, {
@@ -171,7 +177,7 @@ const SignUpPage: React.FC = () => {
 									updateControl={updateUserObjForm}
 								/>
 								<LabelInput
-									title={'Last Name'}
+									title={'Confirm Password'}
 									inputType={'password'}
 									control={signUpForm.get('confirmPassword')}
 									updateControl={updateUserObjForm}

@@ -96,10 +96,10 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 							+ taxes &amp; fees
 						</Label>
 					</div>
-					<div>
-						<StarRating rating={props.starRating} size="small16px" />
-						<LabelLink variant="caption" path="" label={`View ${props.accommodationType} Ratings >`} />
-					</div>
+					{/*<div>*/}
+					{/*	<StarRating rating={props.starRating} size="small16px" />*/}
+					{/*	<LabelLink variant="caption" path="" label={`View ${props.accommodationType} Ratings >`} />*/}
+					{/*</div>*/}
 					<Label className="accommodationDescription" variant="body2">
 						{props.description}
 					</Label>

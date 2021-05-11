@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './BookingFlowPage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -17,14 +17,14 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
 import { convertTwentyFourHourTime } from '../../utils/utils';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 interface BookingFlowPageProps {}
 
 const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
-	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
@@ -45,10 +45,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 				if (response.data.data) {
 					console.log(response.data.data);
 					setReservationData(response.data.data);
-					// setAccommodation(response.data.data);
 				}
 			} catch (e) {
 				rsToasts.error(e.message);
+				router.back();
 			}
 		}
 		getAccommodationDetails().catch(console.error);
@@ -100,6 +100,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	async function completeBooking() {
 		if (!reservationData) return;
 		if (!isDisabled && !isFormValid) return;
+		popupController.open(SpinningLoaderPopup);
 		let data = {
 			accommodationId: params.data.accommodationId,
 			adults: reservationData.adults,
@@ -112,11 +113,20 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		try {
 			let res = await reservationService.create(data);
 			console.log(res.data.data);
-			if (res.data.data) rsToasts.success('The accommodation has been booked!');
+			if (res.data.data) popupController.close(SpinningLoaderPopup);
 			setIsDisabled(false);
+			let newData = {
+				confirmationCode: res.data.data.confirmationCode,
+				destinationName: reservationData.destinationName
+			};
+
+			router
+				.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+				.catch(console.error);
 		} catch (e) {
 			console.error(e.message);
 			setIsDisabled(false);
+			popupController.close(SpinningLoaderPopup);
 		}
 	}
 
@@ -260,6 +270,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 						/>
 					)}
 				</Box>
+				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>
 	);

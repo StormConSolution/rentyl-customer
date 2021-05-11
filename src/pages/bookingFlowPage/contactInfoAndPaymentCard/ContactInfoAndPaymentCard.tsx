@@ -19,6 +19,8 @@ interface ContactInfoAndPaymentCardProps {
 	isValidForm: (isValid: boolean) => void;
 }
 
+let phoneNumber = '';
+
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [isValid, setIsValid] = useState<boolean>(false);
@@ -56,13 +58,14 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			new RsFormControl('lastName', user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
 			]),
-			new RsFormControl('phone', user?.phone || '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Phone number required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Phone number too short', 10)
-			]),
 			new RsFormControl('data', '', [])
 		])
 	);
+
+	useEffect(() => {
+		if (!user) return;
+		phoneNumber = user.phone;
+	}, [user]);
 
 	useEffect(() => {
 		props.isValidForm(isValid);
@@ -85,13 +88,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}
 
 	async function updateContactInfoForm(control: RsFormControl) {
-		if (control.key === 'phone' && control.value.toString().length === 10) {
-			let newValue = formatPhoneNumber(control.value.toString());
-			control.value = newValue;
-		} else if (control.key === 'phone' && control.value.toString().length > 10) {
-			let newValue = removeAllExceptNumbers(control.value.toString());
-			control.value = newValue;
-		}
 		contactInfoForm.update(control);
 		let isFormValid = await contactInfoForm.isValid();
 		props.onContactChange(contactInfoForm.toModel());
@@ -103,10 +99,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		return (
 			!!contactInfoForm.get('firstName').value.toString().length &&
 			!!contactInfoForm.get('lastName').value.toString().length &&
-			!!contactInfoForm.get('phone').value.toString().length &&
 			!!creditCardObj.get('fullName').value.toString().length &&
 			!!creditCardObj.get('creditCard').value.toString().length &&
-			!!creditCardObj.get('expDate').value.toString().length
+			!!creditCardObj.get('expDate').value.toString().length &&
+			!!phoneNumber.length
 		);
 	}
 
@@ -129,13 +125,13 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					updateControl={updateContactInfoForm}
 				/>
 				<LabelInput
-					title={'Phone'}
 					inputType={'tel'}
-					maxLength={10}
+					title={'Phone'}
 					isPhoneInput
-					iconImage={'icon-phone'}
-					control={contactInfoForm.get('phone')}
-					updateControl={updateContactInfoForm}
+					onChange={(value) => {
+						phoneNumber = value;
+					}}
+					initialValue={user?.phone}
 				/>
 			</Box>
 			<hr />
