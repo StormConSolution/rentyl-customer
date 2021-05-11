@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './BookingFlowPage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -17,13 +17,14 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import { convertTwentyFourHourTime } from '../../utils/utils';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 interface BookingFlowPageProps {}
 
 const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
-	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
@@ -31,8 +32,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
-	const [accommodation, setAccommodation] = useState<Api.Accommodation.Res.Details>();
-	const [fakeData, setFakeData] = useState<Api.Reservation.Res.Verification>();
+	const [reservationData, setReservationData] = useState<Api.Reservation.Res.Verification>();
 	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
 
 	useEffect(() => {
@@ -44,11 +44,11 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 				let response = await reservationService.verifyAvailability(params.data);
 				if (response.data.data) {
 					console.log(response.data.data);
-					setFakeData(response.data.data);
-					// setAccommodation(response.data.data);
+					setReservationData(response.data.data);
 				}
 			} catch (e) {
 				rsToasts.error(e.message);
+				router.back();
 			}
 		}
 		getAccommodationDetails().catch(console.error);
@@ -59,8 +59,8 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	}, [hasAgreedToTerms, isFormValid]);
 
 	function renderDestinationPackages() {
-		if (!fakeData) return;
-		return fakeData.destinationPackages.map((item, index) => {
+		if (!reservationData) return;
+		return reservationData.destinationPackages.map((item, index) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
 			let isAdded = addedPackages.find((value) => value.id === item.id);
 			if (isAdded) return false;
@@ -80,7 +80,54 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		});
 	}
 
-	return !fakeData ? (
+	function renderPolicies() {
+		if (!reservationData) return '';
+		return reservationData.policies.map((item) => {
+			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
+			return (
+				<>
+					<Label variant={'h4'}>{item.type}</Label>
+					<Label variant={'body1'} mb={10}>
+						{item.value}
+					</Label>
+				</>
+			);
+		});
+	}
+
+	async function completeBooking() {
+		if (!reservationData) return;
+		if (!isDisabled && !isFormValid) return;
+		popupController.open(SpinningLoaderPopup);
+		let data = {
+			accommodationId: params.data.accommodationId,
+			adults: reservationData.adults,
+			children: reservationData.children,
+			arrivalDate: reservationData.checkInDate,
+			departureDate: reservationData.checkoutDate,
+			rateCode: reservationData.rateCode,
+			numberOfAccommodations: 1
+		};
+		try {
+			let res = await reservationService.create(data);
+			if (res.data.data) popupController.close(SpinningLoaderPopup);
+			setIsDisabled(false);
+			let newData = {
+				confirmationCode: res.data.data.confirmationCode,
+				destinationName: reservationData.destinationName
+			};
+
+			router
+				.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+				.catch(console.error);
+		} catch (e) {
+			console.error(e.message);
+			setIsDisabled(false);
+			popupController.close(SpinningLoaderPopup);
+		}
+	}
+
+	return !reservationData ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowPage'}>
@@ -128,40 +175,37 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							<Box display={'flex'} mb={10}>
 								<Box marginRight={'50px'}>
 									<Label variant={'h4'}>Check-in</Label>
-									<Label variant={'body1'}>After {fakeData.checkInTime}</Label>
+									<Label variant={'body1'}>
+										After {convertTwentyFourHourTime(reservationData.checkInTime)}
+									</Label>
 								</Box>
 								<Box>
 									<Label variant={'h4'}>Check-out</Label>
-									<Label variant={'body1'}>Before {fakeData.checkoutTime}</Label>
+									<Label variant={'body1'}>
+										Before {convertTwentyFourHourTime(reservationData.checkoutTime)}
+									</Label>
 								</Box>
 							</Box>
 							<Label variant={'body1'} mb={10}>
-								{fakeData.accommodationName}
+								{reservationData.accommodationName}
 							</Label>
-							<Label variant={'h4'}>Guarantee Policy</Label>
-							<Label variant={'body1'} mb={10}>
-								{fakeData.policies.guaranteePolicy}
-							</Label>
-							<Label variant={'h4'}>Cancel Policy</Label>
-							<Label variant={'body1'} mb={10}>
-								{fakeData.policies.cancelPolicy}
-							</Label>
+							{renderPolicies()}
 						</Paper>
 						{size === 'small' && (
 							<BookingCartTotalsCard
-								checkInTime={'4:00 pm'}
-								checkoutTime={'11:00 am'}
-								checkInDate={fakeData.checkInDate}
-								checkoutDate={fakeData.checkoutDate}
-								accommodationName={fakeData.accommodationName}
-								taxAndFees={[
-									{ title: 'Sales and Tourist Tax', priceCents: 21248 },
-									{ title: 'Resort Fee', priceCents: 40860 }
-								]}
-								costPerNight={fakeData.costsPerNight}
-								adults={fakeData.adults}
-								children={fakeData.children}
-								costTotalCents={fakeData.costTotalCents}
+								checkInTime={reservationData.checkInTime}
+								checkoutTime={reservationData.checkoutTime}
+								checkInDate={reservationData.checkInDate}
+								checkoutDate={reservationData.checkoutDate}
+								accommodationName={reservationData.accommodationName}
+								accommodationTotalInCents={reservationData.prices.accommodationTotalInCents}
+								taxAndFeeTotalInCent={reservationData.prices.taxAndFeeTotalInCents}
+								feeTotalsInCents={reservationData.prices.feeTotalsInCents}
+								taxTotalsInCents={reservationData.prices.taxTotalsInCents}
+								costPerNight={reservationData.prices.accommodationDailyCostsInCents}
+								adults={reservationData.adults}
+								children={reservationData.children}
+								grandTotalCents={reservationData.prices.accommodationTotalInCents}
 								packages={addedPackages}
 								onDeletePackage={(packageId) => {
 									let newPackages = [...addedPackages];
@@ -194,26 +238,26 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							variant={'button'}
 							label={'complete booking'}
 							onClick={() => {
-								console.log('Do stuff to complete booking');
+								completeBooking().catch(console.error);
 							}}
 							disabled={isDisabled}
 						/>
 					</Box>
 					{size !== 'small' && (
 						<BookingCartTotalsCard
-							checkInTime={'4:00 pm'}
-							checkoutTime={'11:00 am'}
-							checkInDate={fakeData.checkInDate}
-							checkoutDate={fakeData.checkoutDate}
-							accommodationName={fakeData.accommodationName}
-							taxAndFees={[
-								{ title: 'Sales and Tourist Tax', priceCents: 21248 },
-								{ title: 'Resort Fee', priceCents: 40860 }
-							]}
-							costPerNight={fakeData.costsPerNight}
-							adults={fakeData.adults}
-							children={fakeData.children}
-							costTotalCents={fakeData.costTotalCents}
+							checkInTime={reservationData.checkInTime}
+							checkoutTime={reservationData.checkoutTime}
+							checkInDate={reservationData.checkInDate}
+							checkoutDate={reservationData.checkoutDate}
+							accommodationName={reservationData.accommodationName}
+							accommodationTotalInCents={reservationData.prices.accommodationTotalInCents}
+							taxAndFeeTotalInCent={reservationData.prices.taxAndFeeTotalInCents}
+							feeTotalsInCents={reservationData.prices.feeTotalsInCents}
+							taxTotalsInCents={reservationData.prices.taxTotalsInCents}
+							costPerNight={reservationData.prices.accommodationDailyCostsInCents}
+							adults={reservationData.adults}
+							children={reservationData.children}
+							grandTotalCents={reservationData.prices.grandTotalCents}
 							packages={addedPackages}
 							onDeletePackage={(packageId) => {
 								let newPackages = [...addedPackages];
@@ -223,6 +267,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 						/>
 					)}
 				</Box>
+				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>
 	);

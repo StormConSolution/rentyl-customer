@@ -21,16 +21,32 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
+import moment from 'moment';
+import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
+import FilterBar from '../../components/filterBar/FilterBar';
+import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
+import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
+	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLElement>(null);
 	const childRef = useRef<HTMLElement>(null);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
-
-	const size = useWindowResizeChange();
+	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const [page, setPage] = useState<number>(1);
+	const perPage = 5;
+	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
+	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
+		startDate: moment().format('YYYY-MM-DD'),
+		endDate: moment().add(1, 'day').format('YYYY-MM-DD'),
+		adults: 2,
+		children: 0,
+		pagination: { page: 1, perPage: 5 }
+	});
 
 	const params = router.getPageUrlParams<{ destinationId: number }>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
@@ -108,6 +124,74 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		let address = `${destinationDetails.address1} ${destinationDetails.city} ${destinationDetails.state} ${destinationDetails.zip}`;
 		address = address.replace(/ /g, '+');
 		return `https://www.google.com/maps/embed/v1/place?q=${address}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`;
+	}
+
+	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
+		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
+	}
+
+	function updateSearchQueryObj(
+		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
+		value: any
+	) {
+		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
+		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
+		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
+		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
+		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		setSearchQueryObj((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			createSearchQueryObj[key] = value;
+			return createSearchQueryObj;
+		});
+	}
+
+	function renderAccommodations() {
+		return (
+			<AccommodationSearchResultCard
+				id="1"
+				name="VIP Suite"
+				accommodationType="Suite"
+				description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
+				pointsRatePerNight={5300}
+				ratePerNightInCents={98234}
+				starRating={4.5}
+				bedrooms={6}
+				squareFeet={'2.800-3,200sq/ft'}
+				pointsEarnable={2500}
+				onBookNowClick={() => {}}
+				onViewDetailsClick={() => {}}
+				onCompareClick={() => {}}
+				roomStats={[
+					{
+						label: 'Sleeps',
+						datum: 12
+					},
+					{
+						label: 'Bedrooms',
+						datum: 6
+					},
+					{
+						label: 'Various Bed Types',
+						datum: '3'
+					},
+					{
+						label: 'Maximum Capacity',
+						datum: '4'
+					},
+					{
+						label: 'Size',
+						datum: '2,800-32,000 sq/ft'
+					}
+				]}
+				amenityIconNames={['icon-wifi1', 'icon-laundry', 'icon-no-smoking', 'icon-kitchen']}
+				carouselImagePaths={[
+					'../images/dashboardPage/luxury-suite.jpg',
+					'../images/dashboardPage/five-bed-villa.jpg'
+				]}
+			/>
+		);
 	}
 
 	return !destinationDetails ? (
@@ -302,7 +386,56 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						<iframe frameBorder="0" src={renderMapSource()}></iframe>
 					</Box>
 				</Box>
-				<Box className={'sectionFive'}></Box>
+				<Box className={'sectionFive'}>
+					<Label variant={'h1'} mb={20}>
+						Available Stays
+					</Label>
+					<FilterBar
+						className={'filterBar'}
+						startDate={moment(searchQueryObj.startDate)}
+						endDate={moment(searchQueryObj.endDate)}
+						onDatesChange={onDatesChange}
+						focusedInput={focusedInput}
+						onFocusChange={setFocusedInput}
+						monthsToShow={2}
+						onChangeAdults={(value) => {
+							if (value === '') value = 0;
+							updateSearchQueryObj('adults', parseInt(value));
+						}}
+						onChangeChildren={(value) => {
+							if (value !== '') updateSearchQueryObj('children', parseInt(value));
+						}}
+						onChangePriceMin={(value) => {
+							if (value !== '') {
+								updateSearchQueryObj('priceRangeMin', value);
+								(document.querySelector(
+									'.priceMin > input'
+								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+							}
+						}}
+						onChangePriceMax={(value) => {
+							if (value !== '') {
+								updateSearchQueryObj('priceRangeMax', value);
+								(document.querySelector(
+									'.priceMax > input'
+								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+							}
+						}}
+						adultsInitialInput={searchQueryObj.adults.toString()}
+						childrenInitialInput={searchQueryObj.children.toString()}
+					/>
+					<hr />
+					<Box className={'accommodationCardWrapper'}>{renderAccommodations()}</Box>
+					<PaginationButtons
+						selectedRowsPerPage={perPage}
+						currentPageNumber={page}
+						setSelectedPage={(newPage) => {
+							updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
+							setPage(newPage);
+						}}
+						total={availabilityTotal}
+					/>
+				</Box>
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

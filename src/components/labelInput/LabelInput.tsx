@@ -16,7 +16,7 @@ interface LabelInputProps {
 	control?: RsFormControl;
 	updateControl?: (updateControl: RsFormControl) => void;
 	inputType: 'text' | 'textarea' | 'number' | 'password' | 'tel';
-	initialValue?: string | number;
+	initialValue?: string;
 	placeholder?: string;
 	disabled?: boolean;
 	isEmailInput?: boolean;
@@ -98,6 +98,7 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 					onChange={(value) => {
 						if (props.onChange) props.onChange(value);
 					}}
+					value={props.initialValue}
 				/>
 			)}
 		</div>

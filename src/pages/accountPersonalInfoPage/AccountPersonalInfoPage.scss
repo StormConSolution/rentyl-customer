@@ -85,6 +85,11 @@
 	}
 	.rsLabelInput {
 		margin-top: 20px;
+		.react-tel-input {
+			input {
+				max-width: 200px;
+			}
+		}
 	}
 
 	.accountNameInput {

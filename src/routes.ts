@@ -19,6 +19,7 @@ import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
 import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
+import SuccessPage from './pages/successPage/SuccessPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -31,6 +32,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/dashboard',
 		page: DashboardPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/success',
+		page: SuccessPage,
 		options: {
 			view: 'landingPage'
 		}

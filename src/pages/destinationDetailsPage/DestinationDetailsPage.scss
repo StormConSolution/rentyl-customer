@@ -72,6 +72,18 @@
 			}
 		}
 	}
+
+	.sectionFive {
+		width: 1160px;
+		margin: 0 auto;
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 20px 0;
+		}
+	}
 }
 .small {
 	.rsDestinationDetailsPage {
