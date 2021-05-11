@@ -496,7 +496,7 @@ declare namespace Api {
 					description: string;
 					code: string;
 				}[];
-				policies: Record<Model.DestinationPolicyType, string>;
+				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
 			export interface Availability {
 				id: number;
@@ -759,15 +759,15 @@ declare namespace Api {
 				destinationName: string;
 				rateCode: string;
 				destinationPackages: BookingPackageDetails[];
-				policies: Record<Model.DestinationPolicyType, string>;
+				policies: { type: Model.DestinationPolicyType; value: string }[];
 				prices: PriceDetail;
 			}
 
 			interface PriceDetail {
 				accommodationDailyCostsInCents: { [date: string]: number };
 				accommodationTotalInCents: number;
-				feeTotalsInCents: { [feeName: string]: number };
-				taxTotalsInCents: { [taxName: string]: number };
+				feeTotalsInCents: { name: string; amount: number }[];
+				taxTotalsInCents: { name: string; amount: number }[];
 				taxAndFeeTotalInCents: number;
 				grandTotalCents: number;
 			}
@@ -1130,6 +1130,7 @@ declare namespace Api {
 				tierBadge: Media;
 				pendingPoints: number;
 				nextTierThreshold: number;
+				nextTierTitle: string;
 				pointsExpiring: number | null;
 				pointsExpiringOn: Date | string | null;
 			}

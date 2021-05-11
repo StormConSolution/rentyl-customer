@@ -82,19 +82,17 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 
 	function renderPolicies() {
 		if (!reservationData) return '';
-		let policies: React.ReactNodeArray = [];
-		for (let i in reservationData.policies) {
-			if (i === 'CheckIn' || i === 'CheckOut') continue;
-			policies.push(
+		return reservationData.policies.map((item) => {
+			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
+			return (
 				<>
-					<Label variant={'h4'}>{i}</Label>
+					<Label variant={'h4'}>{item.type}</Label>
 					<Label variant={'body1'} mb={10}>
-						{reservationData.policies[i]}
+						{item.value}
 					</Label>
 				</>
 			);
-		}
-		return policies;
+		});
 	}
 
 	async function completeBooking() {
@@ -112,7 +110,6 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		};
 		try {
 			let res = await reservationService.create(data);
-			console.log(res.data.data);
 			if (res.data.data) popupController.close(SpinningLoaderPopup);
 			setIsDisabled(false);
 			let newData = {
@@ -196,8 +193,8 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 						</Paper>
 						{size === 'small' && (
 							<BookingCartTotalsCard
-								checkInTime={'4:00 pm'}
-								checkoutTime={'11:00 am'}
+								checkInTime={reservationData.checkInTime}
+								checkoutTime={reservationData.checkoutTime}
 								checkInDate={reservationData.checkInDate}
 								checkoutDate={reservationData.checkoutDate}
 								accommodationName={reservationData.accommodationName}

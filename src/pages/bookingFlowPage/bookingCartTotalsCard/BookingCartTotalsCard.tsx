@@ -17,9 +17,8 @@ interface BookingCartTotalsCardProps {
 	checkInDate: string | Date;
 	checkoutDate: string | Date;
 	accommodationName: string;
-	// taxAndFees: { title: string; priceCents: number }[];
-	feeTotalsInCents: { [feeName: string]: number };
-	taxTotalsInCents: { [taxName: string]: number };
+	feeTotalsInCents: { name: string; amount: number }[];
+	taxTotalsInCents: { name: string; amount: number }[];
 	costPerNight: { [date: string]: number };
 	grandTotalCents: number;
 	taxAndFeeTotalInCent: number;
@@ -51,45 +50,33 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderTaxesAndFees() {
-		let taxAndFees: React.ReactNodeArray = [];
-		let key = 0;
-		for (let i in props.feeTotalsInCents) {
-			taxAndFees.push(
-				<Box display={'flex'} alignItems={'center'} key={++key}>
+		let index = 0;
+		let taxes = props.taxTotalsInCents.map((item) => {
+			return (
+				<Box display={'flex'} alignItems={'center'} key={++index}>
 					<Label variant={'body2'} width={'170px'}>
-						{i}
+						{item.name}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(props.feeTotalsInCents[i])}
+						${StringUtils.formatMoney(item.amount)}
 					</Label>
 				</Box>
 			);
-		}
-		for (let i in props.taxTotalsInCents) {
-			taxAndFees.push(
-				<Box display={'flex'} alignItems={'center'} key={++key}>
+		});
+		let fees = props.feeTotalsInCents.map((item) => {
+			return (
+				<Box display={'flex'} alignItems={'center'} key={++index}>
 					<Label variant={'body2'} width={'170px'}>
-						{i}
+						{item.name}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(props.taxTotalsInCents[i])}
+						${StringUtils.formatMoney(item.amount)}
 					</Label>
 				</Box>
 			);
-		}
-		return taxAndFees;
-		// return props.taxAndFees.map((item, index) => {
-		// 	return (
-		// 		<Box display={'flex'} alignItems={'center'} key={index}>
-		// 			<Label variant={'body2'} width={'170px'}>
-		// 				{item.title}
-		// 			</Label>
-		// 			<Label variant={'body2'} marginLeft={'auto'}>
-		// 				${StringUtils.formatMoney(item.priceCents)}
-		// 			</Label>
-		// 		</Box>
-		// 	);
-		// });
+		});
+
+		return [...taxes, ...fees];
 	}
 
 	function getPackageTotal() {
