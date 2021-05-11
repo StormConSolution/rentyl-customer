@@ -9,6 +9,7 @@ import LabelLink from '../../components/labelLink/LabelLink';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import router from '../../utils/router';
 
 interface AccountOverviewProps {
 	isOpen: boolean;
@@ -55,6 +56,10 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 					externalLink={false}
 					label={'My Account'}
 					variant={'button'}
+					onClick={() => {
+						router.navigate('/account/personal-info').catch(console.error);
+						props.onClose();
+					}}
 					iconRight={'icon-chevron-right'}
 					iconSize={7}
 				/>

@@ -37,6 +37,77 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 		<>
 			<div ref={popupRef} className={props.isOpened ? `rsNavDrawer opened` : 'rsNavDrawer'}>
 				<Icon iconImg={'icon-close'} onClick={props.onClose} size={21} color={'#ffffff'} cursorPointer />
+				<Box mt={100} ml={40}>
+					<Box mb={30}>
+						<LabelLink
+							path={'/'}
+							label={'Redeem Points'}
+							variant={'h2'}
+							onClick={() => {
+								props.onClose();
+								router.navigate('/').catch(console.error);
+							}}
+						/>
+						<LabelLink
+							path={'/reservation/availability'}
+							label={'Browse Destinations'}
+							variant={'h4'}
+							onClick={() => {
+								props.onClose();
+								router.navigate('/reservation/availability').catch(console.error);
+							}}
+						/>
+						<LabelLink
+							path={'/about-spire-points'}
+							label={'Learn About Points'}
+							variant={'h4'}
+							onClick={() => {
+								props.onClose();
+								router.navigate('/about-spire-points').catch(console.error);
+							}}
+						/>
+					</Box>
+					{user && (
+						<Box mb={30}>
+							<LabelLink
+								path={'/account/personal-info'}
+								label={'My Account'}
+								variant={'h2'}
+								onClick={() => {
+									props.onClose();
+									router.navigate('/account/personal-info').catch(console.error);
+								}}
+							/>
+							<LabelLink
+								path={'/'}
+								label={'Reservations'}
+								variant={'h4'}
+								onClick={() => {
+									props.onClose();
+									router.navigate('/signup').catch(console.error);
+								}}
+							/>
+							<LabelLink
+								path={'/'}
+								label={'Manage/View points'}
+								variant={'h4'}
+								onClick={() => {
+									props.onClose();
+									router.navigate('/signup').catch(console.error);
+								}}
+							/>
+						</Box>
+					)}
+					<LabelLink
+						path={'/about-spire'}
+						label={'About Spire Loyalty'}
+						variant={'h2'}
+						onClick={() => {
+							props.onClose();
+							router.navigate('/about-spire').catch(console.error);
+						}}
+					/>
+				</Box>
 				<Box
 					display={'flex'}
 					alignItems={'center'}
@@ -57,7 +128,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconRight={'icon-chevron-right'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signup');
+									router.navigate('/signup').catch(console.error);
 								}}
 								iconSize={7}
 								iconColor={'#ffffff'}
@@ -69,7 +140,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconRight={'icon-chevron-right'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signin');
+									router.navigate('/signin').catch(console.error);
 								}}
 								iconSize={7}
 								iconColor={'#ffffff'}

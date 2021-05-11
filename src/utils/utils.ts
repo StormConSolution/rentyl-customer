@@ -1,3 +1,23 @@
+import {
+	StringUtils as BaseStringUtils,
+	ObjectUtils as BaseObjectUtils,
+	RegionUtils as BaseRegionUtils,
+	WebUtils as BaseWebUtils,
+	DateUtils as BaseDateUtils
+} from '@bit/redsky.framework.rs.utils';
+
+class StringUtils extends BaseStringUtils {}
+
+class ObjectUtils extends BaseObjectUtils {}
+
+class RegionUtils extends BaseRegionUtils {}
+
+class WebUtils extends BaseWebUtils {}
+
+class DateUtils extends BaseDateUtils {}
+
+export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils };
+
 export function formatDateTime(dateTime: string | Date) {
 	if (dateTime === 'N/A') return dateTime;
 	let newDateTime = new Date(`${dateTime}`);

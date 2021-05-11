@@ -3,11 +3,11 @@ import { FooterLink } from './Footer';
 export const FooterLinkTestData: FooterLink[] = [
 	{
 		text: 'Browse Destinations',
-		path: '#'
+		path: '/reservation/availability'
 	},
 	{
 		text: 'Learn About Spire Points',
-		path: '#'
+		path: '/about-spire-points'
 	},
 	{
 		text: 'Manage Points',
@@ -19,11 +19,11 @@ export const FooterLinkTestData: FooterLink[] = [
 	},
 	{
 		text: 'About Spire Loyalty',
-		path: '#'
+		path: 'about-spire'
 	},
 	{
 		text: 'My Account',
-		path: '#'
+		path: 'account/personal-info'
 	},
 	{
 		text: 'Redeem Points',

@@ -33,6 +33,30 @@
 		}
 	}
 
+	.react-tel-input {
+		input {
+			width: 400px;
+			height: 40px;
+			border-radius: 0;
+			border: 1px solid theme-var($greyLineColor);
+			color: theme-var($primaryTextColor) !important;
+			transition: border-color 300ms;
+			&:focus-within,
+			&:hover {
+				border-color: theme-var($buttonLinkColor) !important;
+			}
+		}
+		.flag-dropdown {
+			background-color: #ffffff;
+			color: theme-var($primaryTextColor) !important;
+			transition: border-color 300ms;
+			&:focus-within,
+			&:hover {
+				border-color: theme-var($buttonLinkColor) !important;
+			}
+		}
+	}
+
 	.rsErrorMessage {
 		position: absolute;
 	}
