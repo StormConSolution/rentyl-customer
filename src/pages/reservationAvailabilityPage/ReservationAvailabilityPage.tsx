@@ -46,7 +46,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
-		endDate: moment().add(1, 'day').format('YYYY-MM-DD'),
+		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
