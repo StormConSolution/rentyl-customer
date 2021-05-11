@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
-import { Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import FilterBar from '../../components/filterBar/FilterBar';
 import Label from '@bit/redsky.framework.rs.label';
@@ -8,7 +8,6 @@ import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import router from '../../utils/router';
-import Box from '../../components/box/Box';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import { useRecoilState } from 'recoil';
@@ -245,8 +244,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
-					width={'1165px'}
+					width={size === 'small' ? '100%' : '1165px'}
 					padding={size === 'small' ? '20px 30px' : '60px 140px'}
+					boxSizing={'border-box'}
 				>
 					<Label className={'filterLabel'} variant={'h1'}>
 						Filter by
@@ -307,8 +307,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'searchResultsWrapper'}
 					bgcolor={'#ffffff'}
-					width={'1165px'}
+					width={size === 'small' ? '100%' : '1165px'}
 					padding={size === 'small' ? '0 30px 20px' : '0 140px 60px'}
+					boxSizing={'border-box'}
 				>
 					{renderDestinationSearchResultCards()}
 				</Box>
