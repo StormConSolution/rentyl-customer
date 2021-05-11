@@ -1177,6 +1177,12 @@ declare namespace Api {
 		export namespace Res {
 			export interface Get extends Model.UserPoint {}
 			export interface Create extends Model.UserPoint {}
+			export interface Verbose extends Model.UserPoint {
+				title: string;
+				arrivalDate: Date | string;
+				departureDate: Date | string;
+				media: Media[];
+			}
 		}
 	}
 

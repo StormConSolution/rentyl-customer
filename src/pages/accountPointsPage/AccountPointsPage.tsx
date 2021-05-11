@@ -18,12 +18,13 @@ import globalState from '../../models/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { SelectOptions } from '../../components/Select/Select';
+import { capitalize, formatDateForUser } from '../../utils/utils';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const userPointService = serviceFactory.get<UserPointService>('UserPointService');
-	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Get[]>();
+	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const pointTypeFilters: SelectOptions[] = [
 		{ value: 'ACTION', text: 'Action', selected: false },
 		{ value: 'CAMPAIGN', text: 'Campaign', selected: false },
@@ -49,41 +50,53 @@ const AccountPointsPage: React.FC = () => {
 		getUserPoints().catch(console.error);
 	}, [user]);
 
-	function renderPendingPoints() {
+	function getMedia(point: Api.UserPoint.Res.Verbose) {
+		if (!point.media) return '';
+		if (point.media.length === 1) return point.media[0].urls.small;
+		for (let i in point.media) {
+			if (point.media[i].isPrimary === 1) return point.media[i].urls.small;
+		}
+		return point.media[0].urls.small;
+	}
+
+	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
+		if (point.status === 'PENDING' || point.status === 'RECEIVED') {
+			return point.pointAmount;
+		} else if (
+			point.status === 'REVOKED' ||
+			point.status === 'EXPIRED' ||
+			point.status === 'CANCELED' ||
+			point.status === 'REDEEMED'
+		) {
+			return `-${point.pointAmount}`;
+		} else {
+			return '';
+		}
+	}
+
+	function renderPoints(type: string) {
 		if (!pointHistory) return;
 		return pointHistory.map((point, index) => {
+			if (type === 'pending' && point.status !== 'PENDING') return;
+			if (type === 'completed' && point.status === 'PENDING') return;
 			return (
-				<Box className={'pointItemContainer pendingPointItemContainer'}>
-					<img
-						className={'pointImage'}
-						src={
-							'https://spire-media-public.s3.us-east-2.amazonaws.com/images/media-service-test-image_S.jpg'
-						}
-						alt={''}
-					/>
+				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
+					<img className={'pointImage'} src={getMedia(point)} alt={''} />
 					<Box className={'pendingPointsDetailsContainer'}>
-						<Label variant={'h3'}>Encore Town Home Rental</Label>
+						<Label variant={'h3'}>{capitalize(point.title)}</Label>
 						<Label className={'pointType'} variant={'caption'}>
-							Rental
-						</Label>
-						<Label className={'extraInfo'} variant={'body1'}>
-							ReservationDates: 3/5/21 - 12/18/21
+							{point.pointType}
 						</Label>
 					</Box>
 					<Label className={'date'} variant={'h2'}>
-						1/05/22
+						{formatDateForUser(point.createdOn.toString())}
 					</Label>
 					<Label className={'points'} variant={'h2'}>
-						13,429
+						{getPointAmount(point)}
 					</Label>
 				</Box>
 			);
 		});
-	}
-
-	function renderCompletedPoints() {
-		if (!pointHistory) return;
-		return pointHistory.map((point, index) => {});
 	}
 
 	return !user ? (
@@ -144,13 +157,13 @@ const AccountPointsPage: React.FC = () => {
 									Transaction type
 								</Label>
 								<Label className={'dateReceived'} variant={'body1'}>
-									Date Received
+									Date
 								</Label>
 								<Label className={'pointAmount'} variant={'body1'}>
 									Point Amount
 								</Label>
 							</Box>
-							<div className={'pending pointTableContainer'}>{renderPendingPoints()}</div>
+							<div className={'pending pointTableContainer'}>{renderPoints('pending')}</div>
 						</div>
 						<div className={'completedTransactionsContainer'}>
 							<Label variant={'h2'}>Completed Transactions</Label>
@@ -159,13 +172,13 @@ const AccountPointsPage: React.FC = () => {
 									Transaction type
 								</Label>
 								<Label className={'dateReceived'} variant={'body1'}>
-									Date Received
+									Date
 								</Label>
 								<Label className={'pointAmount'} variant={'body1'}>
 									Point Amount
 								</Label>
 							</Box>
-							<div className={'completed pointTableContainer'}>{renderCompletedPoints()}</div>
+							<div className={'completed pointTableContainer'}>{renderPoints('completed')}</div>
 						</div>
 					</Paper>
 					<Footer links={FooterLinkTestData} />

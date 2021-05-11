@@ -15,6 +15,12 @@ export function formatReadableDate(date: string) {
 	}
 }
 
+export function formatDateForUser(date: string | Date) {
+	if (date === 'N/A') return date;
+	let newDate = new Date(`${date}`);
+	return `${(newDate.getMonth() + 1).toString()}-${newDate.getDay()}-${newDate.getFullYear()}`;
+}
+
 export function formatDateForServer(date: string) {
 	let match = formatDate(date);
 	if (match) {
