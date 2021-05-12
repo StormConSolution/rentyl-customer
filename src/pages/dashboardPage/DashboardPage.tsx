@@ -188,6 +188,9 @@ const DashboardPage: React.FC = () => {
 					<RoomBookNowCard
 						points={2500}
 						onDatesChange={onDatesChange}
+						onGuestChange={(value) => {
+							console.log(value);
+						}}
 						startDate={startDateControl}
 						endDate={endDateControl}
 						focusedInput={focusedInput}

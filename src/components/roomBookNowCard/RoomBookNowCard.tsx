@@ -9,6 +9,7 @@ import moment from 'moment';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
+import LabelInput from '../labelInput/LabelInput';
 
 interface RoomBookNowCardProps {
 	points: number;
@@ -17,6 +18,7 @@ interface RoomBookNowCardProps {
 	endDate: moment.Moment | null;
 	focusedInput: 'startDate' | 'endDate' | null;
 	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
+	onGuestChange: (value: number) => void;
 	className?: string;
 	bookNowOnClick?: () => void;
 	compareOnClick?: () => void;
@@ -59,7 +61,6 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 			boxShadow
 			backgroundColor={'#fcfbf8'}
 			width={size === 'small' ? '335px' : '263px'}
-			height={size === 'small' ? '150px' : '248px'}
 			padding={size === 'small' ? '10px 10px 15px' : '22px 30px 16px'}
 			className={`rsRoomBookNowCard ${props.className || ''}`}
 		>
@@ -82,6 +83,13 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 						monthsToShow={1}
 					/>
 				</Box>
+				<LabelInput
+					title={'# of Guest'}
+					inputType={'number'}
+					onChange={(value) => {
+						props.onGuestChange(value);
+					}}
+				/>
 				<Box className={'earnPointsBox'}>
 					<Label className={'earnLabel'} variant={'caption'}>
 						Earn Up To
@@ -94,7 +102,7 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 			<Box className={'roomBookNowBottomContent'}>
 				<LabelButton
 					className={'bookNowBtn'}
-					look={'containedPrimary'}
+					look={props.bookNowDisabled ? 'containedSecondary' : 'containedPrimary'}
 					variant={'button'}
 					label={'BOOK NOW'}
 					disabled={props.bookNowDisabled}

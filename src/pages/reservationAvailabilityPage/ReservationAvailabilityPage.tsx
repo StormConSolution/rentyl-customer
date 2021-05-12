@@ -10,7 +10,7 @@ import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
@@ -35,7 +35,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
-	let userService = serviceFactory.get<UserService>('UserService');
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
@@ -178,7 +178,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						delete data.endDate;
 						data = JSON.stringify(data);
 
-						if (!userService.getCurrentUser()) {
+						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});

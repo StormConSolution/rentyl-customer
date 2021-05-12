@@ -69,6 +69,7 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 			if (!selectedRoom) return '';
 			return (
 				<LabelRadioButton
+					key={Math.floor(Math.random() * 1000)}
 					radioName={'layout'}
 					value={item.title}
 					checked={selectedRoom.id === item.id}
