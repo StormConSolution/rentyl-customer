@@ -28,7 +28,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
-	const [user, setUser] = useRecoilState<Api.User.Res.Get | undefined>(globalState.user);
+	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [addressList, setAddressList] = useState<Api.User.Address[]>([]);
 	const [formChanged, setFormChanged] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<Api.User.Address>();

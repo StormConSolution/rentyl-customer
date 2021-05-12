@@ -27,7 +27,7 @@ const KEY_PREFIX = 'spireCust-';
 class GlobalState {
 	destinationComparison: RecoilState<ComparisonCardInfo[]>;
 	userToken: RecoilState<string>;
-	user: RecoilState<Api.User.Res.Get | undefined>;
+	user: RecoilState<Api.User.Res.Detail | undefined>;
 
 	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
 
@@ -37,7 +37,7 @@ class GlobalState {
 			default: this.loadFromLocalStorage<ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
 		});
 
-		this.user = atom<Api.User.Res.Get | undefined>({
+		this.user = atom<Api.User.Res.Detail | undefined>({
 			key: GlobalStateKeys.USER,
 			default: undefined
 		});

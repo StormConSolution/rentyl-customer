@@ -16,7 +16,7 @@ export default class UserService extends Service {
 
 	async loginUserByPassword(username: string, password: string) {
 		password = SparkMD5.hash(password);
-		let axiosResponse = await http.post<RsResponseData<Api.User.Res.Get>>('user/login', {
+		let axiosResponse = await http.post<RsResponseData<Api.User.Res.Detail>>('user/login', {
 			username,
 			password
 		});
@@ -24,7 +24,7 @@ export default class UserService extends Service {
 	}
 
 	async loginUserByToken(token: string) {
-		let axiosResponse = await http.get<RsResponseData<Api.User.Res.Get>>('user/with/token?token=' + token);
+		let axiosResponse = await http.get<RsResponseData<Api.User.Res.Detail>>('user/with/token?token=' + token);
 		await this.onAfterLogin(axiosResponse.data.data);
 	}
 
@@ -42,7 +42,7 @@ export default class UserService extends Service {
 	}
 
 	async update(data: Api.User.Req.Update) {
-		return await http.put<RsResponseData<Api.User.Res.Get>>('user', data);
+		return await http.put<RsResponseData<Api.User.Res.Detail>>('user', data);
 	}
 
 	logout() {
@@ -50,7 +50,7 @@ export default class UserService extends Service {
 			callback.callback();
 		});
 
-		setRecoilExternalValue<Api.User.Res.Get | undefined>(globalState.user, undefined);
+		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, undefined);
 	}
 
 	async updatePassword(data: Api.User.Req.UpdatePassword) {
@@ -101,7 +101,7 @@ export default class UserService extends Service {
 		return res;
 	}
 
-	private async onAfterLogin(user: Api.User.Res.Get) {
+	private async onAfterLogin(user: Api.User.Res.Detail) {
 		let axiosConfig = http.currentConfig();
 		axiosConfig.headers = {
 			'company-id': 1,
@@ -114,7 +114,7 @@ export default class UserService extends Service {
 		http.changeConfig(axiosConfig);
 		this.userModel.setCurrentUser(user);
 		await modelFactory.refreshAllModels();
-		setRecoilExternalValue<Api.User.Res.Get | undefined>(globalState.user, user);
+		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, user);
 		this.onLoggedInCallbacks.forEach((callback) => {
 			callback.callback(user);
 		});
