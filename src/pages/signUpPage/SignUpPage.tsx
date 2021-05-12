@@ -27,7 +27,7 @@ let phoneNumber = '';
 const SignUpPage: React.FC = () => {
 	let userService = serviceFactory.get<UserService>('UserService');
 	const size = useWindowResizeChange();
-	const setUser = useSetRecoilState<Api.User.Res.Get | undefined>(globalState.user);
+	const setUser = useSetRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [formIsValid, setFormIsValid] = useState<boolean>(false);
 	const [signUpForm, setSignUpForm] = useState<RsFormGroup>(
 		new RsFormGroup([

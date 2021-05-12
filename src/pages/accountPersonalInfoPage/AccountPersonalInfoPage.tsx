@@ -15,7 +15,12 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import { formatPhoneNumber, removeAllExceptNumbers, removeExtraSpacesReturnsTabs } from '../../utils/utils';
+import {
+	addCommasToNumber,
+	formatPhoneNumber,
+	removeAllExceptNumbers,
+	removeExtraSpacesReturnsTabs
+} from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
 import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
@@ -27,7 +32,7 @@ let phoneNumber = '';
 
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
-	const [user, setUser] = useRecoilState<Api.User.Res.Get | undefined>(globalState.user);
+	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
 	const [passwordFormValid, setPasswordFormValid] = useState<boolean>(false);
 	const [updateUserObj, setUpdateUserObj] = useState<RsFormGroup>(
@@ -123,6 +128,11 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		}
 	}
 
+	function renderLoadingBarPercent(): string {
+		if (!user) return '';
+		return `${Math.floor(user.lifeTimePoints / (user.nextTierThreshold / 100))}%`;
+	}
+
 	return !user ? (
 		<LoadingPage />
 	) : (
@@ -134,11 +144,15 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 						Welcome, {user.firstName} {user.lastName}
 					</Label>
 					<Box display={'flex'} alignItems={'center'}>
-						<div className={'fakeImg'}>
-							<img src={require('../../images/white-spire.png')} />
-						</div>
+						{user.tierBadge ? (
+							<img src={user.tierBadge} alt={'Tier Badge'} />
+						) : (
+							<div className={'fakeImg'}>
+								<img src={require('../../images/white-spire.png')} />
+							</div>
+						)}
 						<Box>
-							<Label variant={'caption'}>{}</Label>
+							<Label variant={'caption'}>{user.tierTitle}</Label>
 							<Label variant={'body1'}>Account #{user.id}</Label>
 						</Box>
 					</Box>
@@ -154,16 +168,17 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<Label variant={'h4'}>Points Earned</Label>
 							<Label variant={'h4'}>Points Pending</Label>
 							<Label variant={'body1'}>
-								You're 45,835 Points until you reach <b>Silver Member</b> Status, or pay to level up now
+								You're {user.nextTierThreshold - user.lifeTimePoints} Points until you reach{' '}
+								<b>{user.nextTierTitle}</b> Status, or pay to level up now
 							</Label>
 							<Label className={'yellow'} variant={'h1'}>
-								{user.availablePoints}
+								{addCommasToNumber(user.availablePoints)}
 							</Label>
 							<Label className={'grey'} variant={'h1'}>
-								{user.availablePoints}
+								{addCommasToNumber(user.pendingPoints)}
 							</Label>
 							<Box className={'loadingBarContainer'}>
-								<div className={'loadingBar'} />
+								<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
 							</Box>
 							<LabelLink
 								path={'/'}
@@ -187,11 +202,14 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 								iconSize={7}
 							/>
 						</Box>
-						<Box className={'pointsExpireContainer'}>
-							<Label variant={'caption'}>
-								1,342 Points will expire on {DateUtils.displayDate(new Date())}
-							</Label>
-						</Box>
+						{!!user.pointsExpiring && (
+							<Box className={'pointsExpireContainer'}>
+								<Label variant={'caption'}>
+									{user.pointsExpiring || 0} Points will expire on{' '}
+									{DateUtils.displayDate(user.pointsExpiringOn || new Date())}
+								</Label>
+							</Box>
+						)}
 					</Paper>
 				</Box>
 
