@@ -175,7 +175,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 								{addCommasToNumber(user.availablePoints)}
 							</Label>
 							<Label className={'grey'} variant={'h1'}>
-								{addCommasToNumber(user.availablePoints)}
+								{addCommasToNumber(user.pendingPoints)}
 							</Label>
 							<Box className={'loadingBarContainer'}>
 								<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
@@ -202,12 +202,14 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 								iconSize={7}
 							/>
 						</Box>
-						<Box className={'pointsExpireContainer'}>
-							<Label variant={'caption'}>
-								{user.pointsExpiring || 0} Points will expire on{' '}
-								{DateUtils.displayDate(user.pointsExpiringOn || new Date())}
-							</Label>
-						</Box>
+						{!!user.pointsExpiring && (
+							<Box className={'pointsExpireContainer'}>
+								<Label variant={'caption'}>
+									{user.pointsExpiring || 0} Points will expire on{' '}
+									{DateUtils.displayDate(user.pointsExpiringOn || new Date())}
+								</Label>
+							</Box>
+						)}
 					</Paper>
 				</Box>
 
