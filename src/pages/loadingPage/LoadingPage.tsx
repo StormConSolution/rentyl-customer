@@ -5,11 +5,6 @@ import router from '../../utils/router';
 import rsToasts from '@bit/redsky.framework.toast';
 
 const LoadingPage: React.FC = () => {
-	setTimeout(() => {
-		rsToasts.error('Request took too long. Navigating back...');
-		router.navigate('/').catch(console.error);
-	}, 10000);
-
 	return (
 		<Page className={'rsLoadingPage'}>
 			<div className="loader" />
