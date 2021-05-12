@@ -130,7 +130,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 
 	function renderLoadingBarPercent(): string {
 		if (!user) return '';
-		return `${Math.floor(user.nextTierThreshold / (100 / user.availablePoints))}%`;
+		return `${Math.floor(user.lifeTimePoints / (user.nextTierThreshold / 100))}%`;
 	}
 
 	return !user ? (
@@ -168,7 +168,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<Label variant={'h4'}>Points Earned</Label>
 							<Label variant={'h4'}>Points Pending</Label>
 							<Label variant={'body1'}>
-								You're {user.nextTierThreshold - user.availablePoints} Points until you reach{' '}
+								You're {user.nextTierThreshold - user.lifeTimePoints} Points until you reach{' '}
 								<b>{user.nextTierTitle}</b> Status, or pay to level up now
 							</Label>
 							<Label className={'yellow'} variant={'h1'}>
