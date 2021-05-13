@@ -25,7 +25,9 @@ const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const userPointService = serviceFactory.get<UserPointService>('UserPointService');
+	const [allPointHistory, setAllPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
+	const [filterBy, setFilterBy] = useState<React.ReactText[]>([]);
 	const pointTypeFilters: SelectOptions[] = [
 		{ value: 'ACTION', text: 'Action', selected: false },
 		{ value: 'CAMPAIGN', text: 'Campaign', selected: false },
@@ -33,16 +35,16 @@ const AccountPointsPage: React.FC = () => {
 		{ value: 'ORDER', text: 'Order', selected: false },
 		{ value: 'BOOKING', text: 'Booking', selected: false },
 		{ value: 'RENTAL', text: 'Rental', selected: false },
-		{ value: 'VACATION', text: 'Vacation', selected: false }
+		{ value: 'VACATION', text: 'Vacation', selected: false },
+		{ value: 'VOUCHER', text: 'Voucher', selected: false }
 	];
-	const [filterBy, setFilterBy] = useState<React.ReactText[]>(['ADMIN', 'ACTION']);
 
 	useEffect(() => {
 		async function getUserPoints() {
 			try {
 				if (user) {
 					let res = await userPointService.getPointTransactionsByUserId();
-					console.log('res', res);
+					setAllPointHistory(res);
 					setPointHistory(res);
 				}
 			} catch (e) {
@@ -52,6 +54,21 @@ const AccountPointsPage: React.FC = () => {
 		getUserPoints().catch(console.error);
 	}, [user]);
 
+	useEffect(() => {
+		function renderPointsWithFilter() {
+			if (!allPointHistory) return;
+			let newAllPointHistory = [...allPointHistory];
+			let filteredPointHistory: Api.UserPoint.Res.Verbose[] = [];
+
+			for (let i in filterBy) {
+				let newPointHistory = newAllPointHistory.filter((point) => point.pointType === filterBy[i]);
+				filteredPointHistory = newPointHistory.concat(filteredPointHistory);
+			}
+			setPointHistory(filteredPointHistory);
+		}
+		renderPointsWithFilter();
+	}, [filterBy]);
+
 	function getMedia(point: Api.UserPoint.Res.Verbose) {
 		if (!point.media) return '';
 		if (point.media.length === 1) return point.media[0].urls.small;
@@ -60,7 +77,6 @@ const AccountPointsPage: React.FC = () => {
 		}
 		return point.media[0].urls.small;
 	}
-
 	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
 		if (point.status === 'PENDING' || point.status === 'RECEIVED') {
 			return point.pointAmount;
@@ -74,18 +90,6 @@ const AccountPointsPage: React.FC = () => {
 		} else {
 			return '';
 		}
-	}
-
-	function renderPointsWithFilter() {
-		if (!pointHistory) return;
-		let allPointHistory = [...pointHistory];
-		let filteredPointHistory: Api.UserPoint.Res.Verbose[] = [];
-
-		for (let i in filterBy) {
-			let newPointHistory = allPointHistory.filter((point) => point.pointType === filterBy[i]);
-			filteredPointHistory = newPointHistory.concat(filteredPointHistory);
-		}
-		console.log('filteredPointHistory', filteredPointHistory);
 	}
 
 	function renderPoints(type: string) {
@@ -160,8 +164,6 @@ const AccountPointsPage: React.FC = () => {
 							placeHolder={'filter by'}
 							onChange={(value) => {
 								setFilterBy(value);
-								renderPointsWithFilter();
-								console.log('multiSelect Value', value);
 							}}
 							options={pointTypeFilters}
 							showSelectedAsPlaceHolder
