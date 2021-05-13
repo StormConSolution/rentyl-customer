@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
-import { Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import FilterBar from '../../components/filterBar/FilterBar';
 import Label from '@bit/redsky.framework.rs.label';
@@ -8,11 +8,10 @@ import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import router from '../../utils/router';
-import Box from '../../components/box/Box';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import { useRecoilState } from 'recoil';
-import { addCommasToNumber } from '../../utils/utils';
+import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -27,6 +26,8 @@ import { SelectOptions } from '../../components/Select/Select';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import UserService from '../../services/user/user.service';
 import AccommodationFeatures = Model.AccommodationFeatures;
 
@@ -44,7 +45,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
-		endDate: moment().add(1, 'day').format('YYYY-MM-DD'),
+		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
@@ -81,15 +82,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		});
 	}
 
-	function formatDateForServer(date: moment.Moment | null, startOrEnd: 'start' | 'end'): string {
-		if (date) {
-			return date.format('YYYY-MM-DD');
-		} else {
-			if (startOrEnd === 'end') return moment().add(1, 'day').format('YYYY-MM-DD');
-			else return moment().format('YYYY-MM-DD');
-		}
-	}
-
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
@@ -100,8 +92,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['startDate'] = formatDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatDateForServer(checkoutDate, 'end');
+			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
+			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adults'] = parseInt(adults);
 			if (children !== '') {
 				createSearchQueryObj['children'] = parseInt(children);
@@ -117,8 +109,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		updateSearchQueryObj('startDate', formatDateForServer(startDate, 'start'));
-		updateSearchQueryObj('endDate', formatDateForServer(endDate, 'end'));
+		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
+		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
 	function renderDestinationSearchResultCards() {
@@ -136,7 +128,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					picturePaths={urls}
 					starRating={4.5}
 					reviewPath={''}
-					destinationDetailsPath={`/destination?di=${destination.id}`}
+					destinationDetailsPath={`/destination/details?di=${destination.id}`}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
 						comparisonService.addToComparison(recoilComparisonState, {
@@ -174,7 +166,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					accommodationType: 'Suites',
 					accommodations: accommodationsList,
 					onDetailsClick: (accommodationId) => {
-						router.navigate(`/accommodation?ai=${accommodationId}`).catch(console.error);
+						router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
 					},
 					onBookNowClick: (accommodationId) => {
 						let data: any = { ...searchQueryObj };
@@ -252,8 +244,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
-					width={'1165px'}
+					width={size === 'small' ? '100%' : '1165px'}
 					padding={size === 'small' ? '20px 30px' : '60px 140px'}
+					boxSizing={'border-box'}
 				>
 					<Label className={'filterLabel'} variant={'h1'}>
 						Filter by
@@ -314,8 +307,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'searchResultsWrapper'}
 					bgcolor={'#ffffff'}
-					width={'1165px'}
+					width={size === 'small' ? '100%' : '1165px'}
 					padding={size === 'small' ? '0 30px 20px' : '0 140px 60px'}
+					boxSizing={'border-box'}
 				>
 					{renderDestinationSearchResultCards()}
 				</Box>
@@ -330,6 +324,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						total={availabilityTotal}
 					/>
 				</div>
+				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>
 	);

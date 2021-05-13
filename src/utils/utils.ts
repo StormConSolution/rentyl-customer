@@ -5,6 +5,7 @@ import {
 	WebUtils as BaseWebUtils,
 	DateUtils as BaseDateUtils
 } from '@bit/redsky.framework.rs.utils';
+import moment from 'moment';
 
 class StringUtils extends BaseStringUtils {}
 
@@ -32,6 +33,15 @@ export function formatReadableDate(date: string) {
 		return `${match[1]}/${match[2]}/${match[3]}`;
 	} else {
 		return date;
+	}
+}
+
+export function formatFilterDateForServer(date: moment.Moment | null, startOrEnd: 'start' | 'end'): string {
+	if (date) {
+		return date.format('YYYY-MM-DD');
+	} else {
+		if (startOrEnd === 'end') return moment().add(1, 'day').format('YYYY-MM-DD');
+		else return moment().format('YYYY-MM-DD');
 	}
 }
 
@@ -92,4 +102,35 @@ export function capitalize(s: string) {
 	return s.toLowerCase().replace(/\b./g, function (a) {
 		return a.toUpperCase();
 	});
+}
+
+export function convertTwentyFourHourTime(time: string | number): string {
+	if (!time) return '';
+
+	let sanitizedTime: number = parseInt(removeAllExceptNumbers(time.toString()));
+	if (sanitizedTime > 1259) {
+		sanitizedTime = sanitizedTime - 1200;
+		if (sanitizedTime.toString().length === 3) {
+			let minutes = sanitizedTime.toString().slice(-2);
+			let hour = sanitizedTime.toString().slice(0, 1);
+			return `${hour}:${minutes} PM`;
+		} else if (sanitizedTime.toString().length === 4) {
+			let minutes = sanitizedTime.toString().slice(-2);
+			let hours = sanitizedTime.toString().slice(0, 2);
+			return `${hours}:${minutes} PM`;
+		} else {
+			return '';
+		}
+	}
+	if (sanitizedTime.toString().length === 3) {
+		let minutes = sanitizedTime.toString().slice(-2);
+		let hour = sanitizedTime.toString().slice(0, 1);
+		return `${hour}:${minutes} AM`;
+	} else if (sanitizedTime.toString().length === 4) {
+		let minutes = sanitizedTime.toString().slice(-2);
+		let hours = sanitizedTime.toString().slice(0, 2);
+		return `${hours}:${minutes} ${hours === '12' ? 'PM' : 'AM'}`;
+	} else {
+		return '';
+	}
 }

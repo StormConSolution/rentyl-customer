@@ -1,36 +1,13 @@
 import * as React from 'react';
 import './LoadingPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
+import router from '../../utils/router';
+import rsToasts from '@bit/redsky.framework.toast';
 
 const LoadingPage: React.FC = () => {
 	return (
 		<Page className={'rsLoadingPage'}>
-			<div className="boxes">
-				<div className="box">
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
-				<div className="box">
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
-				<div className="box">
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
-				<div className="box">
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-				</div>
-			</div>
+			<div className="loader" />
 		</Page>
 	);
 };

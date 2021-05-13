@@ -20,6 +20,7 @@ import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAnd
 import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
 import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
+import SuccessPage from './pages/successPage/SuccessPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -32,6 +33,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/dashboard',
 		page: DashboardPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/success',
+		page: SuccessPage,
 		options: {
 			view: 'landingPage'
 		}

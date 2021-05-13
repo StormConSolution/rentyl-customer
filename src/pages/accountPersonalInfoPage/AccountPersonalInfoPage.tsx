@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './AccountPersonalInfoPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
@@ -15,7 +15,12 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import { formatPhoneNumber, removeAllExceptNumbers, removeExtraSpacesReturnsTabs } from '../../utils/utils';
+import {
+	addCommasToNumber,
+	formatPhoneNumber,
+	removeAllExceptNumbers,
+	removeExtraSpacesReturnsTabs
+} from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
 import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
@@ -23,19 +28,17 @@ import globalState from '../../models/globalState';
 
 interface AccountPersonalInfoPageProps {}
 
+let phoneNumber = '';
+
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
-	const [user, setUser] = useRecoilState<Api.User.Res.Get | undefined>(globalState.user);
+	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
 	const [passwordFormValid, setPasswordFormValid] = useState<boolean>(false);
 	const [updateUserObj, setUpdateUserObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('fullName', user?.firstName + ' ' + user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Full name is required')
-			]),
-			new RsFormControl('phone', user?.phone || '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Phone number required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Phone number too short', 10)
 			])
 		])
 	);
@@ -56,11 +59,13 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		])
 	);
 
+	useEffect(() => {
+		if (!user) return;
+		phoneNumber = user.phone;
+	}, [user]);
+
 	function isAccountFormFilledOut(): boolean {
-		return (
-			!!updateUserObj.get('fullName').value.toString().length &&
-			!!updateUserObj.get('phone').value.toString().length
-		);
+		return !!updateUserObj.get('fullName').value.toString().length && !!phoneNumber.length;
 	}
 
 	function isPasswordFormFilledOut(): boolean {
@@ -72,13 +77,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 	}
 
 	async function updateUserObjForm(control: RsFormControl) {
-		if (control.key === 'phone' && control.value.toString().length === 10) {
-			let newValue = formatPhoneNumber(control.value.toString());
-			control.value = newValue;
-		} else if (control.key === 'phone' && control.value.toString().length > 10) {
-			let newValue = removeAllExceptNumbers(control.value.toString());
-			control.value = newValue;
-		} else if (control.key === 'fullName') {
+		if (control.key === 'fullName') {
 			let newValue = removeExtraSpacesReturnsTabs(control.value.toString());
 			control.value = newValue;
 		}
@@ -101,6 +100,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		let splitName = newUpdatedUserObj.fullName.split(' ');
 		newUpdatedUserObj.firstName = splitName[0];
 		newUpdatedUserObj.lastName = splitName[1];
+		newUpdatedUserObj.phone = phoneNumber;
 		newUpdatedUserObj.id = user.id;
 		delete newUpdatedUserObj.fullName;
 
@@ -128,6 +128,11 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		}
 	}
 
+	function renderLoadingBarPercent(): string {
+		if (!user) return '';
+		return `${Math.floor(user.lifeTimePoints / (user.nextTierThreshold / 100))}%`;
+	}
+
 	return !user ? (
 		<LoadingPage />
 	) : (
@@ -139,11 +144,15 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 						Welcome, {user.firstName} {user.lastName}
 					</Label>
 					<Box display={'flex'} alignItems={'center'}>
-						<div className={'fakeImg'}>
-							<img src={require('../../images/white-spire.png')} />
-						</div>
+						{user.tierBadge ? (
+							<img src={user.tierBadge} alt={'Tier Badge'} />
+						) : (
+							<div className={'fakeImg'}>
+								<img src={require('../../images/white-spire.png')} />
+							</div>
+						)}
 						<Box>
-							<Label variant={'caption'}>Bronze Member</Label>
+							<Label variant={'caption'}>{user.tierTitle}</Label>
 							<Label variant={'body1'}>Account #{user.id}</Label>
 						</Box>
 					</Box>
@@ -159,16 +168,17 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<Label variant={'h4'}>Points Earned</Label>
 							<Label variant={'h4'}>Points Pending</Label>
 							<Label variant={'body1'}>
-								You're 45,835 Points until you reach <b>Silver Member</b> Status, or pay to level up now
+								You're {user.nextTierThreshold - user.lifeTimePoints} Points until you reach{' '}
+								<b>{user.nextTierTitle}</b> Status, or pay to level up now
 							</Label>
 							<Label className={'yellow'} variant={'h1'}>
-								{user.availablePoints}
+								{addCommasToNumber(user.availablePoints)}
 							</Label>
 							<Label className={'grey'} variant={'h1'}>
-								{user.availablePoints}
+								{addCommasToNumber(user.pendingPoints)}
 							</Label>
 							<Box className={'loadingBarContainer'}>
-								<div className={'loadingBar'} />
+								<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
 							</Box>
 							<LabelLink
 								path={'/'}
@@ -192,11 +202,14 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 								iconSize={7}
 							/>
 						</Box>
-						<Box className={'pointsExpireContainer'}>
-							<Label variant={'caption'}>
-								1,342 Points will expire on {DateUtils.displayDate(new Date())}
-							</Label>
-						</Box>
+						{!!user.pointsExpiring && (
+							<Box className={'pointsExpireContainer'}>
+								<Label variant={'caption'}>
+									{user.pointsExpiring || 0} Points will expire on{' '}
+									{DateUtils.displayDate(user.pointsExpiringOn || new Date())}
+								</Label>
+							</Box>
+						)}
 					</Paper>
 				</Box>
 
@@ -210,13 +223,15 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							updateControl={updateUserObjForm}
 						/>
 						<LabelInput
-							title={'Phone'}
 							inputType={'tel'}
-							maxLength={10}
+							title={'Phone'}
 							isPhoneInput
-							iconImage={'icon-phone'}
-							control={updateUserObj.get('phone')}
-							updateControl={updateUserObjForm}
+							onChange={async (value) => {
+								phoneNumber = value;
+								let isFormValid = await updateUserObj.isValid();
+								setAccountInfoChanged(isAccountFormFilledOut() && isFormValid);
+							}}
+							initialValue={user?.phone}
 						/>
 						<LabelButton
 							className={'saveBtn'}

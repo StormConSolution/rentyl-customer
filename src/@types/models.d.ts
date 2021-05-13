@@ -632,7 +632,7 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
-		isDefault: boolean;
+		isDefault: 1 | 0;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 	}

@@ -112,3 +112,18 @@
 		opacity: 1;
 	}
 }
+
+.small {
+	.rsSignInPage {
+		.container {
+			width: 100%;
+			.signInSection {
+				padding: 50px 40px 0;
+			}
+		}
+		.rsFooter {
+			margin: 0;
+			padding: 0 20px;
+		}
+	}
+}

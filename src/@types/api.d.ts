@@ -62,7 +62,7 @@ declare namespace Api {
 				accommodationId: number;
 				title: string;
 				description?: string;
-				features?: Feature.Req.Create[];
+				features?: number[];
 				mediaIds?: MediaDetails[];
 			}
 			export interface Get {
@@ -189,6 +189,10 @@ declare namespace Api {
 			export interface Delete {
 				id: number;
 			}
+
+			export interface Fulfill {
+				actionId: number;
+			}
 		}
 
 		export namespace Res {
@@ -199,6 +203,13 @@ declare namespace Api {
 				total: number;
 			}
 			export interface Update extends Model.Action {}
+			export interface Details extends Model.Action {
+				campaigns: CampaignDetails[];
+			}
+			export interface CampaignDetails extends Omit<Model.Campaign, 'companyId'> {
+				campaignActionId: number;
+				actionCount: number;
+			}
 		}
 	}
 
@@ -242,6 +253,10 @@ declare namespace Api {
 			}
 			export interface Delete {
 				id: number;
+			}
+
+			export interface Consolidate {
+				userId?: number;
 			}
 		}
 
@@ -373,18 +388,12 @@ declare namespace Api {
 				primaryEmail: string;
 				password: string;
 			}
+
 			export interface Get {}
 		}
 		export namespace Res {
 			export interface Create extends User.Filtered {}
-			export interface Get extends User.Filtered {
-				tierTitle: string;
-				tierBadge: Media;
-				pendingPoints: number;
-				nextTierThreshold: number;
-				pointsExpiring: number | null;
-				pointsExpiringOn: Date | string | null;
-			}
+			export interface Get extends User.Res.Detail {}
 		}
 	}
 
@@ -487,7 +496,7 @@ declare namespace Api {
 					description: string;
 					code: string;
 				}[];
-				policies: Record<Model.DestinationPolicyType, string>;
+				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
 			export interface Availability {
 				id: number;
@@ -723,6 +732,15 @@ declare namespace Api {
 				departureDate: string | Date;
 				numberOfAccommodations: number;
 			}
+			export interface Create {
+				accommodationId: number;
+				adults: number;
+				children: number;
+				arrivalDate: Date | string;
+				departureDate: Date | string;
+				rateCode: string;
+				numberOfAccommodations: number;
+			}
 		}
 		export namespace Res {
 			export interface Get extends Model.Reservation {}
@@ -731,19 +749,33 @@ declare namespace Api {
 			}
 			export interface Paged {}
 			export interface Verification {
-				checkInTime: string | Date;
+				checkInTime: string;
 				checkInDate: string | Date;
-				checkoutTime: string | Date;
+				checkoutTime: string;
 				checkoutDate: string | Date;
 				adults: number;
 				children: number;
-				costTotalCents: number;
-				costsPerNight: { [date: string]: CostPerNight };
 				accommodationName: string;
+				destinationName: string;
+				rateCode: string;
 				destinationPackages: BookingPackageDetails[];
-				policies: Record<Model.DestinationPolicyType, string>;
+				policies: { type: Model.DestinationPolicyType; value: string }[];
+				prices: PriceDetail;
 			}
 
+			interface PriceDetail {
+				accommodationDailyCostsInCents: { [date: string]: number };
+				accommodationTotalInCents: number;
+				feeTotalsInCents: { name: string; amount: number }[];
+				taxTotalsInCents: { name: string; amount: number }[];
+				taxAndFeeTotalInCents: number;
+				grandTotalCents: number;
+			}
+
+			export interface Create {
+				id?: string;
+				confirmationCode?: string;
+			}
 			export interface CostPerNight {
 				accommodationCostInCents: number;
 				taxesAndFeesInCents: number;
@@ -883,7 +915,7 @@ declare namespace Api {
 				companyId: number;
 				userId: number;
 				action: Model.SystemActionLogActions;
-				source: string; // should be a DbTableName
+				source: string; // should be a DbTableName or service
 				sourceId?: number;
 				metaData?: any;
 			}
@@ -970,7 +1002,7 @@ declare namespace Api {
 			state: string;
 			zip: number;
 			country: string;
-			isDefault: 1 | 0 | boolean;
+			isDefault: 1 | 0;
 		}
 
 		export interface Filtered {
@@ -1009,13 +1041,16 @@ declare namespace Api {
 		}
 		export namespace Req {
 			export interface Create {
-				userRoleId: number;
+				userRoleId?: number;
 				firstName: string;
 				lastName: string;
 				primaryEmail: string;
 				password: string;
 				phone?: string;
 				birthDate?: Date | string;
+				address?: Api.UserAddress.Req.Create;
+				newsLetter?: 0 | 1;
+				emailNotification?: 0 | 1;
 			}
 
 			export interface Update {
@@ -1082,7 +1117,7 @@ declare namespace Api {
 			}
 
 			export interface UserPoints {
-				userId: number;
+				userId?: number;
 			}
 		}
 		export namespace Res {
@@ -1090,9 +1125,16 @@ declare namespace Api {
 				companyId: number;
 			}
 			export interface Get extends Filtered {}
-			export interface Login extends Filtered {
+			export interface Detail extends Get {
+				tierTitle: string;
+				tierBadge: Media;
 				pendingPoints: number;
+				nextTierThreshold: number;
+				nextTierTitle: string;
+				pointsExpiring: number | null;
+				pointsExpiringOn: Date | string | null;
 			}
+			export interface Login extends Detail {}
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
@@ -1175,35 +1217,6 @@ declare namespace Api {
 				arrivalDate: Date | string;
 				departureDate: Date | string;
 				media: Media[];
-			}
-		}
-	}
-
-	export namespace Product {
-		export namespace Req {
-			export interface Get {}
-		}
-		export namespace Res {
-			export interface Get {
-				id: number;
-				companyId: number;
-				destinationId: number | null;
-				affiliateId: number | null;
-				name: string;
-				shortDescription: string;
-				longDescription: string;
-				priceCents: number;
-				isActive: boolean;
-				createdOn: Date | string;
-				modifiedOn: Date | string;
-				sku: string;
-				upc: number;
-				reviewScore: number;
-				reviewCount: number;
-				type: string;
-				pointPrice: number;
-				pointValue: number;
-				vendorName: string;
 			}
 		}
 	}
