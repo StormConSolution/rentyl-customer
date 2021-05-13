@@ -2,11 +2,20 @@
 
 .rsAccountPointsPage {
 	.rs-page-content-wrapper {
-		.pageTitle {
-			padding-top: 130px;
-			padding-bottom: 52px;
-			display: flex;
-			justify-content: center;
+		.rsHeroImage {
+			margin-bottom: 150px;
+			display: grid;
+			place-items: center;
+			.rsUserPointStatusBar {
+				position: absolute;
+				bottom: -95px;
+			}
+			h1 {
+				font-size: 40px;
+				font-weight: 900;
+				line-height: 45px;
+				margin: 0;
+			}
 		}
 
 		.pointButtonsContainer {

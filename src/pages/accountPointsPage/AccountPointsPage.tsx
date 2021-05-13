@@ -108,19 +108,14 @@ const AccountPointsPage: React.FC = () => {
 					image={'../../images/pointsPage/PointsPageHero2x.jpg'}
 					height={'300px'}
 					mobileHeight={'300px'}
-					backgroundPosition={'bottom'}
+					backgroundPosition={'center 78%'}
 					position={'relative'}
-					children={
-						<Label className={'pageTitle'} variant={'h1'}>
-							Redeem Your Points
-						</Label>
-					}
-				/>
+				>
+					<h1>Redeem Your Points</h1>
+					<UserPointStatusBar />
+				</HeroImage>
 
 				<div className={'heroImgTitle'}>
-					<Box height={'clamp(191px, 230px, 700px)'}>
-						<UserPointStatusBar />
-					</Box>
 					<Box
 						className={'pointButtonsContainer'}
 						display={'flex'}
