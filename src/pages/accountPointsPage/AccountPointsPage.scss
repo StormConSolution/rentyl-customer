@@ -2,23 +2,11 @@
 
 .rsAccountPointsPage {
 	.rs-page-content-wrapper {
-		.heroImgTitle {
-			position: relative;
-			box-sizing: border-box;
-			background-image: url('../../images/pointsPage/PointsPageHero2x.jpg');
-			background-repeat: no-repeat;
-			background-size: cover;
-			background-position-y: bottom;
-			background-position-x: center;
-			animation: fadeIn 1s;
-			height: 300px;
-
-			.pageTitle {
-				padding-top: 130px;
-				padding-bottom: 52px;
-				display: flex;
-				justify-content: center;
-			}
+		.pageTitle {
+			padding-top: 130px;
+			padding-bottom: 52px;
+			display: flex;
+			justify-content: center;
 		}
 
 		.pointButtonsContainer {

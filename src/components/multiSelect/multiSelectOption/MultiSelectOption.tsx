@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './MultiSelectOption.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
 interface SelectOptionProps {
@@ -14,6 +14,10 @@ interface SelectOptionProps {
 
 const MultiSelectOption: React.FC<SelectOptionProps> = (props) => {
 	const [isChecked, setIsChecked] = useState<boolean>(props.selected || false);
+
+	useEffect(() => {
+		if (props.selected) setIsChecked(props.selected);
+	}, [props.selected]);
 
 	return (
 		<div className={'rsMultiSelectOption'}>

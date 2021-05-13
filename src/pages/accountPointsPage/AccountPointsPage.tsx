@@ -19,6 +19,7 @@ import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { SelectOptions } from '../../components/Select/Select';
 import { capitalize, formatDateForUser } from '../../utils/utils';
+import HeroImage from '../../components/heroImage/HeroImage';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -40,7 +41,6 @@ const AccountPointsPage: React.FC = () => {
 			try {
 				if (user) {
 					let res = await userPointService.getPointTransactionsByUserId();
-					console.log('get user point res', res);
 					setPointHistory(res);
 				}
 			} catch (e) {
@@ -104,10 +104,20 @@ const AccountPointsPage: React.FC = () => {
 	) : (
 		<Page className={'rsAccountPointsPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<HeroImage
+					image={'../../images/pointsPage/PointsPageHero2x.jpg'}
+					height={'300px'}
+					mobileHeight={'300px'}
+					backgroundPosition={'bottom'}
+					position={'relative'}
+					children={
+						<Label className={'pageTitle'} variant={'h1'}>
+							Redeem Your Points
+						</Label>
+					}
+				/>
+
 				<div className={'heroImgTitle'}>
-					<Label className={'pageTitle'} variant={'h1'}>
-						Redeem Your Points
-					</Label>
 					<Box height={'clamp(191px, 230px, 700px)'}>
 						<UserPointStatusBar />
 					</Box>
@@ -121,13 +131,13 @@ const AccountPointsPage: React.FC = () => {
 							look={'containedPrimary'}
 							variant={'button'}
 							label={'Purchase Points'}
-							onClick={() => router.navigate('/')}
+							onClick={() => router.navigate('/').catch(console.error)}
 						/>
 						<LabelButton
 							look={'containedSecondary'}
 							variant={'button'}
 							label={'Learn About Points'}
-							onClick={() => router.navigate('/about-spire-points')}
+							onClick={() => router.navigate('/about-spire-points').catch(console.error)}
 						/>
 					</Box>
 					<Box
