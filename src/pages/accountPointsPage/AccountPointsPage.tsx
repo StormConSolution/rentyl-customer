@@ -35,12 +35,14 @@ const AccountPointsPage: React.FC = () => {
 		{ value: 'RENTAL', text: 'Rental', selected: false },
 		{ value: 'VACATION', text: 'Vacation', selected: false }
 	];
+	const [filterBy, setFilterBy] = useState<React.ReactText[]>(['ADMIN', 'ACTION']);
 
 	useEffect(() => {
 		async function getUserPoints() {
 			try {
 				if (user) {
 					let res = await userPointService.getPointTransactionsByUserId();
+					console.log('res', res);
 					setPointHistory(res);
 				}
 			} catch (e) {
@@ -72,6 +74,18 @@ const AccountPointsPage: React.FC = () => {
 		} else {
 			return '';
 		}
+	}
+
+	function renderPointsWithFilter() {
+		if (!pointHistory) return;
+		let allPointHistory = [...pointHistory];
+		let filteredPointHistory: Api.UserPoint.Res.Verbose[] = [];
+
+		for (let i in filterBy) {
+			let newPointHistory = allPointHistory.filter((point) => point.pointType === filterBy[i]);
+			filteredPointHistory = newPointHistory.concat(filteredPointHistory);
+		}
+		console.log('filteredPointHistory', filteredPointHistory);
 	}
 
 	function renderPoints(type: string) {
@@ -144,7 +158,11 @@ const AccountPointsPage: React.FC = () => {
 						<Label variant={'h1'}>Your Point History</Label>
 						<MultiSelect
 							placeHolder={'filter by'}
-							onChange={(value) => console.log('multiSelect Value', value)}
+							onChange={(value) => {
+								setFilterBy(value);
+								renderPointsWithFilter();
+								console.log('multiSelect Value', value);
+							}}
 							options={pointTypeFilters}
 							showSelectedAsPlaceHolder
 						/>
