@@ -7,7 +7,7 @@
 		height: 40px;
 		grid-column: 1;
 		grid-row: 1 / 2;
-		margin: auto 0;
+		margin: auto 10px;
 	}
 	.rsLabel {
 		&.caption {
@@ -39,10 +39,15 @@
 
 		&.copyright {
 			border-top: 2px solid theme-var($greyLineColor);
-
+			.rsLabel {
+				&.caption {
+					margin-left: 10px;
+				}
+			}
 			.socialMediaLinks {
 				width: 121px;
 				justify-content: space-between;
+				margin-right: 10px;
 			}
 		}
 	}
