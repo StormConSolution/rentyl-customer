@@ -43,7 +43,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(null);
 	const [endDate, setEndDate] = useState<moment.Moment | null>(null);
-	const [isValidBookNow, setIsValidBookNow] = useState<boolean>(false);
 	const [availabilityObj, setAvailabilityObj] = useState({
 		arrivalDate: '',
 		departureDate: '',
@@ -75,11 +74,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		getAccommodationDetails(params.accommodationId);
 	}, []);
 
-	useEffect(() => {
-		let isValid =
-			!!availabilityObj.arrivalDate.length && !!availabilityObj.departureDate.length && !!availabilityObj.adults;
-		setIsValidBookNow(isValid);
-	}, [availabilityObj]);
+	function isValidBookNow() {
+		return (
+			!!availabilityObj.arrivalDate.length && !!availabilityObj.departureDate.length && !!availabilityObj.adults
+		);
+	}
 
 	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults', value: any) {
 		setAvailabilityObj((prev) => {
@@ -155,7 +154,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 						/>
 						<RoomBookNowCard
 							points={2500}
-							bookNowDisabled={!isValidBookNow}
+							bookNowDisabled={!isValidBookNow()}
 							onDatesChange={onDatesChange}
 							focusedInput={focusedInput}
 							startDate={startDate}
