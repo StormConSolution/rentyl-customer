@@ -1,0 +1,112 @@
+@import 'src/themes/themes';
+
+.rsAccountPointsPage {
+	.rs-page-content-wrapper {
+		.rsHeroImage {
+			margin-bottom: 150px;
+			display: grid;
+			place-items: center;
+			.rsUserPointStatusBar {
+				position: absolute;
+				bottom: -95px;
+			}
+			h1 {
+				font-size: 40px;
+				font-weight: 900;
+				line-height: 45px;
+				margin: 0;
+			}
+		}
+
+		.pointButtonsContainer {
+			.rsButton {
+				margin: 0 10px;
+			}
+		}
+
+		.headerAndFilterContainer {
+			margin-bottom: 20px;
+			margin-top: 80px;
+		}
+
+		.pointHistoryContainer {
+			margin: 0 140px;
+		}
+
+		.pointTableHeader {
+			display: grid;
+			grid-template-columns: 55% 30% 25%;
+			margin-top: 20px;
+			padding-bottom: 12px;
+			border-bottom: 2px solid theme-var($greyLineColor);
+		}
+
+		.pointTableContainer {
+			padding: 50px 0;
+
+			.pointItemContainer {
+				display: grid;
+				grid-template-columns: 18% 37% 30% 25%;
+				padding-bottom: 100px;
+
+				.pointImage {
+					width: 150px;
+				}
+				.pendingPointsDetailsContainer {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-evenly;
+					margin: 5px 0;
+
+					.pointType {
+						margin-right: auto;
+						border: 1px solid theme-var($primaryTextColor);
+						border-radius: 5px;
+						padding: 5px 4px 7px;
+						background-color: theme-var($disableTextColor);
+					}
+				}
+				.date {
+					color: theme-var($disableTextColor);
+					margin-top: auto;
+					margin-bottom: auto;
+				}
+				.points {
+					color: theme-var($iconAndHighlightTextColor);
+					margin-top: auto;
+					margin-bottom: auto;
+				}
+			}
+		}
+
+		.rsFooter {
+			margin: 120px 140px 0;
+		}
+	}
+}
+
+.small {
+	.rsAccountPointsPage {
+		.headerAndFilterContainer {
+			flex-direction: column;
+		}
+
+		.pointHistoryContainer {
+			margin: 0 20px;
+		}
+
+		.pointTableHeader {
+			display: none;
+		}
+
+		.pointTableContainer {
+			padding: 20px 0;
+
+			.pointItemContainer {
+				display: flex;
+				flex-direction: column;
+				padding-bottom: 50px;
+			}
+		}
+	}
+}
