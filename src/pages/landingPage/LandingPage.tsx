@@ -43,9 +43,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 		getFeatureRewards().catch(console.error);
 	}, []);
 
-	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
-	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
-
 	function getActiveRewardsStage() {
 		if (activeRewards === 1) return 'stageOne';
 		else if (activeRewards === 2) return 'stageTwo';
@@ -179,7 +176,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						</Label>
 						<Label variant={'body1'}>
 							With Spire you earn points for dollars spent within our network of vacation partners. Those
-							points can be applied to discounts on home purchases with our partner builders.
+							points can be applied to discounts on home &amp; other purchases with our partner builders.
 						</Label>
 					</Box>
 
@@ -190,16 +187,25 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={require(`../../images/landingPage/travel2x.png`)}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
 									alt={''}
+									onClick={() => {
+										setActiveRewards(0);
+									}}
 								/>
 								<img
 									src={require(`../../images/landingPage/real-estate2x.png`)}
 									className={`${activeRewards === 1 ? 'selected' : ''}`}
 									alt={''}
+									onClick={() => {
+										setActiveRewards(1);
+									}}
 								/>
 								<img
 									src={require(`../../images/landingPage/hospitality2x.png`)}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
 									alt={''}
+									onClick={() => {
+										setActiveRewards(2);
+									}}
 								/>
 							</Carousel>
 
@@ -262,6 +268,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}.png`)}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
 									alt={''}
+									onClick={() => {
+										setActiveRewards(0);
+									}}
 								/>
 								<img
 									src={require(`../../images/landingPage/${
@@ -269,6 +278,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}.png`)}
 									className={`${activeRewards === 1 ? 'selected' : ''}`}
 									alt={''}
+									onClick={() => {
+										setActiveRewards(1);
+									}}
 								/>
 								<img
 									src={require(`../../images/landingPage/${
@@ -276,6 +288,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}.png`)}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
 									alt={''}
+									onClick={() => {
+										setActiveRewards(2);
+									}}
 								/>
 							</Box>
 							<Paper
