@@ -61,7 +61,7 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 		if (!selectedLayout) return '';
 		let firstRun = true;
 
-		return selectedLayout.rooms.map((item) => {
+		return selectedLayout.rooms.map((item, index) => {
 			if (firstRun && !selectedRoom) {
 				setSelectedRoom(item);
 				firstRun = false;
@@ -69,6 +69,7 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 			if (!selectedRoom) return '';
 			return (
 				<LabelRadioButton
+					key={index}
 					radioName={'layout'}
 					value={item.title}
 					checked={selectedRoom.id === item.id}

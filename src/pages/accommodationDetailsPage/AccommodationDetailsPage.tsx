@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './AccommodationDetailsPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useState } from 'react';
 import router from '../../utils/router';
@@ -13,7 +13,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import AccommodationInfoCard from '../../components/accommodationInfoCard/AccommodationInfoCard';
 import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import ComparisonService from '../../services/comparison/comparison.service';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
@@ -23,18 +23,31 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import CategoryImageGallery from '../../components/categoryImageGallery/CategoryImageGallery';
 import moment from 'moment';
+import { formatFilterDateForServer } from '../../utils/utils';
+import { animateBackForView } from '@bit/redsky.framework.rs.996/dist/pageAnimation';
+import ReservationsService from '../../services/reservations/reservations.service';
+import LoginOrCreateAccountPopup, {
+	LoginOrCreateAccountPopupProps
+} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 
 interface AccommodationDetailsPageProps {}
 
 const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props) => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [startDate, setStartDate] = useState<moment.Moment | null>(null);
+	const [endDate, setEndDate] = useState<moment.Moment | null>(null);
+	const [availabilityObj, setAvailabilityObj] = useState({
+		arrivalDate: '',
+		departureDate: '',
+		adults: 0
+	});
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 
 	const size = useWindowResizeChange();
@@ -61,9 +74,25 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		getAccommodationDetails(params.accommodationId);
 	}, []);
 
+	function isValidBookNow() {
+		return (
+			!!availabilityObj.arrivalDate.length && !!availabilityObj.departureDate.length && !!availabilityObj.adults
+		);
+	}
+
+	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults', value: any) {
+		setAvailabilityObj((prev) => {
+			let createAvailabilityObj: any = { ...prev };
+			createAvailabilityObj[key] = value;
+			return createAvailabilityObj;
+		});
+	}
+
 	function onDatesChange(calendarStartDate: moment.Moment | null, calendarEndDate: moment.Moment | null) {
-		setStartDateControl(calendarStartDate);
-		setEndDateControl(calendarEndDate);
+		setStartDate(calendarStartDate);
+		setEndDate(calendarEndDate);
+		updateAvailabilityObj('arrivalDate', formatFilterDateForServer(calendarStartDate, 'start'));
+		updateAvailabilityObj('departureDate', formatFilterDateForServer(calendarEndDate, 'end'));
 	}
 
 	function renderFeatureTiles() {
@@ -72,7 +101,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 			return item.isActive;
 		});
 		return accommodationDetailsFeaturesActive.map((item) => {
-			return <IconFeatureTile title={item.title} icon={item.icon} />;
+			return <IconFeatureTile key={item.title} title={item.title} icon={item.icon} />;
 		});
 	}
 
@@ -85,8 +114,26 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 					icon: value.icon
 				};
 			});
-			return <CategoryFeatureIcons title={item.title} features={features} />;
+			return <CategoryFeatureIcons key={item.title} title={item.title} features={features} />;
 		});
+	}
+
+	async function checkIfRoomIsAvailable() {
+		if (!accommodationDetails) return;
+		let data: any = JSON.stringify({
+			...availabilityObj,
+			accommodationId: accommodationDetails.id,
+			children: 0,
+			numberOfAccommodations: 1
+		});
+
+		if (!user) {
+			popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+				query: data
+			});
+		} else {
+			router.navigate(`/booking?data=${data}`).catch(console.error);
+		}
 	}
 
 	return !accommodationDetails || !destinationDetails ? (
@@ -107,18 +154,20 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 						/>
 						<RoomBookNowCard
 							points={2500}
-							onDatesChange={(startDate, endDate) => {
-								onDatesChange(startDate, endDate);
-							}}
+							bookNowDisabled={!isValidBookNow()}
+							onDatesChange={onDatesChange}
 							focusedInput={focusedInput}
-							startDate={startDateControl}
-							endDate={endDateControl}
+							startDate={startDate}
+							endDate={endDate}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
 							}}
+							onGuestChange={(value) => {
+								updateAvailabilityObj('adults', +value);
+							}}
 							compareOnClick={() => {
 								comparisonService.addToComparison(recoilComparisonState, {
-									destinationId: Date.now(),
+									destinationId: destinationDetails.id,
 									logo: destinationDetails.logoUrl,
 									title: destinationDetails.name,
 									roomTypes: destinationDetails.accommodationTypes.map((item, index) => {
@@ -129,6 +178,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 										};
 									})
 								});
+							}}
+							bookNowOnClick={() => {
+								checkIfRoomIsAvailable().catch(console.error);
 							}}
 						/>
 					</Box>
