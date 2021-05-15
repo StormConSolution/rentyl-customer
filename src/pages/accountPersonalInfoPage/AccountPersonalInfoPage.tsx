@@ -25,6 +25,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
+import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -156,61 +157,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<Label variant={'body1'}>Account #{user.id}</Label>
 						</Box>
 					</Box>
-					<Paper
-						className={'rewardPointsContainer'}
-						boxShadow
-						padding={'34px 60px 30px 30px'}
-						width={'1042px'}
-						height={'190px'}
-						position={'absolute'}
-					>
-						<Box display={'grid'}>
-							<Label variant={'h4'}>Points Earned</Label>
-							<Label variant={'h4'}>Points Pending</Label>
-							<Label variant={'body1'}>
-								You're {user.nextTierThreshold - user.lifeTimePoints} Points until you reach{' '}
-								<b>{user.nextTierTitle}</b> Status, or pay to level up now
-							</Label>
-							<Label className={'yellow'} variant={'h1'}>
-								{addCommasToNumber(user.availablePoints)}
-							</Label>
-							<Label className={'grey'} variant={'h1'}>
-								{addCommasToNumber(user.pendingPoints)}
-							</Label>
-							<Box className={'loadingBarContainer'}>
-								<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
-							</Box>
-							<LabelLink
-								path={'/'}
-								label={'Redeem Points'}
-								variant={'caption'}
-								iconRight={'icon-chevron-right'}
-								iconSize={7}
-							/>
-							<LabelLink
-								path={'/'}
-								label={'Manage Points'}
-								variant={'caption'}
-								iconRight={'icon-chevron-right'}
-								iconSize={7}
-							/>
-							<LabelLink
-								path={'/'}
-								label={'See Loyalty Tiers'}
-								variant={'caption'}
-								iconRight={'icon-chevron-right'}
-								iconSize={7}
-							/>
-						</Box>
-						{!!user.pointsExpiring && (
-							<Box className={'pointsExpireContainer'}>
-								<Label variant={'caption'}>
-									{user.pointsExpiring || 0} Points will expire on{' '}
-									{DateUtils.displayDate(user.pointsExpiringOn || new Date())}
-								</Label>
-							</Box>
-						)}
-					</Paper>
+					<UserPointStatusBar />
 				</Box>
 
 				<Box display={'flex'} justifyContent={'center'} marginBottom={'130px'}>
