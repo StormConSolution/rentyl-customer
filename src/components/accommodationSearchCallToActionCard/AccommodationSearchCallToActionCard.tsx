@@ -7,11 +7,12 @@ import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
+import { addCommasToNumber } from '../../utils/utils';
 
 interface AccommodationSearchCallToActionCardProps {
 	points: number;
-	squareFeet: string;
-	bedrooms: number;
+	squareFeet: number | null;
+	maxSleeps: number;
 	bookNowOnClick?: () => void;
 	bookNowDisabled?: boolean;
 	compareOnClick?: () => void;
@@ -35,20 +36,22 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 				padding={'8px 10px 15px'}
 			>
 				<Box className={'topContents'}>
-					<Box className={'sizeBoxMobile'}>
-						<Label className={'sizeTitleLabel'} variant={'caption'}>
-							Size
-						</Label>
-						<Label className={'sizeContentLabel'} variant={'body2'}>
-							{props.squareFeet}
-						</Label>
-					</Box>
+					{props.squareFeet && (
+						<Box className={'sizeBoxMobile'}>
+							<Label className={'sizeTitleLabel'} variant={'caption'}>
+								Size
+							</Label>
+							<Label className={'sizeContentLabel'} variant={'body2'}>
+								{addCommasToNumber(props.squareFeet)}sq.
+							</Label>
+						</Box>
+					)}
 					<Box className={'bedroomsBoxMobile'}>
 						<Label className={'bedroomsTitleLabel'} variant={'caption'}>
-							Bedrooms
+							Sleeps
 						</Label>
 						<Label className={'bedroomsContentLabel'} variant={'body2'}>
-							{props.bedrooms}
+							{props.maxSleeps}
 						</Label>
 					</Box>
 					<Box className={'earnBoxMobile'}>
@@ -56,7 +59,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 							Earn Up To
 						</Label>
 						<Label className={'earnContent'} variant={'h4'}>
-							{props.points.toLocaleString('en-US', { useGrouping: true })} points
+							{addCommasToNumber(props.points)} points
 						</Label>
 					</Box>
 				</Box>
@@ -98,7 +101,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					Earn Up To
 				</Label>
 				<Label className={'pointsLabel'} variant={'h2'}>
-					{props.points.toLocaleString('en-US', { useGrouping: true })} points
+					{addCommasToNumber(props.points)} points
 				</Label>
 				<LabelButton
 					className={'bookNowBtn'}

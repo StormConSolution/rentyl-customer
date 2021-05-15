@@ -13,6 +13,14 @@ export default class AccommodationService extends Service {
 		});
 	}
 
+	async availability(data: Api.Accommodation.Req.Availability) {
+		let res = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
+			'accommodation/availability',
+			data
+		);
+		return res.data.data;
+	}
+
 	async getManyAccommodationDetails(accommodationIds: number[]) {
 		return this.accommodationsModel.getManyAccommodationDetails(accommodationIds);
 	}

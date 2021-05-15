@@ -12,14 +12,21 @@
 		position: relative;
 		height: 280px;
 		width: 278px;
+		min-width: 278px;
 		.carouselParent {
 			overflow-x: hidden;
+		}
+		.accommodationGalleryImage {
+			width: 278px;
+			height: 280px;
+			object-fit: cover;
 		}
 	}
 
 	.info {
 		margin-left: 40px;
 		margin-right: 15px;
+		width: 100%;
 		> div {
 			display: flex;
 			.rsLabel {

@@ -29,6 +29,17 @@ declare namespace Api {
 				sort: string;
 				filter: string;
 			}
+
+			export interface Availability {
+				destinationId: number;
+				startDate: Date | string;
+				endDate: Date | string;
+				adults: number;
+				children: number;
+				priceRangeMin?: number;
+				priceRangeMax?: number;
+				pagination?: RedSky.PagePagination;
+			}
 		}
 		export namespace Res {
 			export interface Update extends Details {}
@@ -48,6 +59,23 @@ declare namespace Api {
 			export interface GetByPage {
 				data: Details[];
 				total: number;
+			}
+			export interface Availability {
+				id: number;
+				name: string;
+				longDescription: string;
+				media: Media[]; //*All media for accommodation and accommodation categories*
+				featureIcons: string[]; //*Limit it to the first five*
+				maxSleeps: number;
+				maxOccupantCount: number;
+				size: { max: number; min: number; units: string } | null; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
+				adaCompliant: 0 | 1;
+				extraBeds: 0 | 1;
+				extraBedPriceCents: number;
+				costPerNightCents: number;
+				availableAccommodationCount: number;
+				pointsPerNight: number;
+				pointsEarned: number;
 			}
 		}
 	}

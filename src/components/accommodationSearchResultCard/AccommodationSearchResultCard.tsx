@@ -18,13 +18,13 @@ export interface AccommodationSearchResultCardProps {
 	id: number | string;
 	name: string;
 	accommodationType: string;
-	bedrooms: number;
-	squareFeet: number | string;
+	maxSleeps: number;
+	squareFeet: number | null;
 	description: string;
 	ratePerNightInCents: number;
 	pointsRatePerNight: number;
 	pointsEarnable: number;
-	starRating: Rating;
+	// starRating: Rating;
 	roomStats: AccommodationStat[];
 	carouselImagePaths: string[];
 	amenityIconNames: string[];
@@ -58,7 +58,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					<Label variant="caption" className="taxAndFees">
 						+ taxes &amp; fees
 					</Label>
-					<StarRating rating={props.starRating} size="small16px" />
+					{/*<StarRating rating={props.starRating} size="small16px" />*/}
 					<LabelButton
 						onClick={props.onViewDetailsClick}
 						look="containedSecondary"
@@ -68,8 +68,8 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 				</div>
 				<AccommodationSearchCallToActionCard
 					points={props.pointsEarnable}
-					bedrooms={props.bedrooms}
-					squareFeet={props.squareFeet.toString()}
+					maxSleeps={props.maxSleeps}
+					squareFeet={props.squareFeet}
 					compareDisabled={props.disableCompare}
 					bookNowOnClick={props.onBookNowClick}
 					compareOnClick={props.onCompareClick}
@@ -109,9 +109,9 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 				</Box>
 				<div>
 					<AccommodationSearchCallToActionCard
+						maxSleeps={props.maxSleeps}
 						points={props.pointsEarnable}
-						bedrooms={props.bedrooms}
-						squareFeet={props.squareFeet.toString()}
+						squareFeet={props.squareFeet}
 						compareDisabled={props.disableCompare}
 						bookNowOnClick={props.onBookNowClick}
 						compareOnClick={props.onCompareClick}

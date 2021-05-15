@@ -233,21 +233,7 @@ const DashboardPage: React.FC = () => {
 						}}
 					/>
 				</Box>
-				<Box margin={'40px 0'} height={'350px'}>
-					<AccommodationSearchCallToActionCard
-						points={2500}
-						squareFeet={'2,300-3,200 sq/ft'}
-						bedrooms={6}
-						compareOnClick={() => {
-							comparisonService.addToComparison(recoilComparisonState, {
-								destinationId: Date.now(),
-								logo: '../../images/encore-resort.png',
-								title: 'Encore Resort',
-								roomTypes: roomTypes
-							});
-						}}
-					/>
-				</Box>
+				<Box margin={'40px 0'} height={'350px'}></Box>
 				<Box margin={'40px 0'}>
 					<DestinationSearchResultCard
 						destinationName="Encore Resort"
@@ -293,50 +279,7 @@ const DashboardPage: React.FC = () => {
 						]}
 					/>
 				</Box>
-				<Box margin={'40px 0'}>
-					<AccommodationSearchResultCard
-						id="1"
-						name="VIP Suite"
-						accommodationType="Suite"
-						description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
-						pointsRatePerNight={5300}
-						ratePerNightInCents={98234}
-						starRating={4.5}
-						bedrooms={6}
-						squareFeet={'2.800-3,200sq/ft'}
-						pointsEarnable={2500}
-						onBookNowClick={emptyFunction}
-						onViewDetailsClick={emptyFunction}
-						onCompareClick={emptyFunction}
-						roomStats={[
-							{
-								label: 'Sleeps',
-								datum: 12
-							},
-							{
-								label: 'Bedrooms',
-								datum: 6
-							},
-							{
-								label: 'Various Bed Types',
-								datum: '3'
-							},
-							{
-								label: 'Maximum Capacity',
-								datum: '4'
-							},
-							{
-								label: 'Size',
-								datum: '2,800-32,000 sq/ft'
-							}
-						]}
-						amenityIconNames={['icon-wifi1', 'icon-laundry', 'icon-no-smoking', 'icon-kitchen']}
-						carouselImagePaths={[
-							'../images/dashboardPage/luxury-suite.jpg',
-							'../images/dashboardPage/five-bed-villa.jpg'
-						]}
-					/>
-				</Box>
+				<Box margin={'40px 0'}></Box>
 				<Box margin={'40px 0'} width={'450px'}></Box>
 
 				<Box>

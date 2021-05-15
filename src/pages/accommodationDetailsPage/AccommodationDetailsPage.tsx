@@ -103,7 +103,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							width={'536px'}
 							height={'371px'}
 							accommodationName={accommodationDetails.name}
-							accommodationDescription={accommodationDetails.shortDescription}
+							accommodationDescription={accommodationDetails.longDescription}
 						/>
 						<RoomBookNowCard
 							points={2500}
