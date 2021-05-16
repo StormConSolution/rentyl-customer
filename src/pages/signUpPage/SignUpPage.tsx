@@ -60,7 +60,7 @@ const SignUpPage: React.FC = () => {
 		);
 	}
 
-	async function updateUserObjForm(control: RsFormControl) {
+	function updateUserObjForm(control: RsFormControl) {
 		if (control.key === 'phone' && control.value.toString().length === 10) {
 			let newValue = formatPhoneNumber(control.value.toString());
 			control.value = newValue;
@@ -72,14 +72,18 @@ const SignUpPage: React.FC = () => {
 			control.value = newValue;
 		}
 		signUpForm.update(control);
-		let isValid = await signUpForm.isValid();
-		setFormIsValid(isSignUpFormFilledOut() && isValid);
+		setFormIsValid(isSignUpFormFilledOut());
 		setSignUpForm(signUpForm.clone());
 	}
 
 	async function signUp() {
-		if (!phoneNumber.length) {
+		if (!phoneNumber.length || phoneNumber.length < 3) {
 			return rsToasts.error('Phone number is required');
+		}
+
+		if (!(await signUpForm.isValid())) {
+			setSignUpForm(signUpForm.clone());
+			return;
 		}
 
 		let newCustomer: any = signUpForm.toModel();
@@ -159,8 +163,6 @@ const SignUpPage: React.FC = () => {
 									isEmailInput
 									control={signUpForm.get('primaryEmail')}
 									updateControl={updateUserObjForm}
-									iconImage={'icon-mail'}
-									iconSize={18}
 								/>
 								<LabelInput
 									title={'Phone'}

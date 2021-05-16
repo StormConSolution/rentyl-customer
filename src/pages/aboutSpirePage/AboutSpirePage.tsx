@@ -17,6 +17,8 @@ import { useRef } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import BookNowImage from '../../components/bookNowImage/BookNowImage';
 import Carousel from '../../components/carousel/Carousel';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface AboutSpirePageProps {}
 
@@ -24,6 +26,8 @@ const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
 	const parentRef = useRef<HTMLElement>(null);
 	const childRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
+
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 
 	let imageIndex = 0;
 
@@ -60,7 +64,7 @@ const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
 						</Label>
 						<Label variant={'body2'} mb={'5px'}>
 							With Spire Loyalty you’re rewarded for a broad base of transactions. You have the ability to
-							earn points for life purchases like buying a home or renting an apartment, and for
+							earn points for life, purchases like buying a home or renting an apartment, and for
 							purchasing meals at your favorite restaurants.
 						</Label>
 						<Label variant={'body2'} mb={'20px'}>
@@ -70,9 +74,10 @@ const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
 							<LabelButton
 								look={'containedPrimary'}
 								variant={'button'}
-								label={'Sign up for spire'}
+								label={user ? 'Browse Destinations' : 'Sign up for spire'}
 								onClick={() => {
-									router.navigate('/signup').catch(console.error);
+									if (user) router.navigate('/reservation/availability').catch(console.error);
+									else router.navigate('/signup').catch(console.error);
 								}}
 							/>
 							<LabelButton
@@ -311,8 +316,8 @@ const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
 						<h1>Earn and Grow</h1>
 						<Label variant={'body2'} mb={'20px'}>
 							As you earn points by making purchases, or taking part in inspiring events, you are on your
-							way to greater things. Becoming a Platinum Spire is the ultimate and we look forward to
-							having you join these unique ranks.
+							way to greater things. Becoming a Platinum Spire Member is the ultimate and we look forward
+							to having you join these unique ranks.
 						</Label>
 						<LabelButton
 							look={'containedPrimary'}
