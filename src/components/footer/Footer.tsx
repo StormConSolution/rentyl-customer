@@ -74,7 +74,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 				<Box display={'grid'}>{renderLinks(props.links)}</Box>
 			</Box>
 			<Box className="copyright" display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-				<Label variant={'caption'}>Spire &#169; 2020, all rights reserved.</Label>
+				<Label variant={'caption'}>Spire &#169; {new Date().getFullYear()}, all rights reserved.</Label>
 				{renderSocialMedia()}
 			</Box>
 		</Box>

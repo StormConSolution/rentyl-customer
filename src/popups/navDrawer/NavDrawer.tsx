@@ -45,7 +45,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 							variant={'h2'}
 							onClick={() => {
 								props.onClose();
-								router.navigate('/').catch(console.error);
+								router.navigate('/reward').catch(console.error);
 							}}
 						/>
 						<LabelLink
