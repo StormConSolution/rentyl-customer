@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './DestinationDetailsPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
@@ -24,47 +24,67 @@ import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
 import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
-import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
+import AccommodationService from '../../services/accommodation/accommodation.service';
+import LoginOrCreateAccountPopup, {
+	LoginOrCreateAccountPopupProps
+} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import ComparisonService from '../../services/comparison/comparison.service';
 
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
+	const params = router.getPageUrlParams<{ destinationId: number }>([
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
+	]);
 	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLElement>(null);
 	const childRef = useRef<HTMLElement>(null);
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [page, setPage] = useState<number>(1);
-	const perPage = 5;
-	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
-	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
+	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
+		destinationId: params.destinationId,
 		startDate: moment().format('YYYY-MM-DD'),
-		endDate: moment().add(1, 'day').format('YYYY-MM-DD'),
+		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
 
-	const params = router.getPageUrlParams<{ destinationId: number }>([
-		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
-	]);
-
 	useEffect(() => {
 		async function getDestinationDetails(id: number) {
 			try {
-				let response = await destinationService.getDestinationDetails(id);
-				if (response.data.data) setDestinationDetails(response.data.data);
-				console.log('Destination Details: ', response.data.data);
+				let dest = await destinationService.getDestinationDetails(id);
+				if (dest.data.data) setDestinationDetails(dest.data.data);
 			} catch (e) {
 				rsToasts.error(e.message);
 			}
 		}
 
-		getDestinationDetails(params.destinationId);
+		getDestinationDetails(params.destinationId).catch(console.error);
 	}, []);
+
+	useEffect(() => {
+		async function getAvailableStays() {
+			try {
+				let availableStays = await accommodationService.availability(searchQueryObj);
+				setAvailabilityStayList(availableStays);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		getAvailableStays().catch(console.error);
+	}, [searchQueryObj]);
 
 	let imageIndex = 0;
 
@@ -127,6 +147,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		setStartDateControl(startDate);
+		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
@@ -148,50 +170,81 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	}
 
 	function renderAccommodations() {
-		return (
-			<AccommodationSearchResultCard
-				id="1"
-				name="VIP Suite"
-				accommodationType="Suite"
-				description="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum."
-				pointsRatePerNight={5300}
-				ratePerNightInCents={98234}
-				starRating={4.5}
-				bedrooms={6}
-				squareFeet={'2.800-3,200sq/ft'}
-				pointsEarnable={2500}
-				onBookNowClick={() => {}}
-				onViewDetailsClick={() => {}}
-				onCompareClick={() => {}}
-				roomStats={[
-					{
-						label: 'Sleeps',
-						datum: 12
-					},
-					{
-						label: 'Bedrooms',
-						datum: 6
-					},
-					{
-						label: 'Various Bed Types',
-						datum: '3'
-					},
-					{
-						label: 'Maximum Capacity',
-						datum: '4'
-					},
-					{
-						label: 'Size',
-						datum: '2,800-32,000 sq/ft'
-					}
-				]}
-				amenityIconNames={['icon-wifi1', 'icon-laundry', 'icon-no-smoking', 'icon-kitchen']}
-				carouselImagePaths={[
-					'../images/dashboardPage/luxury-suite.jpg',
-					'../images/dashboardPage/five-bed-villa.jpg'
-				]}
-			/>
-		);
+		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
+		return availabilityStayList.map((item, index) => {
+			let media = item.media.map((value) => {
+				return value.urls.large;
+			});
+			return (
+				<AccommodationSearchResultCard
+					key={item.id}
+					id={item.id}
+					name={item.name}
+					accommodationType="Suite"
+					description={item.longDescription}
+					pointsRatePerNight={item.pointsPerNight}
+					pointsEarnable={item.pointsEarned}
+					ratePerNightInCents={item.costPerNightCents}
+					squareFeet={item.size ? item.size.max : null}
+					maxSleeps={item.maxSleeps}
+					onBookNowClick={() => {
+						let data: any = { ...searchQueryObj };
+						data.accommodationId = item.id;
+						data.arrivalDate = data.startDate;
+						data.departureDate = data.endDate;
+						delete data.pagination;
+						delete data.startDate;
+						delete data.endDate;
+						data = JSON.stringify(data);
+						if (!user) {
+							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+								query: data
+							});
+						} else {
+							router.navigate(`/booking?data=${data}`).catch(console.error);
+						}
+					}}
+					onViewDetailsClick={() => {
+						router.navigate(`/accommodation/details?ai=${item.id}`).catch(console.error);
+					}}
+					onCompareClick={() => {
+						if (!destinationDetails) return;
+						comparisonService.addToComparison(recoilComparisonState, {
+							destinationId: Date.now(),
+							logo: destinationDetails.logoUrl,
+							title: destinationDetails.name,
+							roomTypes: destinationDetails.accommodationTypes.map((value, index) => {
+								return {
+									value: value.code,
+									text: value.name,
+									selected: value.id === item.id
+								};
+							})
+						});
+					}}
+					roomStats={[
+						{
+							label: 'Sleeps',
+							datum: item.maxSleeps
+						},
+						{
+							label: 'Max Occupancy',
+							datum: item.maxOccupantCount
+						},
+						{
+							label: 'ADA Compliant',
+							datum: item.adaCompliant ? 'Yes' : 'No'
+						},
+						{
+							label: 'Extra Bed',
+							datum: item.extraBeds ? 'Yes' : 'No'
+						}
+					]}
+					amenityIconNames={item.featureIcons}
+					carouselImagePaths={media}
+				/>
+			);
+		});
 	}
 
 	return !destinationDetails ? (
@@ -392,8 +445,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					</Label>
 					<FilterBar
 						className={'filterBar'}
-						startDate={moment(searchQueryObj.startDate)}
-						endDate={moment(searchQueryObj.endDate)}
+						startDate={startDateControl}
+						endDate={endDateControl}
 						onDatesChange={onDatesChange}
 						focusedInput={focusedInput}
 						onFocusChange={setFocusedInput}
@@ -426,15 +479,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					/>
 					<hr />
 					<Box className={'accommodationCardWrapper'}>{renderAccommodations()}</Box>
-					<PaginationButtons
-						selectedRowsPerPage={perPage}
-						currentPageNumber={page}
-						setSelectedPage={(newPage) => {
-							updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
-							setPage(newPage);
-						}}
-						total={availabilityTotal}
-					/>
 				</Box>
 				<Footer links={FooterLinkTestData} />
 			</div>

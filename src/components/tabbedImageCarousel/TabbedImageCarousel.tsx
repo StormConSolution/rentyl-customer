@@ -24,7 +24,7 @@ export interface TabbedImageCarouselProps {
 }
 
 const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props: TabbedImageCarouselProps) {
-	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0].name);
+	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0] ? props.tabs[0].name : '');
 	const size = useWindowResizeChange();
 
 	function renderTab(tab: ImageTabProp): JSX.Element {

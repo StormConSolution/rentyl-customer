@@ -99,6 +99,7 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 						if (props.onChange) props.onChange(value);
 					}}
 					value={props.initialValue}
+					countryCodeEditable={false}
 				/>
 			)}
 		</div>
