@@ -24,7 +24,6 @@ import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
 import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
-import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import LoginOrCreateAccountPopup, {
@@ -79,7 +78,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		async function getAvailableStays() {
 			try {
 				let availableStays = await accommodationService.availability(searchQueryObj);
-				console.log(availableStays);
 				setAvailabilityStayList(availableStays);
 			} catch (e) {
 				console.error(e);
@@ -481,15 +479,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					/>
 					<hr />
 					<Box className={'accommodationCardWrapper'}>{renderAccommodations()}</Box>
-					{/*<PaginationButtons*/}
-					{/*	selectedRowsPerPage={perPage}*/}
-					{/*	currentPageNumber={page}*/}
-					{/*	setSelectedPage={(newPage) => {*/}
-					{/*		updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });*/}
-					{/*		setPage(newPage);*/}
-					{/*	}}*/}
-					{/*	total={availabilityTotal}*/}
-					{/*/>*/}
 				</Box>
 				<Footer links={FooterLinkTestData} />
 			</div>

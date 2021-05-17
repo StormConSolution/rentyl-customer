@@ -31,8 +31,8 @@ const SignUpPage: React.FC = () => {
 	const [formIsValid, setFormIsValid] = useState<boolean>(false);
 	const [signUpForm, setSignUpForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('firstName', ' ', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
-			new RsFormControl('lastName', ' ', [new RsValidator(RsValidatorEnum.REQ, 'Last name is required')]),
+			new RsFormControl('firstName', '', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
+			new RsFormControl('lastName', '', [new RsValidator(RsValidatorEnum.REQ, 'Last name is required')]),
 			new RsFormControl('primaryEmail', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Email Required'),
 				new RsValidator(RsValidatorEnum.EMAIL, 'Invalid email')
@@ -141,7 +141,6 @@ const SignUpPage: React.FC = () => {
 								<Box display={size === 'small' ? 'block' : 'flex'} justifyContent={'space-between'}>
 									<LabelInput
 										title={'First Name'}
-										placeholder={'First Name'}
 										inputType={'text'}
 										control={signUpForm.get('firstName')}
 										updateControl={updateUserObjForm}
