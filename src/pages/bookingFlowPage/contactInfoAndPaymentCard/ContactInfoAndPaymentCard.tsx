@@ -10,9 +10,12 @@ import luhn from 'luhn';
 import { formatPhoneNumber, removeAllExceptNumbers } from '../../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
+import serviceFactory from '../../../services/serviceFactory';
+import PaymentService from '../../../services/payment/payment.service';
+import rsToasts from '@bit/redsky.framework.toast';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
-type CreditCardForm = { name: string; cardNumber: string; expDate: string };
+type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoAndPaymentCardProps {
 	onContactChange: (value: ContactInfoForm) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
@@ -23,27 +26,22 @@ let phoneNumber = '';
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('fullName', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
-			new RsFormControl('creditCard', '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Credit Card is required'),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Credit Card', (control) => {
-					return luhn.validate(control.value.toString());
-				})
-			]),
+			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
 
 			new RsFormControl('expDate', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 5),
-				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 5),
+				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 7),
+				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 7),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
 					let month = parseInt(control.value.toString().slice(0, 2));
-					let year = parseInt(control.value.toString().slice(3, 5)) + 2000;
+					let year = parseInt(control.value.toString().slice(3, 7));
 					let currentYear = new Date().getFullYear();
 					let currentMonth = new Date().getMonth() + 1;
-
+					if (month > 12) return false;
 					if (year === currentYear) return month >= currentMonth;
 					else return year > currentYear;
 				})
@@ -70,6 +68,44 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	useEffect(() => {
 		props.isValidForm(isValid);
 	}, [isValid]);
+
+	useEffect(() => {
+		async function init() {
+			const gatewayDetails: Api.Payment.Res.PublicData = await paymentService.getGateway();
+			window.Spreedly.init(gatewayDetails.publicData.token, {
+				numberEl: 'spreedly-number',
+				cvvEl: 'spreedly-cvv'
+			});
+			window.Spreedly.on('ready', function (frame: any) {
+				console.log('Spreedly is loaded');
+				window.Spreedly.setStyle(
+					'number',
+					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+				);
+				window.Spreedly.setStyle(
+					'cvv',
+					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+				);
+				window.Spreedly.setFieldType('number', 'text');
+				window.Spreedly.setNumberFormat('prettyFormat');
+			});
+			// Error response codes
+			// https://docs.spreedly.com/reference/api/v1/#response-codes
+			window.Spreedly.on('errors', function (errors: any) {
+				for (let error of errors) {
+					console.log(error);
+					rsToasts.error(error.message);
+				}
+			});
+			window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
+				console.log(token);
+				console.log(pmData);
+				const result = await paymentService.addPaymentMethod(token, pmData);
+				rsToasts.success('BOOOOOM! Tokenized and updated');
+			});
+		}
+		init().catch(console.error);
+	}, []);
 
 	async function updateCreditCardObj(control: RsFormControl) {
 		if (
@@ -99,8 +135,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		return (
 			!!contactInfoForm.get('firstName').value.toString().length &&
 			!!contactInfoForm.get('lastName').value.toString().length &&
-			!!creditCardObj.get('fullName').value.toString().length &&
-			!!creditCardObj.get('creditCard').value.toString().length &&
+			!!creditCardObj.get('full_name').value.toString().length &&
 			!!creditCardObj.get('expDate').value.toString().length &&
 			!!phoneNumber.length
 		);
@@ -145,36 +180,45 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				updateControl={updateContactInfoForm}
 			/>
 			<hr />
-			<Box>
+			<form id={'payment-form'} action={'/card-payment'}>
 				<Label variant={'h2'} mb={'10px'}>
 					Payment Information
 				</Label>
 
-				<Box className={'creditCardInfo'} display={'flex'} justifyContent={'space-between'}>
+				<Box className={'creditCardInfo'}>
 					<LabelInput
 						title={'Name on Card'}
 						inputType={'text'}
-						control={creditCardObj.get('fullName')}
+						control={creditCardObj.get('full_name')}
 						updateControl={updateCreditCardObj}
 					/>
-					<LabelInput
-						title={'Card Number'}
-						inputType={'text'}
-						control={creditCardObj.get('creditCard')}
-						updateControl={updateCreditCardObj}
-					/>
-
+					{/*<LabelInput*/}
+					{/*	title={'Card Number'}*/}
+					{/*	inputType={'text'}*/}
+					{/*	control={creditCardObj.get('creditCard')}*/}
+					{/*	updateControl={updateCreditCardObj}*/}
+					{/*/>*/}
+					<div id={'spreedly-number'}>
+						<Label variant={'caption'} mb={10}>
+							Credit Card
+						</Label>
+					</div>
+					<div id={'spreedly-cvv'}>
+						<Label variant={'caption'} mb={10}>
+							CVV
+						</Label>
+					</div>
 					<LabelInput
 						className={'creditCardExpInput'}
-						maxLength={5}
+						maxLength={7}
 						title={'Expiration Date'}
 						inputType={'text'}
 						control={creditCardObj.get('expDate')}
 						updateControl={updateCreditCardObj}
-						placeholder={'MM/YY'}
+						placeholder={'MM/YYYY'}
 					/>
 				</Box>
-			</Box>
+			</form>
 		</Paper>
 	);
 };

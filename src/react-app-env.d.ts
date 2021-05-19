@@ -15,6 +15,7 @@ interface Window {
 	PushNotification: any;
 	browserNavigation: any;
 	sf: any;
+	Spreedly: any;
 }
 
 interface packageJson {

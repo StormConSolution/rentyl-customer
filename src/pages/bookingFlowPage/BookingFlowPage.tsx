@@ -34,6 +34,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [reservationData, setReservationData] = useState<Api.Reservation.Res.Verification>();
 	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
+	const [creditCardForm, setCreditCardForm] = useState<{ full_name: string; month: number; year: number }>();
 
 	useEffect(() => {
 		if (!params) return;
@@ -96,7 +97,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	}
 
 	async function completeBooking() {
-		if (!reservationData) return;
+		if (!reservationData || !creditCardForm) return;
 		if (!isDisabled && !isFormValid) return;
 		popupController.open(SpinningLoaderPopup);
 		let data = {
@@ -108,7 +109,14 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 			rateCode: reservationData.rateCode,
 			numberOfAccommodations: 1
 		};
+		let paymentObj = {
+			full_name: creditCardForm.full_name,
+			month: creditCardForm.month,
+			year: creditCardForm.year
+		};
 		try {
+			window.Spreedly.tokenizeCreditCard(paymentObj);
+
 			let res = await reservationService.create(data);
 			if (res.data.data) popupController.close(SpinningLoaderPopup);
 			setIsDisabled(false);
@@ -162,7 +170,13 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 								console.log('Contact Form: ', value);
 							}}
 							onCreditCardChange={(value) => {
-								console.log('Credit Card Form: ', value);
+								let newValue: any = {
+									full_name: value.full_name
+								};
+								newValue.month = parseInt(value.expDate.split('/')[0]);
+								newValue.year = parseInt(value.expDate.split('/')[1]);
+
+								setCreditCardForm(newValue);
 							}}
 							isValidForm={(isValid) => {
 								setIsFormValid(isValid);

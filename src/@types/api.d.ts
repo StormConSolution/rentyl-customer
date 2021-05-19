@@ -736,6 +736,68 @@ declare namespace Api {
 		}
 	}
 
+	export namespace Payment {
+		export interface PmData {
+			address1: string;
+			address2: string;
+			callback_url: string;
+			card_type: string; // 'visa'
+			city: string;
+			company: string;
+			country: string;
+			created_at: Date | string;
+			data: any;
+			eligible_for_card_updater: boolean;
+			email: string;
+			errors: any[];
+			fingerprint: string;
+			first_name: string;
+			first_six_digits: number;
+			full_name: string;
+			last_four_digits: number;
+			last_name: string;
+			metadata: any;
+			month: number;
+			number: string;
+			payment_method_type: string;
+			phone_number: string;
+			shipping_address1: string;
+			shipping_address2: string;
+			shipping_city: string;
+			shipping_country: string;
+			shipping_phone_number: string;
+			shipping_state: string;
+			shipping_zip: string;
+			state: string;
+			storage_state: string;
+			test: boolean;
+			token: string;
+			updated_at: Date | string;
+			verification_value: string;
+			year: number;
+			zip: string;
+		}
+		export namespace Req {
+			export interface Create {
+				cardToken: string;
+				pmData: PmData;
+				userAddressId?: number;
+				isPrimary?: 0 | 1;
+			}
+			export interface PublicData {}
+			export interface ActiveForUser {}
+		}
+		export namespace Res {
+			export interface Create {}
+			export interface PublicData {
+				id: number;
+				name: string;
+				publicData: { token: string };
+			}
+			export interface ActiveForUser extends Model.UserPaymentMethod {}
+		}
+	}
+
 	export namespace Reservation {
 		export namespace Req {
 			export interface Availability {
