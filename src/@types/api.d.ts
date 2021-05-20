@@ -67,8 +67,8 @@ declare namespace Api {
 				media: Media[]; //*All media for accommodation and accommodation categories*
 				featureIcons: string[]; //*Limit it to the first five*
 				maxSleeps: number;
-				maxOccupantCount: number;
-				size: { max: number; min: number; units: string } | null; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
+				maxOccupancyCount: number;
+				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;
 				extraBeds: 0 | 1;
 				extraBedPriceCents: number;
@@ -788,7 +788,7 @@ declare namespace Api {
 			export interface ActiveForUser {}
 		}
 		export namespace Res {
-			export interface Create {}
+			export interface Create extends Model.UserPaymentMethod {}
 			export interface PublicData {
 				id: number;
 				name: string;
@@ -932,7 +932,7 @@ declare namespace Api {
 				vendorName: string;
 				media: Media[];
 				categoryIds: number[];
-				vouchers: Voucher[];
+				vouchers: Model.Voucher[];
 			}
 			export interface GetByPage {
 				data: Get[];
@@ -1121,6 +1121,7 @@ declare namespace Api {
 			state: string;
 			loginExpiresOn: Date | string;
 			loginVerificationExpiresOn: Date | string;
+			paymentMethods: PaymentMethod[];
 		}
 
 		export interface Model extends Model.User {
@@ -1128,6 +1129,20 @@ declare namespace Api {
 			address: Address[] | [];
 			city: string;
 			state: string;
+		}
+
+		export interface PaymentMethod {
+			id: number;
+			userAddressId: number;
+			nameOnCard: string;
+			type: string;
+			last4: number;
+			expirationMonth: number;
+			expirationYear: number;
+			cardNumber: string;
+			isPrimary: 0 | 1;
+			createdOn: Date | string;
+			systemProvider: string;
 		}
 		export namespace Req {
 			export interface Create {
@@ -1223,13 +1238,14 @@ declare namespace Api {
 				nextTierTitle: string;
 				pointsExpiring: number | null;
 				pointsExpiringOn: Date | string | null;
+				paymentMethods: PaymentMethod[];
 			}
 			export interface Login extends Detail {}
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
 			export interface GetByPage {
-				data: Filtered[];
+				data: Omit<Filtered, 'paymentMethods'>[];
 				total: number;
 			}
 			export interface VerifyLogin extends Filtered {}

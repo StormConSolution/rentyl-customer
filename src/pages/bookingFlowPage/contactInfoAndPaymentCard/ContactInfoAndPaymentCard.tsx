@@ -1,21 +1,22 @@
 import * as React from 'react';
 import './ContactInfoAndPaymentCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../../../components/labelInput/LabelInput';
 import Paper from '../../../components/paper/Paper';
 import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import luhn from 'luhn';
-import { formatPhoneNumber, removeAllExceptNumbers } from '../../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
 import serviceFactory from '../../../services/serviceFactory';
 import PaymentService from '../../../services/payment/payment.service';
 import rsToasts from '@bit/redsky.framework.toast';
+import LabelCheckbox from '../../../components/labelCheckbox/LabelCheckbox';
+import Select from '../../../components/Select/Select';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
 type CreditCardForm = { full_name: string; expDate: string };
+
 interface ContactInfoAndPaymentCardProps {
 	onContactChange: (value: ContactInfoForm) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
@@ -28,10 +29,11 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [isValid, setIsValid] = useState<boolean>(false);
+	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(false);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
-
 			new RsFormControl('expDate', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
 				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 7),
@@ -66,8 +68,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [user]);
 
 	useEffect(() => {
-		props.isValidForm(isValid);
-	}, [isValid]);
+		props.isValidForm(isValid && isAuthorized);
+	}, [isValid, isAuthorized]);
 
 	useEffect(() => {
 		async function init() {
@@ -84,7 +86,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				);
 				window.Spreedly.setStyle(
 					'cvv',
-					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
 				);
 				window.Spreedly.setFieldType('number', 'text');
 				window.Spreedly.setNumberFormat('prettyFormat');
@@ -100,8 +102,14 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
 				console.log(token);
 				console.log(pmData);
-				const result = await paymentService.addPaymentMethod(token, pmData);
-				rsToasts.success('BOOOOOM! Tokenized and updated');
+
+				try {
+					const result = await paymentService.addPaymentMethod(token, pmData);
+					console.log('result', result);
+					rsToasts.success('BOOOOOM! Tokenized and updated');
+				} catch (e) {
+					console.error(e);
+				}
 			});
 		}
 		init().catch(console.error);
@@ -181,23 +189,33 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			/>
 			<hr />
 			<form id={'payment-form'} action={'/card-payment'}>
-				<Label variant={'h2'} mb={'10px'}>
-					Payment Information
-				</Label>
+				<Box display={'flex'}>
+					<Label variant={'h2'} mb={'10px'}>
+						Payment Information
+					</Label>
+					<LabelCheckbox
+						className={'useExistingCreditCard'}
+						value={1}
+						text={'Use Credit Card on file'}
+						onSelect={() => setUseExistingCreditCard(true)}
+						onDeselect={() => setUseExistingCreditCard(false)}
+					/>
+				</Box>
 
-				<Box className={'creditCardInfo'}>
+				<Select
+					className={!useExistingCreditCard ? 'hide' : ''}
+					options={[{ selected: false, text: '****1234', value: 1 }]}
+					onChange={(value) => {
+						console.log(value);
+					}}
+				/>
+				<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
 					<LabelInput
 						title={'Name on Card'}
 						inputType={'text'}
 						control={creditCardObj.get('full_name')}
 						updateControl={updateCreditCardObj}
 					/>
-					{/*<LabelInput*/}
-					{/*	title={'Card Number'}*/}
-					{/*	inputType={'text'}*/}
-					{/*	control={creditCardObj.get('creditCard')}*/}
-					{/*	updateControl={updateCreditCardObj}*/}
-					{/*/>*/}
 					<div id={'spreedly-number'}>
 						<Label variant={'caption'} mb={10}>
 							Credit Card
@@ -218,6 +236,37 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						placeholder={'MM/YYYY'}
 					/>
 				</Box>
+				<LabelCheckbox
+					value={1}
+					text={
+						<>
+							* By checking this box, you authorize your credit card network to monitor and share
+							transaction data with Fidel (our service provider) to earn points for your offline
+							purchases. You also acknowledge and agree that Fidel may share certain details of your
+							qualifying transactions with Spire Loyalty in accordance with the{' '}
+							<Link path={'/'}>
+								<span>Terms and Conditions</span>
+							</Link>
+							,{' '}
+							<Link path={'/'}>
+								<span>Privacy Policy</span>
+							</Link>{' '}
+							and{' '}
+							<Link path={'/'}>
+								<span>Fidel Privacy Policy</span>
+							</Link>
+							. You may opt-out of this optional service at any time by removing this card from your Spire
+							Loyalty account.
+						</>
+					}
+					isChecked={false}
+					onSelect={() => {
+						setIsAuthorized(true);
+					}}
+					onDeselect={() => {
+						setIsAuthorized(false);
+					}}
+				/>
 			</form>
 		</Paper>
 	);
