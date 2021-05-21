@@ -21,11 +21,15 @@ import { convertTwentyFourHourTime } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import PaymentService from '../../services/payment/payment.service';
 
 interface BookingFlowPageProps {}
 
+let existingCardId = 0;
+
 const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
@@ -34,7 +38,12 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [reservationData, setReservationData] = useState<Api.Reservation.Res.Verification>();
 	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
-	const [creditCardForm, setCreditCardForm] = useState<{ full_name: string; month: number; year: number }>();
+	const [creditCardForm, setCreditCardForm] = useState<{
+		full_name: string;
+		month: number;
+		year: number;
+		cardId: number;
+	}>();
 
 	useEffect(() => {
 		if (!params) return;
@@ -52,6 +61,43 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 				router.back();
 			}
 		}
+
+		window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
+			if (!reservationData || !creditCardForm) return;
+			let data: any = {
+				accommodationId: params.data.accommodationId,
+				adults: reservationData.adults,
+				children: reservationData.children,
+				arrivalDate: reservationData.checkInDate,
+				departureDate: reservationData.checkoutDate,
+				rateCode: reservationData.rateCode,
+				numberOfAccommodations: 1
+			};
+
+			try {
+				const result = await paymentService.addPaymentMethod(token, pmData);
+				console.log('result', result);
+				data.cardId = result.id;
+				let res = await reservationService.create(data);
+				if (res) popupController.close(SpinningLoaderPopup);
+				setIsDisabled(false);
+				let newData = {
+					confirmationCode: res.confirmationCode,
+					destinationName: reservationData.destinationName
+				};
+
+				router
+					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+					.catch(console.error);
+
+				rsToasts.success('BOOOOOM! Tokenized and updated');
+			} catch (e) {
+				console.error(e.message);
+				setIsDisabled(false);
+				popupController.close(SpinningLoaderPopup);
+			}
+		});
+
 		getAccommodationDetails().catch(console.error);
 	}, []);
 
@@ -109,29 +155,31 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 			rateCode: reservationData.rateCode,
 			numberOfAccommodations: 1
 		};
-		let paymentObj = {
-			full_name: creditCardForm.full_name,
-			month: creditCardForm.month,
-			year: creditCardForm.year
-		};
-		try {
-			window.Spreedly.tokenizeCreditCard(paymentObj);
-
-			let res = await reservationService.create(data);
-			if (res.data.data) popupController.close(SpinningLoaderPopup);
-			setIsDisabled(false);
-			let newData = {
-				confirmationCode: res.data.data.confirmationCode,
-				destinationName: reservationData.destinationName
+		if (!existingCardId) {
+			let paymentObj = {
+				full_name: creditCardForm.full_name,
+				month: creditCardForm.month,
+				year: creditCardForm.year
 			};
-
-			router
-				.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-				.catch(console.error);
-		} catch (e) {
-			console.error(e.message);
-			setIsDisabled(false);
-			popupController.close(SpinningLoaderPopup);
+			window.Spreedly.tokenizeCreditCard(paymentObj);
+		} else {
+			// try {
+			// 	let res = await reservationService.create(data);
+			// 	if (res) popupController.close(SpinningLoaderPopup);
+			// 	setIsDisabled(false);
+			// 	let newData = {
+			// 		confirmationCode: res.confirmationCode,
+			// 		destinationName: reservationData.destinationName
+			// 	};
+			//
+			// 	router
+			// 		.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+			// 		.catch(console.error);
+			// } catch (e) {
+			// 	console.error(e.message);
+			// 	setIsDisabled(false);
+			// 	popupController.close(SpinningLoaderPopup);
+			// }
 		}
 	}
 
@@ -180,6 +228,9 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							}}
 							isValidForm={(isValid) => {
 								setIsFormValid(isValid);
+							}}
+							onExistingCardSelect={(value) => {
+								existingCardId = value;
 							}}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>

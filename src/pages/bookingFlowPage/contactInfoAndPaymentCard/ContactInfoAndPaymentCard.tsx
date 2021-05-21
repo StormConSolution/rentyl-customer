@@ -12,7 +12,7 @@ import serviceFactory from '../../../services/serviceFactory';
 import PaymentService from '../../../services/payment/payment.service';
 import rsToasts from '@bit/redsky.framework.toast';
 import LabelCheckbox from '../../../components/labelCheckbox/LabelCheckbox';
-import Select from '../../../components/Select/Select';
+import Select, { SelectOptions } from '../../../components/Select/Select';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
 type CreditCardForm = { full_name: string; expDate: string };
@@ -20,10 +20,12 @@ type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoAndPaymentCardProps {
 	onContactChange: (value: ContactInfoForm) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
+	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
 }
 
 let phoneNumber = '';
+let existingCardId = 0;
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -31,6 +33,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(false);
+	// const [existingCardId, setExistingCardId] = useState<number>(0);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
@@ -68,8 +71,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [user]);
 
 	useEffect(() => {
-		props.isValidForm(isValid && isAuthorized);
-	}, [isValid, isAuthorized]);
+		props.isValidForm((isValid && isAuthorized) || (isAuthorized && !!existingCardId));
+	}, [isValid, isAuthorized, existingCardId]);
 
 	useEffect(() => {
 		async function init() {
@@ -99,18 +102,18 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					rsToasts.error(error.message);
 				}
 			});
-			window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
-				console.log(token);
-				console.log(pmData);
-
-				try {
-					const result = await paymentService.addPaymentMethod(token, pmData);
-					console.log('result', result);
-					rsToasts.success('BOOOOOM! Tokenized and updated');
-				} catch (e) {
-					console.error(e);
-				}
-			});
+			// window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
+			// 	console.log(token);
+			// 	console.log(pmData);
+			//
+			// 	try {
+			// 		const result = await paymentService.addPaymentMethod(token, pmData);
+			// 		console.log('result', result);
+			// 		rsToasts.success('BOOOOOM! Tokenized and updated');
+			// 	} catch (e) {
+			// 		console.error(e);
+			// 	}
+			// });
 		}
 		init().catch(console.error);
 	}, []);
@@ -147,6 +150,25 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			!!creditCardObj.get('expDate').value.toString().length &&
 			!!phoneNumber.length
 		);
+	}
+
+	function renderSelectOptions(): SelectOptions[] {
+		if (!user)
+			return [
+				{
+					selected: false,
+					text: 'No Saved Card',
+					value: 0
+				}
+			];
+
+		return user.paymentMethods.map((item, index) => {
+			return {
+				selected: item.id === existingCardId,
+				text: item.cardNumber,
+				value: item.id
+			};
+		});
 	}
 
 	return (
@@ -204,9 +226,14 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 
 				<Select
 					className={!useExistingCreditCard ? 'hide' : ''}
-					options={[{ selected: false, text: '****1234', value: 1 }]}
+					options={renderSelectOptions()}
+					placeHolder={'Please Select A Card'}
+					showSelectedAsPlaceHolder
 					onChange={(value) => {
-						console.log(value);
+						if (typeof value === 'number') {
+							existingCardId = value;
+							if (props.onExistingCardSelect) props.onExistingCardSelect(value);
+						}
 					}}
 				/>
 				<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
