@@ -12,6 +12,7 @@ export default class ReservationsService extends Service {
 	}
 
 	async create(data: Api.Reservation.Req.Create) {
-		return await http.post<RsResponseData<Api.Reservation.Res.Create>>('reservation', data);
+		let response = await http.post<RsResponseData<Api.Reservation.Res.Create>>('reservation', data);
+		return response.data.data;
 	}
 }
