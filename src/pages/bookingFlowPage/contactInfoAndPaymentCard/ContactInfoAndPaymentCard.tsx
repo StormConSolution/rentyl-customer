@@ -25,15 +25,14 @@ interface ContactInfoAndPaymentCardProps {
 }
 
 let phoneNumber = '';
-let existingCardId = 0;
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+	const [existingCardId, setExistingCardId] = useState<number>(0);
 	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(false);
-	// const [existingCardId, setExistingCardId] = useState<number>(0);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
@@ -208,7 +207,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						value={1}
 						text={'Use Credit Card on file'}
 						onSelect={() => setUseExistingCreditCard(true)}
-						onDeselect={() => setUseExistingCreditCard(false)}
+						onDeselect={() => {
+							setUseExistingCreditCard(false);
+							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+						}}
 					/>
 				</Box>
 
@@ -219,8 +221,11 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					showSelectedAsPlaceHolder
 					onChange={(value) => {
 						if (typeof value === 'number') {
-							existingCardId = value;
+							setExistingCardId(value);
 							if (props.onExistingCardSelect) props.onExistingCardSelect(value);
+						} else if (value === null) {
+							setExistingCardId(0);
+							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
 						}
 					}}
 				/>

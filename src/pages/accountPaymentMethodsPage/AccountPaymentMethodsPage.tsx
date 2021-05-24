@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './AccountPaymentMethodsPage.scss';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
-import { Link, Page } from '@bit/redsky.framework.rs.996';
+import { Link, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
@@ -18,11 +18,12 @@ import PaymentService from '../../services/payment/payment.service';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import OtherPaymentCard from '../../components/otherPaymentsCard/OtherPaymentCard';
 import Footer from '../../components/footer/Footer';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 interface AccountPaymentMethodsPageProps {}
 
-let isPrimary = false;
+let isPrimary: 1 | 0 = 0;
 
 const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (props) => {
 	const numberRef = useRef<HTMLElement>(null);
@@ -30,11 +31,13 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [primaryCard, setPrimaryCard] = useState<Api.User.PaymentMethod>();
+	const [nonPrimaryCardList, setNonPrimaryCardList] = useState<Api.User.PaymentMethod[]>([]);
 	const [isValidCard, setIsValidCard] = useState<boolean>(false);
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [isFormComplete, setIsFormComplete] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+	const [existingCardList, setExistingCardList] = useState<Api.User.PaymentMethod[]>([]);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
@@ -66,7 +69,8 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 				numberEl: 'spreedly-number',
 				cvvEl: 'spreedly-cvv'
 			});
-			window.Spreedly.on('ready', function (frame: any) {
+
+			let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
 				console.log('Spreedly is loaded');
 				window.Spreedly.setStyle(
 					'number',
@@ -80,75 +84,124 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 				window.Spreedly.setNumberFormat('prettyFormat');
 			});
 
-			window.Spreedly.on('fieldEvent', function (
-				name: 'number' | 'cvv',
-				type: 'focus' | 'blur' | 'mouseover' | 'mouseout' | 'input' | 'enter' | 'escape' | 'tab' | 'shiftTab',
-				activeEl: 'number' | 'cvv',
-				inputProperties: {
-					cardType?: string;
-					validNumber?: boolean;
-					validCvv?: boolean;
-					numberLength?: number;
-					cvvLength?: number;
+			let fieldEventId = paymentService.subscribeToSpreedlyFieldEvent(
+				(
+					name: 'number' | 'cvv',
+					type:
+						| 'focus'
+						| 'blur'
+						| 'mouseover'
+						| 'mouseout'
+						| 'input'
+						| 'enter'
+						| 'escape'
+						| 'tab'
+						| 'shiftTab',
+					activeEl: 'number' | 'cvv',
+					inputProperties: {
+						cardType?: string;
+						validNumber?: boolean;
+						validCvv?: boolean;
+						numberLength?: number;
+						cvvLength?: number;
+					}
+				) => {
+					if (name === 'number') {
+						let numberParent = numberRef.current;
+						if (type === 'focus') {
+							numberParent!.className = 'highlighted';
+						}
+						if (type === 'input' && !inputProperties.validNumber) {
+							setIsValidCard(false);
+						} else if (type === 'input' && inputProperties.validNumber) {
+							setIsValidCard(true);
+						}
+					}
+					if (name === 'cvv') {
+						let cvvParent = cvvRef.current;
+						if (type === 'focus') {
+							cvvParent!.className = 'highlighted';
+						}
+						if (type === 'input' && !inputProperties.validCvv) {
+							setIsValidCvv(false);
+						} else if (type === 'input' && inputProperties.validCvv) {
+							setIsValidCvv(true);
+						}
+					}
 				}
-			) {
-				if (name === 'number') {
-					let numberParent = numberRef.current;
-					if (type === 'focus') {
-						numberParent!.className = 'highlighted';
-					}
-					if (type === 'input' && !inputProperties.validNumber) {
-						setIsValidCard(false);
-					} else if (type === 'input' && inputProperties.validNumber) {
-						setIsValidCard(true);
-					}
-				}
-				if (name === 'cvv') {
-					let cvvParent = cvvRef.current;
-					if (type === 'focus') {
-						cvvParent!.className = 'highlighted';
-					}
-					if (type === 'input' && !inputProperties.validCvv) {
-						setIsValidCvv(false);
-					} else if (type === 'input' && inputProperties.validCvv) {
-						setIsValidCvv(true);
-					}
-				}
-			});
+			);
 
 			// Error response codes
 			// https://docs.spreedly.com/reference/api/v1/#response-codes
-			window.Spreedly.on('errors', function (errors: any) {
-				for (let error of errors) {
-					console.log(error);
-					rsToasts.error(error.message);
-				}
+			let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
+				console.log(errorMsg);
+				rsToasts.error(errorMsg);
 			});
-			window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
-				console.log(token);
-				console.log(pmData);
 
-				try {
-					const result = await paymentService.addPaymentMethod(token, pmData);
-					console.log('result', result);
-					rsToasts.success('BOOOOOM! Tokenized and updated');
-				} catch (e) {
-					console.error(e);
+			let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
+				async (token: string, pmData: Api.Payment.PmData) => {
+					let data = {
+						cardToken: token,
+						pmData: pmData,
+						isPrimary: isPrimary
+					};
+
+					try {
+						const result = await paymentService.addPaymentMethod(data);
+						if (result) rsToasts.success('Card Added!');
+						let newExistingCardList = [
+							...existingCardList,
+							{
+								id: result.id,
+								userAddressId: result.userAddressId,
+								nameOnCard: result.nameOnCard,
+								type: result.type,
+								last4: result.last4,
+								expirationMonth: result.expirationMonth,
+								expirationYear: result.expirationYear,
+								cardNumber: result.cardNumber,
+								isPrimary: result.isPrimary,
+								createdOn: result.createdOn,
+								systemProvider: result.systemProvider
+							}
+						];
+						if (result.isPrimary) {
+							newExistingCardList = newExistingCardList.map((item) => {
+								return { ...item, isPrimary: item.id === result.id ? 1 : 0 };
+							});
+						}
+						setExistingCardList(newExistingCardList);
+						popupController.close(SpinningLoaderPopup);
+					} catch (e) {
+						console.error(e);
+					}
 				}
-			});
+			);
+
+			return () => {
+				paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
+				paymentService.unsubscribeToSpreedlyReady(readyId);
+				paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
+				paymentService.unsubscribeToSpreedlyError(errorId);
+			};
 		}
 		init().catch(console.error);
-	}, []);
+	}, [existingCardList]);
 
 	useEffect(() => {
-		function getUserPrimaryCard() {
-			if (!user) return;
-			let primaryCard = user.paymentMethods.find((item) => item.isPrimary);
-			if (!primaryCard) primaryCard = user.paymentMethods[0];
-			setPrimaryCard(primaryCard);
-		}
-		getUserPrimaryCard();
+		if (!user) return;
+		setExistingCardList(user.paymentMethods);
 	}, [user]);
+
+	useEffect(() => {
+		if (!existingCardList) return;
+		let primaryCard = existingCardList.find((item) => item.isPrimary);
+		if (!primaryCard) primaryCard = existingCardList[0];
+
+		let nonPrimaryCards = existingCardList.filter((item) => !item.isPrimary && item.systemProvider === 'adyen');
+		setPrimaryCard(primaryCard);
+		setNonPrimaryCardList(nonPrimaryCards);
+	}, [existingCardList]);
 
 	function isFormFilledOut(): boolean {
 		return (
@@ -168,15 +221,48 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		}
 		creditCardObj.update(control);
 		let isFormValid = await creditCardObj.isValid();
-		// props.onCreditCardChange(creditCardObj.toModel());
 		setIsValid(isFormFilledOut() && isFormValid);
 		setCreditCardObj(creditCardObj.clone());
 	}
 
-	function renderOtherPaymentCards() {
+	async function deletePaymentCard(id: number) {
+		popupController.open(SpinningLoaderPopup);
 		if (!user) return;
-		let nonPrimaryCards = user.paymentMethods.filter((item) => !item.isPrimary && item.systemProvider === 'adyen');
-		return nonPrimaryCards.map((item, index) => {
+		try {
+			let res = await paymentService.delete(id);
+			if (res) {
+				let newExistingCardList = [...existingCardList];
+				newExistingCardList = newExistingCardList.filter((item) => item.id !== id);
+				setExistingCardList(newExistingCardList);
+				popupController.close(SpinningLoaderPopup);
+			}
+		} catch (e) {
+			popupController.close(SpinningLoaderPopup);
+			console.error(e.message);
+		}
+	}
+
+	async function setCardToPrimary(data: Api.Payment.Req.Update) {
+		popupController.open(SpinningLoaderPopup);
+		try {
+			let res = await paymentService.update(data);
+			if (res) {
+				let newExistingCardList = [...existingCardList];
+				newExistingCardList = newExistingCardList.map((item) => {
+					return { ...item, isPrimary: item.id === res.id ? 1 : 0 };
+				});
+				setExistingCardList(newExistingCardList);
+				popupController.close(SpinningLoaderPopup);
+			}
+		} catch (e) {
+			console.error(e.message);
+			popupController.close(SpinningLoaderPopup);
+		}
+	}
+
+	function renderOtherPaymentCards() {
+		if (!nonPrimaryCardList) return;
+		return nonPrimaryCardList.map((item, index) => {
 			return (
 				<OtherPaymentCard
 					key={index}
@@ -184,10 +270,10 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 					cardNumber={item.cardNumber}
 					expDate={`${item.expirationMonth}/${item.expirationYear}`}
 					onDelete={() => {
-						console.log('delete');
+						deletePaymentCard(item.id).catch(console.error);
 					}}
 					onSetPrimary={() => {
-						console.log('set primary');
+						setCardToPrimary({ id: item.id, isPrimary: 1 }).catch(console.error);
 					}}
 				/>
 			);
@@ -198,8 +284,8 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		let newCreditCardObj: any = creditCardObj.toModel();
 		newCreditCardObj.month = parseInt(newCreditCardObj.expDate.split('/')[0]);
 		newCreditCardObj.year = parseInt(newCreditCardObj.expDate.split('/')[1]);
-		newCreditCardObj.isPrimary = isPrimary ? 1 : 0;
 		delete newCreditCardObj.expDate;
+		popupController.open(SpinningLoaderPopup);
 		window.Spreedly.tokenizeCreditCard(newCreditCardObj);
 	}
 
@@ -319,10 +405,10 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 							text={'Set as primary'}
 							isChecked={false}
 							onSelect={(value, text) => {
-								isPrimary = true;
+								isPrimary = 1;
 							}}
 							onDeselect={(value, text) => {
-								isPrimary = false;
+								isPrimary = 0;
 							}}
 						/>
 						<LabelButton

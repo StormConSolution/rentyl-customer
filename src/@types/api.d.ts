@@ -786,6 +786,13 @@ declare namespace Api {
 			}
 			export interface PublicData {}
 			export interface ActiveForUser {}
+			export interface Delete {
+				id: number;
+			}
+			export interface Update {
+				id: number;
+				isPrimary: 0 | 1;
+			}
 		}
 		export namespace Res {
 			export interface Create extends Model.UserPaymentMethod {}
@@ -795,6 +802,8 @@ declare namespace Api {
 				publicData: { token: string };
 			}
 			export interface ActiveForUser extends Model.UserPaymentMethod {}
+			export interface Delete {}
+			export interface Update extends Model.UserPaymentMethod {}
 		}
 	}
 

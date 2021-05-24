@@ -67,55 +67,43 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 
 	useEffect(() => {
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
-		// console.count('Effect called new paymentmethod', reservationData);
-		window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
-			// if (!reservationData || !creditCardForm) return;
-			// let data: any = {
-			// 	accommodationId: params.data.accommodationId,
-			// 	adults: reservationData.adults,
-			// 	children: reservationData.children,
-			// 	arrivalDate: reservationData.checkInDate,
-			// 	departureDate: reservationData.checkoutDate,
-			// 	rateCode: reservationData.rateCode,
-			// 	numberOfAccommodations: 1
-			// };
-			console.count('I Ran');
+		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
+			async (token: string, pmData: Api.Payment.PmData) => {
+				let data: any = await getReservationData();
+				if (!data) return;
+				try {
+					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
+					data.cardId = result.id;
+					let res = await reservationService.create(data);
+					if (res) popupController.close(SpinningLoaderPopup);
+					setIsDisabled(false);
+					let newData = {
+						confirmationCode: res.confirmationCode,
+						destinationName: reservationData!.destinationName
+					};
 
-			let data: any = await getReservationData();
-			if (!data) return;
-			try {
-				const result = await paymentService.addPaymentMethod(token, pmData);
-				console.log('result', result);
-				data.cardId = result.id;
-				let res = await reservationService.create(data);
-				if (res) popupController.close(SpinningLoaderPopup);
-				setIsDisabled(false);
-				let newData = {
-					confirmationCode: res.confirmationCode,
-					destinationName: reservationData!.destinationName
-				};
-
-				router
-					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-					.catch(console.error);
-			} catch (e) {
-				console.error(e.message);
-				setIsDisabled(false);
-				popupController.close(SpinningLoaderPopup);
+					router
+						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+						.catch(console.error);
+				} catch (e) {
+					console.error(e.message);
+					setIsDisabled(false);
+					popupController.close(SpinningLoaderPopup);
+				}
 			}
-		});
-
+		);
 		return () => {
 			paymentService.unsubscribeToSpreedlyError(subscribeId);
+			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
 		};
-	}, [reservationData]);
+	}, [reservationData, creditCardForm]);
 
 	useEffect(() => {
 		setIsDisabled(!hasAgreedToTerms || !isFormValid);
 	}, [hasAgreedToTerms, isFormValid]);
 
-	async function getReservationData() {
-		if (!reservationData || !creditCardForm) return;
+	function getReservationData() {
+		if (!reservationData) return;
 		return {
 			accommodationId: params.data.accommodationId,
 			adults: reservationData.adults,
@@ -165,19 +153,10 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	}
 
 	async function completeBooking() {
-		if (!reservationData || !creditCardForm) return;
+		if (!reservationData) return;
 		if (!isDisabled && !isFormValid) return;
 		popupController.open(SpinningLoaderPopup);
-		let data = {
-			accommodationId: params.data.accommodationId,
-			adults: reservationData.adults,
-			children: reservationData.children,
-			arrivalDate: reservationData.checkInDate,
-			departureDate: reservationData.checkoutDate,
-			rateCode: reservationData.rateCode,
-			numberOfAccommodations: 1
-		};
-		if (!existingCardId) {
+		if (!existingCardId && creditCardForm) {
 			let paymentObj = {
 				full_name: creditCardForm.full_name,
 				month: creditCardForm.month,
@@ -185,23 +164,26 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 			};
 			window.Spreedly.tokenizeCreditCard(paymentObj);
 		} else {
-			// try {
-			// 	let res = await reservationService.create(data);
-			// 	if (res) popupController.close(SpinningLoaderPopup);
-			// 	setIsDisabled(false);
-			// 	let newData = {
-			// 		confirmationCode: res.confirmationCode,
-			// 		destinationName: reservationData.destinationName
-			// 	};
-			//
-			// 	router
-			// 		.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-			// 		.catch(console.error);
-			// } catch (e) {
-			// 	console.error(e.message);
-			// 	setIsDisabled(false);
-			// 	popupController.close(SpinningLoaderPopup);
-			// }
+			let data: any = getReservationData();
+			if (!data || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
+			else data.cardId = existingCardId;
+			try {
+				let res = await reservationService.create(data);
+				if (res) popupController.close(SpinningLoaderPopup);
+				setIsDisabled(false);
+				let newData = {
+					confirmationCode: res.confirmationCode,
+					destinationName: reservationData.destinationName
+				};
+
+				router
+					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+					.catch(console.error);
+			} catch (e) {
+				console.error(e.message);
+				setIsDisabled(false);
+				popupController.close(SpinningLoaderPopup);
+			}
 		}
 	}
 
