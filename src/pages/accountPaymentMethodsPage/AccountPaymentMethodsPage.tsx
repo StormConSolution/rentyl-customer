@@ -69,123 +69,116 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 				numberEl: 'spreedly-number',
 				cvvEl: 'spreedly-cvv'
 			});
-
-			let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
-				console.log('Spreedly is loaded');
-				window.Spreedly.setStyle(
-					'number',
-					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
-				);
-				window.Spreedly.setStyle(
-					'cvv',
-					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
-				);
-				window.Spreedly.setFieldType('number', 'text');
-				window.Spreedly.setNumberFormat('prettyFormat');
-			});
-
-			let fieldEventId = paymentService.subscribeToSpreedlyFieldEvent(
-				(
-					name: 'number' | 'cvv',
-					type:
-						| 'focus'
-						| 'blur'
-						| 'mouseover'
-						| 'mouseout'
-						| 'input'
-						| 'enter'
-						| 'escape'
-						| 'tab'
-						| 'shiftTab',
-					activeEl: 'number' | 'cvv',
-					inputProperties: {
-						cardType?: string;
-						validNumber?: boolean;
-						validCvv?: boolean;
-						numberLength?: number;
-						cvvLength?: number;
-					}
-				) => {
-					if (name === 'number') {
-						let numberParent = numberRef.current;
-						if (type === 'focus') {
-							numberParent!.className = 'highlighted';
-						}
-						if (type === 'input' && !inputProperties.validNumber) {
-							setIsValidCard(false);
-						} else if (type === 'input' && inputProperties.validNumber) {
-							setIsValidCard(true);
-						}
-					}
-					if (name === 'cvv') {
-						let cvvParent = cvvRef.current;
-						if (type === 'focus') {
-							cvvParent!.className = 'highlighted';
-						}
-						if (type === 'input' && !inputProperties.validCvv) {
-							setIsValidCvv(false);
-						} else if (type === 'input' && inputProperties.validCvv) {
-							setIsValidCvv(true);
-						}
-					}
-				}
-			);
-
-			// Error response codes
-			// https://docs.spreedly.com/reference/api/v1/#response-codes
-			let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
-				console.log(errorMsg);
-				rsToasts.error(errorMsg);
-			});
-
-			let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
-				async (token: string, pmData: Api.Payment.PmData) => {
-					let data = {
-						cardToken: token,
-						pmData: pmData,
-						isPrimary: isPrimary
-					};
-
-					try {
-						const result = await paymentService.addPaymentMethod(data);
-						if (result) rsToasts.success('Card Added!');
-						let newExistingCardList = [
-							...existingCardList,
-							{
-								id: result.id,
-								userAddressId: result.userAddressId,
-								nameOnCard: result.nameOnCard,
-								type: result.type,
-								last4: result.last4,
-								expirationMonth: result.expirationMonth,
-								expirationYear: result.expirationYear,
-								cardNumber: result.cardNumber,
-								isPrimary: result.isPrimary,
-								createdOn: result.createdOn,
-								systemProvider: result.systemProvider
-							}
-						];
-						if (result.isPrimary) {
-							newExistingCardList = newExistingCardList.map((item) => {
-								return { ...item, isPrimary: item.id === result.id ? 1 : 0 };
-							});
-						}
-						setExistingCardList(newExistingCardList);
-						popupController.close(SpinningLoaderPopup);
-					} catch (e) {
-						console.error(e);
-					}
-				}
-			);
-
-			return () => {
-				paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
-				paymentService.unsubscribeToSpreedlyReady(readyId);
-				paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
-				paymentService.unsubscribeToSpreedlyError(errorId);
-			};
 		}
 		init().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
+			console.log('Spreedly is loaded');
+			window.Spreedly.setStyle(
+				'number',
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+			);
+			window.Spreedly.setStyle(
+				'cvv',
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
+			);
+			window.Spreedly.setFieldType('number', 'text');
+			window.Spreedly.setNumberFormat('prettyFormat');
+		});
+
+		let fieldEventId = paymentService.subscribeToSpreedlyFieldEvent(
+			(
+				name: 'number' | 'cvv',
+				type: 'focus' | 'blur' | 'mouseover' | 'mouseout' | 'input' | 'enter' | 'escape' | 'tab' | 'shiftTab',
+				activeEl: 'number' | 'cvv',
+				inputProperties: {
+					cardType?: string;
+					validNumber?: boolean;
+					validCvv?: boolean;
+					numberLength?: number;
+					cvvLength?: number;
+				}
+			) => {
+				if (name === 'number') {
+					let numberParent = numberRef.current;
+					if (type === 'focus') {
+						numberParent!.className = 'highlighted';
+					}
+					if (type === 'input' && !inputProperties.validNumber) {
+						setIsValidCard(false);
+					} else if (type === 'input' && inputProperties.validNumber) {
+						setIsValidCard(true);
+					}
+				}
+				if (name === 'cvv') {
+					let cvvParent = cvvRef.current;
+					if (type === 'focus') {
+						cvvParent!.className = 'highlighted';
+					}
+					if (type === 'input' && !inputProperties.validCvv) {
+						setIsValidCvv(false);
+					} else if (type === 'input' && inputProperties.validCvv) {
+						setIsValidCvv(true);
+					}
+				}
+			}
+		);
+
+		// Error response codes
+		// https://docs.spreedly.com/reference/api/v1/#response-codes
+		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
+			console.log(errorMsg);
+			rsToasts.error(errorMsg);
+		});
+
+		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
+			async (token: string, pmData: Api.Payment.PmData) => {
+				let data = {
+					cardToken: token,
+					pmData: pmData,
+					isPrimary: isPrimary
+				};
+
+				try {
+					const result = await paymentService.addPaymentMethod(data);
+					if (result) rsToasts.success('Card Added!');
+					let newExistingCardList = [
+						...existingCardList,
+						{
+							id: result.id,
+							userAddressId: result.userAddressId,
+							nameOnCard: result.nameOnCard,
+							type: result.type,
+							last4: result.last4,
+							expirationMonth: result.expirationMonth,
+							expirationYear: result.expirationYear,
+							cardNumber: result.cardNumber,
+							isPrimary: result.isPrimary,
+							createdOn: result.createdOn,
+							systemProvider: result.systemProvider
+						}
+					];
+					if (result.isPrimary) {
+						newExistingCardList = newExistingCardList.map((item) => {
+							return { ...item, isPrimary: item.id === result.id ? 1 : 0 };
+						});
+					}
+					setExistingCardList(newExistingCardList);
+					popupController.close(SpinningLoaderPopup);
+				} catch (e) {
+					console.error(e);
+				}
+			}
+		);
+
+		return () => {
+			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
+			paymentService.unsubscribeToSpreedlyReady(readyId);
+			paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
+			paymentService.unsubscribeToSpreedlyError(errorId);
+		};
 	}, [existingCardList]);
 
 	useEffect(() => {
