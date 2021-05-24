@@ -62,18 +62,27 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 			}
 		}
 
-		window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
-			if (!reservationData || !creditCardForm) return;
-			let data: any = {
-				accommodationId: params.data.accommodationId,
-				adults: reservationData.adults,
-				children: reservationData.children,
-				arrivalDate: reservationData.checkInDate,
-				departureDate: reservationData.checkoutDate,
-				rateCode: reservationData.rateCode,
-				numberOfAccommodations: 1
-			};
+		getAccommodationDetails().catch(console.error);
+	}, []);
 
+	useEffect(() => {
+		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
+		// console.count('Effect called new paymentmethod', reservationData);
+		window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
+			// if (!reservationData || !creditCardForm) return;
+			// let data: any = {
+			// 	accommodationId: params.data.accommodationId,
+			// 	adults: reservationData.adults,
+			// 	children: reservationData.children,
+			// 	arrivalDate: reservationData.checkInDate,
+			// 	departureDate: reservationData.checkoutDate,
+			// 	rateCode: reservationData.rateCode,
+			// 	numberOfAccommodations: 1
+			// };
+			console.count('I Ran');
+
+			let data: any = await getReservationData();
+			if (!data) return;
 			try {
 				const result = await paymentService.addPaymentMethod(token, pmData);
 				console.log('result', result);
@@ -83,14 +92,12 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 				setIsDisabled(false);
 				let newData = {
 					confirmationCode: res.confirmationCode,
-					destinationName: reservationData.destinationName
+					destinationName: reservationData!.destinationName
 				};
 
 				router
 					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
 					.catch(console.error);
-
-				rsToasts.success('BOOOOOM! Tokenized and updated');
 			} catch (e) {
 				console.error(e.message);
 				setIsDisabled(false);
@@ -98,12 +105,27 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 			}
 		});
 
-		getAccommodationDetails().catch(console.error);
-	}, []);
+		return () => {
+			paymentService.unsubscribeToSpreedlyError(subscribeId);
+		};
+	}, [reservationData]);
 
 	useEffect(() => {
 		setIsDisabled(!hasAgreedToTerms || !isFormValid);
 	}, [hasAgreedToTerms, isFormValid]);
+
+	async function getReservationData() {
+		if (!reservationData || !creditCardForm) return;
+		return {
+			accommodationId: params.data.accommodationId,
+			adults: reservationData.adults,
+			children: reservationData.children,
+			arrivalDate: reservationData.checkInDate,
+			departureDate: reservationData.checkoutDate,
+			rateCode: reservationData.rateCode,
+			numberOfAccommodations: 1
+		};
+	}
 
 	function renderDestinationPackages() {
 		if (!reservationData) return;

@@ -102,18 +102,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					rsToasts.error(error.message);
 				}
 			});
-			// window.Spreedly.on('paymentMethod', async function (token: string, pmData: Api.Payment.PmData) {
-			// 	console.log(token);
-			// 	console.log(pmData);
-			//
-			// 	try {
-			// 		const result = await paymentService.addPaymentMethod(token, pmData);
-			// 		console.log('result', result);
-			// 		rsToasts.success('BOOOOOM! Tokenized and updated');
-			// 	} catch (e) {
-			// 		console.error(e);
-			// 	}
-			// });
 		}
 		init().catch(console.error);
 	}, []);
