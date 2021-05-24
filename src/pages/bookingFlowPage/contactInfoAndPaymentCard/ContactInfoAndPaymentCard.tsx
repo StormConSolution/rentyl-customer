@@ -80,29 +80,33 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				numberEl: 'spreedly-number',
 				cvvEl: 'spreedly-cvv'
 			});
-			window.Spreedly.on('ready', function (frame: any) {
-				console.log('Spreedly is loaded');
-				window.Spreedly.setStyle(
-					'number',
-					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
-				);
-				window.Spreedly.setStyle(
-					'cvv',
-					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
-				);
-				window.Spreedly.setFieldType('number', 'text');
-				window.Spreedly.setNumberFormat('prettyFormat');
-			});
-			// Error response codes
-			// https://docs.spreedly.com/reference/api/v1/#response-codes
-			window.Spreedly.on('errors', function (errors: any) {
-				for (let error of errors) {
-					console.log(error);
-					rsToasts.error(error.message);
-				}
-			});
 		}
 		init().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
+			window.Spreedly.setStyle(
+				'number',
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+			);
+			window.Spreedly.setStyle(
+				'cvv',
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
+			);
+			window.Spreedly.setFieldType('number', 'text');
+			window.Spreedly.setNumberFormat('prettyFormat');
+		});
+		// Error response codes
+		// https://docs.spreedly.com/reference/api/v1/#response-codes
+		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
+			rsToasts.error(errorMsg);
+		});
+
+		return () => {
+			paymentService.unsubscribeToSpreedlyError(errorId);
+			paymentService.unsubscribeToSpreedlyReady(readyId);
+		};
 	}, []);
 
 	async function updateCreditCardObj(control: RsFormControl) {

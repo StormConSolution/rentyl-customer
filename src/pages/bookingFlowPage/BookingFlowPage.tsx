@@ -75,7 +75,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
 					data.cardId = result.id;
 					let res = await reservationService.create(data);
-					if (res) popupController.close(SpinningLoaderPopup);
+					popupController.close(SpinningLoaderPopup);
 					setIsDisabled(false);
 					let newData = {
 						confirmationCode: res.confirmationCode,
@@ -86,7 +86,6 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
 						.catch(console.error);
 				} catch (e) {
-					console.error(e.message);
 					setIsDisabled(false);
 					popupController.close(SpinningLoaderPopup);
 				}
@@ -180,7 +179,6 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
 					.catch(console.error);
 			} catch (e) {
-				console.error(e.message);
 				setIsDisabled(false);
 				popupController.close(SpinningLoaderPopup);
 			}

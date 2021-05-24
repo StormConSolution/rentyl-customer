@@ -2,6 +2,14 @@ import http from '../../utils/http';
 import { Service } from '../Service';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 
+interface InputPropertiesOptions {
+	cardType?: string;
+	validNumber?: boolean;
+	validCvv?: boolean;
+	numberLength?: number;
+	cvvLength?: number;
+}
+
 export default class PaymentService extends Service {
 	private spreedlyErrorCallbackId = 0;
 	private onSpreedlyErrorCallbacks: { id: number; callback: (errorMsg: string) => void }[] = [];
@@ -20,13 +28,7 @@ export default class PaymentService extends Service {
 			name: 'number' | 'cvv',
 			type: 'focus' | 'blur' | 'mouseover' | 'mouseout' | 'input' | 'enter' | 'escape' | 'tab' | 'shiftTab',
 			activeEl: 'number' | 'cvv',
-			inputProperties: {
-				cardType?: string;
-				validNumber?: boolean;
-				validCvv?: boolean;
-				numberLength?: number;
-				cvvLength?: number;
-			}
+			inputProperties: InputPropertiesOptions
 		) => void;
 	}[] = [];
 
@@ -58,13 +60,7 @@ export default class PaymentService extends Service {
 				name: 'number' | 'cvv',
 				type: 'focus' | 'blur' | 'mouseover' | 'mouseout' | 'input' | 'enter' | 'escape' | 'tab' | 'shiftTab',
 				activeEl: 'number' | 'cvv',
-				inputProperties: {
-					cardType?: string;
-					validNumber?: boolean;
-					validCvv?: boolean;
-					numberLength?: number;
-					cvvLength?: number;
-				}
+				inputProperties: InputPropertiesOptions
 			) => {
 				this.onSpreedlyFieldEventCallbacks.forEach((callback) => {
 					callback.callback(name, type, activeEl, inputProperties);
@@ -78,13 +74,7 @@ export default class PaymentService extends Service {
 			name: 'number' | 'cvv',
 			type: 'focus' | 'blur' | 'mouseover' | 'mouseout' | 'input' | 'enter' | 'escape' | 'tab' | 'shiftTab',
 			activeEl: 'number' | 'cvv',
-			inputProperties: {
-				cardType?: string;
-				validNumber?: boolean;
-				validCvv?: boolean;
-				numberLength?: number;
-				cvvLength?: number;
-			}
+			inputProperties: InputPropertiesOptions
 		) => void
 	): number {
 		let id = ++this.spreedlyFieldEventCallbackId;

@@ -34,7 +34,7 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 	const [nonPrimaryCardList, setNonPrimaryCardList] = useState<Api.User.PaymentMethod[]>([]);
 	const [isValidCard, setIsValidCard] = useState<boolean>(false);
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
-	const [isValid, setIsValid] = useState<boolean>(false);
+	const [isValidForm, setIsValidForm] = useState<boolean>(false);
 	const [isFormComplete, setIsFormComplete] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [existingCardList, setExistingCardList] = useState<Api.User.PaymentMethod[]>([]);
@@ -60,7 +60,7 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 
 	useEffect(() => {
 		setIsFormComplete(isValidCvv && isValidCard && isAuthorized);
-	}, [isValid, isValidCard, isValidCvv, isAuthorized]);
+	}, [isValidForm, isValidCard, isValidCvv, isAuthorized]);
 
 	useEffect(() => {
 		async function init() {
@@ -75,7 +75,6 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 
 	useEffect(() => {
 		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
-			console.log('Spreedly is loaded');
 			window.Spreedly.setStyle(
 				'number',
 				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
@@ -129,7 +128,6 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		// Error response codes
 		// https://docs.spreedly.com/reference/api/v1/#response-codes
 		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
-			console.log(errorMsg);
 			rsToasts.error(errorMsg);
 		});
 
@@ -214,21 +212,20 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		}
 		creditCardObj.update(control);
 		let isFormValid = await creditCardObj.isValid();
-		setIsValid(isFormFilledOut() && isFormValid);
+		setIsValidForm(isFormFilledOut() && isFormValid);
 		setCreditCardObj(creditCardObj.clone());
 	}
 
 	async function deletePaymentCard(id: number) {
-		popupController.open(SpinningLoaderPopup);
 		if (!user) return;
+		popupController.open(SpinningLoaderPopup);
 		try {
 			let res = await paymentService.delete(id);
-			if (res) {
-				let newExistingCardList = [...existingCardList];
-				newExistingCardList = newExistingCardList.filter((item) => item.id !== id);
-				setExistingCardList(newExistingCardList);
-				popupController.close(SpinningLoaderPopup);
-			}
+			let newExistingCardList = [...existingCardList];
+			newExistingCardList = newExistingCardList.filter((item) => item.id !== id);
+			setExistingCardList(newExistingCardList);
+
+			popupController.close(SpinningLoaderPopup);
 		} catch (e) {
 			popupController.close(SpinningLoaderPopup);
 			console.error(e.message);
@@ -239,16 +236,13 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		popupController.open(SpinningLoaderPopup);
 		try {
 			let res = await paymentService.update(data);
-			if (res) {
-				let newExistingCardList = [...existingCardList];
-				newExistingCardList = newExistingCardList.map((item) => {
-					return { ...item, isPrimary: item.id === res.id ? 1 : 0 };
-				});
-				setExistingCardList(newExistingCardList);
-				popupController.close(SpinningLoaderPopup);
-			}
+			let newExistingCardList = [...existingCardList];
+			newExistingCardList = newExistingCardList.map((item) => {
+				return { ...item, isPrimary: item.id === res.id ? 1 : 0 };
+			});
+			setExistingCardList(newExistingCardList);
+			popupController.close(SpinningLoaderPopup);
 		} catch (e) {
-			console.error(e.message);
 			popupController.close(SpinningLoaderPopup);
 		}
 	}

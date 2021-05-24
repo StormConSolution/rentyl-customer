@@ -28,13 +28,8 @@ const OtherPaymentCard: React.FC<OtherPaymentCardProps> = (props) => {
 				<Label variant={'body1'}>{props.expDate}</Label>
 			</Box>
 			<Box display={'flex'} justifyContent={'space-between'}>
-				<LabelButton
-					look={'none'}
-					variant={'button'}
-					label={'Set Primary'}
-					onClick={() => props.onSetPrimary()}
-				/>
-				<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={() => props.onDelete()} />
+				<LabelButton look={'none'} variant={'button'} label={'Set Primary'} onClick={props.onSetPrimary} />
+				<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
 			</Box>
 		</Box>
 	);
