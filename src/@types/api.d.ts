@@ -67,8 +67,8 @@ declare namespace Api {
 				media: Media[]; //*All media for accommodation and accommodation categories*
 				featureIcons: string[]; //*Limit it to the first five*
 				maxSleeps: number;
-				maxOccupantCount: number;
-				size: { max: number; min: number; units: string } | null; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
+				maxOccupancyCount: number;
+				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;
 				extraBeds: 0 | 1;
 				extraBedPriceCents: number;
@@ -736,6 +736,77 @@ declare namespace Api {
 		}
 	}
 
+	export namespace Payment {
+		export interface PmData {
+			address1: string;
+			address2: string;
+			callback_url: string;
+			card_type: string; // 'visa'
+			city: string;
+			company: string;
+			country: string;
+			created_at: Date | string;
+			data: any;
+			eligible_for_card_updater: boolean;
+			email: string;
+			errors: any[];
+			fingerprint: string;
+			first_name: string;
+			first_six_digits: number;
+			full_name: string;
+			last_four_digits: number;
+			last_name: string;
+			metadata: any;
+			month: number;
+			number: string;
+			payment_method_type: string;
+			phone_number: string;
+			shipping_address1: string;
+			shipping_address2: string;
+			shipping_city: string;
+			shipping_country: string;
+			shipping_phone_number: string;
+			shipping_state: string;
+			shipping_zip: string;
+			state: string;
+			storage_state: string;
+			test: boolean;
+			token: string;
+			updated_at: Date | string;
+			verification_value: string;
+			year: number;
+			zip: string;
+		}
+		export namespace Req {
+			export interface Create {
+				cardToken: string;
+				pmData: PmData;
+				userAddressId?: number;
+				isPrimary?: 0 | 1;
+			}
+			export interface PublicData {}
+			export interface ActiveForUser {}
+			export interface Delete {
+				id: number;
+			}
+			export interface Update {
+				id: number;
+				isPrimary: 0 | 1;
+			}
+		}
+		export namespace Res {
+			export interface Create extends Model.UserPaymentMethod {}
+			export interface PublicData {
+				id: number;
+				name: string;
+				publicData: { token: string };
+			}
+			export interface ActiveForUser extends Model.UserPaymentMethod {}
+			export interface Delete {}
+			export interface Update extends Model.UserPaymentMethod {}
+		}
+	}
+
 	export namespace Reservation {
 		export namespace Req {
 			export interface Availability {
@@ -870,7 +941,7 @@ declare namespace Api {
 				vendorName: string;
 				media: Media[];
 				categoryIds: number[];
-				vouchers: Voucher[];
+				vouchers: Model.Voucher[];
 			}
 			export interface GetByPage {
 				data: Get[];
@@ -1059,6 +1130,7 @@ declare namespace Api {
 			state: string;
 			loginExpiresOn: Date | string;
 			loginVerificationExpiresOn: Date | string;
+			paymentMethods: PaymentMethod[];
 		}
 
 		export interface Model extends Model.User {
@@ -1066,6 +1138,20 @@ declare namespace Api {
 			address: Address[] | [];
 			city: string;
 			state: string;
+		}
+
+		export interface PaymentMethod {
+			id: number;
+			userAddressId: number;
+			nameOnCard: string;
+			type: string;
+			last4: number;
+			expirationMonth: number;
+			expirationYear: number;
+			cardNumber: string;
+			isPrimary: 0 | 1;
+			createdOn: Date | string;
+			systemProvider: string;
 		}
 		export namespace Req {
 			export interface Create {
@@ -1161,13 +1247,14 @@ declare namespace Api {
 				nextTierTitle: string;
 				pointsExpiring: number | null;
 				pointsExpiringOn: Date | string | null;
+				paymentMethods: PaymentMethod[];
 			}
 			export interface Login extends Detail {}
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
 			export interface GetByPage {
-				data: Filtered[];
+				data: Omit<Filtered, 'paymentMethods'>[];
 				total: number;
 			}
 			export interface VerifyLogin extends Filtered {}

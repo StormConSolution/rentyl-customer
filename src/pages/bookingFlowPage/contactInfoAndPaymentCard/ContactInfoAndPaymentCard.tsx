@@ -1,21 +1,26 @@
 import * as React from 'react';
 import './ContactInfoAndPaymentCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../../../components/labelInput/LabelInput';
 import Paper from '../../../components/paper/Paper';
 import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import luhn from 'luhn';
-import { formatPhoneNumber, removeAllExceptNumbers } from '../../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
+import serviceFactory from '../../../services/serviceFactory';
+import PaymentService from '../../../services/payment/payment.service';
+import rsToasts from '@bit/redsky.framework.toast';
+import LabelCheckbox from '../../../components/labelCheckbox/LabelCheckbox';
+import Select, { SelectOptions } from '../../../components/Select/Select';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
-type CreditCardForm = { name: string; cardNumber: string; expDate: string };
+type CreditCardForm = { full_name: string; expDate: string };
+
 interface ContactInfoAndPaymentCardProps {
 	onContactChange: (value: ContactInfoForm) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
+	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
 }
 
@@ -23,27 +28,24 @@ let phoneNumber = '';
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [isValid, setIsValid] = useState<boolean>(false);
+	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
+	const [existingCardId, setExistingCardId] = useState<number>(0);
+	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(false);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('fullName', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
-			new RsFormControl('creditCard', '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Credit Card is required'),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Credit Card', (control) => {
-					return luhn.validate(control.value.toString());
-				})
-			]),
-
+			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
 			new RsFormControl('expDate', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 5),
-				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 5),
+				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 7),
+				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 7),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
 					let month = parseInt(control.value.toString().slice(0, 2));
-					let year = parseInt(control.value.toString().slice(3, 5)) + 2000;
+					let year = parseInt(control.value.toString().slice(3, 7));
 					let currentYear = new Date().getFullYear();
 					let currentMonth = new Date().getMonth() + 1;
-
+					if (month > 12) return false;
 					if (year === currentYear) return month >= currentMonth;
 					else return year > currentYear;
 				})
@@ -68,8 +70,44 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [user]);
 
 	useEffect(() => {
-		props.isValidForm(isValid);
-	}, [isValid]);
+		props.isValidForm((isValid && isAuthorized) || (isAuthorized && !!existingCardId));
+	}, [isValid, isAuthorized, existingCardId]);
+
+	useEffect(() => {
+		async function init() {
+			const gatewayDetails: Api.Payment.Res.PublicData = await paymentService.getGateway();
+			window.Spreedly.init(gatewayDetails.publicData.token, {
+				numberEl: 'spreedly-number',
+				cvvEl: 'spreedly-cvv'
+			});
+		}
+		init().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
+			window.Spreedly.setStyle(
+				'number',
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+			);
+			window.Spreedly.setStyle(
+				'cvv',
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
+			);
+			window.Spreedly.setFieldType('number', 'text');
+			window.Spreedly.setNumberFormat('prettyFormat');
+		});
+		// Error response codes
+		// https://docs.spreedly.com/reference/api/v1/#response-codes
+		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
+			rsToasts.error(errorMsg);
+		});
+
+		return () => {
+			paymentService.unsubscribeToSpreedlyError(errorId);
+			paymentService.unsubscribeToSpreedlyReady(readyId);
+		};
+	}, []);
 
 	async function updateCreditCardObj(control: RsFormControl) {
 		if (
@@ -99,11 +137,29 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		return (
 			!!contactInfoForm.get('firstName').value.toString().length &&
 			!!contactInfoForm.get('lastName').value.toString().length &&
-			!!creditCardObj.get('fullName').value.toString().length &&
-			!!creditCardObj.get('creditCard').value.toString().length &&
+			!!creditCardObj.get('full_name').value.toString().length &&
 			!!creditCardObj.get('expDate').value.toString().length &&
 			!!phoneNumber.length
 		);
+	}
+
+	function renderSelectOptions(): SelectOptions[] {
+		if (!user)
+			return [
+				{
+					selected: false,
+					text: 'No Saved Card',
+					value: 0
+				}
+			];
+
+		return user.paymentMethods.map((item, index) => {
+			return {
+				selected: item.id === existingCardId,
+				text: item.cardNumber,
+				value: item.id
+			};
+		});
 	}
 
 	return (
@@ -145,36 +201,97 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				updateControl={updateContactInfoForm}
 			/>
 			<hr />
-			<Box>
-				<Label variant={'h2'} mb={'10px'}>
-					Payment Information
-				</Label>
+			<form id={'payment-form'} action={'/card-payment'}>
+				<Box display={'flex'}>
+					<Label variant={'h2'} mb={'10px'}>
+						Payment Information
+					</Label>
+					<LabelCheckbox
+						className={'useExistingCreditCard'}
+						value={1}
+						text={'Use Credit Card on file'}
+						onSelect={() => setUseExistingCreditCard(true)}
+						onDeselect={() => {
+							setUseExistingCreditCard(false);
+							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+						}}
+					/>
+				</Box>
 
-				<Box className={'creditCardInfo'} display={'flex'} justifyContent={'space-between'}>
+				<Select
+					className={!useExistingCreditCard ? 'hide' : ''}
+					options={renderSelectOptions()}
+					placeHolder={'Please Select A Card'}
+					showSelectedAsPlaceHolder
+					onChange={(value) => {
+						if (typeof value === 'number') {
+							setExistingCardId(value);
+							if (props.onExistingCardSelect) props.onExistingCardSelect(value);
+						} else if (value === null) {
+							setExistingCardId(0);
+							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+						}
+					}}
+				/>
+				<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
 					<LabelInput
 						title={'Name on Card'}
 						inputType={'text'}
-						control={creditCardObj.get('fullName')}
+						control={creditCardObj.get('full_name')}
 						updateControl={updateCreditCardObj}
 					/>
-					<LabelInput
-						title={'Card Number'}
-						inputType={'text'}
-						control={creditCardObj.get('creditCard')}
-						updateControl={updateCreditCardObj}
-					/>
-
+					<div id={'spreedly-number'}>
+						<Label variant={'caption'} mb={10}>
+							Credit Card
+						</Label>
+					</div>
+					<div id={'spreedly-cvv'}>
+						<Label variant={'caption'} mb={10}>
+							CVV
+						</Label>
+					</div>
 					<LabelInput
 						className={'creditCardExpInput'}
-						maxLength={5}
+						maxLength={7}
 						title={'Expiration Date'}
 						inputType={'text'}
 						control={creditCardObj.get('expDate')}
 						updateControl={updateCreditCardObj}
-						placeholder={'MM/YY'}
+						placeholder={'MM/YYYY'}
 					/>
 				</Box>
-			</Box>
+				<LabelCheckbox
+					value={1}
+					text={
+						<>
+							* By checking this box, you authorize your credit card network to monitor and share
+							transaction data with Fidel (our service provider) to earn points for your offline
+							purchases. You also acknowledge and agree that Fidel may share certain details of your
+							qualifying transactions with Spire Loyalty in accordance with the{' '}
+							<Link path={'/'}>
+								<span>Terms and Conditions</span>
+							</Link>
+							,{' '}
+							<Link path={'/'}>
+								<span>Privacy Policy</span>
+							</Link>{' '}
+							and{' '}
+							<Link path={'/'}>
+								<span>Fidel Privacy Policy</span>
+							</Link>
+							. You may opt-out of this optional service at any time by removing this card from your Spire
+							Loyalty account.
+						</>
+					}
+					isChecked={false}
+					onSelect={() => {
+						setIsAuthorized(true);
+					}}
+					onDeselect={() => {
+						setIsAuthorized(false);
+					}}
+				/>
+			</form>
 		</Paper>
 	);
 };

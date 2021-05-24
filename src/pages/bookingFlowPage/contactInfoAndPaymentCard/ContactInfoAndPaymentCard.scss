@@ -24,9 +24,39 @@
 		}
 	}
 
-	.creditCardExpInput {
-		input {
-			text-align: center;
+	#payment-form {
+		.useExistingCreditCard {
+			margin-top: 0 !important;
+			margin-left: 15px;
+			width: auto;
+		}
+		.creditCardInfo {
+			display: grid;
+			grid-template-columns: auto auto;
+			row-gap: 10px;
+			.creditCardExpInput {
+				input {
+					text-align: center;
+				}
+			}
+			iframe {
+				height: 40px;
+			}
+		}
+		.rsLabelCheckbox {
+			height: 100%;
+			align-items: flex-start;
+			margin-top: 10px;
+			a {
+				span {
+					color: theme-var($buttonLinkColor);
+					text-decoration: underline;
+				}
+			}
+		}
+
+		.hide {
+			display: none;
 		}
 	}
 }
@@ -36,19 +66,21 @@
 		.contactInfo {
 			flex-wrap: wrap;
 			justify-content: center;
-		}
-		.creditCardInfo {
-			flex-wrap: wrap;
-			justify-content: center !important;
-		}
-
-		.rsLabelInput {
-			width: 100%;
-			margin-bottom: 15px;
-			.rsInput {
-				max-width: 100%;
+			.rsLabelInput {
 				width: 100%;
+				.rsInput {
+					max-width: 100%;
+					width: 100%;
+				}
 			}
+		}
+		#payment-form {
+			.creditCardInfo {
+				grid-template-columns: auto;
+			}
+		}
+		.rsLabelInput {
+			margin-bottom: 15px;
 		}
 	}
 }

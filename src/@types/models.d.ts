@@ -17,15 +17,26 @@ declare namespace Model {
 		| 'ORDERS'
 		| 'ANALYTICS'
 		| 'REAL_ESTATE';
-	export type SystemActionLogActions = 'CREATE' | 'DELETE' | 'UPDATE' | 'POINT_ADJUSTMENT';
-	export type PointTypes = 'ACTION' | 'CAMPAIGN' | 'ADMIN' | 'ORDER' | 'BOOKING' | 'RENTAL' | 'VACATION';
+	export type SystemActionLogActions =
+		| 'CREATE'
+		| 'DELETE'
+		| 'UPDATE'
+		| 'POINT_ADJUSTMENT'
+		| 'TRIGGER'
+		| 'CAMPAIGN_CONSOLIDATION';
+	export type PointTypes = 'ACTION' | 'CAMPAIGN' | 'ADMIN' | 'ORDER' | 'BOOKING' | 'RENTAL' | 'VACATION' | 'VOUCHER';
 	export type UserPointStatusTypes = 'PENDING' | 'RECEIVED' | 'REVOKED' | 'EXPIRED' | 'REDEEMED' | 'CANCELED';
 	export type PointReason =
 		| 'TECHNICAL_ERROR'
 		| 'HOTEL_STAY'
 		| 'RETAIL_TRANSACTION'
 		| 'RESTAURANT_TRANSACTION'
-		| 'GOODWILL';
+		| 'GOODWILL'
+		| 'VOUCHER_CLAIM'
+		| 'CAMPAIGN_ACTION';
+	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
+	export type PaymentSystemProviders = 'adyen' | 'spreedly';
+
 	export interface Accommodation {
 		id: number;
 		companyId: number;
@@ -232,6 +243,18 @@ declare namespace Model {
 		createdOn: Date | string;
 	}
 
+	export interface CompanyGateway {
+		id: number;
+		companyId: number;
+		name: string;
+		token: string;
+		apiToken: string;
+		metaData: any;
+		publicData: any;
+		isActive: 0 | 1;
+		isPrimary: 0 | 1;
+	}
+
 	export interface CompanyServiceKey {
 		id: number;
 		companyId: number;
@@ -266,6 +289,14 @@ declare namespace Model {
 		modifiedOn: Date | string;
 		chainId: number;
 	}
+
+	export type DestinationPolicy = {
+		destinationId: number;
+		companyId: number;
+		value: string;
+		policyType: DestinationPolicyType;
+		modifiedOn: Date | string;
+	};
 
 	export interface EmailLog {
 		id: number;
@@ -514,12 +545,45 @@ declare namespace Model {
 		status: string;
 	}
 
+	export interface Reward {
+		id: number;
+		companyId: number;
+		name: string;
+		pointCost: number;
+		monetaryValueInCents: number;
+		destinationId: number | null;
+		affiliateId: number | null;
+		description: string;
+		upc: number;
+		isActive: boolean;
+		createdOn: Date | string;
+		modifiedOn: Date | string;
+	}
+
 	export interface RewardCategory {
 		id: number;
 		companyId: number;
 		name: string;
-		isActive: boolean;
-		isFeatured: boolean;
+		isActive: 0 | 1;
+		isFeatured: 0 | 1;
+		createdOn: Date | string;
+		modifiedOn: Date | string;
+	}
+
+	export interface RewardCategoryMap {
+		rewardId: number;
+		categoryId: number;
+		companyId: number;
+	}
+
+	export interface RewardVoucher {
+		id: number;
+		rewardId: number;
+		code: string;
+		companyId: number;
+		customerUserId: number;
+		isActive: 1 | 0;
+		isRedeemed: 1 | 0;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 	}
@@ -618,7 +682,9 @@ declare namespace Model {
 		id: number;
 		userId: number;
 		campaignActionId: number;
+		hasAwarded: 0 | 1;
 		createdOn: Date | string;
+		modifiedOn: Date | string;
 	}
 
 	export interface UserAddress {
@@ -647,6 +713,23 @@ declare namespace Model {
 		modifiedOn: Date | string;
 	}
 
+	export interface UserPaymentMethod {
+		id: number;
+		companyId: number;
+		userId: number;
+		userAddressId: number;
+		token: string;
+		nameOnCard: string;
+		type: string;
+		last4: number;
+		expirationMonth: number;
+		expirationYear: number;
+		cardNumber: string;
+		isPrimary: 0 | 1;
+		createdOn: Date | string;
+		systemProvider: PaymentSystemProviders;
+	}
+
 	export interface UserPermission {
 		userId: number;
 		key: string;
@@ -660,6 +743,8 @@ declare namespace Model {
 		userActionId: number | null;
 		orderId: number | null;
 		reservationId: number | null;
+		rewardVoucherId: number;
+		campaignActionId: number | null;
 		description: string;
 		status: UserPointStatusTypes;
 		pointType: PointTypes;
@@ -716,5 +801,12 @@ declare namespace Model {
 		tierId: number;
 		createdOn: Date | string;
 		expiresOn: Date | string;
+	}
+
+	export interface Vendor {
+		destinationId: number;
+		affiliateId: number;
+		name: string;
+		companyId: number;
 	}
 }

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import './LabelCheckbox.scss';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
 interface LabelCheckboxProps {
 	value: string | number;
-	text: string | number;
+	text: string | number | ReactNode;
 	isChecked?: boolean;
-	onSelect: (value: string | number, text: string | number) => void;
-	onDeselect: (value: string | number, text: string | number) => void;
+	onSelect: (value: string | number, text: string | number | ReactNode) => void;
+	onDeselect: (value: string | number, text: string | number | ReactNode) => void;
+	className?: string;
 }
 
 const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
@@ -20,7 +21,7 @@ const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
 	}, [props.isChecked]);
 
 	return (
-		<div className={'rsLabelCheckbox'}>
+		<div className={`rsLabelCheckbox ${props.className || ''}`}>
 			<label className={'checkboxContainer'}>
 				<input
 					value={props.value}

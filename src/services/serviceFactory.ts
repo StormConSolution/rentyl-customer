@@ -8,6 +8,7 @@ import CountryService from './country/country.service';
 import UserAddressService from './userAddress/userAddress.service';
 import RewardService from './reward/reward.service';
 import UserPointService from './userPoint/userPoint.service';
+import PaymentService from './payment/payment.service';
 
 type ServiceKey =
 	| 'UserService'
@@ -18,7 +19,8 @@ type ServiceKey =
 	| 'CountryService'
 	| 'UserAddressService'
 	| 'RewardService'
-	| 'UserPointService';
+	| 'UserPointService'
+	| 'PaymentService';
 
 class ServiceFactory {
 	private services: { [key: string]: Service } = {};
@@ -34,6 +36,7 @@ class ServiceFactory {
 		this.services['UserAddressService'] = new UserAddressService();
 		this.services['RewardService'] = new RewardService();
 		this.services['UserPointService'] = new UserPointService();
+		this.services['PaymentService'] = new PaymentService();
 
 		for (let key in this.services) {
 			this.services[key].start();

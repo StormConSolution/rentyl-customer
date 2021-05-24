@@ -53,9 +53,52 @@
 		background-color: theme-var($greyLineColor);
 	}
 
+	#payment-form {
+		display: grid;
+		grid-template-columns: auto auto;
+		row-gap: 10px;
+		column-gap: 15px;
+
+		.creditCardExpInput {
+			input {
+				text-align: center;
+			}
+		}
+
+		iframe {
+			height: 40px;
+		}
+	}
+
+	.rsLabelCheckbox {
+		height: auto;
+		align-items: flex-start;
+		margin-top: 10px;
+
+		a {
+			span {
+				color: theme-var($buttonLinkColor);
+				text-decoration: underline;
+			}
+		}
+	}
+
 	.creditCardExpInput {
 		input {
 			text-align: center;
+		}
+	}
+
+	.otherCardContainer {
+		display: grid;
+		grid-template-columns: 200px auto;
+		place-content: center;
+
+		.otherPaymentCardWrapper {
+			display: grid;
+			grid-template-columns: 200px 200px 200px;
+			row-gap: 50px;
+			column-gap: 50px;
 		}
 	}
 }

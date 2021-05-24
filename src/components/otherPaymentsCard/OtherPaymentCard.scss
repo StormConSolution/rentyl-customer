@@ -1,0 +1,10 @@
+@import '../../themes/themes';
+
+.rsOtherPaymentCard {
+	width: 200px;
+	.rsLabelButton {
+		.rsLabel {
+			color: theme-var($buttonLinkColor);
+		}
+	}
+}
