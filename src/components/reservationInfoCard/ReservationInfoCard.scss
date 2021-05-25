@@ -1,0 +1,8 @@
+@import '../../themes/themes';
+
+.rsReservationInfoCard {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	column-gap: 45px;
+	row-gap: 25px;
+}

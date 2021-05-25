@@ -13,24 +13,32 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import router from '../../utils/router';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
+import LabelInput from '../../components/labelInput/LabelInput';
+import { log } from 'util';
 
 const SignInPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
-	const [emailAddress, setEmailAddress] = useState<string>();
-	const [password, setPassword] = useState<string | number | string[]>('');
 	const [loginErrorMessage, setLoginErrorMessage] = useState<string>('');
-	const loginFormGroup = new RsFormGroup([
-		new RsFormControl('email', '', [new RsValidator(RsValidatorEnum.REQ, 'Email is required')]),
-		new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')])
-	]);
+	const [loginFormGroup, setLoginFormGroup] = useState(
+		new RsFormGroup([
+			new RsFormControl('email', '', [new RsValidator(RsValidatorEnum.REQ, 'Email is required')]),
+			new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Password is required')])
+		])
+	);
 
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 
 	async function signIn(e: FormEvent) {
 		e.preventDefault();
+		if (!(await loginFormGroup.isValid())) {
+			setLoginFormGroup(loginFormGroup.clone());
+			return;
+		}
+		let data: { email: string; password: string } = loginFormGroup.toModel();
+
 		try {
 			setLoginErrorMessage('');
-			await userService.loginUserByPassword(`${emailAddress}`, `${password}`);
+			await userService.loginUserByPassword(data.email, data.password);
 			if (params.data !== 0 && params.data.includes('arrivalDate')) {
 				await router.navigate(`/booking?data=${params.data}`);
 			} else {
@@ -60,29 +68,17 @@ const SignInPage: React.FC = () => {
 					<Box className="signInSection">
 						<Label variant="h1">Sign in</Label>
 						<form className="signInForm" action={'#'} onSubmit={signIn}>
-							<Label className="inputLabel" variant="caption">
-								Email
-							</Label>
-							<Input
-								className="signInInput"
-								type="text"
-								look="outlined"
+							<LabelInput
+								title={'Email'}
+								inputType={'email'}
 								control={loginFormGroup.get('email')}
-								updateControl={(updatedControl) => {
-									setEmailAddress(updatedControl.value.toString());
-								}}
+								updateControl={(updateControl) => loginFormGroup.update(updateControl)}
 							/>
-							<Label className="inputLabel" variant="caption">
-								Password
-							</Label>
-							<Input
-								className="signInInput"
-								type="password"
-								look="outlined"
+							<LabelInput
+								title={'Password'}
+								inputType={'password'}
 								control={loginFormGroup.get('password')}
-								updateControl={(updatedControl) => {
-									setPassword(updatedControl.value.toString());
-								}}
+								updateControl={(updateControl) => loginFormGroup.update(updateControl)}
 							/>
 							<LabelButton
 								className="signInButton"

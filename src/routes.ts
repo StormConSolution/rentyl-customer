@@ -21,6 +21,7 @@ import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsP
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
 import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
 import SuccessPage from './pages/successPage/SuccessPage';
+import ReservationPage from './pages/reservationPage/ReservationPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -58,6 +59,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/reservation/availability',
 		page: ReservationAvailabilityPage
+	},
+	{
+		path: '/reservations',
+		page: ReservationPage
 	},
 	{
 		path: '/compare',

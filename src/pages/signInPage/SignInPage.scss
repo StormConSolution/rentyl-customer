@@ -16,6 +16,14 @@
 			box-shadow: 0px 5px 15px #1e180b33;
 			margin: 170px auto 104px auto;
 
+			.rsLabelInput {
+				.rsInput {
+					width: 100%;
+					max-width: 100%;
+				}
+				margin-bottom: 10px;
+			}
+
 			.signInSection {
 				padding: 50px 85px 0;
 
@@ -23,39 +31,6 @@
 					text-align: center;
 					margin-bottom: 5px;
 				}
-
-				.rsLabel.inputLabel {
-					margin-top: 18px;
-					margin-bottom: 1px;
-				}
-
-				.signInInput {
-					background-color: rgba(0, 0, 0, 0.12);
-					margin-top: 0;
-					height: 56px;
-					color: theme-var($primaryTextColor);
-					border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-					border-color: theme-var($greyLineColor);
-
-					&:hover {
-						background-color: rgba(0, 0, 0, 0.12);
-						border-width: 1px;
-					}
-
-					&:focus-within {
-						border-bottom: 1px solid theme-var($buttonLinkColor) !important;
-					}
-
-					& .input {
-						padding: 4px 0 1px;
-					}
-
-					::placeholder {
-						color: theme-var($disableTextColor);
-						margin: auto auto auto 10px;
-					}
-				}
-
 				.signInButton {
 					margin: 19px auto 0 auto;
 					width: 140px;
