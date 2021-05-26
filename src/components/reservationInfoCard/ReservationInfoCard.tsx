@@ -10,6 +10,7 @@ interface ReservationInfoCardProps {
 	sleeps: number;
 	maxOccupancy: number;
 	amenities: string[];
+	misc?: { title: string; data: string | number }[];
 }
 
 const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
@@ -21,7 +22,20 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 
 	function renderAmenityIcons() {
 		return props.amenities.map((item, index) => {
-			return <Icon key={index} iconImg={item} />;
+			return <Icon key={index} iconImg={item} size={22} />;
+		});
+	}
+
+	function renderMiscData() {
+		if (!props.misc) return;
+
+		return props.misc.map((item, index) => {
+			return (
+				<div key={index}>
+					<Label variant={'caption'}>{item.title}</Label>
+					<Label variant={'body1'}>{item.data}</Label>
+				</div>
+			);
 		});
 	}
 
@@ -47,6 +61,7 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'caption'}>Max Occupancy</Label>
 				<Label variant={'body1'}>{props.maxOccupancy}</Label>
 			</div>
+			{!!props.misc && renderMiscData()}
 		</Paper>
 	);
 };

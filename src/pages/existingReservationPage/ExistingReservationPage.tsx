@@ -1,13 +1,13 @@
 import * as React from 'react';
-import './ReservationPage.scss';
+import './ExistingReservationPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import ReservationCard from '../../components/reservationCard/ReservationCard';
 
 interface ReservationPageProps {}
 
-const ReservationPage: React.FC<ReservationPageProps> = (props) => {
+const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 	return (
-		<Page className={'rsReservationPage'}>
+		<Page className={'rsExistingReservationPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<Box mt={140}>
 					<h1>Your Upcoming Reservations</h1>
@@ -33,4 +33,4 @@ const ReservationPage: React.FC<ReservationPageProps> = (props) => {
 	);
 };
 
-export default ReservationPage;
+export default ExistingReservationPage;
