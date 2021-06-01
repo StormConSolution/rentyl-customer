@@ -8,8 +8,8 @@ interface OtherPaymentCardProps {
 	name: string;
 	cardNumber: string;
 	expDate: string;
-	onDelete: () => void;
-	onSetPrimary: () => void;
+	onDelete?: () => void;
+	onSetPrimary?: () => void;
 }
 
 const OtherPaymentCard: React.FC<OtherPaymentCardProps> = (props) => {
@@ -27,10 +27,12 @@ const OtherPaymentCard: React.FC<OtherPaymentCardProps> = (props) => {
 				<Label variant={'caption'}>Exp Date</Label>
 				<Label variant={'body1'}>{props.expDate}</Label>
 			</Box>
-			<Box display={'flex'} justifyContent={'space-between'}>
-				<LabelButton look={'none'} variant={'button'} label={'Set Primary'} onClick={props.onSetPrimary} />
-				<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
-			</Box>
+			{!!props.onDelete && !!props.onSetPrimary && (
+				<Box display={'flex'} justifyContent={'space-between'}>
+					<LabelButton look={'none'} variant={'button'} label={'Set Primary'} onClick={props.onSetPrimary} />
+					<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
+				</Box>
+			)}
 		</Box>
 	);
 };

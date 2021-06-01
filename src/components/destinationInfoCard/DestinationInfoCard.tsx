@@ -18,6 +18,7 @@ interface DestinationInfoCardProps {
 	zip: number | string;
 	rating: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
 	longDescription: string;
+	onViewAvailableStaysClick?: () => void;
 }
 
 const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
@@ -51,7 +52,12 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 			{/*</Box>*/}
 			<Label variant={'body2'}>{props.longDescription}</Label>
 			<Box display={'flex'} marginTop={'30px'}>
-				<LabelButton look={'containedPrimary'} variant={'button'} label={'View Available Stays'} />
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'button'}
+					label={'View Available Stays'}
+					onClick={props.onViewAvailableStaysClick}
+				/>
 				{/*<LabelLink*/}
 				{/*	path={'/'}*/}
 				{/*	externalLink={false}*/}

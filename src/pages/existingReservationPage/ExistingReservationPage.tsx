@@ -2,14 +2,43 @@ import * as React from 'react';
 import './ExistingReservationPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import ReservationCard from '../../components/reservationCard/ReservationCard';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
+import LoadingPage from '../loadingPage/LoadingPage';
+import { useEffect } from 'react';
+import serviceFactory from '../../services/serviceFactory';
+import ReservationsService from '../../services/reservations/reservations.service';
 
 interface ReservationPageProps {}
 
 const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
-	return (
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+
+	useEffect(() => {
+		if (!user) return;
+
+		async function getReservationsForUser() {
+			try {
+				let res = await reservationService.getByPage(1, 100, 'userId', 'ASC', 'exact', [
+					{
+						column: 'userId',
+						value: user!.id
+					}
+				]);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		getReservationsForUser().catch(console.error);
+	}, []);
+
+	return !user ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsExistingReservationPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box mt={140}>
+				<Box m={'140px auto'} maxWidth={1160}>
 					<h1>Your Upcoming Reservations</h1>
 					<ReservationCard
 						imgPath={require('../../images/aboutSpirePage/couple-beach.png')}

@@ -11,24 +11,37 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import ReservationInfoCard from '../../components/reservationInfoCard/ReservationInfoCard';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import ReservationSummaryCard from '../../components/reservationSummaryCard/ReservationSummaryCard';
+import serviceFactory from '../../services/serviceFactory';
+import ReservationsService from '../../services/reservations/reservations.service';
+import LoadingPage from '../loadingPage/LoadingPage';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface ReservationDetailsPageProps {}
 
 const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) => {
+	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
-	const [reservation, setReservation] = useState<any>();
+	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
 			try {
+				let res = await reservationsService.get(id);
+				setReservation(res);
+				console.log(res);
 			} catch (e) {}
 		}
 		getReservationData(params.reservationId).catch(console.error);
-	}, [params]);
+	}, []);
 
-	return (
+	return !reservation || !user ? (
+		<LoadingPage />
+	) : (
 		<Page className={'rsReservationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<HeroImage
@@ -38,27 +51,42 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 				>
 					<Paper padding={'50px'} width={'536px'} boxShadow>
 						<LabelLink path={'/reservations'} label={'< Back to reservations'} variant={'caption'} />
-						<Label m={'40px 0 10px 0'} variant={'h2'}>
-							Your reservation at *Insert Dest Logo*
+						<Label m={'40px 0 10px 0'} variant={'h2'} display={'flex'}>
+							Your reservation at{' '}
+							{!reservation.destination.logoUrl ? (
+								reservation.destination.name
+							) : (
+								<img src={reservation.destination.logoUrl} alt={'Destination Logo'} />
+							)}
 						</Label>
 						<Label variant={'h1'} mb={20}>
-							VIP Suite
+							{reservation.accommodation.name}
 						</Label>
 						<Box display={'flex'} mb={20}>
 							<Box mr={50}>
 								<Label variant={'h4'} color={'#cc9e0d'}>
 									Check-in
 								</Label>
-								<Label variant={'h2'}>May 16, 2020</Label>
+								<Label variant={'h2'}>{new Date(reservation.arrivalDate).toDateString()}</Label>
 							</Box>
 							<div>
 								<Label variant={'h4'} color={'#cc9e0d'}>
 									Check-out
 								</Label>
-								<Label variant={'h2'}>May 22, 2020</Label>
+								<Label variant={'h2'}>{new Date(reservation.departureDate).toDateString()}</Label>
 							</div>
 						</Box>
-						<LabelButton look={'containedPrimary'} variant={'button'} label={'View Destination'} />
+						<LabelButton
+							look={'containedPrimary'}
+							variant={'button'}
+							label={'View Destination'}
+							onClick={() => {
+								if (!reservation) return;
+								router
+									.navigate('/destination/details?di=' + reservation.destination.id)
+									.catch(console.error);
+							}}
+						/>
 					</Paper>
 					<div className={'tanBox'} />
 				</HeroImage>
@@ -68,21 +96,24 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							Reservation Details
 						</Label>
 						<ReservationInfoCard
-							reservationDates={{ startDate: 'May 16, 2020', endDate: 'May 22, 2020' }}
-							propertyType={'Villa'}
-							sleeps={5}
-							amenities={[
-								'cms-icon-0419',
-								'cms-icon-0417',
-								'cms-icon-0475',
-								'cms-icon-0455',
-								'cms-icon-0426'
-							]}
-							maxOccupancy={8}
+							reservationDates={{
+								startDate: reservation.arrivalDate,
+								endDate: reservation.departureDate
+							}}
+							propertyType={'Hotel'}
+							sleeps={reservation.accommodation.maxSleeps}
+							amenities={reservation.accommodation.featureIcons}
+							maxOccupancy={reservation.accommodation.maxOccupantCount}
 							misc={[
-								{ title: 'Reservation Number', data: '2lkx93llskjhh3o' },
+								{ title: 'Reservation Number', data: reservation.externalReservationNumber },
 								{ title: 'Adults', data: 2 },
-								{ title: 'Children', data: 0 }
+								{ title: 'Children', data: 0 },
+								{
+									title: 'ADA Compliant',
+									data: !!reservation.accommodation.adaCompliant ? 'Yes' : 'No'
+								},
+								{ title: 'Extra Bed', data: !!reservation.accommodation.extraBed ? 'Yes' : 'No' },
+								{ title: 'Number of Floors', data: reservation.accommodation.floorCount }
 							]}
 						/>
 					</Box>
@@ -90,7 +121,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 						<Label variant={'h1'} mb={30}>
 							Reservation Cost Summary
 						</Label>
-						<Paper padding={'25px 40px'} boxShadow></Paper>
+						<ReservationSummaryCard paymentMethod={reservation.paymentMethod} />
 					</Box>
 				</Box>
 				<Footer links={FooterLinkTestData} />

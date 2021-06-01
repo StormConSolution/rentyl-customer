@@ -12,12 +12,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import {
-	addCommasToNumber,
-	formatPhoneNumber,
-	removeAllExceptNumbers,
-	removeExtraSpacesReturnsTabs
-} from '../../utils/utils';
+import { removeExtraSpacesReturnsTabs } from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
 import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';

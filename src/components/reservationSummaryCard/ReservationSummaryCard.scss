@@ -1,0 +1,11 @@
+@import '../../themes/themes';
+
+.rsReservationSummaryCard {
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 20px 0;
+	}
+}

@@ -13,6 +13,18 @@
 					color: theme-var($buttonLinkColor);
 				}
 			}
+			.rsLabel {
+				&.h2:first-of-type {
+					display: flex;
+					align-items: center;
+					img {
+						width: 100px;
+						height: 50px;
+						object-fit: contain;
+						margin-left: 10px;
+					}
+				}
+			}
 		}
 		.tanBox {
 			position: absolute;

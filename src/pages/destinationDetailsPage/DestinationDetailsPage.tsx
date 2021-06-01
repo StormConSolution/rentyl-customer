@@ -41,6 +41,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	]);
 	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLElement>(null);
+	const availableStaysRef = useRef<HTMLElement>(null);
 	const childRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
@@ -188,10 +189,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					squareFeet={item.size ? item.size.max : null}
 					maxSleeps={item.maxSleeps}
 					onBookNowClick={() => {
+						if (!destinationDetails) return;
 						let data: any = { ...searchQueryObj };
 						data.accommodationId = item.id;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
+						data.destinationId = destinationDetails.id;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
@@ -266,6 +269,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 								zip={destinationDetails.zip}
 								rating={4.5}
 								longDescription={destinationDetails.description}
+								onViewAvailableStaysClick={() => {
+									let availableStaysSection = availableStaysRef.current!.offsetTop;
+									window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
+								}}
 							/>
 							{size !== 'small' && (
 								<CarouselButtons
@@ -439,7 +446,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						<iframe frameBorder="0" src={renderMapSource()}></iframe>
 					</Box>
 				</Box>
-				<Box className={'sectionFive'}>
+				<div className={'sectionFive'} ref={availableStaysRef}>
 					<Label variant={'h1'} mb={20}>
 						Available Stays
 					</Label>
@@ -478,8 +485,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						childrenInitialInput={searchQueryObj.children.toString()}
 					/>
 					<hr />
-					<Box className={'accommodationCardWrapper'}>{renderAccommodations()}</Box>
-				</Box>
+					<div className={'accommodationCardWrapper'}>{renderAccommodations()}</div>
+				</div>
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

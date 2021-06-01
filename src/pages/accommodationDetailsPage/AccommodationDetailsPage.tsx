@@ -119,10 +119,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	}
 
 	async function checkIfRoomIsAvailable() {
-		if (!accommodationDetails) return;
+		if (!accommodationDetails || !destinationDetails) return;
 		let data: any = JSON.stringify({
 			...availabilityObj,
 			accommodationId: accommodationDetails.id,
+			destinationId: destinationDetails.id,
 			children: 0,
 			numberOfAccommodations: 1
 		});

@@ -783,6 +783,7 @@ declare namespace Api {
 				pmData: PmData;
 				userAddressId?: number;
 				isPrimary?: 0 | 1;
+				offsiteLoyaltyEnrollment?: 0 | 1;
 			}
 			export interface PublicData {}
 			export interface ActiveForUser {}
@@ -808,6 +809,71 @@ declare namespace Api {
 	}
 
 	export namespace Reservation {
+		export interface AccommodationDetails {
+			id: number;
+			name: string;
+			shortDescription: string;
+			longDescription: string;
+			featureIcons: string[]; //Tanner wrote this one already: *Limit it to the first five*
+			address1: string;
+			address2: string;
+			city: string;
+			state: string;
+			zip: string;
+			country: string;
+			heroUrl: string;
+			maxSleeps: number;
+			roomCount: number;
+			floorCount: number;
+			extraBed: 1 | 0;
+			adaCompliant: 1 | 0;
+			maxOccupantCount: number;
+		}
+		export interface DestinationDetails {
+			id: number;
+			name: string;
+			description: string;
+			status: string;
+			address1: string;
+			address2: string;
+			city: string;
+			state: string;
+			zip: string;
+			country: string;
+			logoUrl: string;
+			heroUrl: string;
+			policies: { type: Model.DestinationPolicyType; value: string }[];
+		}
+		interface PriceDetail {
+			accommodationDailyCostsInCents: { [date: string]: number };
+			accommodationTotalInCents: number;
+			feeTotalsInCents: { name: string; amount: number }[];
+			taxTotalsInCents: { name: string; amount: number }[];
+			taxAndFeeTotalInCents: number;
+			grandTotalCents: number;
+		}
+
+		export interface PaymentMethod {
+			id: number;
+			userAddressId: number;
+			nameOnCard: string;
+			type: string;
+			last4: number;
+			expirationMonth: number;
+			expirationYear: number;
+			cardNumber: string;
+			isPrimary: 0 | 1;
+			createdOn: Date | string;
+			systemProvider: string;
+		}
+		export interface BillingAddressDetails {
+			address1: string;
+			address2: string;
+			city: string;
+			state: string;
+			zip: string;
+			country: string;
+		}
 		export namespace Req {
 			export interface Availability {
 				startDate: Date | string;
@@ -825,28 +891,46 @@ declare namespace Api {
 			export interface Paged extends RedSky.PageQuery {}
 			export interface Verification {
 				accommodationId: number;
+				destinationId: number;
 				adults: number;
 				children: number;
 				arrivalDate: string | Date;
 				departureDate: string | Date;
 				numberOfAccommodations: number;
 			}
-			export interface Create {
-				accommodationId: number;
-				adults: number;
-				children: number;
-				arrivalDate: Date | string;
-				departureDate: Date | string;
+			export interface Create extends Verification {
 				rateCode: string;
-				numberOfAccommodations: number;
+				paymentMethodId: number;
+			}
+			export interface Get {
+				id: number;
 			}
 		}
 		export namespace Res {
-			export interface Get extends Model.Reservation {}
+			export interface Get {
+				id: number;
+				userId: number;
+				billingAddress: BillingAddressDetails;
+				paymentMethod: PaymentMethod;
+				destination: DestinationDetails;
+				accommodation: AccommodationDetails;
+				reservationNumber: string;
+				arrivalDate: Date | string;
+				departureDate: Date | string;
+				status: string;
+				canceledOn: Date | string;
+				externalReservationNumber: string;
+				cancelNumber: string;
+				externalCancelNumber: string;
+				adultCount: number;
+				childCount: number;
+				confirmationDate: Date | string;
+				nightCount: number;
+				priceDetail: PriceDetail;
+			}
 			export interface Availability {
 				[key: string]: Redis.Availability;
 			}
-			export interface Paged {}
 			export interface Verification {
 				checkInTime: string;
 				checkInDate: string | Date;
@@ -862,17 +946,9 @@ declare namespace Api {
 				prices: PriceDetail;
 			}
 
-			interface PriceDetail {
-				accommodationDailyCostsInCents: { [date: string]: number };
-				accommodationTotalInCents: number;
-				feeTotalsInCents: { name: string; amount: number }[];
-				taxTotalsInCents: { name: string; amount: number }[];
-				taxAndFeeTotalInCents: number;
-				grandTotalCents: number;
-			}
-
 			export interface Create {
-				id?: string;
+				id: number;
+				externalReservationId: string;
 				confirmationCode?: string;
 			}
 			export interface CostPerNight {
@@ -941,7 +1017,7 @@ declare namespace Api {
 				vendorName: string;
 				media: Media[];
 				categoryIds: number[];
-				vouchers: Model.Voucher[];
+				vouchers: Model.RewardVoucher[];
 			}
 			export interface GetByPage {
 				data: Get[];
