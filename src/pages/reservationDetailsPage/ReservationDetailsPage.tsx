@@ -15,7 +15,7 @@ import ReservationSummaryCard from '../../components/reservationSummaryCard/Rese
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 
 interface ReservationDetailsPageProps {}
@@ -121,7 +121,11 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 						<Label variant={'h1'} mb={30}>
 							Reservation Cost Summary
 						</Label>
-						<ReservationSummaryCard paymentMethod={reservation.paymentMethod} />
+						<ReservationSummaryCard
+							paymentMethod={reservation.paymentMethod}
+							fullName={`${user.firstName} ${user.lastName}`}
+							billingAddress={reservation.billingAddress}
+						/>
 					</Box>
 				</Box>
 				<Footer links={FooterLinkTestData} />

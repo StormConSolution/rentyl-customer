@@ -7,6 +7,8 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ReservationSummaryCardProps {
 	paymentMethod: Api.Reservation.PaymentMethod;
+	fullName: string;
+	billingAddress: Api.Reservation.BillingAddressDetails;
 }
 
 const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) => {
@@ -29,9 +31,13 @@ const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) =>
 					<Label variant={'h4'} mb={10}>
 						Billing Address
 					</Label>
-					<Label variant={'body1'}>Jon Doherty</Label>
-					<Label variant={'body1'}>123 East Maple Rd</Label>
-					<Label variant={'body1'}>Newark, DE 07101</Label>
+					<Label variant={'body1'}>{props.fullName}</Label>
+					<Label variant={'body1'}>{`${props.billingAddress.address1} ${
+						props.billingAddress.address2 || ''
+					}`}</Label>
+					<Label variant={'body1'}>
+						{props.billingAddress.city}, {props.billingAddress.state} {props.billingAddress.zip}
+					</Label>
 				</Box>
 			</Box>
 		</Paper>

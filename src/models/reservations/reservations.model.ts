@@ -3,7 +3,6 @@ import StandardOrderTypes = RedSky.StandardOrderTypes;
 import MatchTypes = RedSky.MatchTypes;
 import FilterQueryValue = RedSky.FilterQueryValue;
 import FilterQuery = RedSky.FilterQuery;
-import { match } from 'assert';
 
 export default class ReservationsModel extends Model {
 	start() {
