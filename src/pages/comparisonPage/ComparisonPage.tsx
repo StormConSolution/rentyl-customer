@@ -17,6 +17,7 @@ import { axiosErrorHandler } from '../../utils/errorHandler';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import LoadingPage from '../loadingPage/LoadingPage';
+import router from '../../utils/router';
 
 export interface TableData {
 	description: JSX.Element[];
@@ -43,6 +44,15 @@ const ComparisonPage: React.FC = () => {
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 		setWaitToLoad(false);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
+	}, []);
+
+	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
+			document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
+		});
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
 	}, []);
 
 	useEffect(() => {

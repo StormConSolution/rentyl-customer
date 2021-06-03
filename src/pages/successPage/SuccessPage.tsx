@@ -25,7 +25,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props) => {
 						Thank you for your reservation at
 						<br /> <span>{successData.destinationName}</span>
 						<br /> Your confirmation code is: <span>{successData.confirmationCode}</span>. Access all your
-						reservations <Link path={'/'}>here</Link>.
+						reservations <Link path={'/reservations'}>here</Link>.
 					</Label>
 				</Box>
 				<Footer links={FooterLinkTestData} />

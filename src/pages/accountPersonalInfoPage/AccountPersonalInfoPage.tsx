@@ -121,11 +121,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		}
 	}
 
-	function renderLoadingBarPercent(): string {
-		if (!user) return '';
-		return `${Math.floor(user.lifeTimePoints / (user.nextTierThreshold / 100))}%`;
-	}
-
 	return !user ? (
 		<LoadingPage />
 	) : (

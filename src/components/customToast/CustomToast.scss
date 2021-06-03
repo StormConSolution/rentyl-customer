@@ -1,15 +1,29 @@
-@import '../../themes/themes';
+$toastSuccessColor: #208d00;
+$toastInfoColor: #5da9df;
+$toastWarningColor: #ffb900;
+$toastErrorColor: #dd1100;
 
 .rsToastContainer {
 	display: flex;
-	flex-direction: row;
 	position: fixed;
 	z-index: 1000;
 	width: 90%;
-	border-radius: 5px;
+	max-width: 550px;
+	background: white;
 	top: 10px;
 	right: 5px;
-	box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.8);
+	border: 1px solid #cecece;
+	padding: 5px 5px;
+	align-items: center;
+
+	.rsLabel.subtitle1 {
+		font-weight: 800;
+	}
+
+	.rsIcon {
+		margin-right: 13px;
+	}
+
 	@keyframes fadeout {
 		0% {
 			opacity: 1;
@@ -24,11 +38,9 @@
 	@keyframes fadein {
 		0% {
 			opacity: 0;
-			transform: scale(1.1);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1);
 		}
 	}
 
@@ -42,39 +54,57 @@
 		opacity: 1;
 	}
 
-	.content {
-		align-items: center;
-		text-align: left;
-		font-size: 15pt;
-		color: white;
-		padding: 5px 4px;
-		animation: fadeIn ease 500ms;
-		display: flex;
-		flex-direction: row;
-		.iconContainer {
-			background: white;
-			justify-content: center;
-			align-items: center;
-			border-radius: 5px;
-			padding: 4px 4px;
-			margin-right: 10px;
-			box-shadow: inset 0px 0px 6px 1px rgba(0, 0, 0, 0.8);
-		}
+	.verticalLine {
+		min-width: 3px;
 	}
 
 	&.success {
-		background: green;
+		.verticalLine {
+			background: $toastSuccessColor;
+		}
+
+		.rsIcon {
+			color: $toastSuccessColor;
+		}
 	}
 
 	&.error {
-		background: theme-var($errorColor);
+		.verticalLine {
+			background: $toastErrorColor;
+		}
+
+		.rsIcon {
+			color: $toastErrorColor;
+		}
+	}
+
+	&.warning {
+		.verticalLine {
+			background: $toastWarningColor;
+		}
+
+		.rsIcon {
+			color: $toastWarningColor;
+		}
 	}
 
 	&.info {
-		background: dodgerblue;
+		.verticalLine {
+			background: $toastInfoColor;
+		}
+
+		.rsIcon {
+			color: $toastInfoColor;
+		}
 	}
 
 	&.customToast {
-		background: radial-gradient(circle, rgba(255, 0, 0, 1) 12%, rgba(69, 69, 69, 1) 79%);
+		.verticalLine {
+			background: $toastWarningColor;
+		}
+
+		.rsIcon {
+			color: $toastWarningColor;
+		}
 	}
 }

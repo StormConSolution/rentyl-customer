@@ -125,6 +125,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							paymentMethod={reservation.paymentMethod}
 							fullName={`${user.firstName} ${user.lastName}`}
 							billingAddress={reservation.billingAddress}
+							priceDetails={reservation.priceDetail}
 						/>
 					</Box>
 				</Box>

@@ -32,6 +32,7 @@ export default class ReservationsService extends Service {
 		matchType?: MatchTypes,
 		filter?: FilterQueryValue[]
 	) {
-		return this.reservationsModel.getByPage(page, perPage, sortField, sortOrder, matchType, filter);
+		let response = await this.reservationsModel.getByPage(page, perPage, sortField, sortOrder, matchType, filter);
+		return response.data;
 	}
 }

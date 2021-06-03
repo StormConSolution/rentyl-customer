@@ -2,7 +2,7 @@ const fs = require('fs');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 (async function updateBitDev() {
-	let redSkyFramework = fs.readdirSync('../node_modules/@bit');
+	let redSkyFramework = fs.readdirSync('./node_modules/@bit');
 	console.log(redSkyFramework);
 	function executeCommand(cmd) {
 		return new Promise((resolve, reject) => {

@@ -54,7 +54,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 				updateAddressObj('country', 'US');
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('An unexpected error occurred on the server.');
+				throw rsToasts.error('An unexpected error occurred on the server.', '', 5000);
 			}
 		}
 		getCountries().catch(console.error);
@@ -71,7 +71,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error(e.message, '', 5000);
 			}
 		}
 		getStates().catch(console.error);
@@ -113,7 +113,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 		let data = { id: addressId, isDefault: 1 };
 		try {
 			let response = await userAddressService.update(data);
-			if (response.data.data) rsToasts.success('Update Successful');
+			if (response.data.data) rsToasts.success('Update Successful', '', 5000);
 
 			let addresses = [...addressList];
 			addresses = addresses.map((item) => {
@@ -121,7 +121,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			});
 			setAddressList(addresses);
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error(e.message, '', 5000);
 		}
 	}
 
@@ -180,7 +180,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			newAddressObj['userId'] = user.id;
 			newAddressObj['type'] = 'BOTH';
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error(e.message, '', 5000);
 			return;
 		}
 		try {
@@ -189,7 +189,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			let newAddressList: Api.User.Address[] = [...addressList, convertObj(response.data.data)];
 			setAddressList(newAddressList);
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error(e.message, '', 5000);
 		}
 	}
 

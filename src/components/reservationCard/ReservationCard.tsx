@@ -60,14 +60,7 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 					</Label>
 					<Label variant={'h2'}>{addCommasToNumber(props.totalPoints)}</Label>
 				</div>
-				<LabelLink
-					path={'/'}
-					label={'view details'}
-					variant={'caption'}
-					onClick={() => {
-						router.navigate('/').catch(console.error);
-					}}
-				/>
+				<LabelLink path={'/'} label={'view details'} variant={'caption'} onClick={props.onViewDetailsClick} />
 			</Paper>
 		</Box>
 	);

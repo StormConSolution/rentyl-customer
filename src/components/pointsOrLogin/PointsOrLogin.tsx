@@ -5,14 +5,15 @@ import LabelLink from '../labelLink/LabelLink';
 import { addCommasToNumber } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface PointsOrLoginProps {
 	className?: string;
 }
 
 const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
-	let userService = serviceFactory.get<UserService>('UserService');
-	const user = userService.getCurrentUser();
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	function renderPointsOrLogin() {
 		if (user) {
 			return (
@@ -26,7 +27,7 @@ const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
 					<div className={'pendingPointsContainer'}>
 						<Label variant={'h4'}>Points Pending</Label>
 						<Label className={'pendingPointsNumber'} variant={'h1'}>
-							951
+							{user.pendingPoints}
 						</Label>
 					</div>
 				</div>
