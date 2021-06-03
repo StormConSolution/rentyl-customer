@@ -28,7 +28,6 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import UserService from '../../services/user/user.service';
 import AccommodationFeatures = Model.AccommodationFeatures;
 
 const ReservationAvailabilityPage: React.FC = () => {
@@ -225,7 +224,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.small.toString();
+				return urlObj.urls.large.toString();
 			});
 		}
 		return [];
@@ -271,21 +270,23 @@ const ReservationAvailabilityPage: React.FC = () => {
 						onChangePriceMin={(value) => {
 							if (value !== '') {
 								updateSearchQueryObj('priceRangeMin', value);
-								(document.querySelector(
-									'.priceMin > input'
-								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+								// (document.querySelector(
+								// 	'.priceMin > input'
+								// ) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 							}
 						}}
 						onChangePriceMax={(value) => {
 							if (value !== '') {
 								updateSearchQueryObj('priceRangeMax', value);
-								(document.querySelector(
-									'.priceMax > input'
-								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+								// (document.querySelector(
+								// 	'.priceMax > input'
+								// ) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 							}
 						}}
 						adultsInitialInput={searchQueryObj.adults.toString()}
 						childrenInitialInput={searchQueryObj.children.toString()}
+						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
+						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
 					/>
 					<IconLabel
 						className={'moreFiltersLink'}

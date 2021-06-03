@@ -20,6 +20,7 @@ interface RoomBookNowCardProps {
 	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	onGuestChange: (value: number) => void;
 	className?: string;
+	guestValue?: number;
 	bookNowOnClick?: () => void;
 	compareOnClick?: () => void;
 	bookNowDisabled?: boolean;
@@ -86,6 +87,7 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 				<LabelInput
 					title={'# of Guest'}
 					inputType={'number'}
+					initialValue={!!props.guestValue ? props.guestValue.toString() : ''}
 					onChange={(value) => {
 						props.onGuestChange(value);
 					}}

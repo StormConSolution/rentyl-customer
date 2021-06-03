@@ -35,3 +35,16 @@
 		}
 	}
 }
+
+.small {
+	.rsComparisonDrawer {
+		width: 100vw;
+		overflow-x: auto;
+		padding: 20px;
+		height: 150px;
+		transform: translateY(150px);
+		&.show {
+			transform: translateY(0);
+		}
+	}
+}
