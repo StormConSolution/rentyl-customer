@@ -5,6 +5,8 @@ import AccountHeader from '../../components/accountHeader/AccountHeader';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import NotificationTile from '../../components/notificationTile/NotificationTile';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 interface AccountNotificationPreferencesProps {}
 
@@ -114,6 +116,7 @@ const AccountNotificationPreferences: React.FC<AccountNotificationPreferencesPro
 						isEmailSelected={false}
 					/>
 				</Box>
+				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>
 	);

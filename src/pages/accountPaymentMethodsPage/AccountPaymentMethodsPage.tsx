@@ -401,7 +401,7 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 						<LabelButton
 							look={isFormComplete ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
-							label={'Add New Address'}
+							label={'Add New Payment'}
 							disabled={!isFormComplete}
 							onClick={() => {
 								save();

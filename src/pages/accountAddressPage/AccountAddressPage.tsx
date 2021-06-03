@@ -54,7 +54,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 				updateAddressObj('country', 'US');
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('An unexpected error occurred on the server.');
+				throw rsToasts.error('An unexpected error occurred on the server.', '', 5000);
 			}
 		}
 		getCountries().catch(console.error);
@@ -71,7 +71,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error(e.message, '', 5000);
 			}
 		}
 		getStates().catch(console.error);
@@ -113,7 +113,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 		let data = { id: addressId, isDefault: 1 };
 		try {
 			let response = await userAddressService.update(data);
-			if (response.data.data) rsToasts.success('Update Successful');
+			if (response.data.data) rsToasts.success('Update Successful', '', 5000);
 
 			let addresses = [...addressList];
 			addresses = addresses.map((item) => {
@@ -185,8 +185,12 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 		}
 		try {
 			let response = await userAddressService.create(newAddressObj);
-			if (response.data.data) console.log(response.data.data);
-			let newAddressList: Api.User.Address[] = [...addressList, convertObj(response.data.data)];
+			let newAddressList: Api.User.Address[] = [...addressList, convertObj(response)];
+			if (response.isDefault) {
+				newAddressList = newAddressList.map((item, index) => {
+					return { ...item, isDefault: response.id === item.id ? 1 : 0 };
+				});
+			}
 			setAddressList(newAddressList);
 		} catch (e) {
 			rsToasts.error(e.message);
@@ -199,7 +203,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			let response = await userAddressService.delete(id);
 			let newAddressList = addressList.filter((item) => item.id !== id);
 			setAddressList(newAddressList);
-			if (response.data.data) rsToasts.success('Delete Successful');
+			if (response.data.data) rsToasts.success('Delete Successful', '', 5000);
 		} catch (e) {}
 	}
 
@@ -211,7 +215,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 				<AccountHeader selected={'ADDRESSES'} />
 				<Box maxWidth={'920px'} margin={'60px auto 120px'} display={'flex'} justifyContent={'space-evenly'}>
 					<Box width={'420px'}>
-						<Label variant={'h2'}>Primary Address</Label>
+						<Label variant={'h2'}>Addresses</Label>
 						{renderAddresses()}
 					</Box>
 					<Box width={'420px'}>

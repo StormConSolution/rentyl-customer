@@ -17,9 +17,8 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
-import ComparisonService from '../../services/comparison/comparison.service';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 import RewardService from '../../services/reward/reward.service';
 
 interface LandingPageProps {}
@@ -54,6 +53,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 		return featuredRewards.map((item, index) => {
 			return (
 				<FeaturedRewardCard
+					key={index}
 					mainImg={item.imagePath}
 					title={item.name}
 					urlPath={`/reward?cids=[${item.categoryId}]`}
