@@ -73,7 +73,8 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 				if (!data) return;
 				try {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
-					data.cardId = result.id;
+					data.paymentMethodId = result.id;
+					data.destinationId = params.data.destinationId;
 					let res = await reservationService.create(data);
 					popupController.close(SpinningLoaderPopup);
 					setIsDisabled(false);
@@ -165,7 +166,8 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		} else {
 			let data: any = getReservationData();
 			if (!data || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
-			else data.cardId = existingCardId;
+			else data.paymentMethodId = existingCardId;
+			data.destinationId = params.data.destinationId;
 			try {
 				let res = await reservationService.create(data);
 				if (res) popupController.close(SpinningLoaderPopup);

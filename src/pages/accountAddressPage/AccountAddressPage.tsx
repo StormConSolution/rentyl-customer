@@ -121,7 +121,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			});
 			setAddressList(addresses);
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error(e.message, '', 5000);
 		}
 	}
 
@@ -180,7 +180,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			newAddressObj['userId'] = user.id;
 			newAddressObj['type'] = 'BOTH';
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error(e.message, '', 5000);
 			return;
 		}
 		try {
@@ -193,7 +193,7 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 			}
 			setAddressList(newAddressList);
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error(e.message, '', 5000);
 		}
 	}
 

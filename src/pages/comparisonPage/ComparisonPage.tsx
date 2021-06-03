@@ -17,6 +17,7 @@ import { axiosErrorHandler } from '../../utils/errorHandler';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import LoadingPage from '../loadingPage/LoadingPage';
+import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
@@ -48,6 +49,15 @@ const ComparisonPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
+			document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
+		});
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
+	}, []);
+
+	useEffect(() => {
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];
 		for (let item of comparisonItems) {
@@ -75,7 +85,7 @@ const ComparisonPage: React.FC = () => {
 				rsToasts.error('An unexpected error has occurred on the server.');
 				axiosErrorHandler(e, {
 					[HttpStatusCode.NOT_FOUND]: () => {
-						rsToasts.error('An unexpected erro+r has occurred on the server.');
+						rsToasts.error('An unexpected error has occurred on the server.', '', 5000);
 					}
 				});
 			}
