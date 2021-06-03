@@ -1,0 +1,17 @@
+@import '../../themes/themes';
+
+.rsReservationInfoCard {
+	display: grid;
+	grid-template-columns: 240px auto auto;
+	column-gap: 45px;
+	row-gap: 25px;
+	.rsLabel {
+		&.caption {
+			margin-bottom: 5px;
+		}
+	}
+
+	.rsIcon {
+		margin-right: 8px;
+	}
+}

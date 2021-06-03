@@ -2,37 +2,40 @@ import * as React from 'react';
 import './CustomToast.scss';
 import { ToastType, ToastProps } from '@bit/redsky.framework.toast';
 
-import { MdErrorOutline } from 'react-icons/md';
-import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { BsInfo } from 'react-icons/bs';
-import { MdFingerprint } from 'react-icons/md';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import { Box } from '@bit/redsky.framework.rs.996';
+import Icon from '@bit/redsky.framework.rs.icon';
 
-const CustomToast: React.FC<ToastProps> = ({ msg, type, display, closing }: ToastProps) => {
+const CustomToast: React.FC<ToastProps> = (props) => {
 	let classes = ['rsToastContainer'];
 
-	if (display && !closing) classes.push('toggleIn');
-	else if (display && closing) classes.push('toggleOut');
-	else if (!display) return <></>;
+	if (props.display && !props.closing) classes.push('toggleIn');
+	else if (props.display && props.closing) classes.push('toggleOut');
+	else if (!props.display) return <></>;
 
-	if (type === ToastType.SUCCESS) classes.push('success');
-	else if (type === ToastType.ERROR) classes.push('error');
-	else if (type === ToastType.INFO) classes.push('info');
+	if (props.type === ToastType.SUCCESS) classes.push('success');
+	else if (props.type === ToastType.ERROR) classes.push('error');
+	else if (props.type === ToastType.WARNING) classes.push('warning');
+	else if (props.type === ToastType.INFO) classes.push('info');
 	else classes.push('customToast');
 
 	function renderIcon() {
-		if (type === ToastType.ERROR) return <MdErrorOutline color="red" size={35} />;
-		else if (type === ToastType.SUCCESS) return <AiOutlineCheckCircle color="green" size={35} />;
-		else if (type === ToastType.INFO) return <BsInfo color="dodgerblue" size={35} />;
-		else if (type === ToastType.CUSTOM) return <MdFingerprint color="black" size={35} />;
+		if (props.type === ToastType.ERROR) return <Icon iconImg={'icon-exclamation-circle'} size={21} />;
+		if (props.type === ToastType.WARNING) return <Icon iconImg={'icon-exclamation-circle'} size={21} />;
+		else if (props.type === ToastType.SUCCESS) return <Icon iconImg={'icon-solid-check-circle'} size={21} />;
+		else if (props.type === ToastType.INFO) return <Icon iconImg={'icon-solid-info-circle'} size={21} />;
+		else if (props.type === ToastType.CUSTOM) return <Icon iconImg={'icon-exclamation-circle'} size={21} />;
 	}
 
 	return (
-		<div className={classes.join(' ')}>
-			<div className="content">
-				<div className="iconContainer">{renderIcon()}</div>
-				{msg}
-			</div>
-		</div>
+		<Box className={classes.join(' ')}>
+			<Box width={3} height={47} className={'verticalLine'} mr={12} />
+			{renderIcon()}
+			<Box>
+				<Label variant={'subtitle1'}>{props.title}</Label>
+				<Label variant={'body2'}>{props.msg}</Label>
+			</Box>
+		</Box>
 	);
 };
 export default CustomToast;

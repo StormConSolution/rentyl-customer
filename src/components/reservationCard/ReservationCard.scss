@@ -1,0 +1,46 @@
+@import '../../themes/themes';
+
+.rsReservationCard {
+	display: flex;
+	justify-content: center;
+	.columnOne {
+		width: 278px;
+		height: 230px;
+		margin-right: 16px;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.columnTwo {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		.rowOne {
+			img {
+				width: 100px;
+				height: 50px;
+				object-fit: contain;
+				margin-right: 25px;
+			}
+		}
+		.rsReservationInfoCard {
+			margin-left: 104px;
+		}
+	}
+
+	.columnThree {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		text-align: center;
+		.rsLabelLink {
+			.rsLabel {
+				color: theme-var($buttonLinkColor);
+			}
+		}
+	}
+}

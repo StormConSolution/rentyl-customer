@@ -68,7 +68,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 					if (destination.data.data) setDestinationDetails(destination.data.data);
 				}
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error(e.message, '', 5000);
 			}
 		}
 		getAccommodationDetails(params.accommodationId);
@@ -119,10 +119,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	}
 
 	async function checkIfRoomIsAvailable() {
-		if (!accommodationDetails) return;
+		if (!accommodationDetails || !destinationDetails) return;
 		let data: any = JSON.stringify({
 			...availabilityObj,
 			accommodationId: accommodationDetails.id,
+			destinationId: destinationDetails.id,
 			children: 0,
 			numberOfAccommodations: 1
 		});
