@@ -33,7 +33,6 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 			try {
 				let res = await reservationsService.get(id);
 				setReservation(res);
-				console.log(res);
 			} catch (e) {}
 		}
 		getReservationData(params.reservationId).catch(console.error);
@@ -106,6 +105,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							maxOccupancy={reservation.accommodation.maxOccupantCount}
 							misc={[
 								{ title: 'Reservation Number', data: reservation.externalReservationNumber },
+								{ title: 'Confirmation Code', data: reservation.confirmationCode },
 								{ title: 'Adults', data: 2 },
 								{ title: 'Children', data: 0 },
 								{

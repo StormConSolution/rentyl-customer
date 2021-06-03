@@ -517,6 +517,7 @@ declare namespace Api {
 					id: number;
 					name: string;
 					shortDescription: string;
+					longDescription: string;
 				}[];
 				accommodationTypes: {
 					id: number;
@@ -814,7 +815,7 @@ declare namespace Api {
 			name: string;
 			shortDescription: string;
 			longDescription: string;
-			featureIcons: string[]; //Tanner wrote this one already: *Limit it to the first five*
+			featureIcons: string[];
 			address1: string;
 			address2: string;
 			city: string;
@@ -889,6 +890,9 @@ declare namespace Api {
 				limit?: number;
 			}
 			export interface Paged extends RedSky.PageQuery {}
+			/**
+			 * WE NEED TO REMOVE THE OPTIONAL PARAM ONCE WE GET THE FRONT END PUSHED
+			 */
 			export interface Verification {
 				accommodationId: number;
 				destinationId: number;
@@ -927,6 +931,9 @@ declare namespace Api {
 				confirmationDate: Date | string;
 				nightCount: number;
 				priceDetail: PriceDetail;
+				confirmationCode: string;
+				itineraryNumber: string;
+				cancellationPermitted: 0 | 1;
 			}
 			export interface Availability {
 				[key: string]: Redis.Availability;
