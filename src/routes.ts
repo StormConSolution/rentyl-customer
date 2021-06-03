@@ -66,7 +66,7 @@ const routes: RouteDetails[] = [
 		page: ExistingReservationPage
 	},
 	{
-		path: '/reservations/details',
+		path: '/reservation/details',
 		page: ReservationDetailsPage
 	},
 	{

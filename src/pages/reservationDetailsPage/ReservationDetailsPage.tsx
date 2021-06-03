@@ -106,8 +106,8 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							misc={[
 								{ title: 'Reservation Number', data: reservation.externalReservationNumber },
 								{ title: 'Confirmation Code', data: reservation.confirmationCode },
-								{ title: 'Adults', data: 2 },
-								{ title: 'Children', data: 0 },
+								{ title: 'Adults', data: reservation.adultCount },
+								{ title: 'Children', data: reservation.childCount },
 								{
 									title: 'ADA Compliant',
 									data: !!reservation.accommodation.adaCompliant ? 'Yes' : 'No'
