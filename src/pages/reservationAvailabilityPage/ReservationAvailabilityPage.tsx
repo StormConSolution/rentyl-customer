@@ -270,17 +270,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 						onChangePriceMin={(value) => {
 							if (value !== '') {
 								updateSearchQueryObj('priceRangeMin', value);
-								// (document.querySelector(
-								// 	'.priceMin > input'
-								// ) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 							}
 						}}
 						onChangePriceMax={(value) => {
 							if (value !== '') {
 								updateSearchQueryObj('priceRangeMax', value);
-								// (document.querySelector(
-								// 	'.priceMax > input'
-								// ) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 							}
 						}}
 						adultsInitialInput={searchQueryObj.adults.toString()}
