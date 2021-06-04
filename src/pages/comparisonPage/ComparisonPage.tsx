@@ -18,6 +18,8 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import IconLabel from '../../components/iconLabel/IconLabel';
 import LoadingPage from '../loadingPage/LoadingPage';
 import router from '../../utils/router';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 export interface TableData {
 	description: JSX.Element[];
@@ -75,9 +77,6 @@ const ComparisonPage: React.FC = () => {
 	}, [comparisonItems]);
 
 	useEffect(() => {
-		if (comparisonItems.length === 0) {
-			rsToasts.error('No destinations or accommodations selected to compare.');
-		}
 		async function getAccommodation() {
 			try {
 				let res = await accommodationService.getManyAccommodationDetails(accommodationIdList);
@@ -86,7 +85,7 @@ const ComparisonPage: React.FC = () => {
 				rsToasts.error('An unexpected error has occurred on the server.');
 				axiosErrorHandler(e, {
 					[HttpStatusCode.NOT_FOUND]: () => {
-						rsToasts.error('An unexpected error has occurred on the server.');
+						rsToasts.error('An unexpected error has occurred on the server.', '', 5000);
 					}
 				});
 			}
@@ -245,6 +244,7 @@ const ComparisonPage: React.FC = () => {
 						<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
 					</table>
 				</Paper>
+				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>
 	);

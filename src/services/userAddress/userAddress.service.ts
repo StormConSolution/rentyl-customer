@@ -4,7 +4,8 @@ import { RsResponseData } from '@bit/redsky.framework.rs.http';
 
 export default class UserAddressService extends Service {
 	async create(data: Api.UserAddress.Req.Create) {
-		return await http.post<RsResponseData<Api.UserAddress.Res.Create>>('userAddress', data);
+		let res = await http.post<RsResponseData<Api.UserAddress.Res.Create>>('userAddress', data);
+		return res.data.data;
 	}
 
 	async update(data: Api.UserAddress.Req.Update) {

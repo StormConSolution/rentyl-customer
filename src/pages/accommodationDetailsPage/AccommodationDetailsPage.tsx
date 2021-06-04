@@ -166,6 +166,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							onGuestChange={(value) => {
 								updateAvailabilityObj('adults', +value);
 							}}
+							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
 								comparisonService.addToComparison(recoilComparisonState, {
 									destinationId: destinationDetails.id,
