@@ -35,4 +35,11 @@ export default class ReservationsService extends Service {
 		let response = await this.reservationsModel.getByPage(page, perPage, sortField, sortOrder, matchType, filter);
 		return response.data;
 	}
+
+	async upcoming(limit: number) {
+		let response = await http.get<RsResponseData<Api.Reservation.Res.Upcoming[]>>('reservation/upcoming', {
+			limit
+		});
+		return response.data.data;
+	}
 }

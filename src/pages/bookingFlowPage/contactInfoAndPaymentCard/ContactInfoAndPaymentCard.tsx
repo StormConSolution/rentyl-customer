@@ -4,7 +4,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../../../components/labelInput/LabelInput';
 import Paper from '../../../components/paper/Paper';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
@@ -13,6 +13,8 @@ import PaymentService from '../../../services/payment/payment.service';
 import rsToasts from '@bit/redsky.framework.toast';
 import LabelCheckbox from '../../../components/labelCheckbox/LabelCheckbox';
 import Select, { SelectOptions } from '../../../components/Select/Select';
+import debounce from 'lodash.debounce';
+import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
 type CreditCardForm = { full_name: string; expDate: string };
@@ -27,8 +29,12 @@ interface ContactInfoAndPaymentCardProps {
 let phoneNumber = '';
 
 const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (props) => {
+	const numberRef = useRef<HTMLElement>(null);
+	const cvvRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
+	const [isValidCard, setIsValidCard] = useState<boolean>(false);
+	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [existingCardId, setExistingCardId] = useState<number>(0);
@@ -70,7 +76,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [user]);
 
 	useEffect(() => {
-		props.isValidForm((isValid && isAuthorized) || (isAuthorized && !!existingCardId));
+		props.isValidForm(isValid || !!existingCardId);
 	}, [isValid, isAuthorized, existingCardId]);
 
 	useEffect(() => {
@@ -88,26 +94,102 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
 			window.Spreedly.setStyle(
 				'number',
-				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
 			);
 			window.Spreedly.setStyle(
 				'cvv',
-				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; transition: border-color 300ms; '
 			);
 			window.Spreedly.setFieldType('number', 'text');
 			window.Spreedly.setNumberFormat('prettyFormat');
 		});
+
+		let fieldEventId = paymentService.subscribeToSpreedlyFieldEvent(
+			(
+				name: 'number' | 'cvv',
+				type: 'focus' | 'blur' | 'mouseover' | 'mouseout' | 'input' | 'enter' | 'escape' | 'tab' | 'shiftTab',
+				activeEl: 'number' | 'cvv',
+				inputProperties: {
+					cardType?: string;
+					validNumber?: boolean;
+					validCvv?: boolean;
+					numberLength?: number;
+					cvvLength?: number;
+				}
+			) => {
+				if (name === 'number') {
+					let numberParent = numberRef.current;
+					if (type === 'focus') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #004b98;');
+					}
+					if (type === 'blur') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #dedede;');
+					}
+					if (type === 'mouseover') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #004b98;');
+					}
+					if (type === 'mouseout') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #dedede;');
+					}
+
+					if (type === 'input' && !inputProperties.validNumber) {
+						setIsValidCard(false);
+						debounceCvvCardError('Number');
+					} else if (type === 'input' && inputProperties.validNumber) {
+						setIsValidCard(true);
+						debounceCvvCardSuccess('Number');
+					}
+				}
+				if (name === 'cvv') {
+					let cvvParent = cvvRef.current;
+					if (type === 'focus') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #004b98;');
+					}
+					if (type === 'blur') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #dedede;');
+					}
+					if (type === 'mouseover') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #004b98;');
+					}
+					if (type === 'mouseout') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #dedede;');
+					}
+					if (type === 'input' && !inputProperties.validCvv) {
+						setIsValidCvv(false);
+						debounceCvvCardError('Cvv');
+					} else if (type === 'input' && inputProperties.validCvv) {
+						setIsValidCvv(true);
+						debounceCvvCardSuccess('Cvv');
+					}
+				}
+			}
+		);
+
 		// Error response codes
 		// https://docs.spreedly.com/reference/api/v1/#response-codes
 		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
-			rsToasts.error(errorMsg);
+			let errorMessages = errorMsg.map((item) => {
+				return item.message;
+			});
+			popupController.closeAll();
+			return rsToasts.error(errorMessages.join(' '), '', 8000);
 		});
 
 		return () => {
 			paymentService.unsubscribeToSpreedlyError(errorId);
 			paymentService.unsubscribeToSpreedlyReady(readyId);
+			paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
 		};
 	}, []);
+
+	let debounceCvvCardError = debounce(async (element: 'Number' | 'Cvv') => {
+		let htmlBlock: HTMLElement | null = document.querySelector(`#${element}`);
+		if (!!htmlBlock) htmlBlock.style.color = 'red';
+	}, 1000);
+	let debounceCvvCardSuccess = debounce(async (element: 'Number' | 'Cvv') => {
+		let htmlBlock: HTMLElement | null = document.querySelector(`#${element}`);
+		if (!!htmlBlock) htmlBlock.style.color = '#001933';
+	}, 1000);
 
 	async function updateCreditCardObj(control: RsFormControl) {
 		if (
@@ -240,13 +322,13 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						control={creditCardObj.get('full_name')}
 						updateControl={updateCreditCardObj}
 					/>
-					<div id={'spreedly-number'}>
-						<Label variant={'caption'} mb={10}>
+					<div ref={numberRef} id={'spreedly-number'}>
+						<Label id={'Number'} variant={'caption'} mb={10}>
 							Credit Card
 						</Label>
 					</div>
-					<div id={'spreedly-cvv'}>
-						<Label variant={'caption'} mb={10}>
+					<div ref={cvvRef} id={'spreedly-cvv'}>
+						<Label id={'Cvv'} variant={'caption'} mb={10}>
 							CVV
 						</Label>
 					</div>

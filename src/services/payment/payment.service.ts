@@ -12,7 +12,10 @@ interface InputPropertiesOptions {
 
 export default class PaymentService extends Service {
 	private spreedlyErrorCallbackId = 0;
-	private onSpreedlyErrorCallbacks: { id: number; callback: (errorMsg: string) => void }[] = [];
+	private onSpreedlyErrorCallbacks: {
+		id: number;
+		callback: (errorMsg: { attribute: string; key: string; message: string }[]) => void;
+	}[] = [];
 	private spreedlyPaymentMethodCallbackId = 0;
 	private onSpreedlyPaymentMethodCallbacks: {
 		id: number;
@@ -35,10 +38,10 @@ export default class PaymentService extends Service {
 	constructor() {
 		super();
 
-		window.Spreedly.on('errors', () => {
+		window.Spreedly.on('errors', (error: { attribute: string; key: string; message: string }[]) => {
 			// error occurred
 			this.onSpreedlyErrorCallbacks.forEach((callback) => {
-				callback.callback('error');
+				callback.callback(error);
 			});
 		});
 
@@ -112,7 +115,9 @@ export default class PaymentService extends Service {
 		});
 	}
 
-	subscribeToSpreedlyError(callback: (errorMsg: string) => void): number {
+	subscribeToSpreedlyError(
+		callback: (errorMsg: { attribute: string; key: string; message: string }[]) => void
+	): number {
 		let id = ++this.spreedlyErrorCallbackId;
 		this.onSpreedlyErrorCallbacks.push({ id, callback });
 		return id;

@@ -909,6 +909,9 @@ declare namespace Api {
 			export interface Get {
 				id: number;
 			}
+			export interface Upcoming {
+				limit: number;
+			}
 		}
 		export namespace Res {
 			export interface Get {
@@ -971,6 +974,7 @@ declare namespace Api {
 				guaranteePolicy: string;
 				cancelPolicy: string;
 			}
+			export interface Upcoming extends Get {}
 		}
 	}
 
