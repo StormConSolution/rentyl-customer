@@ -79,12 +79,12 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								}}
 							/>
 							<LabelLink
-								path={'/'}
+								path={'/reservations'}
 								label={'Reservations'}
 								variant={'h4'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signup').catch(console.error);
+									router.navigate('/reservations').catch(console.error);
 								}}
 							/>
 							<LabelLink

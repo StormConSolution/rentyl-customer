@@ -21,11 +21,9 @@ import Footer from '../../components/footer/Footer';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
-interface AccountPaymentMethodsPageProps {}
-
 let isPrimary: 1 | 0 = 0;
 
-const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (props) => {
+const AccountPaymentMethodsPage: React.FC = () => {
 	const numberRef = useRef<HTMLElement>(null);
 	const cvvRef = useRef<HTMLElement>(null);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
@@ -59,8 +57,8 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 	);
 
 	useEffect(() => {
-		setIsFormComplete(isValidCvv && isValidCard && isAuthorized);
-	}, [isValidForm, isValidCard, isValidCvv, isAuthorized]);
+		setIsFormComplete(isValidCvv && isValidCard);
+	}, [isValidForm, isValidCard, isValidCvv]);
 
 	useEffect(() => {
 		async function init() {
@@ -77,11 +75,11 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
 			window.Spreedly.setStyle(
 				'number',
-				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff '
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
 			);
 			window.Spreedly.setStyle(
 				'cvv',
-				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; '
+				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; transition: border-color 300ms; '
 			);
 			window.Spreedly.setFieldType('number', 'text');
 			window.Spreedly.setNumberFormat('prettyFormat');
@@ -103,8 +101,18 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 				if (name === 'number') {
 					let numberParent = numberRef.current;
 					if (type === 'focus') {
-						numberParent!.className = 'highlighted';
+						window.Spreedly.setStyle('number', 'border: 1px solid #004b98;');
 					}
+					if (type === 'blur') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #dedede;');
+					}
+					if (type === 'mouseover') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #004b98;');
+					}
+					if (type === 'mouseout') {
+						window.Spreedly.setStyle('number', 'border: 1px solid #dedede;');
+					}
+
 					if (type === 'input' && !inputProperties.validNumber) {
 						setIsValidCard(false);
 					} else if (type === 'input' && inputProperties.validNumber) {
@@ -114,7 +122,16 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 				if (name === 'cvv') {
 					let cvvParent = cvvRef.current;
 					if (type === 'focus') {
-						cvvParent!.className = 'highlighted';
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #004b98;');
+					}
+					if (type === 'blur') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #dedede;');
+					}
+					if (type === 'mouseover') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #004b98;');
+					}
+					if (type === 'mouseout') {
+						window.Spreedly.setStyle('cvv', 'border: 1px solid #dedede;');
 					}
 					if (type === 'input' && !inputProperties.validCvv) {
 						setIsValidCvv(false);
@@ -128,15 +145,20 @@ const AccountPaymentMethodsPage: React.FC<AccountPaymentMethodsPageProps> = (pro
 		// Error response codes
 		// https://docs.spreedly.com/reference/api/v1/#response-codes
 		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
-			rsToasts.error(errorMsg);
+			let errorMessages = errorMsg.map((item) => {
+				return item.message;
+			});
+			popupController.closeAll();
+			return rsToasts.error(errorMessages.join(' '), '', 8000);
 		});
 
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
-				let data = {
+				let data: Api.Payment.Req.Create = {
 					cardToken: token,
 					pmData: pmData,
-					isPrimary: isPrimary
+					isPrimary: isPrimary,
+					offsiteLoyaltyEnrollment: isAuthorized ? 1 : 0
 				};
 
 				try {

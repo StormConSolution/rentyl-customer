@@ -76,7 +76,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 					totalCostCents={item.priceDetail.grandTotalCents}
 					totalPoints={1000} //This needs to be added to the endpoint.
 					onViewDetailsClick={() => {
-						router.navigate('/reservations/details?ri=' + item.id).catch(console.error);
+						router.navigate('/reservation/details?ri=' + item.id).catch(console.error);
 					}}
 				/>
 			);
@@ -101,7 +101,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 					totalCostCents={item.priceDetail.grandTotalCents}
 					totalPoints={1000} //This needs to be added to the endpoint.
 					onViewDetailsClick={() => {
-						router.navigate('/reservations/details?ri=' + item.id).catch(console.error);
+						router.navigate('/reservation/details?ri=' + item.id).catch(console.error);
 					}}
 				/>
 			);

@@ -10,6 +10,8 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import router from '../../utils/router';
+import serviceFactory from '../../services/serviceFactory';
+import ReservationsService from '../../services/reservations/reservations.service';
 
 interface AccountOverviewProps {
 	isOpen: boolean;
@@ -20,6 +22,8 @@ interface AccountOverviewProps {
 const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const popupRef = useRef<HTMLElement>(null);
+	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const [upComingReservation, setUpComingReservation] = useState<Api.Reservation.Res.Upcoming>();
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
@@ -32,6 +36,18 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
+	}, []);
+
+	useEffect(() => {
+		async function getUpcomingReservationForUser() {
+			try {
+				let res = await reservationService.upcoming(1);
+				setUpComingReservation(res[0]);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		getUpcomingReservationForUser().catch(console.error);
 	}, []);
 
 	/*
@@ -65,28 +81,49 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 				/>
 				<hr />
 				<Label variant={'h4'}>Upcoming Stay</Label>
-				<Box display={'flex'}>
-					<img src={require('../../images/FullLogo-StandardBlack.png')} alt={''} />
-					<Label className={'yellow'} variant={'h4'}>
-						6 bedroom villa
-					</Label>
-				</Box>
-				<Box marginBottom={15}>
-					<Label variant={'caption'}>Dates</Label>
-					<Label variant={'body1'}>05/25/2020 - 05/31/2020</Label>
-				</Box>
-				<Box marginBottom={15}>
-					<Label variant={'caption'}>Room Rate</Label>
-					<Label variant={'body1'}>$250/per night</Label>
-				</Box>
-				<LabelLink
-					path={'/'}
-					externalLink={false}
-					label={'View Booking Details'}
-					variant={'button'}
-					iconRight={'icon-chevron-right'}
-					iconSize={7}
-				/>
+				{!!upComingReservation ? (
+					<>
+						<Box display={'flex'}>
+							<img src={upComingReservation.destination.logoUrl} alt={''} />
+							<Label
+								className={'yellow'}
+								variant={'h4'}
+								textOverflow={'ellipsis'}
+								whiteSpace={'non-wrap'}
+								overflow={'hidden'}
+							>
+								{upComingReservation.accommodation.name}
+							</Label>
+						</Box>
+						<Box marginBottom={15}>
+							<Label variant={'caption'}>Dates</Label>
+							<Label variant={'body1'}>
+								{new Date(upComingReservation.arrivalDate).toLocaleDateString()} -{' '}
+								{new Date(upComingReservation.departureDate).toLocaleDateString()}
+							</Label>
+						</Box>
+						<Box marginBottom={15}>
+							<Label variant={'caption'}>Confirmation Code</Label>
+							<Label variant={'body1'}>{upComingReservation.confirmationCode}</Label>
+						</Box>
+						<LabelLink
+							path={`/reservation/details?ri=${upComingReservation.id}`}
+							externalLink={false}
+							label={'View Booking Details'}
+							variant={'button'}
+							iconRight={'icon-chevron-right'}
+							iconSize={7}
+							onClick={() => {
+								router
+									.navigate(`/reservation/details?ri=${upComingReservation.id}`)
+									.catch(console.error);
+								props.onClose();
+							}}
+						/>
+					</>
+				) : (
+					<Label variant={'h4'}>You have no upcoming stays</Label>
+				)}
 			</Paper>
 			<Box className={'tab'} onClick={props.onToggle}>
 				<Icon
