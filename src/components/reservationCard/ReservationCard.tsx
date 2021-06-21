@@ -23,6 +23,9 @@ interface ReservationCardProps {
 	totalCostCents: number;
 	totalPoints: number;
 	onViewDetailsClick: () => void;
+	cancelPermitted: 0 | 1;
+	cancelPolicy: string;
+	confirmCancellation?: () => void;
 }
 
 const ReservationCard: React.FC<ReservationCardProps> = (props) => {
@@ -45,6 +48,10 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 					sleeps={props.sleeps}
 					maxOccupancy={props.maxOccupancy}
 					amenities={props.amenities}
+					toggleConfirmation={() => {}}
+					cancelPermitted={props.cancelPermitted}
+					cancelPolicy={props.cancelPolicy}
+					confirmCancellation={props.confirmCancellation}
 				/>
 			</Box>
 			<Paper className={'columnThree'} boxShadow padding={'25px 40px'}>
