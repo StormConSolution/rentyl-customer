@@ -50,6 +50,119 @@ const ReservationAvailabilityPage: React.FC = () => {
 		pagination: { page: 1, perPage: 5 }
 	});
 
+	const mockAvailability: Api.Destination.Res.Availability[] = [
+		{
+			id: 1,
+			name: 'tester',
+			description: 'more testing',
+			code: 'code bob',
+			status: 'some status',
+			address1: '123 s 456 e',
+			address2: '',
+			city: 'city',
+			state: 'st',
+			zip: '12345',
+			country: 'usa',
+			logoUrl: '',
+			media: [
+				{
+					id: 1,
+					companyId: 1,
+					uploaderId: 1,
+					type: 'image',
+					urls: { thumb: '', small: '', large: '' },
+					title: 'media',
+					description: 'media test',
+					isPrimary: 1
+				}
+			],
+			features: [
+				{
+					id: 1,
+					title: 'feature',
+					icon: 'icon'
+				}
+			],
+			accommodationTypes: [
+				{
+					id: 1,
+					name: 'accomodation type'
+				}
+			],
+			accommodations: [
+				{
+					id: 1,
+					name: 'accomodation',
+					roomCount: 1,
+					bedDetails: 2,
+					priceCents: 3,
+					features: [
+						{
+							id: 1,
+							title: 'feature',
+							icon: 'feature icon'
+						}
+					]
+				}
+			]
+		},
+		{
+			id: 1,
+			name: 'tester',
+			description: 'more testing',
+			code: 'code bob',
+			status: 'some status',
+			address1: '123 s 456 e',
+			address2: '',
+			city: 'city',
+			state: 'st',
+			zip: '12345',
+			country: 'usa',
+			logoUrl: '',
+			media: [
+				{
+					id: 1,
+					companyId: 1,
+					uploaderId: 1,
+					type: 'image',
+					urls: { thumb: '', small: '', large: '' },
+					title: 'media',
+					description: 'media test',
+					isPrimary: 1
+				}
+			],
+			features: [
+				{
+					id: 1,
+					title: 'feature',
+					icon: 'icon'
+				}
+			],
+			accommodationTypes: [
+				{
+					id: 1,
+					name: 'accomodation type'
+				}
+			],
+			accommodations: [
+				{
+					id: 1,
+					name: 'accomodation',
+					roomCount: 1,
+					bedDetails: 2,
+					priceCents: 3,
+					features: [
+						{
+							id: 1,
+							title: 'feature',
+							icon: 'feature icon'
+						}
+					]
+				}
+			]
+		}
+	];
+
 	useEffect(() => {
 		async function getReservations() {
 			console.log('searchQueryObj', searchQueryObj);
@@ -113,8 +226,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function renderDestinationSearchResultCards() {
-		if (!destinations) return;
-		return destinations.map((destination, index) => {
+		// if (!destinations) return;
+		// return destinations.map((destination, index) => {
+		return mockAvailability.map((destination, index) => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, -1);
