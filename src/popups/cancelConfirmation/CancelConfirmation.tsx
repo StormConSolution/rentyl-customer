@@ -30,7 +30,7 @@ const CancelConfirmation: React.FC<CancelConfirmationProps> = (props) => {
 						popupController.close(CancelConfirmation);
 					}}
 				/>
-				<Paper className={'paperWrapper'} height={'423px'} width={'335px'} backgroundColor={'#fcfbf8'}>
+				<Paper className={'paperWrapper'} backgroundColor={'#fcfbf8'}>
 					<Label variant={'h2'}>{props.title}</Label>
 					<p>{props.cancelPolicy}</p>
 					<Box className={'buttonBox'} display={'flex'}>
