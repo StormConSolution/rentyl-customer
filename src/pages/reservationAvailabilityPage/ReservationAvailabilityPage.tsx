@@ -23,6 +23,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
+import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
@@ -423,6 +424,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				>
 					{renderDestinationSearchResultCards()}
 				</Box>
+				<RateCodeSelect cancel={() => {}} apply={() => {}} />
 				<div className={'paginationDiv'}>
 					<PaginationButtons
 						selectedRowsPerPage={perPage}
