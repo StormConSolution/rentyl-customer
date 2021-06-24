@@ -29,6 +29,7 @@ import LoginOrCreateAccountPopup, {
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import AccommodationFeatures = Model.AccommodationFeatures;
+import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -282,6 +283,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
 						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
 					/>
+					<RateCodeSelect apply={} />
 					<IconLabel
 						className={'moreFiltersLink'}
 						labelName={'More Filters'}
