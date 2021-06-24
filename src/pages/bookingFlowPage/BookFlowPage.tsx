@@ -14,6 +14,7 @@ import Footer from '../../components/footer/Footer';
 import BookingAvailability from './bookingAvailability/BookingAvailability';
 import BookingCheckout from './bookingCheckout/BookingCheckout';
 import AccommodationDetails from './accomodationDetails/AccommodationDetails';
+import moment from 'moment';
 
 const BookFlowPage = () => {
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -85,7 +86,13 @@ const BookFlowPage = () => {
 	return (
 		<Paper className={'rsBookFlowPage'}>
 			{addRoom ? (
-				<BookingAvailability destinationId={params.data.destinationId} />
+				<BookingAvailability
+					destinationId={params.data.destinationId}
+					adults={1}
+					startDate={moment()}
+					endDate={moment()}
+					children={0}
+				/>
 			) : (
 				<BookingCheckout
 					reservationData={reservationData}

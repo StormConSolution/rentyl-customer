@@ -16,4 +16,14 @@ export default class DestinationService extends Service {
 	async searchAvailableReservations(data: Api.Destination.Req.Availability) {
 		return await http.get<Api.Destination.Res.GetByPageAvailability>('destination/availability', data);
 	}
+
+	async searchAvailableAccommodationsByDestination(
+		data: Api.Accommodation.Req.Availability
+	): Promise<Api.Accommodation.Res.Availability[]> {
+		const response = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
+			'/accommodation/availability',
+			data
+		);
+		return response.data.data;
+	}
 }
