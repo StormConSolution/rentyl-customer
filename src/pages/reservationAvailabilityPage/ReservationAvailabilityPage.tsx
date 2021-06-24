@@ -28,8 +28,8 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import AccommodationFeatures = Model.AccommodationFeatures;
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
+import AccommodationFeatures = Model.AccommodationFeatures;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -50,6 +50,22 @@ const ReservationAvailabilityPage: React.FC = () => {
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
+	const [showRateCode, setShowRateCode] = useState<boolean>(false);
+	const [rateCode, setRateCode] = useState<string | null>();
+
+	useEffect(() => {
+		async function getReservations() {
+			try {
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
+				setDestinations(res.data.data);
+				setAvailabilityTotal(res.data.total);
+			} catch (e) {
+				rsToasts.error('An unexpected error has occurred on the server.');
+			}
+			setWaitToLoad(false);
+		}
+		getReservations().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function getReservations() {
@@ -67,7 +83,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}, [searchQueryObj]);
 
 	function updateSearchQueryObj(
-		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
+		key:
+			| 'startDate'
+			| 'endDate'
+			| 'adults'
+			| 'children'
+			| 'priceRangeMin'
+			| 'priceRangeMax'
+			| 'pagination'
+			| 'rate',
 		value: any
 	) {
 		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
@@ -283,7 +307,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
 						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
 					/>
-					<RateCodeSelect apply={} />
 					<IconLabel
 						className={'moreFiltersLink'}
 						labelName={'More Filters'}
@@ -300,6 +323,26 @@ const ReservationAvailabilityPage: React.FC = () => {
 							});
 						}}
 					/>
+					<Box>
+						<IconLabel
+							labelName={'toggle rate code'}
+							iconImg={!showRateCode ? 'icon-chevron-down' : 'icon-chevron-up'}
+							iconPosition={'right'}
+							iconSize={16}
+							onClick={() => setShowRateCode(!showRateCode)}
+						/>
+						{showRateCode && (
+							<RateCodeSelect
+								apply={(value) => {
+									setRateCode(value);
+									updateSearchQueryObj('rate', value);
+									setShowRateCode(false);
+								}}
+								code={rateCode}
+								valid={true}
+							/>
+						)}
+					</Box>
 					<div className={'bottomBorderDiv'} />
 				</Box>
 				<Box
