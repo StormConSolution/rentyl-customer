@@ -51,7 +51,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		pagination: { page: 1, perPage: 5 }
 	});
 	const [showRateCode, setShowRateCode] = useState<boolean>(false);
-	const [rateCode, setRateCode] = useState<string | null>();
+	const [rateCode, setRateCode] = useState<string>('');
 
 	useEffect(() => {
 		async function getReservations() {
@@ -69,7 +69,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getReservations() {
-			console.log('searchQueryObj', searchQueryObj);
 			try {
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
@@ -101,7 +100,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj[key] = value;
+			if (value === '') delete createSearchQueryObj[key];
+			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
 	}
@@ -330,16 +330,16 @@ const ReservationAvailabilityPage: React.FC = () => {
 							iconPosition={'right'}
 							iconSize={16}
 							onClick={() => setShowRateCode(!showRateCode)}
+							className={'toggleCode'}
 						/>
 						{showRateCode && (
 							<RateCodeSelect
 								apply={(value) => {
 									setRateCode(value);
 									updateSearchQueryObj('rate', value);
-									setShowRateCode(false);
 								}}
 								code={rateCode}
-								valid={true}
+								valid={rateCode !== '' && (!destinations || destinations.length < 1)}
 							/>
 						)}
 					</Box>

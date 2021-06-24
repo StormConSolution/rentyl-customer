@@ -1,2 +1,13 @@
 .rsRateCodeSelect {
+	grid-template-columns: 400px 400px;
+
+	.applyButton {
+		place-self: end;
+	}
+}
+
+.small {
+	.rsRateCodeSelect {
+		grid-template-columns: 50% 50%;
+	}
 }
