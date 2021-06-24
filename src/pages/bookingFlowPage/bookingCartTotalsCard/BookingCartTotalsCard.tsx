@@ -10,6 +10,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import { useState } from 'react';
 import { convertTwentyFourHourTime } from '../../../utils/utils';
+import IconLabel from '../../../components/iconLabel/IconLabel';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -27,6 +28,7 @@ interface BookingCartTotalsCardProps {
 	children: number;
 	packages?: Booking.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
+	addRoom?: () => void;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -183,6 +185,14 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				</Label>
 			</Box>
 			<Accordion titleReact={<Label variant={'body1'}>Details</Label>}>{renderTaxesAndFees()}</Accordion>
+			<IconLabel
+				labelName={'Add Room'}
+				iconImg={'icon-chevron-down'}
+				iconPosition={'right'}
+				iconSize={16}
+				onClick={props.addRoom}
+			/>
+
 			<hr />
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h3'} width={'170px'}>

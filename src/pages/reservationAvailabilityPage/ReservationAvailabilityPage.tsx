@@ -50,6 +50,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
+	const [showRateCode, setShowRateCode] = useState<boolean>(false);
+	const [rateCode, setRateCode] = useState<string | null>();
 
 	const mockAvailability: Api.Destination.Res.Availability[] = [
 		{
@@ -177,10 +179,33 @@ const ReservationAvailabilityPage: React.FC = () => {
 			setWaitToLoad(false);
 		}
 		getReservations().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getReservations() {
+			console.log('searchQueryObj', searchQueryObj);
+			try {
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
+				setDestinations(res.data.data);
+				setAvailabilityTotal(res.data.total);
+			} catch (e) {
+				rsToasts.error('An unexpected error has occurred on the server.');
+			}
+			setWaitToLoad(false);
+		}
+		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
 	function updateSearchQueryObj(
-		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
+		key:
+			| 'startDate'
+			| 'endDate'
+			| 'adults'
+			| 'children'
+			| 'priceRangeMin'
+			| 'priceRangeMax'
+			| 'pagination'
+			| 'rate',
 		value: any
 	) {
 		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
@@ -227,9 +252,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function renderDestinationSearchResultCards() {
-		// if (!destinations) return;
-		// return destinations.map((destination, index) => {
-		return mockAvailability.map((destination, index) => {
+		if (!destinations) return;
+		return destinations.map((destination, index) => {
+			// return mockAvailability.map((destination, index) => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, -1);
@@ -413,6 +438,28 @@ const ReservationAvailabilityPage: React.FC = () => {
 							});
 						}}
 					/>
+					<Box>
+						<IconLabel
+							labelName={'toggle rate code'}
+							iconImg={!showRateCode ? 'icon-chevron-down' : 'icon-chevron-up'}
+							iconPosition={'right'}
+							iconSize={16}
+							onClick={() => setShowRateCode(!showRateCode)}
+						/>
+						{showRateCode && (
+							<RateCodeSelect
+								cancel={() => {
+									setShowRateCode(false);
+								}}
+								apply={(value) => {
+									setRateCode(value);
+									updateSearchQueryObj('rate', value);
+									setShowRateCode(false);
+								}}
+								code={rateCode}
+							/>
+						)}
+					</Box>
 					<div className={'bottomBorderDiv'} />
 				</Box>
 				<Box
@@ -424,7 +471,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				>
 					{renderDestinationSearchResultCards()}
 				</Box>
-				<RateCodeSelect cancel={() => {}} apply={() => {}} />
 				<div className={'paginationDiv'}>
 					<PaginationButtons
 						selectedRowsPerPage={perPage}

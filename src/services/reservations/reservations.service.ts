@@ -11,6 +11,7 @@ export default class ReservationsService extends Service {
 	reservationsModel: ReservationsModel = modelFactory.get<ReservationsModel>('ReservationsModel');
 
 	async verifyAvailability(data: Api.Reservation.Req.Verification) {
+		console.log('ver');
 		return await http.get<RsResponseData<Api.Reservation.Res.Verification>>('reservation/verification', data);
 	}
 

@@ -9,14 +9,16 @@ import LabelButton from '../labelButton/LabelButton';
 
 interface RateCodeSelectProps {
 	cancel: () => void;
-	apply: () => void;
+	apply: (value: string) => void;
+	code?: string | null;
 }
 
 const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 	const [rateCodeForm, setRateCodeForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('code', '', [new RsValidator(RsValidatorEnum.REQ, 'Enter a code')]),
-			new RsFormControl('agent', '', [])
+			new RsFormControl('code', props.code ? props.code : '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Enter a code')
+			])
 		])
 	);
 
@@ -27,28 +29,21 @@ const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 	return (
 		<Box className={'rsRateCodeSelect'} display={'grid'}>
 			<Box className={'enterCode'} display={'grid'}>
-				<LabelSelect
-					title={'Code Type'}
-					onChange={() => {}}
-					selectOptions={[{ value: 1, text: 'Promo Code', selected: true }]}
-				/>
 				<LabelInput
 					title={'Code'}
 					inputType={'text'}
 					control={rateCodeForm.get('code')}
 					updateControl={updateRateCodeForm}
 				/>
-				<LabelInput
-					title={'Agent'}
-					inputType={'text'}
-					control={rateCodeForm.get('agent')}
-					updateControl={updateRateCodeForm}
-					className={'agentInput'}
-				/>
 			</Box>
 			<Box display={'flex'} className={'buttonGroup'}>
 				<LabelButton look={'containedSecondary'} variant={'body1'} label={'Cancel'} onClick={props.cancel} />
-				<LabelButton look={'containedPrimary'} variant={'body1'} label={'Apply'} onClick={props.apply} />
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'body1'}
+					label={'Apply'}
+					onClick={() => props.apply(rateCodeForm.get('code').value.toString())}
+				/>
 			</Box>
 		</Box>
 	);
