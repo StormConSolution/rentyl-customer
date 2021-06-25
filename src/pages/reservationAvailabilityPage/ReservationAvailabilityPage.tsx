@@ -23,12 +23,12 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
+import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 
 interface AccommodationFeatures {
 	id: number;
@@ -335,15 +335,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 							iconPosition={'right'}
 							iconSize={16}
 							onClick={() => setShowRateCode(!showRateCode)}
-							className={'toggleCode'}
 						/>
 						{showRateCode && (
 							<RateCodeSelect
 								apply={(value) => {
 									setRateCode(value);
 									updateSearchQueryObj('rate', value);
+									setShowRateCode(false);
 								}}
-								code={rateCode}
+								code={rateCode || ''}
 								valid={rateCode !== '' && (!destinations || destinations.length < 1)}
 							/>
 						)}
