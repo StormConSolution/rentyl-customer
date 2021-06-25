@@ -236,17 +236,17 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 						iconSize={16}
 						onClick={() => setShowRateCode(!showRateCode)}
 					/>
-					{showRateCode && (
-						<RateCodeSelect
-							apply={(value) => {
-								setRateCode(value);
-								updateSearchQueryObj('rate', value);
-								setShowRateCode(false);
-							}}
-							code={rateCode}
-							valid={true}
-						/>
-					)}
+					{/*{showRateCode && (*/}
+					{/*	<RateCodeSelect*/}
+					{/*		apply={(value) => {*/}
+					{/*			setRateCode(value);*/}
+					{/*			updateSearchQueryObj('rate', value);*/}
+					{/*			setShowRateCode(false);*/}
+					{/*		}}*/}
+					{/*		code={rateCode}*/}
+					{/*		valid={true}*/}
+					{/*	/>*/}
+					{/*)}*/}
 				</Box>
 				{renderDestinationSearchResultCards()}
 			</Box>

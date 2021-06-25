@@ -22,9 +22,17 @@ const BookFlowPage = () => {
 	params.data = JSON.parse(params.data);
 	const [addRoom, setAddRoom] = useState<boolean>(false);
 
-	const [reservationData, setReservationData] = useState<Api.Reservation.Req.Create[]>();
+	const [creditCardForm, setCreditCardForm] = useState<{
+		full_name: string;
+		month: number;
+		year: number;
+		cardId: number;
+	}>();
 
-	// const [accomodations, setAccomodations] = useState<any[]>([1, 2]);
+	const [reservationData, setReservationData] = useState<Api.Reservation.Res.Verification>();
+	//what is this disabling?
+
+	const [accomodations, setAccomodations] = useState<any[]>([1, 2]);
 
 	useEffect(() => {
 		if (!params) return;
@@ -33,7 +41,7 @@ const BookFlowPage = () => {
 			try {
 				let response = await reservationService.verifyAvailability(params.data);
 				//fix this line of code should be able to just set as response
-				// if (response.data.data) setReservationData(response.data.data);
+				if (response.data.data) setReservationData(response.data.data);
 			} catch (e) {
 				//not sure i want this error message?
 				rsToasts.error(e.message);
