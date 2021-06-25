@@ -335,15 +335,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 						/>
 						{showRateCode && (
 							<RateCodeSelect
-								cancel={() => {
-									setShowRateCode(false);
-								}}
 								apply={(value) => {
 									setRateCode(value);
 									updateSearchQueryObj('rate', value);
 									setShowRateCode(false);
 								}}
-								code={rateCode}
+								code={rateCode || ''}
+								valid={true}
 							/>
 						)}
 					</Box>
