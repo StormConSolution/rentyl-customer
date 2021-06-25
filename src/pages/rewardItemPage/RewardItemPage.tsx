@@ -305,7 +305,7 @@ const RewardItemPage: React.FC = () => {
 			<div className={'querySideBar'}>
 				<div className={'rewardCategoryCheckboxList'}>
 					<Label className={'queryTitle'} variant={'h4'}>
-						Reward Categories
+						Business Categories
 					</Label>
 					<CheckboxList
 						onChange={(value, options) => {
@@ -316,6 +316,8 @@ const RewardItemPage: React.FC = () => {
 								router.updateUrlParams({
 									cids: JSON.stringify(value)
 								});
+								setShowCategoryOrRewardCards('reward');
+								setApplyFilterToggle(!applyFilterToggle);
 							}
 							setCategorySelectList(options);
 						}}

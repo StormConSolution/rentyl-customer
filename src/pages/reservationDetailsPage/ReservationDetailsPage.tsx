@@ -120,6 +120,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								{ title: 'Extra Bed', data: !!reservation.accommodation.extraBed ? 'Yes' : 'No' },
 								{ title: 'Number of Floors', data: reservation.accommodation.floorCount }
 							]}
+							toggleConfirmation={() => {}}
 							cancelPermitted={reservation.cancellationPermitted}
 							cancelPolicy={cancelPolicy}
 							confirmCancellation={() => reservationsService.cancel(params.reservationId)}

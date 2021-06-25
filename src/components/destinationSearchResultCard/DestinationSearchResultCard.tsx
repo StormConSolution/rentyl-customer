@@ -28,7 +28,6 @@ export interface DestinationSearchResultCardProps {
 
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
-	console.log('destination search result:', props);
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
 		return picturePaths.map((path: string) => {

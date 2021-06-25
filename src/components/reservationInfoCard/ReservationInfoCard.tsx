@@ -3,6 +3,9 @@ import './ReservationInfoCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
+import LabelButton from '../labelButton/LabelButton';
+import { popupController } from '@bit/redsky.framework.rs.996';
+import CancelConfirmation, { CancelConfirmationProps } from '../../popups/cancelConfirmation/CancelConfirmation';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
@@ -11,6 +14,10 @@ interface ReservationInfoCardProps {
 	maxOccupancy: number;
 	amenities: string[];
 	misc?: { title: string; data: string | number }[];
+	toggleConfirmation?: (toggle?: boolean) => void;
+	cancelPermitted: 0 | 1;
+	cancelPolicy?: string;
+	confirmCancellation?: () => void;
 }
 
 const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
@@ -62,6 +69,25 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'body1'}>{props.maxOccupancy}</Label>
 			</div>
 			{!!props.misc && renderMiscData()}
+			{/*will add back in once we have reservations that are cancellable to test && props.cancelPermitted === 1*/}
+			{new Date(props.reservationDates.startDate) > new Date() && (
+				<LabelButton
+					variant={'button'}
+					onClick={() => {
+						popupController.open<CancelConfirmationProps>(CancelConfirmation, {
+							title: 'Reservation Cancellation',
+							onChange: props.toggleConfirmation ? props.toggleConfirmation : () => {},
+							onClose: () => {
+								props.toggleConfirmation && props.toggleConfirmation(false);
+							},
+							cancelPolicy: props.cancelPolicy,
+							confirm: props.confirmCancellation ? props.confirmCancellation : () => {}
+						});
+					}}
+					label={'Cancel'}
+					look={'containedPrimary'}
+				/>
+			)}
 		</Paper>
 	);
 };

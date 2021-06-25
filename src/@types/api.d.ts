@@ -36,10 +36,9 @@ declare namespace Api {
 				endDate: Date | string;
 				adults: number;
 				children: number;
-				rate?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
-				pagination: RedSky.PagePagination;
+				pagination?: RedSky.PagePagination;
 			}
 		}
 		export namespace Res {
@@ -199,8 +198,6 @@ declare namespace Api {
 				name: string;
 				description?: string;
 				isActive?: boolean | number;
-				affiliateId?: number;
-				affiliateLocationId?: number;
 				type: string;
 				pointValue: number;
 			}
@@ -214,8 +211,6 @@ declare namespace Api {
 				name?: string;
 				description?: string;
 				isActive?: boolean | number;
-				affiliateId?: number | null;
-				affiliateLocationId?: number | null;
 				type?: string;
 				pointValue?: number;
 			}
@@ -229,30 +224,20 @@ declare namespace Api {
 		}
 
 		export namespace Res {
-			export interface Create extends Omit<Model.Action, 'companyId'> {}
-			export interface Get extends Omit<Model.Action, 'companyId' | 'affiliateId' | 'affiliateLocationId'> {
-				affiliate?: Omit<Model.Affiliate, 'companyId'>;
-				affiliateLocation?: Model.AffiliateLocation;
+			export interface Create extends Model.Action {}
+			export interface Get extends Model.Action {}
+			export interface GetByPage {
+				data: Model.Action[];
+				total: number;
 			}
-			export interface Update extends Omit<Model.Action, 'affiliateId' | 'affiliateLocationId'> {
-				affiliateId?: number;
-				affiliateLocationId?: number;
-			}
-			export interface Details extends Omit<Model.Action, 'companyId'> {
+			export interface Update extends Model.Action {}
+			export interface Details extends Model.Action {
 				campaigns: CampaignDetails[];
 			}
 			export interface CampaignDetails extends Omit<Model.Campaign, 'companyId'> {
 				campaignActionId: number;
 				actionCount: number;
 			}
-		}
-	}
-
-	export namespace Affiliate {
-		export namespace Req {}
-		export namespace Res {
-			export interface Location extends Model.AffiliateLocation {}
-			export interface Get extends Omit<Model.Affiliate, 'companyId'> {}
 		}
 	}
 
@@ -274,7 +259,6 @@ declare namespace Api {
 				startOn: Date | string;
 				endOn: Date | string;
 				pointValueMultiplier: number;
-				activityReferenceNumber?: string;
 				actions: CampaignAction.CreateMany[];
 			}
 			export interface Get {
@@ -293,7 +277,6 @@ declare namespace Api {
 				startOn?: Date | string;
 				endOn?: Date | string;
 				pointValueMultiplier?: number;
-				activityReferenceNumber?: string;
 				actions?: CampaignAction.CreateMany[];
 			}
 			export interface Delete {
@@ -321,12 +304,10 @@ declare namespace Api {
 			campaignId: number;
 			actionId: number;
 			actionCount?: number;
-			isActive?: 0 | 1;
 		}
 		export interface CreateMany {
 			actionId: number;
 			actionCount?: number;
-			isActive?: 0 | 1;
 		}
 	}
 
@@ -484,15 +465,13 @@ declare namespace Api {
 				filter: string;
 			}
 
-			export interface Availability {
+			export interface Availability extends RedSky.PageQuery {
 				startDate: Date | string;
 				endDate: Date | string;
 				adults: number;
 				children: number;
-				rate?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
-				pagination: RedSky.PagePagination;
 			}
 		}
 		export namespace Res {
@@ -516,7 +495,6 @@ declare namespace Api {
 			export interface Update extends Details {}
 			export interface Details {
 				id: number;
-				externalId: string;
 				name: string;
 				description: string;
 				code: string;
@@ -854,7 +832,6 @@ declare namespace Api {
 		}
 		export interface DestinationDetails {
 			id: number;
-			externalId: string;
 			name: string;
 			description: string;
 			status: string;
@@ -912,12 +889,15 @@ declare namespace Api {
 				page?: number;
 				limit?: number;
 			}
+			export interface Paged extends RedSky.PageQuery {}
+			/**
+			 * WE NEED TO REMOVE THE OPTIONAL PARAM ONCE WE GET THE FRONT END PUSHED
+			 */
 			export interface Verification {
 				accommodationId: number;
 				destinationId: number;
 				adults: number;
 				children: number;
-				rateCode?: string;
 				arrivalDate: string | Date;
 				departureDate: string | Date;
 				numberOfAccommodations: number;
@@ -929,32 +909,8 @@ declare namespace Api {
 			export interface Get {
 				id: number;
 			}
-			export interface Cancel {
-				id: number;
-			}
 			export interface Upcoming {
 				limit: number;
-			}
-
-			export namespace Itinerary {
-				export interface Get {
-					reservationId?: number;
-					itineraryNumber?: string;
-				}
-				interface Stay {
-					accommodationId: number;
-					numberOfAccommodations: number;
-					arrivalDate: Date | string;
-					departureDate: Date | string;
-					adultCount: number;
-					childCount: number;
-					rateCode: string;
-				}
-				export interface Create {
-					paymentMethodId: number;
-					destinationId: number;
-					stays: Stay[];
-				}
 			}
 		}
 		export namespace Res {
@@ -975,7 +931,6 @@ declare namespace Api {
 				externalCancelNumber: string;
 				adultCount: number;
 				childCount: number;
-				externalConfirmationId: string | null;
 				confirmationDate: Date | string;
 				nightCount: number;
 				priceDetail: PriceDetail;
@@ -1019,38 +974,7 @@ declare namespace Api {
 				guaranteePolicy: string;
 				cancelPolicy: string;
 			}
-
-			export interface Cancel {
-				cancellationId: string;
-			}
 			export interface Upcoming extends Get {}
-
-			export namespace Itinerary {
-				interface Stay {
-					reservationId: number;
-					accommodation: AccommodationDetails;
-					arrivalDate: Date | string;
-					departureDate: Date | string;
-					status: string;
-					canceledOn: Date | string;
-					externalReservationNumber: string;
-					externalCancelNumber: string;
-					adultCount: number;
-					childCount: number;
-					externalConfirmationId: string | null;
-					confirmationDate: Date | string;
-					priceDetail: PriceDetail;
-					cancellationPermitted: 0 | 1;
-				}
-				export interface Get {
-					parentReservationId: number;
-					itineraryNumber: string;
-					billingAddress: BillingAddressDetails;
-					paymentMethod: PaymentMethod;
-					destination: DestinationDetails;
-					stays: Itinerary.Stay[];
-				}
-			}
 		}
 	}
 
@@ -1245,13 +1169,6 @@ declare namespace Api {
 			export interface GetFeatures extends Model.TierFeature {}
 			export interface GetFeature extends Model.TierFeature {}
 			export interface UpdateFeature extends Model.TierFeature {}
-		}
-	}
-
-	export namespace Transaction {
-		export namespace Req {}
-		export namespace Res {
-			export type OffsiteResponse = true | false;
 		}
 	}
 

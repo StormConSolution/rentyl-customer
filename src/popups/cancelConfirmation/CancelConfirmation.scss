@@ -1,0 +1,31 @@
+.rsCancelConfirmation {
+	.rsPaper {
+		padding: 15px;
+		width: 423px;
+
+		.rsLabel {
+			&.h2 {
+				text-align: center;
+			}
+		}
+	}
+
+	.buttonBox {
+		justify-content: space-around;
+		gap: 30px;
+	}
+}
+
+.small {
+	.rsCancelConfirmation {
+		.rsPaper {
+			width: 300px;
+		}
+		.buttonBox {
+			gap: 10px;
+			.rsButton {
+				padding: 0 12px;
+			}
+		}
+	}
+}
