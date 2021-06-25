@@ -238,15 +238,13 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 					/>
 					{showRateCode && (
 						<RateCodeSelect
-							cancel={() => {
-								setShowRateCode(false);
-							}}
 							apply={(value) => {
 								setRateCode(value);
 								updateSearchQueryObj('rate', value);
 								setShowRateCode(false);
 							}}
 							code={rateCode}
+							valid={true}
 						/>
 					)}
 				</Box>
