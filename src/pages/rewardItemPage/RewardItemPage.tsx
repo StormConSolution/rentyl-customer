@@ -22,6 +22,12 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
+interface FeaturedCategory {
+	categoryId: number | string;
+	imagePath: string;
+	name: string;
+}
+
 const RewardItemPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	let user = userService.getCurrentUser();
@@ -30,7 +36,7 @@ const RewardItemPage: React.FC = () => {
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [showCategoryOrRewardCards, setShowCategoryOrRewardCards] = useState<'category' | 'reward'>('category');
 	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
-	const [featuredCategory, setFeaturedCategory] = useState<Model.FeaturedCategory[]>();
+	const [featuredCategory, setFeaturedCategory] = useState<FeaturedCategory[]>();
 	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
 	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
 	const [destinationSelectList, setDestinationSelectList] = useState<SelectOptions[]>([]);
@@ -199,13 +205,13 @@ const RewardItemPage: React.FC = () => {
 	function getPrimaryRewardImg(medias: Api.Media[]): string {
 		if (!ObjectUtils.isArrayWithData(medias)) return '';
 		let primary = medias.find((item) => item.isPrimary);
-		if (primary) return primary.urls.small;
-		else return medias[0].urls.small;
+		if (primary) return primary.urls.small || '';
+		else return medias[0].urls.small || '';
 	}
 
 	function getRedeemableVoucherCode(vouchers: Api.Reward.Voucher.Res.Get[]) {
 		for (let i in vouchers) {
-			if (vouchers[i].isActive === 1 && vouchers[i].isRedeemed === 0 && vouchers[i].customerUserId === 0) {
+			if (vouchers[i].isActive && !vouchers[i].isRedeemed && vouchers[i].customerUserId === 0) {
 				return vouchers[i].code;
 			}
 		}
@@ -220,7 +226,7 @@ const RewardItemPage: React.FC = () => {
 						key={index}
 						value={category.id}
 						title={category.name}
-						imgPath={category.media[0] ? category.media[0].urls.small : ''}
+						imgPath={category.media[0].urls.small || ''}
 						onClick={(categoryId) => {
 							handleCategoryOnClick(categoryId);
 						}}

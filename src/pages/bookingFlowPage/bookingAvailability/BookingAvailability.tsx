@@ -12,7 +12,12 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 import AccommodationSearchResultCard from '../../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
-import AccommodationFeatures = Model.AccommodationFeatures;
+
+interface AccommodationFeatures {
+	id: number;
+	title: string;
+	icon: string;
+}
 
 interface BookingAvailabilityProps {
 	destinationId: number;
@@ -150,7 +155,7 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 	function getImageUrls(destination: Api.Accommodation.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large.toString();
+				return urlObj.urls.large?.toString() || '';
 			});
 		}
 		return [];

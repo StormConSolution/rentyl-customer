@@ -23,13 +23,18 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import AccommodationFeatures = Model.AccommodationFeatures;
+import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
+
+interface AccommodationFeatures {
+	id: number;
+	title: string;
+	icon: string;
+}
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -51,11 +56,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 		pagination: { page: 1, perPage: 5 }
 	});
 	const [showRateCode, setShowRateCode] = useState<boolean>(false);
-	const [rateCode, setRateCode] = useState<string | null>();
+	const [rateCode, setRateCode] = useState<string>('');
 
 	useEffect(() => {
 		async function getReservations() {
-			console.log('searchQueryObj', searchQueryObj);
 			try {
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
@@ -70,7 +74,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getReservations() {
-			console.log('searchQueryObj', searchQueryObj);
 			try {
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
@@ -102,7 +105,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj[key] = value;
+			if (value === '') delete createSearchQueryObj[key];
+			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
 	}
@@ -141,7 +145,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
 		return destinations.map((destination, index) => {
-			// return mockAvailability.map((destination, index) => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, -1);
@@ -251,7 +254,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large.toString();
+				return urlObj?.urls?.large?.toString() || '';
 			});
 		}
 		return [];
@@ -332,18 +335,16 @@ const ReservationAvailabilityPage: React.FC = () => {
 							iconPosition={'right'}
 							iconSize={16}
 							onClick={() => setShowRateCode(!showRateCode)}
+							className={'toggleCode'}
 						/>
 						{showRateCode && (
 							<RateCodeSelect
-								cancel={() => {
-									setShowRateCode(false);
-								}}
 								apply={(value) => {
 									setRateCode(value);
 									updateSearchQueryObj('rate', value);
-									setShowRateCode(false);
 								}}
 								code={rateCode}
+								valid={rateCode !== '' && (!destinations || destinations.length < 1)}
 							/>
 						)}
 					</Box>

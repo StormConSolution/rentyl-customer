@@ -23,12 +23,18 @@ import RewardService from '../../services/reward/reward.service';
 
 interface LandingPageProps {}
 
+interface FeaturedCategory {
+	categoryId: number | string;
+	imagePath: string;
+	name: string;
+}
+
 const LandingPage: React.FC<LandingPageProps> = () => {
 	const size = useWindowResizeChange();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [activeRewards, setActiveRewards] = useState<number>(0);
-	const [featuredRewards, setFeaturedRewards] = useState<Model.FeaturedCategory[]>();
+	const [featuredRewards, setFeaturedRewards] = useState<FeaturedCategory[]>();
 
 	useEffect(() => {
 		async function getFeatureRewards() {

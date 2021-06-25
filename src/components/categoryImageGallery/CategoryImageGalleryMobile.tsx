@@ -54,7 +54,7 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 								return {
 									title: value.title,
 									description: value.description,
-									imagePath: value.urls.large
+									imagePath: value.urls.large || ''
 								};
 							})
 						});

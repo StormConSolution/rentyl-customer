@@ -1,6 +1,6 @@
 declare namespace Model {
 	export type InternalResourceTypes = 'ANDROID' | 'IOS' | 'WEB';
-	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION' | 'PAYMENT';
+	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION' | 'PAYMENT' | 'OFFSITE_LOYALTY';
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 	export type AccommodationRoomClassType = 'Deluxe';
@@ -33,9 +33,11 @@ declare namespace Model {
 		| 'RESTAURANT_TRANSACTION'
 		| 'GOODWILL'
 		| 'VOUCHER_CLAIM'
-		| 'CAMPAIGN_ACTION';
+		| 'CAMPAIGN_ACTION'
+		| 'TRANSACTION_REFUND';
 	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
-	export type PaymentSystemProviders = 'adyen' | 'spreedly';
+	export type PaymentSystemProviders = 'adyen' | 'spreedly' | 'mock';
+	export type OffsiteLoyaltySystemProviders = 'fidel';
 
 	export interface Accommodation {
 		id: number;
@@ -82,6 +84,7 @@ declare namespace Model {
 		extraBedPriceCents: number;
 		adaCompliant: boolean | number;
 		heroUrl: string;
+		size: string; // of type {max: number; min: number; units: string}
 	}
 
 	export interface AccommodationBedDetails {
@@ -114,19 +117,6 @@ declare namespace Model {
 		description: string;
 	}
 
-	export interface AccommodationBedDetails {
-		type: string;
-		isPrimary: boolean | number;
-		qty: number;
-		description: string;
-	}
-
-	export interface AccommodationFeatures {
-		id: number;
-		title: string;
-		icon: string;
-	}
-
 	export interface AccommodationType {
 		id: number;
 		companyId: number;
@@ -149,14 +139,16 @@ declare namespace Model {
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean;
+		isActive: boolean | number;
 		type: string;
-		value: number;
-		valueMax: number;
+		pointValue: number;
 	}
 
 	export interface Affiliate {
 		id: number;
+		companyId: number;
+		affiliateId: number;
+		affiliateLocationId: number;
 		name: string;
 		squareLogoUrl: string;
 		wideLogoUrl: string;
@@ -164,6 +156,23 @@ declare namespace Model {
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+		externalId: string;
+		metaData: any;
+	}
+
+	export interface AffiliateLocation {
+		id: number;
+		affiliateId: number;
+		name: string;
+		address1: string;
+		address2: string;
+		city: string;
+		state: string;
+		zip: string;
+		country: string;
+		isActive: 0 | 1;
+		externalId: string;
+		metaData: any;
 	}
 
 	export interface BookingSource {
@@ -183,11 +192,13 @@ declare namespace Model {
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		maxReward: number;
 		type: string;
 		startOn: Date | string;
 		endOn: Date | string;
+		pointValueMultiplier: number;
+		activityReferenceNumber?: string;
 	}
 
 	export interface CampaignAction {
@@ -195,18 +206,9 @@ declare namespace Model {
 		companyId: number;
 		campaignId: number;
 		actionId: number;
-		createdOn: number;
-		actionCount: number;
-	}
-
-	export interface Category {
-		id: number;
-		companyId: number;
-		name: string;
-		description: string;
 		createdOn: Date | string;
-		isActive: boolean;
-		parentCategoryId: number;
+		actionCount: number;
+		isActive: 0 | 1;
 	}
 
 	export interface Cms {
@@ -298,6 +300,13 @@ declare namespace Model {
 		modifiedOn: Date | string;
 	};
 
+	export interface DestinationTax {
+		destinationId: number;
+		companyId: number;
+		code: string;
+		name: string;
+	}
+
 	export interface EmailLog {
 		id: number;
 		companyId: number;
@@ -334,12 +343,6 @@ declare namespace Model {
 		isCarousel: 0 | 1;
 	}
 
-	export interface FeaturedCategory {
-		categoryId: number | string;
-		imagePath: string;
-		name: string;
-	}
-
 	export interface MarketSegment {
 		id: number;
 		name: string;
@@ -350,9 +353,12 @@ declare namespace Model {
 	}
 
 	export interface MediaUrls {
-		thumb: string;
-		small: string;
-		large: string;
+		thumb?: string;
+		smallSmall?: string;
+		small?: string;
+		mediumSmall?: string;
+		medium?: string;
+		large?: string;
 	}
 
 	export interface StorageDetails {
@@ -388,7 +394,9 @@ declare namespace Model {
 		featureId: number;
 		mediaId: number;
 		packagesId: number;
-		productId: number;
+		rewardId: number;
+		rewardCategoryId: number;
+		tierId: number;
 	}
 
 	export interface OrderProduct {
@@ -459,41 +467,6 @@ declare namespace Model {
 		modifiedOn: Date | string;
 	}
 
-	export interface Product {
-		id: number;
-		companyId: number;
-		destinationId: number | null;
-		affiliateId: number | null;
-		name: string;
-		shortDescription: string;
-		longDescription: string;
-		priceCents: number;
-		isActive: boolean;
-		createdOn: Date | string;
-		modifiedOn: Date | string;
-		sku: string;
-		upc: number;
-		reviewScore: number;
-		reviewCount: number;
-		type: string;
-		pointPrice: number;
-		pointValue: number;
-		destinationName: string | null;
-		affiliateName: string | null;
-	}
-
-	export interface ProductCategory {
-		productId: number;
-		categoryId: number;
-		createdOn: Date | string;
-	}
-
-	export interface RedeemableRewards {
-		allCategories: Api.Reward.Category.Res.Get[];
-		featuredCategories: FeaturedCategory[];
-		destinationSelect: SelectOptions[];
-	}
-
 	export interface ReportTemplate {
 		id: number;
 		companyId: number;
@@ -507,8 +480,8 @@ declare namespace Model {
 		id: number;
 		companyId: number;
 		userId: number;
-		destinationId: number;
 		accommodationId: number;
+		destinationId: number;
 		bookingSourceId: number;
 		marketSegmentId: number;
 		orderId: number;
@@ -524,9 +497,15 @@ declare namespace Model {
 		externalCancelNumber: string;
 		adultCount: number;
 		childCount: number;
-		infantCount: number;
+		externalConfirmationId: string | null;
 		confirmationDate: Date | string;
-		nightCount: number;
+		priceDetail: string | null;
+		userPaymentMethodId: number;
+		metaData: any;
+		confirmationCode: string;
+		itineraryNumber: string;
+		cancellationPermitted: 0 | 1;
+		parentReservationId: number | null;
 	}
 
 	export interface Review {
@@ -582,16 +561,10 @@ declare namespace Model {
 		code: string;
 		companyId: number;
 		customerUserId: number;
-		isActive: 1 | 0;
-		isRedeemed: 1 | 0;
+		isActive: boolean;
+		isRedeemed: boolean;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-	}
-
-	export interface SelectOptions {
-		value: number | string;
-		text: number | string;
-		selected: boolean;
 	}
 
 	export interface Segment {
@@ -728,6 +701,7 @@ declare namespace Model {
 		isPrimary: 0 | 1;
 		createdOn: Date | string;
 		systemProvider: PaymentSystemProviders;
+		metaData: any;
 	}
 
 	export interface UserPermission {
@@ -754,6 +728,7 @@ declare namespace Model {
 		createdOn: Date | string;
 		modifiedOn: Date | string | null;
 		availableOn: Date | string;
+		expireOn: Date | string | null;
 	}
 
 	export interface UserRole {

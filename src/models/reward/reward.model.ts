@@ -2,11 +2,27 @@ import { Model } from '../Model';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
+import { SelectOptions } from '../../components/Select/Select';
 import StandardOrderTypes = RedSky.StandardOrderTypes;
 import MatchTypes = RedSky.MatchTypes;
 import FilterQueryValue = RedSky.FilterQueryValue;
 import FilterQuery = RedSky.FilterQuery;
-import FeaturedCategory = Model.FeaturedCategory;
+
+interface FeaturedCategory {
+	categoryId: number | string;
+	imagePath: string;
+	name: string;
+}
+interface RedeemableRewards {
+	allCategories: Api.Reward.Category.Res.Get[];
+	featuredCategories: FeaturedCategory[];
+	destinationSelect: SelectOptions[];
+}
+interface FeaturedCategory {
+	categoryId: number | string;
+	imagePath: string;
+	name: string;
+}
 
 export default class RewardModel extends Model {
 	private allActiveCategories: Api.Reward.Category.Res.Get[] = [];
@@ -62,13 +78,13 @@ export default class RewardModel extends Model {
 	}
 
 	async getFeaturedCategories(): Promise<FeaturedCategory[]> {
-		let featured: Model.FeaturedCategory[] = [];
+		let featured: FeaturedCategory[] = [];
 		if (ObjectUtils.isArrayWithData(this.allActiveCategories) && this.allActiveCategories) {
 			for (let category of this.allActiveCategories) {
 				if (category.isFeatured && category.isActive) {
 					featured.push({
 						categoryId: category.id,
-						imagePath: category.media[0].urls.small,
+						imagePath: category.media[0].urls.small || '',
 						name: category.name
 					});
 				}
@@ -109,7 +125,7 @@ export default class RewardModel extends Model {
 		return this.getPaginatedList(page, perPage, sortField, sortOrder, filterQuery, 'reward/voucher/paged');
 	}
 
-	async getAllForRewardItemPage(): Promise<Model.RedeemableRewards> {
+	async getAllForRewardItemPage(): Promise<RedeemableRewards> {
 		return {
 			allCategories: await this.getAllActiveCategories(),
 			featuredCategories: await this.getFeaturedCategories(),

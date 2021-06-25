@@ -244,7 +244,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						}
 					]}
 					amenityIconNames={item.featureIcons}
-					carouselImagePaths={media}
+					carouselImagePaths={media.map((m) => (m ? m : ''))}
 				/>
 			);
 		});

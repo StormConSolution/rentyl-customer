@@ -68,7 +68,7 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 											return {
 												title: value.title,
 												description: value.description,
-												imagePath: value.urls.large
+												imagePath: value.urls.large || ''
 											};
 										})
 									});
@@ -79,7 +79,7 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 											return {
 												title: value.title,
 												description: value.description,
-												imagePath: value.urls.large
+												imagePath: value.urls.large || ''
 											};
 										})
 									});

@@ -43,4 +43,9 @@ export default class ReservationsService extends Service {
 		});
 		return response.data.data;
 	}
+
+	async cancel(id: number) {
+		let response = await http.post('reservation/cancel', { id });
+		return response.data;
+	}
 }

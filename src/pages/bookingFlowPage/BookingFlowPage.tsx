@@ -127,7 +127,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 					title={item.title}
 					description={item.description}
 					priceCents={item.priceCents}
-					imgUrl={defaultImage ? defaultImage.urls.large : ''}
+					imgUrl={defaultImage?.urls.large || ''}
 					onAddPackage={() => {
 						let newPackages = [...addedPackages, item];
 						setAddedPackages(newPackages);

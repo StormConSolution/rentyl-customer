@@ -56,7 +56,7 @@ const CategoryImageGalleryResponsive: React.FC<CategoryImageGalleryResponsivePro
 								return {
 									title: value.title,
 									description: value.description,
-									imagePath: value.urls.large
+									imagePath: value.urls.large || ''
 								};
 							})
 						});
