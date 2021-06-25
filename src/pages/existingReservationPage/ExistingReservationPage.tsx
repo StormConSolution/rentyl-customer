@@ -78,6 +78,12 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 					onViewDetailsClick={() => {
 						router.navigate('/reservation/details?ri=' + item.id).catch(console.error);
 					}}
+					cancelPermitted={item.cancellationPermitted}
+					cancelPolicy={
+						item.destination.policies[item.destination.policies.findIndex((p) => p.type === 'Cancellation')]
+							.value
+					}
+					confirmCancellation={() => reservationService.cancel(item.id)}
 				/>
 			);
 		});
@@ -103,6 +109,8 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 					onViewDetailsClick={() => {
 						router.navigate('/reservation/details?ri=' + item.id).catch(console.error);
 					}}
+					cancelPermitted={0}
+					cancelPolicy={''}
 				/>
 			);
 		});

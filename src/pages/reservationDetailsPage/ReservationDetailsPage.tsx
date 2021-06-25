@@ -27,11 +27,16 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
+	const [cancelPolicy, setCancelPolicy] = useState<string>('');
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
 			try {
 				let res = await reservationsService.get(id);
+				const cancellationPolicy =
+					res.destination.policies[res.destination.policies.findIndex((p) => p.type === 'Cancellation')]
+						.value;
+				setCancelPolicy(cancellationPolicy);
 				setReservation(res);
 			} catch (e) {}
 		}
@@ -115,6 +120,10 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								{ title: 'Extra Bed', data: !!reservation.accommodation.extraBed ? 'Yes' : 'No' },
 								{ title: 'Number of Floors', data: reservation.accommodation.floorCount }
 							]}
+							toggleConfirmation={() => {}}
+							cancelPermitted={reservation.cancellationPermitted}
+							cancelPolicy={cancelPolicy}
+							confirmCancellation={() => reservationsService.cancel(params.reservationId)}
 						/>
 					</Box>
 					<Box className={'columnTwo'}>
