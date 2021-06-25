@@ -16,7 +16,7 @@ interface RateCodeSelectProps {
 
 const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 	const [rateCodeForm, setRateCodeForm] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('code', props.code ? props.code : '', [])])
+		new RsFormGroup([new RsFormControl('code', props.code || '', [])])
 	);
 
 	function updateRateCodeForm(control: RsFormControl) {

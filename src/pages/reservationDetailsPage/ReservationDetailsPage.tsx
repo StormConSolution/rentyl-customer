@@ -26,7 +26,6 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
-	const [loaded, setLoaded] = useState<boolean>(false);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [cancelPolicy, setCancelPolicy] = useState<string>('');
 
@@ -39,13 +38,12 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 						.value;
 				setCancelPolicy(cancellationPolicy);
 				setReservation(res);
-				setLoaded(true);
 			} catch (e) {}
 		}
 		getReservationData(params.reservationId).catch(console.error);
 	}, []);
 
-	return !reservation || !user || !loaded ? (
+	return !reservation || !user ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsReservationDetailsPage'}>

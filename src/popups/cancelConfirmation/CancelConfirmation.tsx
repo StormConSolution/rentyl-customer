@@ -24,7 +24,6 @@ const CancelConfirmation: React.FC<CancelConfirmationProps> = (props) => {
 			<div className={'rsCancelConfirmation'}>
 				<Icon
 					iconImg={'icon-close'}
-					className={'closeBtn'}
 					cursorPointer
 					onClick={() => {
 						popupController.close(CancelConfirmation);
