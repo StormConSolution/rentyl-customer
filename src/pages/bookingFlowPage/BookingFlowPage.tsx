@@ -218,9 +218,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 							{renderDestinationPackages()}
 						</Paper>
 						<ContactInfoAndPaymentCard
-							onContactChange={(value) => {
-								console.log('Contact Form: ', value);
-							}}
+							onContactChange={(value) => {}}
 							onCreditCardChange={(value) => {
 								let newValue: any = {
 									full_name: value.full_name

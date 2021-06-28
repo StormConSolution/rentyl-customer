@@ -12,6 +12,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 import AccommodationSearchResultCard from '../../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
+import { formatFilterDateForServer } from '../../../utils/utils';
 
 interface AccommodationFeatures {
 	id: number;
@@ -26,6 +27,7 @@ interface BookingAvailabilityProps {
 	adults: number;
 	children: number;
 	rateCode?: string;
+	bookNow: (data: Api.Reservation.Req.Verification) => void;
 }
 const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 	const size = useWindowResizeChange();
@@ -33,11 +35,7 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(false);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDate, setStartDate] = useState<moment.Moment>(props.startDate);
-	const [endDate, setEndDate] = useState<moment.Moment>(props.endDate);
-	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
-	const [showRateCode, setShowRateCode] = useState<boolean>(false);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		startDate: props.startDate.format('YYYY-MM-DD'),
 		endDate: props.endDate.format('YYYY-MM-DD'),
@@ -46,6 +44,7 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 		pagination: { page: 1, perPage: 5 },
 		destinationId: props.destinationId
 	});
+	const [showRateCode, setShowRateCode] = useState<boolean>(false);
 	const [rateCode, setRateCode] = useState<string>(props.rateCode ? props.rateCode : '');
 
 	useEffect(() => {
@@ -61,9 +60,9 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
-	function onDatesChange(start: moment.Moment | null, end: moment.Moment | null) {
-		setStartDate(start ? start : moment());
-		setEndDate(end ? end : moment());
+	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
+		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
 	function updateSearchQueryObj(
@@ -180,7 +179,18 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 					amenityIconNames={['as', 'bc']}
 					pointsEarnable={12}
 					roomStats={[]}
-					onBookNowClick={() => {}}
+					onBookNowClick={() =>
+						props.bookNow({
+							accommodationId: destination.id,
+							destinationId: props.destinationId,
+							adults: searchQueryObj.adults,
+							children: searchQueryObj.children,
+							rateCode: searchQueryObj.rate,
+							arrivalDate: searchQueryObj.startDate,
+							departureDate: searchQueryObj.endDate,
+							numberOfAccommodations: 1
+						})
+					}
 					onCompareClick={() => {}}
 					onViewDetailsClick={() => {}}
 					carouselImagePaths={['ab', 'cd']}
@@ -241,17 +251,17 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 						iconSize={16}
 						onClick={() => setShowRateCode(!showRateCode)}
 					/>
-					{/*{showRateCode && (*/}
-					{/*	<RateCodeSelect*/}
-					{/*		apply={(value) => {*/}
-					{/*			setRateCode(value);*/}
-					{/*			updateSearchQueryObj('rate', value);*/}
-					{/*			setShowRateCode(false);*/}
-					{/*		}}*/}
-					{/*		code={rateCode}*/}
-					{/*		valid={true}*/}
-					{/*	/>*/}
-					{/*)}*/}
+					{showRateCode && (
+						<RateCodeSelect
+							apply={(value) => {
+								setRateCode(value);
+								updateSearchQueryObj('rate', value);
+								setShowRateCode(false);
+							}}
+							code={rateCode}
+							valid={false}
+						/>
+					)}
 				</Box>
 				{renderDestinationSearchResultCards()}
 			</Box>

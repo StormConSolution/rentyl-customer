@@ -129,9 +129,9 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			boxShadow
 			padding={'16px'}
 		>
-			<Label variant={'h2'} marginBottom={'10px'}>
-				Your Stay
-			</Label>
+			{/*<Label variant={'h2'} marginBottom={'10px'}>*/}
+			{/*	Your Stay*/}
+			{/*</Label>*/}
 			<Box display={'flex'}>
 				<Box marginRight={'50px'}>
 					<Label variant={'h4'}>Check-in</Label>

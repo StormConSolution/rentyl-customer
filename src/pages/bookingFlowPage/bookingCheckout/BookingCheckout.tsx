@@ -13,10 +13,14 @@ import serviceFactory from '../../../services/serviceFactory';
 import PaymentService from '../../../services/payment/payment.service';
 import ReservationsService from '../../../services/reservations/reservations.service';
 
+interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
+	accommodationName: string;
+}
 interface BookingCheckoutProps {
-	reservationData?: Api.Reservation.Res.Verification;
+	accommodations: Stay[];
 	destinationId: number;
-	accommodationId: number;
+	policies: { type: Model.DestinationPolicyType; value: string }[];
+	destinationName: string;
 }
 const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 	let existingCardId = 0;
@@ -36,69 +40,71 @@ const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 	useEffect(() => {
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
-			async (token: string, pmData: Api.Payment.PmData) => {
-				let data: any = await getReservationData();
-				if (!data) return;
-				try {
-					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
-					data.paymentMethodId = result.id;
-					data.destinationId = props.destinationId;
-					let res = await reservationService.create(data);
-					popupController.close(SpinningLoaderPopup);
-					setIsDisabled(false);
-					let newData = {
-						confirmationCode: res.confirmationCode,
-						destinationName: props.reservationData!.destinationName
-					};
-
-					router
-						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-						.catch(console.error);
-				} catch (e) {
-					setIsDisabled(false);
-					popupController.close(SpinningLoaderPopup);
-				}
-			}
+			() => {}
+			// async (token: string, pmData: Api.Payment.PmData) => {
+			// 	let data = {paymentMethodId: 0, destinationId: props.destinationId};
+			// 	// let data: any = await getReservationData();
+			// 	// if (!data) return;
+			// 	try {
+			// 		const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
+			// 		data.paymentMethodId = result.id;
+			// 		// don't create a reservation just because data changed?
+			// 		// let res = await reservationService.create(data);
+			// 		popupController.close(SpinningLoaderPopup);
+			// 		setIsDisabled(false);
+			// 		// let newData = {
+			// 		// 	confirmationCode: res.confirmationCode,
+			// 		// 	destinationName: props.reservationData!.destinationName
+			// 		// };
+			// 		//
+			// 		// router
+			// 		// 	.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+			// 		// 	.catch(console.error);
+			// 	} catch (e) {
+			// 		setIsDisabled(false);
+			// 		popupController.close(SpinningLoaderPopup);
+			// 	}
+			// }
 		);
 		return () => {
 			paymentService.unsubscribeToSpreedlyError(subscribeId);
 			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
 		};
-	}, [props.reservationData, creditCardForm]);
+	}, [creditCardForm]);
 
-	function getReservationData() {
-		if (!props.reservationData) return;
-		return {
-			accommodationId: props.accommodationId,
-			adults: props.reservationData.adults,
-			children: props.reservationData.children,
-			arrivalDate: props.reservationData.checkInDate,
-			departureDate: props.reservationData.checkoutDate,
-			rateCode: props.reservationData.rateCode,
-			numberOfAccommodations: 1
-		};
-	}
+	// function getReservationData() {
+	// 	if (!props.reservationData) return;
+	// 	return {
+	// 		accommodationId: props.accommodationId,
+	// 		adults: props.reservationData.adults,
+	// 		children: props.reservationData.children,
+	// 		arrivalDate: props.reservationData.checkInDate,
+	// 		departureDate: props.reservationData.checkoutDate,
+	// 		rateCode: props.reservationData.rateCode,
+	// 		numberOfAccommodations: 1
+	// 	};
+	// }
 
 	function renderPackages() {
-		if (!props.reservationData) return;
-		return props.reservationData.destinationPackages.map((item, index) => {
-			let defaultImage = item.media.find((value) => value.isPrimary);
-			let isAdded = addedPackages.find((value) => value.id === item.id);
-			if (isAdded) return false;
-
-			return (
-				<DestinationPackageTile
-					title={item.title}
-					description={item.description}
-					priceCents={item.priceCents}
-					imgUrl={defaultImage?.urls.large || ''}
-					onAddPackage={() => {
-						let newPackages = [...addedPackages, item];
-						setAddedPackages(newPackages);
-					}}
-				/>
-			);
-		});
+		// if (!props.reservationData) return;
+		// return props.reservationData.destinationPackages.map((item, index) => {
+		// 	let defaultImage = item.media.find((value) => value.isPrimary);
+		// 	let isAdded = addedPackages.find((value) => value.id === item.id);
+		// 	if (isAdded) return false;
+		//
+		// 	return (
+		// 		<DestinationPackageTile
+		// 			title={item.title}
+		// 			description={item.description}
+		// 			priceCents={item.priceCents}
+		// 			imgUrl={defaultImage?.urls.large || ''}
+		// 			onAddPackage={() => {
+		// 				let newPackages = [...addedPackages, item];
+		// 				setAddedPackages(newPackages);
+		// 			}}
+		// 		/>
+		// 	);
+		// });
 	}
 
 	function renderContactInfo() {
@@ -127,60 +133,40 @@ const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 	}
 
 	function renderPolicies() {
-		if (!props.reservationData) return;
+		// if (!props.reservationData) return;
 		return (
 			<Box>
 				<Box display={'flex'}>
 					<div className={'labelGroup'}>
 						<Label variant={'h4'}>
-							{
-								props.reservationData.policies[
-									props.reservationData.policies.findIndex((p) => p.type === 'CheckIn')
-								].type
-							}
+							{props.policies[props.policies.findIndex((p) => p.type === 'CheckIn')]?.type}
 						</Label>
 						<Label variant={'body1'}>
 							{convertTwentyFourHourTime(
-								props.reservationData.policies[
-									props.reservationData.policies.findIndex((p) => p.type === 'CheckIn')
-								].value
+								props.policies[props.policies.findIndex((p) => p.type === 'CheckIn')]?.value
 							)}
 						</Label>
 					</div>
 					<div className={'labelGroup'}>
 						<Label variant={'h4'}>
-							{
-								props.reservationData.policies[
-									props.reservationData.policies.findIndex((p) => p.type === 'CheckOut')
-								].type
-							}
+							{props.policies[props.policies.findIndex((p) => p.type === 'CheckOut')]?.type}
 						</Label>
 						<Label variant={'body1'}>
 							{convertTwentyFourHourTime(
-								props.reservationData.policies[
-									props.reservationData.policies.findIndex((p) => p.type === 'CheckOut')
-								].value
+								props.policies[props.policies.findIndex((p) => p.type === 'CheckOut')]?.value
 							)}
 						</Label>
 					</div>
 				</Box>
 				<Label variant={'body1'} mb={10}>
-					{props.reservationData.accommodationName}
+					{props.destinationName}
 				</Label>
 				<div className={'labelGroup'}>
 					<Label variant={'h4'}>
-						{
-							props.reservationData.policies[
-								props.reservationData.policies.findIndex((p) => p.type === 'Cancellation')
-							].type
-						}
+						{props.policies[props.policies.findIndex((p) => p.type === 'Cancellation')]?.type}
 					</Label>
 					<Label variant={'body1'}>
-						{
-							props.reservationData.policies[
-								props.reservationData.policies.findIndex((p) => p.type === 'Cancellation')
-							].value
-						}
+						{props.policies[props.policies.findIndex((p) => p.type === 'Cancellation')]?.value}
 					</Label>
 				</div>
 			</Box>

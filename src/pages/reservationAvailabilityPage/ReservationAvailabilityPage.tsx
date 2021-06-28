@@ -29,7 +29,12 @@ import LoginOrCreateAccountPopup, {
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-import AccommodationFeatures = Model.AccommodationFeatures;
+
+interface AccommodationFeatures {
+	id: number;
+	title: string;
+	icon: string;
+}
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -197,18 +202,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 						data.accommodationId = accommodationId;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
-						data.destinationId = destination.id;
+						// data.destinationId = destination.id;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
-						data = JSON.stringify(data);
+						data = JSON.stringify({ destinationId: destination.id, stays: [data] });
 
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});
 						} else {
-							router.navigate(`/booking?data=${data}`).catch(console.error);
+							router.navigate(`/book?data=${data}`).catch(console.error);
 						}
 					},
 					onAddCompareClick: (accommodationId) => {
@@ -249,7 +254,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large.toString();
+				return urlObj.urls.large?.toString() || '';
 			});
 		}
 		return [];

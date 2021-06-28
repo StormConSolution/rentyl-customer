@@ -23,6 +23,7 @@ import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
 import SuccessPage from './pages/successPage/SuccessPage';
 import ExistingReservationPage from './pages/existingReservationPage/ExistingReservationPage';
 import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDetailsPage';
+import BookFlowPage from './pages/bookingFlowPage/BookFlowPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -76,6 +77,13 @@ const routes: RouteDetails[] = [
 	{
 		path: '/booking',
 		page: BookingFlowPage,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/book',
+		page: BookFlowPage,
 		options: {
 			view: 'landingPage'
 		}
