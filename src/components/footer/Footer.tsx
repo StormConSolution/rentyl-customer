@@ -4,6 +4,8 @@ import Box from '../box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Link } from '@bit/redsky.framework.rs.996';
+import router from '../../utils/router';
+import { useEffect } from 'react';
 
 export interface FooterLink {
 	text: string;
@@ -15,52 +17,27 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = (props) => {
-	function renderSocialMedia() {
-		return (
-			<Box className={'socialMediaLinks'} display={'flex'}>
-				<Icon
-					iconImg={'icon-facebook'}
-					size={21}
-					color={'#004B98'}
-					cursorPointer
-					onClick={() => {
-						console.log('Navigating to facebook');
-					}}
-				/>
-				<Icon
-					iconImg={'icon-Twitter'}
-					size={21}
-					color={'#004B98'}
-					cursorPointer
-					onClick={() => {
-						console.log('Navigating to Twitter');
-					}}
-				/>
-				<Icon
-					iconImg={'icon-youtube'}
-					size={21}
-					color={'#004B98'}
-					cursorPointer
-					onClick={() => {
-						console.log('Navigating to youtube');
-					}}
-				/>
-				<Icon
-					iconImg={'icon-instagram'}
-					size={21}
-					color={'#004B98'}
-					cursorPointer
-					onClick={() => {
-						console.log('Navigating to instagram');
-					}}
-				/>
-			</Box>
-		);
-	}
+	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
+			setTimeout(() => {
+				window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+			}, 300);
+		});
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
+	}, []);
+
 	function renderLinks(links: FooterLink[]) {
 		return links.map((link: FooterLink, index: number) => {
 			return (
-				<Link path={link.path} key={index}>
+				<Link
+					path={link.path}
+					key={index}
+					onClick={() => {
+						router.navigate(link.path).catch(console.error);
+					}}
+				>
 					{link.text}
 				</Link>
 			);
@@ -70,12 +47,55 @@ const Footer: React.FC<FooterProps> = (props) => {
 	return (
 		<Box className={'rsFooter'}>
 			<Box className={'footerNavigation'} display={'grid'}>
-				<img src={require('../../images/spire-logo.png')} alt={'Company Logo'} />
+				<img
+					src={require('../../images/spire-logo.png')}
+					alt={'Company Logo'}
+					onClick={() => {
+						router.navigate('/').catch(console.error);
+					}}
+				/>
 				<Box display={'grid'}>{renderLinks(props.links)}</Box>
 			</Box>
 			<Box className="copyright" display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 				<Label variant={'caption'}>Spire &#169; {new Date().getFullYear()}, all rights reserved.</Label>
-				{renderSocialMedia()}
+				<Box className={'socialMediaLinks'} display={'flex'}>
+					<Icon
+						iconImg={'icon-facebook'}
+						size={21}
+						color={'#004B98'}
+						cursorPointer
+						onClick={() => {
+							console.log('Navigating to facebook');
+						}}
+					/>
+					<Icon
+						iconImg={'icon-Twitter'}
+						size={21}
+						color={'#004B98'}
+						cursorPointer
+						onClick={() => {
+							console.log('Navigating to Twitter');
+						}}
+					/>
+					<Icon
+						iconImg={'icon-youtube'}
+						size={21}
+						color={'#004B98'}
+						cursorPointer
+						onClick={() => {
+							console.log('Navigating to youtube');
+						}}
+					/>
+					<Icon
+						iconImg={'icon-instagram'}
+						size={21}
+						color={'#004B98'}
+						cursorPointer
+						onClick={() => {
+							console.log('Navigating to instagram');
+						}}
+					/>
+				</Box>
 			</Box>
 		</Box>
 	);
