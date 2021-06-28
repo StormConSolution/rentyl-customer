@@ -23,13 +23,12 @@ interface BookingCheckoutProps {
 	destinationName: string;
 }
 const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
-	let existingCardId = 0;
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
-	const [isDisabled, setIsDisabled] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
+	const [existingCardId, setExistingCardId] = useState<number>(0);
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
@@ -40,31 +39,40 @@ const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 	useEffect(() => {
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
-			() => {}
-			// async (token: string, pmData: Api.Payment.PmData) => {
-			// 	let data = {paymentMethodId: 0, destinationId: props.destinationId};
-			// 	// let data: any = await getReservationData();
-			// 	// if (!data) return;
-			// 	try {
-			// 		const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
-			// 		data.paymentMethodId = result.id;
-			// 		// don't create a reservation just because data changed?
-			// 		// let res = await reservationService.create(data);
-			// 		popupController.close(SpinningLoaderPopup);
-			// 		setIsDisabled(false);
-			// 		// let newData = {
-			// 		// 	confirmationCode: res.confirmationCode,
-			// 		// 	destinationName: props.reservationData!.destinationName
-			// 		// };
-			// 		//
-			// 		// router
-			// 		// 	.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-			// 		// 	.catch(console.error);
-			// 	} catch (e) {
-			// 		setIsDisabled(false);
-			// 		popupController.close(SpinningLoaderPopup);
-			// 	}
-			// }
+			async (token: string, pmData: Api.Payment.PmData) => {
+				let data = {
+					paymentMethodId: 0,
+					destinationId: props.destinationId,
+					stays: props.accommodations.map((accommodation) => {
+						return {
+							accommodationId: accommodation.accommodationId,
+							numberOfAccommodations: 1,
+							arrivalDate: accommodation.arrivalDate,
+							departureDate: accommodation.departureDate,
+							adultCount: accommodation.adultCount,
+							childCount: accommodation.childCount,
+							rateCode: accommodation.rateCode
+						};
+					})
+				};
+				try {
+					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
+					data.paymentMethodId = result.id;
+					// don't create a reservation just because data changed?
+					let res = await reservationService.createItenerary(data);
+					popupController.close(SpinningLoaderPopup);
+					let newData = {
+						// confirmationCode: res.confirmationCode,
+						destinationName: props.destinationName
+					};
+
+					router
+						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+						.catch(console.error);
+				} catch (e) {
+					popupController.close(SpinningLoaderPopup);
+				}
+			}
 		);
 		return () => {
 			paymentService.unsubscribeToSpreedlyError(subscribeId);
@@ -72,18 +80,48 @@ const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 		};
 	}, [creditCardForm]);
 
-	// function getReservationData() {
-	// 	if (!props.reservationData) return;
-	// 	return {
-	// 		accommodationId: props.accommodationId,
-	// 		adults: props.reservationData.adults,
-	// 		children: props.reservationData.children,
-	// 		arrivalDate: props.reservationData.checkInDate,
-	// 		departureDate: props.reservationData.checkoutDate,
-	// 		rateCode: props.reservationData.rateCode,
-	// 		numberOfAccommodations: 1
-	// 	};
-	// }
+	async function completeBooking() {
+		popupController.open(SpinningLoaderPopup);
+		if (!existingCardId && creditCardForm) {
+			let paymentObj = {
+				full_name: creditCardForm.full_name,
+				month: creditCardForm.month,
+				year: creditCardForm.year
+			};
+			window.Spreedly.tokenizeCreditCard(paymentObj);
+		} else {
+			if (!props.accommodations || !existingCardId)
+				throw new Error('Missing proper data or existing card is invalid');
+			let data = {
+				paymentMethodId: existingCardId,
+				destinationId: props.destinationId,
+				stays: props.accommodations.map((accommodation) => {
+					return {
+						accommodationId: accommodation.accommodationId,
+						numberOfAccommodations: 1,
+						arrivalDate: accommodation.arrivalDate,
+						departureDate: accommodation.departureDate,
+						adultCount: accommodation.adultCount,
+						childCount: accommodation.childCount,
+						rateCode: accommodation.rateCode
+					};
+				})
+			};
+			try {
+				let res = await reservationService.createItenerary(data);
+				if (res) popupController.close(SpinningLoaderPopup);
+				let newData = {
+					iteneraryNumber: res.itineraryNumber
+				};
+
+				router
+					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+					.catch(console.error);
+			} catch (e) {
+				popupController.close(SpinningLoaderPopup);
+			}
+		}
+	}
 
 	function renderPackages() {
 		// if (!props.reservationData) return;
@@ -126,7 +164,7 @@ const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 					setIsFormValid(isValid);
 				}}
 				onExistingCardSelect={(value) => {
-					existingCardId = value;
+					setExistingCardId(value);
 				}}
 			/>
 		);
@@ -202,8 +240,10 @@ const BookingCheckout: React.FC<BookingCheckoutProps> = (props) => {
 				look={'containedPrimary'}
 				variant={'button'}
 				label={'Complete Booking'}
-				disabled={isDisabled}
-				onClick={() => {}}
+				disabled={!isFormValid || !hasAgreedToTerms}
+				onClick={() => {
+					completeBooking().catch(console.error);
+				}}
 			/>
 		</Box>
 	);

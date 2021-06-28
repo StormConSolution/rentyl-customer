@@ -42,7 +42,8 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 		adults: props.adults,
 		children: props.children,
 		pagination: { page: 1, perPage: 5 },
-		destinationId: props.destinationId
+		destinationId: props.destinationId,
+		rate: props.rateCode
 	});
 	const [showRateCode, setShowRateCode] = useState<boolean>(false);
 	const [rateCode, setRateCode] = useState<string>(props.rateCode ? props.rateCode : '');
@@ -90,67 +91,6 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 		});
 	}
 
-	function getAccommodationList(destination: Api.Accommodation.Res.Availability) {
-		// return destination.accommodations.map((accommodationDetails) => {
-		// 	let amenityIconNames: string[] = getAmenityIconNames(accommodationDetails.features);
-		// 	return {
-		// 		id: accommodationDetails.id,
-		// 		name: accommodationDetails.name,
-		// 		amenityIconNames: amenityIconNames,
-		// 		bedrooms: accommodationDetails.roomCount,
-		// 		beds: accommodationDetails.bedDetails.length,
-		// 		ratePerNight: 0,
-		// 		pointsPerNight: 0
-		// 	};
-		// });
-	}
-
-	function getSummaryTabs(destination: Api.Accommodation.Res.Availability) {
-		let accommodationsList = getAccommodationList(destination);
-		return [
-			{ label: 'Overview', content: { text: '' } },
-			{ label: 'Available Suites', content: { text: '' } }
-		];
-		// return [
-		// 	{ label: 'Overview', content: { text: ''} },
-		// 	{
-		// 		label: 'Available Suites',
-		// 		content: {
-		// 			accommodationType: 'Suites',
-		// 			accommodations: accommodationsList,
-		// 			onDetailsClick: (accommodationId: number) => {
-		// 				router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
-		// 			},
-		// 			onBookNowClick(accommodationId: number
-		// 				let data: any = {...searchQueryObj};
-		// 				data.accommodationId = accommodationId;
-		// 				data.arrivalDate = data.startDate;
-		// 				data.departureDate = data.endDate;
-		// 				data.destinationId = destination.id;
-		// 				delete data.pagination;
-		// 				delete data.startDate;
-		// 				delete data.endDate;
-		// 				data = JSON.stringify(data);
-		//
-		// 				if (!user) {
-		// 					popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
-		// 						query: data
-		// 					});
-		// 				} else {
-		// 					router.navigate(`/booking?data=${data}`).catch(console.error);
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// ];
-	}
-
-	function getAmenityIconNames(features: AccommodationFeatures[]): string[] {
-		return features.map((feature) => {
-			return feature.icon;
-		});
-	}
-
 	function getImageUrls(destination: Api.Accommodation.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
@@ -163,22 +103,39 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
 		return destinations.map((destination, index) => {
+			console.log(destination);
 			let urls: string[] = getImageUrls(destination);
-			let summaryTabs = getSummaryTabs(destination);
 			return (
 				<AccommodationSearchResultCard
 					key={index}
 					id={destination.id}
 					name={destination.name}
 					accommodationType={''}
-					maxSleeps={4}
+					maxSleeps={destination.maxSleeps}
 					squareFeet={2500}
-					description={'some description here'}
-					ratePerNightInCents={50}
-					pointsRatePerNight={100}
-					amenityIconNames={['as', 'bc']}
-					pointsEarnable={12}
-					roomStats={[]}
+					description={destination.longDescription}
+					ratePerNightInCents={destination.costPerNightCents}
+					pointsRatePerNight={destination.pointsPerNight}
+					amenityIconNames={destination.featureIcons}
+					pointsEarnable={destination.pointsEarned}
+					roomStats={[
+						{
+							label: 'Sleeps',
+							datum: destination.maxSleeps
+						},
+						{
+							label: 'Max Occupancy',
+							datum: destination.maxOccupantCount
+						},
+						{
+							label: 'ADA Compliant',
+							datum: destination.adaCompliant ? 'Yes' : 'No'
+						},
+						{
+							label: 'Extra Bed',
+							datum: destination.extraBeds ? 'Yes' : 'No'
+						}
+					]}
 					onBookNowClick={() =>
 						props.bookNow({
 							accommodationId: destination.id,
@@ -193,7 +150,7 @@ const BookingAvailability: React.FC<BookingAvailabilityProps> = (props) => {
 					}
 					onCompareClick={() => {}}
 					onViewDetailsClick={() => {}}
-					carouselImagePaths={['ab', 'cd']}
+					carouselImagePaths={urls}
 				/>
 			);
 		});

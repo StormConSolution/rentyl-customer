@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './BookFlowPage.scss';
 import Paper from '../../components/paper/Paper';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import rsToasts from '@bit/redsky.framework.toast';
 import router from '../../utils/router';
@@ -14,9 +14,9 @@ import Footer from '../../components/footer/Footer';
 import BookingAvailability from './bookingAvailability/BookingAvailability';
 import BookingCheckout from './bookingCheckout/BookingCheckout';
 import moment from 'moment';
-import AccommodationDetails from './accommodationDetails/AccommodationDetails';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
 import { StringUtils } from '../../utils/utils';
+import LoadingPage from '../loadingPage/LoadingPage';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -81,6 +81,22 @@ const BookFlowPage = () => {
 		getAccommodationDetails().catch(console.error);
 	}, []);
 
+	useEffect(() => {
+		let stays = accommodations.map((accommodation) => {
+			return {
+				adults: accommodation.adultCount,
+				children: accommodation.childCount,
+				rate: accommodation.rateCode,
+				accommodationId: accommodation.accommodationId,
+				arrivalDate: accommodation.arrivalDate,
+				departureDate: accommodation.departureDate
+			};
+		});
+		router.updateUrlParams({
+			data: JSON.stringify({ destinationId: params.data.destinationId, stays })
+		});
+	}, [accommodations]);
+
 	async function addAccommodation(
 		data: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'>
 	): Promise<Stay | undefined> {
@@ -108,19 +124,20 @@ const BookFlowPage = () => {
 				checkInTime: res.checkInTime,
 				checkoutTime: res.checkoutTime
 			};
-			if (!policies) setPolicies(res.policies);
-			if (!destinationName) setDestinationName(res.destinationName);
+			setPolicies(res.policies);
+			setDestinationName(res.destinationName);
 			return stay;
 		}
 		return;
 	}
 
-	function renderAccommodatonDetails() {
+	function renderAccommodationDetails() {
 		return (
 			<Box>
 				{accommodations.map((accommodation, index) => {
 					return (
 						<BookingCartTotalsCard
+							key={index}
 							checkInTime={accommodation.checkInTime}
 							checkoutTime={accommodation.checkoutTime}
 							checkInDate={accommodation.arrivalDate}
@@ -151,9 +168,9 @@ const BookFlowPage = () => {
 		return (
 			<Box>
 				<Label variant={'h2'}>Your Stay</Label>
-				{renderAccommodatonDetails()}
+				{renderAccommodationDetails()}
 				<Label variant={'h1'} onClick={() => setAddRoom(!addRoom)}>
-					Add Room +
+					{!addRoom ? 'Add Room +' : 'Continue to checkout'}
 				</Label>
 				<Label variant={'h2'}>
 					Total:{' '}
@@ -168,34 +185,39 @@ const BookFlowPage = () => {
 		);
 	}
 
-	return (
-		<Paper className={'rsBookFlowPage'}>
-			{addRoom ? (
-				<BookingAvailability
-					destinationId={params.data.destinationId}
-					adults={1}
-					startDate={moment()}
-					endDate={moment()}
-					children={0}
-					bookNow={async (data) => {
-						let stay = await addAccommodation(data);
-						if (stay) {
-							setAccommodations([...accommodations, stay]);
-							setAddRoom(false);
-						}
-					}}
-				/>
-			) : (
-				<BookingCheckout
-					accommodations={accommodations}
-					destinationId={params.data.destinationId}
-					policies={policies}
-					destinationName={destinationName}
-				/>
-			)}
-			{renderItinerary()}
-			<Footer links={FooterLinkTestData} />
-		</Paper>
+	return accommodations.length < 1 ? (
+		<LoadingPage />
+	) : (
+		<Page className={'rsBookFlowPage'}>
+			<div className={'rs-page-content-wrapper'}>
+				{addRoom ? (
+					<BookingAvailability
+						destinationId={params.data.destinationId}
+						adults={1}
+						startDate={moment(accommodations[0].arrivalDate)}
+						endDate={moment(accommodations[0].departureDate)}
+						children={0}
+						bookNow={async (data) => {
+							let stay = await addAccommodation(data);
+							if (stay) {
+								setAccommodations([...accommodations, stay]);
+								setAddRoom(false);
+							}
+						}}
+						rateCode={accommodations[0].rateCode}
+					/>
+				) : (
+					<BookingCheckout
+						accommodations={accommodations}
+						destinationId={params.data.destinationId}
+						policies={policies}
+						destinationName={destinationName}
+					/>
+				)}
+				{renderItinerary()}
+				<Footer links={FooterLinkTestData} />
+			</div>
+		</Page>
 	);
 };
 

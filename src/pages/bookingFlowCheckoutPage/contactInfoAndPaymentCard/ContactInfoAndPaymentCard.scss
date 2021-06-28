@@ -1,0 +1,86 @@
+@import '../../../themes/themes';
+
+.rsContactInfoAndPaymentCard {
+	background-color: theme-var($primaryBackgroundColor);
+	.contactInfo {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
+	}
+	.rsLabelInput {
+		.rsInput {
+			&.textarea {
+				max-width: 100%;
+				width: 100%;
+				height: 150px;
+				padding: 10px;
+			}
+		}
+
+		.react-tel-input {
+			input {
+				max-width: 200px;
+			}
+		}
+	}
+
+	#payment-form {
+		.useExistingCreditCard {
+			margin-top: 0 !important;
+			margin-left: 15px;
+			width: auto;
+		}
+		.creditCardInfo {
+			display: grid;
+			grid-template-columns: auto auto;
+			row-gap: 10px;
+			.creditCardExpInput {
+				input {
+					text-align: center;
+				}
+			}
+			iframe {
+				height: 40px;
+			}
+		}
+		.rsLabelCheckbox {
+			height: 100%;
+			align-items: flex-start;
+			margin-top: 10px;
+			a {
+				span {
+					color: theme-var($buttonLinkColor);
+					text-decoration: underline;
+				}
+			}
+		}
+
+		.hide {
+			display: none;
+		}
+	}
+}
+
+.small {
+	.rsContactInfoAndPaymentCard {
+		.contactInfo {
+			flex-wrap: wrap;
+			justify-content: center;
+			.rsLabelInput {
+				width: 100%;
+				.rsInput {
+					max-width: 100%;
+					width: 100%;
+				}
+			}
+		}
+		#payment-form {
+			.creditCardInfo {
+				grid-template-columns: auto;
+			}
+		}
+		.rsLabelInput {
+			margin-bottom: 15px;
+		}
+	}
+}

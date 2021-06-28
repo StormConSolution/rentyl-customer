@@ -24,6 +24,9 @@ import SuccessPage from './pages/successPage/SuccessPage';
 import ExistingReservationPage from './pages/existingReservationPage/ExistingReservationPage';
 import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDetailsPage';
 import BookFlowPage from './pages/bookingFlowPage/BookFlowPage';
+import BookingFlowCheckoutPage from './pages/bookingFlowCheckoutPage/BookingFlowCheckoutPage';
+import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
+import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
 
 const routes: RouteDetails[] = [
 	{
@@ -82,11 +85,19 @@ const routes: RouteDetails[] = [
 		}
 	},
 	{
-		path: '/book',
-		page: BookFlowPage,
+		path: '/booking/checkout',
+		page: BookingFlowCheckoutPage,
 		options: {
 			view: 'landingPage'
 		}
+	},
+	{
+		path: '/booking/add-room',
+		page: BookingFlowAddRoomPage
+	},
+	{
+		path: '/booking/packages',
+		page: BookingFlowAddPackagePage
 	},
 	{
 		path: '/reward',

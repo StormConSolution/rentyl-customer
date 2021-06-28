@@ -50,10 +50,8 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 		async function getAccommodationDetails() {
 			params.data.numberOfAccommodations = 1;
 			try {
-				console.log(params.data);
 				let response = await reservationService.verifyAvailability(params.data);
 				if (response.data.data) {
-					console.log(response.data.data);
 					setReservationData(response.data.data);
 				}
 			} catch (e) {
