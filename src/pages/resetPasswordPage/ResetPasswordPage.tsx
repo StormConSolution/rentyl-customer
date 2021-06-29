@@ -82,12 +82,14 @@ const ResetPasswordPage: React.FC = () => {
 			setPasswordForm(passwordForm.clone());
 			return;
 		}
-		if (passwordForm.get('password').value !== passwordForm.get('verifyPassword').value) {
+		const password = passwordForm.get('password').value.toString();
+		const verifyPassword = passwordForm.get('verifyPassword').value;
+		if (password !== verifyPassword) {
 			setErrorMessage('passwords do not match.');
 			return;
 		}
 		try {
-			await userService.resetPasswordByGuid(guid, `${passwordForm.get('password').value}`);
+			await userService.resetPasswordByGuid(guid, password);
 			await router.navigate('/signin');
 		} catch (e) {
 			axiosErrorHandler(e, {
