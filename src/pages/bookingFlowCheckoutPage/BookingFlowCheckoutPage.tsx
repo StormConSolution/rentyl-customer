@@ -268,8 +268,13 @@ const BookingFlowCheckoutPage = () => {
 			<Paper>
 				<Label variant={'h2'}>Your Stay</Label>
 				{renderAccommodationDetails()}
-				<Label variant={'h1'} onClick={() => {}}>
-					Add Room +'
+				<Label
+					variant={'h1'}
+					onClick={() => {
+						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`);
+					}}
+				>
+					Add Room +
 				</Label>
 				<Label variant={'h2'}>
 					Total:{' '}

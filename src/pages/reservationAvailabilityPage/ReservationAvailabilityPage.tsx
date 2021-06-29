@@ -206,14 +206,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
-						data = JSON.stringify({ destinationId: destination.id, stays: [data] });
+						data = JSON.stringify({ destinationId: destination.id, newRoom: data });
 
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});
 						} else {
-							router.navigate(`/book?data=${data}`).catch(console.error);
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
 					},
 					onAddCompareClick: (accommodationId) => {

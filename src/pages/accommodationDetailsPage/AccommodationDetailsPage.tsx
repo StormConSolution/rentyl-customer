@@ -120,20 +120,19 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 
 	async function checkIfRoomIsAvailable() {
 		if (!accommodationDetails || !destinationDetails) return;
-		let data: any = JSON.stringify({
+		let data: any = {
 			...availabilityObj,
 			accommodationId: accommodationDetails.id,
-			destinationId: destinationDetails.id,
-			children: 0,
-			numberOfAccommodations: 1
-		});
+			children: 0
+		};
+		data = JSON.stringify({ destinationId: destinationDetails.id, newRoom: data });
 
 		if (!user) {
 			popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 				query: data
 			});
 		} else {
-			router.navigate(`/booking?data=${data}`).catch(console.error);
+			router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 		}
 	}
 
