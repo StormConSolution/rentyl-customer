@@ -78,21 +78,17 @@ const ResetPasswordPage: React.FC = () => {
 	}, []);
 
 	async function resetPasswordRequest() {
-		let isValid = await passwordForm.isValid();
-		if (!isValid) {
+		if (!(await passwordForm.isValid())) {
 			setPasswordForm(passwordForm.clone());
 			return;
 		}
-		const password = passwordForm.get('password').value;
-		const verifyPassword = passwordForm.get('verifyPassword').value;
-		if (password !== verifyPassword) {
+		if (passwordForm.get('password').value !== passwordForm.get('verifyPassword').value) {
 			setErrorMessage('passwords do not match.');
 			return;
 		}
 		try {
-			let res = await userService.resetPasswordByGuid(`${guid}`, `${password}`);
+			await userService.resetPasswordByGuid(guid, `${passwordForm.get('password').value}`);
 			await router.navigate('/signin');
-			console.log(res);
 		} catch (e) {
 			axiosErrorHandler(e, {
 				[HttpStatusCode.NOT_FOUND]: () => {
