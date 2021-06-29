@@ -37,7 +37,21 @@ const SignUpPage: React.FC = () => {
 				new RsValidator(RsValidatorEnum.REQ, 'Email Required'),
 				new RsValidator(RsValidatorEnum.EMAIL, 'Invalid email')
 			]),
-			new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Please provide a password')]),
+			new RsFormControl('password', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Please provide a password'),
+				new RsValidator(
+					RsValidatorEnum.CUSTOM,
+					'Password must have: Minimum 8 characters, 1 Uppercase letter, 1 Lowercase letter, 1 Number or 1 Special character',
+					(control) => {
+						return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
+							control.value.toString()
+						);
+					}
+				),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Password must not be password', (control) => {
+					return control.value.toString() !== 'password';
+				})
+			]),
 			new RsFormControl('confirmPassword', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please retype your new password'),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Password does not match', (control) => {
