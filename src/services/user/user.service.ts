@@ -28,6 +28,26 @@ export default class UserService extends Service {
 		await this.onAfterLogin(axiosResponse.data.data);
 	}
 
+	async requestPasswordByEmail(primaryEmail: string) {
+		return await http.post<RsResponseData<Api.User.Res.ForgotPassword>>('user/password/forgot', {
+			primaryEmail
+		});
+	}
+
+	async resetPasswordByGuid(passwordResetGuid: string, newPassword: string) {
+		newPassword = SparkMD5.hash(newPassword);
+		return await http.put<RsResponseData<Api.User.Res.ResetPassword>>('user/password/reset', {
+			passwordResetGuid,
+			newPassword
+		});
+	}
+
+	async guidValidation(guid: string) {
+		return await http.put<RsResponseData<Api.User.Res.ValidateGuid>>('user/password/guid/valid', {
+			guid
+		});
+	}
+
 	async getAllCountries(): Promise<Api.Country.ICountry[]> {
 		let res = await http.get<RsResponseData<Api.Country.Res.AllCountries>>('country/all');
 		return res.data.data.countries;
