@@ -29,6 +29,7 @@ import LoginOrCreateAccountPopup, {
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
+import Accordion from '@bit/redsky.framework.rs.accordion';
 
 interface AccommodationFeatures {
 	id: number;
@@ -57,20 +58,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	});
 	const [showRateCode, setShowRateCode] = useState<boolean>(false);
 	const [rateCode, setRateCode] = useState<string>('');
-
-	useEffect(() => {
-		async function getReservations() {
-			try {
-				let res = await destinationService.searchAvailableReservations(searchQueryObj);
-				setDestinations(res.data.data);
-				setAvailabilityTotal(res.data.total);
-			} catch (e) {
-				rsToasts.error('An unexpected error has occurred on the server.');
-			}
-			setWaitToLoad(false);
-		}
-		getReservations().catch(console.error);
-	}, []);
 
 	useEffect(() => {
 		async function getReservations() {
@@ -328,16 +315,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 							});
 						}}
 					/>
-					<Box>
-						<IconLabel
-							labelName={'toggle rate code'}
-							iconImg={!showRateCode ? 'icon-chevron-down' : 'icon-chevron-up'}
-							iconPosition={'right'}
-							iconSize={16}
-							onClick={() => setShowRateCode(!showRateCode)}
-							className={'toggleCode'}
-						/>
-						{showRateCode && (
+					<Accordion
+						hideHoverEffect
+						children={
 							<RateCodeSelect
 								apply={(value) => {
 									setRateCode(value);
@@ -346,8 +326,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 								code={rateCode}
 								valid={rateCode !== '' && (!destinations || destinations.length < 1)}
 							/>
-						)}
-					</Box>
+						}
+						titleReact={<Label variant={'button'}>toggle rate code</Label>}
+					/>
+
 					<div className={'bottomBorderDiv'} />
 				</Box>
 				<Box

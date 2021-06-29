@@ -39,6 +39,18 @@
 		cursor: pointer;
 		text-decoration: underline;
 	}
+
+	.rsAccordion {
+		max-width: 800px;
+		.articleItemHeader {
+			padding: 0;
+			.rsLabel {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
 }
 
 .small {

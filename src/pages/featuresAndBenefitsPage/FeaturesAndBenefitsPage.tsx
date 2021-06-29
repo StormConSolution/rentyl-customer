@@ -62,7 +62,7 @@ const FeaturesAndBenefitsPage: React.FC<FeaturesAndBenefitsPageProps> = (props) 
 						<div className={'infoWrapper'}>
 							<Box className={'textBox'}>
 								<h1>Real Estate</h1>
-								<Label variant={'body2'} mb={'20px'}>
+								<Label variant={'body1'} mb={'20px'}>
 									The power of Spire Loyalty membership can maximize your property purchasing
 									experience, rewarding you for one of life's biggest purchases
 								</Label>
@@ -74,7 +74,7 @@ const FeaturesAndBenefitsPage: React.FC<FeaturesAndBenefitsPageProps> = (props) 
 						<div className={'infoWrapper flipped'}>
 							<Box className={'textBox'}>
 								<h1>More than just a rental</h1>
-								<Label variant={'body2'} mb={'20px'}>
+								<Label variant={'body1'} mb={'20px'}>
 									Members get to experience the rewards of paying rent and participating in their
 									rental community - reward the way you rent
 								</Label>
@@ -89,7 +89,7 @@ const FeaturesAndBenefitsPage: React.FC<FeaturesAndBenefitsPageProps> = (props) 
 						<div className={'infoWrapper'}>
 							<Box className={'textBox'}>
 								<h1>Create long lasting memories</h1>
-								<Label variant={'body2'} mb={'20px'}>
+								<Label variant={'body1'} mb={'20px'}>
 									Spire is all about rewarding the way you live work and play - these rewards will
 									enhance all your experiences
 								</Label>
@@ -101,7 +101,7 @@ const FeaturesAndBenefitsPage: React.FC<FeaturesAndBenefitsPageProps> = (props) 
 						<div className={'infoWrapper flipped'}>
 							<Box className={'textBox'}>
 								<h1>Find your dream home</h1>
-								<Label variant={'body2'} mb={'20px'}>
+								<Label variant={'body1'} mb={'20px'}>
 									With Spire you can access unique properties and experiences that will be available
 									first to our upper tier membership levels
 								</Label>

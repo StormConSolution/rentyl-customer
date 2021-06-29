@@ -19,11 +19,11 @@ export const FooterLinkTestData: FooterLink[] = [
 	},
 	{
 		text: 'About Spire Loyalty',
-		path: 'about-spire'
+		path: '/about-spire'
 	},
 	{
 		text: 'My Account',
-		path: 'account/personal-info'
+		path: '/account/personal-info'
 	},
 	{
 		text: 'Redeem Points',

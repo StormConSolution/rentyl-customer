@@ -21,22 +21,33 @@ import CountryService from '../../services/country/country.service';
 import UserAddressService from '../../services/userAddress/userAddress.service';
 import { useRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 
-interface AccountAddressPageProps {}
+let country = 'US';
+let state = '';
+let isDefault: 1 | 0 = 0;
 
-const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
-	const userService = serviceFactory.get<UserService>('UserService');
+const AccountAddressPage: React.FC = () => {
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [addressList, setAddressList] = useState<Api.User.Address[]>([]);
-	const [formChanged, setFormChanged] = useState<boolean>(false);
-	const [addressObj, setAddressObj] = useState<Api.User.Address>();
+	const [isValidForm, setIsValidForm] = useState<boolean>(false);
+	// const [addressObj, setAddressObj] = useState<Api.User.Address>();
 	const [countryList, setCountryList] = useState<
 		{ value: number | string; text: number | string; selected: boolean }[]
 	>([]);
 	const [stateList, setStateList] = useState<{ value: number | string; text: number | string; selected: boolean }[]>(
 		[]
+	);
+	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
+			new RsFormControl('address1', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
+			new RsFormControl('address2', '', []),
+			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
+			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')])
+		])
 	);
 
 	useEffect(() => {
@@ -47,11 +58,15 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 	}, []);
 
 	useEffect(() => {
+		console.log(newAddressObj.toModel());
+		console.log('isValidForm', isValidForm);
+	}, [newAddressObj]);
+
+	useEffect(() => {
 		async function getCountries() {
 			try {
 				let countries = await countryService.getAllCountries();
 				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
-				updateAddressObj('country', 'US');
 			} catch (e) {
 				console.error('getCountries', e);
 				throw rsToasts.error('An unexpected error occurred on the server.', '', 5000);
@@ -125,36 +140,21 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 		}
 	}
 
-	function updateAddressObj(
-		key: 'address1' | 'address2' | 'name' | 'city' | 'state' | 'zip' | 'country' | 'isDefault',
-		value: any
-	) {
-		setAddressObj((prev) => {
-			let createAddressObj: any = { ...prev };
-			createAddressObj[key] = value;
-			return createAddressObj;
-		});
+	function isFormFilledOut(): boolean {
+		return (
+			!!newAddressObj.get('full_name').value.toString().length &&
+			!!newAddressObj.get('address1').value.toString().length &&
+			!!newAddressObj.get('city').value.toString().length &&
+			!!newAddressObj.get('zip').value.toString().length &&
+			!!state.length
+		);
 	}
 
-	function validateObject(obj: any) {
-		let newObj: any = { ...obj };
-		let key = ['name', 'address1', 'address2', 'zip', 'city', 'state', 'country', 'isDefault'];
-		for (let value of key) {
-			if (Object.keys(newObj).includes(value)) {
-				if (newObj[value] === '') {
-					throw new Error('You are missing ' + value);
-				}
-			} else {
-				if (value === 'address2') {
-					newObj[value] = '';
-				} else if (value === 'isDefault') {
-					newObj[value] = 0;
-				} else {
-					throw new Error('You are missing ' + value);
-				}
-			}
-		}
-		return newObj;
+	async function updateNewAddressObj(control: RsFormControl) {
+		if (control.key === 'zip') control.value = +control.value;
+		newAddressObj.update(control);
+		setIsValidForm(isFormFilledOut());
+		setNewAddressObj(newAddressObj.clone());
 	}
 
 	function convertObj(obj: Api.UserAddress.Res.Create): Api.User.Address {
@@ -174,23 +174,22 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 
 	async function save() {
 		if (!user) return;
-		let newAddressObj: any = { ...addressObj };
+		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
+		addressObj['userId'] = user.id;
+		addressObj['type'] = 'BOTH';
+		addressObj['state'] = state;
+		addressObj['isDefault'] = isDefault;
+		addressObj['country'] = country;
+
 		try {
-			newAddressObj = validateObject(newAddressObj);
-			newAddressObj['userId'] = user.id;
-			newAddressObj['type'] = 'BOTH';
-		} catch (e) {
-			rsToasts.error(e.message, '', 5000);
-			return;
-		}
-		try {
-			let response = await userAddressService.create(newAddressObj);
+			let response = await userAddressService.create(addressObj);
 			let newAddressList: Api.User.Address[] = [...addressList, convertObj(response)];
 			if (response.isDefault) {
 				newAddressList = newAddressList.map((item, index) => {
 					return { ...item, isDefault: response.id === item.id ? 1 : 0 };
 				});
 			}
+			newAddressObj.resetToInitialValue();
 			setAddressList(newAddressList);
 		} catch (e) {
 			rsToasts.error(e.message, '', 5000);
@@ -224,71 +223,61 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 							className={'inputStretched'}
 							title={'Full Name'}
 							inputType={'text'}
-							onChange={(value) => {
-								setFormChanged(true);
-								updateAddressObj('name', value);
-							}}
+							control={newAddressObj.get('full_name')}
+							updateControl={updateNewAddressObj}
 						/>
 						<LabelInput
 							className={'inputStretched'}
 							title={'Address Line 1'}
 							inputType={'text'}
-							onChange={(value) => {
-								setFormChanged(true);
-								updateAddressObj('address1', value);
-							}}
+							control={newAddressObj.get('address1')}
+							updateControl={updateNewAddressObj}
 						/>
 						<LabelInput
 							className={'inputStretched'}
 							title={'Address Line 2'}
 							inputType={'text'}
-							onChange={(value) => {
-								setFormChanged(true);
-								updateAddressObj('address2', value);
-							}}
+							control={newAddressObj.get('address2')}
+							updateControl={updateNewAddressObj}
 						/>
 						<Box display={'flex'} justifyContent={'space-between'}>
 							<LabelInput
 								title={'City'}
 								inputType={'text'}
-								onChange={(value) => {
-									setFormChanged(true);
-									updateAddressObj('city', value);
-								}}
+								control={newAddressObj.get('city')}
+								updateControl={updateNewAddressObj}
 							/>
 							<LabelInput
 								title={'Zip Code'}
 								inputType={'number'}
-								onChange={(value) => {
-									setFormChanged(true);
-									updateAddressObj('zip', +value);
-								}}
+								control={newAddressObj.get('zip')}
+								updateControl={updateNewAddressObj}
 							/>
 						</Box>
 						<Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
 							<LabelSelect
 								title={'State'}
 								onChange={(value) => {
-									setFormChanged(true);
 									let newStateList = [...stateList];
 									newStateList = newStateList.map((item) => {
 										return { value: item.value, text: item.text, selected: item.value === value };
 									});
 									setStateList(newStateList);
-									updateAddressObj('state', value);
+									state = value || '';
+									setIsValidForm(isFormFilledOut());
 								}}
 								selectOptions={stateList}
 							/>
 							<LabelSelect
 								title={'Country'}
 								onChange={(value) => {
-									setFormChanged(true);
 									let newCountryList = [...countryList];
 									newCountryList = newCountryList.map((item) => {
 										return { value: item.value, text: item.text, selected: item.value === value };
 									});
 									setCountryList(newCountryList);
-									updateAddressObj('country', value);
+									country = value || '';
+									setIsValidForm(isFormFilledOut());
 								}}
 								selectOptions={countryList}
 							/>
@@ -297,19 +286,18 @@ const AccountAddressPage: React.FC<AccountAddressPageProps> = (props) => {
 							value={'isDefault'}
 							text={'Set as primary'}
 							isChecked={false}
-							onSelect={(value, text) => {
-								setFormChanged(true);
-								updateAddressObj('isDefault', 1);
+							onSelect={() => {
+								isDefault = 1;
 							}}
-							onDeselect={(value, text) => {
-								updateAddressObj('isDefault', 0);
+							onDeselect={() => {
+								isDefault = 0;
 							}}
 						/>
 						<LabelButton
-							look={formChanged ? 'containedPrimary' : 'containedSecondary'}
+							look={isValidForm ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Add New Address'}
-							disabled={!formChanged}
+							disabled={!isValidForm}
 							onClick={() => {
 								save();
 							}}

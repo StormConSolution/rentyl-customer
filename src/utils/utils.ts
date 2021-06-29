@@ -13,7 +13,19 @@ class ObjectUtils extends BaseObjectUtils {}
 
 class RegionUtils extends BaseRegionUtils {}
 
-class WebUtils extends BaseWebUtils {}
+class WebUtils extends BaseWebUtils {
+	static convertDataForUrlParams(data: any): any {
+		let convertedData: any = {};
+		for (let i in data) {
+			if (typeof data[i] === 'object') {
+				convertedData[i] = JSON.stringify(data[i]);
+			} else {
+				convertedData[i] = data[i];
+			}
+		}
+		return convertedData;
+	}
+}
 
 class DateUtils extends BaseDateUtils {}
 

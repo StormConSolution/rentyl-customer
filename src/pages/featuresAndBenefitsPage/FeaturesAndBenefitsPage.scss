@@ -21,14 +21,15 @@
 		margin: 120px auto;
 		display: flex;
 		justify-content: center;
+		align-items: flex-start;
 
 		.imageText {
 			display: grid;
 			place-items: center;
-			width: clamp(293px, 80%, 376px);
+			width: clamp(293px, 100%, 376px);
 			margin: 0 7px;
 			img {
-				width: clamp(293px, 80%, 376px);
+				width: clamp(293px, 100%, 376px);
 				height: 220px;
 				object-fit: cover;
 				margin-bottom: 15px;
