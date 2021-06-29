@@ -77,14 +77,20 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 
 	useEffect(() => {
 		async function getAvailableStays() {
+			let newSearchQueryObj = { ...searchQueryObj };
+			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
+				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
+				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			}
 			try {
-				let availableStays = await accommodationService.availability(searchQueryObj);
+				let availableStays = await accommodationService.availability(newSearchQueryObj);
 				setAvailabilityStayList(availableStays);
 			} catch (e) {
 				console.error(e);
 			}
 		}
 		getAvailableStays().catch(console.error);
+		console.log('I am running!!!');
 	}, [searchQueryObj]);
 
 	let imageIndex = 0;
@@ -467,22 +473,19 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						}}
 						onChangePriceMin={(value) => {
 							if (value !== '') {
+								console.log('I ran');
 								updateSearchQueryObj('priceRangeMin', value);
-								(document.querySelector(
-									'.priceMin > input'
-								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 							}
 						}}
 						onChangePriceMax={(value) => {
 							if (value !== '') {
 								updateSearchQueryObj('priceRangeMax', value);
-								(document.querySelector(
-									'.priceMax > input'
-								) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 							}
 						}}
 						adultsInitialInput={searchQueryObj.adults.toString()}
 						childrenInitialInput={searchQueryObj.children.toString()}
+						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
+						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
 					/>
 					<hr />
 					<div className={'accommodationCardWrapper'}>{renderAccommodations()}</div>

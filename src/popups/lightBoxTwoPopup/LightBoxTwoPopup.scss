@@ -42,12 +42,12 @@
 			}
 
 			img {
-				transition: border 300ms, filter 300ms;
+				transition: outline 300ms, filter 300ms;
 				width: 125px;
 				margin: 0 3px;
 				object-fit: cover;
 				&.selected {
-					border: 4px solid theme-var($iconAndHighlightTextColor);
+					outline: 4px solid theme-var($iconAndHighlightTextColor);
 					box-sizing: border-box;
 				}
 				&:hover {

@@ -51,13 +51,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
-	const [showRateCode, setShowRateCode] = useState<boolean>(false);
 	const [rateCode, setRateCode] = useState<string>('');
 
 	useEffect(() => {
 		async function getReservations() {
+			let newSearchQueryObj = { ...searchQueryObj };
+			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
+				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
+				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			}
 			try {
-				let res = await destinationService.searchAvailableReservations(searchQueryObj);
+				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
 				setDestinations(res.data.data);
 				setAvailabilityTotal(res.data.total);
 			} catch (e) {

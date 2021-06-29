@@ -3,6 +3,7 @@ import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import AccommodationsModel from '../../models/accommodations/accommodations.model';
 import modelFactory from '../../models/modelFactory';
+import { WebUtils } from '../../utils/utils';
 
 export default class AccommodationService extends Service {
 	accommodationsModel: AccommodationsModel = modelFactory.get<AccommodationsModel>('AccommodationsModel');
@@ -16,7 +17,7 @@ export default class AccommodationService extends Service {
 	async availability(data: Api.Accommodation.Req.Availability) {
 		let res = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
 			'accommodation/availability',
-			data
+			WebUtils.convertDataForUrlParams(data)
 		);
 		return res.data.data;
 	}
