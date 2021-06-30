@@ -15,7 +15,6 @@ import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/Account
 import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
-import BookingFlowPage from './pages/bookingFlowPage/BookingFlowPage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
 import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
@@ -23,7 +22,6 @@ import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
 import SuccessPage from './pages/successPage/SuccessPage';
 import ExistingReservationPage from './pages/existingReservationPage/ExistingReservationPage';
 import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDetailsPage';
-import BookFlowPage from './pages/bookingFlowPage/BookFlowPage';
 import BookingFlowCheckoutPage from './pages/bookingFlowCheckoutPage/BookingFlowCheckoutPage';
 import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
 import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
@@ -79,7 +77,7 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/booking',
-		page: BookingFlowPage,
+		page: BookingFlowCheckoutPage,
 		options: {
 			view: 'landingPage'
 		}

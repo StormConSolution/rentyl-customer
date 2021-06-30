@@ -1,22 +1,24 @@
+import * as React from 'react';
 import './BookingFlowCheckoutPage.scss';
-import PaymentService from '../../services/payment/payment.service';
-import serviceFactory from '../../services/serviceFactory';
-import ReservationsService from '../../services/reservations/reservations.service';
-import React, { useEffect, useState } from 'react';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
-import LabelButton from '../../components/labelButton/LabelButton';
-import Box from '../../components/box/Box';
+import { useEffect, useState } from 'react';
+import rsToasts from '@bit/redsky.framework.toast';
+import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
-import { convertTwentyFourHourTime, StringUtils } from '../../utils/utils';
+import Paper from '../../components/paper/Paper';
+import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
 import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
-import { Page, popupController } from '@bit/redsky.framework.rs.996';
+import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
+import LabelButton from '../../components/labelButton/LabelButton';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import ReservationsService from '../../services/reservations/reservations.service';
+import LoadingPage from '../loadingPage/LoadingPage';
+import { convertTwentyFourHourTime, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import BookingCartTotalsCard from '../bookingFlowPage/bookingCartTotalsCard/BookingCartTotalsCard';
-import rsToasts from '@bit/redsky.framework.toast';
-import Paper from '../../components/paper/Paper';
+import PaymentService from '../../services/payment/payment.service';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -25,18 +27,23 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	checkoutTime: string;
 }
 
-const BookingFlowCheckoutPage = () => {
-	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
+interface BookingFlowPageProps {}
+
+let existingCardId = 0;
+
+const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
+	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
 	const destinationId = params.data.destinationId;
+	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
+	const [isFormValid, setIsFormValid] = useState<boolean>(false);
+	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
 	const [destinationName, setDestinationName] = useState<string>('');
 	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
-	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
-	const [isFormValid, setIsFormValid] = useState<boolean>(false);
-	const [existingCardId, setExistingCardId] = useState<number>(0);
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
@@ -45,8 +52,11 @@ const BookingFlowCheckoutPage = () => {
 	}>();
 
 	useEffect(() => {
+		if (!params) return;
 		async function getAccommodationDetails() {
+			params.data.numberOfAccommodations = 1;
 			try {
+				popupController.open(SpinningLoaderPopup);
 				const rooms: Stay[] = await Promise.all(
 					params.data.stays.map(
 						async (accommodation: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'>) => {
@@ -55,11 +65,14 @@ const BookingFlowCheckoutPage = () => {
 					)
 				);
 				if (rooms) setAccommodations(rooms);
+				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error(e.message);
-				router.back();
+				router.navigate('/reservation/availability');
+				popupController.close(SpinningLoaderPopup);
 			}
 		}
+
 		getAccommodationDetails().catch(console.error);
 	}, []);
 
@@ -107,6 +120,10 @@ const BookingFlowCheckoutPage = () => {
 		};
 	}, [creditCardForm]);
 
+	useEffect(() => {
+		setIsDisabled(!hasAgreedToTerms || !isFormValid);
+	}, [hasAgreedToTerms, isFormValid]);
+
 	async function addAccommodation(
 		data: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'>
 	): Promise<Stay | undefined> {
@@ -139,6 +156,20 @@ const BookingFlowCheckoutPage = () => {
 			return stay;
 		}
 		return;
+	}
+
+	function renderPolicies() {
+		return policies.map((item) => {
+			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
+			return (
+				<>
+					<Label variant={'h4'}>{item.type}</Label>
+					<Label variant={'body1'} mb={10}>
+						{item.value}
+					</Label>
+				</>
+			);
+		});
 	}
 
 	async function completeBooking() {
@@ -183,163 +214,150 @@ const BookingFlowCheckoutPage = () => {
 		}
 	}
 
-	function renderContactInfo() {
+	function renderAccommodationDetails() {
 		return (
-			<ContactInfoAndPaymentCard
-				onContactChange={(value) => {
-					console.log('Contact Form: ', value);
-				}}
-				onCreditCardChange={(value) => {
-					let newValue: any = {
-						full_name: value.full_name
-					};
-					newValue.month = parseInt(value.expDate.split('/')[0]);
-					newValue.year = parseInt(value.expDate.split('/')[1]);
-
-					setCreditCardForm(newValue);
-				}}
-				isValidForm={(isValid) => {
-					setIsFormValid(isValid);
-				}}
-				onExistingCardSelect={(value) => {
-					setExistingCardId(value);
-				}}
-			/>
-		);
-	}
-
-	function renderPolicies() {
-		// if (!reservationData) return;
-		return (
-			<Box>
-				<Box display={'flex'}>
-					<div className={'labelGroup'}>
-						<Label variant={'h4'}>{policies[policies.findIndex((p) => p.type === 'CheckIn')]?.type}</Label>
-						<Label variant={'body1'}>
-							{convertTwentyFourHourTime(
-								policies[policies.findIndex((p) => p.type === 'CheckIn')]?.value
-							)}
-						</Label>
-					</div>
-					<div className={'labelGroup'}>
-						<Label variant={'h4'}>{policies[policies.findIndex((p) => p.type === 'CheckOut')]?.type}</Label>
-						<Label variant={'body1'}>
-							{convertTwentyFourHourTime(
-								policies[policies.findIndex((p) => p.type === 'CheckOut')]?.value
-							)}
-						</Label>
-					</div>
-				</Box>
-				<Label variant={'body1'} mb={10}>
-					{destinationName}
-				</Label>
-				<div className={'labelGroup'}>
-					<Label variant={'h4'}>{policies[policies.findIndex((p) => p.type === 'Cancellation')]?.type}</Label>
-					<Label variant={'body1'}>
-						{policies[policies.findIndex((p) => p.type === 'Cancellation')]?.value}
-					</Label>
-				</div>
-			</Box>
-		);
-	}
-
-	function renderAcknowledgement() {
-		return (
-			<Box>
-				<Label variant={'h2'}>Acknowledgement</Label>
-				<LabelCheckbox
-					value={1}
-					text={'* I agree with the Privacy Terms.'}
-					isChecked={hasAgreedToTerms}
-					onSelect={() => {
-						setHasAgreedToTerms(true);
-					}}
-					onDeselect={() => {
-						setHasAgreedToTerms(false);
-					}}
-				/>
-				<Label variant={'h4'}>By completing this booking, I agree with the booking conditions</Label>
-			</Box>
-		);
-	}
-
-	function renderItinerary() {
-		return (
-			<Paper>
+			<Box className={'cart'}>
 				<Label variant={'h2'}>Your Stay</Label>
-				{renderAccommodationDetails()}
-				<Label
-					variant={'h1'}
+				{accommodations.map((accommodation, index) => (
+					<BookingCartTotalsCard
+						key={index}
+						checkInTime={accommodation.checkInTime}
+						checkoutTime={accommodation.checkoutTime}
+						checkInDate={accommodation.arrivalDate}
+						checkoutDate={accommodation.departureDate}
+						accommodationName={accommodation.accommodationName}
+						accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
+						taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
+						feeTotalsInCents={accommodation.prices.feeTotalsInCents}
+						taxTotalsInCents={accommodation.prices.taxTotalsInCents}
+						costPerNight={accommodation.prices.accommodationDailyCostsInCents}
+						adults={accommodation.adultCount}
+						children={accommodation.childCount}
+						grandTotalCents={accommodation.prices.grandTotalCents}
+						packages={[]}
+						onDeletePackage={(packageId) => {
+							// let newPackages = [...addedPackages];
+							// newPackages = newPackages.filter((item) => item.id !== packageId);
+							// setAddedPackages(newPackages);
+						}}
+					/>
+				))}
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'button'}
+					label={'Add Room'}
 					onClick={() => {
 						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`);
 					}}
-				>
-					Add Room +
-				</Label>
-				<Label variant={'h2'}>
-					Total:{' '}
-					{StringUtils.formatMoney(
-						accommodations.reduce(
-							(total, accommodation) => (total += accommodation.prices.grandTotalCents),
-							0
-						)
-					)}
-				</Label>
-			</Paper>
-		);
-	}
-
-	function renderAccommodationDetails() {
-		return (
-			<Box>
-				{accommodations.map((accommodation, index) => {
-					return (
-						<BookingCartTotalsCard
-							key={index}
-							checkInTime={accommodation.checkInTime}
-							checkoutTime={accommodation.checkoutTime}
-							checkInDate={accommodation.arrivalDate}
-							checkoutDate={accommodation.departureDate}
-							accommodationName={accommodation.accommodationName}
-							accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
-							taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
-							feeTotalsInCents={accommodation.prices.feeTotalsInCents}
-							taxTotalsInCents={accommodation.prices.taxTotalsInCents}
-							costPerNight={accommodation.prices.accommodationDailyCostsInCents}
-							adults={accommodation.adultCount}
-							children={accommodation.childCount}
-							grandTotalCents={accommodation.prices.grandTotalCents}
-							packages={[]}
-							onDeletePackage={(packageId) => {
-								// let newPackages = [...addedPackages];
-								// newPackages = newPackages.filter((item) => item.id !== packageId);
-								// setAddedPackages(newPackages);
-							}}
-						/>
-					);
-				})}
+				/>
+				<Box display={'flex'} className={'grandTotal'}>
+					<Label variant={'h2'}>Grand Total:</Label>
+					<Label variant={'h2'}>
+						{StringUtils.formatMoney(
+							accommodations.reduce(
+								(total, accommodation) => (total += accommodation.prices.grandTotalCents),
+								0
+							)
+						)}
+					</Label>
+				</Box>
 			</Box>
 		);
 	}
 
-	return (
-		<Page className={'rsBookingFlowCheckoutPage'}>
+	return !accommodations ? (
+		<LoadingPage />
+	) : (
+		<Page className={'rsBookingFlowPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box>
-					{renderContactInfo()}
-					{renderPolicies()}
-					{renderAcknowledgement()}
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Complete Booking'}
-						disabled={!isFormValid || !hasAgreedToTerms}
-						onClick={() => {
-							completeBooking().catch(console.error);
-						}}
-					/>
+				<Label marginTop={80} marginLeft={size === 'small' ? '15px' : ''} variant={'h1'}>
+					Booking
+				</Label>
+				<hr />
+				<Box
+					padding={size === 'small' ? '0 15px' : '0 25px'}
+					boxSizing={'border-box'}
+					display={'flex'}
+					width={'100%'}
+					justifyContent={'space-evenly'}
+					alignItems={'flex-start'}
+					position={'relative'}
+					height={'fit-content'}
+				>
+					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
+						<ContactInfoAndPaymentCard
+							onContactChange={(value) => {}}
+							onCreditCardChange={(value) => {
+								let newValue: any = {
+									full_name: value.full_name
+								};
+								newValue.month = parseInt(value.expDate.split('/')[0]);
+								newValue.year = parseInt(value.expDate.split('/')[1]);
+
+								setCreditCardForm(newValue);
+							}}
+							isValidForm={(isValid) => {
+								setIsFormValid(isValid);
+							}}
+							onExistingCardSelect={(value) => {
+								existingCardId = value;
+							}}
+						/>
+						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
+							<Label variant={'h2'} mb={10}>
+								Policies:
+							</Label>
+							<Box display={'flex'} mb={10}>
+								<Box marginRight={'50px'}>
+									<Label variant={'h4'}>Check-in</Label>
+									<Label variant={'body1'}>
+										After {convertTwentyFourHourTime(accommodations[0]?.checkInTime)}
+									</Label>
+								</Box>
+								<Box>
+									<Label variant={'h4'}>Check-out</Label>
+									<Label variant={'body1'}>
+										Before {convertTwentyFourHourTime(accommodations[0]?.checkoutTime)}
+									</Label>
+								</Box>
+							</Box>
+							<Label variant={'body1'} mb={10}>
+								{destinationName}
+							</Label>
+							{renderPolicies()}
+						</Paper>
+						{size === 'small' && renderAccommodationDetails()}
+
+						<Paper className={'acknowledgementSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
+							<Label variant={'h2'}>Acknowledgement</Label>
+							<LabelCheckbox
+								value={1}
+								text={'* I agree with the Privacy Terms.'}
+								isChecked={false}
+								onSelect={() => {
+									setHasAgreedToTerms(true);
+								}}
+								onDeselect={() => {
+									setHasAgreedToTerms(false);
+								}}
+							/>
+							<Label variant={'h4'}>
+								By completing this booking, I agree with the booking conditions
+							</Label>
+						</Paper>
+						<LabelButton
+							className={'completeBookingBtn'}
+							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
+							variant={'button'}
+							label={'complete booking'}
+							onClick={() => {
+								completeBooking().catch(console.error);
+							}}
+							disabled={isDisabled}
+						/>
+					</Box>
+					{size !== 'small' && renderAccommodationDetails()}
 				</Box>
-				{renderItinerary()}
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

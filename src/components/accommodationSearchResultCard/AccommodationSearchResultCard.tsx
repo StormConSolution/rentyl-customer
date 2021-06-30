@@ -10,14 +10,13 @@ import AccommodationSearchDetailCard, {
 } from '../accommodationSearchDetailCard/AccommodationSearchDetailCard';
 import StarRating, { Rating } from '../starRating/StarRating';
 import './AccommodationSearchResultCard.scss';
-import LabelLink from '../labelLink/LabelLink';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../labelButton/LabelButton';
 
 export interface AccommodationSearchResultCardProps {
 	id: number | string;
 	name: string;
-	accommodationType: string;
+	accommodationType?: string;
 	maxSleeps: number;
 	squareFeet: number | null;
 	description: string;
@@ -29,9 +28,10 @@ export interface AccommodationSearchResultCardProps {
 	carouselImagePaths: string[];
 	amenityIconNames: string[];
 	onBookNowClick: () => void;
-	onCompareClick: () => void;
+	onCompareClick?: () => void;
 	disableCompare?: boolean;
-	onViewDetailsClick: () => void;
+	onViewDetailsClick?: () => void;
+	hideButtons?: boolean;
 }
 
 const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps> = (props) => {
@@ -59,12 +59,14 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						+ taxes &amp; fees
 					</Label>
 					{/*<StarRating rating={props.starRating} size="small16px" />*/}
-					<LabelButton
-						onClick={props.onViewDetailsClick}
-						look="containedSecondary"
-						label="View Details"
-						variant="caption"
-					/>
+					{!props.hideButtons && (
+						<LabelButton
+							onClick={props.onViewDetailsClick}
+							look="containedSecondary"
+							label="View Details"
+							variant="caption"
+						/>
+					)}
 				</div>
 				<AccommodationSearchCallToActionCard
 					points={props.pointsEarnable}
@@ -74,6 +76,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					bookNowOnClick={props.onBookNowClick}
 					compareOnClick={props.onCompareClick}
 					viewDetailsOnClick={props.onViewDetailsClick}
+					hideButtons={props.hideButtons}
 				/>
 			</Box>
 		);
@@ -100,7 +103,12 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					{/*	<StarRating rating={props.starRating} size="small16px" />*/}
 					{/*	<LabelLink variant="caption" path="" label={`View ${props.accommodationType} Ratings >`} />*/}
 					{/*</div>*/}
-					<Label className="accommodationDescription" variant="body2">
+					<Label
+						className="accommodationDescription"
+						variant="body2"
+						overflow={'hidden'}
+						textOverflow={'ellipsis'}
+					>
 						{props.description}
 					</Label>
 				</div>
@@ -116,6 +124,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						bookNowOnClick={props.onBookNowClick}
 						compareOnClick={props.onCompareClick}
 						viewDetailsOnClick={props.onViewDetailsClick}
+						hideButtons={props.hideButtons}
 					/>
 				</div>
 			</Box>

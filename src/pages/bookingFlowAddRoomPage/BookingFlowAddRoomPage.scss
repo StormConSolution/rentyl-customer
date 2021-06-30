@@ -1,7 +1,33 @@
 @import '../../themes/themes';
 
 .rsBookingFlowAddRoomPage {
-	width: 100%;
+	.rsRateCodeSelect {
+		margin-bottom: 30px;
+		padding-bottom: 30px;
+		border-bottom: 1px solid theme-var($greyLineColor);
+	}
 	.rsAccommodationSearchResultCard {
+		margin: 35px auto;
+		img {
+			min-width: 100px;
+		}
+	}
+}
+
+.small {
+	.rsBookingFlowAddRoomPage {
+		margin-top: 50px;
+		.rsAccommodationSearchResultCard {
+			width: min(70vw);
+			max-width: 700px;
+			grid-template-columns: min(100px) auto;
+			img {
+				width: 100%;
+			}
+			.rsAccommodationSearchCallToActionCard {
+				width: min(70vw);
+				max-width: 700px;
+			}
+		}
 	}
 }

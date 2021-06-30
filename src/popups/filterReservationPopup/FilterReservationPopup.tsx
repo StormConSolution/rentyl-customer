@@ -18,7 +18,8 @@ export interface FilterReservationPopupProps extends PopupProps {
 		adults: string,
 		children: string,
 		priceRangeMin: string,
-		priceRangeMax: string
+		priceRangeMax: string,
+		rateCode: string
 	) => void;
 	className?: string;
 }
@@ -35,6 +36,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		setStartDate(startDate);
 		setEndDate(endDate);
 	}
+	const [rateCode, setRateCode] = useState<string>('');
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
@@ -59,12 +61,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								inputType="text"
 								title="# of Adults"
 								onChange={(value) => setAdults(value)}
+								initialValue={adults}
 							/>
 							<LabelInput
 								className="numberOfChildren"
 								inputType="text"
 								title="# of Children"
 								onChange={(value) => setChildren(value)}
+								initialValue={children}
 							/>
 						</div>
 						<div className={'minMaxDiv'}>
@@ -78,6 +82,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										'.rsFilterReservationPopup .priceMin > input'
 									) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 								}}
+								initialValue={priceRangeMin}
 							/>
 							<LabelInput
 								className="priceMax"
@@ -89,8 +94,21 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										'.rsFilterReservationPopup .priceMax > input'
 									) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
 								}}
+								initialValue={priceRangeMax}
 							/>
 						</div>
+						<LabelInput
+							className={'rateCode'}
+							inputType={'text'}
+							title={'Rate Code'}
+							onChange={(value) => {
+								setRateCode(value);
+								(document.querySelector(
+									'.rsFilterReservationPopup .rateCode > input'
+								) as HTMLInputElement).value = value;
+							}}
+							initialValue={rateCode}
+						/>
 						<div className={'buttons'}>
 							<LabelButton
 								className={'cancelButton'}
@@ -111,7 +129,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										adults,
 										children,
 										priceRangeMin,
-										priceRangeMax
+										priceRangeMax,
+										rateCode
 									);
 									popupController.close(FilterReservationPopup);
 								}}

@@ -30,6 +30,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 interface AccommodationFeatures {
 	id: number;
@@ -56,17 +57,23 @@ const ReservationAvailabilityPage: React.FC = () => {
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
-	const [showRateCode, setShowRateCode] = useState<boolean>(false);
 	const [rateCode, setRateCode] = useState<string>('');
+	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
 		async function getReservations() {
 			try {
+				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
 				setAvailabilityTotal(res.data.total);
+				console.log(!!res.data.data && res.data.data.length > 0, rateCode === '');
+				setValidCode(rateCode === '' || (!!res.data.data && res.data.data.length > 0));
+				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
+				setValidCode(rateCode === '');
+				popupController.close(SpinningLoaderPopup);
 			}
 			setWaitToLoad(false);
 		}
@@ -247,9 +254,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		return [];
 	}
 
-	return waitToLoad ? (
-		<LoadingPage />
-	) : (
+	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<HeroImage
@@ -269,66 +274,82 @@ const ReservationAvailabilityPage: React.FC = () => {
 						Filter by
 					</Label>
 
-					<FilterBar
-						className={'filterBar'}
-						startDate={moment(searchQueryObj.startDate)}
-						endDate={moment(searchQueryObj.endDate)}
-						onDatesChange={onDatesChange}
-						focusedInput={focusedInput}
-						onFocusChange={setFocusedInput}
-						monthsToShow={2}
-						onChangeAdults={(value) => {
-							if (value === '') value = 0;
-							updateSearchQueryObj('adults', parseInt(value));
-						}}
-						onChangeChildren={(value) => {
-							if (value !== '') updateSearchQueryObj('children', parseInt(value));
-						}}
-						onChangePriceMin={(value) => {
-							if (value !== '') {
-								updateSearchQueryObj('priceRangeMin', value);
-							}
-						}}
-						onChangePriceMax={(value) => {
-							if (value !== '') {
-								updateSearchQueryObj('priceRangeMax', value);
-							}
-						}}
-						adultsInitialInput={searchQueryObj.adults.toString()}
-						childrenInitialInput={searchQueryObj.children.toString()}
-						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
-						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
-					/>
-					<IconLabel
-						className={'moreFiltersLink'}
-						labelName={'More Filters'}
-						iconImg={'icon-chevron-right'}
-						iconPosition={'right'}
-						iconSize={8}
-						labelVariant={'caption'}
-						onClick={() => {
-							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (startDate, endDate, adults, children, priceRangeMin, priceRangeMax) => {
-									popupSearch(startDate, endDate, adults, children, priceRangeMin, priceRangeMax);
-								},
-								className: 'filterPopup'
-							});
-						}}
-					/>
-					<Accordion
-						hideHoverEffect
-						children={
-							<RateCodeSelect
-								apply={(value) => {
-									setRateCode(value);
-									updateSearchQueryObj('rate', value);
+					{size !== 'small' ? (
+						<>
+							<FilterBar
+								className={'filterBar'}
+								startDate={moment(searchQueryObj.startDate)}
+								endDate={moment(searchQueryObj.endDate)}
+								onDatesChange={onDatesChange}
+								focusedInput={focusedInput}
+								onFocusChange={setFocusedInput}
+								monthsToShow={2}
+								onChangeAdults={(value) => {
+									if (value === '') value = 0;
+									updateSearchQueryObj('adults', parseInt(value));
 								}}
-								code={rateCode}
-								valid={rateCode !== '' && (!destinations || destinations.length < 1)}
+								onChangeChildren={(value) => {
+									if (value !== '') updateSearchQueryObj('children', parseInt(value));
+								}}
+								onChangePriceMin={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMin', value);
+									}
+								}}
+								onChangePriceMax={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMax', value);
+									}
+								}}
+								adultsInitialInput={searchQueryObj.adults.toString()}
+								childrenInitialInput={searchQueryObj.children.toString()}
+								initialPriceMax={
+									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
+								}
+								initialPriceMin={
+									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
+								}
 							/>
-						}
-						titleReact={<Label variant={'button'}>toggle rate code</Label>}
-					/>
+							<Accordion
+								hideHoverEffect
+								children={
+									<RateCodeSelect
+										apply={(value) => {
+											setRateCode(value);
+											updateSearchQueryObj('rate', value);
+										}}
+										code={rateCode}
+										valid={!validCode}
+									/>
+								}
+								titleReact={<Label variant={'button'}>toggle rate code</Label>}
+							/>
+						</>
+					) : (
+						<IconLabel
+							className={'moreFiltersLink'}
+							labelName={'More Filters'}
+							iconImg={'icon-chevron-right'}
+							iconPosition={'right'}
+							iconSize={8}
+							labelVariant={'caption'}
+							onClick={() => {
+								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+									onClickApply: (
+										startDate,
+										endDate,
+										adults,
+										children,
+										priceRangeMin,
+										priceRangeMax
+									) => {
+										popupSearch(startDate, endDate, adults, children, priceRangeMin, priceRangeMax);
+									},
+									className: 'filterPopup'
+								});
+							}}
+						/>
+					)}
 
 					<div className={'bottomBorderDiv'} />
 				</Box>

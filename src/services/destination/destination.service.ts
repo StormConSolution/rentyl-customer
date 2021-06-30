@@ -26,7 +26,7 @@ export default class DestinationService extends Service {
 	): Promise<Api.Accommodation.Res.Availability[]> {
 		const response = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
 			'/accommodation/availability',
-			data
+			WebUtils.convertDataForUrlParams(data)
 		);
 		return response.data.data;
 	}

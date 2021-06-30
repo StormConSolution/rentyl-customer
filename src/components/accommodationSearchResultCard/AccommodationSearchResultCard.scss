@@ -40,6 +40,7 @@
 			}
 			&.accommodationDescription {
 				margin-top: 15px;
+				height: clamp(100px, 150px, 183px);
 			}
 		}
 	}
@@ -61,6 +62,12 @@
 			left: 0;
 			top: 0;
 			opacity: 15%;
+		}
+
+		.amenityIcons {
+			.rsIcon::before {
+				color: theme-var($primaryTextColor);
+			}
 		}
 	}
 }

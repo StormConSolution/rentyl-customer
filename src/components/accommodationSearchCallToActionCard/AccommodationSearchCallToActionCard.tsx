@@ -17,6 +17,7 @@ interface AccommodationSearchCallToActionCardProps {
 	bookNowDisabled?: boolean;
 	compareOnClick?: () => void;
 	viewDetailsOnClick?: () => void;
+	hideButtons?: boolean;
 	compareDisabled?: boolean;
 	viewDetailsDisabled?: boolean;
 	className?: string;
@@ -31,7 +32,6 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 				boxShadow
 				className={`rsAccommodationSearchCallToActionCard ${props.className || ''}`}
 				height={'117px'}
-				width={'335px'}
 				backgroundColor={'#fcfbf8'}
 				padding={'8px 10px 15px'}
 			>
@@ -64,18 +64,25 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					</Box>
 				</Box>
 				<Box className={'bottomContents'} display={'flex'}>
-					<Button
-						className={'compareBtnMobile'}
-						look={'containedSecondary'}
-						onClick={props.compareOnClick}
-						disabled={props.compareDisabled}
-						type={'button'}
-					>
-						<Label className={'compareBtnTextMobile'} variant={'button'}>
-							ADD TO COMPARE
-							<Icon className={'addCompareIconMobile'} iconImg={'icon-plus'} size={8} color={'#004b98'} />
-						</Label>
-					</Button>
+					{!props.hideButtons && (
+						<Button
+							className={'compareBtnMobile'}
+							look={'containedSecondary'}
+							onClick={props.compareOnClick}
+							disabled={props.compareDisabled}
+							type={'button'}
+						>
+							<Label className={'compareBtnTextMobile'} variant={'button'}>
+								ADD TO COMPARE
+								<Icon
+									className={'addCompareIconMobile'}
+									iconImg={'icon-plus'}
+									size={8}
+									color={'#004b98'}
+								/>
+							</Label>
+						</Button>
+					)}
 					<LabelButton
 						className={'bookNowBtnMobile'}
 						look={'containedPrimary'}
@@ -111,21 +118,25 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					disabled={props.bookNowDisabled}
 					onClick={props.bookNowOnClick}
 				/>
-				<LabelButton
-					className={'viewDetailsBtn'}
-					look={'containedSecondary'}
-					variant={'button'}
-					label={'VIEW DETAILS'}
-					disabled={props.viewDetailsDisabled}
-					onClick={props.viewDetailsOnClick}
-				/>
+				{!props.hideButtons && (
+					<LabelButton
+						className={'viewDetailsBtn'}
+						look={'containedSecondary'}
+						variant={'button'}
+						label={'VIEW DETAILS'}
+						disabled={props.viewDetailsDisabled}
+						onClick={props.viewDetailsOnClick}
+					/>
+				)}
 
-				<div className={'compareLinkDiv'}>
-					<Label className={'compareLink'} onClick={props.compareOnClick} variant={'caption'}>
-						Add To Compare
-						<Icon className={'addCompareIcon'} iconImg={'icon-plus'} size={9} color={'#004b98'} />
-					</Label>
-				</div>
+				{!props.hideButtons && (
+					<div className={'compareLinkDiv'}>
+						<Label className={'compareLink'} onClick={props.compareOnClick} variant={'caption'}>
+							Add To Compare
+							<Icon className={'addCompareIcon'} iconImg={'icon-plus'} size={9} color={'#004b98'} />
+						</Label>
+					</div>
+				)}
 			</Paper>
 		);
 	}

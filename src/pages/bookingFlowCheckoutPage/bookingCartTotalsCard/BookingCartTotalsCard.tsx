@@ -5,8 +5,10 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Paper from '../../../components/paper/Paper';
+import { Booking } from '../fakeBookingData';
 import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
+import { useState } from 'react';
 import { convertTwentyFourHourTime } from '../../../utils/utils';
 
 interface BookingCartTotalsCardProps {
@@ -23,7 +25,7 @@ interface BookingCartTotalsCardProps {
 	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Api.Reservation.Res.BookingPackageDetails[];
+	packages?: Booking.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
 }
 
@@ -148,39 +150,52 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				<Label variant={'body1'}>{props.adults} Adults</Label>
 				<Label variant={'body1'}>{props.children} Children</Label>
 			</Box>
-			<Box display={'flex'} alignItems={'center'}>
-				<Label variant={'h4'} width={'170px'}>
-					{props.accommodationName}
-				</Label>
-				<Label variant={'h4'} marginLeft={'auto'}>
-					${StringUtils.formatMoney(props.accommodationTotalInCents)}
-				</Label>
-			</Box>
-			<Accordion titleReact={<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>}>
-				{renderItemizedCostPerNight()}
-			</Accordion>
-			{ObjectUtils.isArrayWithData(props.packages) && (
-				<>
-					<Box display={'flex'} alignItems={'center'} marginBottom={10}>
+			<Accordion
+				titleReact={
+					<Box display={'flex'} alignItems={'center'}>
 						<Label variant={'h4'} width={'170px'}>
-							Packages
+							{props.accommodationName}
 						</Label>
 						<Label variant={'h4'} marginLeft={'auto'}>
-							${getPackageTotal()}
+							${StringUtils.formatMoney(props.accommodationTotalInCents)}
 						</Label>
 					</Box>
-					{renderPackages()}
-				</>
-			)}
-			<Box display={'flex'} alignItems={'center'}>
-				<Label variant={'h4'} width={'170px'}>
-					Taxes and Fees
-				</Label>
-				<Label variant={'h4'} marginLeft={'auto'}>
-					${StringUtils.formatMoney(props.taxAndFeeTotalInCent)}
-				</Label>
-			</Box>
-			<Accordion titleReact={<Label variant={'body1'}>Details</Label>}>{renderTaxesAndFees()}</Accordion>
+				}
+				onClick={() => {
+					document.querySelector('.articleItemChildren .opened');
+				}}
+			>
+				<Accordion
+					titleReact={<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>}
+					isOpen
+				>
+					{renderItemizedCostPerNight()}
+				</Accordion>
+				{ObjectUtils.isArrayWithData(props.packages) && (
+					<>
+						<Box display={'flex'} alignItems={'center'} marginBottom={10}>
+							<Label variant={'h4'} width={'170px'}>
+								Packages
+							</Label>
+							<Label variant={'h4'} marginLeft={'auto'}>
+								${getPackageTotal()}
+							</Label>
+						</Box>
+						{renderPackages()}
+					</>
+				)}
+				<Box display={'flex'} alignItems={'center'}>
+					<Label variant={'h4'} width={'170px'}>
+						Taxes and Fees
+					</Label>
+					<Label variant={'h4'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(props.taxAndFeeTotalInCent)}
+					</Label>
+				</Box>
+				<Accordion isOpen={true} titleReact={<Label variant={'body1'}>Details</Label>}>
+					{renderTaxesAndFees()}
+				</Accordion>
+			</Accordion>
 			<hr />
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h3'} width={'170px'}>
