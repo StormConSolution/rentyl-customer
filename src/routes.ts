@@ -4,6 +4,7 @@ import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
+import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
@@ -58,6 +59,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/signup',
 		page: SignUpPage
+	},
+	{
+		path: '/password-reset',
+		page: ResetPasswordPage
 	},
 	{
 		path: '/reservation/availability',
