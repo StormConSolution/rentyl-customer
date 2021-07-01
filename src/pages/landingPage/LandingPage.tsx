@@ -28,7 +28,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [activeRewards, setActiveRewards] = useState<number>(0);
-	const [featuredRewards, setFeaturedRewards] = useState<Model.FeaturedCategory[]>();
+	const [featuredRewards, setFeaturedRewards] = useState<Misc.FeaturedCategory[]>();
 
 	useEffect(() => {
 		async function getFeatureRewards() {

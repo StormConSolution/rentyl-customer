@@ -5,7 +5,6 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Paper from '../../../components/paper/Paper';
-import { Booking } from '../fakeBookingData';
 import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import { useState } from 'react';
@@ -25,7 +24,7 @@ interface BookingCartTotalsCardProps {
 	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Booking.BookingPackageDetails[];
+	packages?: Api.Reservation.Res.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
 }
 

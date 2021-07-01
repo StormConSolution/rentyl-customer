@@ -30,7 +30,7 @@ const RewardItemPage: React.FC = () => {
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [showCategoryOrRewardCards, setShowCategoryOrRewardCards] = useState<'category' | 'reward'>('category');
 	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
-	const [featuredCategory, setFeaturedCategory] = useState<Model.FeaturedCategory[]>();
+	const [featuredCategory, setFeaturedCategory] = useState<Misc.FeaturedCategory[]>();
 	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
 	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
 	const [destinationSelectList, setDestinationSelectList] = useState<SelectOptions[]>([]);
