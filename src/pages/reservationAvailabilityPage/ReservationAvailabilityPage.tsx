@@ -56,9 +56,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 	useEffect(() => {
 		async function getReservations() {
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
-				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			if (
+				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
+				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
+			) {
+				newSearchQueryObj.priceRangeMax *= 100;
+				newSearchQueryObj.priceRangeMin *= 100;
 			}
 			try {
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);

@@ -78,9 +78,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	useEffect(() => {
 		async function getAvailableStays() {
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
-				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			if (
+				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
+				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
+			) {
+				newSearchQueryObj.priceRangeMax *= 100;
+				newSearchQueryObj.priceRangeMin *= 100;
 			}
 			try {
 				let availableStays = await accommodationService.availability(newSearchQueryObj);
@@ -90,7 +93,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			}
 		}
 		getAvailableStays().catch(console.error);
-		console.log('I am running!!!');
 	}, [searchQueryObj]);
 
 	let imageIndex = 0;
@@ -473,7 +475,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						}}
 						onChangePriceMin={(value) => {
 							if (value !== '') {
-								console.log('I ran');
 								updateSearchQueryObj('priceRangeMin', value);
 							}
 						}}
