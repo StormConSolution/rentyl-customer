@@ -104,7 +104,7 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 						</Box>
 						<Box marginBottom={15}>
 							<Label variant={'caption'}>Confirmation Code</Label>
-							<Label variant={'body1'}>{upComingReservation.confirmationCode}</Label>
+							<Label variant={'body1'}>{upComingReservation.externalConfirmationId}</Label>
 						</Box>
 						<LabelLink
 							path={`/reservation/details?ri=${upComingReservation.id}`}
