@@ -268,6 +268,21 @@ const BookingFlowAddRoomPage = () => {
 						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
 						onBookNowClick={() => {
 							let data = params.data;
+							data.newRoom = data.stays.splice(
+								data.stays.findIndex(
+									(room: {
+										adults: number;
+										children: number;
+										accommodationId: number;
+										arrivalDate: string;
+										departureDate: string;
+									}) =>
+										room.accommodationId === data.edit.id &&
+										room.arrivalDate === data.edit.startDate &&
+										room.departureDate === data.edit.endDate
+								),
+								1
+							);
 							delete data.edit;
 							router.navigate(`/booking/packages?data=${JSON.stringify(data)}`);
 						}}

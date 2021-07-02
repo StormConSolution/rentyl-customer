@@ -4,9 +4,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
-import { Booking } from '../fakeBookingData';
 import Icon from '@bit/redsky.framework.rs.icon';
-import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import { convertTwentyFourHourTime } from '../../../utils/utils';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
@@ -26,7 +24,7 @@ interface BookingCartTotalsCardProps {
 	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Booking.BookingPackageDetails[];
+	packages?: Api.Reservation.Res.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
 	accommodationId?: number;
 	remove: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
@@ -117,7 +115,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						/>
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(item.priceCents)}
+						${StringUtils.formatMoney(0)}
 					</Label>
 				</Box>
 			);

@@ -72,7 +72,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
 				setDestinations(res.data.data);
 				setAvailabilityTotal(res.data.total);
@@ -204,18 +203,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 						data.accommodationId = accommodationId;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
-						data.destinationId = destination.id;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
-						data = JSON.stringify(data);
+						data = JSON.stringify({ destinationId: destination.id, newRoom: data });
 
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});
 						} else {
-							router.navigate(`/booking?data=${data}`).catch(console.error);
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
 					},
 					onAddCompareClick: (accommodationId) => {
@@ -247,7 +245,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		});
 	}
 
-	function getAmenityIconNames(features: AccommodationFeatures[]): string[] {
+	function getAmenityIconNames(features: Misc.AccommodationFeatures[]): string[] {
 		return features.map((feature) => {
 			return feature.icon;
 		});
