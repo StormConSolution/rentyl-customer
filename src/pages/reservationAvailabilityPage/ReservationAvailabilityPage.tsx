@@ -62,9 +62,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getReservations() {
+			let newSearchQueryObj = { ...searchQueryObj };
+			if (
+				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
+				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
+			) {
+				newSearchQueryObj.priceRangeMax *= 100;
+				newSearchQueryObj.priceRangeMin *= 100;
+			}
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
+				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
 				setDestinations(res.data.data);
 				setAvailabilityTotal(res.data.total);
 				setValidCode(rateCode === '' || (!!res.data.data && res.data.data.length > 0));
@@ -195,17 +204,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 						data.accommodationId = accommodationId;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
+						data.destinationId = destination.id;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
-						data = JSON.stringify({ destinationId: destination.id, newRoom: data });
+						data = JSON.stringify(data);
 
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});
 						} else {
-							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+							router.navigate(`/booking?data=${data}`).catch(console.error);
 						}
 					},
 					onAddCompareClick: (accommodationId) => {

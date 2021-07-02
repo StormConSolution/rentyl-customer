@@ -82,7 +82,7 @@ declare namespace Model {
 		bedDetails: AccommodationBedDetails[];
 		extraBeds: boolean | number;
 		extraBedPriceCents: number;
-		adaCompliant: boolean | number;
+		adaCompliant: 0 | 1;
 		heroUrl: string;
 		size: string; // of type {max: number; min: number; units: string}
 	}
@@ -126,7 +126,7 @@ declare namespace Model {
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		type: AccommodationTypes;
 		metaData: string;
 		externalSystemId: string;
@@ -135,11 +135,13 @@ declare namespace Model {
 	export interface Action {
 		id: number;
 		companyId: number;
+		affiliateId: number;
+		affiliateLocationId: number;
 		name: string;
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean | number;
+		isActive: 0 | 1;
 		type: string;
 		pointValue: number;
 	}
@@ -147,8 +149,6 @@ declare namespace Model {
 	export interface Affiliate {
 		id: number;
 		companyId: number;
-		affiliateId: number;
-		affiliateLocationId: number;
 		name: string;
 		squareLogoUrl: string;
 		wideLogoUrl: string;
@@ -180,7 +180,7 @@ declare namespace Model {
 		name: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		code: string;
 	}
 
@@ -198,7 +198,7 @@ declare namespace Model {
 		startOn: Date | string;
 		endOn: Date | string;
 		pointValueMultiplier: number;
-		activityReferenceNumber?: string;
+		activityReferenceNumber: string;
 	}
 
 	export interface CampaignAction {
@@ -348,17 +348,14 @@ declare namespace Model {
 		name: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		code: string;
 	}
 
 	export interface MediaUrls {
-		thumb?: string;
-		smallSmall?: string;
-		small?: string;
-		mediumSmall?: string;
-		medium?: string;
-		large?: string;
+		thumb: string;
+		small: string;
+		large: string;
 	}
 
 	export interface StorageDetails {
@@ -387,12 +384,12 @@ declare namespace Model {
 	}
 
 	export interface MediaMap {
+		mediaId: number;
 		accommodationId: number;
 		accommodationCategoryId: number;
 		accommodationLayoutId: number;
 		destinationId: number;
 		featureId: number;
-		mediaId: number;
 		packagesId: number;
 		rewardId: number;
 		rewardCategoryId: number;
@@ -432,9 +429,11 @@ declare namespace Model {
 	export interface Packages {
 		id: number;
 		companyId: number;
+		destinationId: number;
 		title: string;
 		description: string;
 		code: string;
+		isActive: 0 | 1;
 	}
 
 	export interface PaymentMethod {
@@ -449,8 +448,8 @@ declare namespace Model {
 		paymentExpiration: string;
 		paymentCardName: string;
 		paymentGateway: string;
-		isDeleted: boolean;
-		isPrimary: boolean;
+		isDeleted: 0 | 1;
+		isPrimary: 0 | 1;
 		metaData: string;
 	}
 
@@ -480,11 +479,12 @@ declare namespace Model {
 		id: number;
 		companyId: number;
 		userId: number;
-		accommodationId: number;
 		destinationId: number;
+		accommodationId: number;
 		bookingSourceId: number;
 		marketSegmentId: number;
 		orderId: number;
+		userPaymentMethodId: number;
 		reservationNumber: string;
 		arrivalDate: Date | string;
 		departureDate: Date | string;
@@ -497,15 +497,18 @@ declare namespace Model {
 		externalCancelNumber: string;
 		adultCount: number;
 		childCount: number;
-		externalConfirmationId: string | null;
+		infantCount: number;
 		confirmationDate: Date | string;
 		priceDetail: string | null;
-		userPaymentMethodId: number;
+		nightCount: number;
 		metaData: any;
+		externalConfirmationId: string;
 		confirmationCode: string;
 		itineraryNumber: string;
 		cancellationPermitted: 0 | 1;
-		parentReservationId: number | null;
+		parentReservationId: number;
+		externalReservationId: string;
+		externalCancellationId: string;
 	}
 
 	export interface Review {
@@ -518,7 +521,7 @@ declare namespace Model {
 		score: number;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isVerified: boolean;
+		isVerified: 0 | 1;
 		verifyUserId: number;
 		verifiedOn: Date | string;
 		status: string;
@@ -527,16 +530,16 @@ declare namespace Model {
 	export interface Reward {
 		id: number;
 		companyId: number;
+		destinationId: number | null;
+		affiliateId: number | null;
 		name: string;
 		pointCost: number;
 		monetaryValueInCents: number;
-		destinationId: number | null;
-		affiliateId: number | null;
 		description: string;
-		upc: number;
-		isActive: boolean;
+		upc: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+		isActive: 0 | 1;
 	}
 
 	export interface RewardCategory {
@@ -558,13 +561,14 @@ declare namespace Model {
 	export interface RewardVoucher {
 		id: number;
 		rewardId: number;
-		code: string;
 		companyId: number;
 		customerUserId: number;
-		isActive: boolean;
-		isRedeemed: boolean;
+		code: string;
+		isActive: 0 | 1;
+		isRedeemed: 0 | 1;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+		redeemedOn: Date | string;
 	}
 
 	export interface Segment {
@@ -575,7 +579,7 @@ declare namespace Model {
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 		description: string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		ageMin: number;
 		ageMax: number;
 		spendMin: number;
@@ -632,8 +636,8 @@ declare namespace Model {
 		notes: string;
 		password: string;
 		token: string;
-		resetPasswordOnLogin: Boolean | number;
-		permissionLogin: boolean;
+		resetPasswordOnLogin: 0 | 1;
+		permissionLogin: 0 | 1;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 		joinedOn: Date | string;
@@ -681,7 +685,7 @@ declare namespace Model {
 		companyId: number;
 		userId: number;
 		name: string;
-		isActive: boolean;
+		isActive: 0 | 1;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 	}
@@ -714,11 +718,11 @@ declare namespace Model {
 	export interface UserPoint {
 		id: number;
 		userId: number;
-		userActionId: number | null;
-		orderId: number | null;
-		reservationId: number | null;
+		userActionId: number;
+		orderId: number;
+		reservationId: number;
 		rewardVoucherId: number;
-		campaignActionId: number | null;
+		campaignActionId: number;
 		description: string;
 		status: UserPointStatusTypes;
 		pointType: PointTypes;
@@ -726,9 +730,9 @@ declare namespace Model {
 		reason: PointReason;
 		notes: string;
 		createdOn: Date | string;
-		modifiedOn: Date | string | null;
+		modifiedOn: Date | string;
 		availableOn: Date | string;
-		expireOn: Date | string | null;
+		expireOn: Date | string;
 	}
 
 	export interface UserRole {

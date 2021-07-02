@@ -2,12 +2,7 @@ import React from 'react';
 import './FeaturedCategoryCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import IconLabel from '../../../components/iconLabel/IconLabel';
-
-interface FeaturedCategory {
-	categoryId: number | string;
-	imagePath: string;
-	name: string;
-}
+import FeaturedCategory = Misc.FeaturedCategory;
 
 interface FeaturedCategoryCardProps {
 	category: FeaturedCategory;
