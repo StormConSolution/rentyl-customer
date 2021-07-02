@@ -60,7 +60,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						}}
 					/>
 				</div>
-				{props.onAddCompareClick && (
+				{!!props.onAddCompareClick && (
 					<Label
 						className={'comparePlusText'}
 						variant="caption"

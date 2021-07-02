@@ -59,8 +59,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
-		pagination: { page: 1, perPage: 5 },
-		rate: 'ITSTIME'
+		pagination: { page: 1, perPage: 5 }
 	});
 
 	useEffect(() => {
@@ -252,7 +251,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						}
 					]}
 					amenityIconNames={item.featureIcons}
-					carouselImagePaths={media.map((m) => (m ? m : ''))}
+					carouselImagePaths={media.map((media) => (media ? media : ''))}
 				/>
 			);
 		});

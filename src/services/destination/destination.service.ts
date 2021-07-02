@@ -21,6 +21,11 @@ export default class DestinationService extends Service {
 		);
 	}
 
+	async getAvailablePackages(destinationId: number): Promise<Api.Package.Res.GetByPage> {
+		const response = await http.get<RsResponseData<Api.Package.Res.GetByPage>>('/package/paged');
+		return response.data.data;
+	}
+
 	async searchAvailableAccommodationsByDestination(
 		data: Api.Accommodation.Req.Availability
 	): Promise<Api.Accommodation.Res.Availability[]> {

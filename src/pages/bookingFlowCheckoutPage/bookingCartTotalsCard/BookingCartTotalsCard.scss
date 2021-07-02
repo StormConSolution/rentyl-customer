@@ -1,9 +1,11 @@
 @import '../../../themes/themes';
 
 .rsBookingCartTotalsCard {
-	//height: fit-content;
 	background: theme-var($primaryBackgroundColor);
 
+	.articleItemHeader {
+		padding: 0;
+	}
 	.rsIcon {
 		&.icon-trash {
 			margin-left: 7px;

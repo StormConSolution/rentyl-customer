@@ -21,6 +21,7 @@ interface AccommodationSearchCallToActionCardProps {
 	compareDisabled?: boolean;
 	viewDetailsDisabled?: boolean;
 	className?: string;
+	currentRoom?: boolean;
 }
 
 const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToActionCardProps> = (props) => {
@@ -87,7 +88,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 						className={'bookNowBtnMobile'}
 						look={'containedPrimary'}
 						variant={'button'}
-						label={'BOOK NOW'}
+						label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 						disabled={props.bookNowDisabled}
 						onClick={props.bookNowOnClick}
 					/>
@@ -114,7 +115,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					className={'bookNowBtn'}
 					look={'containedPrimary'}
 					variant={'button'}
-					label={'BOOK NOW'}
+					label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 					disabled={props.bookNowDisabled}
 					onClick={props.bookNowOnClick}
 				/>

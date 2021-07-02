@@ -5,12 +5,10 @@ import Label from '@bit/redsky.framework.rs.label';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, StringUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -20,32 +18,21 @@ import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import IconLabel from '../../components/iconLabel/IconLabel';
-
-interface AccommodationFeatures {
-	id: number;
-	title: string;
-	icon: string;
-}
-
-interface BookingAvailabilityProps {
-	destinationId: number;
-	startDate: moment.Moment;
-	endDate: moment.Moment;
-	adults: number;
-	children: number;
-	rateCode?: string;
-	bookNow: (data: Api.Reservation.Req.Verification) => void;
-}
+import AccommodationService from '../../services/accommodation/accommodation.service';
+import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import Footer from '../../components/footer/Footer';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 const BookingFlowAddRoomPage = () => {
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
 
-	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-
-	const [waitToLoad, setWaitToLoad] = useState<boolean>(false);
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const perPage = 5;
+	const [page, setPage] = useState<number>(1);
+	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
@@ -59,13 +46,34 @@ const BookingFlowAddRoomPage = () => {
 	});
 	const [rateCode, setRateCode] = useState<string>(params.data.stays[0].rate);
 	const [validCode, setValidCode] = useState<boolean>(true);
+	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
+
+	useEffect(() => {
+		async function checkForEdit() {
+			if (params.data.edit) {
+				let result = await accommodationService.getAccommodationDetails(params.data.edit.id);
+				setEditingAccommodation(result.data.data);
+			}
+		}
+		checkForEdit().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function getReservations() {
+			let newSearchQueryObj = { ...searchQueryObj };
+			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
+				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
+				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			}
+
 			try {
 				popupController.open(SpinningLoaderPopup);
-				if (searchQueryObj.rate === '' || searchQueryObj.rate === undefined) delete searchQueryObj.rate;
-				let res = await destinationService.searchAvailableAccommodationsByDestination(searchQueryObj);
+				if (newSearchQueryObj.rate === '' || newSearchQueryObj.rate === undefined)
+					delete newSearchQueryObj.rate;
+				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
+				//can't use getByPage as it doesn't return with the info needed for the cards.
+				// setAvailabilityTotal(res.total)
 				setDestinations(res);
 				setValidCode(rateCode === '' || (!!res && res.length > 0));
 				popupController.close(SpinningLoaderPopup);
@@ -74,7 +82,6 @@ const BookingFlowAddRoomPage = () => {
 				setValidCode(rateCode === '' || rateCode === undefined);
 				popupController.close(SpinningLoaderPopup);
 			}
-			setWaitToLoad(false);
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
@@ -105,8 +112,6 @@ const BookingFlowAddRoomPage = () => {
 			let createSearchQueryObj: any = { ...prev };
 			if (value === '' || value === undefined) delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
-
-			console.log(createSearchQueryObj);
 			return createSearchQueryObj;
 		});
 	}
@@ -151,16 +156,34 @@ const BookingFlowAddRoomPage = () => {
 	}
 
 	function bookNow(id: number) {
+		const edited: { id: number; startDate: string; endDate: string; packages: any } = params.data.edit;
+		const stays = params.data.stays.filter(
+			(stay: {
+				adults: number;
+				children: number;
+				accommodationId: number;
+				arrivalDate: string;
+				departureDate: string;
+			}) => {
+				return (
+					stay.accommodationId !== edited.id ||
+					stay.arrivalDate !== edited.startDate ||
+					stay.departureDate !== edited.endDate
+				);
+			}
+		);
+
 		let data = JSON.stringify({
 			destinationId: params.data.destinationId,
-			stays: params.data.stays,
+			stays,
 			newRoom: {
 				adults: searchQueryObj.adults,
 				children: searchQueryObj.children,
 				rate: searchQueryObj.rate,
 				accommodationId: id,
 				arrivalDate: searchQueryObj.startDate,
-				departureDate: searchQueryObj.endDate
+				departureDate: searchQueryObj.endDate,
+				packages: edited.packages ? edited.packages : []
 			}
 		});
 		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
@@ -213,6 +236,44 @@ const BookingFlowAddRoomPage = () => {
 	return (
 		<Page className={'rsBookingFlowAddRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				{params.data.edit && !!editingAccommodation && (
+					<AccommodationSearchResultCard
+						currentRoom={true}
+						id={editingAccommodation.id}
+						name={editingAccommodation.name}
+						maxSleeps={editingAccommodation.maxSleeps}
+						squareFeet={2500}
+						description={editingAccommodation.longDescription}
+						ratePerNightInCents={editingAccommodation.priceCents}
+						pointsRatePerNight={0}
+						roomStats={[
+							{
+								label: 'Sleeps',
+								datum: editingAccommodation.maxSleeps
+							},
+							{
+								label: 'Max Occupancy',
+								datum: editingAccommodation.maxOccupantCount
+							},
+							{
+								label: 'ADA Compliant',
+								datum: editingAccommodation.adaCompliant ? 'Yes' : 'No'
+							},
+							{
+								label: 'Extra Bed',
+								datum: editingAccommodation.extraBeds ? 'Yes' : 'No'
+							}
+						]}
+						carouselImagePaths={editingAccommodation.media.map((media) => media.urls.large || '')}
+						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
+						onBookNowClick={() => {
+							let data = params.data;
+							delete data.edit;
+							router.navigate(`/booking/packages?data=${JSON.stringify(data)}`);
+						}}
+						pointsEarnable={0}
+					/>
+				)}
 				<Label className={'filterLabel'} variant={'h1'}>
 					Filter by
 				</Label>
@@ -306,13 +367,22 @@ const BookingFlowAddRoomPage = () => {
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
 					width={size === 'small' ? '100%' : '1165px'}
-					// padding={size === 'small' ? '20px 30px' : '60px 140px'}
 					margin={'85px auto'}
 					boxSizing={'border-box'}
 				>
 					{renderDestinationSearchResultCards()}
 				</Box>
+				<PaginationButtons
+					selectedRowsPerPage={perPage}
+					currentPageNumber={page}
+					setSelectedPage={(newPage) => {
+						updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
+						setPage(newPage);
+					}}
+					total={availabilityTotal}
+				/>
 			</div>
+			<Footer links={FooterLinkTestData} />
 		</Page>
 	);
 };

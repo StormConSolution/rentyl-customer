@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './CancelConfirmation.scss';
+import './ConfirmOptionPopup.scss';
 import { Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Box from '../../components/box/Box';
@@ -8,36 +8,35 @@ import Paper from '../../components/paper/Paper';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
-export interface CancelConfirmationProps extends PopupProps {
+export interface ConfirmOptionPopupProps extends PopupProps {
 	title: string;
-	onChange: (value: any) => void;
-	onClose: () => void;
-	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
-	cancelPolicy?: string;
+	bodyText?: string;
 	confirm: () => void;
+	cancelText: string;
+	confirmText: string;
 }
 
-const CancelConfirmation: React.FC<CancelConfirmationProps> = (props) => {
+const ConfirmOptionPopup: React.FC<ConfirmOptionPopupProps> = (props) => {
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
-			<div className={'rsCancelConfirmation'}>
+			<div className={'rsConfirmOptionPopup'}>
 				<Icon
 					iconImg={'icon-close'}
 					cursorPointer
 					onClick={() => {
-						popupController.close(CancelConfirmation);
+						popupController.close(ConfirmOptionPopup);
 					}}
 				/>
 				<Paper className={'paperWrapper'} backgroundColor={'#fcfbf8'}>
 					<Label variant={'h2'}>{props.title}</Label>
-					<p>{props.cancelPolicy}</p>
+					<p>{props.bodyText}</p>
 					<Box className={'buttonBox'} display={'flex'}>
 						<LabelButton
 							variant={'caption'}
 							look={'containedSecondary'}
-							onClick={() => popupController.close(CancelConfirmation)}
-							label={'Do Not Cancel'}
+							onClick={() => popupController.close(ConfirmOptionPopup)}
+							label={props.cancelText}
 							buttonType={'button'}
 							className={'popupBtn'}
 						/>
@@ -46,9 +45,9 @@ const CancelConfirmation: React.FC<CancelConfirmationProps> = (props) => {
 							look={'containedPrimary'}
 							onClick={() => {
 								props.confirm();
-								popupController.close(CancelConfirmation);
+								popupController.close(ConfirmOptionPopup);
 							}}
-							label={'Cancel Now'}
+							label={props.confirmText}
 							buttonType={'button'}
 							className={'popupBtn'}
 						/>
@@ -59,4 +58,4 @@ const CancelConfirmation: React.FC<CancelConfirmationProps> = (props) => {
 	);
 };
 
-export default CancelConfirmation;
+export default ConfirmOptionPopup;

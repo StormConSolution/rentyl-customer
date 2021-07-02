@@ -67,7 +67,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data.data);
 				setAvailabilityTotal(res.data.total);
-				console.log(!!res.data.data && res.data.data.length > 0, rateCode === '');
 				setValidCode(rateCode === '' || (!!res.data.data && res.data.data.length > 0));
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
@@ -196,7 +195,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						data.accommodationId = accommodationId;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
-						// data.destinationId = destination.id;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;

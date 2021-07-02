@@ -24,7 +24,6 @@ export default class ReservationsService extends Service {
 			'reservation/itinerary',
 			data
 		);
-		console.log(response);
 		return response.data.data;
 	}
 

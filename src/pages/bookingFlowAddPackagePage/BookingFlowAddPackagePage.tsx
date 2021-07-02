@@ -67,7 +67,7 @@ const BookingFlowAddPackagePage = () => {
 					label={'Checkout'}
 					onClick={() => {
 						let data = params.data;
-						data.newRoom.packages = addedPackages.map((p) => p.id);
+						data.newRoom.packages = addedPackages.map((item) => item.id);
 						if (data.stays) data.stays = [...data.stays, data.newRoom];
 						else data.stays = [data.newRoom];
 						delete data.newRoom;

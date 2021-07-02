@@ -1,6 +1,9 @@
 @import '../../themes/themes';
 
 .rsBookingFlowAddRoomPage {
+	.rs-page-content-wrapper {
+		margin-top: 80px;
+	}
 	.rsRateCodeSelect {
 		margin-bottom: 30px;
 		padding-bottom: 30px;
@@ -16,7 +19,9 @@
 
 .small {
 	.rsBookingFlowAddRoomPage {
-		margin-top: 50px;
+		.rs-page-content-wrapper {
+			margin-top: 50px;
+		}
 		.rsAccommodationSearchResultCard {
 			width: min(70vw);
 			max-width: 700px;

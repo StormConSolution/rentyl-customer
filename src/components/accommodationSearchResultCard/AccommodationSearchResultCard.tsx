@@ -32,6 +32,7 @@ export interface AccommodationSearchResultCardProps {
 	disableCompare?: boolean;
 	onViewDetailsClick?: () => void;
 	hideButtons?: boolean;
+	currentRoom?: boolean;
 }
 
 const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps> = (props) => {
@@ -77,6 +78,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					compareOnClick={props.onCompareClick}
 					viewDetailsOnClick={props.onViewDetailsClick}
 					hideButtons={props.hideButtons}
+					currentRoom={props.currentRoom}
 				/>
 			</Box>
 		);
@@ -103,12 +105,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 					{/*	<StarRating rating={props.starRating} size="small16px" />*/}
 					{/*	<LabelLink variant="caption" path="" label={`View ${props.accommodationType} Ratings >`} />*/}
 					{/*</div>*/}
-					<Label
-						className="accommodationDescription"
-						variant="body2"
-						overflow={'hidden'}
-						textOverflow={'ellipsis'}
-					>
+					<Label className="accommodationDescription" variant="body2">
 						{props.description}
 					</Label>
 				</div>
@@ -125,6 +122,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						compareOnClick={props.onCompareClick}
 						viewDetailsOnClick={props.onViewDetailsClick}
 						hideButtons={props.hideButtons}
+						currentRoom={props.currentRoom}
 					/>
 				</div>
 			</Box>

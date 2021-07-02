@@ -4,6 +4,7 @@
 	.cart {
 		position: sticky;
 		top: 20px;
+		background-color: theme-var($primaryBackgroundColor);
 
 		.grandTotal {
 			justify-content: space-between;
