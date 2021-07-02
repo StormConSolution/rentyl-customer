@@ -6,7 +6,6 @@ import StandardOrderTypes = RedSky.StandardOrderTypes;
 import MatchTypes = RedSky.MatchTypes;
 import FilterQueryValue = RedSky.FilterQueryValue;
 import FilterQuery = RedSky.FilterQuery;
-import FeaturedCategory = Model.FeaturedCategory;
 
 export default class RewardModel extends Model {
 	private allActiveCategories: Api.Reward.Category.Res.Get[] = [];
@@ -61,8 +60,8 @@ export default class RewardModel extends Model {
 		return this.allActiveCategories;
 	}
 
-	async getFeaturedCategories(): Promise<FeaturedCategory[]> {
-		let featured: Model.FeaturedCategory[] = [];
+	async getFeaturedCategories(): Promise<Misc.FeaturedCategory[]> {
+		let featured: Misc.FeaturedCategory[] = [];
 		if (ObjectUtils.isArrayWithData(this.allActiveCategories) && this.allActiveCategories) {
 			for (let category of this.allActiveCategories) {
 				if (category.isFeatured && category.isActive) {
@@ -109,7 +108,7 @@ export default class RewardModel extends Model {
 		return this.getPaginatedList(page, perPage, sortField, sortOrder, filterQuery, 'reward/voucher/paged');
 	}
 
-	async getAllForRewardItemPage(): Promise<Model.RedeemableRewards> {
+	async getAllForRewardItemPage(): Promise<Misc.RedeemableRewards> {
 		return {
 			allCategories: await this.getAllActiveCategories(),
 			featuredCategories: await this.getFeaturedCategories(),

@@ -30,7 +30,6 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import AccommodationFeatures = Model.AccommodationFeatures;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -234,7 +233,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		});
 	}
 
-	function getAmenityIconNames(features: AccommodationFeatures[]): string[] {
+	function getAmenityIconNames(features: Misc.AccommodationFeatures[]): string[] {
 		return features.map((feature) => {
 			return feature.icon;
 		});

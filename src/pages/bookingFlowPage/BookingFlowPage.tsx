@@ -8,7 +8,6 @@ import serviceFactory from '../../services/serviceFactory';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
-import { Booking, FakeBookingData } from './fakeBookingData';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
 import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationPackageTile from './destinationPackageTile/DestinationPackageTile';
@@ -37,7 +36,7 @@ const BookingFlowPage: React.FC<BookingFlowPageProps> = (props) => {
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [reservationData, setReservationData] = useState<Api.Reservation.Res.Verification>();
-	const [addedPackages, setAddedPackages] = useState<Booking.BookingPackageDetails[]>([]);
+	const [addedPackages, setAddedPackages] = useState<Api.Reservation.Res.BookingPackageDetails[]>([]);
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
