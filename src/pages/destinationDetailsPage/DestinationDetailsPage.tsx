@@ -247,7 +247,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						},
 						{
 							label: 'Max Occupancy',
-							datum: item.maxOccupantCount
+							datum: item.maxOccupancyCount
 						},
 						{
 							label: 'ADA Compliant',

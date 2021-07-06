@@ -263,7 +263,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				let res = await reservationService.createItenerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
 				let newData = {
-					itineraryNumber: res.itineraryNumber
+					itineraryNumber: res.itineraryId
 				};
 
 				router
