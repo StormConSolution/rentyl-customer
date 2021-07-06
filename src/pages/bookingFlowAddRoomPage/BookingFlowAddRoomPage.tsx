@@ -61,9 +61,12 @@ const BookingFlowAddRoomPage = () => {
 	useEffect(() => {
 		async function getReservations() {
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
-				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			if (
+				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
+				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
+			) {
+				newSearchQueryObj.priceRangeMax *= 100;
+				newSearchQueryObj.priceRangeMin *= 100;
 			}
 
 			try {
@@ -157,21 +160,24 @@ const BookingFlowAddRoomPage = () => {
 
 	function bookNow(id: number) {
 		const edited: { id: number; startDate: string; endDate: string; packages: any } = params.data.edit;
-		const stays = params.data.stays.filter(
-			(stay: {
-				adults: number;
-				children: number;
-				accommodationId: number;
-				arrivalDate: string;
-				departureDate: string;
-			}) => {
-				return (
-					stay.accommodationId !== edited.id ||
-					stay.arrivalDate !== edited.startDate ||
-					stay.departureDate !== edited.endDate
-				);
-			}
-		);
+		let stays = params.data.stays;
+		if (edited) {
+			stays = params.data.stays.filter(
+				(stay: {
+					adults: number;
+					children: number;
+					accommodationId: number;
+					arrivalDate: string;
+					departureDate: string;
+				}) => {
+					return (
+						stay.accommodationId !== edited.id ||
+						stay.arrivalDate !== edited.startDate ||
+						stay.departureDate !== edited.endDate
+					);
+				}
+			);
+		}
 
 		let data = JSON.stringify({
 			destinationId: params.data.destinationId,
@@ -183,7 +189,7 @@ const BookingFlowAddRoomPage = () => {
 				accommodationId: id,
 				arrivalDate: searchQueryObj.startDate,
 				departureDate: searchQueryObj.endDate,
-				packages: edited.packages ? edited.packages : []
+				packages: edited?.packages ? edited.packages : []
 			}
 		});
 		router.navigate(`/booking/packages?data=${data}`).catch(console.error);

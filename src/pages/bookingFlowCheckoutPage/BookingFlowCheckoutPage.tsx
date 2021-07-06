@@ -30,6 +30,8 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	checkoutTime: string;
 }
 
+interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {}
+
 interface BookingFlowPageProps {}
 
 let existingCardId = 0;
@@ -61,11 +63,9 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 			try {
 				popupController.open(SpinningLoaderPopup);
 				const rooms: Stay[] = await Promise.all(
-					params.data.stays.map(
-						async (accommodation: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'>) => {
-							return addAccommodation(accommodation);
-						}
-					)
+					params.data.stays.map(async (accommodation: Verification) => {
+						return addAccommodation(accommodation);
+					})
 				);
 				if (rooms) setAccommodations(rooms);
 				popupController.close(SpinningLoaderPopup);
@@ -125,9 +125,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 		setIsDisabled(!hasAgreedToTerms || !isFormValid);
 	}, [hasAgreedToTerms, isFormValid]);
 
-	async function addAccommodation(
-		data: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'>
-	): Promise<Stay | undefined> {
+	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
 		let response = await reservationService.verifyAvailability({
 			accommodationId: data.accommodationId,
 			destinationId: destinationId,
@@ -159,22 +157,25 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 		return;
 	}
 
-	async function removeAccommodation(accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) {
-		let indexToRemove = accommodations.findIndex((a) => {
+	async function removeAccommodation(
+		accommodationId: number,
+		checkInDate: string | Date,
+		checkoutDate: string | Date
+	) {
+		let newAccommodationList = accommodations.filter((accommodation) => {
 			return (
-				a.accommodationId === accommodation && a.arrivalDate === checkInDate && checkoutDate === a.departureDate
+				accommodation.accommodationId !== accommodationId &&
+				accommodation.arrivalDate !== checkInDate &&
+				accommodation.departureDate !== checkoutDate
 			);
 		});
-		let copy = [...accommodations];
-		copy.splice(indexToRemove, 1);
 		let data = {
-			destinationId: destinationId,
-			stays: [copy]
+			destinationId,
+			stays: newAccommodationList
 		};
-		if (copy.length < 1) {
+		if (!newAccommodationList.length) {
 			await router.navigate('/reservation/availability').catch(console.error);
 		} else router.updateUrlParams({ data: JSON.stringify(data) });
-		setAccommodations(copy);
 	}
 
 	function changeRoom(accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) {
@@ -199,7 +200,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 		popupController.close(EditAccommodationPopup);
 		try {
 			let newParams = params.data.stays;
-			const editedRoom: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations' | 'destinationId'> = {
+			const editedRoom: Omit<Verification, 'destinationId'> = {
 				adults,
 				children,
 				accommodationId,
@@ -207,10 +208,10 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				departureDate: checkoutDate
 			};
 			newParams = [
-				...newParams.filter((stay: Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'>) => {
+				...newParams.filter((stay: Verification) => {
 					return (
-						stay.arrivalDate !== checkinDate &&
-						stay.departureDate !== checkoutDate &&
+						stay.arrivalDate !== checkinDate ||
+						stay.departureDate !== checkoutDate ||
 						stay.accommodationId !== accommodationId
 					);
 				}),
@@ -218,16 +219,16 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 			];
 			router.updateUrlParams({ data: JSON.stringify({ destinationId: destinationId, stays: newParams }) });
 			const stay = await addAccommodation({ ...editedRoom, destinationId });
-
-			let copiedAccommodations = [...accommodations];
-			const index = copiedAccommodations.findIndex(
-				(accommodation) =>
-					accommodation.accommodationId === accommodationId &&
-					accommodation.arrivalDate === checkinDate &&
-					accommodation.departureDate === checkoutDate
-			);
-			if (stay) copiedAccommodations.splice(index, 1, stay);
-			setAccommodations(copiedAccommodations);
+			if (stay) {
+				let copiedAccommodations = accommodations.filter((accommodation) => {
+					return (
+						accommodation.accommodationId !== accommodationId ||
+						accommodation.arrivalDate !== checkinDate ||
+						accommodation.departureDate !== checkoutDate
+					);
+				});
+				setAccommodations([...copiedAccommodations, stay]);
+			}
 		} catch (e) {
 			rsToasts.error('Something unexpected happened.');
 		}
