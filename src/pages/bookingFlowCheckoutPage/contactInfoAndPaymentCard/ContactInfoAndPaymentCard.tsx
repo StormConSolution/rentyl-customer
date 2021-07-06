@@ -76,7 +76,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [user]);
 
 	useEffect(() => {
-		props.isValidForm(isValid || !!existingCardId);
+		props.isValidForm((isValid || !!existingCardId) && isAuthorized);
 	}, [isValid, isAuthorized, existingCardId]);
 
 	useEffect(() => {
@@ -294,6 +294,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						text={'Use Credit Card on file'}
 						onSelect={() => setUseExistingCreditCard(true)}
 						onDeselect={() => {
+							setExistingCardId(0);
 							setUseExistingCreditCard(false);
 							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
 						}}

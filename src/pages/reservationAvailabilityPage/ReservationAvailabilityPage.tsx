@@ -19,7 +19,6 @@ import IconLabel from '../../components/iconLabel/IconLabel';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import DestinationService from '../../services/destination/destination.service';
 import ComparisonService from '../../services/comparison/comparison.service';
-import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
@@ -30,6 +29,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -37,7 +37,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
-	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
@@ -51,6 +50,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		pagination: { page: 1, perPage: 5 }
 	});
 	const [rateCode, setRateCode] = useState<string>('');
+	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
 		async function getReservations() {
@@ -63,13 +63,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 				newSearchQueryObj.priceRangeMin *= 100;
 			}
 			try {
+				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
 				setDestinations(res.data.data);
 				setAvailabilityTotal(res.data.total);
+				setValidCode(rateCode === '' || (!!res.data.data && res.data.data.length > 0));
+				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
+				setValidCode(rateCode === '');
+				popupController.close(SpinningLoaderPopup);
 			}
-			setWaitToLoad(false);
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
@@ -190,18 +194,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 						data.accommodationId = accommodationId;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
-						data.destinationId = destination.id;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
-						data = JSON.stringify(data);
+						data = JSON.stringify({ destinationId: destination.id, newRoom: data });
 
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});
 						} else {
-							router.navigate(`/booking?data=${data}`).catch(console.error);
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
 					},
 					onAddCompareClick: (accommodationId) => {
@@ -242,15 +245,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large.toString();
+				return urlObj.urls.large?.toString() || '';
 			});
 		}
 		return [];
 	}
 
-	return waitToLoad ? (
-		<LoadingPage />
-	) : (
+	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<HeroImage
@@ -270,66 +271,82 @@ const ReservationAvailabilityPage: React.FC = () => {
 						Filter by
 					</Label>
 
-					<FilterBar
-						className={'filterBar'}
-						startDate={moment(searchQueryObj.startDate)}
-						endDate={moment(searchQueryObj.endDate)}
-						onDatesChange={onDatesChange}
-						focusedInput={focusedInput}
-						onFocusChange={setFocusedInput}
-						monthsToShow={2}
-						onChangeAdults={(value) => {
-							if (value === '') value = 0;
-							updateSearchQueryObj('adults', parseInt(value));
-						}}
-						onChangeChildren={(value) => {
-							if (value !== '') updateSearchQueryObj('children', parseInt(value));
-						}}
-						onChangePriceMin={(value) => {
-							if (value !== '') {
-								updateSearchQueryObj('priceRangeMin', value);
-							}
-						}}
-						onChangePriceMax={(value) => {
-							if (value !== '') {
-								updateSearchQueryObj('priceRangeMax', value);
-							}
-						}}
-						adultsInitialInput={searchQueryObj.adults.toString()}
-						childrenInitialInput={searchQueryObj.children.toString()}
-						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
-						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
-					/>
-					<IconLabel
-						className={'moreFiltersLink'}
-						labelName={'More Filters'}
-						iconImg={'icon-chevron-right'}
-						iconPosition={'right'}
-						iconSize={8}
-						labelVariant={'caption'}
-						onClick={() => {
-							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (startDate, endDate, adults, children, priceRangeMin, priceRangeMax) => {
-									popupSearch(startDate, endDate, adults, children, priceRangeMin, priceRangeMax);
-								},
-								className: 'filterPopup'
-							});
-						}}
-					/>
-					<Accordion
-						hideHoverEffect
-						children={
-							<RateCodeSelect
-								apply={(value) => {
-									setRateCode(value);
-									updateSearchQueryObj('rate', value);
+					{size !== 'small' ? (
+						<>
+							<FilterBar
+								className={'filterBar'}
+								startDate={moment(searchQueryObj.startDate)}
+								endDate={moment(searchQueryObj.endDate)}
+								onDatesChange={onDatesChange}
+								focusedInput={focusedInput}
+								onFocusChange={setFocusedInput}
+								monthsToShow={2}
+								onChangeAdults={(value) => {
+									if (value === '') value = 0;
+									updateSearchQueryObj('adults', parseInt(value));
 								}}
-								code={rateCode}
-								valid={rateCode !== '' && (!destinations || destinations.length < 1)}
+								onChangeChildren={(value) => {
+									if (value !== '') updateSearchQueryObj('children', parseInt(value));
+								}}
+								onChangePriceMin={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMin', value);
+									}
+								}}
+								onChangePriceMax={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMax', value);
+									}
+								}}
+								adultsInitialInput={searchQueryObj.adults.toString()}
+								childrenInitialInput={searchQueryObj.children.toString()}
+								initialPriceMax={
+									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
+								}
+								initialPriceMin={
+									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
+								}
 							/>
-						}
-						titleReact={<Label variant={'button'}>toggle rate code</Label>}
-					/>
+							<Accordion
+								hideHoverEffect
+								children={
+									<RateCodeSelect
+										apply={(value) => {
+											setRateCode(value);
+											updateSearchQueryObj('rate', value);
+										}}
+										code={rateCode}
+										valid={!validCode}
+									/>
+								}
+								titleReact={<Label variant={'button'}>toggle rate code</Label>}
+							/>
+						</>
+					) : (
+						<IconLabel
+							className={'moreFiltersLink'}
+							labelName={'More Filters'}
+							iconImg={'icon-chevron-right'}
+							iconPosition={'right'}
+							iconSize={8}
+							labelVariant={'caption'}
+							onClick={() => {
+								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+									onClickApply: (
+										startDate,
+										endDate,
+										adults,
+										children,
+										priceRangeMin,
+										priceRangeMax
+									) => {
+										popupSearch(startDate, endDate, adults, children, priceRangeMin, priceRangeMax);
+									},
+									className: 'filterPopup'
+								});
+							}}
+						/>
+					)}
 
 					<div className={'bottomBorderDiv'} />
 				</Box>

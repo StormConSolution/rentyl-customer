@@ -202,7 +202,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						data.accommodationId = item.id;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
-						data.destinationId = destinationDetails.id;
+						delete data.destinationId;
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
@@ -212,7 +212,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 								query: data
 							});
 						} else {
-							router.navigate(`/booking?data=${data}`).catch(console.error);
+							router
+								.navigate(
+									`/booking/packages?data=${JSON.stringify({
+										destinationId: destinationDetails.id,
+										newRoom: JSON.parse(data)
+									})}`
+								)
+								.catch(console.error);
 						}
 					}}
 					onViewDetailsClick={() => {
@@ -252,7 +259,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						}
 					]}
 					amenityIconNames={item.featureIcons}
-					carouselImagePaths={media}
+					carouselImagePaths={media.map((media) => (media ? media : ''))}
 				/>
 			);
 		});

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import './BookingCartTotalsCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
-import Paper from '../../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
-import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
-import { useState } from 'react';
 import { convertTwentyFourHourTime } from '../../../utils/utils';
+import AccommodationOptionsPopup, {
+	AccommodationOptionsPopupProps
+} from '../accommodationOptionsPopup/AccommodationOptionsPopup';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -26,11 +26,13 @@ interface BookingCartTotalsCardProps {
 	children: number;
 	packages?: Api.Reservation.Res.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
+	accommodationId?: number;
+	remove: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	edit: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	changeRoom: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
-	const size = useWindowResizeChange();
-
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		for (let i in props.costPerNight) {
@@ -121,16 +123,37 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	return (
-		<Paper
-			width={size === 'small' ? '100%' : '410px'}
+		<Accordion
+			isOpen
 			className={'rsBookingCartTotalsCard'}
-			borderRadius={'4px'}
-			boxShadow
-			padding={'16px'}
+			hideHoverEffect
+			titleReact={
+				<Box display={'flex'} alignItems={'center'}>
+					<Label variant={'h4'} width={'170px'}>
+						{props.accommodationName}
+					</Label>
+					<Icon
+						iconImg={'icon-edit'}
+						cursorPointer
+						onClick={(event) => {
+							event.stopPropagation();
+							popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
+								onChangeRoom: () => {
+									popupController.close(AccommodationOptionsPopup);
+									props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+								},
+								onEditRoom: () => {
+									props.edit(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+								},
+								onRemove: () => {
+									props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+								}
+							});
+						}}
+					/>
+				</Box>
+			}
 		>
-			<Label variant={'h2'} marginBottom={'10px'}>
-				Your Stay
-			</Label>
 			<Box display={'flex'}>
 				<Box marginRight={'50px'}>
 					<Label variant={'h4'}>Check-in</Label>
@@ -149,16 +172,21 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				<Label variant={'body1'}>{props.adults} Adults</Label>
 				<Label variant={'body1'}>{props.children} Children</Label>
 			</Box>
-			<Box display={'flex'} alignItems={'center'}>
-				<Label variant={'h4'} width={'170px'}>
-					{props.accommodationName}
-				</Label>
-				<Label variant={'h4'} marginLeft={'auto'}>
-					${StringUtils.formatMoney(props.accommodationTotalInCents)}
-				</Label>
-			</Box>
-			<Accordion titleReact={<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>}>
+
+			<Accordion
+				titleReact={
+					<Box display={'flex'} alignItems={'center'}>
+						<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>
+					</Box>
+				}
+			>
 				{renderItemizedCostPerNight()}
+				<Box display={'flex'} alignItems={'center'}>
+					<Label variant={'h4'}>Total:</Label>
+					<Label variant={'h4'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(props.accommodationTotalInCents)}
+					</Label>
+				</Box>
 			</Accordion>
 			{ObjectUtils.isArrayWithData(props.packages) && (
 				<>
@@ -173,16 +201,22 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					{renderPackages()}
 				</>
 			)}
-			<Box display={'flex'} alignItems={'center'}>
-				<Label variant={'h4'} width={'170px'}>
-					Taxes and Fees
-				</Label>
-				<Label variant={'h4'} marginLeft={'auto'}>
-					${StringUtils.formatMoney(props.taxAndFeeTotalInCent)}
-				</Label>
-			</Box>
-			<Accordion titleReact={<Label variant={'body1'}>Details</Label>}>{renderTaxesAndFees()}</Accordion>
-			<hr />
+			<Accordion
+				titleReact={
+					<Label variant={'body2'} width={'170px'}>
+						Taxes and Fees
+					</Label>
+				}
+			>
+				{renderTaxesAndFees()}
+				<Box alignItems={'center'} display={'flex'}>
+					<Label variant={'h4'}>Total</Label>
+					<Label variant={'h4'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(props.taxAndFeeTotalInCent)}
+					</Label>
+				</Box>
+			</Accordion>
+
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h3'} width={'170px'}>
 					Total:
@@ -191,7 +225,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					${getCartTotal()}
 				</Label>
 			</Box>
-		</Paper>
+			<hr />
+		</Accordion>
 	);
 };
 

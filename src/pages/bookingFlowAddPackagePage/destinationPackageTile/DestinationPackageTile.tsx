@@ -12,7 +12,7 @@ interface DestinationPackageTileProps {
 	description: string;
 	priceCents: number;
 	imgUrl: string;
-	onAddPackage: () => void;
+	onAddPackage?: () => void;
 }
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {

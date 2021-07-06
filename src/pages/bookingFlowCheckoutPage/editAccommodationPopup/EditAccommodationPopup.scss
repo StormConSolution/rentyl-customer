@@ -1,0 +1,20 @@
+@import '../../../themes/themes';
+
+.rsEditAccommodationPopup {
+	background-color: theme-var($secondaryBackgroundColor);
+	padding: 20px;
+
+	.guests {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		.rsLabelInput {
+			width: 90px;
+		}
+	}
+	.rsDateRangeSelector {
+		display: grid;
+		place-items: center;
+		margin: 10px 0;
+	}
+}

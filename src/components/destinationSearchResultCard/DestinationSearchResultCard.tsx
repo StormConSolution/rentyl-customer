@@ -23,7 +23,7 @@ export interface DestinationSearchResultCardProps {
 	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
-	onAddCompareClick: () => void;
+	onAddCompareClick?: () => void;
 }
 
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {

@@ -11,7 +11,7 @@ export interface DestinationSummaryAccommodationListProps {
 	accommodations: AccommodationListRowProp[];
 	onDetailsClick: (accommodationId: number | string) => void;
 	onBookNowClick: (accommodationId: number | string) => void;
-	onAddCompareClick: (accommodationId: number | string) => void;
+	onAddCompareClick?: (accommodationId: number | string) => void;
 }
 
 interface AccommodationListRowProp {
@@ -60,15 +60,17 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						}}
 					/>
 				</div>
-				<Label
-					className={'comparePlusText'}
-					variant="caption"
-					onClick={() => {
-						props.onAddCompareClick(accommodation.id);
-					}}
-				>
-					Compare +
-				</Label>
+				{!!props.onAddCompareClick && (
+					<Label
+						className={'comparePlusText'}
+						variant="caption"
+						onClick={() => {
+							props.onAddCompareClick?.(accommodation.id);
+						}}
+					>
+						Compare +
+					</Label>
+				)}
 			</div>
 		);
 	}

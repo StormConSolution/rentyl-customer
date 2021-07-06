@@ -1,0 +1,17 @@
+@import '../../../themes/themes';
+
+.rsAccommodationOptionsPopup {
+	position: relative;
+	display: flex;
+	justify-content: space-around;
+	padding: 20px;
+	width: 500px;
+	background-color: theme-var($secondaryBackgroundColor);
+	.rsIcon {
+		&.icon-close {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+		}
+	}
+}

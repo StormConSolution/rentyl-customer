@@ -5,7 +5,7 @@ import Paper from '../paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
 import LabelButton from '../labelButton/LabelButton';
 import { popupController } from '@bit/redsky.framework.rs.996';
-import CancelConfirmation, { CancelConfirmationProps } from '../../popups/cancelConfirmation/CancelConfirmation';
+import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
@@ -74,14 +74,12 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<LabelButton
 					variant={'button'}
 					onClick={() => {
-						popupController.open<CancelConfirmationProps>(CancelConfirmation, {
+						popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
 							title: 'Reservation Cancellation',
-							onChange: props.toggleConfirmation ? props.toggleConfirmation : () => {},
-							onClose: () => {
-								props.toggleConfirmation && props.toggleConfirmation(false);
-							},
-							cancelPolicy: props.cancelPolicy,
-							confirm: props.confirmCancellation ? props.confirmCancellation : () => {}
+							bodyText: props.cancelPolicy,
+							confirm: props.confirmCancellation ? props.confirmCancellation : () => {},
+							cancelText: 'Do Not Cancel',
+							confirmText: 'Cancel Now'
 						});
 					}}
 					label={'Cancel'}
