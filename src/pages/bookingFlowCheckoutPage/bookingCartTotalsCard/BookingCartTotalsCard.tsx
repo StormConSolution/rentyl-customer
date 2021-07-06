@@ -27,9 +27,9 @@ interface BookingCartTotalsCardProps {
 	packages?: Api.Reservation.Res.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
 	accommodationId?: number;
-	remove: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	edit: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	changeRoom: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -132,25 +132,42 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h4'} width={'170px'}>
 						{props.accommodationName}
 					</Label>
-					<Icon
-						iconImg={'icon-edit'}
-						cursorPointer
-						onClick={(event) => {
-							event.stopPropagation();
-							popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
-								onChangeRoom: () => {
-									popupController.close(AccommodationOptionsPopup);
-									props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
-								},
-								onEditRoom: () => {
-									props.edit(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
-								},
-								onRemove: () => {
-									props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
-								}
-							});
-						}}
-					/>
+					{props.edit && (
+						<Icon
+							iconImg={'icon-edit'}
+							cursorPointer
+							onClick={(event) => {
+								event.stopPropagation();
+								popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
+									onChangeRoom: () => {
+										popupController.close(AccommodationOptionsPopup);
+										if (props.changeRoom)
+											props.changeRoom(
+												props.accommodationId || 0,
+												props.checkInDate,
+												props.checkoutDate
+											);
+									},
+									onEditRoom: () => {
+										if (props.edit)
+											props.edit(
+												props.accommodationId || 0,
+												props.checkInDate,
+												props.checkoutDate
+											);
+									},
+									onRemove: () => {
+										if (props.remove)
+											props.remove(
+												props.accommodationId || 0,
+												props.checkInDate,
+												props.checkoutDate
+											);
+									}
+								});
+							}}
+						/>
+					)}
 				</Box>
 			}
 		>

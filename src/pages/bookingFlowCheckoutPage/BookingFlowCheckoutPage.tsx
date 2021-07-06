@@ -8,7 +8,7 @@ import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
-import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
+import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
@@ -101,7 +101,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				try {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
 					data.paymentMethodId = result.id;
-					let res = await reservationService.createItenerary(data);
+					let res = await reservationService.createItinerary(data);
 					popupController.close(SpinningLoaderPopup);
 					let newData = {
 						destinationName: destinationName
@@ -260,10 +260,11 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				})
 			};
 			try {
-				let res = await reservationService.createItenerary(data);
+				let res = await reservationService.createItinerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
 				let newData = {
-					itineraryNumber: res.itineraryNumber
+					confirmationCode: res.itineraryNumber,
+					destinationName: res.destination.name
 				};
 
 				router

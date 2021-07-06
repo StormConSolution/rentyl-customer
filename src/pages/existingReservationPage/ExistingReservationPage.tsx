@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ExistingReservationPage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import ReservationCard from '../../components/reservationCard/ReservationCard';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
@@ -12,6 +12,8 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import WhatToEditPopup, { WhatToEditPopupProps } from './whatToEditPopup/WhatToEditPopup';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationPageProps {}
 
@@ -62,6 +64,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 		if (!ObjectUtils.isArrayWithData(upComingReservations)) return;
 
 		return upComingReservations.map((item, index) => {
+			console.log(item);
 			return (
 				<ReservationCard
 					imgPath={item.destination.heroUrl}
@@ -83,7 +86,32 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 						item.destination.policies[item.destination.policies.findIndex((p) => p.type === 'Cancellation')]
 							.value
 					}
-					confirmCancellation={() => reservationService.cancel(item.id)}
+					edit={() =>
+						popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
+							cancel: () => {
+								reservationService.cancel(item.id);
+							},
+							changeRoom: () => {
+								let data = {
+									reservationNumber: item.externalConfirmationId,
+									destinationId: item.destination.id,
+									accommodationId: item.accommodation.id,
+									arrivalDate: DateUtils.displayDate(item.arrivalDate),
+									departureDate: DateUtils.displayDate(item.departureDate),
+									adults: item.adultCount,
+									children: item.childCount
+								};
+								router.navigate(`/reservations/edit-room?data=${JSON.stringify(data)}`);
+							},
+							editInfo: () => {
+								let data = {
+									payment: item.paymentMethod,
+									address: item.billingAddress
+								};
+								router.navigate(`/reservations/payment?data=${JSON.stringify(data)}`);
+							}
+						})
+					}
 				/>
 			);
 		});

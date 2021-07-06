@@ -123,7 +123,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							toggleConfirmation={() => {}}
 							cancelPermitted={reservation.cancellationPermitted}
 							cancelPolicy={cancelPolicy}
-							confirmCancellation={() => reservationsService.cancel(params.reservationId)}
+							edit={() => reservationsService.cancel(params.reservationId)}
 						/>
 					</Box>
 					<Box className={'columnTwo'}>
