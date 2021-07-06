@@ -1,4 +1,6 @@
 import * as React from 'react';
+import './WhatToEditPopup.scss';
+import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import { Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Paper from '../../../components/paper/Paper';
@@ -13,6 +15,7 @@ export interface WhatToEditPopupProps extends PopupProps {
 }
 
 const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
+	const size = useWindowResizeChange();
 	return (
 		<Popup opened={props.opened}>
 			<Paper className={'rsWhatToEditPopup'}>
@@ -24,7 +27,12 @@ const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
 						popupController.close(WhatToEditPopup);
 					}}
 				/>
-				<Box display={'flex'}>
+				<Box
+					display={'flex'}
+					width={size === 'small' ? '300px' : '375px'}
+					justifyContent={'space-around'}
+					alignItems={'center'}
+				>
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}
@@ -34,15 +42,15 @@ const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
 							props.cancel();
 						}}
 					/>
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Change Room'}
-						onClick={() => {
-							popupController.close(WhatToEditPopup);
-							props.changeRoom();
-						}}
-					/>
+					{/*<LabelButton*/}
+					{/*	look={'containedPrimary'}*/}
+					{/*	variant={'button'}*/}
+					{/*	label={'Change Room'}*/}
+					{/*	onClick={() => {*/}
+					{/*		popupController.close(WhatToEditPopup);*/}
+					{/*		props.changeRoom();*/}
+					{/*	}}*/}
+					{/*/>*/}
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}

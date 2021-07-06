@@ -22,7 +22,6 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [reservations, setReservations] = useState<Api.Reservation.Res.Get[]>([]);
 	const [upComingReservations, setUpComingReservations] = useState<Api.Reservation.Res.Get[]>([]);
-	const [upcomingItineraries, setUpcomingItineraries] = useState<Api.Reservation.Res.Itinerary.Get[]>([]);
 	const [previousReservations, setPreviousReservations] = useState<Api.Reservation.Res.Get[]>([]);
 
 	useEffect(() => {
@@ -37,45 +36,6 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 					}
 				]);
 
-				let tempReservationList: Api.Reservation.Res.Get[] = res.data;
-				// console.log(res.data, tempReservationList);
-				let itineraryList: Api.Reservation.Res.Itinerary.Get[] = [];
-				tempReservationList.forEach((reservation: Api.Reservation.Res.Get) => {
-					// let stays: Api.Reservation.Res.Itinerary.Stay[] = tempReservationList.map(
-					// 	(item: Api.Reservation.Res.Get) => {
-					// 		if (reservation.itineraryNumber === item.itineraryNumber)
-					// 			return {
-					// 				reservationId: item.id,
-					// 				accommodation: item.accommodation,
-					// 				arrivalDate: item.arrivalDate,
-					// 				departureDate: item.departureDate,
-					// 				status: item.status,
-					// 				canceledOn: item.canceledOn,
-					// 				externalReservationNumber: item.externalReservationNumber,
-					// 				externalCancelNumber: item.externalCancelNumber,
-					// 				adultCount: item.adultCount,
-					// 				childCount: item.childCount,
-					// 				externalConfirmationId: item.externalConfirmationId,
-					// 				confirmationDate: item.confirmationDate,
-					// 				priceDetail: item.priceDetail,
-					// 				cancellationPermitted: item.cancellationPermitted
-					// 			};
-				});
-				// 	const itinerary: Api.Reservation.Res.Itinerary.Get = {
-				// 		parentReservationId: reservation.id,
-				// 		itineraryNumber: reservation.itineraryNumber,
-				// 		billingAddress: reservation.billingAddress,
-				// 		paymentMethod: reservation.paymentMethod,
-				// 		destination: reservation.destination,
-				// 		stays
-				// 	};
-				// 	itineraryList.push(itinerary);
-				// 	tempReservationList = tempReservationList.filter(
-				// 		(item: Api.Reservation.Res.Get) => item.itineraryNumber !== reservation.itineraryNumber
-				// 	);
-				// });
-				// setUpcomingItineraries(itineraryList);
-				// tempReservationList.filter(reservation => reservation.itineraryNumber)
 				setReservations(res.data);
 			} catch (e) {
 				console.error(e);
@@ -132,23 +92,10 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 								reservationService.cancel(item.id);
 							},
 							changeRoom: () => {
-								let data = {
-									reservationNumber: item.externalConfirmationId,
-									destinationId: item.destination.id,
-									accommodationId: item.accommodation.id,
-									arrivalDate: DateUtils.displayDate(item.arrivalDate),
-									departureDate: DateUtils.displayDate(item.departureDate),
-									adults: item.adultCount,
-									children: item.childCount
-								};
-								router.navigate(`/reservations/edit-room?data=${JSON.stringify(data)}`);
+								router.navigate(`/reservations/edit-room?ri=${item.id}`);
 							},
 							editInfo: () => {
-								let data = {
-									payment: item.paymentMethod,
-									address: item.billingAddress
-								};
-								router.navigate(`/reservations/payment?data=${JSON.stringify(data)}`);
+								router.navigate(`/reservations/payment?ri=${item.id}`);
 							}
 						})
 					}

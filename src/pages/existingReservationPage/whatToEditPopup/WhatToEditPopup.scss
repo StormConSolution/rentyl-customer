@@ -1,0 +1,12 @@
+@import '../../../themes/themes';
+
+.rsWhatToEditPopup {
+	background-color: theme-var($primaryBackgroundColor);
+	padding: 20px;
+
+	.icon-close {
+		position: relative;
+		top: -15px;
+		left: 100%;
+	}
+}

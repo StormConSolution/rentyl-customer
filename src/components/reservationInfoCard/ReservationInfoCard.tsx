@@ -56,7 +56,7 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'caption'}>Sleeps</Label>
 				<Label variant={'body1'}>{props.sleeps}</Label>
 			</div>
-			<div>
+			<div className={'amenities'}>
 				<Label variant={'caption'}>Amenities</Label>
 				<Label variant={'body1'}>{renderAmenityIcons()}</Label>
 			</div>

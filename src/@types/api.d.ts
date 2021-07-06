@@ -941,6 +941,16 @@ declare namespace Api {
 					destinationId: number;
 					stays: Stay[];
 				}
+				export interface Update {
+					itineraryId: string;
+					paymentMethodId?: number;
+					stays?: Update.Stay[];
+				}
+				namespace Update {
+					interface Stay extends Itinerary.Stay {
+						reservationId: number;
+					}
+				}
 			}
 		}
 		export namespace Res {

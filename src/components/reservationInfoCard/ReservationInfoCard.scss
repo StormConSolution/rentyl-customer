@@ -11,7 +11,14 @@
 		}
 	}
 
+	.amenities {
+		text-overflow: ellipsis;
+	}
+
 	.rsIcon {
 		margin-right: 8px;
+		&:before {
+			color: theme-var($primaryTextColor);
+		}
 	}
 }

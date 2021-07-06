@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import './EditFlowModifyPaymentPage.scss';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
@@ -6,38 +7,122 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import BookingCartTotalsCard from '../bookingFlowCheckoutPage/bookingCartTotalsCard/BookingCartTotalsCard';
+import serviceFactory from '../../services/serviceFactory';
+import ReservationsService from '../../services/reservations/reservations.service';
+import router from '../../utils/router';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import PaymentService from '../../services/payment/payment.service';
+import { convertTwentyFourHourTime } from '../../utils/utils';
+import Paper from '../../components/paper/Paper';
+import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 
 const EditFlowModifyPaymentPage = () => {
+	const params = router.getPageUrlParams<{ reservationId: number }>([
+		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
+	]);
 	const size = useWindowResizeChange();
 	let existingCardId = 0;
+	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
-	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
+	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
+	const [cancelPolicy, setCancelPolicy] = useState<string>('');
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
 		year: number;
 		cardId: number;
 	}>();
-	const [reservation, setReservation] = useState();
 
-	//userService.getCurrentUser()???
-	//has PaymentMethods and
+	useEffect(() => {
+		async function getReservationData(id: number) {
+			console.log('being called');
+			try {
+				let res = await reservationsService.get(id);
+				const cancellationPolicy =
+					res.destination.policies[res.destination.policies.findIndex((p) => p.type === 'Cancellation')]
+						.value;
+				setCancelPolicy(cancellationPolicy);
+				console.log(res);
+				setReservation(res);
+			} catch (e) {}
+		}
+		getReservationData(params.reservationId).catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
+		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
+			async (token: string, pmData: Api.Payment.PmData) => {
+				let data = {
+					paymentMethodId: 0,
+					destinationId: reservation?.destination.id
+				};
+				try {
+					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
+					data.paymentMethodId = result.id;
+					// let res = await reservationService.createItinerary(data);
+					popupController.close(SpinningLoaderPopup);
+					let newData = {
+						confirmationCode: reservation?.confirmationCode,
+						destinationName: reservation?.destination.name
+					};
+
+					router
+						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+						.catch(console.error);
+				} catch (e) {
+					popupController.close(SpinningLoaderPopup);
+				}
+			}
+		);
+		return () => {
+			paymentService.unsubscribeToSpreedlyError(subscribeId);
+			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
+		};
+	}, [creditCardForm]);
+
+	useEffect(() => {
+		setIsDisabled(!hasAgreedToTerms || !isFormValid);
+	}, [hasAgreedToTerms, isFormValid]);
+
 	async function updateInformation() {}
 
-	return !!reservation ? (
+	function renderPolicies() {
+		return reservation?.destination.policies.map((item) => {
+			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
+			return (
+				<>
+					<Label variant={'h4'}>{item.type}</Label>
+					<Label variant={'body1'} mb={10}>
+						{item.value}
+					</Label>
+				</>
+			);
+		});
+	}
+
+	return !!!reservation ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsEditFlowModifyPaymentPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box display={'flex'}>
-					<Label variant={'h4'}>You are editing your reservation</Label>
+				<Box
+					display={'flex'}
+					className={'editingNotification'}
+					alignItems={'center'}
+					justifyContent={'space-around'}
+				>
+					<Label variant={'h2'}>You are editing your reservation</Label>
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}
 						label={'Dismiss Edits'}
-						onClick={() => {}}
+						onClick={() => {
+							router.back();
+						}}
 					/>
 				</Box>
 				<hr />
@@ -50,8 +135,9 @@ const EditFlowModifyPaymentPage = () => {
 					alignItems={'flex-start'}
 					position={'relative'}
 					height={'fit-content'}
+					className={'editFlowContainer'}
 				>
-					<Box>
+					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
 							onContactChange={(value) => {}}
 							onCreditCardChange={(value) => {
@@ -69,7 +155,62 @@ const EditFlowModifyPaymentPage = () => {
 							onExistingCardSelect={(value) => {
 								existingCardId = value;
 							}}
+							existingCardId={reservation.paymentMethod.id}
 						/>
+						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
+							<Label variant={'h2'} mb={10}>
+								Policies:
+							</Label>
+							<Box display={'flex'} mb={10}>
+								<Box marginRight={'50px'}>
+									<Label variant={'h4'}>Check-in</Label>
+									<Label variant={'body1'}>
+										After{' '}
+										{convertTwentyFourHourTime(
+											reservation.destination.policies[
+												reservation.destination.policies.findIndex(
+													(policy) => policy.type === 'CheckIn'
+												)
+											].value
+										)}
+									</Label>
+								</Box>
+								<Box>
+									<Label variant={'h4'}>Check-out</Label>
+									<Label variant={'body1'}>
+										Before{' '}
+										{convertTwentyFourHourTime(
+											reservation.destination.policies[
+												reservation.destination.policies.findIndex(
+													(policy) => policy.type === 'CheckOut'
+												)
+											].value
+										)}
+									</Label>
+								</Box>
+							</Box>
+							<Label variant={'body1'} mb={10}>
+								{reservation.destination.name}
+							</Label>
+							{renderPolicies()}
+						</Paper>
+						<Paper className={'acknowledgementSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
+							<Label variant={'h2'}>Acknowledgement</Label>
+							<LabelCheckbox
+								value={1}
+								text={'* I agree with the Privacy Terms.'}
+								isChecked={false}
+								onSelect={() => {
+									setHasAgreedToTerms(true);
+								}}
+								onDeselect={() => {
+									setHasAgreedToTerms(false);
+								}}
+							/>
+							<Label variant={'h4'}>
+								By completing this booking, I agree with the booking conditions
+							</Label>
+						</Paper>
 						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
@@ -81,23 +222,46 @@ const EditFlowModifyPaymentPage = () => {
 							disabled={isDisabled}
 						/>
 					</Box>
+
 					<Box>
-						<BookingCartTotalsCard
-							checkInTime={'1600'}
-							checkoutTime={'1000'}
-							checkInDate={'2021-07-03'}
-							checkoutDate={'2021-07-05'}
-							accommodationName={'test test'}
-							feeTotalsInCents={[{ name: 'money', amount: 1555 }]}
-							taxTotalsInCents={[{ name: 'money', amount: 100 }]}
-							costPerNight={{ '2021-06-05': 345 }}
-							grandTotalCents={2000}
-							taxAndFeeTotalInCent={999}
-							accommodationTotalInCents={234}
-							adults={2}
-							onDeletePackage={() => {}}
-							children={0}
-						/>
+						<Paper
+							className={'cart'}
+							borderRadius={'4px'}
+							boxShadow
+							padding={'16px'}
+							width={size === 'small' ? '100%' : '410px'}
+						>
+							<Label variant={'h2'}>Your Stay</Label>
+							<hr />
+							<BookingCartTotalsCard
+								checkInTime={
+									reservation.destination.policies[
+										reservation.destination.policies.findIndex(
+											(policy) => policy.type === 'CheckIn'
+										)
+									].value
+								}
+								checkoutTime={
+									reservation.destination.policies[
+										reservation.destination.policies.findIndex(
+											(policy) => policy.type === 'CheckOut'
+										)
+									].value
+								}
+								checkInDate={reservation.arrivalDate}
+								checkoutDate={reservation.departureDate}
+								accommodationName={reservation.accommodation.name}
+								feeTotalsInCents={reservation.priceDetail.feeTotalsInCents}
+								taxTotalsInCents={reservation.priceDetail.taxTotalsInCents}
+								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
+								grandTotalCents={reservation.priceDetail.grandTotalCents}
+								taxAndFeeTotalInCent={reservation.priceDetail.taxAndFeeTotalInCents}
+								accommodationTotalInCents={reservation.priceDetail.accommodationTotalInCents}
+								adults={reservation.adultCount}
+								onDeletePackage={() => {}}
+								children={reservation.childCount}
+							/>
+						</Paper>
 					</Box>
 				</Box>
 			</div>

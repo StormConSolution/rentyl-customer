@@ -24,6 +24,7 @@ interface ContactInfoAndPaymentCardProps {
 	onCreditCardChange: (value: CreditCardForm) => void;
 	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
+	existingCardId?: number;
 }
 
 let phoneNumber = '';
@@ -37,8 +38,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-	const [existingCardId, setExistingCardId] = useState<number>(0);
-	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(false);
+	const [existingCardId, setExistingCardId] = useState<number>(props.existingCardId || 0);
+	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(
+		props.existingCardId ? props.existingCardId > 0 : false
+	);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
@@ -298,6 +301,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 							setUseExistingCreditCard(false);
 							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
 						}}
+						isChecked={props.existingCardId ? props.existingCardId > 0 : false}
 					/>
 				</Box>
 
