@@ -19,7 +19,6 @@ import IconLabel from '../../components/iconLabel/IconLabel';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import DestinationService from '../../services/destination/destination.service';
 import ComparisonService from '../../services/comparison/comparison.service';
-import LoadingPage from '../loadingPage/LoadingPage';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { SelectOptions } from '../../components/Select/Select';
@@ -32,19 +31,12 @@ import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
-interface AccommodationFeatures {
-	id: number;
-	title: string;
-	icon: string;
-}
-
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
-	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
@@ -82,7 +74,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				setValidCode(rateCode === '');
 				popupController.close(SpinningLoaderPopup);
 			}
-			setWaitToLoad(false);
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);

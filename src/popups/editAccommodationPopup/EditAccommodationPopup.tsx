@@ -8,13 +8,12 @@ import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import moment from 'moment';
-import serviceFactory from '../../services/serviceFactory';
-import DestinationService from '../../services/destination/destination.service';
+import serviceFactory from '../../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import DestinationPackageTile from '../../pages/bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
-import ReservationsService from '../../services/reservations/reservations.service';
-import { DateUtils, StringUtils } from '../../utils/utils';
-import LabelButton from '../../components/labelButton/LabelButton';
+import DestinationPackageTile from '../../bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
+import ReservationsService from '../../../services/reservations/reservations.service';
+import { DateUtils } from '../../../utils/utils';
+import LabelButton from '../../../components/labelButton/LabelButton';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
@@ -167,8 +166,8 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 							props.onApplyChanges(
 								parseInt(guestForm.get('adults').value.toString()),
 								parseInt(guestForm.get('children').value.toString()),
-								DateUtils.displayDate(startDate?.toDate() || ''),
-								DateUtils.displayDate(endDate?.toDate() || ''),
+								startDate?.format('YYYY-MM-DD') || '',
+								endDate?.format('YYYY-MM-DD') || '',
 								addedPackages
 							);
 							popupController.closeAll();

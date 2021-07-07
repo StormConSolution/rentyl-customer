@@ -115,7 +115,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						/>
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(0)}
+						${StringUtils.formatMoney(item.priceCents)}
 					</Label>
 				</Box>
 			);

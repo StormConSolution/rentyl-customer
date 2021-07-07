@@ -40,7 +40,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
-				<Paper className={'paperWrapper'} height={'430px'} width={'330px'} backgroundColor={'#fcfbf8'}>
+				<Paper className={'paperWrapper'} width={'330px'} backgroundColor={'#fcfbf8'}>
 					<Label className={'filtersLabel'} variant={'h2'}>
 						Filters
 					</Label>

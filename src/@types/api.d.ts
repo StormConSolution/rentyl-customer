@@ -68,7 +68,7 @@ declare namespace Api {
 				media: Media[]; //*All media for accommodation and accommodation categories*
 				featureIcons: string[]; //*Limit it to the first five*
 				maxSleeps: number;
-				maxOccupantCount: number;
+				maxOccupancyCount: number;
 				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;
 				extraBeds: 0 | 1;
@@ -198,7 +198,9 @@ declare namespace Api {
 			export interface Create {
 				name: string;
 				description?: string;
-				isActive?: boolean | number;
+				isActive?: 0 | 1;
+				affiliateId?: number;
+				affiliateLocationId?: number;
 				type: string;
 				pointValue: number;
 			}
@@ -211,7 +213,9 @@ declare namespace Api {
 				id: number;
 				name?: string;
 				description?: string;
-				isActive?: boolean | number;
+				isActive?: 0 | 1;
+				affiliateId?: number;
+				affiliateLocationId?: number;
 				type?: string;
 				pointValue?: number;
 			}
@@ -225,20 +229,25 @@ declare namespace Api {
 		}
 
 		export namespace Res {
-			export interface Create extends Model.Action {}
-			export interface Get extends Model.Action {}
-			export interface GetByPage {
-				data: Model.Action[];
-				total: number;
+			export interface Get extends Omit<Model.Action, 'companyId' | 'affiliateId' | 'affiliateLocationId'> {
+				affiliate: Omit<Model.Affiliate, 'companyId'>;
+				affiliateLocation: Model.AffiliateLocation;
 			}
-			export interface Update extends Model.Action {}
-			export interface Details extends Model.Action {
+			export interface Details extends Get {
 				campaigns: CampaignDetails[];
 			}
 			export interface CampaignDetails extends Omit<Model.Campaign, 'companyId'> {
 				campaignActionId: number;
 				actionCount: number;
 			}
+		}
+	}
+
+	export namespace Affiliate {
+		export namespace Req {}
+		export namespace Res {
+			export interface Location extends Model.AffiliateLocation {}
+			export interface Get extends Omit<Model.Affiliate, 'companyId'> {}
 		}
 	}
 
@@ -564,6 +573,11 @@ declare namespace Api {
 					roomCount: number;
 					bedDetails: any;
 					priceCents: number;
+					prices: {
+						priceCents: number;
+						quantityAvailable: number;
+						rateCode: string;
+					}[];
 					features: {
 						id: number;
 						title: string;
@@ -1026,8 +1040,8 @@ declare namespace Api {
 					departureDate: Date | string;
 					status: string;
 					canceledOn: Date | string;
-					externalReservationNumber: string;
-					externalCancelNumber: string;
+					externalReservationId: string;
+					externalCancellationId: string;
 					adultCount: number;
 					childCount: number;
 					externalConfirmationId: string | null;
@@ -1037,7 +1051,7 @@ declare namespace Api {
 				}
 				export interface Get {
 					parentReservationId: number;
-					itineraryNumber: string;
+					itineraryId: string;
 					billingAddress: BillingAddressDetails;
 					paymentMethod: PaymentMethod;
 					destination: DestinationDetails;
@@ -1408,8 +1422,8 @@ declare namespace Api {
 				pendingPoints: number;
 				nextTierThreshold: number;
 				nextTierTitle: string;
-				pointsExpiring: number | null;
-				pointsExpiringOn: Date | string | null;
+				pointsExpiring: number;
+				pointsExpiringOn: Date | string;
 				paymentMethods: PaymentMethod[];
 			}
 			export interface Login extends Detail {}
