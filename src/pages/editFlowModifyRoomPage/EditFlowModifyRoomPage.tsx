@@ -8,7 +8,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer, StringUtils } from '../../utils/utils';
+import { formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -18,7 +18,6 @@ import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import IconLabel from '../../components/iconLabel/IconLabel';
-import AccommodationService from '../../services/accommodation/accommodation.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -28,7 +27,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ reservationId: number }>([
+	const params = router.getPageUrlParams<{ reservationId: number; destinationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' },
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
 	]);
@@ -78,7 +77,6 @@ const EditFlowModifyRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rate === '' || newSearchQueryObj.rate === undefined)
 					delete newSearchQueryObj.rate;
-				if (reservation) newSearchQueryObj.destinationId = reservation?.destination.id;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
 				//can't use getByPage as it doesn't return with the info needed for the cards.
