@@ -216,7 +216,7 @@ const EditFlowModifyRoomPage = () => {
 						},
 						{
 							label: 'Max Occupancy',
-							datum: destination.maxOccupantCount
+							datum: destination.maxOccupancyCount
 						},
 						{
 							label: 'ADA Compliant',

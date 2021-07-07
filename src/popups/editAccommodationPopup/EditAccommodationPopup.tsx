@@ -8,14 +8,14 @@ import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import moment from 'moment';
-import serviceFactory from '../../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import DestinationPackageTile from '../../bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
-import ReservationsService from '../../../services/reservations/reservations.service';
-import { DateUtils } from '../../../utils/utils';
-import LabelButton from '../../../components/labelButton/LabelButton';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import serviceFactory from '../../services/serviceFactory';
+import ReservationsService from '../../services/reservations/reservations.service';
+import { DateUtils } from '../../utils/utils';
+import DestinationPackageTile from '../../pages/bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	adults: number;

@@ -8,7 +8,6 @@ import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
-import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
@@ -24,6 +23,7 @@ import EditAccommodationPopup, {
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -274,7 +274,7 @@ const BookingFlowCheckoutPage = () => {
 				let res = await reservationService.createItinerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
 				let newData = {
-					confirmationCode: res.itineraryNumber,
+					confirmationCode: res.itineraryId,
 					destinationName: res.destination.name
 				};
 
