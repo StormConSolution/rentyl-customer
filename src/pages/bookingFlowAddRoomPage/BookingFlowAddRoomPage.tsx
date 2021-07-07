@@ -288,7 +288,7 @@ const BookingFlowAddRoomPage = () => {
 										room.departureDate === data.edit.endDate
 								),
 								1
-							);
+							)[0];
 							delete data.edit;
 							router.navigate(`/booking/packages?data=${JSON.stringify(data)}`);
 						}}
@@ -310,13 +310,13 @@ const BookingFlowAddRoomPage = () => {
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
 								onClickApply: (
-									startDate,
-									endDate,
-									adults,
-									children,
-									priceRangeMin,
-									priceRangeMax,
-									rateCode
+									startDate: moment.Moment | null,
+									endDate: moment.Moment | null,
+									adults: string,
+									children: string,
+									priceRangeMin: string,
+									priceRangeMax: string,
+									rateCode: string
 								) => {
 									popupSearch(
 										startDate,
