@@ -3,18 +3,18 @@ import { useEffect, useState } from 'react';
 import { Popup, popupController } from '@bit/redsky.framework.rs.996';
 import './EditAccommodationPopup.scss';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
-import Box from '../../../components/box/Box';
-import Paper from '../../../components/paper/Paper';
-import LabelInput from '../../../components/labelInput/LabelInput';
-import DateRangeSelector from '../../../components/dateRangeSelector/DateRangeSelector';
+import Box from '../../components/box/Box';
+import Paper from '../../components/paper/Paper';
+import LabelInput from '../../components/labelInput/LabelInput';
+import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import moment from 'moment';
-import serviceFactory from '../../../services/serviceFactory';
-import DestinationService from '../../../services/destination/destination.service';
+import serviceFactory from '../../services/serviceFactory';
+import DestinationService from '../../services/destination/destination.service';
 import rsToasts from '@bit/redsky.framework.toast';
-import DestinationPackageTile from '../../bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
-import ReservationsService from '../../../services/reservations/reservations.service';
-import { DateUtils, StringUtils } from '../../../utils/utils';
-import LabelButton from '../../../components/labelButton/LabelButton';
+import DestinationPackageTile from '../../pages/bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
+import ReservationsService from '../../services/reservations/reservations.service';
+import { DateUtils, StringUtils } from '../../utils/utils';
+import LabelButton from '../../components/labelButton/LabelButton';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
@@ -156,7 +156,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						look={'containedSecondary'}
 						variant={'button'}
 						label={'Cancel'}
-						onClick={() => popupController.close(EditAccommodationPopup)}
+						onClick={() => popupController.closeAll()}
 					/>
 					<LabelButton
 						look={'containedPrimary'}
@@ -171,6 +171,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 								DateUtils.displayDate(endDate?.toDate() || ''),
 								addedPackages
 							);
+							popupController.closeAll();
 						}}
 					/>
 				</Box>

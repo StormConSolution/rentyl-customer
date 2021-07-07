@@ -35,7 +35,7 @@ const ConfirmOptionPopup: React.FC<ConfirmOptionPopupProps> = (props) => {
 						<LabelButton
 							variant={'caption'}
 							look={'containedSecondary'}
-							onClick={() => popupController.close(ConfirmOptionPopup)}
+							onClick={() => popupController.closeAll()}
 							label={props.cancelText}
 							buttonType={'button'}
 							className={'popupBtn'}
@@ -45,7 +45,7 @@ const ConfirmOptionPopup: React.FC<ConfirmOptionPopupProps> = (props) => {
 							look={'containedPrimary'}
 							onClick={() => {
 								props.confirm();
-								popupController.close(ConfirmOptionPopup);
+								popupController.closeAll();
 							}}
 							label={props.confirmText}
 							buttonType={'button'}

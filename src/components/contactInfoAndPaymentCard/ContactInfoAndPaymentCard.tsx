@@ -16,7 +16,7 @@ import Select, { SelectOptions } from '../Select/Select';
 import debounce from 'lodash.debounce';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
-type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
+type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string; email: string };
 type CreditCardForm = { full_name: string; expDate: string };
 
 interface ContactInfo extends ContactInfoForm {
@@ -72,7 +72,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			new RsFormControl('lastName', user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
 			]),
-			new RsFormControl('data', '', [])
+			new RsFormControl('data', '', []),
+			new RsFormControl('email', user?.primaryEmail || '', [
+				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid email address')
+			])
 		])
 	);
 
@@ -255,7 +258,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			<Label variant={'h2'} marginBottom={'10px'}>
 				Contact Info
 			</Label>
-			<Box className={'contactInfo'}>
+			<Box className={'contactInfo'} display={'grid'}>
 				<LabelInput
 					title={'First Name'}
 					inputType={'text'}
@@ -266,6 +269,12 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					title={'Last Name'}
 					inputType={'text'}
 					control={contactInfoForm.get('lastName')}
+					updateControl={updateContactInfoForm}
+				/>
+				<LabelInput
+					title={'Email'}
+					inputType={'text'}
+					control={contactInfoForm.get('email')}
 					updateControl={updateContactInfoForm}
 				/>
 				<LabelInput

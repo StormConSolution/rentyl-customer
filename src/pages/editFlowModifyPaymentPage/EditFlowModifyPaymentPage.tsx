@@ -21,6 +21,7 @@ interface ContactInfo {
 	firstName: string;
 	lastName: string;
 	details: string;
+	email: string;
 	phone: string;
 }
 const EditFlowModifyPaymentPage = () => {
@@ -71,7 +72,8 @@ const EditFlowModifyPaymentPage = () => {
 					setExistingCardId(result.id);
 					if (reservation) {
 						let res = await reservationsService.updateReservation({
-							itineraryId: reservation.itineraryId
+							itineraryId: reservation.itineraryId,
+							paymentMethodId: existingCardId
 						});
 					}
 					popupController.close(SpinningLoaderPopup);

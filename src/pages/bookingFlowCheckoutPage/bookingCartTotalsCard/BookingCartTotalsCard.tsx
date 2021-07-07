@@ -8,7 +8,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime } from '../../../utils/utils';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
-} from '../accommodationOptionsPopup/AccommodationOptionsPopup';
+} from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;

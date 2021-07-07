@@ -1,17 +1,18 @@
 import * as React from 'react';
 import './WhatToEditPopup.scss';
-import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
-import Paper from '../../../components/paper/Paper';
-import LabelButton from '../../../components/labelButton/LabelButton';
+import Paper from '../../components/paper/Paper';
+import LabelButton from '../../components/labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
-import Box from '../../../components/box/Box';
+import Box from '../../components/box/Box';
 
 export interface WhatToEditPopupProps extends PopupProps {
 	cancel: () => void;
 	changeRoom: () => void;
 	editInfo: () => void;
+	editRoomInfo: () => void;
 }
 
 const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
@@ -24,7 +25,7 @@ const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
 					className={'closeBtn'}
 					cursorPointer
 					onClick={() => {
-						popupController.close(WhatToEditPopup);
+						popupController.closeAll();
 					}}
 				/>
 				<Box
@@ -36,10 +37,10 @@ const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}
-						label={'Cancel'}
+						label={'Change Room Details'}
 						onClick={() => {
-							popupController.close(WhatToEditPopup);
-							props.cancel();
+							popupController.hide(WhatToEditPopup);
+							props.editRoomInfo();
 						}}
 					/>
 					{/*<LabelButton*/}
@@ -51,12 +52,21 @@ const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
 					{/*		props.changeRoom();*/}
 					{/*	}}*/}
 					{/*/>*/}
+					{/*<LabelButton*/}
+					{/*	look={'containedPrimary'}*/}
+					{/*	variant={'button'}*/}
+					{/*	label={'Cancel'}*/}
+					{/*	onClick={() => {*/}
+					{/*		popupController.close(WhatToEditPopup);*/}
+					{/*		props.cancel();*/}
+					{/*	}}*/}
+					{/*/>*/}
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}
 						label={'Change Payment Info'}
 						onClick={() => {
-							popupController.close(WhatToEditPopup);
+							popupController.closeAll();
 							props.editInfo();
 						}}
 					/>

@@ -22,40 +22,48 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import ReservationsService from '../../services/reservations/reservations.service';
+import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
-	params.data = JSON.parse(params.data);
-
+	const params = router.getPageUrlParams<{ reservationId: number }>([
+		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' },
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
+	]);
+	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
-	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
+	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
-		startDate: moment(params.data.arrivalDate).format('YYYY-MM-DD'),
-		endDate: moment(params.data.departureDate).format('YYYY-MM-DD'),
-		adults: params.data.adults,
-		children: params.data.children,
+		startDate: moment(reservation?.arrivalDate).format('YYYY-MM-DD'),
+		endDate: !!reservation
+			? moment(reservation.departureDate).format('YYYY-MM-DD')
+			: moment().add(2, 'day').format('YYYY-MM-DD'),
+		adults: reservation?.adultCount || 0,
+		children: reservation?.childCount || 0,
 		pagination: { page: 1, perPage: 5 },
-		destinationId: params.data.destinationId
+		destinationId: params.destinationId
 	});
 	const [rateCode, setRateCode] = useState<string>('');
 	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
-		async function getReservationDetails() {
-			const response = await accommodationService.getAccommodationDetails(params.data.accommodationId);
-			setAccommodationDetails(response.data.data);
-			const response2 = await destinationService.getDestinationDetails(params.data.destinationId);
-			setDestinationDetails(response2.data.data);
+		async function getReservationData(id: number) {
+			try {
+				let res = await reservationsService.get(id);
+				setReservation(res);
+			} catch (e) {
+				rsToasts.error('Something unexpected happened on the server.');
+				router.navigate('/reservations').catch(console.error);
+			}
 		}
-		getReservationDetails().catch(console.error);
+		getReservationData(params.reservationId).catch(console.error);
 	}, []);
 
 	useEffect(() => {
@@ -70,6 +78,7 @@ const EditFlowModifyRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rate === '' || newSearchQueryObj.rate === undefined)
 					delete newSearchQueryObj.rate;
+				if (reservation) newSearchQueryObj.destinationId = reservation?.destination.id;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
 				//can't use getByPage as it doesn't return with the info needed for the cards.
@@ -155,38 +164,34 @@ const EditFlowModifyRoomPage = () => {
 		return [];
 	}
 
-	function bookNow(id: number) {
-		// const edited: { id: number; startDate: string; endDate: string; packages: any } = params.data.edit;
-		// const stays = params.data.stays.filter(
-		// 	(stay: {
-		// 		adults: number;
-		// 		children: number;
-		// 		accommodationId: number;
-		// 		arrivalDate: string;
-		// 		departureDate: string;
-		// 	}) => {
-		// 		return (
-		// 			stay.accommodationId !== edited.id ||
-		// 			stay.arrivalDate !== edited.startDate ||
-		// 			stay.departureDate !== edited.endDate
-		// 		);
-		// 	}
-		// );
-		//
-		// let data = JSON.stringify({
-		// 	destinationId: params.data.destinationId,
-		// 	stays,
-		// 	newRoom: {
-		// 		adults: searchQueryObj.adults,
-		// 		children: searchQueryObj.children,
-		// 		rate: searchQueryObj.rate,
-		// 		accommodationId: id,
-		// 		arrivalDate: searchQueryObj.startDate,
-		// 		departureDate: searchQueryObj.endDate,
-		// 		packages: edited.packages ? edited.packages : []
-		// 	}
-		// });
-		// router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+	async function bookNow(id: number) {
+		if (reservation) {
+			let stay: {
+				adultCount: number;
+				childCount: number;
+				accommodationId: number;
+				arrivalDate: string;
+				departureDate: string;
+				numberOfAccommodations: number;
+				rateCode: string;
+				reservationId: number;
+			} = {
+				adultCount: searchQueryObj.adults,
+				childCount: searchQueryObj.children,
+				accommodationId: id,
+				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
+				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
+				numberOfAccommodations: 1,
+				rateCode: searchQueryObj.rate || '',
+				reservationId: reservation?.id
+			};
+			try {
+				await reservationsService.updateReservation({ itineraryId: reservation.itineraryId, stays: [stay] });
+				router.navigate(`/reservations`).catch(console.error);
+			} catch {
+				rsToasts.error('Something unexpected happend on the server');
+			}
+		}
 	}
 
 	function renderDestinationSearchResultCards() {
@@ -225,7 +230,15 @@ const EditFlowModifyRoomPage = () => {
 						}
 					]}
 					onBookNowClick={() => {
-						bookNow(destination.id);
+						popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
+							bodyText: 'This will change your current room, are you sure?',
+							cancelText: 'No',
+							confirm(): void {
+								bookNow(destination.id);
+							},
+							confirmText: 'Yes',
+							title: 'Change Room'
+						});
 					}}
 					carouselImagePaths={urls}
 				/>
@@ -236,40 +249,59 @@ const EditFlowModifyRoomPage = () => {
 	return (
 		<Page className={'rsEditFlowModifyRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<AccommodationSearchResultCard
-					currentRoom={true}
-					id={params.data.destinationId}
-					name={destinationDetails?.name || ''}
-					maxSleeps={accommodationDetails?.maxSleeps || 0}
-					squareFeet={parseInt(accommodationDetails?.size || '2500')}
-					description={accommodationDetails?.longDescription || ''}
-					//params.data.priceDetail.accommodationTotalInCents
-					ratePerNightInCents={accommodationDetails?.priceCents || 0}
-					pointsRatePerNight={0}
-					hideButtons={true}
-					roomStats={[
-						{
-							label: 'Sleeps',
-							datum: accommodationDetails?.maxSleeps || 0
-						},
-						{
-							label: 'Max Occupancy',
-							datum: accommodationDetails?.maxOccupantCount || 0
-						},
-						{
-							label: 'ADA Compliant',
-							datum: accommodationDetails?.adaCompliant ? 'Yes' : 'No'
-						},
-						{
-							label: 'Extra Bed',
-							datum: accommodationDetails?.extraBeds ? 'Yes' : 'No'
-						}
-					]}
-					carouselImagePaths={accommodationDetails?.media.map((image) => image.urls.large) || ['']}
-					amenityIconNames={accommodationDetails?.features.map((feature) => feature.icon) || ['']}
-					onBookNowClick={() => {}}
-					pointsEarnable={0}
-				/>
+				<Box
+					display={'flex'}
+					className={'editingNotification'}
+					alignItems={'center'}
+					justifyContent={'space-around'}
+				>
+					<Label variant={'h2'}>You are editing your reservation</Label>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Dismiss Edits'}
+						onClick={() => {
+							router.back();
+						}}
+					/>
+				</Box>
+				{!!reservation && (
+					<AccommodationSearchResultCard
+						currentRoom={true}
+						id={reservation.destination.id}
+						name={reservation.destination.name}
+						maxSleeps={reservation.accommodation.maxSleeps}
+						squareFeet={2500}
+						description={reservation.accommodation.longDescription}
+						ratePerNightInCents={reservation.priceDetail.accommodationTotalInCents}
+						pointsRatePerNight={0}
+						hideButtons={true}
+						roomStats={[
+							{
+								label: 'Sleeps',
+								datum: reservation.accommodation.maxSleeps
+							},
+							{
+								label: 'Max Occupancy',
+								datum: reservation.accommodation.maxOccupantCount
+							},
+							{
+								label: 'ADA Compliant',
+								datum: reservation.accommodation.adaCompliant === 1 ? 'Yes' : 'No'
+							},
+							{
+								label: 'Extra Bed',
+								datum: reservation.accommodation.extraBed
+							}
+						]}
+						carouselImagePaths={['']}
+						amenityIconNames={reservation.accommodation.featureIcons}
+						onBookNowClick={() => {
+							router.back();
+						}}
+						pointsEarnable={0}
+					/>
+				)}
 				<Label className={'filterLabel'} variant={'h1'}>
 					Filter by
 				</Label>

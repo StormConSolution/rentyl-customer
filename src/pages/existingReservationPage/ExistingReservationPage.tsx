@@ -12,8 +12,14 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import WhatToEditPopup, { WhatToEditPopupProps } from './whatToEditPopup/WhatToEditPopup';
-import { DateUtils } from '../../utils/utils';
+import WhatToEditPopup, { WhatToEditPopupProps } from '../../popups/whatToEditPopup/WhatToEditPopup';
+import AccommodationOptionsPopup, {
+	AccommodationOptionsPopupProps
+} from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import EditAccommodationPopup, {
+	EditAccommodationPopupProps
+} from '../../popups/editAccommodationPopup/EditAccommodationPopup';
+import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 
 interface ReservationPageProps {}
 
@@ -89,13 +95,79 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 					edit={() =>
 						popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
 							cancel: () => {
-								reservationService.cancel(item.id);
+								popupController.closeAll();
+								reservationService.cancel(item.id).catch(console.error);
 							},
 							changeRoom: () => {
-								router.navigate(`/reservations/edit-room?ri=${item.id}`);
+								popupController.closeAll();
+								router
+									.navigate(`/reservations/edit-room?ri=${item.id}&&di=${item.destination.id}`)
+									.catch(console.error);
 							},
 							editInfo: () => {
-								router.navigate(`/reservations/payment?ri=${item.id}`);
+								popupController.closeAll();
+								router.navigate(`/reservations/payment?ri=${item.id}`).catch(console.error);
+							},
+							editRoomInfo: () => {
+								popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
+									onRemove: () => {
+										popupController.hide(AccommodationOptionsPopup);
+										popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
+											bodyText: 'Are you sure you want to remove this reservation?',
+											cancelText: 'No',
+											confirm(): void {
+												reservationService.cancel(item.id).catch(console.error);
+											},
+											confirmText: 'Yes',
+											title: 'Cancel Reservation'
+										});
+									},
+									onChangeRoom: () => {
+										popupController.closeAll();
+										router
+											.navigate(
+												`/reservations/edit-room?ri=${item.id}&&di=${item.destination.id}`
+											)
+											.catch(console.error);
+									},
+									onEditRoom: () => {
+										popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+											adults: item.adultCount,
+											children: item.childCount,
+											startDate: item.arrivalDate,
+											endDate: item.departureDate,
+											packages: [],
+											onApplyChanges: (
+												adults: number,
+												children: number,
+												checkinDate: string | Date,
+												checkoutDate: string | Date,
+												packages: Api.Package.Res.Get[]
+											) => {
+												reservationService
+													.updateReservation({
+														itineraryId: item.itineraryId,
+														stays: [
+															{
+																accommodationId: item.accommodation.id,
+																numberOfAccommodations: 1,
+																arrivalDate: checkinDate,
+																departureDate: checkoutDate,
+																adultCount: adults,
+																childCount: children,
+																rateCode: '',
+																reservationId: item.id
+															}
+														]
+													})
+													.catch(console.error);
+												popupController.closeAll();
+											},
+											destinationId: item.destination.id,
+											accommodationId: item.accommodation.id
+										});
+									}
+								});
 							}
 						})
 					}

@@ -19,9 +19,11 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import PaymentService from '../../services/payment/payment.service';
-import EditAccommodationPopup, { EditAccommodationPopupProps } from './editAccommodationPopup/EditAccommodationPopup';
+import EditAccommodationPopup, {
+	EditAccommodationPopupProps
+} from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
-import AccommodationOptionsPopup from './accommodationOptionsPopup/AccommodationOptionsPopup';
+import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -34,6 +36,7 @@ interface ContactInfo {
 	firstName: string;
 	lastName: string;
 	details: string;
+	email: string;
 	phone: string;
 }
 
