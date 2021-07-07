@@ -101,7 +101,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				try {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
 					data.paymentMethodId = result.id;
-					let res = await reservationService.createItenerary(data);
+					let res = await reservationService.createItinerary(data);
 					popupController.close(SpinningLoaderPopup);
 					let newData = {
 						destinationName: destinationName
@@ -194,6 +194,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 		children: number,
 		checkinDate: string | Date,
 		checkoutDate: string | Date,
+		originalStartDate: string | Date,
+		originalEndDate: string | Date,
 		packages: Api.Package.Res.Get[],
 		accommodationId: number
 	) {
@@ -210,8 +212,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 			newParams = [
 				...newParams.filter((stay: Verification) => {
 					return (
-						stay.arrivalDate !== checkinDate ||
-						stay.departureDate !== checkoutDate ||
+						stay.arrivalDate !== originalStartDate ||
+						stay.departureDate !== originalEndDate ||
 						stay.accommodationId !== accommodationId
 					);
 				}),
@@ -223,8 +225,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				let copiedAccommodations = accommodations.filter((accommodation) => {
 					return (
 						accommodation.accommodationId !== accommodationId ||
-						accommodation.arrivalDate !== checkinDate ||
-						accommodation.departureDate !== checkoutDate
+						accommodation.arrivalDate !== originalStartDate ||
+						accommodation.departureDate !== originalEndDate
 					);
 				});
 				setAccommodations([...copiedAccommodations, stay]);
@@ -261,7 +263,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				})
 			};
 			try {
-				let res = await reservationService.createItenerary(data);
+				let res = await reservationService.createItinerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
 				let newData = {
 					itineraryNumber: res.itineraryId
@@ -301,68 +303,82 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 			>
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
-				{accommodations.map((accommodation, index) => (
-					<BookingCartTotalsCard
-						key={index}
-						checkInTime={accommodation.checkInTime}
-						checkoutTime={accommodation.checkoutTime}
-						checkInDate={accommodation.arrivalDate}
-						checkoutDate={accommodation.departureDate}
-						accommodationName={accommodation.accommodationName}
-						accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
-						taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
-						feeTotalsInCents={accommodation.prices.feeTotalsInCents}
-						taxTotalsInCents={accommodation.prices.taxTotalsInCents}
-						costPerNight={accommodation.prices.accommodationDailyCostsInCents}
-						adults={accommodation.adultCount}
-						children={accommodation.childCount}
-						grandTotalCents={accommodation.prices.grandTotalCents}
-						packages={[]}
-						onDeletePackage={(packageId) => {
-							// let newPackages = [...addedPackages];
-							// newPackages = newPackages.filter((item) => item.id !== packageId);
-							// setAddedPackages(newPackages);
-						}}
-						remove={() => {
-							popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-								bodyText: 'Are you sure you want to remove this?',
-								cancelText: 'Do not remove',
-								confirm(): void {
-									removeAccommodation(
-										accommodation.accommodationId,
-										accommodation.arrivalDate,
-										accommodation.departureDate
-									).catch(console.error);
-								},
-								confirmText: 'Remove',
-								title: 'Remove accommodation'
-							});
-						}}
-						edit={(id, checkInDate, checkoutDate) => {
-							popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
-								accommodationId: id,
-								adults: accommodation.adultCount,
-								children: accommodation.childCount,
-								destinationId: destinationId,
-								endDate: checkoutDate,
-								onApplyChanges(
-									adults: number,
-									children: number,
-									checkinDate: string | Date,
-									checkoutDate: string | Date,
-									packages: Api.Package.Res.Get[]
-								): void {
-									popupController.close(AccommodationOptionsPopup);
-									editRoom(adults, children, checkinDate, checkoutDate, packages, id);
-								},
-								packages: [],
-								startDate: checkInDate
-							});
-						}}
-						changeRoom={changeRoom}
-						accommodationId={accommodation.accommodationId}
-					/>
-				))}
+				{accommodations.map((accommodation, index) => {
+					console.log(accommodation.arrivalDate, accommodation.departureDate);
+					return (
+						<BookingCartTotalsCard
+							key={index}
+							checkInTime={accommodation.checkInTime}
+							checkoutTime={accommodation.checkoutTime}
+							checkInDate={accommodation.arrivalDate}
+							checkoutDate={accommodation.departureDate}
+							accommodationName={accommodation.accommodationName}
+							accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
+							taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
+							feeTotalsInCents={accommodation.prices.feeTotalsInCents}
+							taxTotalsInCents={accommodation.prices.taxTotalsInCents}
+							costPerNight={accommodation.prices.accommodationDailyCostsInCents}
+							adults={accommodation.adultCount}
+							children={accommodation.childCount}
+							grandTotalCents={accommodation.prices.grandTotalCents}
+							packages={[]}
+							onDeletePackage={(packageId) => {
+								// let newPackages = [...addedPackages];
+								// newPackages = newPackages.filter((item) => item.id !== packageId);
+								// setAddedPackages(newPackages);
+							}}
+							remove={() => {
+								popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
+									bodyText: 'Are you sure you want to remove this?',
+									cancelText: 'Do not remove',
+									confirm(): void {
+										removeAccommodation(
+											accommodation.accommodationId,
+											accommodation.arrivalDate,
+											accommodation.departureDate
+										).catch(console.error);
+									},
+									confirmText: 'Remove',
+									title: 'Remove accommodation'
+								});
+							}}
+							edit={(id, checkInDate, checkoutDate) => {
+								popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+									accommodationId: id,
+									adults: accommodation.adultCount,
+									children: accommodation.childCount,
+									destinationId: destinationId,
+									endDate: checkoutDate,
+									onApplyChanges(
+										adults: number,
+										children: number,
+										checkinDate: string | Date,
+										checkoutDate: string | Date,
+										originalStartDate: string | Date,
+										originalEndDate: string | Date,
+										packages: Api.Package.Res.Get[]
+									): void {
+										popupController.close(AccommodationOptionsPopup);
+										editRoom(
+											adults,
+											children,
+											checkinDate,
+											checkoutDate,
+											originalStartDate,
+											originalEndDate,
+											packages,
+											id
+										);
+									},
+									packages: [],
+									startDate: checkInDate
+								});
+							}}
+							changeRoom={changeRoom}
+							accommodationId={accommodation.accommodationId}
+						/>
+					);
+				})}
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'button'}

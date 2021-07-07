@@ -19,7 +19,7 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async createItenerary(data: Api.Reservation.Req.Itinerary.Create): Promise<Api.Reservation.Res.Itinerary.Get> {
+	async createItinerary(data: Api.Reservation.Req.Itinerary.Create): Promise<Api.Reservation.Res.Itinerary.Get> {
 		const response = await http.post<RsResponseData<Api.Reservation.Res.Itinerary.Get>>(
 			'reservation/itinerary',
 			data
