@@ -189,6 +189,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 					popupController.close(SpinningLoaderPopup);
 				} catch (e) {
 					console.error(e);
+					popupController.close(SpinningLoaderPopup);
 				}
 			}
 		);

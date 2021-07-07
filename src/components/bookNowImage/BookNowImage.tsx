@@ -14,6 +14,7 @@ interface BookNowImageProps {
 	reactTitle?: React.ReactNode;
 	linkPath: string;
 	imgUrl: string;
+	onClick?: () => void;
 }
 
 const BookNowImage: React.FC<BookNowImageProps> = (props) => {
@@ -29,7 +30,7 @@ const BookNowImage: React.FC<BookNowImageProps> = (props) => {
 	}
 
 	return (
-		<div className={'rsBookNowImage'} style={renderStyle()}>
+		<div className={'rsBookNowImage'} style={renderStyle()} onClick={props.onClick}>
 			<Box>
 				{!!props.reactTitle ? (
 					props.reactTitle

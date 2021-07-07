@@ -1098,13 +1098,14 @@
   dependencies:
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.accordion@0.0.23":
-  version "0.0.23"
-  resolved "https://node.bit.dev/redsky.framework.rs.accordion/-/redsky.framework.rs.accordion-0.0.23.tgz#6c21ddfd784d70ab00cf35d88b148747fe325a8e"
-  integrity sha1-bCHd/XhNcKsAzzXYixSHR/4yWo4=
+"@bit/redsky.framework.rs.accordion@0.0.24":
+  version "0.0.24"
+  resolved "https://node.bit.dev/redsky.framework.rs.accordion/-/redsky.framework.rs.accordion-0.0.24.tgz#1a05900c8642d615a80205eb5c7d088b2324b4d8"
+  integrity sha1-GgWQDIZC1hWoAgXrXH0IiyMktNg=
   dependencies:
     "@bit/redsky.framework.rs.icon" "0.0.38"
     react "^16.12.0"
+    resize-observer-polyfill "^1.5.1"
 
 "@bit/redsky.framework.rs.avatar@0.0.4":
   version "0.0.4"
@@ -1165,10 +1166,10 @@
   dependencies:
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.input@0.0.44":
-  version "0.0.44"
-  resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.44.tgz#d8c06bf8d73a03e2a75b7aa6dc2ba083cd4a1ac1"
-  integrity sha1-2MBr+Nc6A+KnW3qm3Cugg81KGsE=
+"@bit/redsky.framework.rs.input@0.0.45":
+  version "0.0.45"
+  resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.45.tgz#4ae87867f97e34d6d99b8d455bf730997bfa5ab8"
+  integrity sha1-Suh4Z/l+NNbZm41FW/cwmXv6Wrg=
   dependencies:
     "@bit/redsky.framework.rs.form" "0.0.9"
     "@bit/redsky.framework.rs.icon" "0.0.38"
@@ -8198,6 +8199,11 @@ requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
+
+resize-observer-polyfill@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
+  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
 
 resolve-cwd@^2.0.0:
   version "2.0.0"
