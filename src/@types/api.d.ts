@@ -961,22 +961,19 @@ declare namespace Api {
 				paymentMethod: PaymentMethod;
 				destination: DestinationDetails;
 				accommodation: AccommodationDetails;
-				reservationNumber: string;
 				arrivalDate: Date | string;
 				departureDate: Date | string;
 				status: string;
 				canceledOn: Date | string;
-				externalReservationNumber: string;
-				cancelNumber: string;
-				externalCancelNumber: string;
+				externalReservationId: string;
+				externalCancellationId: string;
 				adultCount: number;
 				childCount: number;
 				externalConfirmationId: string | null;
 				confirmationDate: Date | string;
 				nightCount: number;
 				priceDetail: PriceDetail;
-				confirmationCode: string;
-				itineraryNumber: string;
+				itineraryId: string;
 				cancellationPermitted: 0 | 1;
 			}
 			export interface Availability {

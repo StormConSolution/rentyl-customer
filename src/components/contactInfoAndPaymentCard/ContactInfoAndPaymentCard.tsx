@@ -19,8 +19,11 @@ import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
 type CreditCardForm = { full_name: string; expDate: string };
 
+interface ContactInfo extends ContactInfoForm {
+	phone: string;
+}
 interface ContactInfoAndPaymentCardProps {
-	onContactChange: (value: ContactInfoForm) => void;
+	onContactChange: (value: ContactInfo) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
 	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
@@ -213,7 +216,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	async function updateContactInfoForm(control: RsFormControl) {
 		contactInfoForm.update(control);
 		let isFormValid = await contactInfoForm.isValid();
-		props.onContactChange(contactInfoForm.toModel());
+		props.onContactChange({ ...contactInfoForm.toModel(), phone: phoneNumber });
 		setIsValid(isFormFilledOut() && isFormValid);
 		setContactInfoForm(contactInfoForm.clone());
 	}

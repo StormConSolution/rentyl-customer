@@ -15,20 +15,27 @@ import PaymentService from '../../services/payment/payment.service';
 import { convertTwentyFourHourTime } from '../../utils/utils';
 import Paper from '../../components/paper/Paper';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
+import rsToasts from '@bit/redsky.framework.toast';
 
+interface ContactInfo {
+	firstName: string;
+	lastName: string;
+	details: string;
+	phone: string;
+}
 const EditFlowModifyPaymentPage = () => {
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
 	const size = useWindowResizeChange();
-	let existingCardId = 0;
+	const [existingCardId, setExistingCardId] = useState<number>(0);
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
-	const [cancelPolicy, setCancelPolicy] = useState<string>('');
+	const [contactInfo, setContactInfo] = useState<ContactInfo>();
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
@@ -38,16 +45,14 @@ const EditFlowModifyPaymentPage = () => {
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
-			console.log('being called');
 			try {
 				let res = await reservationsService.get(id);
-				const cancellationPolicy =
-					res.destination.policies[res.destination.policies.findIndex((p) => p.type === 'Cancellation')]
-						.value;
-				setCancelPolicy(cancellationPolicy);
-				console.log(res);
+				setExistingCardId(res.paymentMethod.id);
 				setReservation(res);
-			} catch (e) {}
+			} catch (e) {
+				rsToasts.error('Something unexpected happened on the server.');
+				router.navigate('/reservations').catch(console.error);
+			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
 	}, []);
@@ -63,16 +68,21 @@ const EditFlowModifyPaymentPage = () => {
 				try {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
 					data.paymentMethodId = result.id;
-					// let res = await reservationService.createItinerary(data);
+					setExistingCardId(result.id);
+					if (reservation) {
+						let res = await reservationsService.updateReservation({
+							itineraryId: reservation.itineraryId
+						});
+					}
 					popupController.close(SpinningLoaderPopup);
-					let newData = {
-						confirmationCode: reservation?.confirmationCode,
-						destinationName: reservation?.destination.name
-					};
+					// let newData = {
+					// 	confirmationCode: reservation?.confirmationCode,
+					// 	destinationName: reservation?.destination.name
+					// };
 
-					router
-						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-						.catch(console.error);
+					// router
+					// 	.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
+					// 	.catch(console.error);
 				} catch (e) {
 					popupController.close(SpinningLoaderPopup);
 				}
@@ -88,18 +98,25 @@ const EditFlowModifyPaymentPage = () => {
 		setIsDisabled(!hasAgreedToTerms || !isFormValid);
 	}, [hasAgreedToTerms, isFormValid]);
 
-	async function updateInformation() {}
+	async function updateInformation() {
+		if (reservation) {
+			const response = await reservationsService.updateReservation({
+				itineraryId: reservation.itineraryId,
+				paymentMethodId: existingCardId
+			});
+		}
+	}
 
 	function renderPolicies() {
-		return reservation?.destination.policies.map((item) => {
+		return reservation?.destination.policies.map((item, index) => {
 			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
 			return (
-				<>
+				<Box key={index}>
 					<Label variant={'h4'}>{item.type}</Label>
 					<Label variant={'body1'} mb={10}>
 						{item.value}
 					</Label>
-				</>
+				</Box>
 			);
 		});
 	}
@@ -139,7 +156,9 @@ const EditFlowModifyPaymentPage = () => {
 				>
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
-							onContactChange={(value) => {}}
+							onContactChange={(value: ContactInfo) => {
+								setContactInfo(value);
+							}}
 							onCreditCardChange={(value) => {
 								let newValue: any = {
 									full_name: value.full_name
@@ -153,9 +172,9 @@ const EditFlowModifyPaymentPage = () => {
 								setIsFormValid(isValid);
 							}}
 							onExistingCardSelect={(value) => {
-								existingCardId = value;
+								setExistingCardId(value);
 							}}
-							existingCardId={reservation.paymentMethod.id}
+							existingCardId={existingCardId}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'} mb={10}>

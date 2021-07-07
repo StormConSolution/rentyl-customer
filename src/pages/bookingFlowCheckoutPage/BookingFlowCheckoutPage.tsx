@@ -30,11 +30,16 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	checkoutTime: string;
 }
 
-interface BookingFlowPageProps {}
+interface ContactInfo {
+	firstName: string;
+	lastName: string;
+	details: string;
+	phone: string;
+}
 
 let existingCardId = 0;
 
-const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
+const BookingFlowCheckoutPage = () => {
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const size = useWindowResizeChange();
@@ -42,6 +47,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 	params.data = JSON.parse(params.data);
 	const destinationId = params.data.destinationId;
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
+	const [contactInfo, setContactInfo] = useState<ContactInfo>();
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
@@ -101,7 +107,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				try {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
 					data.paymentMethodId = result.id;
-					let res = await reservationService.createItinerary(data);
+					await reservationService.createItinerary(data);
 					popupController.close(SpinningLoaderPopup);
 					let newData = {
 						destinationName: destinationName
@@ -407,7 +413,9 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				>
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
-							onContactChange={(value) => {}}
+							onContactChange={(value) => {
+								setContactInfo(value);
+							}}
 							onCreditCardChange={(value) => {
 								let newValue: any = {
 									full_name: value.full_name

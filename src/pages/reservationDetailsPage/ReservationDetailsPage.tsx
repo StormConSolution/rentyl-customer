@@ -109,8 +109,8 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							amenities={reservation.accommodation.featureIcons}
 							maxOccupancy={reservation.accommodation.maxOccupantCount}
 							misc={[
-								{ title: 'Reservation Number', data: reservation.externalReservationNumber },
-								{ title: 'Confirmation Code', data: reservation.confirmationCode },
+								{ title: 'Reservation Number', data: reservation.externalReservationId },
+								{ title: 'Confirmation Code', data: reservation.externalConfirmationId || '' },
 								{ title: 'Adults', data: reservation.adultCount },
 								{ title: 'Children', data: reservation.childCount },
 								{

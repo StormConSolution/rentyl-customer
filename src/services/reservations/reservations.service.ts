@@ -63,4 +63,10 @@ export default class ReservationsService extends Service {
 		let response = await http.post('reservation/cancel', { id });
 		return response.data;
 	}
+
+	async updateReservation(data: Api.Reservation.Req.Itinerary.Update) {
+		// console.log(data);
+		let response = await http.put<Api.Reservation.Res.Itinerary.Get>('reservation', data);
+		return response.data;
+	}
 }
