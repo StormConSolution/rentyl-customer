@@ -164,16 +164,7 @@ const EditFlowModifyRoomPage = () => {
 
 	async function bookNow(id: number) {
 		if (reservation) {
-			let stay: {
-				adultCount: number;
-				childCount: number;
-				accommodationId: number;
-				arrivalDate: string;
-				departureDate: string;
-				numberOfAccommodations: number;
-				rateCode: string;
-				reservationId: number;
-			} = {
+			let stay: Api.Reservation.Req.Itinerary.Update.Stay = {
 				adultCount: searchQueryObj.adults,
 				childCount: searchQueryObj.children,
 				accommodationId: id,
@@ -181,7 +172,8 @@ const EditFlowModifyRoomPage = () => {
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
 				rateCode: searchQueryObj.rate || '',
-				reservationId: reservation?.id
+				reservationId: reservation?.id,
+				guest: reservation.guest
 			};
 			try {
 				await reservationsService.updateReservation({ itineraryId: reservation.itineraryId, stays: [stay] });

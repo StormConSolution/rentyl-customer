@@ -10,6 +10,7 @@ export interface AccommodationOptionsPopupProps extends PopupProps {
 	onRemove: () => void;
 	onChangeRoom: () => void;
 	onEditRoom: () => void;
+	cancellable: boolean;
 }
 
 const AccommodationOptionsPopup: React.FC<AccommodationOptionsPopupProps> = (props) => {
@@ -24,15 +25,17 @@ const AccommodationOptionsPopup: React.FC<AccommodationOptionsPopupProps> = (pro
 						popupController.closeAll();
 					}}
 				/>
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Remove'}
-					onClick={() => {
-						popupController.hide(AccommodationOptionsPopup);
-						props.onRemove();
-					}}
-				/>
+				{props.cancellable && (
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Remove'}
+						onClick={() => {
+							popupController.hide(AccommodationOptionsPopup);
+							props.onRemove();
+						}}
+					/>
+				)}
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'button'}

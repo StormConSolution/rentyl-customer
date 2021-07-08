@@ -25,6 +25,7 @@ import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confir
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -378,6 +379,7 @@ const BookingFlowCheckoutPage = () => {
 						}}
 						changeRoom={changeRoom}
 						accommodationId={accommodation.accommodationId}
+						cancellable={true}
 					/>
 				))}
 				<LabelButton

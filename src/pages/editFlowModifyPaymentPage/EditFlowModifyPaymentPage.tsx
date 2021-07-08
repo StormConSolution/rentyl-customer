@@ -16,19 +16,16 @@ import { convertTwentyFourHourTime } from '../../utils/utils';
 import Paper from '../../components/paper/Paper';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import rsToasts from '@bit/redsky.framework.toast';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
+import moment from 'moment';
 
-interface ContactInfo {
-	firstName: string;
-	lastName: string;
-	details: string;
-	email: string;
-	phone: string;
-}
 const EditFlowModifyPaymentPage = () => {
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
 	const size = useWindowResizeChange();
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [existingCardId, setExistingCardId] = useState<number>(0);
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
@@ -36,7 +33,12 @@ const EditFlowModifyPaymentPage = () => {
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
-	const [contactInfo, setContactInfo] = useState<ContactInfo>();
+	const [contactInfo, setContactInfo] = useState<Api.Reservation.Guest>({
+		firstName: user?.firstName || '',
+		lastName: user?.lastName || '',
+		email: user?.primaryEmail || '',
+		phone: user?.phone || ''
+	});
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
@@ -48,6 +50,7 @@ const EditFlowModifyPaymentPage = () => {
 		async function getReservationData(id: number) {
 			try {
 				let res = await reservationsService.get(id);
+				setContactInfo(res.guest);
 				setExistingCardId(res.paymentMethod.id);
 				setReservation(res);
 			} catch (e) {
@@ -102,10 +105,29 @@ const EditFlowModifyPaymentPage = () => {
 
 	async function updateInformation() {
 		if (reservation) {
-			const response = await reservationsService.updateReservation({
-				itineraryId: reservation.itineraryId,
-				paymentMethodId: existingCardId
-			});
+			try {
+				let stay: Api.Reservation.Req.Itinerary.Update.Stay = {
+					accommodationId: reservation.accommodation.id,
+					adultCount: reservation.adultCount,
+					arrivalDate: reservation.arrivalDate,
+					childCount: reservation.childCount,
+					departureDate: reservation.departureDate,
+					guest: contactInfo,
+					numberOfAccommodations: 1,
+					rateCode: '',
+					reservationId: reservation.id
+				};
+				await reservationsService.updateReservation({
+					itineraryId: reservation.itineraryId,
+					paymentMethodId: existingCardId,
+					stays: [stay]
+				});
+
+				rsToasts.success('Successfully Updated');
+				router.navigate('/reservations').catch(console.error);
+			} catch {
+				rsToasts.error('Something unexpected happened on the server.');
+			}
 		}
 	}
 
@@ -158,7 +180,7 @@ const EditFlowModifyPaymentPage = () => {
 				>
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
-							onContactChange={(value: ContactInfo) => {
+							onContactChange={(value: Api.Reservation.Guest) => {
 								setContactInfo(value);
 							}}
 							onCreditCardChange={(value) => {
@@ -281,6 +303,10 @@ const EditFlowModifyPaymentPage = () => {
 								adults={reservation.adultCount}
 								onDeletePackage={() => {}}
 								children={reservation.childCount}
+								cancellable={
+									reservation.cancellationPermitted === 1 &&
+									moment(reservation.arrivalDate) > moment().add(15, 'days')
+								}
 							/>
 						</Paper>
 					</Box>

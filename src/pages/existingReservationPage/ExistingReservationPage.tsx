@@ -20,6 +20,8 @@ import EditAccommodationPopup, {
 	EditAccommodationPopupProps
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
+import moment from 'moment';
+import rsToasts from '@bit/redsky.framework.toast';
 
 interface ReservationPageProps {}
 
@@ -69,111 +71,129 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 
 	function renderUpcomingReservations() {
 		if (!ObjectUtils.isArrayWithData(upComingReservations)) return;
-
-		return upComingReservations.map((item, index) => {
-			return (
-				<ReservationCard
-					imgPath={item.destination.heroUrl}
-					logo={item.destination.logoUrl}
-					title={item.destination.name}
-					address={`${item.destination.address1}, ${item.destination.city}, ${item.destination.state} ${item.destination.zip}`}
-					reservationDates={{ startDate: item.arrivalDate, endDate: item.departureDate }}
-					propertyType={'VIP Suite'}
-					sleeps={item.accommodation.maxSleeps}
-					maxOccupancy={item.accommodation.maxOccupantCount}
-					amenities={item.accommodation.featureIcons}
-					totalCostCents={item.priceDetail.grandTotalCents}
-					totalPoints={1000} //This needs to be added to the endpoint.
-					onViewDetailsClick={() => {
-						router.navigate('/reservation/details?ri=' + item.id).catch(console.error);
-					}}
-					cancelPermitted={item.cancellationPermitted}
-					cancelPolicy={
-						item.destination.policies[item.destination.policies.findIndex((p) => p.type === 'Cancellation')]
-							.value
-					}
-					edit={() =>
-						popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
-							cancel: () => {
-								popupController.closeAll();
-								reservationService.cancel(item.id).catch(console.error);
-							},
-							changeRoom: () => {
-								popupController.closeAll();
-								router
-									.navigate(`/reservations/edit-room?ri=${item.id}&&di=${item.destination.id}`)
-									.catch(console.error);
-							},
-							editInfo: () => {
-								popupController.closeAll();
-								router.navigate(`/reservations/payment?ri=${item.id}`).catch(console.error);
-							},
-							editRoomInfo: () => {
-								popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
-									onRemove: () => {
-										popupController.hide(AccommodationOptionsPopup);
-										popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-											bodyText: 'Are you sure you want to remove this reservation?',
-											cancelText: 'No',
-											confirm(): void {
-												reservationService.cancel(item.id).catch(console.error);
-											},
-											confirmText: 'Yes',
-											title: 'Cancel Reservation'
-										});
-									},
-									onChangeRoom: () => {
-										popupController.closeAll();
-										router
-											.navigate(
-												`/reservations/edit-room?ri=${item.id}&&di=${item.destination.id}`
-											)
-											.catch(console.error);
-									},
-									onEditRoom: () => {
-										popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
-											adults: item.adultCount,
-											children: item.childCount,
-											startDate: item.arrivalDate,
-											endDate: item.departureDate,
-											packages: [],
-											onApplyChanges: (
-												adults: number,
-												children: number,
-												checkinDate: string | Date,
-												checkoutDate: string | Date,
-												packages: Api.Package.Res.Get[]
-											) => {
-												reservationService
-													.updateReservation({
-														itineraryId: item.itineraryId,
-														stays: [
-															{
-																accommodationId: item.accommodation.id,
-																numberOfAccommodations: 1,
-																arrivalDate: checkinDate,
-																departureDate: checkoutDate,
-																adultCount: adults,
-																childCount: children,
-																rateCode: '',
-																reservationId: item.id
-															}
-														]
-													})
-													.catch(console.error);
-												popupController.closeAll();
-											},
-											destinationId: item.destination.id,
-											accommodationId: item.accommodation.id
-										});
-									}
-								});
-							}
-						})
-					}
-				/>
-			);
-		});
+		return upComingReservations
+			.filter((reservation) => {
+				return !reservation.externalCancellationId;
+			})
+			.map((item, index) => {
+				return (
+					<ReservationCard
+						imgPath={item.destination.heroUrl}
+						logo={item.destination.logoUrl}
+						title={item.destination.name}
+						address={`${item.destination.address1}, ${item.destination.city}, ${item.destination.state} ${item.destination.zip}`}
+						reservationDates={{ startDate: item.arrivalDate, endDate: item.departureDate }}
+						propertyType={'VIP Suite'}
+						sleeps={item.accommodation.maxSleeps}
+						maxOccupancy={item.accommodation.maxOccupantCount}
+						amenities={item.accommodation.featureIcons}
+						totalCostCents={item.priceDetail.grandTotalCents}
+						totalPoints={1000} //This needs to be added to the endpoint.
+						onViewDetailsClick={() => {
+							router.navigate('/reservation/details?ri=' + item.id).catch(console.error);
+						}}
+						cancelPermitted={item.cancellationPermitted}
+						cancelPolicy={
+							item.destination.policies[
+								item.destination.policies.findIndex((p) => p.type === 'Cancellation')
+							].value
+						}
+						edit={() =>
+							popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
+								cancel: () => {
+									popupController.closeAll();
+									reservationService.cancel(item.id).catch(console.error);
+								},
+								changeRoom: () => {
+									popupController.closeAll();
+									router
+										.navigate(`/reservations/edit-room?ri=${item.id}&&di=${item.destination.id}`)
+										.catch(console.error);
+								},
+								editInfo: () => {
+									popupController.closeAll();
+									router.navigate(`/reservations/payment?ri=${item.id}`).catch(console.error);
+								},
+								editRoomInfo: () => {
+									popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
+										cancellable:
+											item.cancellationPermitted === 1 &&
+											moment(item.arrivalDate) > moment().add(15, 'days'),
+										onRemove: () => {
+											popupController.hide(AccommodationOptionsPopup);
+											popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
+												bodyText: 'Are you sure you want to remove this reservation?',
+												cancelText: 'No',
+												async confirm() {
+													try {
+														let res = await reservationService.cancel(item.id);
+														rsToasts.success(`Cancel Confirmation: ${res.cancellationId}`);
+														setUpComingReservations(
+															upComingReservations.filter(
+																(reservation, index2) => index2 !== index
+															)
+														);
+													} catch {
+														rsToasts.error('Failed to cancel reservation');
+													}
+												},
+												confirmText: 'Yes',
+												title: 'Cancel Reservation'
+											});
+										},
+										onChangeRoom: () => {
+											popupController.closeAll();
+											router
+												.navigate(
+													`/reservations/edit-room?ri=${item.id}&&di=${item.destination.id}`
+												)
+												.catch(console.error);
+										},
+										onEditRoom: () => {
+											popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+												adults: item.adultCount,
+												children: item.childCount,
+												startDate: item.arrivalDate,
+												endDate: item.departureDate,
+												packages: [],
+												onApplyChanges: (
+													adults: number,
+													children: number,
+													checkinDate: string | Date,
+													checkoutDate: string | Date,
+													packages: Api.Package.Res.Get[]
+												) => {
+													reservationService
+														.updateReservation({
+															itineraryId: item.itineraryId,
+															stays: [
+																{
+																	accommodationId: item.accommodation.id,
+																	numberOfAccommodations: 1,
+																	arrivalDate: checkinDate,
+																	departureDate: checkoutDate,
+																	adultCount: adults,
+																	childCount: children,
+																	rateCode: '',
+																	reservationId: item.id,
+																	guest: item.guest
+																}
+															]
+														})
+														.catch(console.error);
+													popupController.closeAll();
+												},
+												destinationId: item.destination.id,
+												accommodationId: item.accommodation.id
+											});
+										}
+									});
+								}
+							})
+						}
+					/>
+				);
+			});
 	}
 
 	function renderPrevReservations() {

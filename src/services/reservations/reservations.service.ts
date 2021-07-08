@@ -59,9 +59,9 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async cancel(id: number) {
-		let response = await http.post('reservation/cancel', { id });
-		return response.data;
+	async cancel(id: number): Promise<Api.Reservation.Res.Cancel> {
+		let response = await http.post<RsResponseData<Api.Reservation.Res.Cancel>>('reservation/cancel', { id });
+		return response.data.data;
 	}
 
 	async updateReservation(data: Api.Reservation.Req.Itinerary.Update) {

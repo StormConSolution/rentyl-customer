@@ -30,6 +30,7 @@ interface BookingCartTotalsCardProps {
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	cancellable: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -163,7 +164,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 												props.checkInDate,
 												props.checkoutDate
 											);
-									}
+									},
+									cancellable: props.cancellable
 								});
 							}}
 						/>
@@ -233,7 +235,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 				</Box>
 			</Accordion>
-
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h3'} width={'170px'}>
 					Total:

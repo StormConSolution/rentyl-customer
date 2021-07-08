@@ -24,6 +24,7 @@ import AccommodationOptionsPopup, {
 import EditAccommodationPopup, {
 	EditAccommodationPopupProps
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
+import moment from 'moment';
 
 interface ReservationDetailsPageProps {}
 
@@ -149,6 +150,9 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 										popupController.open<AccommodationOptionsPopupProps>(
 											AccommodationOptionsPopup,
 											{
+												cancellable:
+													reservation?.cancellationPermitted === 1 &&
+													moment(reservation.arrivalDate) > moment().add(15, 'days'),
 												onRemove: () => {
 													reservationsService.cancel(reservation.id).catch(console.error);
 												},
@@ -186,7 +190,8 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 																				adultCount: adults,
 																				childCount: children,
 																				rateCode: '',
-																				reservationId: reservation.id
+																				reservationId: reservation.id,
+																				guest: reservation?.guest
 																			}
 																		]
 																	})
