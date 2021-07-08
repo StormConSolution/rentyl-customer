@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './ContactInfoAndPaymentCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../../../components/labelInput/LabelInput';
 import Paper from '../../../components/paper/Paper';
-import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
@@ -16,7 +16,9 @@ import Select, { SelectOptions } from '../../../components/Select/Select';
 import debounce from 'lodash.debounce';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
-type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string };
+interface ContactInfoForm extends Api.Reservation.Guest {
+	details: string;
+}
 type CreditCardForm = { full_name: string; expDate: string };
 
 interface ContactInfoAndPaymentCardProps {
@@ -65,6 +67,9 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			]),
 			new RsFormControl('lastName', user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
+			]),
+			new RsFormControl('email', user?.primaryEmail || '', [
+				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
 			]),
 			new RsFormControl('data', '', [])
 		])
@@ -260,6 +265,12 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					title={'Last Name'}
 					inputType={'text'}
 					control={contactInfoForm.get('lastName')}
+					updateControl={updateContactInfoForm}
+				/>
+				<LabelInput
+					title={'email'}
+					inputType={'email'}
+					control={contactInfoForm.get('email')}
 					updateControl={updateContactInfoForm}
 				/>
 				<LabelInput
