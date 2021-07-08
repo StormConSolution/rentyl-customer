@@ -22,6 +22,8 @@ import PaymentService from '../../services/payment/payment.service';
 import EditAccommodationPopup, { EditAccommodationPopupProps } from './editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import AccommodationOptionsPopup from './accommodationOptionsPopup/AccommodationOptionsPopup';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -32,11 +34,14 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {}
 
-interface BookingFlowPageProps {}
+interface ContactInfo extends Api.Reservation.Guest {
+	details: string;
+}
 
 let existingCardId = 0;
 
-const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
+const BookingFlowCheckoutPage = () => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const size = useWindowResizeChange();
@@ -47,6 +52,12 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
+	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
+		firstName: user?.firstName || '',
+		lastName: user?.lastName || '',
+		phone: user?.phone || '',
+		email: user?.primaryEmail || ''
+	});
 	const [destinationName, setDestinationName] = useState<string>('');
 	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
 	const [creditCardForm, setCreditCardForm] = useState<{
@@ -71,7 +82,7 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error(e.message);
-				router.navigate('/reservation/availability');
+				router.navigate('/reservation/availability').catch(console.error);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -94,7 +105,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							rateCode: accommodation.rateCode
+							rateCode: accommodation.rateCode,
+							guest: guestInfo
 						};
 					})
 				};
@@ -104,7 +116,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 					let res = await reservationService.createItenerary(data);
 					popupController.close(SpinningLoaderPopup);
 					let newData = {
-						destinationName: destinationName
+						itineraryNumber: res.itineraryId,
+						destinationName: res.destination.name
 					};
 
 					router
@@ -148,7 +161,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				rateCode: res.rateCode,
 				prices: res.prices,
 				checkInTime: res.checkInTime,
-				checkoutTime: res.checkoutTime
+				checkoutTime: res.checkoutTime,
+				guest: guestInfo
 			};
 			setPolicies(res.policies);
 			setDestinationName(res.destinationName);
@@ -256,7 +270,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						rateCode: accommodation.rateCode
+						rateCode: accommodation.rateCode,
+						guest: guestInfo
 					};
 				})
 			};
@@ -264,7 +279,8 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				let res = await reservationService.createItenerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
 				let newData = {
-					itineraryNumber: res.itineraryId
+					itineraryNumber: res.itineraryId,
+					destinationName: res.destination.name
 				};
 
 				router
@@ -407,7 +423,9 @@ const BookingFlowCheckoutPage: React.FC<BookingFlowPageProps> = (props) => {
 				>
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
-							onContactChange={(value) => {}}
+							onContactChange={(value) => {
+								setGuestInfo(value);
+							}}
 							onCreditCardChange={(value) => {
 								let newValue: any = {
 									full_name: value.full_name

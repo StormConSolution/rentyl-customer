@@ -3,8 +3,9 @@
 .rsContactInfoAndPaymentCard {
 	background-color: theme-var($primaryBackgroundColor);
 	.contactInfo {
-		display: flex;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: 40% 40%;
+		justify-content: center;
 		width: 100%;
 	}
 	.rsLabelInput {
@@ -65,7 +66,7 @@
 	.rsContactInfoAndPaymentCard {
 		.contactInfo {
 			flex-wrap: wrap;
-			justify-content: center;
+			justify-content: start;
 			.rsLabelInput {
 				width: 100%;
 				.rsInput {
