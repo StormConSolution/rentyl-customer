@@ -16,8 +16,10 @@ import Select, { SelectOptions } from '../Select/Select';
 import debounce from 'lodash.debounce';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
-type ContactInfoForm = { firstName: string; lastName: string; phone: string; details: string; email: string };
 type CreditCardForm = { full_name: string; expDate: string };
+interface ContactInfoForm extends Api.Reservation.Guest {
+	details: string;
+}
 
 interface ContactInfo extends ContactInfoForm {
 	phone: string;
@@ -72,10 +74,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			new RsFormControl('lastName', user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
 			]),
-			new RsFormControl('data', '', []),
 			new RsFormControl('email', user?.primaryEmail || '', [
-				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid email address')
-			])
+				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
+			]),
+			new RsFormControl('data', '', [])
 		])
 	);
 

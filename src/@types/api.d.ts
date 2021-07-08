@@ -898,6 +898,12 @@ declare namespace Api {
 			zip: string;
 			country: string;
 		}
+		interface Guest {
+			firstName: string;
+			lastName: string;
+			phone: string;
+			email: string;
+		}
 		export namespace Req {
 			export interface Availability {
 				startDate: Date | string;
@@ -925,6 +931,7 @@ declare namespace Api {
 			export interface Create extends Verification {
 				rateCode: string;
 				paymentMethodId: number;
+				guest: Guest;
 			}
 			export interface Get {
 				id: number;
@@ -949,6 +956,7 @@ declare namespace Api {
 					adultCount: number;
 					childCount: number;
 					rateCode: string;
+					guest: Guest;
 				}
 				export interface Create {
 					paymentMethodId: number;
@@ -971,6 +979,7 @@ declare namespace Api {
 			export interface Get {
 				id: number;
 				userId: number;
+				guest: Guest;
 				billingAddress: BillingAddressDetails;
 				paymentMethod: PaymentMethod;
 				destination: DestinationDetails;
@@ -1048,6 +1057,7 @@ declare namespace Api {
 					confirmationDate: Date | string;
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
+					guest: Guest;
 				}
 				export interface Get {
 					parentReservationId: number;

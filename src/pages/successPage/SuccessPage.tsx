@@ -8,7 +8,7 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 interface SuccessPageProps {}
 type SuccessData = {
-	confirmationCode: string;
+	itineraryNumber: string;
 	destinationName: string;
 };
 
@@ -24,8 +24,8 @@ const SuccessPage: React.FC<SuccessPageProps> = (props) => {
 					<Label variant={'h1'} mt={20}>
 						Thank you for your reservation at
 						<br /> <span>{successData.destinationName}</span>
-						<br /> Your confirmation code is: <span>{successData.confirmationCode}</span>. Access all your
-						reservations <Link path={'/reservations'}>here</Link>.
+						<br /> Your itinerary number is: <span>{successData.itineraryNumber}</span>.
+						<br /> Access all your reservations <Link path={'/reservations'}>here</Link>.
 					</Label>
 				</Box>
 				<Footer links={FooterLinkTestData} />

@@ -22,8 +22,9 @@ import EditAccommodationPopup, {
 	EditAccommodationPopupProps
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
-import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -34,18 +35,14 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {}
 
-interface BookingFlowPageProps {}
-interface ContactInfo {
-	firstName: string;
-	lastName: string;
+interface ContactInfo extends Api.Reservation.Guest {
 	details: string;
-	email: string;
-	phone: string;
 }
 
 let existingCardId = 0;
 
 const BookingFlowCheckoutPage = () => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const size = useWindowResizeChange();
@@ -53,10 +50,15 @@ const BookingFlowCheckoutPage = () => {
 	params.data = JSON.parse(params.data);
 	const destinationId = params.data.destinationId;
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
-	const [contactInfo, setContactInfo] = useState<ContactInfo>();
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
+	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
+		firstName: user?.firstName || '',
+		lastName: user?.lastName || '',
+		phone: user?.phone || '',
+		email: user?.primaryEmail || ''
+	});
 	const [destinationName, setDestinationName] = useState<string>('');
 	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
 	const [creditCardForm, setCreditCardForm] = useState<{
@@ -81,7 +83,7 @@ const BookingFlowCheckoutPage = () => {
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error(e.message);
-				router.navigate('/reservation/availability');
+				router.navigate('/reservation/availability').catch(console.error);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -104,17 +106,19 @@ const BookingFlowCheckoutPage = () => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							rateCode: accommodation.rateCode
+							rateCode: accommodation.rateCode,
+							guest: guestInfo
 						};
 					})
 				};
 				try {
 					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
 					data.paymentMethodId = result.id;
-					await reservationService.createItinerary(data);
+					let res = await reservationService.createItinerary(data);
 					popupController.close(SpinningLoaderPopup);
 					let newData = {
-						destinationName: destinationName
+						itineraryNumber: res.itineraryId,
+						destinationName: res.destination.name
 					};
 
 					router
@@ -158,7 +162,8 @@ const BookingFlowCheckoutPage = () => {
 				rateCode: res.rateCode,
 				prices: res.prices,
 				checkInTime: res.checkInTime,
-				checkoutTime: res.checkoutTime
+				checkoutTime: res.checkoutTime,
+				guest: guestInfo
 			};
 			setPolicies(res.policies);
 			setDestinationName(res.destinationName);
@@ -266,7 +271,8 @@ const BookingFlowCheckoutPage = () => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						rateCode: accommodation.rateCode
+						rateCode: accommodation.rateCode,
+						guest: guestInfo
 					};
 				})
 			};
@@ -274,7 +280,7 @@ const BookingFlowCheckoutPage = () => {
 				let res = await reservationService.createItinerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
 				let newData = {
-					confirmationCode: res.itineraryId,
+					itineraryNumber: res.itineraryId,
 					destinationName: res.destination.name
 				};
 
@@ -419,7 +425,7 @@ const BookingFlowCheckoutPage = () => {
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
 							onContactChange={(value) => {
-								setContactInfo(value);
+								setGuestInfo(value);
 							}}
 							onCreditCardChange={(value) => {
 								let newValue: any = {
