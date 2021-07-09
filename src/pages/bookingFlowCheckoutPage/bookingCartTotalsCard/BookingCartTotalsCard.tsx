@@ -5,10 +5,11 @@ import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { convertTwentyFourHourTime } from '../../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils } from '../../../utils/utils';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
-} from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+} from '../accommodationOptionsPopup/AccommodationOptionsPopup';
+import moment from 'moment';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -186,7 +187,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			<hr />
 			<Box marginBottom={'10px'}>
 				<Label variant={'body1'}>
-					{new Date(props.checkInDate).toDateString()} - {new Date(props.checkoutDate).toDateString()}
+					{moment(props.checkInDate).toDate().toDateString()} -{' '}
+					{moment(props.checkoutDate).toDate().toDateString()}
 				</Label>
 				<Label variant={'body1'}>{props.adults} Adults</Label>
 				<Label variant={'body1'}>{props.children} Children</Label>

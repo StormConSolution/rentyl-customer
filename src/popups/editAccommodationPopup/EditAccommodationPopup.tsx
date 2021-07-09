@@ -28,6 +28,8 @@ export interface EditAccommodationPopupProps extends PopupProps {
 		children: number,
 		checkinDate: string | Date,
 		checkoutDate: string | Date,
+		originalStartDate: string | Date,
+		originalEndDate: string | Date,
 		packages: Api.Package.Res.Get[]
 	) => void;
 	destinationId: number;
@@ -168,6 +170,8 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 								parseInt(guestForm.get('children').value.toString()),
 								startDate?.format('YYYY-MM-DD') || '',
 								endDate?.format('YYYY-MM-DD') || '',
+								props.startDate,
+								props.endDate,
 								addedPackages
 							);
 							popupController.closeAll();
