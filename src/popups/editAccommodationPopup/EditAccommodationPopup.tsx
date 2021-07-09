@@ -16,6 +16,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import { DateUtils } from '../../utils/utils';
 import DestinationPackageTile from '../../pages/bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
+import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	adults: number;
@@ -53,20 +54,6 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	const [available, setAvailable] = useState<boolean>(true);
 
 	useEffect(() => {
-		async function getPackages() {
-			try {
-				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
-				const response = await reservationsService.getPackages(data);
-				setAvailablePackages(response.data.data);
-				setTotalPackages(response.data.total);
-			} catch {
-				console.error('An unexpected error on the server happened');
-			}
-		}
-		getPackages().catch(console.error);
-	}, []);
-
-	useEffect(() => {
 		async function checkAvailability() {
 			try {
 				let data: Api.Reservation.Req.Verification = {
@@ -83,12 +70,19 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					numberOfAccommodations: 1
 				};
 				await reservationsService.verifyAvailability(data);
+				popupController.close(SpinningLoaderPopup);
 				setAvailable(true);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				setAvailable(false);
 			}
 		}
-		checkAvailability();
+		if (!moment(props.startDate).isSame(startDate) || !moment(props.endDate).isSame(endDate)) {
+			popupController.open(SpinningLoaderPopup);
+			checkAvailability().catch(console.error);
+		} else {
+			setAvailable(true);
+		}
 	}, [startDate, endDate]);
 
 	function onDatesChange(start: moment.Moment | null, end: moment.Moment | null) {

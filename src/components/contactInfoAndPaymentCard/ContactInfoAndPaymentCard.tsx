@@ -30,6 +30,7 @@ interface ContactInfoAndPaymentCardProps {
 	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
 	existingCardId?: number;
+	contactInfo?: Api.Reservation.Guest;
 }
 
 let phoneNumber = '';
@@ -68,13 +69,13 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	);
 	const [contactInfoForm, setContactInfoForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('firstName', user?.firstName || '', [
+			new RsFormControl('firstName', props.contactInfo?.firstName || user?.firstName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'First name is required')
 			]),
-			new RsFormControl('lastName', user?.lastName || '', [
+			new RsFormControl('lastName', props.contactInfo?.lastName || user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
 			]),
-			new RsFormControl('email', user?.primaryEmail || '', [
+			new RsFormControl('email', props.contactInfo?.email || user?.primaryEmail || '', [
 				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
 			]),
 			new RsFormControl('data', '', [])
@@ -83,7 +84,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 
 	useEffect(() => {
 		if (!user) return;
-		phoneNumber = user.phone;
+		phoneNumber = props.contactInfo?.phone || user.phone;
 	}, [user]);
 
 	useEffect(() => {

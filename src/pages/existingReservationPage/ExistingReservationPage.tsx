@@ -22,6 +22,7 @@ import EditAccommodationPopup, {
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import moment from 'moment';
 import rsToasts from '@bit/redsky.framework.toast';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationPageProps {}
 
@@ -165,24 +166,23 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 													originalEndDate: string | Date,
 													packages: Api.Package.Res.Get[]
 												) => {
-													reservationService
-														.updateReservation({
-															itineraryId: item.itineraryId,
-															stays: [
-																{
-																	accommodationId: item.accommodation.id,
-																	numberOfAccommodations: 1,
-																	arrivalDate: checkinDate,
-																	departureDate: checkoutDate,
-																	adultCount: adults,
-																	childCount: children,
-																	rateCode: '',
-																	reservationId: item.id,
-																	guest: item.guest
-																}
-															]
-														})
-														.catch(console.error);
+													let stay: Api.Reservation.Req.Update = {
+														id: item.id,
+														rateCode: 'ITSTIME',
+														paymentMethodId: item.paymentMethod.id,
+														guest: item.guest,
+														accommodationId: item.accommodation.id,
+														adults,
+														children,
+														arrivalDate: DateUtils.clientToServerDate(
+															new Date(checkinDate)
+														),
+														departureDate: DateUtils.clientToServerDate(
+															new Date(checkoutDate)
+														),
+														numberOfAccommodations: 1
+													};
+													reservationService.updateReservation(stay).catch(console.error);
 													popupController.closeAll();
 												},
 												destinationId: item.destination.id,

@@ -44,12 +44,12 @@ const EditFlowModifyRoomPage = () => {
 		endDate: !!reservation
 			? moment(reservation.departureDate).format('YYYY-MM-DD')
 			: moment().add(2, 'day').format('YYYY-MM-DD'),
-		adults: reservation?.adultCount || 0,
+		adults: reservation?.adultCount || 1,
 		children: reservation?.childCount || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.destinationId
 	});
-	const [rateCode, setRateCode] = useState<string>('');
+	const [rateCode, setRateCode] = useState<string>('ITSTIME');
 	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -148,6 +148,8 @@ const EditFlowModifyRoomPage = () => {
 			}
 			if (rateCode !== '') {
 				createSearchQueryObj['rate'] = rateCode;
+			} else {
+				createSearchQueryObj['rate'] = 'ITSTIME';
 			}
 			return createSearchQueryObj;
 		});
@@ -164,19 +166,20 @@ const EditFlowModifyRoomPage = () => {
 
 	async function bookNow(id: number) {
 		if (reservation) {
-			let stay: Api.Reservation.Req.Itinerary.Update.Stay = {
-				adultCount: searchQueryObj.adults,
-				childCount: searchQueryObj.children,
+			let stay: Api.Reservation.Req.Update = {
+				id: reservation.id,
+				rateCode: 'ITSTIME',
+				paymentMethodId: reservation.paymentMethod.id,
+				guest: reservation.guest,
 				accommodationId: id,
+				adults: searchQueryObj.adults,
+				children: searchQueryObj.children,
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
-				numberOfAccommodations: 1,
-				rateCode: searchQueryObj.rate || '',
-				reservationId: reservation?.id,
-				guest: reservation.guest
+				numberOfAccommodations: 1
 			};
 			try {
-				await reservationsService.updateReservation({ itineraryId: reservation.itineraryId, stays: [stay] });
+				await reservationsService.updateReservation(stay);
 				router.navigate(`/reservations`).catch(console.error);
 			} catch {
 				rsToasts.error('Something unexpected happend on the server');

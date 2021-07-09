@@ -12,7 +12,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import router from '../../utils/router';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaymentService from '../../services/payment/payment.service';
-import { convertTwentyFourHourTime } from '../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils } from '../../utils/utils';
 import Paper from '../../components/paper/Paper';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -74,20 +74,22 @@ const EditFlowModifyPaymentPage = () => {
 					data.paymentMethodId = result.id;
 					setExistingCardId(result.id);
 					if (reservation) {
-						let res = await reservationsService.updateReservation({
-							itineraryId: reservation.itineraryId,
-							paymentMethodId: existingCardId
-						});
+						let stay: Api.Reservation.Req.Update = {
+							id: reservation.id,
+							rateCode: 'ITSTIME',
+							paymentMethodId: result.id,
+							guest: contactInfo,
+							accommodationId: reservation.accommodation.id,
+							adults: reservation.adultCount,
+							children: reservation.childCount,
+							arrivalDate: DateUtils.clientToServerDate(new Date(reservation.arrivalDate)),
+							departureDate: DateUtils.clientToServerDate(new Date(reservation.departureDate)),
+							numberOfAccommodations: 1
+						};
+						popupController.close(SpinningLoaderPopup);
+						await reservationsService.updateReservation(stay);
+						router.back();
 					}
-					popupController.close(SpinningLoaderPopup);
-					// let newData = {
-					// 	confirmationCode: reservation?.confirmationCode,
-					// 	destinationName: reservation?.destination.name
-					// };
-
-					// router
-					// 	.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-					// 	.catch(console.error);
 				} catch (e) {
 					popupController.close(SpinningLoaderPopup);
 				}
@@ -106,22 +108,19 @@ const EditFlowModifyPaymentPage = () => {
 	async function updateInformation() {
 		if (reservation) {
 			try {
-				let stay: Api.Reservation.Req.Itinerary.Update.Stay = {
-					accommodationId: reservation.accommodation.id,
-					adultCount: reservation.adultCount,
-					arrivalDate: reservation.arrivalDate,
-					childCount: reservation.childCount,
-					departureDate: reservation.departureDate,
-					guest: contactInfo,
-					numberOfAccommodations: 1,
-					rateCode: '',
-					reservationId: reservation.id
-				};
-				await reservationsService.updateReservation({
-					itineraryId: reservation.itineraryId,
+				let stay: Api.Reservation.Req.Update = {
+					id: reservation.id,
+					rateCode: 'ITSTIME',
 					paymentMethodId: existingCardId,
-					stays: [stay]
-				});
+					guest: contactInfo,
+					accommodationId: reservation.accommodation.id,
+					adults: reservation.adultCount,
+					children: reservation.childCount,
+					arrivalDate: DateUtils.clientToServerDate(new Date(reservation.arrivalDate)),
+					departureDate: DateUtils.clientToServerDate(new Date(reservation.departureDate)),
+					numberOfAccommodations: 1
+				};
+				await reservationsService.updateReservation(stay);
 
 				rsToasts.success('Successfully Updated');
 				router.navigate('/reservations').catch(console.error);
@@ -199,6 +198,7 @@ const EditFlowModifyPaymentPage = () => {
 								setExistingCardId(value);
 							}}
 							existingCardId={existingCardId}
+							contactInfo={contactInfo}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'} mb={10}>
