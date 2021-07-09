@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './DestinationPackageTile.scss';
-import Paper from '../../../components/paper/Paper';
+import Paper from '../paper/Paper';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import LabelButton from '../../../components/labelButton/LabelButton';
+import LabelButton from '../labelButton/LabelButton';
 
 interface DestinationPackageTileProps {
 	title: string;

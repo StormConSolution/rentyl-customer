@@ -301,12 +301,12 @@ const EditFlowModifyPaymentPage = () => {
 								taxAndFeeTotalInCent={reservation.priceDetail.taxAndFeeTotalInCents}
 								accommodationTotalInCents={reservation.priceDetail.accommodationTotalInCents}
 								adults={reservation.adultCount}
-								onDeletePackage={() => {}}
 								children={reservation.childCount}
 								cancellable={
 									reservation.cancellationPermitted === 1 &&
 									moment(reservation.arrivalDate) > moment().add(15, 'days')
 								}
+								packages={[]}
 							/>
 						</Paper>
 					</Box>

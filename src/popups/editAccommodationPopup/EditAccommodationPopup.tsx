@@ -14,8 +14,10 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { DateUtils } from '../../utils/utils';
-import DestinationPackageTile from '../../pages/bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
+import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
+import Icon from '@bit/redsky.framework.rs.icon';
+import PackageDetailsPopup, { PackageDetailsPopupProps } from './packageDetailsPopup/PackageDetailsPopup';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	adults: number;
@@ -128,26 +130,53 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					endDateLabel={'check out'}
 				/>
 				<Box className={'addedPackages'}>
+					<Label variant={'h3'}>Packages</Label>
+
 					{addedPackages.map((item) => (
-						<DestinationPackageTile
-							title={item.title}
-							description={item.description}
-							priceCents={100}
-							imgUrl={item.media[0].urls.large || ''}
-						/>
+						<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+							<Label variant={'body1'}>{item.title}</Label>
+							<Icon
+								iconImg={'icon-trash'}
+								size={12}
+								cursorPointer
+								onClick={() => {
+									setAddedPackages(
+										addedPackages.filter((addedPackage) => addedPackage.id !== item.id)
+									);
+									setAvailablePackages([...availablePackages, item]);
+								}}
+							/>
+						</Box>
 					))}
 				</Box>
+				<hr />
 				<Box className={'availablePackages'}>
+					<Label variant={'h3'}>Available Packages</Label>
 					{availablePackages
 						.filter((item) => !addedPackages.map((added) => added.id).includes(item.id))
 						.map((item) => (
-							<DestinationPackageTile
-								title={item.title}
-								description={item.description}
-								priceCents={100}
-								imgUrl={item.media[0].urls.large || ''}
-								onAddPackage={() => setAddedPackages([...addedPackages, item])}
-							/>
+							<Label
+								key={item.id}
+								className={'availablePackage'}
+								variant={'body1'}
+								onClick={() => {
+									popupController.open<PackageDetailsPopupProps>(PackageDetailsPopup, {
+										onAdd(): void {
+											setAvailablePackages(
+												availablePackages.filter(
+													(availablePackage) => availablePackage.id !== item.id
+												)
+											);
+											setAddedPackages([...addedPackages, item]);
+											popupController.close(PackageDetailsPopup);
+										},
+										package: item,
+										preventCloseByBackgroundClick: false
+									});
+								}}
+							>
+								{item.title}
+							</Label>
 						))}
 				</Box>
 				{!available && (
@@ -155,6 +184,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						These dates are unavailable, please pick new dates
 					</Label>
 				)}
+				<br />
 				<Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
 					<LabelButton
 						look={'containedSecondary'}

@@ -3,14 +3,13 @@ import './BookingFlowAddPackagePage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import router from '../../utils/router';
-import DestinationPackageTile from './destinationPackageTile/DestinationPackageTile';
+import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import Box from '../../components/box/Box';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { RsResponseData } from '@bit/redsky.framework.rs.http';
 
 const BookingFlowAddPackagePage = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -25,8 +24,9 @@ const BookingFlowAddPackagePage = () => {
 			try {
 				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
 				const response = await reservationsService.getPackages(data);
-				console.log(response);
-				setAvailablePackages(response.data.data);
+				let packages: Api.Package.Details[] = response.data.data;
+				setAvailablePackages(packages.filter((item) => !params.data.newRoom.packages.includes(item.id)));
+				setAddedPackages(packages.filter((item) => params.data.newRoom.packages.includes(item.id)));
 				setTotalPackages(response.data.total);
 			} catch {
 				console.error('An unexpected error on the server happened');

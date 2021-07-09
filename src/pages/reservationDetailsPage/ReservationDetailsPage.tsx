@@ -220,6 +220,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							fullName={`${user.firstName} ${user.lastName}`}
 							billingAddress={reservation.billingAddress}
 							priceDetails={reservation.priceDetail}
+							packages={[]}
 						/>
 					</Box>
 				</Box>
