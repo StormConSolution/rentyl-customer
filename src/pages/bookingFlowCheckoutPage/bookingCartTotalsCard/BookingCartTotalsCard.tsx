@@ -6,10 +6,10 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime, DateUtils } from '../../../utils/utils';
+import moment from 'moment';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
-} from '../accommodationOptionsPopup/AccommodationOptionsPopup';
-import moment from 'moment';
+} from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;

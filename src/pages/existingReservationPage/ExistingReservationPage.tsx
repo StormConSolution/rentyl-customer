@@ -161,6 +161,8 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 													children: number,
 													checkinDate: string | Date,
 													checkoutDate: string | Date,
+													originalStartDate: string | Date,
+													originalEndDate: string | Date,
 													packages: Api.Package.Res.Get[]
 												) => {
 													reservationService

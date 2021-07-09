@@ -27,14 +27,6 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getItinerary(data: Api.Reservation.Req.Itinerary.Get): Promise<Api.Reservation.Res.Itinerary.Get> {
-		const response = await http.get<RsResponseData<Api.Reservation.Res.Itinerary.Get>>(
-			'reserveration/itinerary',
-			data
-		);
-		return response.data.data;
-	}
-
 	async get(id: number): Promise<Api.Reservation.Res.Get> {
 		let response = await http.get<RsResponseData<Api.Reservation.Res.Get>>('reservation', { id });
 		return response.data.data;
@@ -59,14 +51,18 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
+	async updateReservation(data: Api.Reservation.Req.Itinerary.Update) {
+		let response = await http.put<RsResponseData<Api.Reservation.Res.Itinerary.Get>>('reservation/itinerary', data);
+		return response.data.data;
+	}
+
 	async cancel(id: number): Promise<Api.Reservation.Res.Cancel> {
 		let response = await http.post<RsResponseData<Api.Reservation.Res.Cancel>>('reservation/cancel', { id });
 		return response.data.data;
 	}
 
-	async updateReservation(data: Api.Reservation.Req.Itinerary.Update) {
-		// console.log(data);
-		let response = await http.put<Api.Reservation.Res.Itinerary.Get>('reservation', data);
-		return response.data;
+	async getPackages(data: Api.Package.Req.GetByPage): Promise<RsResponseData<Api.Package.Res.GetByPage>> {
+		let response = await http.get<Api.Package.Res.GetByPage>('package/paged', {});
+		return response;
 	}
 }

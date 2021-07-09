@@ -37,9 +37,10 @@ export interface EditAccommodationPopupProps extends PopupProps {
 }
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
-	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [availablePackages, setAvailablePackages] = useState<Api.Package.Res.Get[]>([]);
 	const [addedPackages, setAddedPackages] = useState<Api.Package.Res.Get[]>(props.packages);
+	const [totalPackages, setTotalPackages] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(moment(props.startDate));
 	const [endDate, setEndDate] = useState<moment.Moment | null>(moment(props.endDate));
@@ -54,10 +55,12 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				// const response = await destinationService.getAvailablePackages(props.destinationId);
-				// setAvailablePackages(response.data);
-			} catch (e) {
-				rsToasts.error('Something unexpected happened on the server!');
+				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
+				const response = await reservationsService.getPackages(data);
+				setAvailablePackages(response.data.data);
+				setTotalPackages(response.data.total);
+			} catch {
+				console.error('An unexpected error on the server happened');
 			}
 		}
 		getPackages().catch(console.error);
@@ -79,7 +82,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					),
 					numberOfAccommodations: 1
 				};
-				await reservationService.verifyAvailability(data);
+				await reservationsService.verifyAvailability(data);
 				setAvailable(true);
 			} catch {
 				setAvailable(false);
