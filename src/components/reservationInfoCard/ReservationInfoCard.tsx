@@ -17,7 +17,7 @@ interface ReservationInfoCardProps {
 	toggleConfirmation?: (toggle?: boolean) => void;
 	cancelPermitted: 0 | 1;
 	cancelPolicy?: string;
-	confirmCancellation?: () => void;
+	edit?: () => void;
 }
 
 const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
@@ -56,7 +56,7 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'caption'}>Sleeps</Label>
 				<Label variant={'body1'}>{props.sleeps}</Label>
 			</div>
-			<div>
+			<div className={'amenities'}>
 				<Label variant={'caption'}>Amenities</Label>
 				<Label variant={'body1'}>{renderAmenityIcons()}</Label>
 			</div>
@@ -74,15 +74,9 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<LabelButton
 					variant={'button'}
 					onClick={() => {
-						popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-							title: 'Reservation Cancellation',
-							bodyText: props.cancelPolicy,
-							confirm: props.confirmCancellation ? props.confirmCancellation : () => {},
-							cancelText: 'Do Not Cancel',
-							confirmText: 'Cancel Now'
-						});
+						if (props.edit) props.edit();
 					}}
-					label={'Cancel'}
+					label={'Edit'}
 					look={'containedPrimary'}
 				/>
 			)}

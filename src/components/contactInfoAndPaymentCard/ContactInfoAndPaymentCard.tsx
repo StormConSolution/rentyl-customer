@@ -1,31 +1,36 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
 import './ContactInfoAndPaymentCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
-import LabelInput from '../../../components/labelInput/LabelInput';
-import Paper from '../../../components/paper/Paper';
+import LabelInput from '../labelInput/LabelInput';
+import Paper from '../paper/Paper';
+import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../../models/globalState';
-import serviceFactory from '../../../services/serviceFactory';
-import PaymentService from '../../../services/payment/payment.service';
+import globalState from '../../models/globalState';
+import serviceFactory from '../../services/serviceFactory';
+import PaymentService from '../../services/payment/payment.service';
 import rsToasts from '@bit/redsky.framework.toast';
-import LabelCheckbox from '../../../components/labelCheckbox/LabelCheckbox';
-import Select, { SelectOptions } from '../../../components/Select/Select';
+import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
+import Select, { SelectOptions } from '../Select/Select';
 import debounce from 'lodash.debounce';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
+type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoForm extends Api.Reservation.Guest {
 	details: string;
 }
-type CreditCardForm = { full_name: string; expDate: string };
 
+interface ContactInfo extends ContactInfoForm {
+	phone: string;
+}
 interface ContactInfoAndPaymentCardProps {
-	onContactChange: (value: ContactInfoForm) => void;
+	onContactChange: (value: ContactInfo) => void;
 	onCreditCardChange: (value: CreditCardForm) => void;
 	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
+	existingCardId?: number;
+	contactInfo?: Api.Reservation.Guest;
 }
 
 let phoneNumber = '';
@@ -39,8 +44,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-	const [existingCardId, setExistingCardId] = useState<number>(0);
-	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(false);
+	const [existingCardId, setExistingCardId] = useState<number>(props.existingCardId || 0);
+	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(
+		props.existingCardId ? props.existingCardId > 0 : false
+	);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
@@ -62,13 +69,13 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	);
 	const [contactInfoForm, setContactInfoForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('firstName', user?.firstName || '', [
+			new RsFormControl('firstName', props.contactInfo?.firstName || user?.firstName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'First name is required')
 			]),
-			new RsFormControl('lastName', user?.lastName || '', [
+			new RsFormControl('lastName', props.contactInfo?.lastName || user?.lastName || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
 			]),
-			new RsFormControl('email', user?.primaryEmail || '', [
+			new RsFormControl('email', props.contactInfo?.email || user?.primaryEmail || '', [
 				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
 			]),
 			new RsFormControl('data', '', [])
@@ -77,7 +84,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 
 	useEffect(() => {
 		if (!user) return;
-		phoneNumber = user.phone;
+		phoneNumber = props.contactInfo?.phone || user.phone;
 	}, [user]);
 
 	useEffect(() => {
@@ -215,7 +222,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	async function updateContactInfoForm(control: RsFormControl) {
 		contactInfoForm.update(control);
 		let isFormValid = await contactInfoForm.isValid();
-		props.onContactChange(contactInfoForm.toModel());
+		props.onContactChange({ ...contactInfoForm.toModel(), phone: phoneNumber });
 		setIsValid(isFormFilledOut() && isFormValid);
 		setContactInfoForm(contactInfoForm.clone());
 	}
@@ -254,7 +261,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			<Label variant={'h2'} marginBottom={'10px'}>
 				Contact Info
 			</Label>
-			<Box className={'contactInfo'}>
+			<Box className={'contactInfo'} display={'grid'}>
 				<LabelInput
 					title={'First Name'}
 					inputType={'text'}
@@ -268,8 +275,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					updateControl={updateContactInfoForm}
 				/>
 				<LabelInput
-					title={'email'}
-					inputType={'email'}
+					title={'Email'}
+					inputType={'text'}
 					control={contactInfoForm.get('email')}
 					updateControl={updateContactInfoForm}
 				/>
@@ -309,6 +316,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 							setUseExistingCreditCard(false);
 							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
 						}}
+						isChecked={useExistingCreditCard}
 					/>
 				</Box>
 
