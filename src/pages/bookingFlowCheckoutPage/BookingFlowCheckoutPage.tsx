@@ -178,9 +178,13 @@ const BookingFlowCheckoutPage = () => {
 		accommodationId: number,
 		checkInDate: string | Date,
 		checkoutDate: string | Date
-	) {
+	): Promise<void> {
 		let newAccommodationList = accommodations.filter((accommodation) => {
-			return accommodation.accommodationId !== accommodationId;
+			return (
+				accommodation.accommodationId !== accommodationId ||
+				checkInDate !== accommodation.arrivalDate ||
+				checkoutDate !== accommodation.departureDate
+			);
 		});
 		setAccommodations(newAccommodationList);
 		let data = {
