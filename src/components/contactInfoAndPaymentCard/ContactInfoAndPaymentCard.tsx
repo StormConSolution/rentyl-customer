@@ -316,7 +316,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 							setUseExistingCreditCard(false);
 							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
 						}}
-						isChecked={props.existingCardId ? props.existingCardId > 0 : false}
+						isChecked={useExistingCreditCard}
 					/>
 				</Box>
 

@@ -62,7 +62,6 @@ const EditFlowModifyPaymentPage = () => {
 	}, []);
 
 	useEffect(() => {
-		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
 				let data = {
@@ -96,7 +95,6 @@ const EditFlowModifyPaymentPage = () => {
 			}
 		);
 		return () => {
-			paymentService.unsubscribeToSpreedlyError(subscribeId);
 			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
 		};
 	}, [creditCardForm]);
@@ -133,17 +131,19 @@ const EditFlowModifyPaymentPage = () => {
 	}
 
 	function renderPolicies() {
-		return reservation?.destination.policies.map((item, index) => {
-			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
-			return (
-				<Box key={index}>
-					<Label variant={'h4'}>{item.type}</Label>
-					<Label variant={'body1'} mb={10}>
-						{item.value}
-					</Label>
-				</Box>
-			);
-		});
+		if (reservation) {
+			return reservation.destination.policies.map((item, index) => {
+				if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
+				return (
+					<Box key={index}>
+						<Label variant={'h4'}>{item.type}</Label>
+						<Label variant={'body1'} mb={10}>
+							{item.value}
+						</Label>
+					</Box>
+				);
+			});
+		}
 	}
 
 	return !!!reservation ? (

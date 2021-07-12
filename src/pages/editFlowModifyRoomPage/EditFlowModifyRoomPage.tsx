@@ -68,9 +68,12 @@ const EditFlowModifyRoomPage = () => {
 	useEffect(() => {
 		async function getReservations() {
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
-				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			if (
+				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
+				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
+			) {
+				newSearchQueryObj.priceRangeMax *= 100;
+				newSearchQueryObj.priceRangeMin *= 100;
 			}
 
 			try {
@@ -181,8 +184,8 @@ const EditFlowModifyRoomPage = () => {
 			};
 			try {
 				await reservationsService.updateReservation(stay);
-				popupController.close(SpinningLoaderPopup);
 				router.navigate(`/reservations`).catch(console.error);
+				popupController.close(SpinningLoaderPopup);
 			} catch {
 				popupController.close(SpinningLoaderPopup);
 				rsToasts.error('Something unexpected happend on the server');

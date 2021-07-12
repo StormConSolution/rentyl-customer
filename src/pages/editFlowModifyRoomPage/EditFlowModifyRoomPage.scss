@@ -1,47 +1,43 @@
 @import '../../themes/themes';
 
-.rs-view {
-	.rsEditFlowModifyRoomPage {
-		.rs-page-content-wrapper {
-			margin-top: 80px;
-		}
-		.editingNotification {
-			border: 1px solid red;
-			width: 700px;
-			padding: 10px;
-		}
-		.rsRateCodeSelect {
-			margin-bottom: 30px;
-			padding-bottom: 30px;
-			border-bottom: 1px solid theme-var($greyLineColor);
-		}
-		.rsAccommodationSearchResultCard {
-			margin: 35px auto;
-			img {
-				min-width: 100px;
-			}
+.rsEditFlowModifyRoomPage {
+	.editingNotification {
+		margin-top: 80px;
+		border: 1px solid red;
+		width: 700px;
+		padding: 10px;
+	}
+	.rsRateCodeSelect {
+		margin-bottom: 30px;
+		padding-bottom: 30px;
+		border-bottom: 1px solid theme-var($greyLineColor);
+	}
+	.rsAccommodationSearchResultCard {
+		margin: 35px auto;
+		img {
+			min-width: 100px;
 		}
 	}
+}
 
-	.small {
-		.rsEditFlowModifyRoomPage {
-			.rs-page-content-wrapper {
-				margin-top: 50px;
+.small {
+	.rsEditFlowModifyRoomPage {
+		.rs-page-content-wrapper {
+			margin-top: 50px;
+		}
+
+		.rsAccommodationSearchResultCard {
+			width: min(70vw);
+			max-width: 700px;
+			grid-template-columns: min(100px) auto;
+
+			img {
+				width: 100%;
 			}
 
-			.rsAccommodationSearchResultCard {
+			.rsAccommodationSearchCallToActionCard {
 				width: min(70vw);
 				max-width: 700px;
-				grid-template-columns: min(100px) auto;
-
-				img {
-					width: 100%;
-				}
-
-				.rsAccommodationSearchCallToActionCard {
-					width: min(70vw);
-					max-width: 700px;
-				}
 			}
 		}
 	}

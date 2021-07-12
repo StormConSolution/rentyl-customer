@@ -25,21 +25,21 @@ const BookingFlowAddPackagePage = () => {
 			try {
 				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
 				const response = await reservationsService.getPackages(data);
-				console.log(response);
 				setAvailablePackages(response.data.data);
 				setTotalPackages(response.data.total);
 			} catch {
-				console.error('An unexpected error on the server happened');
+				console.error('An unexpected error happened on the server.');
 			}
 		}
 		getPackages().catch(console.error);
 	}, []);
 
-	useEffect(() => {}, [addedPackages]);
-
 	function renderPackages() {
 		return addedPackages.map((item, index) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
+			if (defaultImage === undefined && item.media.length > 0) {
+				defaultImage = item.media[0];
+			}
 			return (
 				<DestinationPackageTile
 					key={item.id}

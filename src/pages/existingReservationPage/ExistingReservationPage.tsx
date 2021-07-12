@@ -97,7 +97,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 						cancelPermitted={item.cancellationPermitted}
 						cancelPolicy={
 							item.destination.policies[
-								item.destination.policies.findIndex((p) => p.type === 'Cancellation')
+								item.destination.policies.findIndex((policy) => policy.type === 'Cancellation')
 							].value
 						}
 						edit={() => {

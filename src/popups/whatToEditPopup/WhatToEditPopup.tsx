@@ -43,24 +43,6 @@ const WhatToEditPopup: React.FC<WhatToEditPopupProps> = (props) => {
 							props.editRoomInfo();
 						}}
 					/>
-					{/*<LabelButton*/}
-					{/*	look={'containedPrimary'}*/}
-					{/*	variant={'button'}*/}
-					{/*	label={'Change Room'}*/}
-					{/*	onClick={() => {*/}
-					{/*		popupController.close(WhatToEditPopup);*/}
-					{/*		props.changeRoom();*/}
-					{/*	}}*/}
-					{/*/>*/}
-					{/*<LabelButton*/}
-					{/*	look={'containedPrimary'}*/}
-					{/*	variant={'button'}*/}
-					{/*	label={'Cancel'}*/}
-					{/*	onClick={() => {*/}
-					{/*		popupController.close(WhatToEditPopup);*/}
-					{/*		props.cancel();*/}
-					{/*	}}*/}
-					{/*/>*/}
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}
