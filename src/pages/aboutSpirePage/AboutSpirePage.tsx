@@ -53,7 +53,7 @@ const AboutSpirePage: React.FC = () => {
 	}, [imageIndex]);
 
 	function moveImagesRight() {
-		if (parentRef.current!.childElementCount - 1 === imageIndex) {
+		if (parentRef.current!.childElementCount === imageIndex) {
 			setImageIndex(0);
 			return (parentRef.current!.style.transform = `translateX(0px)`);
 		} else {
