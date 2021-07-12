@@ -169,12 +169,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 		accommodationIdSelected: number | string
 	): SelectOptions[] {
 		if (!destination.accommodationTypes) return [];
-		return destination.accommodationTypes.map((type) => {
-			if (accommodationIdSelected === type.id) {
-				return { value: type.id, text: type.name, selected: true };
-			}
-			return { value: type.id, text: type.name, selected: false };
-		});
+		return destination.accommodations
+			.sort((room1, room2) => room1.roomCount - room2.roomCount)
+			.map((type) => {
+				if (accommodationIdSelected === type.id) {
+					return { value: type.id, text: type.name, selected: true };
+				}
+				return { value: type.id, text: type.name, selected: false };
+			});
 	}
 
 	function getSummaryTabs(destination: Api.Destination.Res.Availability): DestinationSummaryTab[] {
