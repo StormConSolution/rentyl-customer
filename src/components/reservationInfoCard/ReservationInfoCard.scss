@@ -12,7 +12,15 @@
 	}
 
 	.amenities {
-		text-overflow: ellipsis;
+		.rsIcon {
+			display: none;
+
+			&:nth-child(1),
+			&:nth-child(2),
+			&:nth-child(3) {
+				display: inline-block;
+			}
+		}
 	}
 
 	.rsIcon {

@@ -108,6 +108,7 @@ const EditFlowModifyPaymentPage = () => {
 	async function updateInformation() {
 		if (reservation) {
 			try {
+				popupController.open(SpinningLoaderPopup);
 				let stay: Api.Reservation.Req.Update = {
 					id: reservation.id,
 					rateCode: 'ITSTIME',
@@ -121,10 +122,11 @@ const EditFlowModifyPaymentPage = () => {
 					numberOfAccommodations: 1
 				};
 				await reservationsService.updateReservation(stay);
-
+				popupController.close(SpinningLoaderPopup);
 				rsToasts.success('Successfully Updated');
 				router.navigate('/reservations').catch(console.error);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				rsToasts.error('Something unexpected happened on the server.');
 			}
 		}

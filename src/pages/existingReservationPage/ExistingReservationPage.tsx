@@ -23,6 +23,7 @@ import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confir
 import moment from 'moment';
 import rsToasts from '@bit/redsky.framework.toast';
 import { DateUtils } from '../../utils/utils';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 interface ReservationPageProps {}
 
@@ -99,7 +100,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 								item.destination.policies.findIndex((p) => p.type === 'Cancellation')
 							].value
 						}
-						edit={() =>
+						edit={() => {
 							popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
 								cancel: () => {
 									popupController.closeAll();
@@ -166,6 +167,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 													originalEndDate: string | Date,
 													packages: Api.Package.Res.Get[]
 												) => {
+													popupController.open(SpinningLoaderPopup);
 													let stay: Api.Reservation.Req.Update = {
 														id: item.id,
 														rateCode: 'ITSTIME',
@@ -191,8 +193,8 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 										}
 									});
 								}
-							})
-						}
+							});
+						}}
 					/>
 				);
 			});

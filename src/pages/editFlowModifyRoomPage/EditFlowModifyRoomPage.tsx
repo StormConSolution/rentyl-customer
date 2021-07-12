@@ -166,6 +166,7 @@ const EditFlowModifyRoomPage = () => {
 
 	async function bookNow(id: number) {
 		if (reservation) {
+			popupController.open(SpinningLoaderPopup);
 			let stay: Api.Reservation.Req.Update = {
 				id: reservation.id,
 				rateCode: 'ITSTIME',
@@ -180,8 +181,10 @@ const EditFlowModifyRoomPage = () => {
 			};
 			try {
 				await reservationsService.updateReservation(stay);
+				popupController.close(SpinningLoaderPopup);
 				router.navigate(`/reservations`).catch(console.error);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				rsToasts.error('Something unexpected happend on the server');
 			}
 		}

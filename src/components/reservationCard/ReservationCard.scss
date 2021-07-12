@@ -1,10 +1,10 @@
 @import '../../themes/themes';
 
 .rsReservationCard {
-	display: flex;
+	display: grid;
+	grid-template-columns: 278px 685px 204px;
 	justify-content: center;
 	.columnOne {
-		width: 278px;
 		height: 230px;
 		margin-right: 16px;
 		img {
