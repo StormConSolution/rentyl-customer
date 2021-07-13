@@ -43,8 +43,12 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	const [addedPackages, setAddedPackages] = useState<Api.Package.Res.Get[]>(props.packages);
 	const [totalPackages, setTotalPackages] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDate, setStartDate] = useState<moment.Moment | null>(moment(props.startDate));
-	const [endDate, setEndDate] = useState<moment.Moment | null>(moment(props.endDate));
+	const [startDate, setStartDate] = useState<moment.Moment | null>(
+		moment(new Date(DateUtils.displayUserDate(props.startDate)))
+	);
+	const [endDate, setEndDate] = useState<moment.Moment | null>(
+		moment(new Date(DateUtils.displayUserDate(props.endDate)))
+	);
 	const [guestForm, setGuestForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('adults', props.adults, [new RsValidator(RsValidatorEnum.NUM, 'Must be a number')]),

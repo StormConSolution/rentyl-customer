@@ -187,8 +187,9 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			<hr />
 			<Box marginBottom={'10px'}>
 				<Label variant={'body1'}>
-					{moment(props.checkInDate).toDate().toDateString()} -{' '}
-					{moment(props.checkoutDate).toDate().toDateString()}
+					{DateUtils.displayUserDate(props.checkInDate)}
+					{' - '}
+					{DateUtils.displayUserDate(props.checkoutDate)}
 				</Label>
 				<Label variant={'body1'}>{props.adults} Adults</Label>
 				<Label variant={'body1'}>{props.children} Children</Label>
