@@ -178,7 +178,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function getSummaryTabs(destination: Api.Destination.Res.Availability): DestinationSummaryTab[] {
-		let accommodationsList = getAccommodationList(destination);
+		let accommodationsList = destination.accommodations;
 		return [
 			{ label: 'Overview', content: { text: destination.description } },
 			{
@@ -219,27 +219,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				}
 			}
 		];
-	}
-
-	function getAccommodationList(destination: Api.Destination.Res.Availability) {
-		return destination.accommodations.map((accommodationDetails) => {
-			let amenityIconNames: string[] = getAmenityIconNames(accommodationDetails.features);
-			return {
-				id: accommodationDetails.id,
-				name: accommodationDetails.name,
-				amenityIconNames: amenityIconNames,
-				bedrooms: accommodationDetails.roomCount,
-				beds: accommodationDetails.bedDetails.length,
-				ratePerNight: 0,
-				pointsPerNight: 0
-			};
-		});
-	}
-
-	function getAmenityIconNames(features: Misc.AccommodationFeatures[]): string[] {
-		return features.map((feature) => {
-			return feature.icon;
-		});
 	}
 
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {

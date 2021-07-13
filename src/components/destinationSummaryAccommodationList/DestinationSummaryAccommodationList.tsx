@@ -14,30 +14,50 @@ export interface DestinationSummaryAccommodationListProps {
 	onAddCompareClick?: (accommodationId: number | string) => void;
 }
 
+interface BedDetails {
+	type: string;
+	isPrimary: number;
+	qty: string;
+	description: string;
+}
+
 interface AccommodationListRowProp {
-	id: any;
+	id: number;
 	name: string;
-	amenityIconNames: string[];
-	bedrooms: number;
-	beds: number;
-	ratePerNight: number;
-	pointsPerNight: number;
+	roomCount: number;
+	bedDetails: BedDetails[];
+	priceCents: number;
+	prices: {
+		priceCents: number;
+		quantityAvailable: number;
+		rateCode: string;
+	}[];
+	features: {
+		id: number;
+		title: string;
+		icon: string;
+	}[];
 }
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
+	function getBedQuantity(room: BedDetails[]): number {
+		return room.reduce((total, bed) => (total += +bed.qty), 0);
+	}
 	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
 		return (
 			<div className="accommodationRow" key={index}>
-				<Label>{accommodation.name}</Label>
-				<Label>{renderIcons(accommodation.amenityIconNames)}</Label>
-				<Label>{accommodation.bedrooms}</Label>
-				<Label>{accommodation.beds}</Label>
+				<Label variant={'caption'}>{accommodation.name}</Label>
+				<Label display={'flex'} className={'icons'}>
+					{renderIcons(accommodation.features.map((feature) => feature.icon))}
+				</Label>
+				<Label variant={'caption'}>{accommodation.roomCount}</Label>
+				<Label variant={'caption'}>{getBedQuantity(accommodation.bedDetails)}</Label>
 				<div>
 					<Label variant="h3" className="rate">
-						{StringUtils.formatMoney(accommodation.ratePerNight)}
+						${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
 					</Label>
 					<Label variant="body2" className="points">
-						{addCommasToNumber(accommodation.pointsPerNight)} pts.
+						{addCommasToNumber(accommodation.prices[0].priceCents)} pts.
 					</Label>
 				</div>
 				<div>
@@ -76,36 +96,40 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 	}
 
 	function renderIcons(iconNames: string[]): JSX.Element[] {
-		return iconNames.map((name, index: number) => {
-			return <Icon iconImg={name} key={index} />;
-		});
+		return iconNames
+			.map((name, index: number) => {
+				return <Icon iconImg={name} key={index} />;
+			})
+			.slice(0, 4);
 	}
 
 	function renderAccommodationList(accommodations: AccommodationListRowProp[], index: number): JSX.Element[] {
-		return accommodations.map(renderAccommodationListRow, index);
+		return accommodations
+			.sort((room1, room2) => getBedQuantity(room2.bedDetails) - getBedQuantity(room1.bedDetails))
+			.map(renderAccommodationListRow, index);
 	}
 
 	return (
 		<div className="rsDestinationSummaryAccomodationList">
 			<div className="accommodationRow header">
 				<div>
-					<Label variant="caption">{props.accommodationType}</Label>
+					<Label variant="h4">{props.accommodationType}</Label>
 				</div>
 				<div>
-					<Label variant="caption">Amenities</Label>
+					<Label variant="h4">Amenities</Label>
 				</div>
 				<div>
-					<Label variant="caption">Bedrooms</Label>
+					<Label variant="h4">Bedrooms</Label>
 				</div>
 				<div>
-					<Label variant="caption">Beds</Label>
+					<Label variant="h4">Beds</Label>
 				</div>
 				<div>
-					<Label variant="caption">Rate/Night</Label>
+					<Label variant="h4">Rate/Night</Label>
 				</div>
 				<div>&nbsp;</div>
 			</div>
-			{renderAccommodationList(props.accommodations, 0)}
+			<div className={'availableAccommodationRows'}>{renderAccommodationList(props.accommodations, 0)}</div>
 		</div>
 	);
 };
