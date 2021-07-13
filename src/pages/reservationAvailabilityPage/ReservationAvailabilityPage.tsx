@@ -49,11 +49,24 @@ const ReservationAvailabilityPage: React.FC = () => {
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useState<string>('');
 	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
 		async function getReservations() {
+			if (
+				searchQueryObj['priceRangeMin'] &&
+				searchQueryObj['priceRangeMax'] &&
+				searchQueryObj['priceRangeMin'] > searchQueryObj['priceRangeMax']
+			)
+				return;
+			if (
+				searchQueryObj['startDate'] &&
+				searchQueryObj['endDate'] &&
+				new Date(searchQueryObj['startDate']) > new Date(searchQueryObj['endDate'])
+			)
+				return;
 			let newSearchQueryObj = { ...searchQueryObj };
 			if (
 				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
@@ -90,11 +103,32 @@ const ReservationAvailabilityPage: React.FC = () => {
 			| 'rate',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
-		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
-		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
-		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
-		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		if (key === 'adults' && value === 0) {
+			throw rsToasts.error('There must be at least one adult.');
+		}
+		if (key === 'adults' && isNaN(value)) {
+			throw rsToasts.error('# of adults must be a number');
+		}
+		if (key === 'children' && isNaN(value)) {
+			throw rsToasts.error('# of children must be a number');
+		}
+		if (key === 'priceRangeMin' && isNaN(value)) {
+			throw rsToasts.error('Price min must be a number');
+		}
+		if (key === 'priceRangeMax' && isNaN(value)) {
+			throw rsToasts.error('Price max must be a number');
+		}
+		if (key === 'priceRangeMin' && searchQueryObj['priceRangeMax'] && value > searchQueryObj['priceRangeMax']) {
+			setErrorMessage('Price min must be lower than the max');
+		} else if (
+			key === 'priceRangeMax' &&
+			searchQueryObj['priceRangeMin'] &&
+			value < searchQueryObj['priceRangeMin']
+		) {
+			setErrorMessage('Price max must be greater than the min');
+		} else {
+			setErrorMessage('');
+		}
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			if (value === '') delete createSearchQueryObj[key];
@@ -307,6 +341,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 								}
 							/>
+							<Label variant={'body1'} color={'red'}>
+								{errorMessage}
+							</Label>
 							<Accordion
 								hideHoverEffect
 								children={

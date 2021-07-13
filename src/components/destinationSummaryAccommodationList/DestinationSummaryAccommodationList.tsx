@@ -5,6 +5,7 @@ import React from 'react';
 import { addCommasToNumber } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import './DestinationSummaryAccommodationList.scss';
+import IconToolTip from '../iconToolTip/IconToolTip';
 
 export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
@@ -29,7 +30,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 		return (
 			<div className="accommodationRow" key={index}>
 				<Label>{accommodation.name}</Label>
-				<Label>{renderIcons(accommodation.amenityIconNames)}</Label>
+				<Label display={'flex'}>{renderIcons(accommodation.amenityIconNames)}</Label>
 				<Label>{accommodation.bedrooms}</Label>
 				<Label>{accommodation.beds}</Label>
 				<div>
@@ -77,7 +78,8 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 
 	function renderIcons(iconNames: string[]): JSX.Element[] {
 		return iconNames.map((name, index: number) => {
-			return <Icon iconImg={name} key={index} />;
+			return <IconToolTip iconImg={name} key={index} title={name} />;
+			// return <Icon iconImg={name} key={index} />;
 		});
 	}
 
