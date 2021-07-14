@@ -84,6 +84,10 @@
 			height: 532px;
 			padding: 50px;
 			box-sizing: border-box;
+			transition: background-image 300ms ease-in-out;
+			background-position: bottom;
+			background-repeat: no-repeat;
+			background-size: cover;
 			img {
 				position: absolute;
 				top: 0;
@@ -111,6 +115,10 @@
 			height: 415px;
 		}
 		.featureSliderWrapper {
+			display: flex;
+			padding: 0 3px;
+			box-sizing: border-box;
+			transition: transform 300ms;
 			position: absolute;
 			bottom: 0;
 			left: 46%;
@@ -122,6 +130,9 @@
 				.rsBookNowImage {
 					margin: 0 10px;
 				}
+			}
+			&::-webkit-scrollbar {
+				display: none;
 			}
 		}
 	}

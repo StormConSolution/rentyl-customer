@@ -6,6 +6,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelButton from '../labelButton/LabelButton';
 import { popupController } from '@bit/redsky.framework.rs.996';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
@@ -17,14 +18,14 @@ interface ReservationInfoCardProps {
 	toggleConfirmation?: (toggle?: boolean) => void;
 	cancelPermitted: 0 | 1;
 	cancelPolicy?: string;
-	confirmCancellation?: () => void;
+	edit?: () => void;
 }
 
 const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 	function renderReservationDates() {
-		return `${new Date(props.reservationDates.startDate).toDateString()} - ${new Date(
+		return `${DateUtils.displayUserDate(props.reservationDates.startDate)} - ${DateUtils.displayUserDate(
 			props.reservationDates.endDate
-		).toDateString()}`;
+		)}`;
 	}
 
 	function renderAmenityIcons() {
@@ -56,7 +57,7 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'caption'}>Sleeps</Label>
 				<Label variant={'body1'}>{props.sleeps}</Label>
 			</div>
-			<div>
+			<div className={'amenities'}>
 				<Label variant={'caption'}>Amenities</Label>
 				<Label variant={'body1'}>{renderAmenityIcons()}</Label>
 			</div>
@@ -74,15 +75,9 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<LabelButton
 					variant={'button'}
 					onClick={() => {
-						popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-							title: 'Reservation Cancellation',
-							bodyText: props.cancelPolicy,
-							confirm: props.confirmCancellation ? props.confirmCancellation : () => {},
-							cancelText: 'Do Not Cancel',
-							confirmText: 'Cancel Now'
-						});
+						if (props.edit) props.edit();
 					}}
-					label={'Cancel'}
+					label={'Edit'}
 					look={'containedPrimary'}
 				/>
 			)}

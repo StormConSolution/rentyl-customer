@@ -898,6 +898,12 @@ declare namespace Api {
 			zip: string;
 			country: string;
 		}
+		interface Guest {
+			firstName: string;
+			lastName: string;
+			phone: string;
+			email: string;
+		}
 		export namespace Req {
 			export interface Availability {
 				startDate: Date | string;
@@ -925,6 +931,10 @@ declare namespace Api {
 			export interface Create extends Verification {
 				rateCode: string;
 				paymentMethodId: number;
+				guest: Guest;
+			}
+			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
+				id: number;
 			}
 			export interface Get {
 				id: number;
@@ -939,7 +949,7 @@ declare namespace Api {
 			export namespace Itinerary {
 				export interface Get {
 					reservationId?: number;
-					itineraryNumber?: string;
+					itineraryId?: string;
 				}
 				interface Stay {
 					accommodationId: number;
@@ -949,10 +959,11 @@ declare namespace Api {
 					adultCount: number;
 					childCount: number;
 					rateCode: string;
+					guest: Guest;
 				}
 				export interface Create {
-					paymentMethodId: number;
 					destinationId: number;
+					paymentMethodId: number;
 					stays: Stay[];
 				}
 			}
@@ -961,6 +972,7 @@ declare namespace Api {
 			export interface Get {
 				id: number;
 				userId: number;
+				guest: Guest;
 				billingAddress: BillingAddressDetails;
 				paymentMethod: PaymentMethod;
 				destination: DestinationDetails;
@@ -1038,6 +1050,7 @@ declare namespace Api {
 					confirmationDate: Date | string;
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
+					guest: Guest;
 				}
 				export interface Get {
 					parentReservationId: number;
@@ -1065,7 +1078,7 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
-				upc: number;
+				upc: string;
 				mediaDetails?: MediaDetails[];
 				categoryIds: number[];
 			}
@@ -1094,8 +1107,8 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
-				upc: number;
-				isActive: boolean;
+				upc: string;
+				isActive: 0 | 1;
 				createdOn: Date | string;
 				modifiedOn: Date | string;
 				vendorName: string;
