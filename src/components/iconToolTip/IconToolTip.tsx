@@ -15,7 +15,11 @@ interface IconToolTipProps {
 const IconToolTip: React.FC<IconToolTipProps> = (props) => {
 	const [hovered, setHovered] = useState<boolean>(false);
 	return (
-		<div className={'rsIconToolTip'} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+		<div
+			className={`rsIconToolTip ${props.className}`}
+			onMouseEnter={() => setHovered(true)}
+			onMouseLeave={() => setHovered(false)}
+		>
 			<Label variant={'caption'} display={hovered ? 'inline-block' : 'none'}>
 				{props.title}
 			</Label>
@@ -24,7 +28,6 @@ const IconToolTip: React.FC<IconToolTipProps> = (props) => {
 				iconImg={props.iconImg}
 				color={props.color}
 				size={props.size}
-				className={props.className}
 				onClick={props.onClick}
 				cursorPointer={props.cursorPointer}
 			/>

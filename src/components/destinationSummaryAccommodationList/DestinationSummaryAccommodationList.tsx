@@ -22,24 +22,7 @@ interface BedDetails {
 	description: string;
 }
 
-interface AccommodationListRowProp {
-	id: number;
-	name: string;
-	roomCount: number;
-	bedDetails: BedDetails[];
-	priceCents: number;
-	maxOccupantCount: number;
-	prices: {
-		priceCents: number;
-		quantityAvailable: number;
-		rateCode: string;
-	}[];
-	features: {
-		id: number;
-		title: string;
-		icon: string;
-	}[];
-}
+interface AccommodationListRowProp extends Api.Destination.Res.Accommodation {}
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
 	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
@@ -98,7 +81,6 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 		return icons
 			.map((icon, index: number) => {
 				return <IconToolTip iconImg={icon.icon} key={icon.id} title={icon.title} />;
-				// return <Icon iconImg={name} key={index} />;
 			})
 			.slice(0, 4);
 	}
