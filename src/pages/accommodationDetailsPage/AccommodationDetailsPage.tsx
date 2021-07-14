@@ -47,7 +47,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' }
 	]);
 
-	const [available, setAvailable] = useState<boolean>(false);
+	const [available, setAvailable] = useState<boolean>(true);
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
@@ -77,6 +77,40 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		getAccommodationDetails(params.accommodationId);
 	}, []);
 
+	useEffect(() => {
+		checkAvailability().catch(console.error);
+	}, [availabilityObj]);
+
+	async function checkAvailability() {
+		if (
+			availabilityObj.departureDate === null ||
+			availabilityObj.arrivalDate === null ||
+			availabilityObj.adults < 1
+		)
+			return;
+		popupController.open(SpinningLoaderPopup);
+		if (!accommodationDetails || !destinationDetails) return false;
+		try {
+			let data: Api.Reservation.Req.Verification = {
+				accommodationId: accommodationDetails.id,
+				destinationId: destinationDetails.id,
+				adults: availabilityObj.adults,
+				children: 0,
+				arrivalDate: DateUtils.clientToServerDate(new Date(availabilityObj.arrivalDate)),
+				departureDate: DateUtils.clientToServerDate(new Date(availabilityObj.departureDate)),
+				numberOfAccommodations: 1
+			};
+			await reservationsService.verifyAvailability(data);
+			popupController.close(SpinningLoaderPopup);
+			setAvailable(true);
+			return true;
+		} catch {
+			popupController.close(SpinningLoaderPopup);
+			setAvailable(false);
+			return false;
+		}
+	}
+
 	function isValidBookNow() {
 		return (
 			!!availabilityObj.arrivalDate.length && !!availabilityObj.departureDate.length && !!availabilityObj.adults
@@ -94,9 +128,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	function onDatesChange(calendarStartDate: moment.Moment | null, calendarEndDate: moment.Moment | null) {
 		setStartDate(calendarStartDate);
 		setEndDate(calendarEndDate);
+		if (calendarStartDate === null || calendarEndDate === null) return;
 		updateAvailabilityObj('arrivalDate', formatFilterDateForServer(calendarStartDate, 'start'));
 		updateAvailabilityObj('departureDate', formatFilterDateForServer(calendarEndDate, 'end'));
-		checkIfRoomIsAvailable();
 	}
 
 	function renderFeatureTiles() {
@@ -122,29 +156,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		});
 	}
 
-	async function checkIfRoomIsAvailable(): Promise<boolean> {
-		if (!accommodationDetails || !destinationDetails) return false;
-		try {
-			let data: Api.Reservation.Req.Verification = {
-				accommodationId: accommodationDetails.id,
-				destinationId: destinationDetails.id,
-				adults: availabilityObj.adults,
-				children: 0,
-				arrivalDate: DateUtils.clientToServerDate(new Date(availabilityObj.arrivalDate)),
-				departureDate: DateUtils.clientToServerDate(new Date(availabilityObj.departureDate)),
-				numberOfAccommodations: 1
-			};
-			await reservationsService.verifyAvailability(data);
-			popupController.close(SpinningLoaderPopup);
-			setAvailable(true);
-			return true;
-		} catch {
-			popupController.close(SpinningLoaderPopup);
-			setAvailable(false);
-			return false;
-		}
-	}
-
 	async function bookNow() {
 		if (!accommodationDetails || !destinationDetails) return;
 		let data: any = {
@@ -153,7 +164,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 			children: 0
 		};
 		data = JSON.stringify({ destinationId: destinationDetails.id, newRoom: data });
-
 		if (!user) {
 			popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 				query: data
@@ -209,9 +219,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 								});
 							}}
 							bookNowOnClick={() => {
-								if (checkIfRoomIsAvailable()) {
-									bookNow().catch(console.error);
-								}
+								bookNow().catch(console.error);
 							}}
 						/>
 					</Box>
