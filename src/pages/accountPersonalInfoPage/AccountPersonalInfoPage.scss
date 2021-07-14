@@ -39,23 +39,37 @@
 			bottom: -140px;
 		}
 	}
-	.rsLabelInput {
-		margin-top: 20px;
-		.react-tel-input {
-			input {
-				max-width: 200px;
+
+	.editSection {
+		display: grid;
+		grid-template-columns: 420px 420px;
+		column-gap: 20px;
+		row-gap: 40px;
+		justify-content: center;
+		margin-bottom: 130px;
+
+		.rsLabelInput {
+			margin-top: 20px;
+			.react-tel-input {
+				input {
+					max-width: 200px;
+				}
 			}
 		}
-	}
-
-	.accountNameInput {
-		max-width: 100%;
-		input {
-			width: 100%;
+		.rsLabelCheckbox {
+			margin-top: 20px;
+			padding: 0;
 		}
-	}
 
-	.saveBtn {
-		margin-top: 50px;
+		.accountNameInput {
+			max-width: 100%;
+			input {
+				width: 100%;
+			}
+		}
+
+		.saveBtn {
+			margin-top: 50px;
+		}
 	}
 }

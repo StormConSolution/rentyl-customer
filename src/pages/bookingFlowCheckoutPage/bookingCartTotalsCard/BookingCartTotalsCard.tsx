@@ -6,10 +6,10 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime, DateUtils } from '../../../utils/utils';
+import moment from 'moment';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
-} from '../accommodationOptionsPopup/AccommodationOptionsPopup';
-import moment from 'moment';
+} from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -28,9 +28,10 @@ interface BookingCartTotalsCardProps {
 	packages?: Api.Reservation.Res.BookingPackageDetails[];
 	onDeletePackage: (packageId: number) => void;
 	accommodationId?: number;
-	remove: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	edit: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	changeRoom: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	cancellable: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -133,25 +134,43 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h4'} width={'170px'}>
 						{props.accommodationName}
 					</Label>
-					<Icon
-						iconImg={'icon-edit'}
-						cursorPointer
-						onClick={(event) => {
-							event.stopPropagation();
-							popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
-								onChangeRoom: () => {
-									popupController.close(AccommodationOptionsPopup);
-									props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
-								},
-								onEditRoom: () => {
-									props.edit(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
-								},
-								onRemove: () => {
-									props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
-								}
-							});
-						}}
-					/>
+					{props.edit && (
+						<Icon
+							iconImg={'icon-edit'}
+							cursorPointer
+							onClick={(event) => {
+								event.stopPropagation();
+								popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
+									onChangeRoom: () => {
+										popupController.close(AccommodationOptionsPopup);
+										if (props.changeRoom)
+											props.changeRoom(
+												props.accommodationId || 0,
+												props.checkInDate,
+												props.checkoutDate
+											);
+									},
+									onEditRoom: () => {
+										if (props.edit)
+											props.edit(
+												props.accommodationId || 0,
+												props.checkInDate,
+												props.checkoutDate
+											);
+									},
+									onRemove: () => {
+										if (props.remove)
+											props.remove(
+												props.accommodationId || 0,
+												props.checkInDate,
+												props.checkoutDate
+											);
+									},
+									cancellable: props.cancellable
+								});
+							}}
+						/>
+					)}
 				</Box>
 			}
 		>
@@ -168,8 +187,9 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			<hr />
 			<Box marginBottom={'10px'}>
 				<Label variant={'body1'}>
-					{moment(props.checkInDate).toDate().toDateString()} -{' '}
-					{moment(props.checkoutDate).toDate().toDateString()}
+					{DateUtils.displayUserDate(props.checkInDate)}
+					{' - '}
+					{DateUtils.displayUserDate(props.checkoutDate)}
 				</Label>
 				<Label variant={'body1'}>{props.adults} Adults</Label>
 				<Label variant={'body1'}>{props.children} Children</Label>
@@ -218,7 +238,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 				</Box>
 			</Accordion>
-
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h3'} width={'170px'}>
 					Total:

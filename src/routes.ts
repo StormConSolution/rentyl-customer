@@ -13,7 +13,6 @@ import RewardItemPage from './pages/rewardItemPage/RewardItemPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
-import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
@@ -26,6 +25,8 @@ import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDe
 import BookingFlowCheckoutPage from './pages/bookingFlowCheckoutPage/BookingFlowCheckoutPage';
 import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
 import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
+import EditFlowModifyPaymentPage from './pages/editFlowModifyPaymentPage/EditFlowModifyPaymentPage';
+import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModifyRoomPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -71,6 +72,14 @@ const routes: RouteDetails[] = [
 	{
 		path: '/reservations',
 		page: ExistingReservationPage
+	},
+	{
+		path: '/reservations/payment',
+		page: EditFlowModifyPaymentPage
+	},
+	{
+		path: '/reservations/edit-room',
+		page: EditFlowModifyRoomPage
 	},
 	{
 		path: '/reservation/details',
@@ -142,13 +151,6 @@ const routes: RouteDetails[] = [
 	{
 		path: '/account/payment-methods',
 		page: AccountPaymentMethodsPage,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/account/notification-preferences',
-		page: AccountNotificationPreferences,
 		options: {
 			view: 'landingPage'
 		}

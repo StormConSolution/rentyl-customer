@@ -8,7 +8,6 @@ import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
-import ContactInfoAndPaymentCard from './contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
@@ -19,11 +18,15 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import PaymentService from '../../services/payment/payment.service';
-import EditAccommodationPopup, { EditAccommodationPopupProps } from './editAccommodationPopup/EditAccommodationPopup';
+import EditAccommodationPopup, {
+	EditAccommodationPopupProps
+} from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
-import AccommodationOptionsPopup from './accommodationOptionsPopup/AccommodationOptionsPopup';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
+import moment from 'moment';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -175,14 +178,15 @@ const BookingFlowCheckoutPage = () => {
 		accommodationId: number,
 		checkInDate: string | Date,
 		checkoutDate: string | Date
-	) {
+	): Promise<void> {
 		let newAccommodationList = accommodations.filter((accommodation) => {
 			return (
-				accommodation.accommodationId !== accommodationId &&
-				accommodation.arrivalDate !== checkInDate &&
-				accommodation.departureDate !== checkoutDate
+				accommodation.accommodationId !== accommodationId ||
+				checkInDate !== accommodation.arrivalDate ||
+				checkoutDate !== accommodation.departureDate
 			);
 		});
+		setAccommodations(newAccommodationList);
 		let data = {
 			destinationId,
 			stays: newAccommodationList
@@ -320,7 +324,6 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{accommodations.map((accommodation, index) => {
-					console.log(accommodation.arrivalDate, accommodation.departureDate);
 					return (
 						<BookingCartTotalsCard
 							key={index}
@@ -392,6 +395,7 @@ const BookingFlowCheckoutPage = () => {
 							}}
 							changeRoom={changeRoom}
 							accommodationId={accommodation.accommodationId}
+							cancellable={true}
 						/>
 					);
 				})}

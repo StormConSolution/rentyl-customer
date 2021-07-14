@@ -544,6 +544,25 @@ declare namespace Api {
 				}[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
+			export interface Accommodation {
+				id: number;
+				name: string;
+				roomCount: number;
+				bedDetails: any;
+				priceCents: number;
+				maxOccupantCount: number;
+				prices: {
+					priceCents: number;
+					quantityAvailable: number;
+					rateCode: string;
+				}[];
+				features: {
+					id: number;
+					title: string;
+					icon: string;
+				}[];
+			}
+			[];
 			export interface Availability {
 				id: number;
 				name: string;
@@ -567,23 +586,7 @@ declare namespace Api {
 					id: number;
 					name: string;
 				}[];
-				accommodations: {
-					id: number;
-					name: string;
-					roomCount: number;
-					bedDetails: any;
-					priceCents: number;
-					prices: {
-						priceCents: number;
-						quantityAvailable: number;
-						rateCode: string;
-					}[];
-					features: {
-						id: number;
-						title: string;
-						icon: string;
-					}[];
-				}[];
+				accommodations: Accommodation[];
 			}
 			export interface GetByPageAvailability {
 				data: Availability[];
@@ -933,6 +936,9 @@ declare namespace Api {
 				paymentMethodId: number;
 				guest: Guest;
 			}
+			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
+				id: number;
+			}
 			export interface Get {
 				id: number;
 			}
@@ -946,7 +952,7 @@ declare namespace Api {
 			export namespace Itinerary {
 				export interface Get {
 					reservationId?: number;
-					itineraryNumber?: string;
+					itineraryId?: string;
 				}
 				interface Stay {
 					accommodationId: number;
@@ -959,8 +965,8 @@ declare namespace Api {
 					guest: Guest;
 				}
 				export interface Create {
-					paymentMethodId: number;
 					destinationId: number;
+					paymentMethodId: number;
 					stays: Stay[];
 				}
 			}
@@ -1075,7 +1081,7 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
-				upc: number;
+				upc: string;
 				mediaDetails?: MediaDetails[];
 				categoryIds: number[];
 			}
@@ -1104,8 +1110,8 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
-				upc: number;
-				isActive: boolean;
+				upc: string;
+				isActive: 0 | 1;
 				createdOn: Date | string;
 				modifiedOn: Date | string;
 				vendorName: string;

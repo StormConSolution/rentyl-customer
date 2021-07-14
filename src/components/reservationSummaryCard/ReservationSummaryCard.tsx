@@ -6,6 +6,7 @@ import OtherPaymentCard from '../otherPaymentsCard/OtherPaymentCard';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Accordion from '@bit/redsky.framework.rs.accordion';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationSummaryCardProps {
 	fullName: string;
@@ -21,7 +22,7 @@ const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) =>
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={i}>
 					<Label variant={'body2'} width={'170px'}>
-						{new Date(i).toDateString()}
+						{DateUtils.displayUserDate(i)}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
 						${StringUtils.formatMoney(props.priceDetails.accommodationDailyCostsInCents[i])}

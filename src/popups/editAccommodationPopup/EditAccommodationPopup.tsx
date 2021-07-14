@@ -3,19 +3,20 @@ import { useEffect, useState } from 'react';
 import { Popup, popupController } from '@bit/redsky.framework.rs.996';
 import './EditAccommodationPopup.scss';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
-import Box from '../../../components/box/Box';
-import Paper from '../../../components/paper/Paper';
-import LabelInput from '../../../components/labelInput/LabelInput';
-import DateRangeSelector from '../../../components/dateRangeSelector/DateRangeSelector';
+import Box from '../../components/box/Box';
+import Paper from '../../components/paper/Paper';
+import LabelInput from '../../components/labelInput/LabelInput';
+import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import moment from 'moment';
-import serviceFactory from '../../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import DestinationPackageTile from '../../bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
-import ReservationsService from '../../../services/reservations/reservations.service';
-import { DateUtils } from '../../../utils/utils';
-import LabelButton from '../../../components/labelButton/LabelButton';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import serviceFactory from '../../services/serviceFactory';
+import ReservationsService from '../../services/reservations/reservations.service';
+import { DateUtils } from '../../utils/utils';
+import DestinationPackageTile from '../../pages/bookingFlowAddPackagePage/destinationPackageTile/DestinationPackageTile';
+import LabelButton from '../../components/labelButton/LabelButton';
+import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	adults: number;
@@ -37,12 +38,17 @@ export interface EditAccommodationPopupProps extends PopupProps {
 }
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
-	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [availablePackages, setAvailablePackages] = useState<Api.Package.Res.Get[]>([]);
 	const [addedPackages, setAddedPackages] = useState<Api.Package.Res.Get[]>(props.packages);
+	const [totalPackages, setTotalPackages] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDate, setStartDate] = useState<moment.Moment | null>(moment(props.startDate));
-	const [endDate, setEndDate] = useState<moment.Moment | null>(moment(props.endDate));
+	const [startDate, setStartDate] = useState<moment.Moment | null>(
+		moment(new Date(DateUtils.displayUserDate(props.startDate)))
+	);
+	const [endDate, setEndDate] = useState<moment.Moment | null>(
+		moment(new Date(DateUtils.displayUserDate(props.endDate)))
+	);
 	const [guestForm, setGuestForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('adults', props.adults, [new RsValidator(RsValidatorEnum.NUM, 'Must be a number')]),
@@ -50,18 +56,6 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 		])
 	);
 	const [available, setAvailable] = useState<boolean>(true);
-
-	useEffect(() => {
-		async function getPackages() {
-			try {
-				// const response = await destinationService.getAvailablePackages(props.destinationId);
-				// setAvailablePackages(response.data);
-			} catch (e) {
-				rsToasts.error('Something unexpected happened on the server!');
-			}
-		}
-		getPackages().catch(console.error);
-	}, []);
 
 	useEffect(() => {
 		async function checkAvailability() {
@@ -79,13 +73,20 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					),
 					numberOfAccommodations: 1
 				};
-				await reservationService.verifyAvailability(data);
+				await reservationsService.verifyAvailability(data);
+				popupController.close(SpinningLoaderPopup);
 				setAvailable(true);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				setAvailable(false);
 			}
 		}
-		checkAvailability();
+		if (!moment(props.startDate).isSame(startDate) || !moment(props.endDate).isSame(endDate)) {
+			popupController.open(SpinningLoaderPopup);
+			checkAvailability().catch(console.error);
+		} else {
+			setAvailable(true);
+		}
 	}, [startDate, endDate]);
 
 	function onDatesChange(start: moment.Moment | null, end: moment.Moment | null) {
@@ -157,7 +158,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						look={'containedSecondary'}
 						variant={'button'}
 						label={'Cancel'}
-						onClick={() => popupController.close(EditAccommodationPopup)}
+						onClick={() => popupController.closeAll()}
 					/>
 					<LabelButton
 						look={'containedPrimary'}
@@ -174,6 +175,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 								props.endDate,
 								addedPackages
 							);
+							popupController.closeAll();
 						}}
 					/>
 				</Box>
