@@ -11,6 +11,7 @@
 			padding-left: 5px;
 		}
 		.icons {
+			justify-content: center;
 			.rsIcon:before {
 				color: theme-var($primaryTextColor);
 			}
@@ -21,9 +22,9 @@
 	}
 	.accommodationRow {
 		display: grid;
-		grid-template-columns: 162px 134px 84px 51px 93px 90px 110px 88px;
-
-		.rsLabel {
+		grid-template-columns: 162px 114px 84px 81px 93px 90px 110px 88px;
+		text-align: center;
+		.rsLabel.caption {
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;

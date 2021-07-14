@@ -49,15 +49,6 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 							router.navigate('/account/payment-methods');
 						}}
 					/>
-					<LabelButton
-						look={'none'}
-						variant={'button'}
-						className={`tab ${props.selected === 'NOTIFICATION_PREFERENCES' ? 'selected' : ''}`}
-						label={'Notification Preferences'}
-						onClick={() => {
-							router.navigate('/account/notification-preferences');
-						}}
-					/>
 				</Box>
 			</Box>
 		</div>
