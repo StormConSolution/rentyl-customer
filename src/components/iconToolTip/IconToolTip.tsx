@@ -16,7 +16,7 @@ const IconToolTip: React.FC<IconToolTipProps> = (props) => {
 	const [hovered, setHovered] = useState<boolean>(false);
 	return (
 		<div
-			className={`rsIconToolTip ${props.className}`}
+			className={`rsIconToolTip ${props.className || ''}`}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 		>

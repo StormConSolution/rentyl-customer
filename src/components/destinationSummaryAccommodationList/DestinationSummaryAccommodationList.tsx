@@ -15,13 +15,6 @@ export interface DestinationSummaryAccommodationListProps {
 	onAddCompareClick?: (accommodationId: number | string) => void;
 }
 
-interface BedDetails {
-	type: string;
-	isPrimary: number;
-	qty: string;
-	description: string;
-}
-
 interface AccommodationListRowProp extends Api.Destination.Res.Accommodation {}
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
