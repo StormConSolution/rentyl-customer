@@ -25,6 +25,7 @@ import EditAccommodationPopup, {
 	EditAccommodationPopupProps
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import moment from 'moment';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationDetailsPageProps {}
 
@@ -79,13 +80,13 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								<Label variant={'h4'} color={'#cc9e0d'}>
 									Check-in
 								</Label>
-								<Label variant={'h2'}>{new Date(reservation.arrivalDate).toDateString()}</Label>
+								<Label variant={'h2'}>{DateUtils.displayUserDate(reservation.arrivalDate)}</Label>
 							</Box>
 							<div>
 								<Label variant={'h4'} color={'#cc9e0d'}>
 									Check-out
 								</Label>
-								<Label variant={'h2'}>{new Date(reservation.departureDate).toDateString()}</Label>
+								<Label variant={'h2'}>{DateUtils.displayUserDate(reservation.departureDate)}</Label>
 							</div>
 						</Box>
 						<LabelButton

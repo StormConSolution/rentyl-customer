@@ -27,7 +27,14 @@ class WebUtils extends BaseWebUtils {
 	}
 }
 
-class DateUtils extends BaseDateUtils {}
+class DateUtils extends BaseDateUtils {
+	static displayUserDate(date: string | Date): string {
+		let dateToReturn = new Date(date);
+		let timeZoneOffset = dateToReturn.getTimezoneOffset() * 60000;
+		dateToReturn.setTime(dateToReturn.getTime() + timeZoneOffset);
+		return dateToReturn.toDateString();
+	}
+}
 
 export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils };
 

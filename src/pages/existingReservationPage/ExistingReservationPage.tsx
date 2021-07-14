@@ -22,7 +22,7 @@ import EditAccommodationPopup, {
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import moment from 'moment';
 import rsToasts from '@bit/redsky.framework.toast';
-import { DateUtils } from '../../utils/utils';
+import { DateUtils, formatDateForUser } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 interface ReservationPageProps {}
@@ -84,7 +84,10 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 						logo={item.destination.logoUrl}
 						title={item.destination.name}
 						address={`${item.destination.address1}, ${item.destination.city}, ${item.destination.state} ${item.destination.zip}`}
-						reservationDates={{ startDate: item.arrivalDate, endDate: item.departureDate }}
+						reservationDates={{
+							startDate: item.arrivalDate,
+							endDate: item.departureDate
+						}}
 						propertyType={'VIP Suite'}
 						sleeps={item.accommodation.maxSleeps}
 						maxOccupancy={item.accommodation.maxOccupantCount}
