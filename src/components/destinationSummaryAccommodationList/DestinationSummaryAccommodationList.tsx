@@ -28,6 +28,7 @@ interface AccommodationListRowProp {
 	roomCount: number;
 	bedDetails: BedDetails[];
 	priceCents: number;
+	maxOccupantCount: number;
 	prices: {
 		priceCents: number;
 		quantityAvailable: number;
@@ -41,18 +42,15 @@ interface AccommodationListRowProp {
 }
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
-	function getBedQuantity(room: BedDetails[]): number {
-		return room.reduce((total, bed) => (total += +bed.qty), 0);
-	}
 	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
 		return (
 			<div className="accommodationRow" key={index}>
 				<Label variant={'caption'}>{accommodation.name}</Label>
 				<Label display={'flex'} className={'icons'}>
-					{renderIcons(accommodation.features.map((feature) => feature.icon))}
+					{renderIcons(accommodation.features)}
 				</Label>
 				<Label variant={'caption'}>{accommodation.roomCount}</Label>
-				<Label variant={'caption'}>{getBedQuantity(accommodation.bedDetails)}</Label>
+				<Label variant={'caption'}>{accommodation.maxOccupantCount}</Label>
 				<div>
 					<Label variant="h3" className="rate">
 						${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
@@ -96,10 +94,10 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 		);
 	}
 
-	function renderIcons(iconNames: string[]): JSX.Element[] {
-		return iconNames
-			.map((name, index: number) => {
-				return <IconToolTip iconImg={name} key={index} title={name} />;
+	function renderIcons(icons: { id: number; title: string; icon: string }[]): JSX.Element[] {
+		return icons
+			.map((icon, index: number) => {
+				return <IconToolTip iconImg={icon.icon} key={icon.id} title={icon.title} />;
 				// return <Icon iconImg={name} key={index} />;
 			})
 			.slice(0, 4);
@@ -107,7 +105,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 
 	function renderAccommodationList(accommodations: AccommodationListRowProp[], index: number): JSX.Element[] {
 		return accommodations
-			.sort((room1, room2) => getBedQuantity(room2.bedDetails) - getBedQuantity(room1.bedDetails))
+			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
 			.map(renderAccommodationListRow, index);
 	}
 
@@ -124,7 +122,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 					<Label variant="h4">Bedrooms</Label>
 				</div>
 				<div>
-					<Label variant="h4">Beds</Label>
+					<Label variant="h4">Guests</Label>
 				</div>
 				<div>
 					<Label variant="h4">Rate/Night</Label>

@@ -573,6 +573,7 @@ declare namespace Api {
 					roomCount: number;
 					bedDetails: any;
 					priceCents: number;
+					maxOccupantCount: number;
 					prices: {
 						priceCents: number;
 						quantityAvailable: number;
