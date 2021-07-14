@@ -6,7 +6,6 @@ import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
 import { addCommasToNumber, removeAllExceptNumbers } from '../../utils/utils';
-import { StringUtils } from '@bit/redsky.framework.rs.utils';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;

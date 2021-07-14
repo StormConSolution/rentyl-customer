@@ -90,13 +90,13 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 					</div>
 					<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
 					{/*<StarRating size="small16px" rating={props.starRating} /> we don't have this information in the database yet*/}
-					<LabelLink
-						className="ratings"
-						label="View ratings >"
-						path={props.reviewPath}
-						variant="caption"
-						externalLink={false}
-					/>
+					{/*<LabelLink*/}
+					{/*	className="ratings"*/}
+					{/*	label="View ratings >"*/}
+					{/*	path={props.reviewPath}*/}
+					{/*	variant="caption"*/}
+					{/*	externalLink={false}*/}
+					{/*/>*/}
 					<LabelLink
 						className="addCompare"
 						label="Add to compare +"
