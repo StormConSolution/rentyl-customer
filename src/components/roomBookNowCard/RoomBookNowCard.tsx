@@ -85,8 +85,9 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 					/>
 				</Box>
 				<LabelInput
-					title={'# of Guest'}
+					title={size === 'small' ? 'Guests' : '# of Guest'}
 					inputType={'number'}
+					className={'numberOfGuests'}
 					initialValue={!!props.guestValue ? props.guestValue.toString() : ''}
 					onChange={(value) => {
 						props.onGuestChange(value);

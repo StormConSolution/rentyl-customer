@@ -215,9 +215,10 @@
 		}
 
 		.heroImgAndText {
-			width: 321px;
+			width: 100%;
 			height: 423px;
 			padding-left: 20px;
+			margin: 0 auto;
 			.heroText {
 				font-size: 30px;
 				line-height: 35px;
