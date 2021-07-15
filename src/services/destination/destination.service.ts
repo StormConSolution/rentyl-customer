@@ -5,8 +5,8 @@ import { WebUtils } from '../../utils/utils';
 
 export default class DestinationService extends Service {
 	async getDestinations(): Promise<Api.Destination.Res.Details[]> {
-		let response = await http.get<RsResponseData<Api.Destination.Res.GetByPage>>('destination/paged');
-		return response.data.data.data;
+		let response = await http.get<Api.Destination.Res.GetByPage>('destination/paged');
+		return response.data.data;
 	}
 	async getDestinationById(id: Api.Destination.Req.Get) {
 		return await http.get<RsResponseData<Api.Destination.Res.Get>>('destination', id);

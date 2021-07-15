@@ -11,33 +11,55 @@ import ComparisonService from '../../services/comparison/comparison.service';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import { useEffect, useState } from 'react';
 import DestinationService from '../../services/destination/destination.service';
+import { ObjectUtils } from '../../utils/utils';
+import AccommodationService from '../../services/accommodation/accommodation.service';
+import FilterQueryValue = RedSky.FilterQueryValue;
 
+interface Accommodation {
+	id: number;
+	name: string;
+	shortDescription: string;
+	longDescription: string;
+}
 const ComparisonDrawer: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const destinationsService = serviceFactory.get<DestinationService>('DestinationService');
+	const accommodationsService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Details[]>([]);
 	const [destinationId, setDestinationId] = useState<number>(0);
-	const [accommodations, setAccommodations] = useState<any>([]);
+	const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
 
 	useEffect(() => {
 		async function getDestinations() {
-			setDestinations(await destinationsService.getDestinations());
+			let results = await destinationsService.getDestinations();
+			setDestinations(results);
 		}
+		if (!comparisonItems) return;
 		getDestinations().catch(console.error);
 	}, []);
 
 	useEffect(() => {
-		getAccommodations().catch(console.error);
+		if (destinationId === 0 || !destinations) return;
+		let destination = destinations.find((destination) => destination.id === destinationId);
+		if (destination) setAccommodations(destination.accommodations);
+		// getAccommodations(destinationId).catch(console.error);
 	}, [destinationId]);
 
-	async function getAccommodations() {
-		setAccommodations(await destinationsService.getDestinationAccommodations(destinationId));
+	async function getAccommodations(id: number) {
+		let filterQuery: FilterQueryValue = { column: 'destinationId', value: id };
+		let results = await accommodationsService.getByPage([filterQuery]);
+		console.log(results);
+		setAccommodations(results.data);
+		// .sort(
+		// 		(room1: Api.Destination.Res.Accommodation, room2: Api.Destination.Res.Accommodation) =>
+		// 			room1.maxOccupantCount - room2.maxOccupantCount
+		// 	)
 	}
 
 	function renderComparisonCard() {
-		if (!comparisonItems || comparisonItems.length > 3) return;
+		if (!ObjectUtils.isArrayWithData(comparisonItems) || comparisonItems.length > 3) return;
 		let items = [];
 		comparisonItems.forEach((item, index) => {
 			if (index > 2) return;
@@ -60,13 +82,13 @@ const ComparisonDrawer: React.FC = () => {
 		});
 		while (items.length < 3) {
 			items.push(
-				<Box>
+				<Box key={items.length}>
 					<LabelSelect
 						title={'Select Destinatiion'}
 						onChange={(item) => {
 							setDestinationId(item);
 						}}
-						selectOptions={destinations.map((destination) => {
+						selectOptions={destinations?.map((destination) => {
 							return {
 								value: destination.id,
 								text: destination.name,
@@ -74,7 +96,16 @@ const ComparisonDrawer: React.FC = () => {
 							};
 						})}
 					/>
-					<LabelSelect title={'Select Accommodation'} onChange={(item) => {}} selectOptions={[]} />
+					<LabelSelect
+						title={'Select Accommodation'}
+						onChange={(item) => {
+							console.log(item);
+							comparisonService.setSelectedAccommodation(-1, item, comparisonItems);
+						}}
+						selectOptions={accommodations.map((item) => {
+							return { value: item.id, text: item.name, selected: false };
+						})}
+					/>
 				</Box>
 			);
 		}
