@@ -22,7 +22,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -231,13 +231,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							destinationId: Date.now(),
 							logo: destinationDetails.logoUrl,
 							title: destinationDetails.name,
-							roomTypes: destinationDetails.accommodationTypes.map((value, index) => {
-								return {
-									value: value.code,
-									text: value.name,
-									selected: value.id === item.id
-								};
-							})
+							roomTypes: destinationDetails.accommodations
+								.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
+								.map((value, index) => {
+									return {
+										value: value.id,
+										text: value.name,
+										selected: value.id === item.id
+									};
+								})
 						});
 					}}
 					roomStats={[

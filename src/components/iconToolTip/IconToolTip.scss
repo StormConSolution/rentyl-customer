@@ -2,6 +2,9 @@
 
 .rsIconToolTip {
 	position: relative;
+	.rsIcon:before {
+		color: theme-var($primaryTextColor);
+	}
 	.rsLabel {
 		text-align: left;
 		position: absolute;

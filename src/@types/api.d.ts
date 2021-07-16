@@ -48,7 +48,10 @@ declare namespace Api {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
 				accommodationTypeCode: string;
-				accommodationTypeDescription: string;
+				accommodationDescription: string;
+				maxOccupantCount: number;
+				extraBeds: 0 | 1;
+				adaCompliant: 0 | 1;
 				media: Media[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
@@ -535,6 +538,7 @@ declare namespace Api {
 					name: string;
 					shortDescription: string;
 					longDescription: string;
+					maxOccupantCount: number;
 				}[];
 				accommodationTypes: {
 					id: number;
