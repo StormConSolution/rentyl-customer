@@ -209,7 +209,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 									destinationId: destinationDetails.id,
 									logo: destinationDetails.logoUrl,
 									title: destinationDetails.name,
-									roomTypes: destinationDetails?.accommodations
+									roomTypes: destinationDetails.accommodations
 										.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
 										.map((item, index) => {
 											return {
