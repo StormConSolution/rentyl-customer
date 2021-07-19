@@ -54,6 +54,13 @@
 			display: flex;
 		}
 
+		.numberOfGuests {
+			.rsInput {
+				height: 42px;
+				margin-top: 4px;
+			}
+		}
+
 		.earnPointsBox {
 			width: 93px;
 			margin-left: 12px;
@@ -61,6 +68,11 @@
 
 		.earnLabel {
 			justify-content: flex-start;
+			line-height: 15px;
+		}
+
+		.pointsLabel {
+			line-height: 15px;
 		}
 
 		.roomBookNowBottomContent {

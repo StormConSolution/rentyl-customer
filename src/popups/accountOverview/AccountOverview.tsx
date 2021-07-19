@@ -129,7 +129,7 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 				<Icon
 					iconImg={'icon-chevron-left'}
 					className={props.isOpen ? 'iconSpinDown' : 'iconSpinUp'}
-					color={'#001933'}
+					color={'#ffffff'}
 				/>
 			</Box>
 		</div>

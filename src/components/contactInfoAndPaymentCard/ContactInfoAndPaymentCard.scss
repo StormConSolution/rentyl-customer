@@ -66,17 +66,20 @@
 	.rsContactInfoAndPaymentCard {
 		.contactInfo {
 			justify-content: start;
+			grid-template-columns: auto;
+			gap: 5px;
 			.rsLabelInput {
+				max-width: 100%;
 				width: 100%;
-				.rsInput {
-					max-width: 100%;
-					width: 100%;
-				}
 			}
 		}
 		#payment-form {
 			.creditCardInfo {
 				grid-template-columns: auto;
+				justify-content: start;
+				.rsLabelInput {
+					width: 100%;
+				}
 			}
 		}
 		.rsLabelInput {
