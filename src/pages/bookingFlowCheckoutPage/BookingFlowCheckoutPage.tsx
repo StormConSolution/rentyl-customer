@@ -26,6 +26,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
+import moment from 'moment';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -178,14 +179,15 @@ const BookingFlowCheckoutPage = () => {
 		accommodationId: number,
 		checkInDate: string | Date,
 		checkoutDate: string | Date
-	) {
+	): Promise<void> {
 		let newAccommodationList = accommodations.filter((accommodation) => {
 			return (
-				accommodation.accommodationId !== accommodationId &&
-				accommodation.arrivalDate !== checkInDate &&
-				accommodation.departureDate !== checkoutDate
+				accommodation.accommodationId !== accommodationId ||
+				checkInDate !== accommodation.arrivalDate ||
+				checkoutDate !== accommodation.departureDate
 			);
 		});
+		setAccommodations(newAccommodationList);
 		let data = {
 			destinationId,
 			stays: newAccommodationList

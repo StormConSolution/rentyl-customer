@@ -25,6 +25,7 @@ interface RoomBookNowCardProps {
 	compareOnClick?: () => void;
 	bookNowDisabled?: boolean;
 	compareDisabled?: boolean;
+	isAvailable: boolean;
 }
 
 const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
@@ -84,6 +85,11 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 						monthsToShow={1}
 					/>
 				</Box>
+				{!props.isAvailable && (
+					<Label variant={'body1'} color={'red'}>
+						Those dates are unavailable
+					</Label>
+				)}
 				<LabelInput
 					title={'# of Guest'}
 					inputType={'number'}
@@ -104,10 +110,10 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 			<Box className={'roomBookNowBottomContent'}>
 				<LabelButton
 					className={'bookNowBtn'}
-					look={props.bookNowDisabled ? 'containedSecondary' : 'containedPrimary'}
+					look={props.bookNowDisabled && !props.isAvailable ? 'containedSecondary' : 'containedPrimary'}
 					variant={'button'}
 					label={'BOOK NOW'}
-					disabled={props.bookNowDisabled}
+					disabled={props.bookNowDisabled && !props.isAvailable}
 					onClick={props.bookNowOnClick}
 				/>
 				{renderCompareLabelOrButton()}

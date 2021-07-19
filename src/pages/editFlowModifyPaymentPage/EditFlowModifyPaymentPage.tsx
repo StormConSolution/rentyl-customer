@@ -12,7 +12,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import router from '../../utils/router';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaymentService from '../../services/payment/payment.service';
-import { convertTwentyFourHourTime } from '../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils } from '../../utils/utils';
 import Paper from '../../components/paper/Paper';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -62,7 +62,6 @@ const EditFlowModifyPaymentPage = () => {
 	}, []);
 
 	useEffect(() => {
-		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
 				let data = {
@@ -78,23 +77,30 @@ const EditFlowModifyPaymentPage = () => {
 							id: reservation.id,
 							paymentMethodId: existingCardId
 						});
-					}
-					popupController.close(SpinningLoaderPopup);
-					// let newData = {
-					// 	confirmationCode: reservation?.confirmationCode,
-					// 	destinationName: reservation?.destination.name
-					// };
 
-					// router
-					// 	.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
-					// 	.catch(console.error);
+						popupController.close(SpinningLoaderPopup);
+						let stay: Api.Reservation.Req.Update = {
+							id: reservation.id,
+							rateCode: 'ITSTIME',
+							paymentMethodId: result.id,
+							guest: contactInfo,
+							accommodationId: reservation.accommodation.id,
+							adults: reservation.adultCount,
+							children: reservation.childCount,
+							arrivalDate: DateUtils.clientToServerDate(new Date(reservation.arrivalDate)),
+							departureDate: DateUtils.clientToServerDate(new Date(reservation.departureDate)),
+							numberOfAccommodations: 1
+						};
+						popupController.close(SpinningLoaderPopup);
+						await reservationsService.updateReservation(stay);
+						router.back();
+					}
 				} catch (e) {
 					popupController.close(SpinningLoaderPopup);
 				}
 			}
 		);
 		return () => {
-			paymentService.unsubscribeToSpreedlyError(subscribeId);
 			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
 		};
 	}, [creditCardForm]);
@@ -107,41 +113,43 @@ const EditFlowModifyPaymentPage = () => {
 		if (reservation) {
 			try {
 				let stay: Api.Reservation.Req.Update = {
+					id: reservation.id,
+					rateCode: '',
+					paymentMethodId: existingCardId,
+					guest: contactInfo,
 					accommodationId: reservation.accommodation.id,
 					adults: reservation.adultCount,
-					arrivalDate: reservation.arrivalDate,
 					children: reservation.childCount,
-					departureDate: reservation.departureDate,
-					guest: contactInfo,
-					numberOfAccommodations: 1,
-					rateCode: '',
-					id: reservation.id
+					arrivalDate: DateUtils.clientToServerDate(new Date(reservation.arrivalDate)),
+					departureDate: DateUtils.clientToServerDate(new Date(reservation.departureDate)),
+					numberOfAccommodations: 1
 				};
-				await reservationsService.updateReservation({
-					id: reservation.id,
-					paymentMethodId: existingCardId
-				});
+				await reservationsService.updateReservation(stay);
+				popupController.close(SpinningLoaderPopup);
 
 				rsToasts.success('Successfully Updated');
 				router.navigate('/reservations').catch(console.error);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				rsToasts.error('Something unexpected happened on the server.');
 			}
 		}
 	}
 
 	function renderPolicies() {
-		return reservation?.destination.policies.map((item, index) => {
-			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
-			return (
-				<Box key={index}>
-					<Label variant={'h4'}>{item.type}</Label>
-					<Label variant={'body1'} mb={10}>
-						{item.value}
-					</Label>
-				</Box>
-			);
-		});
+		if (reservation) {
+			return reservation.destination.policies.map((item, index) => {
+				if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
+				return (
+					<Box key={index}>
+						<Label variant={'h4'}>{item.type}</Label>
+						<Label variant={'body1'} mb={10}>
+							{item.value}
+						</Label>
+					</Box>
+				);
+			});
+		}
 	}
 
 	return !!!reservation ? (
@@ -198,6 +206,7 @@ const EditFlowModifyPaymentPage = () => {
 								setExistingCardId(value);
 							}}
 							existingCardId={existingCardId}
+							contactInfo={contactInfo}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'} mb={10}>

@@ -44,12 +44,12 @@ const EditFlowModifyRoomPage = () => {
 		endDate: !!reservation
 			? moment(reservation.departureDate).format('YYYY-MM-DD')
 			: moment().add(2, 'day').format('YYYY-MM-DD'),
-		adults: reservation?.adultCount || 0,
+		adults: reservation?.adultCount || 1,
 		children: reservation?.childCount || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.destinationId
 	});
-	const [rateCode, setRateCode] = useState<string>('');
+	const [rateCode, setRateCode] = useState<string>('ITSTIME');
 	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -68,9 +68,12 @@ const EditFlowModifyRoomPage = () => {
 	useEffect(() => {
 		async function getReservations() {
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (!!newSearchQueryObj.priceRangeMin && !!newSearchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = newSearchQueryObj.priceRangeMax * 100;
-				newSearchQueryObj.priceRangeMin = newSearchQueryObj.priceRangeMin * 100;
+			if (
+				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
+				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
+			) {
+				newSearchQueryObj.priceRangeMax *= 100;
+				newSearchQueryObj.priceRangeMin *= 100;
 			}
 
 			try {
@@ -148,6 +151,8 @@ const EditFlowModifyRoomPage = () => {
 			}
 			if (rateCode !== '') {
 				createSearchQueryObj['rate'] = rateCode;
+			} else {
+				createSearchQueryObj['rate'] = 'ITSTIME';
 			}
 			return createSearchQueryObj;
 		});
@@ -164,21 +169,25 @@ const EditFlowModifyRoomPage = () => {
 
 	async function bookNow(id: number) {
 		if (reservation) {
+			popupController.open(SpinningLoaderPopup);
 			let stay: Api.Reservation.Req.Update = {
+				id: reservation.id,
+				paymentMethodId: reservation.paymentMethod.id,
+				guest: reservation.guest,
+				accommodationId: id,
 				adults: searchQueryObj.adults,
 				children: searchQueryObj.children,
-				accommodationId: id,
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
-				rateCode: searchQueryObj.rate || '',
-				id: reservation?.id,
-				guest: reservation.guest
+				rateCode: searchQueryObj.rate || ''
 			};
 			try {
 				await reservationsService.updateReservation(stay);
 				router.navigate(`/reservations`).catch(console.error);
+				popupController.close(SpinningLoaderPopup);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				rsToasts.error('Something unexpected happend on the server');
 			}
 		}

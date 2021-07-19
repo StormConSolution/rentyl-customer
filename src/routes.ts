@@ -13,7 +13,6 @@ import RewardItemPage from './pages/rewardItemPage/RewardItemPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
-import AccountNotificationPreferences from './pages/accountNotificationPreferences/AccountNotificationPreferences';
 import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
@@ -152,13 +151,6 @@ const routes: RouteDetails[] = [
 	{
 		path: '/account/payment-methods',
 		page: AccountPaymentMethodsPage,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/account/notification-preferences',
-		page: AccountNotificationPreferences,
 		options: {
 			view: 'landingPage'
 		}

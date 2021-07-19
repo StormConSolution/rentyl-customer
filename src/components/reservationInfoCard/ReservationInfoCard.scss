@@ -2,7 +2,7 @@
 
 .rsReservationInfoCard {
 	display: grid;
-	grid-template-columns: 240px auto auto;
+	grid-template-columns: 240px auto 150px;
 	column-gap: 45px;
 	row-gap: 25px;
 	.rsLabel {
@@ -11,8 +11,8 @@
 		}
 	}
 
-	.amenities {
-		text-overflow: ellipsis;
+	.rsButton {
+		justify-self: center;
 	}
 
 	.rsIcon {

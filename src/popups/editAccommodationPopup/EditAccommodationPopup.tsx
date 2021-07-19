@@ -18,6 +18,7 @@ import DestinationPackageTile from '../../components/destinationPackageTile/Dest
 import LabelButton from '../../components/labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import PackageDetailsPopup, { PackageDetailsPopupProps } from './packageDetailsPopup/PackageDetailsPopup';
+import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	adults: number;
@@ -44,8 +45,12 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	const [addedPackages, setAddedPackages] = useState<Api.Package.Res.Get[]>(props.packages);
 	const [totalPackages, setTotalPackages] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDate, setStartDate] = useState<moment.Moment | null>(moment(props.startDate));
-	const [endDate, setEndDate] = useState<moment.Moment | null>(moment(props.endDate));
+	const [startDate, setStartDate] = useState<moment.Moment | null>(
+		moment(new Date(DateUtils.displayUserDate(props.startDate)))
+	);
+	const [endDate, setEndDate] = useState<moment.Moment | null>(
+		moment(new Date(DateUtils.displayUserDate(props.endDate)))
+	);
 	const [guestForm, setGuestForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('adults', props.adults, [new RsValidator(RsValidatorEnum.NUM, 'Must be a number')]),
@@ -53,20 +58,6 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 		])
 	);
 	const [available, setAvailable] = useState<boolean>(true);
-
-	useEffect(() => {
-		async function getPackages() {
-			try {
-				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
-				const response = await reservationsService.getPackages(data);
-				setAvailablePackages(response.data.data);
-				setTotalPackages(response.data.total);
-			} catch {
-				console.error('An unexpected error on the server happened');
-			}
-		}
-		getPackages().catch(console.error);
-	}, []);
 
 	useEffect(() => {
 		async function checkAvailability() {
@@ -85,12 +76,19 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					numberOfAccommodations: 1
 				};
 				await reservationsService.verifyAvailability(data);
+				popupController.close(SpinningLoaderPopup);
 				setAvailable(true);
 			} catch {
+				popupController.close(SpinningLoaderPopup);
 				setAvailable(false);
 			}
 		}
-		checkAvailability();
+		if (!moment(props.startDate).isSame(startDate) || !moment(props.endDate).isSame(endDate)) {
+			popupController.open(SpinningLoaderPopup);
+			checkAvailability().catch(console.error);
+		} else {
+			setAvailable(true);
+		}
 	}, [startDate, endDate]);
 
 	function onDatesChange(start: moment.Moment | null, end: moment.Moment | null) {

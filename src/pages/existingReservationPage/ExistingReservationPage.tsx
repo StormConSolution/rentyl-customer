@@ -22,6 +22,8 @@ import EditAccommodationPopup, {
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import moment from 'moment';
 import rsToasts from '@bit/redsky.framework.toast';
+import { DateUtils, formatDateForUser } from '../../utils/utils';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 interface ReservationPageProps {}
 
@@ -82,7 +84,10 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 						logo={item.destination.logoUrl}
 						title={item.destination.name}
 						address={`${item.destination.address1}, ${item.destination.city}, ${item.destination.state} ${item.destination.zip}`}
-						reservationDates={{ startDate: item.arrivalDate, endDate: item.departureDate }}
+						reservationDates={{
+							startDate: item.arrivalDate,
+							endDate: item.departureDate
+						}}
 						propertyType={'VIP Suite'}
 						sleeps={item.accommodation.maxSleeps}
 						maxOccupancy={item.accommodation.maxOccupantCount}
@@ -95,10 +100,10 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 						cancelPermitted={item.cancellationPermitted}
 						cancelPolicy={
 							item.destination.policies[
-								item.destination.policies.findIndex((p) => p.type === 'Cancellation')
+								item.destination.policies.findIndex((policy) => policy.type === 'Cancellation')
 							].value
 						}
-						edit={() =>
+						edit={() => {
 							popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
 								cancel: () => {
 									popupController.closeAll();
@@ -165,19 +170,24 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 													originalEndDate: string | Date,
 													packages: Api.Package.Res.Get[]
 												) => {
-													reservationService
-														.updateReservation({
-															accommodationId: item.accommodation.id,
-															numberOfAccommodations: 1,
-															arrivalDate: checkinDate,
-															departureDate: checkoutDate,
-															adults: adults,
-															children: children,
-															rateCode: '',
-															id: item.id,
-															guest: item.guest
-														})
-														.catch(console.error);
+													popupController.open(SpinningLoaderPopup);
+													let stay: Api.Reservation.Req.Update = {
+														id: item.id,
+														rateCode: 'ITSTIME',
+														paymentMethodId: item.paymentMethod.id,
+														guest: item.guest,
+														accommodationId: item.accommodation.id,
+														adults,
+														children,
+														arrivalDate: DateUtils.clientToServerDate(
+															new Date(checkinDate)
+														),
+														departureDate: DateUtils.clientToServerDate(
+															new Date(checkoutDate)
+														),
+														numberOfAccommodations: 1
+													};
+													reservationService.updateReservation(stay).catch(console.error);
 													popupController.closeAll();
 												},
 												destinationId: item.destination.id,
@@ -186,8 +196,8 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 										}
 									});
 								}
-							})
-						}
+							});
+						}}
 					/>
 				);
 			});

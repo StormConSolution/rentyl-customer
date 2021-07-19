@@ -6,6 +6,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelButton from '../labelButton/LabelButton';
 import { popupController } from '@bit/redsky.framework.rs.996';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
@@ -22,9 +23,9 @@ interface ReservationInfoCardProps {
 
 const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 	function renderReservationDates() {
-		return `${new Date(props.reservationDates.startDate).toDateString()} - ${new Date(
+		return `${DateUtils.displayUserDate(props.reservationDates.startDate)} - ${DateUtils.displayUserDate(
 			props.reservationDates.endDate
-		).toDateString()}`;
+		)}`;
 	}
 
 	function renderAmenityIcons() {

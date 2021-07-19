@@ -52,7 +52,7 @@ export default class ReservationsService extends Service {
 	}
 
 	async updateReservation(data: Api.Reservation.Req.Update) {
-		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation/itinerary', data);
+		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
 		return response.data.data;
 	}
 

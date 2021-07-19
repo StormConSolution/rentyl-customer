@@ -1,0 +1,13 @@
+@import '../../themes/themes';
+
+.rsIconToolTip {
+	position: relative;
+	.rsLabel {
+		text-align: left;
+		position: absolute;
+		transform: translate(-20px, -15px);
+		background: theme-var($secondaryBackgroundColor);
+		border-radius: 4px;
+		padding: 2px;
+	}
+}

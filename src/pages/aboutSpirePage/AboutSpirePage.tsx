@@ -8,44 +8,90 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import router from '../../utils/router';
 import InfoCard from '../../components/infoCard/InfoCard';
 import LabelLink from '../../components/labelLink/LabelLink';
-import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import FeatureRoomCard from '../../components/featureRoomCard/FeatureRoomCard';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import BookNowImage from '../../components/bookNowImage/BookNowImage';
 import Carousel from '../../components/carousel/Carousel';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import promotionWheelData, { IPromotionWheel } from './PromotionWheelData';
 
-interface AboutSpirePageProps {}
-
-const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
+const AboutSpirePage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
-	const childRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
-
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const [mainImage, setMainImage] = useState<string>();
+	const [mainTitleDescription, setMainTitleDescription] = useState<React.ReactNode>();
+	const [imageIndex, setImageIndex] = useState<number>(0);
 
-	let imageIndex = 0;
+	useEffect(() => {
+		setMainImage(promotionWheelData[imageIndex].imgUrl);
+		setMainTitleDescription(
+			<Box maxWidth={445}>
+				<Label variant={'caption'} mb={20}>
+					Featured points promotion
+				</Label>
+				<Label variant={'h1'} mb={20}>
+					{promotionWheelData[imageIndex].title}
+				</Label>
+				<Label variant={'body1'} mb={30}>
+					{promotionWheelData[imageIndex].description}
+				</Label>
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'button'}
+					label={'Book Now'}
+					onClick={() => {
+						router.navigate('/reservation/availability').catch(console.error);
+					}}
+				/>
+			</Box>
+		);
+	}, [imageIndex]);
 
 	function moveImagesRight() {
-		if (parentRef.current!.childElementCount - 1 === imageIndex) {
-			imageIndex = 0;
+		if (parentRef.current!.childElementCount === imageIndex) {
+			setImageIndex(0);
+			return (parentRef.current!.style.transform = `translateX(0px)`);
 		} else {
-			imageIndex++;
+			setImageIndex(imageIndex + 1);
 		}
-		let childWidth = childRef.current!.offsetWidth;
-		parentRef.current!.style.transform = `translateX(-${imageIndex * childWidth}px)`;
+
+		//@ts-ignore
+		let childWidth = parentRef.current!.children[0].offsetWidth;
+		parentRef.current!.style.transform = `translateX(-${(imageIndex + 1) * childWidth}px)`;
 	}
 
 	function moveImagesLeft() {
-		if (imageIndex === 0) imageIndex = parentRef.current!.childElementCount;
-		imageIndex--;
-		let childWidth = childRef.current!.offsetWidth;
-		parentRef.current!.style.transform = `translateX(-${imageIndex * childWidth}px)`;
+		if (imageIndex === 0) return;
+		setImageIndex(imageIndex - 1);
+		//@ts-ignore
+		let childWidth = parentRef.current!.children[0].offsetWidth;
+		parentRef.current!.style.transform = `translateX(-${(imageIndex - 1) * childWidth}px)`;
+	}
+
+	function renderPromotionImage() {
+		return { backgroundImage: `url(${mainImage})` };
+	}
+
+	function renderBookNowImages() {
+		let images: IPromotionWheel[] = promotionWheelData.filter((item) => item.imgUrl !== mainImage);
+		return images.map((item, index) => {
+			return (
+				<div key={index}>
+					<BookNowImage
+						width={'270px'}
+						height={'200px'}
+						title={item.description}
+						linkPath={'/reservation/availability'}
+						imgUrl={item.imgUrl}
+					/>
+				</div>
+			);
+		});
 	}
 
 	return (
@@ -199,59 +245,13 @@ const AboutSpirePage: React.FC<AboutSpirePageProps> = (props) => {
 						</div>
 						<Box overflow={'hidden'} className={'featureSliderWrapper'}>
 							<div ref={parentRef} className={'featureSlider'}>
-								<div ref={childRef}>
-									<BookNowImage
-										width={'270px'}
-										height={'200px'}
-										title={
-											'Join us at Island H20 Live! Spire Loyalty members receive the VIP treatment'
-										}
-										linkPath={'/'}
-										imgUrl={require('../../images/aboutSpirePage/Mask Group 30-2.png')}
-									/>
-								</div>
-
-								<div>
-									<BookNowImage
-										width={'270px'}
-										height={'200px'}
-										title={
-											'Sunset Walk your way to points earnings - El Jeffe and Estefan Kitchen are offering discounted drinks and appetizers to Spire members'
-										}
-										linkPath={'/'}
-										imgUrl={require('../../images/aboutSpirePage/Mask Group 30-1.png')}
-									/>
-								</div>
-								<div>
-									<BookNowImage
-										width={'270px'}
-										height={'200px'}
-										title={
-											'Upgrade your stay at our partner resort properties where Spire members receive points multipliers on stays and on property spending.'
-										}
-										linkPath={'/'}
-										imgUrl={require('../../images/aboutSpirePage/Mask Group 30.png')}
-									/>
-								</div>
+								{renderBookNowImages()}
 							</div>
 						</Box>
-						<Box className={'imageWrapper'}>
-							<img src={require('../../images/aboutSpirePage/credit-card-payment.png')} />
-							<Box maxWidth={445}>
-								<Label variant={'caption'} mb={20}>
-									Featured points promotion
-								</Label>
-								<Label variant={'h1'} mb={20}>
-									Get 2x the points value for Margaritaville today only when paying with points.
-								</Label>
-								<Label variant={'body1'} mb={30}>
-									Earning points is now twice as fun with our Margaritaville points promotion.
-									Increase your points earning power while you enjoy Margaritavilles award winning
-									hospitality…….and Margaritas!
-								</Label>
-								<LabelButton look={'containedPrimary'} variant={'button'} label={'Book Now'} />
-							</Box>
-						</Box>
+
+						<div className={'imageWrapper'} style={renderPromotionImage()}>
+							{mainTitleDescription || ''}
+						</div>
 					</Box>
 				) : (
 					<Box className={'sectionThree'} mb={120} height={'465px'} position={'relative'}>
