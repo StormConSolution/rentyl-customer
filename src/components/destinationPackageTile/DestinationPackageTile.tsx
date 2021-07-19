@@ -13,6 +13,7 @@ interface DestinationPackageTileProps {
 	priceCents: number;
 	imgUrl: string;
 	onAddPackage?: () => void;
+	text?: string;
 }
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {
@@ -43,7 +44,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			<LabelButton
 				look={'containedPrimary'}
 				variant={'button'}
-				label={'Add Package'}
+				label={props.text ? props.text : 'Add Package'}
 				onClick={props.onAddPackage}
 			/>
 		</Paper>

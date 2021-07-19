@@ -164,19 +164,19 @@ const EditFlowModifyRoomPage = () => {
 
 	async function bookNow(id: number) {
 		if (reservation) {
-			let stay: Api.Reservation.Req.Itinerary.Update.Stay = {
-				adultCount: searchQueryObj.adults,
-				childCount: searchQueryObj.children,
+			let stay: Api.Reservation.Req.Update = {
+				adults: searchQueryObj.adults,
+				children: searchQueryObj.children,
 				accommodationId: id,
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
 				rateCode: searchQueryObj.rate || '',
-				reservationId: reservation?.id,
+				id: reservation?.id,
 				guest: reservation.guest
 			};
 			try {
-				await reservationsService.updateReservation({ itineraryId: reservation.itineraryId, stays: [stay] });
+				await reservationsService.updateReservation(stay);
 				router.navigate(`/reservations`).catch(console.error);
 			} catch {
 				rsToasts.error('Something unexpected happend on the server');

@@ -167,20 +167,15 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 												) => {
 													reservationService
 														.updateReservation({
-															itineraryId: item.itineraryId,
-															stays: [
-																{
-																	accommodationId: item.accommodation.id,
-																	numberOfAccommodations: 1,
-																	arrivalDate: checkinDate,
-																	departureDate: checkoutDate,
-																	adultCount: adults,
-																	childCount: children,
-																	rateCode: '',
-																	reservationId: item.id,
-																	guest: item.guest
-																}
-															]
+															accommodationId: item.accommodation.id,
+															numberOfAccommodations: 1,
+															arrivalDate: checkinDate,
+															departureDate: checkoutDate,
+															adults: adults,
+															children: children,
+															rateCode: '',
+															id: item.id,
+															guest: item.guest
 														})
 														.catch(console.error);
 													popupController.closeAll();

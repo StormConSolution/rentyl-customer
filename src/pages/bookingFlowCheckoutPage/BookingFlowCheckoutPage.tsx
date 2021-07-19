@@ -26,7 +26,6 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -38,10 +37,6 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
 	packages?: number[];
-}
-
-interface ContactInfo extends Api.Reservation.Guest {
-	details: string;
 }
 
 let existingCardId = 0;
@@ -281,6 +276,11 @@ const BookingFlowCheckoutPage = () => {
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
 						rateCode: accommodation.rateCode,
+						upsellPackages: accommodation.packages.map((item) => {
+							return {
+								id: item.id
+							};
+						}),
 						guest: guestInfo
 					};
 				})
@@ -327,7 +327,6 @@ const BookingFlowCheckoutPage = () => {
 			>
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
-				{console.log(accommodations)}
 				{accommodations.map((accommodation, index) => {
 					return (
 						<BookingCartTotalsCard

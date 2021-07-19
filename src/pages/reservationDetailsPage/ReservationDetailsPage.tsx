@@ -181,21 +181,15 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 															) => {
 																reservationsService
 																	.updateReservation({
-																		itineraryId: reservation.itineraryId,
-																		stays: [
-																			{
-																				accommodationId:
-																					reservation.accommodation.id,
-																				numberOfAccommodations: 1,
-																				arrivalDate: checkinDate,
-																				departureDate: checkoutDate,
-																				adultCount: adults,
-																				childCount: children,
-																				rateCode: '',
-																				reservationId: reservation.id,
-																				guest: reservation?.guest
-																			}
-																		]
+																		accommodationId: reservation.accommodation.id,
+																		numberOfAccommodations: 1,
+																		arrivalDate: checkinDate,
+																		departureDate: checkoutDate,
+																		adults: adults,
+																		children: children,
+																		rateCode: '',
+																		id: reservation.id,
+																		guest: reservation?.guest
 																	})
 																	.catch(console.error);
 															},

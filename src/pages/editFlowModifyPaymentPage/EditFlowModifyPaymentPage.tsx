@@ -75,7 +75,7 @@ const EditFlowModifyPaymentPage = () => {
 					setExistingCardId(result.id);
 					if (reservation) {
 						let res = await reservationsService.updateReservation({
-							itineraryId: reservation.itineraryId,
+							id: reservation.id,
 							paymentMethodId: existingCardId
 						});
 					}
@@ -106,21 +106,20 @@ const EditFlowModifyPaymentPage = () => {
 	async function updateInformation() {
 		if (reservation) {
 			try {
-				let stay: Api.Reservation.Req.Itinerary.Update.Stay = {
+				let stay: Api.Reservation.Req.Update = {
 					accommodationId: reservation.accommodation.id,
-					adultCount: reservation.adultCount,
+					adults: reservation.adultCount,
 					arrivalDate: reservation.arrivalDate,
-					childCount: reservation.childCount,
+					children: reservation.childCount,
 					departureDate: reservation.departureDate,
 					guest: contactInfo,
 					numberOfAccommodations: 1,
 					rateCode: '',
-					reservationId: reservation.id
+					id: reservation.id
 				};
 				await reservationsService.updateReservation({
-					itineraryId: reservation.itineraryId,
-					paymentMethodId: existingCardId,
-					stays: [stay]
+					id: reservation.id,
+					paymentMethodId: existingCardId
 				});
 
 				rsToasts.success('Successfully Updated');

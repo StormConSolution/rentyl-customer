@@ -52,6 +52,7 @@ const BookingFlowAddPackagePage = () => {
 						let newPackages = addedPackages.filter((addedPackage) => addedPackage.id !== item.id);
 						setAddedPackages(newPackages);
 					}}
+					text={'Remove Package'}
 				/>
 			);
 		});
@@ -75,6 +76,7 @@ const BookingFlowAddPackagePage = () => {
 						let available = availablePackages.filter((availablePackage) => availablePackage.id !== item.id);
 						setAvailablePackages(available);
 					}}
+					text={'Add Package'}
 				/>
 			);
 		});
