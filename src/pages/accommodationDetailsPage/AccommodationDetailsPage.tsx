@@ -171,13 +171,15 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 									destinationId: destinationDetails.id,
 									logo: destinationDetails.logoUrl,
 									title: destinationDetails.name,
-									roomTypes: destinationDetails.accommodationTypes.map((item, index) => {
-										return {
-											value: item.code,
-											text: item.name,
-											selected: item.id === accommodationDetails.id
-										};
-									})
+									roomTypes: destinationDetails?.accommodations
+										.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
+										.map((item, index) => {
+											return {
+												value: item.id,
+												text: item.name,
+												selected: item.id === accommodationDetails.id
+											};
+										})
 								});
 							}}
 							bookNowOnClick={() => {
