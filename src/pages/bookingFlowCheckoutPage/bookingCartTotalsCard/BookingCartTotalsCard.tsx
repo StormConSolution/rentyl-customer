@@ -99,7 +99,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 
 	function renderPackages() {
 		if (!props.packages || !ObjectUtils.isArrayWithData(props.packages)) return [];
-		return props.packages?.map((item, index) => {
+		return props.packages.map((item, index) => {
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
