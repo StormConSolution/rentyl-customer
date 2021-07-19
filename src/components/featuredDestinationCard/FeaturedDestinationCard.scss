@@ -21,8 +21,12 @@
 .small {
 	.rsFeaturedDestinationCard {
 		img {
-			width: 335px;
+			margin-left: 5px;
+			width: 345px;
 			height: 244px;
+		}
+		.rsBox {
+			margin-top: 20px;
 		}
 	}
 }

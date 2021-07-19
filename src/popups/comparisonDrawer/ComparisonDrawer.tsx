@@ -8,14 +8,28 @@ import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
+import LabelSelect from '../../components/labelSelect/LabelSelect';
+import { useEffect, useState } from 'react';
+import DestinationService from '../../services/destination/destination.service';
+import { ObjectUtils } from '../../utils/utils';
+import AccommodationService from '../../services/accommodation/accommodation.service';
+import FilterQueryValue = RedSky.FilterQueryValue;
 
+interface Accommodation {
+	id: number;
+	name: string;
+	shortDescription: string;
+	longDescription: string;
+	maxOccupantCount: number;
+}
 const ComparisonDrawer: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	const destinationsService = serviceFactory.get<DestinationService>('DestinationService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
 
 	function renderComparisonCard() {
-		if (!comparisonItems || comparisonItems.length > 3) return;
+		if (!ObjectUtils.isArrayWithData(comparisonItems) || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
 			return (
 				<ResortComparisonCard
