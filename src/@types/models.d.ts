@@ -237,6 +237,8 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
+		allowPointBooking: 0 | 1;
+		allowCashBooking: 0 | 1;
 	}
 
 	export interface CompanyAffiliate {

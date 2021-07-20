@@ -11,7 +11,8 @@ import * as React from 'react';
 enum GlobalStateKeys {
 	COMPARISON_CARD = 'DestinationComparison',
 	USER_TOKEN = 'UserToken',
-	USER = 'User'
+	USER = 'User',
+	COMPANY = 'Company'
 }
 
 export interface ComparisonCardInfo {
@@ -28,6 +29,7 @@ class GlobalState {
 	destinationComparison: RecoilState<ComparisonCardInfo[]>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
+	company: RecoilState<Api.Company.Res.Get>;
 
 	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
 
@@ -47,9 +49,36 @@ class GlobalState {
 			default: this.loadFromLocalStorage<string>(GlobalStateKeys.USER_TOKEN, '')
 		});
 
+		this.company = atom<Model.Company>({
+			key: GlobalStateKeys.COMPANY,
+			default: this.loadFromLocalStorage<Model.Company>(GlobalStateKeys.COMPANY, {
+				address: '',
+				allowCashBooking: 1,
+				allowPointBooking: 1,
+				city: '',
+				country: '',
+				createdOn: '',
+				description: '',
+				hostname: '',
+				id: 1,
+				modifiedOn: '',
+				name: '',
+				privacyPolicyUrl: '',
+				returnPolicyUrl: '',
+				squareLogoUrl: '',
+				state: '',
+				termsConditionsUrl: '',
+				vanityUrls: '',
+				website: '',
+				wideLogoUrl: '',
+				zip: ''
+			})
+		});
+
 		// The following is stored in local storage automatically
 		this.saveToStorageList.push({ key: GlobalStateKeys.USER_TOKEN, state: this.userToken });
 		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
+		this.saveToStorageList.push({ key: GlobalStateKeys.COMPANY, state: this.company });
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {
