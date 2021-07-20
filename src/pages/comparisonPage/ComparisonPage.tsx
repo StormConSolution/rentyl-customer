@@ -20,6 +20,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import IconToolTip from '../../components/iconToolTip/IconToolTip';
 
 export interface TableData {
 	description: JSX.Element[];
@@ -159,16 +160,36 @@ const ComparisonPage: React.FC = () => {
 	function renderAccommodationCompare() {
 		let output: JSX.Element[] = [];
 		let table: TableData = {
-			description: [<td key={'titleDescription'}>Description</td>],
-			guestLimit: [<td key={'titleGuestLimit'}>Guest Limit</td>],
-			extraBedding: [<td key={'titleExtraBedding'}>Extra Bedding</td>],
-			features: [<td key={'titleFeatures'}>Features</td>],
-			adaCompliant: [<td key={'titleAdaCompliant'}>Ada Compliant</td>]
+			description: [
+				<td key={'titleDescription'}>
+					<Label variant={'h4'}>Description</Label>
+				</td>
+			],
+			guestLimit: [
+				<td key={'titleGuestLimit'}>
+					<Label variant={'h4'}>Guest Limit</Label>
+				</td>
+			],
+			extraBedding: [
+				<td key={'titleExtraBedding'}>
+					<Label variant={'h4'}>Extra Bedding</Label>
+				</td>
+			],
+			features: [
+				<td key={'titleFeatures'}>
+					<Label variant={'h4'}>Features</Label>
+				</td>
+			],
+			adaCompliant: [
+				<td key={'titleAdaCompliant'}>
+					<Label variant={'h4'}>Ada Compliant</Label>
+				</td>
+			]
 		};
 
 		if (!accommodationDetailList) return [];
 		accommodationDetailList.map((accommodation, index) => {
-			table.description.push(<td key={index}>{accommodation.accommodationType}</td>);
+			table.description.push(<td key={index}>{accommodation.longDescription}</td>);
 			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
 			table.extraBedding.push(
 				<td key={index}>{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}</td>
@@ -180,13 +201,11 @@ const ComparisonPage: React.FC = () => {
 			let featureList: JSX.Element[] = [];
 			for (let feature of accommodation.features) {
 				featureList.push(
-					<IconLabel
-						key={feature.title}
+					<IconToolTip
+						iconImg={feature.icon}
 						className={'featureIconLabel'}
-						labelName={feature.title || ''}
-						iconImg={'icon-' + feature.icon}
-						iconPosition={'left'}
-						iconSize={11}
+						key={feature.title}
+						title={feature.title}
 					/>
 				);
 			}

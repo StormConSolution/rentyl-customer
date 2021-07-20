@@ -96,7 +96,11 @@
 .small {
 	.rsAboutSpirePointsPage {
 		.rsHeroImage {
+			position: relative;
 			margin-bottom: 55px;
+			h1 {
+				bottom: 0;
+			}
 		}
 
 		h1 {
@@ -107,6 +111,7 @@
 		}
 
 		.infoCardWrapper {
+			justify-content: center;
 			grid-template-columns: 335px;
 			grid-template-rows: auto auto auto auto;
 		}

@@ -10,6 +10,7 @@
 		margin-left: 7px;
 	}
 	.rsLabel {
+		color: theme-var($buttonLinkColor);
 		&:hover {
 			text-decoration: underline;
 		}

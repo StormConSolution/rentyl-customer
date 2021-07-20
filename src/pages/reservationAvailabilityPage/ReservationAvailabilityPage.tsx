@@ -205,11 +205,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (!destination.accommodationTypes) return [];
 		return destination.accommodations
 			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-			.map((type) => {
-				if (accommodationIdSelected === type.id) {
-					return { value: type.id, text: type.name, selected: true };
+			.map((room) => {
+				if (accommodationIdSelected === room.id) {
+					return { value: room.id, text: room.name, selected: true };
 				}
-				return { value: type.id, text: type.name, selected: false };
+				return { value: room.id, text: room.name, selected: false };
 			});
 	}
 
