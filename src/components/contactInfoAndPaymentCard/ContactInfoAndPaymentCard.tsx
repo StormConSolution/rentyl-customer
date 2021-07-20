@@ -247,13 +247,15 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				}
 			];
 
-		return user.paymentMethods.map((item, index) => {
-			return {
-				selected: item.id === existingCardId,
-				text: item.cardNumber,
-				value: item.id
-			};
-		});
+		return user.paymentMethods
+			.filter((item) => item.systemProvider === 'adyen')
+			.map((item, index) => {
+				return {
+					selected: item.id === existingCardId,
+					text: item.cardNumber,
+					value: item.id
+				};
+			});
 	}
 
 	return (
