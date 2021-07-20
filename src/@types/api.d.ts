@@ -1046,7 +1046,7 @@ declare namespace Api {
 					externalCancellationId: string;
 					adultCount: number;
 					childCount: number;
-					externalConfirmationId: string | null;
+					externalConfirmationId: string;
 					confirmationDate: Date | string;
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;

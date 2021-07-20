@@ -21,13 +21,14 @@ import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsP
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
 import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
 import SuccessPage from './pages/successPage/SuccessPage';
-import ExistingReservationPage from './pages/existingReservationPage/ExistingReservationPage';
+import ExistingItineraryPage from './pages/existingReservationPage/ExistingItineraryPage';
 import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDetailsPage';
 import BookingFlowCheckoutPage from './pages/bookingFlowCheckoutPage/BookingFlowCheckoutPage';
 import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
 import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
 import EditFlowModifyPaymentPage from './pages/editFlowModifyPaymentPage/EditFlowModifyPaymentPage';
 import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModifyRoomPage';
+import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -72,7 +73,7 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/reservations',
-		page: ExistingReservationPage
+		page: ExistingItineraryPage
 	},
 	{
 		path: '/reservations/payment',
@@ -81,6 +82,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/reservations/edit-room',
 		page: EditFlowModifyRoomPage
+	},
+	{
+		path: '/reservations/itinerary/details',
+		page: ItineraryDetailsPage
 	},
 	{
 		path: '/reservation/details',

@@ -40,7 +40,6 @@ export function formatDateTime(dateTime: string | Date) {
 
 export function formatReadableDate(date: string) {
 	let match = formatDate(date);
-
 	if (match) {
 		return `${match[1]}/${match[2]}/${match[3]}`;
 	} else {

@@ -3,21 +3,15 @@ import './ReservationInfoCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
-import LabelButton from '../labelButton/LabelButton';
-import { popupController } from '@bit/redsky.framework.rs.996';
-import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
 	propertyType: string;
-	sleeps: number;
+	itineraryId: string;
 	maxOccupancy: number;
 	amenities: string[];
 	misc?: { title: string; data: string | number }[];
-	toggleConfirmation?: (toggle?: boolean) => void;
 	cancelPermitted: 0 | 1;
-	cancelPolicy?: string;
-	edit?: () => void;
 }
 
 const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
@@ -53,8 +47,10 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'body1'}>{renderReservationDates()}</Label>
 			</div>
 			<div>
-				<Label variant={'caption'}>Sleeps</Label>
-				<Label variant={'body1'}>{props.sleeps}</Label>
+				<Label variant={'caption'}>Itinerary #</Label>
+				<Label color={'#004b98'} variant={'body1'}>
+					{props.itineraryId}
+				</Label>
 			</div>
 			<div className={'amenities'}>
 				<Label variant={'caption'}>Amenities</Label>
@@ -69,17 +65,6 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				<Label variant={'body1'}>{props.maxOccupancy}</Label>
 			</div>
 			{!!props.misc && renderMiscData()}
-			{/*will add back in once we have reservations that are cancellable to test && props.cancelPermitted === 1*/}
-			{new Date(props.reservationDates.startDate) > new Date() && (
-				<LabelButton
-					variant={'button'}
-					onClick={() => {
-						if (props.edit) props.edit();
-					}}
-					label={'Edit'}
-					look={'containedPrimary'}
-				/>
-			)}
 		</Paper>
 	);
 };

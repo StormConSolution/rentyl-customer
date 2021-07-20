@@ -113,7 +113,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								endDate: reservation.departureDate
 							}}
 							propertyType={'Hotel'}
-							sleeps={reservation.accommodation.maxSleeps}
+							itineraryId={reservation.itineraryId}
 							amenities={reservation.accommodation.featureIcons}
 							maxOccupancy={reservation.accommodation.maxOccupantCount}
 							misc={[
@@ -121,6 +121,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								{ title: 'Confirmation Code', data: reservation.externalConfirmationId || '' },
 								{ title: 'Adults', data: reservation.adultCount },
 								{ title: 'Children', data: reservation.childCount },
+								{ title: 'Sleeps', data: reservation.accommodation.maxSleeps },
 								{
 									title: 'ADA Compliant',
 									data: !!reservation.accommodation.adaCompliant ? 'Yes' : 'No'
@@ -128,83 +129,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								{ title: 'Extra Bed', data: !!reservation.accommodation.extraBed ? 'Yes' : 'No' },
 								{ title: 'Number of Floors', data: reservation.accommodation.floorCount }
 							]}
-							toggleConfirmation={() => {}}
 							cancelPermitted={reservation.cancellationPermitted}
-							cancelPolicy={cancelPolicy}
-							edit={() =>
-								popupController.open<WhatToEditPopupProps>(WhatToEditPopup, {
-									cancel: () => {
-										reservationsService.cancel(reservation.id).catch(console.error);
-									},
-									changeRoom: () => {
-										router
-											.navigate(`/reservations/edit-room?ri=${reservation.id}`)
-											.catch(console.error);
-									},
-									editInfo: () => {
-										router
-											.navigate(`/reservations/payment?ri=${reservation.id}`)
-											.catch(console.error);
-									},
-									editRoomInfo: () => {
-										popupController.open<AccommodationOptionsPopupProps>(
-											AccommodationOptionsPopup,
-											{
-												cancellable:
-													reservation?.cancellationPermitted === 1 &&
-													moment(reservation.arrivalDate) > moment().add(15, 'days'),
-												onRemove: () => {
-													reservationsService.cancel(reservation.id).catch(console.error);
-												},
-												onChangeRoom: () => {
-													router
-														.navigate(`/reservations/edit-room?ri=${reservation.id}`)
-														.catch(console.error);
-												},
-												onEditRoom: () => {
-													popupController.open<EditAccommodationPopupProps>(
-														EditAccommodationPopup,
-														{
-															adults: reservation.adultCount,
-															children: reservation.childCount,
-															startDate: reservation.arrivalDate,
-															endDate: reservation.departureDate,
-															packages: [],
-															onApplyChanges: (
-																adults: number,
-																children: number,
-																checkinDate: string | Date,
-																checkoutDate: string | Date,
-																originalStartDate: string | Date,
-																originalEndDate: string | Date,
-																packages: Api.Package.Res.Get[]
-															) => {
-																let stay: Api.Reservation.Req.Update = {
-																	id: reservation.id,
-																	rateCode: '',
-																	paymentMethodId: reservation?.paymentMethod.id,
-																	guest: reservation.guest,
-																	accommodationId: reservation.accommodation.id,
-																	adults,
-																	children,
-																	arrivalDate: checkinDate,
-																	departureDate: checkoutDate,
-																	numberOfAccommodations: 1
-																};
-																reservationsService
-																	.updateReservation(stay)
-																	.catch(console.error);
-															},
-															destinationId: reservation.destination.id,
-															accommodationId: reservation.accommodation.id
-														}
-													);
-												}
-											}
-										);
-									}
-								})
-							}
 						/>
 					</Box>
 					<Box className={'columnTwo'}>
