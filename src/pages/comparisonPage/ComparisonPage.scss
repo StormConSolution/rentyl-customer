@@ -21,9 +21,10 @@
 		margin-top: 55px;
 		width: 100%;
 		border-collapse: collapse;
+		table-layout: fixed;
 
 		.blankCell {
-			width: 278px;
+			width: 160px;
 		}
 		th {
 			height: 100px;
@@ -31,6 +32,8 @@
 		}
 		td {
 			height: 40px;
+			width: 278px;
+			padding: 5px;
 			border-spacing: unset;
 		}
 		tbody {

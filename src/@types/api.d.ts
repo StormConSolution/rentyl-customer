@@ -48,7 +48,10 @@ declare namespace Api {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
 				accommodationTypeCode: string;
-				accommodationTypeDescription: string;
+				accommodationDescription: string;
+				maxOccupantCount: number;
+				extraBeds: 0 | 1;
+				adaCompliant: 0 | 1;
 				media: Media[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
@@ -535,6 +538,7 @@ declare namespace Api {
 					name: string;
 					shortDescription: string;
 					longDescription: string;
+					maxOccupantCount: number;
 				}[];
 				accommodationTypes: {
 					id: number;
@@ -544,6 +548,25 @@ declare namespace Api {
 				}[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
+			export interface Accommodation {
+				id: number;
+				name: string;
+				roomCount: number;
+				bedDetails: any;
+				priceCents: number;
+				maxOccupantCount: number;
+				prices: {
+					priceCents: number;
+					quantityAvailable: number;
+					rateCode: string;
+				}[];
+				features: {
+					id: number;
+					title: string;
+					icon: string;
+				}[];
+			}
+			[];
 			export interface Availability {
 				id: number;
 				name: string;
@@ -567,23 +590,7 @@ declare namespace Api {
 					id: number;
 					name: string;
 				}[];
-				accommodations: {
-					id: number;
-					name: string;
-					roomCount: number;
-					bedDetails: any;
-					priceCents: number;
-					prices: {
-						priceCents: number;
-						quantityAvailable: number;
-						rateCode: string;
-					}[];
-					features: {
-						id: number;
-						title: string;
-						icon: string;
-					}[];
-				}[];
+				accommodations: Accommodation[];
 			}
 			export interface GetByPageAvailability {
 				data: Availability[];

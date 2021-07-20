@@ -22,7 +22,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -32,6 +32,10 @@ import LoginOrCreateAccountPopup, {
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import ComparisonService from '../../services/comparison/comparison.service';
+import LabelButton from '../../components/labelButton/LabelButton';
+import FilterReservationPopup, {
+	FilterReservationPopupProps
+} from '../../popups/filterReservationPopup/FilterReservationPopup';
 
 interface DestinationDetailsPageProps {}
 
@@ -231,13 +235,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							destinationId: Date.now(),
 							logo: destinationDetails.logoUrl,
 							title: destinationDetails.name,
-							roomTypes: destinationDetails.accommodationTypes.map((value, index) => {
-								return {
-									value: value.code,
-									text: value.name,
-									selected: value.id === item.id
-								};
-							})
+							roomTypes: destinationDetails.accommodations
+								.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
+								.map((value, index) => {
+									return {
+										value: value.id,
+										text: value.name,
+										selected: value.id === item.id
+									};
+								})
 						});
 					}}
 					roomStats={[
@@ -465,36 +471,84 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					<Label variant={'h1'} mb={20}>
 						Available Stays
 					</Label>
-					<FilterBar
-						className={'filterBar'}
-						startDate={startDateControl}
-						endDate={endDateControl}
-						onDatesChange={onDatesChange}
-						focusedInput={focusedInput}
-						onFocusChange={setFocusedInput}
-						monthsToShow={2}
-						onChangeAdults={(value) => {
-							if (value === '') value = 0;
-							updateSearchQueryObj('adults', parseInt(value));
-						}}
-						onChangeChildren={(value) => {
-							if (value !== '') updateSearchQueryObj('children', parseInt(value));
-						}}
-						onChangePriceMin={(value) => {
-							if (value !== '') {
-								updateSearchQueryObj('priceRangeMin', value);
+					{size !== 'small' ? (
+						<FilterBar
+							className={'filterBar'}
+							startDate={startDateControl}
+							endDate={endDateControl}
+							onDatesChange={onDatesChange}
+							focusedInput={focusedInput}
+							onFocusChange={setFocusedInput}
+							monthsToShow={2}
+							onChangeAdults={(value) => {
+								if (value === '') value = 0;
+								updateSearchQueryObj('adults', parseInt(value));
+							}}
+							onChangeChildren={(value) => {
+								if (value !== '') updateSearchQueryObj('children', parseInt(value));
+							}}
+							onChangePriceMin={(value) => {
+								if (value !== '') {
+									updateSearchQueryObj('priceRangeMin', value);
+								}
+							}}
+							onChangePriceMax={(value) => {
+								if (value !== '') {
+									updateSearchQueryObj('priceRangeMax', value);
+								}
+							}}
+							adultsInitialInput={searchQueryObj.adults.toString()}
+							childrenInitialInput={searchQueryObj.children.toString()}
+							initialPriceMax={
+								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 							}
-						}}
-						onChangePriceMax={(value) => {
-							if (value !== '') {
-								updateSearchQueryObj('priceRangeMax', value);
+							initialPriceMin={
+								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 							}
-						}}
-						adultsInitialInput={searchQueryObj.adults.toString()}
-						childrenInitialInput={searchQueryObj.children.toString()}
-						initialPriceMax={!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''}
-						initialPriceMin={!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''}
-					/>
+						/>
+					) : (
+						<LabelButton
+							look={'none'}
+							variant={'button'}
+							label={'Filter >'}
+							onClick={() => {
+								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+									onClickApply(
+										startDate: moment.Moment | null,
+										endDate: moment.Moment | null,
+										adults: string,
+										children: string,
+										priceRangeMin: string,
+										priceRangeMax: string,
+										rateCode: string
+									): void {
+										setSearchQueryObj((prev) => {
+											let createSearchQueryObj: any = { ...prev };
+											if (startDate !== null)
+												createSearchQueryObj['startDate'] = formatFilterDateForServer(
+													startDate,
+													'start'
+												);
+											if (endDate !== null)
+												createSearchQueryObj['endDate'] = formatFilterDateForServer(
+													endDate,
+													'end'
+												);
+											if (adults !== '') createSearchQueryObj['adults'] = adults;
+											if (children !== '') createSearchQueryObj['children'] = children;
+											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
+												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
+											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))
+												createSearchQueryObj['priceRangeMax'] = +priceRangeMax;
+											if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
+											return createSearchQueryObj;
+										});
+									},
+									preventCloseByBackgroundClick: false
+								});
+							}}
+						/>
+					)}
 					<hr />
 					<div className={'accommodationCardWrapper'}>{renderAccommodations()}</div>
 				</div>

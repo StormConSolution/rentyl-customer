@@ -18,6 +18,7 @@ import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
+import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -147,8 +148,8 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 					<UserPointStatusBar />
 				</Box>
 
-				<Box display={'flex'} justifyContent={'center'} marginBottom={'130px'}>
-					<Box width={'420px'} margin={'0 20px'}>
+				<Box className={'editSection'}>
+					<Box>
 						<Label variant={'h2'}>Account Info</Label>
 						<LabelInput
 							title={'Name'}
@@ -178,7 +179,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							}}
 						/>
 					</Box>
-					<Box width={'420px'} margin={'0 20px'}>
+					<Box>
 						<Label variant={'h2'}>Update Password</Label>
 						<LabelInput
 							className={'accountNameInput'}
@@ -213,7 +214,24 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							}}
 						/>
 					</Box>
+					<Box>
+						<Label variant={'h2'}>Notification Preferences</Label>
+						<LabelCheckbox
+							value={''}
+							isChecked={true}
+							text={'I want to receive e-mails with the latest promotions, offers, and Spire updates'}
+							onSelect={() => {
+								// Waiting for backend
+								console.log('Selected');
+							}}
+							onDeselect={() => {
+								// Waiting for backend
+								console.log('De-selected');
+							}}
+						/>
+					</Box>
 				</Box>
+
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

@@ -75,12 +75,16 @@
 .small {
 	.rsAccommodationSearchResultCard {
 		display: grid;
-		grid-template-columns: 100px auto;
-		column-gap: 10px;
+		grid-template-columns: 120px auto;
+		column-gap: 30px;
 		grid-template-rows: 145px 117px;
 		row-gap: 15px;
+		.rsAccommodationSearchCallToActionCard {
+			grid-column: span 2;
+		}
 		> img:first-child {
-			width: 100px;
+			margin-left: 5px;
+			width: 120px;
 			height: 145px;
 		}
 		.info {

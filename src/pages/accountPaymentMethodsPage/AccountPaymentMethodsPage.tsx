@@ -200,7 +200,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 			paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
 			paymentService.unsubscribeToSpreedlyError(errorId);
 		};
-	}, [existingCardList]);
+	}, [existingCardList, isAuthorized]);
 
 	useEffect(() => {
 		if (!user) return;

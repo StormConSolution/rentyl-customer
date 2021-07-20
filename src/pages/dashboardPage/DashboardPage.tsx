@@ -188,6 +188,7 @@ const DashboardPage: React.FC = () => {
 					<RoomBookNowCard
 						points={2500}
 						onDatesChange={onDatesChange}
+						isAvailable={true}
 						onGuestChange={(value) => {
 							console.log(value);
 						}}

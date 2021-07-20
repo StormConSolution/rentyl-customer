@@ -5,6 +5,7 @@ import React from 'react';
 import { addCommasToNumber } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import './DestinationSummaryAccommodationList.scss';
+import IconToolTip from '../iconToolTip/IconToolTip';
 
 export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
@@ -14,30 +15,24 @@ export interface DestinationSummaryAccommodationListProps {
 	onAddCompareClick?: (accommodationId: number | string) => void;
 }
 
-interface AccommodationListRowProp {
-	id: any;
-	name: string;
-	amenityIconNames: string[];
-	bedrooms: number;
-	beds: number;
-	ratePerNight: number;
-	pointsPerNight: number;
-}
+interface AccommodationListRowProp extends Api.Destination.Res.Accommodation {}
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
 	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
 		return (
 			<div className="accommodationRow" key={index}>
-				<Label>{accommodation.name}</Label>
-				<Label>{renderIcons(accommodation.amenityIconNames)}</Label>
-				<Label>{accommodation.bedrooms}</Label>
-				<Label>{accommodation.beds}</Label>
+				<Label variant={'caption'}>{accommodation.name}</Label>
+				<Label display={'flex'} className={'icons'}>
+					{renderIcons(accommodation.features)}
+				</Label>
+				<Label variant={'caption'}>{accommodation.roomCount}</Label>
+				<Label variant={'caption'}>{accommodation.maxOccupantCount}</Label>
 				<div>
 					<Label variant="h3" className="rate">
-						{StringUtils.formatMoney(accommodation.ratePerNight)}
+						${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
 					</Label>
 					<Label variant="body2" className="points">
-						{addCommasToNumber(accommodation.pointsPerNight)} pts.
+						{addCommasToNumber(accommodation.prices[0].priceCents)} pts.
 					</Label>
 				</div>
 				<div>
@@ -75,37 +70,41 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 		);
 	}
 
-	function renderIcons(iconNames: string[]): JSX.Element[] {
-		return iconNames.map((name, index: number) => {
-			return <Icon iconImg={name} key={index} />;
-		});
+	function renderIcons(icons: { id: number; title: string; icon: string }[]): JSX.Element[] {
+		return icons
+			.map((icon, index: number) => {
+				return <IconToolTip iconImg={icon.icon} key={icon.id} title={icon.title} />;
+			})
+			.slice(0, 4);
 	}
 
 	function renderAccommodationList(accommodations: AccommodationListRowProp[], index: number): JSX.Element[] {
-		return accommodations.map(renderAccommodationListRow, index);
+		return accommodations
+			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
+			.map(renderAccommodationListRow, index);
 	}
 
 	return (
 		<div className="rsDestinationSummaryAccomodationList">
 			<div className="accommodationRow header">
 				<div>
-					<Label variant="caption">{props.accommodationType}</Label>
+					<Label variant="h4">{props.accommodationType}</Label>
 				</div>
 				<div>
-					<Label variant="caption">Amenities</Label>
+					<Label variant="h4">Amenities</Label>
 				</div>
 				<div>
-					<Label variant="caption">Bedrooms</Label>
+					<Label variant="h4">Bedrooms</Label>
 				</div>
 				<div>
-					<Label variant="caption">Beds</Label>
+					<Label variant="h4">Guests</Label>
 				</div>
 				<div>
-					<Label variant="caption">Rate/Night</Label>
+					<Label variant="h4">Rate/Night</Label>
 				</div>
 				<div>&nbsp;</div>
 			</div>
-			{renderAccommodationList(props.accommodations, 0)}
+			<div className={'availableAccommodationRows'}>{renderAccommodationList(props.accommodations, 0)}</div>
 		</div>
 	);
 };

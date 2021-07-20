@@ -4,6 +4,9 @@ import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import AccommodationsModel from '../../models/accommodations/accommodations.model';
 import modelFactory from '../../models/modelFactory';
 import { WebUtils } from '../../utils/utils';
+import FilterQueryValue = RedSky.FilterQueryValue;
+import MatchTypes = RedSky.MatchTypes;
+import StandardOrderTypes = RedSky.StandardOrderTypes;
 
 export default class AccommodationService extends Service {
 	accommodationsModel: AccommodationsModel = modelFactory.get<AccommodationsModel>('AccommodationsModel');
@@ -12,6 +15,14 @@ export default class AccommodationService extends Service {
 		return await http.get<RsResponseData<Api.Accommodation.Res.Details>>('accommodation/details', {
 			accommodationId
 		});
+	}
+
+	async getByPage(filter?: FilterQueryValue[]): Promise<Api.Accommodation.Res.GetByPage> {
+		let res = await http.get<RsResponseData<Api.Accommodation.Res.GetByPage>>(
+			'accommodation/paged',
+			WebUtils.convertDataForUrlParams(filter)
+		);
+		return res.data.data;
 	}
 
 	async availability(data: Api.Accommodation.Req.Availability) {
