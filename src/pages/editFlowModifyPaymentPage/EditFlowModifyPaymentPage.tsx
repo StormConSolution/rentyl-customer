@@ -202,6 +202,7 @@ const EditFlowModifyPaymentPage = () => {
 							isValidForm={(isValid) => {
 								setIsFormValid(isValid);
 							}}
+							isAuthorized={(isAuthorized) => {}}
 							onExistingCardSelect={(value) => {
 								setExistingCardId(value);
 							}}
