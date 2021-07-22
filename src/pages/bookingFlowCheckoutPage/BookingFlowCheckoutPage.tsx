@@ -231,7 +231,8 @@ const BookingFlowCheckoutPage = () => {
 				children,
 				accommodationId,
 				arrivalDate: checkinDate,
-				departureDate: checkoutDate
+				departureDate: checkoutDate,
+				packages: packages.map((item) => item.id)
 			};
 			newParams = [
 				...newParams.filter((stay: Verification) => {
