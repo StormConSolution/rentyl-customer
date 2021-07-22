@@ -34,7 +34,7 @@ function App() {
 		});
 		async function getCompanyInfo() {
 			let res = await companyService.getCompanyDetails();
-			setRecoilExternalValue<Api.Company.Res.Get>(globalState.company, res);
+			setRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company, res);
 		}
 		getCompanyInfo().catch(console.error);
 	}, []);

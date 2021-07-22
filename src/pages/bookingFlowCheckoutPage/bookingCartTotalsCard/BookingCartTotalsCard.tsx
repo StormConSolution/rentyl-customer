@@ -10,6 +10,8 @@ import moment from 'moment';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
 } from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../../models/globalState';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -34,6 +36,7 @@ interface BookingCartTotalsCardProps {
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		for (let i in props.costPerNight) {
@@ -42,9 +45,19 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'body2'} width={'170px'}>
 						{new Date(i).toDateString()}
 					</Label>
-					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(props.costPerNight[i])}
-					</Label>
+					<div>
+						{company.allowCashBooking && (
+							<Label variant={'body2'} marginLeft={'auto'}>
+								${StringUtils.formatMoney(props.costPerNight[i])}
+								{company.allowPointBooking && ' or '}
+							</Label>
+						)}
+						{company.allowPointBooking && (
+							<Label variant={'body2'}>
+								{StringUtils.addCommasToNumber(props.costPerNight[i])} points
+							</Label>
+						)}
+					</div>
 				</Box>
 			);
 		}
@@ -105,9 +118,17 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'body2'} width={'170px'}>
 						{item.title}
 					</Label>
-					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(0)}
-					</Label>
+					<Box display={'flex'} marginLeft={'auto'}>
+						{company.allowCashBooking && (
+							<Label variant={'body2'} display={'flex'}>
+								${StringUtils.formatMoney(0)}
+								{company.allowPointBooking && ' or '}
+							</Label>
+						)}
+						{company.allowPointBooking && (
+							<Label variant={'body2'}>{StringUtils.addCommasToNumber(0)} points</Label>
+						)}
+					</Box>
 				</Box>
 			);
 		});

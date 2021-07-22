@@ -35,6 +35,7 @@ interface AccommodationDetailsPageProps {}
 
 const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');

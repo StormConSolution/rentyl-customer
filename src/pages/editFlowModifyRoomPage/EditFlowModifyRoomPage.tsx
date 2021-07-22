@@ -172,7 +172,7 @@ const EditFlowModifyRoomPage = () => {
 			popupController.open(SpinningLoaderPopup);
 			let stay: Api.Reservation.Req.Update = {
 				id: reservation.id,
-				paymentMethodId: reservation.paymentMethod.id,
+				paymentMethodId: reservation.paymentMethod?.id,
 				guest: reservation.guest,
 				accommodationId: id,
 				adults: searchQueryObj.adults,

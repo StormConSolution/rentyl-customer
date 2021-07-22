@@ -50,7 +50,9 @@ const BookingFlowCheckoutPage = () => {
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
 	const destinationId = params.data.destinationId;
-	const companyInfo: Api.Company.Res.Get = useRecoilValue<Api.Company.Res.Get>(globalState.company);
+	const companyInfo: Api.Company.Res.GetCompanyAndClientVariables = useRecoilValue<
+		Api.Company.Res.GetCompanyAndClientVariables
+	>(globalState.company);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);

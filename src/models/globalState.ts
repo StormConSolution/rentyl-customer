@@ -29,7 +29,7 @@ class GlobalState {
 	destinationComparison: RecoilState<ComparisonCardInfo[]>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
-	company: RecoilState<Api.Company.Res.Get>;
+	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 
 	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
 
@@ -49,29 +49,15 @@ class GlobalState {
 			default: this.loadFromLocalStorage<string>(GlobalStateKeys.USER_TOKEN, '')
 		});
 
-		this.company = atom<Model.Company>({
+		this.company = atom<Api.Company.Res.GetCompanyAndClientVariables>({
 			key: GlobalStateKeys.COMPANY,
-			default: this.loadFromLocalStorage<Model.Company>(GlobalStateKeys.COMPANY, {
-				address: '',
+			default: this.loadFromLocalStorage<Api.Company.Res.GetCompanyAndClientVariables>(GlobalStateKeys.COMPANY, {
 				allowCashBooking: 1,
 				allowPointBooking: 1,
-				city: '',
-				country: '',
-				createdOn: '',
-				description: '',
-				hostname: '',
-				id: 1,
-				modifiedOn: '',
+				id: 0,
 				name: '',
-				privacyPolicyUrl: '',
-				returnPolicyUrl: '',
 				squareLogoUrl: '',
-				state: '',
-				termsConditionsUrl: '',
-				vanityUrls: '',
-				website: '',
-				wideLogoUrl: '',
-				zip: ''
+				wideLogoUrl: ''
 			})
 		});
 
