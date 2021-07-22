@@ -29,6 +29,7 @@ const EditFlowModifyPaymentPage = () => {
 	const [existingCardId, setExistingCardId] = useState<number>(0);
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
+	const [usePoints, setUsePoints] = useState<boolean>(false);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -207,6 +208,8 @@ const EditFlowModifyPaymentPage = () => {
 							}}
 							existingCardId={existingCardId}
 							contactInfo={contactInfo}
+							usePoints={usePoints}
+							setUsePoints={(value: boolean) => setUsePoints(value)}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'} mb={10}>
@@ -315,6 +318,7 @@ const EditFlowModifyPaymentPage = () => {
 									moment(reservation.arrivalDate) > moment().add(15, 'days')
 								}
 								packages={[]}
+								usePoints={false}
 							/>
 						</Paper>
 					</Box>
