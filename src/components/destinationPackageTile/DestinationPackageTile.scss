@@ -3,8 +3,7 @@
 .rsDestinationPackageTile {
 	background-color: theme-var($primaryBackgroundColor);
 	display: flex;
-	//grid-template-columns: 20% 60% 10% ;
-	//gap: 10px;
+	margin: 0 auto;
 	width: 800px;
 	margin-bottom: 10px;
 	img {
