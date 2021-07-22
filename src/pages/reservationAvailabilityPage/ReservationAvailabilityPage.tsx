@@ -230,6 +230,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						data.accommodationId = accommodationId;
 						data.arrivalDate = data.startDate;
 						data.departureDate = data.endDate;
+						data.packages = [];
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;

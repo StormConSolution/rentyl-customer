@@ -12,6 +12,10 @@
 			width: 90px;
 		}
 	}
+
+	.availablePackage:hover {
+		cursor: pointer;
+	}
 	.rsDateRangeSelector {
 		display: grid;
 		place-items: center;

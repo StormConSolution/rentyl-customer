@@ -13,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { convertTwentyFourHourTime, StringUtils } from '../../utils/utils';
+import { convertTwentyFourHourTime, ObjectUtils, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -33,12 +33,11 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	prices: Api.Reservation.PriceDetail;
 	checkInTime: string;
 	checkoutTime: string;
+	packages: Api.Package.Res.Get[];
 }
 
-interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {}
-
-interface ContactInfo extends Api.Reservation.Guest {
-	details: string;
+interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
+	packages?: number[];
 }
 
 let existingCardId = 0;
@@ -78,7 +77,7 @@ const BookingFlowCheckoutPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				const rooms: Stay[] = await Promise.all(
 					params.data.stays.map(async (accommodation: Verification) => {
-						return addAccommodation(accommodation);
+						return await addAccommodation(accommodation);
 					})
 				);
 				if (rooms) setAccommodations(rooms);
@@ -152,26 +151,28 @@ const BookingFlowCheckoutPage = () => {
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
 		});
-		if (response.data.data) {
-			let res = response.data.data;
-			let stay: Stay = {
-				accommodationId: data.accommodationId,
-				accommodationName: res.accommodationName,
-				arrivalDate: res.checkInDate,
-				departureDate: res.checkoutDate,
-				adultCount: res.adults,
-				childCount: res.children,
-				rateCode: res.rateCode,
-				prices: res.prices,
-				checkInTime: res.checkInTime,
-				checkoutTime: res.checkoutTime,
-				guest: guestInfo
-			};
-			setPolicies(res.policies);
-			setDestinationName(res.destinationName);
-			return stay;
+		let packageResponse;
+		if (ObjectUtils.isArrayWithData(data.packages)) {
+			packageResponse = await reservationService.getPackagesByIds({ ids: data.packages });
 		}
-		return;
+		let res = response.data.data;
+		let stay: Stay = {
+			accommodationId: data.accommodationId,
+			accommodationName: res.accommodationName,
+			arrivalDate: res.checkInDate,
+			departureDate: res.checkoutDate,
+			adultCount: res.adults,
+			childCount: res.children,
+			rateCode: res.rateCode,
+			prices: res.prices,
+			checkInTime: res.checkInTime,
+			checkoutTime: res.checkoutTime,
+			guest: guestInfo,
+			packages: packageResponse?.data || []
+		};
+		setPolicies(res.policies);
+		setDestinationName(res.destinationName);
+		return stay;
 	}
 
 	async function removeAccommodation(
@@ -277,6 +278,11 @@ const BookingFlowCheckoutPage = () => {
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
 						rateCode: accommodation.rateCode,
+						upsellPackages: accommodation.packages.map((item) => {
+							return {
+								id: item.id
+							};
+						}),
 						guest: guestInfo
 					};
 				})
@@ -340,12 +346,7 @@ const BookingFlowCheckoutPage = () => {
 							adults={accommodation.adultCount}
 							children={accommodation.childCount}
 							grandTotalCents={accommodation.prices.grandTotalCents}
-							packages={[]}
-							onDeletePackage={(packageId) => {
-								// let newPackages = [...addedPackages];
-								// newPackages = newPackages.filter((item) => item.id !== packageId);
-								// setAddedPackages(newPackages);
-							}}
+							packages={accommodation.packages}
 							remove={() => {
 								popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
 									bodyText: 'Are you sure you want to remove this?',
@@ -389,7 +390,7 @@ const BookingFlowCheckoutPage = () => {
 											id
 										);
 									},
-									packages: [],
+									packages: accommodation.packages,
 									startDate: checkInDate
 								});
 							}}

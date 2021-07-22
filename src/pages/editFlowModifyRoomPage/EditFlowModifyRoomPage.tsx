@@ -172,7 +172,6 @@ const EditFlowModifyRoomPage = () => {
 			popupController.open(SpinningLoaderPopup);
 			let stay: Api.Reservation.Req.Update = {
 				id: reservation.id,
-				rateCode: 'ITSTIME',
 				paymentMethodId: reservation.paymentMethod.id,
 				guest: reservation.guest,
 				accommodationId: id,
@@ -180,7 +179,8 @@ const EditFlowModifyRoomPage = () => {
 				children: searchQueryObj.children,
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
-				numberOfAccommodations: 1
+				numberOfAccommodations: 1,
+				rateCode: searchQueryObj.rate || ''
 			};
 			try {
 				await reservationsService.updateReservation(stay);

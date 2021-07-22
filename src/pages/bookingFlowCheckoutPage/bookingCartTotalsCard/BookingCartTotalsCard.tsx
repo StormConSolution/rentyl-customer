@@ -25,8 +25,7 @@ interface BookingCartTotalsCardProps {
 	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Api.Reservation.Res.BookingPackageDetails[];
-	onDeletePackage: (packageId: number) => void;
+	packages?: Api.Package.Res.Get[];
 	accommodationId?: number;
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
@@ -83,41 +82,31 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function getPackageTotal() {
-		if (!props.packages) return;
-		let total = 0;
-		props.packages.forEach((item) => (total += item.priceCents));
-		return `${StringUtils.formatMoney(total)}`;
+		if (!ObjectUtils.isArrayWithData(props.packages)) return `${StringUtils.formatMoney(0)}`;
+		//Does not have any price detail on it
+		let total = props.packages?.reduce((sum, item) => (sum += 0), 0);
+		return `${StringUtils.formatMoney(total || 0)}`;
 	}
 
 	function getCartTotal() {
 		if (props.grandTotalCents && !ObjectUtils.isArrayWithData(props.packages)) {
 			return `${StringUtils.formatMoney(props.grandTotalCents)}`;
 		} else if (props.packages && ObjectUtils.isArrayWithData(props.packages)) {
-			let packagesTotals = props.grandTotalCents;
-			props.packages.forEach((item) => (packagesTotals += item.priceCents));
+			const packagesTotals = props.packages.reduce((total, item) => (total += 0), props.grandTotalCents);
 			return `${StringUtils.formatMoney(packagesTotals)}`;
 		}
 	}
 
 	function renderPackages() {
 		if (!props.packages || !ObjectUtils.isArrayWithData(props.packages)) return [];
-
 		return props.packages.map((item, index) => {
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
 						{item.title}
-						<Icon
-							iconImg={'icon-trash'}
-							size={12}
-							cursorPointer
-							onClick={() => {
-								props.onDeletePackage(item.id);
-							}}
-						/>
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(item.priceCents)}
+						${StringUtils.formatMoney(0)}
 					</Label>
 				</Box>
 			);
@@ -198,9 +187,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			<Accordion
 				titleReact={
 					<Box display={'flex'} alignItems={'center'}>
-						<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>
+						<Label variant={'h4'}>{Object.keys(props.costPerNight).length} Nights</Label>
 					</Box>
 				}
+				isOpen
 			>
 				{renderItemizedCostPerNight()}
 				<Box display={'flex'} alignItems={'center'}>
@@ -210,22 +200,24 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 				</Box>
 			</Accordion>
-			{ObjectUtils.isArrayWithData(props.packages) && (
-				<>
-					<Box display={'flex'} alignItems={'center'} marginBottom={10}>
-						<Label variant={'h4'} width={'170px'}>
-							Packages
-						</Label>
-						<Label variant={'h4'} marginLeft={'auto'}>
-							${getPackageTotal()}
-						</Label>
-					</Box>
-					{renderPackages()}
-				</>
-			)}
 			<Accordion
 				titleReact={
-					<Label variant={'body2'} width={'170px'}>
+					<Label variant={'h4'} width={'170px'}>
+						Packages
+					</Label>
+				}
+			>
+				{renderPackages()}
+				<Box display={'flex'} justifyContent={'space-between'}>
+					<Label variant={'h4'}>Total: </Label>
+					<Label variant={'h4'} marginLeft={'auto'}>
+						${getPackageTotal()}
+					</Label>
+				</Box>
+			</Accordion>
+			<Accordion
+				titleReact={
+					<Label variant={'h4'} width={'170px'}>
 						Taxes and Fees
 					</Label>
 				}
