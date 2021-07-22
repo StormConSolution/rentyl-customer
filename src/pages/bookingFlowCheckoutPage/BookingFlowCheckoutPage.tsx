@@ -26,7 +26,6 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
-import moment from 'moment';
 
 interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
 	accommodationName: string;
@@ -52,6 +51,7 @@ const BookingFlowCheckoutPage = () => {
 	const destinationId = params.data.destinationId;
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
+	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
@@ -113,7 +113,11 @@ const BookingFlowCheckoutPage = () => {
 					})
 				};
 				try {
-					const result = await paymentService.addPaymentMethod({ cardToken: token, pmData });
+					const result = await paymentService.addPaymentMethod({
+						cardToken: token,
+						pmData,
+						offsiteLoyaltyEnrollment: isAuthorized ? 1 : 0
+					});
 					data.paymentMethodId = result.id;
 					let res = await reservationService.createItinerary(data);
 					popupController.close(SpinningLoaderPopup);
@@ -270,6 +274,7 @@ const BookingFlowCheckoutPage = () => {
 				paymentMethodId: existingCardId,
 				destinationId: destinationId,
 				stays: accommodations.map((accommodation) => {
+					console.log(accommodation.packages);
 					return {
 						accommodationId: accommodation.accommodationId,
 						numberOfAccommodations: 1,
@@ -459,6 +464,7 @@ const BookingFlowCheckoutPage = () => {
 							isValidForm={(isValid) => {
 								setIsFormValid(isValid);
 							}}
+							isAuthorized={(isAuthorized) => setIsAuthorized(isAuthorized)}
 							onExistingCardSelect={(value) => {
 								existingCardId = value;
 							}}
