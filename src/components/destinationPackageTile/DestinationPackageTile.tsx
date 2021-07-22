@@ -59,7 +59,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			<LabelButton
 				look={'containedPrimary'}
 				variant={'button'}
-				label={props.text ? props.text : 'Add Package'}
+				label={props.text || 'Add Package'}
 				onClick={props.onAddPackage}
 			/>
 		</Paper>

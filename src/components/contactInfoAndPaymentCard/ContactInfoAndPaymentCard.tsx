@@ -29,6 +29,7 @@ interface ContactInfoAndPaymentCardProps {
 	onCreditCardChange: (value: CreditCardForm) => void;
 	onExistingCardSelect?: (value: number) => void;
 	isValidForm: (isValid: boolean) => void;
+	isAuthorized: (isAuthorized: boolean) => void;
 	existingCardId?: number;
 	contactInfo?: Api.Reservation.Guest;
 	usePoints: boolean;
@@ -46,7 +47,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	const [isValidCard, setIsValidCard] = useState<boolean>(false);
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(false);
-	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [existingCardId, setExistingCardId] = useState<number>(props.existingCardId || 0);
 	const [useExistingCreditCard, setUseExistingCreditCard] = useState<boolean>(
 		props.existingCardId ? props.existingCardId > 0 : false
@@ -91,8 +91,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [user]);
 
 	useEffect(() => {
-		props.isValidForm((isValid || !!existingCardId) && isAuthorized);
-	}, [isValid, isAuthorized, existingCardId]);
+		props.isValidForm(isValid || !!existingCardId);
+	}, [isValid, existingCardId]);
 
 	useEffect(() => {
 		if (props.usePoints) return;
@@ -251,13 +251,15 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				}
 			];
 
-		return user.paymentMethods.map((item, index) => {
-			return {
-				selected: item.id === existingCardId,
-				text: item.cardNumber,
-				value: item.id
-			};
-		});
+		return user.paymentMethods
+			.filter((item) => item.systemProvider === 'adyen')
+			.map((item, index) => {
+				return {
+					selected: item.id === existingCardId,
+					text: item.cardNumber,
+					value: item.id
+				};
+			});
 	}
 
 	return (
