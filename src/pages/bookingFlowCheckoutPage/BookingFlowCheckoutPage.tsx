@@ -108,6 +108,11 @@ const BookingFlowCheckoutPage = () => {
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
 							rateCode: accommodation.rateCode,
+							upsellPackages: accommodation.packages.map((item) => {
+								return {
+									id: item.id
+								};
+							}),
 							guest: guestInfo
 						};
 					})
@@ -274,7 +279,6 @@ const BookingFlowCheckoutPage = () => {
 				paymentMethodId: existingCardId,
 				destinationId: destinationId,
 				stays: accommodations.map((accommodation) => {
-					console.log(accommodation.packages);
 					return {
 						accommodationId: accommodation.accommodationId,
 						numberOfAccommodations: 1,
