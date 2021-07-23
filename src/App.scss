@@ -88,6 +88,15 @@ body {
 	}
 }
 
+.rsInput::-webkit-outer-spin-button,
+.rsInput::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+
+.rsInput[type='number'] {
+	-moz-appearance: textfield;
+}
+
 .rsSelect {
 	&.outlined {
 		height: 40px;
