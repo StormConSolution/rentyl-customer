@@ -934,6 +934,7 @@ declare namespace Api {
 				arrivalDate: string | Date;
 				departureDate: string | Date;
 				numberOfAccommodations: number;
+				upsellPackages?: UpsellPackage[];
 			}
 			export interface Create extends Verification {
 				rateCode: string;
@@ -966,13 +967,20 @@ declare namespace Api {
 					adultCount: number;
 					childCount: number;
 					rateCode: string;
+					upsellPackages?: UpsellPackage[];
 					guest: Guest;
 				}
+
 				export interface Create {
 					destinationId: number;
 					paymentMethodId: number;
 					stays: Stay[];
 				}
+			}
+			export interface UpsellPackage {
+				id: number;
+				date?: string | Date;
+				time?: string;
 			}
 		}
 		export namespace Res {
@@ -998,6 +1006,7 @@ declare namespace Api {
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
+				upsellPackages: BookingPackageDetails[];
 			}
 			export interface Availability {
 				[key: string]: Redis.Availability;
@@ -1012,7 +1021,7 @@ declare namespace Api {
 				accommodationName: string;
 				destinationName: string;
 				rateCode: string;
-				destinationPackages: BookingPackageDetails[];
+				upsellPackages: BookingPackageDetails[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 				prices: PriceDetail;
 			}
@@ -1058,6 +1067,7 @@ declare namespace Api {
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
 					guest: Guest;
+					upsellPackages: BookingPackageDetails[];
 				}
 				export interface Get {
 					parentReservationId: number;

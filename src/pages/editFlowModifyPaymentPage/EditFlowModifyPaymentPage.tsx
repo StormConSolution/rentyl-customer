@@ -73,6 +73,12 @@ const EditFlowModifyPaymentPage = () => {
 					data.paymentMethodId = result.id;
 					setExistingCardId(result.id);
 					if (reservation) {
+						let res = await reservationsService.updateReservation({
+							id: reservation.id,
+							paymentMethodId: existingCardId
+						});
+
+						popupController.close(SpinningLoaderPopup);
 						let stay: Api.Reservation.Req.Update = {
 							id: reservation.id,
 							rateCode: 'ITSTIME',
@@ -106,10 +112,9 @@ const EditFlowModifyPaymentPage = () => {
 	async function updateInformation() {
 		if (reservation) {
 			try {
-				popupController.open(SpinningLoaderPopup);
 				let stay: Api.Reservation.Req.Update = {
 					id: reservation.id,
-					rateCode: 'ITSTIME',
+					rateCode: '',
 					paymentMethodId: existingCardId,
 					guest: contactInfo,
 					accommodationId: reservation.accommodation.id,
@@ -121,6 +126,7 @@ const EditFlowModifyPaymentPage = () => {
 				};
 				await reservationsService.updateReservation(stay);
 				popupController.close(SpinningLoaderPopup);
+
 				rsToasts.success('Successfully Updated');
 				router.navigate('/reservations').catch(console.error);
 			} catch {
@@ -196,6 +202,7 @@ const EditFlowModifyPaymentPage = () => {
 							isValidForm={(isValid) => {
 								setIsFormValid(isValid);
 							}}
+							isAuthorized={(isAuthorized) => {}}
 							onExistingCardSelect={(value) => {
 								setExistingCardId(value);
 							}}
@@ -303,12 +310,12 @@ const EditFlowModifyPaymentPage = () => {
 								taxAndFeeTotalInCent={reservation.priceDetail.taxAndFeeTotalInCents}
 								accommodationTotalInCents={reservation.priceDetail.accommodationTotalInCents}
 								adults={reservation.adultCount}
-								onDeletePackage={() => {}}
 								children={reservation.childCount}
 								cancellable={
 									reservation.cancellationPermitted === 1 &&
 									moment(reservation.arrivalDate) > moment().add(15, 'days')
 								}
+								packages={[]}
 							/>
 						</Paper>
 					</Box>

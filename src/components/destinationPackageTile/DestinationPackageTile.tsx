@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './DestinationPackageTile.scss';
-import Paper from '../../../components/paper/Paper';
+import Paper from '../paper/Paper';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import LabelButton from '../../../components/labelButton/LabelButton';
+import LabelButton from '../labelButton/LabelButton';
 
 interface DestinationPackageTileProps {
 	title: string;
@@ -13,6 +13,7 @@ interface DestinationPackageTileProps {
 	priceCents: number;
 	imgUrl: string;
 	onAddPackage?: () => void;
+	text?: string;
 }
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {
@@ -43,7 +44,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			<LabelButton
 				look={'containedPrimary'}
 				variant={'button'}
-				label={'Add Package'}
+				label={props.text || 'Add Package'}
 				onClick={props.onAddPackage}
 			/>
 		</Paper>

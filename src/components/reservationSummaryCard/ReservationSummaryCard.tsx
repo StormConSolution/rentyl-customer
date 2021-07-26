@@ -13,6 +13,7 @@ interface ReservationSummaryCardProps {
 	paymentMethod: Api.Reservation.PaymentMethod;
 	billingAddress: Api.Reservation.BillingAddressDetails;
 	priceDetails: Api.Reservation.PriceDetail;
+	packages: Api.Package.Res.Get[];
 }
 
 const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) => {
@@ -48,6 +49,22 @@ const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) =>
 		});
 	}
 
+	function renderPackageDetails() {
+		if (!ObjectUtils.isArrayWithData(props.packages)) return [];
+		return props.packages.map((item) => {
+			return (
+				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
+					<Label variant={'body2'} width={'170px'}>
+						{item.title}
+					</Label>
+					<Label variant={'body2'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(0)}
+					</Label>
+				</Box>
+			);
+		});
+	}
+
 	function renderItemizedFees() {
 		return props.priceDetails.feeTotalsInCents.map((item, index) => {
 			return (
@@ -76,6 +93,15 @@ const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) =>
 					}
 				>
 					{renderItemizedCostPerNight()}
+				</Accordion>
+				<Accordion isOpen titleReact={<Label variant={'h4'}>Packages</Label>}>
+					{renderPackageDetails()}
+					<Box display={'flex'} justifyContent={'space-between'}>
+						<Label variant={'body1'}>Total: </Label>
+						<Label variant={'body1'}>
+							${StringUtils.formatMoney(props.packages.reduce((total, item) => (total += 0), 0))}
+						</Label>
+					</Box>
 				</Accordion>
 				<Label variant={'h4'} mt={20}>
 					Fees
