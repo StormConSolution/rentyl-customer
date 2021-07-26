@@ -1,6 +1,6 @@
 // Full documentation of the DateRangePicker used can be found at https://github.com/airbnb/react-dates
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -9,6 +9,7 @@ import './DateRangeSelector.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Label from '@bit/redsky.framework.rs.label';
+import { DateUtils } from '../../utils/utils';
 
 export interface DateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
@@ -41,6 +42,14 @@ export interface DateRangeSelectorProps {
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 	const [instanceId] = useState<string>(StringUtils.generateGuid());
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(props.startDate);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(props.endDate);
+
+	useEffect(() => {
+		setStartDateControl(props.startDate);
+		setEndDateControl(props.endDate);
+	}, [props.startDate, props.endDate]);
+
 	return (
 		<Box className={`rsDateRangeSelector ${props.className || ''}`}>
 			<div className={'startEndLabels'}>
@@ -52,11 +61,15 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				</Label>
 			</div>
 			<DateRangePicker
-				startDate={props.startDate}
+				startDate={startDateControl}
 				startDateId={`startDate-${instanceId}`}
-				endDate={props.endDate}
+				endDate={endDateControl}
 				endDateId={`endDate-${instanceId}`}
-				onDatesChange={({ startDate, endDate }) => props.onDatesChange(startDate, endDate)}
+				onClose={({ startDate, endDate }) => props.onDatesChange(startDate, endDate)}
+				onDatesChange={({ startDate, endDate }) => {
+					setStartDateControl(startDate);
+					setEndDateControl(endDate);
+				}}
 				focusedInput={props.focusedInput}
 				onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 				numberOfMonths={props.monthsToShow}

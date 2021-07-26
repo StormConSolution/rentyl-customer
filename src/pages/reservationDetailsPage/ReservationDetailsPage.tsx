@@ -24,6 +24,7 @@ import EditAccommodationPopup, {
 	EditAccommodationPopupProps
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import EditReservationDetailsPopup, {
+	EditDetailsObj,
 	EditReservationDetailsPopupProps
 } from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
 
@@ -58,19 +59,14 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 		else return '';
 	}
 
-	async function updateReservationContactDetails(data: Misc.ReservationContactInfoDetails) {
+	async function updateReservation(data: any, isGuest?: boolean) {
 		if (!reservation) return;
-		let guestNameSplit = data.contactInfo.split(' ').filter((item) => item.length > 0);
-		let guest = {
-			id: reservation.id,
-			firstName: guestNameSplit[0],
-			lastName: guestNameSplit[1],
-			email: data.email,
-			phone: data.phone
-		};
-
+		let newData: any = { ...data, id: reservation.id };
+		if (isGuest) {
+			newData = { guest: { ...data }, id: reservation.id };
+		}
 		try {
-			let res = await reservationsService.update(guest);
+			let res = await reservationsService.update(newData);
 			setReservation({ ...res });
 		} catch (e) {
 			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
@@ -134,7 +130,15 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 								console.log('hello');
 							}}
 							onSave={(data) => {
-								updateReservationContactDetails(data).catch(console.error);
+								let guestNameSplit = data.contactInfo.split(' ').filter((item) => item.length > 0);
+								let guest = {
+									id: reservation.id,
+									firstName: guestNameSplit[0],
+									lastName: guestNameSplit[1],
+									email: data.email,
+									phone: data.phone
+								};
+								updateReservation(guest, true).catch(console.error);
 							}}
 							onRemove={() => {
 								popupController.open<ConfirmRemovePopupProps>(ConfirmRemovePopup, {
@@ -156,8 +160,8 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 									childCount: reservation.childCount,
 									arrivalDate: reservation.arrivalDate,
 									departureDate: reservation.departureDate,
-									onApplyChanges() {
-										console.log('I was clicked ');
+									onApplyChanges: (data) => {
+										updateReservation(data).catch(console.error);
 									}
 								});
 								// 	popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {

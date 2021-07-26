@@ -10,11 +10,18 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import moment from 'moment';
-import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
+import { DateUtils, formatDateForServer, formatFilterDateForServer } from '../../utils/utils';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
+
+export interface EditDetailsObj {
+	adults: number;
+	children: number;
+	arrivalDate: string;
+	departureDate: string;
+}
 
 export interface EditReservationDetailsPopupProps extends PopupProps {
 	accommodationId: number;
@@ -23,12 +30,13 @@ export interface EditReservationDetailsPopupProps extends PopupProps {
 	departureDate: string | Date;
 	adultCount: number;
 	childCount: number;
-	onApplyChanges: () => void;
+	onApplyChanges: (data: EditDetailsObj) => void;
 }
 
 const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = (props) => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [canUpdateDetails, setCanUpdateDetails] = useState<boolean>(false);
+	const [isInvalidDates, setIsInvalidDates] = useState<boolean>(false);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(
 		moment(new Date(DateUtils.displayUserDate(props.arrivalDate)))
@@ -42,26 +50,60 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 				new RsValidator(RsValidatorEnum.REQ, 'Number of Adults is required')
 			]),
 			new RsFormControl('children', props.childCount, []),
-			new RsFormControl('arrivalDate', props.arrivalDate.toString(), []),
-			new RsFormControl('departureDate', props.departureDate.toString(), [])
+			new RsFormControl('arrivalDate', formatPropsDate(props.arrivalDate.toString()), []),
+			new RsFormControl('departureDate', formatPropsDate(props.departureDate.toString()), [])
 		])
 	);
 
-	useEffect(() => {
-		if (editDetailsForm.isModified()) setCanUpdateDetails(true);
-		else setCanUpdateDetails(false);
+	function formatPropsDate(date: string) {
+		if (date.includes('T')) {
+			return date.split('T')[0];
+		} else return date;
+	}
 
-		// if(moment(new Date(DateUtils.displayUserDate(props.arrivalDate))) === startDateControl) setCanUpdateDetails(false)
-		// else setCanUpdateDetails(true);
-		//
-		// if(moment(new Date(DateUtils.displayUserDate(props.departureDate))) === endDateControl) setCanUpdateDetails(false)
-		// else setCanUpdateDetails(true)
+	useEffect(() => {
+		let startDate = formatFilterDateForServer(
+			moment(new Date(DateUtils.displayUserDate(props.arrivalDate))),
+			'start'
+		);
+		let endDate = formatFilterDateForServer(
+			moment(new Date(DateUtils.displayUserDate(props.departureDate))),
+			'end'
+		);
+
+		if (editDetailsForm.isModified()) setCanUpdateDetails(true);
+		else return setCanUpdateDetails(false);
+
+		if (
+			editDetailsForm.get('departureDate').value.toString().includes(endDate) &&
+			editDetailsForm.get('arrivalDate').value.toString().includes(startDate)
+		)
+			return;
+
+		if (editDetailsForm.get('arrivalDate').value.toString().includes(startDate)) setCanUpdateDetails(false);
+		else setCanUpdateDetails(true);
+
+		if (editDetailsForm.get('departureDate').value.toString().includes(endDate)) setCanUpdateDetails(false);
+		else setCanUpdateDetails(true);
 	}, [editDetailsForm]);
 
 	useEffect(() => {
-		if (props.departureDate.toString() === editDetailsForm.get('departureDate').value) return;
+		let startDate = formatFilterDateForServer(
+			moment(new Date(DateUtils.displayUserDate(props.arrivalDate))),
+			'start'
+		);
+		let endDate = formatFilterDateForServer(
+			moment(new Date(DateUtils.displayUserDate(props.departureDate))),
+			'end'
+		);
+		if (
+			editDetailsForm.get('departureDate').value.toString().includes(endDate) &&
+			editDetailsForm.get('arrivalDate').value.toString().includes(startDate)
+		)
+			return;
 		async function checkAvailability() {
 			popupController.open(SpinningLoaderPopup);
+			setIsInvalidDates(false);
 			let data: Api.Reservation.Req.Verification = editDetailsForm.toModel();
 			data.accommodationId = props.accommodationId;
 			data.destinationId = props.destinationId;
@@ -75,6 +117,7 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 				console.log(e.message);
 				popupController.close(SpinningLoaderPopup);
 				setCanUpdateDetails(false);
+				setIsInvalidDates(true);
 			}
 		}
 		checkAvailability().catch(console.error);
@@ -127,6 +170,11 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 							endDateLabel={'CHECK OUT'}
 							labelVariant={'body1'}
 						/>
+						{isInvalidDates && (
+							<Label mt={5} variant={'caption'} color={'red'}>
+								SELECTED DATES ARE UNAVAILABLE
+							</Label>
+						)}
 					</Box>
 					<Box mb={40} className={'guestWrapper'}>
 						<Label variant={'h3'}>GUESTS</Label>
@@ -154,19 +202,14 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 						disabled={!canUpdateDetails}
 						variant={'button'}
 						label={'Apply changes'}
-						// onClick={props.onApplyChanges}
-						onClick={() => {
-							console.log(editDetailsForm.toModel());
-							// props.onApplyChanges(editDetailsForm.toModel())
-						}}
+						onClick={() => props.onApplyChanges({ ...editDetailsForm.toModel() })}
 					/>
 					<LabelButton
 						look={'containedSecondary'}
 						variant={'button'}
 						label={'Cancel'}
 						onClick={() => {
-							console.log(editDetailsForm.toModel());
-							// popupController.close(EditReservationDetailsPopup);
+							popupController.close(EditReservationDetailsPopup);
 						}}
 					/>
 				</Box>

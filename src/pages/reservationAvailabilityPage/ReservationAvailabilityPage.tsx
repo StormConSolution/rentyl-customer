@@ -40,6 +40,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
@@ -164,6 +166,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		setStartDateControl(startDate);
+		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
@@ -290,8 +294,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 						<>
 							<FilterBar
 								className={'filterBar'}
-								startDate={moment(searchQueryObj.startDate)}
-								endDate={moment(searchQueryObj.endDate)}
+								startDate={startDateControl}
+								endDate={endDateControl}
 								onDatesChange={onDatesChange}
 								focusedInput={focusedInput}
 								onFocusChange={setFocusedInput}
