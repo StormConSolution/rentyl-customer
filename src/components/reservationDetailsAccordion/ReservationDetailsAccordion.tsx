@@ -9,6 +9,7 @@ import LabelInput from '../labelInput/LabelInput';
 import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
+import { DateUtils } from '../../utils/utils';
 
 interface ReservationDetailsAccordionProps {
 	reservationId: number;
@@ -197,9 +198,9 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					<AccordionTitleDescription title={'Reservation Name'} description={props.accommodationName} />
 					<AccordionTitleDescription
 						title={'Reservation Date'}
-						description={`${new Date(props.arrivalDate).toDateString()} - ${new Date(
+						description={`${DateUtils.displayUserDate(props.arrivalDate)} - ${DateUtils.displayUserDate(
 							props.departureDate
-						).toDateString()}`}
+						)}`}
 					/>
 					<AccordionTitleDescription title={'Confirmation code'} description={props.externalConfirmationId} />
 				</div>
