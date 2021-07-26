@@ -19,6 +19,13 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
 import Paper from '../../components/paper/Paper';
 import { convertTwentyFourHourTime } from '../../utils/utils';
+import ConfirmRemovePopup, { ConfirmRemovePopupProps } from '../../popups/confirmRemovePopup/ConfirmRemovePopup';
+import EditAccommodationPopup, {
+	EditAccommodationPopupProps
+} from '../../popups/editAccommodationPopup/EditAccommodationPopup';
+import EditReservationDetailsPopup, {
+	EditReservationDetailsPopupProps
+} from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
 
 interface ReservationDetailsPageProps {}
 
@@ -128,6 +135,43 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							}}
 							onSave={(data) => {
 								updateReservationContactDetails(data).catch(console.error);
+							}}
+							onRemove={() => {
+								popupController.open<ConfirmRemovePopupProps>(ConfirmRemovePopup, {
+									onRemove: async () => {
+										try {
+											let res = await reservationsService.cancel(reservation.id);
+										} catch (e) {
+											console.error(e.message);
+										}
+									}
+								});
+							}}
+							onEditDetails={() => {
+								if (!reservation) return;
+								popupController.open<EditReservationDetailsPopupProps>(EditReservationDetailsPopup, {
+									accommodationId: reservation.accommodation.id,
+									destinationId: reservation.destination.id,
+									adultCount: reservation.adultCount,
+									childCount: reservation.childCount,
+									arrivalDate: reservation.arrivalDate,
+									departureDate: reservation.departureDate,
+									onApplyChanges() {
+										console.log('I was clicked ');
+									}
+								});
+								// 	popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+								// 		accommodationId: reservation.id,
+								// 		destinationId: reservation.destination.id,
+								// 		adults: reservation.adultCount,
+								// 		children: reservation.childCount,
+								// 		startDate: reservation.arrivalDate,
+								// 		endDate: reservation.departureDate,
+								// 		onApplyChanges(adults: number, children: number, checkinDate: string | Date, checkoutDate: string | Date, originalStartDate: string | Date, originalEndDate: string | Date, packages: Api.Package.Res.Get[]): void {
+								// 		},
+								// 		packages: [],
+								// 	})
+								// }
 							}}
 							isEdit
 							isOpen

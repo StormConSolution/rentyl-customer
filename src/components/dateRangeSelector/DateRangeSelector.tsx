@@ -20,6 +20,23 @@ export interface DateRangeSelectorProps {
 	className?: string;
 	startDateLabel?: string;
 	endDateLabel?: string;
+	labelVariant?:
+		| 'h1'
+		| 'h2'
+		| 'h3'
+		| 'h4'
+		| 'h5'
+		| 'h6'
+		| 'link1'
+		| 'link2'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
+		| string;
 }
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
@@ -27,10 +44,10 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 	return (
 		<Box className={`rsDateRangeSelector ${props.className || ''}`}>
 			<div className={'startEndLabels'}>
-				<Label className={'startDateLabel'} variant={'caption'}>
+				<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
 					{props.startDateLabel}
 				</Label>
-				<Label className={'endDateLabel'} variant={'caption'}>
+				<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
 					{props.endDateLabel}
 				</Label>
 			</div>

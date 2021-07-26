@@ -7,7 +7,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 
-interface ConfirmRemovePopupProps extends PopupProps {
+export interface ConfirmRemovePopupProps extends PopupProps {
 	onRemove: () => void;
 }
 
@@ -20,6 +20,7 @@ const ConfirmRemovePopup: React.FC<ConfirmRemovePopupProps> = (props) => {
 					onClick={() => {
 						popupController.close(ConfirmRemovePopup);
 					}}
+					cursorPointer
 				/>
 				<Label variant={'h2'} mb={40}>
 					REMOVE

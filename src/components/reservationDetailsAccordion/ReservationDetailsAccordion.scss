@@ -63,6 +63,9 @@
 		.rsLabelButton {
 			margin-bottom: 8px;
 			margin-left: 30px;
+			.rsLabel {
+				color: theme-var($buttonLinkColor);
+			}
 			&:first-of-type {
 				margin-top: 20px;
 			}

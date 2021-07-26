@@ -8,7 +8,6 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../labelInput/LabelInput';
 import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import ConfirmRemovePopup from '../../popups/confirmRemovePopup/ConfirmRemovePopup';
 import router from '../../utils/router';
 
 interface ReservationDetailsAccordionProps {
@@ -33,6 +32,10 @@ interface ReservationDetailsAccordionProps {
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
 	isOpen?: boolean;
+	onRemove?: () => void;
+	onChangeRoom?: () => void;
+	onEditService?: () => void;
+	onEditDetails?: () => void;
 }
 
 const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = (props) => {
@@ -153,11 +156,33 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					variant={'body1'}
 					label={'REMOVE'}
 					onClick={() => {
-						popupController.open(ConfirmRemovePopup);
+						if (props.onRemove) props.onRemove();
 					}}
 				/>
-				<LabelButton look={'none'} variant={'body1'} label={'CHANGE ROOM'} />
-				<LabelButton look={'none'} variant={'body1'} label={'EDIT SERVICE'} />
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'CHANGE ROOM'}
+					onClick={() => {
+						if (props.onChangeRoom) props.onChangeRoom();
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT SERVICE'}
+					onClick={() => {
+						if (props.onEditService) props.onEditService();
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT DETAILS'}
+					onClick={() => {
+						if (props.onEditDetails) props.onEditDetails();
+					}}
+				/>
 			</>
 		);
 	}
@@ -224,8 +249,6 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 								} else {
 									event.stopPropagation();
 									setToggleBtn(!toggleBtn);
-									// if(toggleBtn) setToggleBtn(false);
-									// setToggleBtn(true);
 								}
 							}}
 						/>
