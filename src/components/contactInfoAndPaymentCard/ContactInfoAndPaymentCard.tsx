@@ -412,10 +412,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						}
 						isChecked={false}
 						onSelect={() => {
-							setIsAuthorized(true);
+							props.isAuthorized(true);
 						}}
 						onDeselect={() => {
-							setIsAuthorized(false);
+							props.isAuthorized(false);
 						}}
 					/>
 				</form>
