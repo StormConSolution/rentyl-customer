@@ -40,7 +40,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={i}>
 					<Label variant={'body2'} width={'170px'}>
-						{new Date(i).toDateString()}
+						{DateUtils.displayUserDate(i)}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
 						${StringUtils.formatMoney(props.costPerNight[i])}
