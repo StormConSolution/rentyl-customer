@@ -27,7 +27,7 @@ const ItineraryInfoCard: React.FC<ItineraryInfoCardProps> = (props) => {
 			<Label marginTop={85} variant={'h3'}>
 				Your Itinerary at <img className={'logoImg'} src={props.logoImgUrl} alt={props.name} />
 			</Label>
-			<Box margin={'40px auto 50px'} width={'466px'}>
+			<Box margin={'40px auto 50px'} width={'477px'}>
 				<Label margin={'0 auto 16px'} variant={'h1'}>
 					{props.name}
 				</Label>

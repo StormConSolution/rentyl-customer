@@ -20,7 +20,7 @@ interface ReservationCardProps {
 	amenities: string[];
 	totalCostCents: number;
 	totalPoints: number;
-	onViewDetailsClick: () => void;
+	linkPath: string;
 	cancelPermitted: 0 | 1;
 }
 
@@ -60,7 +60,7 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 					</Label>
 					<Label variant={'h2'}>{addCommasToNumber(props.totalPoints)}</Label>
 				</div>
-				<LabelLink path={'/'} label={'view details'} variant={'caption'} onClick={props.onViewDetailsClick} />
+				<LabelLink path={props.linkPath} label={'view details'} variant={'caption'} />
 			</Paper>
 		</Box>
 	);

@@ -25,6 +25,7 @@ import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
+import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -50,88 +51,37 @@ const ItineraryDetailsPage: React.FC = () => {
 		getItineraryDetails().catch(console.error);
 	}, []);
 
-	function renderAmenities(amenities: string[]) {
-		return amenities.map((item, index) => {
-			return <Icon key={index} iconImg={item} />;
-		});
-	}
-
 	function renderReservations() {
 		if (!itinerary || !ObjectUtils.isArrayWithData(itinerary.stays)) return;
 
 		return itinerary.stays.map((item, index) => {
 			return (
-				<Accordion
-					key={item.reservationId}
-					className={'reservationAccordion'}
-					hideHoverEffect
-					titleReact={
-						<div className={'accordionReservationGrid'}>
-							<AccordionTitleDescription
-								title={'Reservation Name'}
-								description={item.accommodation.name}
-							/>
-							<AccordionTitleDescription
-								title={'Reservation Date'}
-								description={`${new Date(item.arrivalDate).toDateString()} - ${new Date(
-									item.departureDate
-								).toDateString()}`}
-							/>
-							<AccordionTitleDescription
-								title={'Confirmation code'}
-								description={item.externalConfirmationId}
-							/>
-						</div>
+				<ReservationDetailsAccordion
+					reservationId={item.reservationId}
+					accommodationName={item.accommodation.name}
+					arrivalDate={item.arrivalDate}
+					departureDate={item.departureDate}
+					externalConfirmationId={item.externalConfirmationId}
+					maxOccupantCount={item.accommodation.maxOccupantCount}
+					maxSleeps={item.accommodation.maxSleeps}
+					adultCount={item.adultCount}
+					childCount={item.childCount}
+					adaCompliant={item.accommodation.adaCompliant}
+					extraBed={item.accommodation.extraBed}
+					floorCount={item.accommodation.floorCount}
+					featureIcons={item.accommodation.featureIcons}
+					contactInfo={`${item.guest.firstName} ${item.guest.lastName}`}
+					email={item.guest.email}
+					phone={item.guest.phone}
+					additionalDetails={
+						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Metus aliquet dictum neque varius adipiscing donec molestie risus ac. Et morbi nunc, sed purus. Enim leo gravida eget amet, malesuada blandit bibendum. Venenatis, purus arcu facilisi lorem pretium sit lectus non. Consectetur nunc pellentesque nulla mi hendrerit maecenas nunc diam. Ipsum egestas massa vulputate quam.'
 					}
-				>
-					<Box padding={'0 16px'}>
-						<div className={'accordionReservationGrid'}>
-							<AccordionTitleDescription
-								title={'Max Occupancy'}
-								description={item.accommodation.maxOccupantCount}
-							/>
-							<AccordionTitleDescription title={'sleeps'} description={item.accommodation.maxSleeps} />
-							<AccordionTitleDescription title={'Property Type'} description={'VIP SUITE'} />
-							<AccordionTitleDescription title={'Adults'} description={item.adultCount} />
-							<AccordionTitleDescription title={'Children'} description={item.childCount} />
-							<AccordionTitleDescription
-								title={'Ada Compliant'}
-								description={item.accommodation.adaCompliant ? 'Yes' : 'No'}
-							/>
-							<AccordionTitleDescription
-								title={'Extra Bed'}
-								description={item.accommodation.extraBed ? 'Yes' : 'No'}
-							/>
-							<AccordionTitleDescription
-								title={'Floor Count'}
-								description={item.accommodation.floorCount}
-							/>
-							<AccordionTitleDescription
-								title={'Amenities'}
-								description={renderAmenities(item.accommodation.featureIcons)}
-							/>
-						</div>
-						<hr />
-						<div className={'accordionReservationGrid'}>
-							<AccordionTitleDescription title={'Contact Info'} description={'Joe Smo'} />
-							<AccordionTitleDescription title={'Email'} description={'joesmo@replaceme.com'} />
-							<AccordionTitleDescription title={'Phone'} description={'801-555-5555'} />
-						</div>
-						<hr />
-						<AccordionTitleDescription
-							title={'Additional Details'}
-							description={
-								'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Metus aliquet dictum neque varius adipiscing donec molestie risus ac. Et morbi nunc, sed purus. Enim leo gravida eget amet, malesuada blandit bibendum. Venenatis, purus arcu facilisi lorem pretium sit lectus non. Consectetur nunc pellentesque nulla mi hendrerit maecenas nunc diam. Ipsum egestas massa vulputate quam.'
-							}
-						/>
-						<LabelButton
-							className={'detailsBtn'}
-							look={'containedPrimary'}
-							variant={'button'}
-							label={'Details'}
-						/>
-					</Box>
-				</Accordion>
+					onDetailsClick={() => {
+						router
+							.navigate('/reservations/itinerary/reservation/details?ri=' + item.reservationId)
+							.catch(console.error);
+					}}
+				/>
 			);
 		});
 	}
@@ -221,89 +171,97 @@ const ItineraryDetailsPage: React.FC = () => {
 							<Label variant={'h1'} mb={40}>
 								Payment Information
 							</Label>
-							<Paper className={'paymentInfoCard'} boxShadow padding={'24px 28px'}>
-								<div className={'currentCardWrapper'}>
-									<AccordionTitleDescription
-										title={'Name on card'}
-										description={itinerary.paymentMethod.nameOnCard}
-									/>
-									<AccordionTitleDescription
-										title={'Card Number'}
-										description={itinerary.paymentMethod.cardNumber}
-									/>
-									<AccordionTitleDescription
-										title={'Expiration Date'}
-										description={`${itinerary.paymentMethod.expirationMonth}/${itinerary.paymentMethod.expirationYear}`}
-									/>
-									<AccordionTitleDescription
-										title={'Card Type'}
-										description={itinerary.paymentMethod.type}
-									/>
-								</div>
-								<hr />
-								<div className={editPaymentCard ? 'newPaymentOptions show' : 'newPaymentOptions'}>
-									<div>
-										<Label variant={'h4'} marginBottom={9}>
-											OTHER PAYMENT OPTIONS
-										</Label>
-										<Select
-											options={renderSelectOptions()}
-											placeHolder={'Please Select A Card'}
-											showSelectedAsPlaceHolder
-											onChange={(value) => {
-												if (!user) return;
-												if (typeof value === 'number') {
-													return setNewPaymentMethod(
-														user.paymentMethods.find((item) => item.id === value)
-													);
-												}
-												setNewPaymentMethod(undefined);
+							{!!itinerary.paymentMethod && (
+								<Paper className={'paymentInfoCard'} boxShadow padding={'24px 28px'}>
+									<div className={'currentCardWrapper'}>
+										<AccordionTitleDescription
+											title={'Name on card'}
+											description={itinerary.paymentMethod.nameOnCard}
+										/>
+										<AccordionTitleDescription
+											title={'Card Number'}
+											description={itinerary.paymentMethod.cardNumber}
+										/>
+										<AccordionTitleDescription
+											title={'Expiration Date'}
+											description={`${itinerary.paymentMethod.expirationMonth}/${itinerary.paymentMethod.expirationYear}`}
+										/>
+										<AccordionTitleDescription
+											title={'Card Type'}
+											description={itinerary.paymentMethod.type}
+										/>
+									</div>
+									<hr />
+									<div className={editPaymentCard ? 'newPaymentOptions show' : 'newPaymentOptions'}>
+										<div>
+											<Label variant={'h4'} marginBottom={9}>
+												OTHER PAYMENT OPTIONS
+											</Label>
+											<Select
+												options={renderSelectOptions()}
+												placeHolder={'Please Select A Card'}
+												showSelectedAsPlaceHolder
+												onChange={(value) => {
+													if (!user) return;
+													if (typeof value === 'number') {
+														return setNewPaymentMethod(
+															user.paymentMethods.find((item) => item.id === value)
+														);
+													}
+													setNewPaymentMethod(undefined);
+												}}
+											/>
+										</div>
+										<AccordionTitleDescription
+											title={'Name on card'}
+											description={newPaymentMethod?.nameOnCard || ''}
+										/>
+										<AccordionTitleDescription
+											title={'Card Number'}
+											description={newPaymentMethod?.cardNumber || ''}
+										/>
+										<AccordionTitleDescription
+											title={'Expiration Date'}
+											description={
+												!!newPaymentMethod
+													? `${
+															newPaymentMethod.expirationMonth +
+															'/' +
+															newPaymentMethod.expirationYear
+													  }`
+													: ''
+											}
+										/>
+										<LabelCheckbox
+											value={'test'}
+											text={'* I agree with the Privacy Terms and booking conditions'}
+											onSelect={() => {
+												console.log('Yes');
+											}}
+											onDeselect={() => {
+												console.log('No');
 											}}
 										/>
 									</div>
-									<AccordionTitleDescription
-										title={'Name on card'}
-										description={newPaymentMethod?.nameOnCard || ''}
-									/>
-									<AccordionTitleDescription
-										title={'Card Number'}
-										description={newPaymentMethod?.cardNumber || ''}
-									/>
-									<AccordionTitleDescription
-										title={'Expiration Date'}
-										description={`${newPaymentMethod?.expirationMonth || ''}/${
-											newPaymentMethod?.expirationYear || ''
-										}`}
-									/>
-									<LabelCheckbox
-										value={'test'}
-										text={'* I agree with the Privacy Terms and booking conditions'}
-										onSelect={() => {
-											console.log('Yes');
-										}}
-										onDeselect={() => {
-											console.log('No');
-										}}
-									/>
-								</div>
-								<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>
-									<LabelButton
-										className={editPaymentCard ? 'showBtn' : 'hideBtn'}
-										look={'containedPrimary'}
-										variant={'button'}
-										label={'Save'}
-									/>
-									<LabelButton
-										className={'editCancelBtn'}
-										look={editPaymentCard ? 'containedSecondary' : 'containedPrimary'}
-										variant={'button'}
-										label={editPaymentCard ? 'Cancel' : 'Change'}
-										onClick={() => {
-											setEditPaymentCard(!editPaymentCard);
-										}}
-									/>
-								</Box>
-							</Paper>
+									<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>
+										<LabelButton
+											className={editPaymentCard ? 'showBtn' : 'hideBtn'}
+											look={'containedPrimary'}
+											variant={'button'}
+											label={'Save'}
+										/>
+										<LabelButton
+											className={'editCancelBtn'}
+											look={editPaymentCard ? 'containedSecondary' : 'containedPrimary'}
+											variant={'button'}
+											label={editPaymentCard ? 'Cancel' : 'Change'}
+											onClick={() => {
+												setEditPaymentCard(!editPaymentCard);
+											}}
+										/>
+									</Box>
+								</Paper>
+							)}
 						</Box>
 					</div>
 				</div>

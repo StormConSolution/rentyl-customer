@@ -6,11 +6,12 @@ import { ReactNodeArray } from 'react';
 interface AccordionTitleDescriptionProps {
 	title: string;
 	description: string | number | ReactNodeArray;
+	className?: string;
 }
 
 const AccordionTitleDescription: React.FC<AccordionTitleDescriptionProps> = (props) => {
 	return (
-		<div className={'rsAccordionTitleDescription'}>
+		<div className={`'rsAccordionTitleDescription' ${props.className || ''}`}>
 			<Label variant={'h4'} marginBottom={9}>
 				{props.title}
 			</Label>

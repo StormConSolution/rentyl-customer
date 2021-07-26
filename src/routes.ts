@@ -20,7 +20,7 @@ import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsP
 import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
 import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
 import SuccessPage from './pages/successPage/SuccessPage';
-import ExistingItineraryPage from './pages/existingReservationPage/ExistingItineraryPage';
+import ExistingItineraryPage from './pages/existingItineraryPage/ExistingItineraryPage';
 import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDetailsPage';
 import BookingFlowCheckoutPage from './pages/bookingFlowCheckoutPage/BookingFlowCheckoutPage';
 import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
@@ -87,7 +87,7 @@ const routes: RouteDetails[] = [
 		page: ItineraryDetailsPage
 	},
 	{
-		path: '/reservation/details',
+		path: '/reservations/itinerary/reservation/details',
 		page: ReservationDetailsPage
 	},
 	{

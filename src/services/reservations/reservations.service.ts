@@ -37,6 +37,11 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
+	async update({ id, ...guest }: Api.Reservation.Req.Update): Promise<Api.Reservation.Res.Get> {
+		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', { id, guest });
+		return response.data.data;
+	}
+
 	async getByPage(
 		page: number,
 		perPage: number,

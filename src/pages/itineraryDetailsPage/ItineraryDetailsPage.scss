@@ -24,25 +24,8 @@
 		column-gap: 64px;
 		padding: 0 95px;
 		box-sizing: border-box;
-		.reservationAccordion {
-			width: 700px;
-			background: #f7f1db;
+		.rsReservationDetailsAccordion {
 			margin-bottom: 40px;
-			.accordionReservationGrid {
-				display: grid;
-				grid-template-columns: 180px 195px 180px;
-				column-gap: 48px;
-				row-gap: 18px;
-			}
-			.articleItemHeader {
-				padding: 24px 16px;
-			}
-			.rsIcon {
-				margin-right: 8px;
-			}
-			.detailsBtn {
-				margin: 40px 0 24px auto;
-			}
 		}
 
 		.rsItineraryCostSummaryCard {

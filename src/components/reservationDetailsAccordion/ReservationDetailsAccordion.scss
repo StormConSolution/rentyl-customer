@@ -1,0 +1,117 @@
+@import '../../themes/themes';
+.rsReservationDetailsAccordion {
+	width: 700px;
+	background: #f7f1db;
+	&.active {
+		overflow: visible;
+	}
+	.accordionReservationGrid {
+		display: grid;
+		grid-template-columns: 180px 195px 180px;
+		column-gap: 48px;
+		row-gap: 18px;
+	}
+
+	.articleItemHeader {
+		padding: 24px 16px;
+	}
+
+	.articleItemChildren {
+		&.opened {
+			overflow: visible;
+			animation-name: DelayOverflow;
+			animation-duration: 500ms;
+		}
+		&:hover {
+			cursor: default;
+		}
+	}
+
+	.rsIcon {
+		margin-right: 8px;
+	}
+
+	.rsLabelInput {
+		.react-tel-input {
+			input {
+				width: 100%;
+			}
+		}
+		.textarea {
+			max-width: 100%;
+			height: 150px;
+			padding: 10px;
+		}
+	}
+
+	.whiteBox {
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		flex-direction: column;
+		transition: width 250ms, height 250ms;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		background: theme-var($primaryBackgroundColor);
+		position: absolute;
+		border-radius: 20px 0;
+		top: 0;
+		right: 0;
+		height: 0;
+		width: 0;
+		overflow: hidden;
+		box-sizing: border-box;
+		.rsLabelButton {
+			margin-bottom: 8px;
+			margin-left: 30px;
+			&:first-of-type {
+				margin-top: 20px;
+			}
+			&:hover {
+				.rsLabel {
+					text-decoration: underline;
+				}
+			}
+		}
+		&.open {
+			height: 160px;
+			width: 180px;
+		}
+	}
+
+	.rsLabelButton {
+		transition: right 500ms, opacity 500ms;
+		&.editCancelBtn {
+			position: relative;
+			z-index: 99;
+			margin-left: auto;
+		}
+		&.hideBtn {
+			position: absolute;
+			margin-right: 8px;
+			opacity: 0;
+			right: -8px;
+		}
+		&.showBtn {
+			position: absolute;
+			right: 108px;
+			opacity: 1;
+		}
+	}
+
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 16px 0;
+	}
+
+	@keyframes DelayOverflow {
+		0% {
+			overflow: hidden;
+		}
+		100% {
+			overflow: visible;
+		}
+	}
+}

@@ -1,0 +1,17 @@
+@import '../../themes/themes';
+.rsReservationDetailsCostSummaryCard {
+	padding: 24px 28px 38px;
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 16px 0;
+	}
+
+	.rsAccordion {
+		.articleItemHeader {
+			padding: 0;
+		}
+	}
+}

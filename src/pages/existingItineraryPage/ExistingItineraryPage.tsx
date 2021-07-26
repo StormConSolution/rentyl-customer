@@ -92,10 +92,11 @@ const ExistingItineraryPage: React.FC = () => {
 					amenities={reservation.accommodation.featureIcons}
 					totalCostCents={reservation.priceDetail.grandTotalCents}
 					totalPoints={1000} //This needs to be added to the endpoint.
-					onViewDetailsClick={() => {
-						if (item.reservations.length > 1)
-							router.navigate('/reservation/details?ri=' + reservation.id).catch(console.error);
-					}}
+					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
+					// onViewDetailsClick={() => {
+					// 	if (item.reservations.length > 1)
+					// 		router.navigate('/reservations/itinerary/details?ii=' + reservation.itineraryId).catch(console.error);
+					// }}
 					cancelPermitted={reservation.cancellationPermitted}
 				/>
 			);
@@ -123,9 +124,10 @@ const ExistingItineraryPage: React.FC = () => {
 					amenities={reservation.accommodation.featureIcons}
 					totalCostCents={reservation.priceDetail.grandTotalCents}
 					totalPoints={1000} //This needs to be added to the endpoint.
-					onViewDetailsClick={() => {
-						router.navigate('/reservation/details?ri=' + reservation.id).catch(console.error);
-					}}
+					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
+					// onViewDetailsClick={() => {
+					// 	router.navigate('/reservations/itinerary/details?ii=' + reservation.itineraryId).catch(console.error);
+					// }}
 					cancelPermitted={0}
 				/>
 			);
