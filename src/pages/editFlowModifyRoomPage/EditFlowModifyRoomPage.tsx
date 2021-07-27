@@ -180,7 +180,7 @@ const EditFlowModifyRoomPage = () => {
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
-				rateCode: searchQueryObj.rate || ''
+				rateCode: searchQueryObj.rate || 'ITSTIME'
 			};
 			try {
 				await reservationsService.updateReservation(stay);
