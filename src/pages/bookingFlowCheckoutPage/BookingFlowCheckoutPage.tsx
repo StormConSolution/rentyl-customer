@@ -109,7 +109,8 @@ const BookingFlowCheckoutPage = () => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							rateCode: accommodation.rateCode || 'ITSTIME',
+							//@ts-ignore
+							rateCode: accommodation.rateCode || accommodation.rate,
 							upsellPackages: accommodation.packages.map((item) => {
 								return {
 									id: item.id
@@ -296,7 +297,8 @@ const BookingFlowCheckoutPage = () => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						rateCode: accommodation.rateCode || 'ITSTIME',
+						//@ts-ignore
+						rateCode: accommodation.rateCode || accommodation.rate,
 						upsellPackages: accommodation.packages.map((item) => {
 							return {
 								id: item.id
