@@ -163,7 +163,7 @@ const BookingFlowCheckoutPage = () => {
 			adults: data.adults,
 			children: data.children,
 			//@ts-ignore
-			rateCode: data.rateCode || data.rate,
+			rateCode: data.rateCode || data.rate || 'ITSTIME',
 			arrivalDate: data.arrivalDate,
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
