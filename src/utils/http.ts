@@ -17,12 +17,19 @@ export enum HttpStatusCode {
 }
 
 function getCompanyId() {
+	let companyId: number;
 	let urlParams = new URLSearchParams(window.location.search);
-	if (!urlParams.has('company_id')) {
-		console.error('missing company id on local host');
-		throw new Error('Missing company Id');
+	let queryCompanyId = urlParams.get('company_id');
+	if (queryCompanyId) {
+		companyId = parseInt(queryCompanyId);
+		sessionStorage['company_id'] = companyId;
+	} else if (sessionStorage['company_id']) {
+		companyId = parseInt(sessionStorage['company_id']);
+	} else {
+		console.error('Missing company ID when in localhost');
+		throw new Error('Missing company ID when in localhost');
 	}
-	return parseInt(urlParams.get('company_id') || '1');
+	return companyId;
 }
 
 let headers: any = {

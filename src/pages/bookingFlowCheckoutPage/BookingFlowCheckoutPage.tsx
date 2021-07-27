@@ -55,6 +55,7 @@ const BookingFlowCheckoutPage = () => {
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
+	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
@@ -149,7 +150,15 @@ const BookingFlowCheckoutPage = () => {
 
 	useEffect(() => {
 		if (usePoints) {
-			setIsDisabled(!usePoints || !hasAgreedToTerms);
+			if (user) {
+				setHasEnoughPoints(
+					accommodations.reduce(
+						(total, accommodation) => (total += accommodation.prices.grandTotalCents),
+						0
+					) < user.availablePoints
+				);
+			}
+			setIsDisabled(!hasAgreedToTerms || !hasEnoughPoints);
 		} else {
 			setIsDisabled(!hasAgreedToTerms || !isFormValid);
 		}
@@ -549,6 +558,15 @@ const BookingFlowCheckoutPage = () => {
 							}}
 							disabled={isDisabled}
 						/>
+						<Label
+							color={'red'}
+							variant={'body1'}
+							mb={120}
+							width={'fit-content'}
+							className={'notEnoughPoints'}
+						>
+							{usePoints && !hasEnoughPoints && 'Not Enough Points'}
+						</Label>
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}
 				</Box>

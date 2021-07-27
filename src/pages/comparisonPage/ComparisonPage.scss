@@ -45,6 +45,13 @@
 			}
 		}
 	}
+
+	.backNavigation {
+		color: theme-var($buttonLinkColor);
+		&:hover {
+			cursor: pointer;
+		}
+	}
 }
 
 .small {
