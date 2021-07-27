@@ -162,7 +162,8 @@ const BookingFlowCheckoutPage = () => {
 			destinationId: destinationId,
 			adults: data.adults,
 			children: data.children,
-			rateCode: data.rateCode,
+			//@ts-ignore
+			rateCode: data.rateCode || data.rate,
 			arrivalDate: data.arrivalDate,
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
