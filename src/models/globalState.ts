@@ -51,20 +51,19 @@ class GlobalState {
 
 		this.company = atom<Api.Company.Res.GetCompanyAndClientVariables>({
 			key: GlobalStateKeys.COMPANY,
-			default: this.loadFromLocalStorage<Api.Company.Res.GetCompanyAndClientVariables>(GlobalStateKeys.COMPANY, {
-				allowCashBooking: 1,
-				allowPointBooking: 1,
+			default: {
 				id: 0,
 				name: '',
 				squareLogoUrl: '',
-				wideLogoUrl: ''
-			})
+				wideLogoUrl: '',
+				allowPointBooking: 0,
+				allowCashBooking: 0
+			}
 		});
 
 		// The following is stored in local storage automatically
 		this.saveToStorageList.push({ key: GlobalStateKeys.USER_TOKEN, state: this.userToken });
 		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
-		this.saveToStorageList.push({ key: GlobalStateKeys.COMPANY, state: this.company });
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {
