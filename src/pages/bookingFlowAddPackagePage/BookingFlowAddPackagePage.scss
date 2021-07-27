@@ -1,12 +1,9 @@
-.rs-view {
-	.rsBookingFlowAddPackagePage {
-		.rs-page-content-wrapper {
-			margin-top: 80px;
-			.addedPackages {
-			}
-
-			.availablePackages {
-			}
+@import '../../themes/themes';
+.rsBookingFlowAddPackagePage {
+	.rs-page-content-wrapper {
+		margin-top: 80px;
+		> .rsLabelButton {
+			margin: 0 auto;
 		}
 	}
 }
