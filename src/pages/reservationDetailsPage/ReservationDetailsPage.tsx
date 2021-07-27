@@ -27,6 +27,7 @@ import EditReservationDetailsPopup, {
 	EditDetailsObj,
 	EditReservationDetailsPopupProps
 } from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 interface ReservationDetailsPageProps {}
 
@@ -62,18 +63,19 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 	async function updateReservation(data: any, isGuest?: boolean) {
 		if (!reservation) return;
 		let newData: any = { ...data, id: reservation.id };
-		if (isGuest) {
-			newData = { guest: { ...data }, id: reservation.id };
-		}
+
 		try {
+			popupController.open(SpinningLoaderPopup);
 			let res = await reservationsService.update(newData);
 			setReservation({ ...res });
+			popupController.close(SpinningLoaderPopup);
 		} catch (e) {
 			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
 				rsToasts.error('Cannot update a past reservation', 'Failed To update', 5000);
 			} else {
 				console.error(e.message);
 			}
+			popupController.close(SpinningLoaderPopup);
 		}
 	}
 
@@ -123,22 +125,21 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							contactInfo={`${reservation.guest.firstName} ${reservation.guest.lastName}`}
 							email={reservation.guest.email}
 							phone={reservation.guest.phone}
-							additionalDetails={
-								'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Metus aliquet dictum neque varius adipiscing donec molestie risus ac. Et morbi nunc, sed purus. Enim leo gravida eget amet, malesuada blandit bibendum. Venenatis, purus arcu facilisi lorem pretium sit lectus non. Consectetur nunc pellentesque nulla mi hendrerit maecenas nunc diam. Ipsum egestas massa vulputate quam.'
-							}
+							additionalDetails={reservation.additionalDetails}
 							onDetailsClick={() => {
 								console.log('hello');
 							}}
 							onSave={(data) => {
 								let guestNameSplit = data.contactInfo.split(' ').filter((item) => item.length > 0);
 								let guest = {
-									id: reservation.id,
 									firstName: guestNameSplit[0],
 									lastName: guestNameSplit[1],
 									email: data.email,
 									phone: data.phone
 								};
-								updateReservation(guest, true).catch(console.error);
+								updateReservation({ guest, additionalDetails: data.additionalDetails }, true).catch(
+									console.error
+								);
 							}}
 							onRemove={() => {
 								popupController.open<ConfirmRemovePopupProps>(ConfirmRemovePopup, {
@@ -164,18 +165,14 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 										updateReservation(data).catch(console.error);
 									}
 								});
-								// 	popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
-								// 		accommodationId: reservation.id,
-								// 		destinationId: reservation.destination.id,
-								// 		adults: reservation.adultCount,
-								// 		children: reservation.childCount,
-								// 		startDate: reservation.arrivalDate,
-								// 		endDate: reservation.departureDate,
-								// 		onApplyChanges(adults: number, children: number, checkinDate: string | Date, checkoutDate: string | Date, originalStartDate: string | Date, originalEndDate: string | Date, packages: Api.Package.Res.Get[]): void {
-								// 		},
-								// 		packages: [],
-								// 	})
-								// }
+							}}
+							onChangeRoom={() => {
+								if (!reservation) return;
+								router
+									.navigate(
+										`/reservations/edit-room?ri=${reservation.id}&di=${reservation.destination.id}`
+									)
+									.catch(console.error);
 							}}
 							isEdit
 							isOpen

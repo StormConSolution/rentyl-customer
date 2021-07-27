@@ -92,13 +92,19 @@ export function addCommasToNumber(intNum: any) {
 
 export function formatPhoneNumber(phone: string | number) {
 	let cleaned = ('' + phone).replace(/\D/g, '');
-	let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-
-	if (match) {
-		return `(${match[1]}) ${match[2]}-${match[3]}`;
+	let match: any;
+	if (cleaned.length <= 10) {
+		match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+		if (match) {
+			return `(${match[1]}) ${match[2]}-${match[3]}`;
+		}
 	} else {
-		return cleaned;
+		match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+		if (match) {
+			return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}`;
+		}
 	}
+	return cleaned;
 }
 
 export function removeAllExceptNumbers(string: string): string {

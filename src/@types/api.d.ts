@@ -48,10 +48,7 @@ declare namespace Api {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
 				accommodationTypeCode: string;
-				accommodationDescription: string;
-				maxOccupantCount: number;
-				extraBeds: 0 | 1;
-				adaCompliant: 0 | 1;
+				accommodationTypeDescription: string;
 				media: Media[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
@@ -363,6 +360,11 @@ declare namespace Api {
 			export interface Update extends Model.Company {}
 			export interface Role extends Model.UserRole {}
 			export interface Get extends Model.Company {}
+			export interface GetCompanyAndClientVariables
+				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
+				allowPointBooking: 0 | 1;
+				allowCashBooking: 0 | 1;
+			}
 		}
 	}
 
@@ -432,6 +434,7 @@ declare namespace Api {
 				phone: string;
 				primaryEmail: string;
 				password: string;
+				address?: Api.UserAddress.Req.Create;
 			}
 
 			export interface Get {}
@@ -566,7 +569,6 @@ declare namespace Api {
 					icon: string;
 				}[];
 			}
-			[];
 			export interface Availability {
 				id: number;
 				name: string;
@@ -938,8 +940,9 @@ declare namespace Api {
 			}
 			export interface Create extends Verification {
 				rateCode: string;
-				paymentMethodId: number;
+				paymentMethodId?: number;
 				guest: Guest;
+				additionalDetails?: string;
 			}
 			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
 				id: number;
@@ -969,11 +972,12 @@ declare namespace Api {
 					rateCode: string;
 					upsellPackages?: UpsellPackage[];
 					guest: Guest;
+					additionalDetails?: string;
 				}
 
 				export interface Create {
 					destinationId: number;
-					paymentMethodId: number;
+					paymentMethodId?: number;
 					stays: Stay[];
 				}
 			}
@@ -989,7 +993,7 @@ declare namespace Api {
 				userId: number;
 				guest: Guest;
 				billingAddress: BillingAddressDetails;
-				paymentMethod: PaymentMethod;
+				paymentMethod?: PaymentMethod;
 				destination: DestinationDetails;
 				accommodation: AccommodationDetails;
 				arrivalDate: Date | string;
@@ -1007,6 +1011,7 @@ declare namespace Api {
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
 				upsellPackages: BookingPackageDetails[];
+				additionalDetails: string;
 			}
 			export interface Availability {
 				[key: string]: Redis.Availability;
@@ -1068,12 +1073,13 @@ declare namespace Api {
 					cancellationPermitted: 0 | 1;
 					guest: Guest;
 					upsellPackages: BookingPackageDetails[];
+					additionalDetails: string;
 				}
 				export interface Get {
 					parentReservationId: number;
 					itineraryId: string;
 					billingAddress: BillingAddressDetails;
-					paymentMethod: PaymentMethod;
+					paymentMethod?: PaymentMethod;
 					destination: DestinationDetails;
 					stays: Itinerary.Stay[];
 				}
@@ -1360,7 +1366,6 @@ declare namespace Api {
 				phone?: string;
 				birthDate?: Date | string;
 				address?: Api.UserAddress.Req.Create;
-				newsLetter?: 0 | 1;
 				emailNotification?: 0 | 1;
 			}
 
@@ -1373,6 +1378,7 @@ declare namespace Api {
 				primaryEmail?: string;
 				phone?: string;
 				birthDate?: Date | string;
+				emailNotification?: 0 | 1;
 			}
 
 			export interface Login {
@@ -1471,7 +1477,7 @@ declare namespace Api {
 				state?: string;
 				zip: number;
 				country: string;
-				isDefault: boolean | number;
+				isDefault: 0 | 1;
 			}
 			export interface Get {
 				id?: number;

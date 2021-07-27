@@ -51,7 +51,7 @@ const EditFlowModifyPaymentPage = () => {
 			try {
 				let res = await reservationsService.get(id);
 				setContactInfo(res.guest);
-				setExistingCardId(res.paymentMethod.id);
+				setExistingCardId(!!res.paymentMethod ? res.paymentMethod.id : 0);
 				setReservation(res);
 			} catch (e) {
 				rsToasts.error('Something unexpected happened on the server.');

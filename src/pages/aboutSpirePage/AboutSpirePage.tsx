@@ -143,7 +143,7 @@ const AboutSpirePage: React.FC = () => {
 					<img src={require('../../images/aboutSpirePage/key-chain.png')} alt={'Key Chain'} />
 					<Box className={'textBox'}>
 						<h1>History of Spire</h1>
-						<Label variant={'body2'} mb={'20px'}>
+						<Label variant={'body1'} mb={'20px'}>
 							Spire was born out of desire to reward people for some of the most important transactions in
 							our lives. We know that through Spire our members will be able to aspire to new heights. As
 							a technology company, we are committed to creating unique and seamless ways for our partners
@@ -314,7 +314,7 @@ const AboutSpirePage: React.FC = () => {
 				<Box className={'sectionOne'} mb={120}>
 					<Box className={'textBox'}>
 						<h1>Earn and Grow</h1>
-						<Label variant={'body2'} mb={'20px'}>
+						<Label variant={'body1'} mb={'20px'}>
 							As you earn points by making purchases, or taking part in inspiring events, you are on your
 							way to greater things. Becoming a Platinum Spire Member is the ultimate and we look forward
 							to having you join these unique ranks.

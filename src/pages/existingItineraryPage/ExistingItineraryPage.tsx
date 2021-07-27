@@ -141,7 +141,7 @@ const ExistingItineraryPage: React.FC = () => {
 			<div className={'rs-page-content-wrapper'}>
 				<Box m={'140px auto'} maxWidth={1160}>
 					<h1>Your Upcoming Reservations</h1>
-					{renderUpcomingReservations()}
+					{renderUpcomingReservations()?.reverse()}
 					<h1>Past Stays</h1>
 					{renderPrevReservations()}
 				</Box>

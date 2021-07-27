@@ -73,9 +73,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					contactInfo={`${item.guest.firstName} ${item.guest.lastName}`}
 					email={item.guest.email}
 					phone={item.guest.phone}
-					additionalDetails={
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Metus aliquet dictum neque varius adipiscing donec molestie risus ac. Et morbi nunc, sed purus. Enim leo gravida eget amet, malesuada blandit bibendum. Venenatis, purus arcu facilisi lorem pretium sit lectus non. Consectetur nunc pellentesque nulla mi hendrerit maecenas nunc diam. Ipsum egestas massa vulputate quam.'
-					}
+					additionalDetails={item.additionalDetails}
 					onDetailsClick={() => {
 						router
 							.navigate('/reservations/itinerary/reservation/details?ri=' + item.reservationId)
@@ -129,6 +127,10 @@ const ItineraryDetailsPage: React.FC = () => {
 				value: item.id
 			};
 		});
+	}
+
+	async function saveNewPaymentMethod() {
+		console.log(newPaymentMethod);
 	}
 
 	return !itinerary || !user ? (
@@ -249,6 +251,9 @@ const ItineraryDetailsPage: React.FC = () => {
 											look={'containedPrimary'}
 											variant={'button'}
 											label={'Save'}
+											onClick={() => {
+												saveNewPaymentMethod();
+											}}
 										/>
 										<LabelButton
 											className={'editCancelBtn'}

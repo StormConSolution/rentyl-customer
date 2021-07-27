@@ -9,7 +9,7 @@ import LabelInput from '../labelInput/LabelInput';
 import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
-import { DateUtils } from '../../utils/utils';
+import { DateUtils, formatPhoneNumber } from '../../utils/utils';
 
 interface ReservationDetailsAccordionProps {
 	reservationId: number;
@@ -140,7 +140,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					<div className={'accordionReservationGrid'}>
 						<AccordionTitleDescription title={'Contact Info'} description={props.contactInfo} />
 						<AccordionTitleDescription title={'Email'} description={props.email} />
-						<AccordionTitleDescription title={'Phone'} description={props.phone} />
+						<AccordionTitleDescription title={'Phone'} description={formatPhoneNumber(props.phone)} />
 					</div>
 					<hr />
 					<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
@@ -232,6 +232,8 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						onClick={() => {
 							let newReservationDetails: Misc.ReservationContactInfoDetails = reservationDetails.toModel();
 							if (props.onSave) props.onSave(newReservationDetails);
+							reservationDetails.updateInitialValues();
+							setIsModified(false);
 						}}
 					/>
 					<Box marginLeft={'auto'} position={'relative'}>
