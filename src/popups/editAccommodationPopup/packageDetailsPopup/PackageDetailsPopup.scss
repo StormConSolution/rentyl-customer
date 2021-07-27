@@ -1,0 +1,10 @@
+.rsPackageDetailsPopup {
+	.rsDestinationPackageTile {
+		grid-template-columns: 30% 50% 20%;
+		grid-template-rows: auto auto;
+
+		.rsAccordion {
+			grid-column: 1/2;
+		}
+	}
+}

@@ -54,7 +54,7 @@ export default class UserService extends Service {
 	}
 	async createNewCustomer(customer: Api.Customer.Req.Create) {
 		customer.password = SparkMD5.hash(customer.password);
-		return await http.post('customer', customer);
+		return await http.post<RsResponseData<Api.Customer.Res.Create>>('customer', customer);
 	}
 
 	getCurrentUser(): Api.User.Res.Get | undefined {

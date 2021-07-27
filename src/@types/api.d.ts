@@ -434,6 +434,7 @@ declare namespace Api {
 				phone: string;
 				primaryEmail: string;
 				password: string;
+				address?: Api.UserAddress.Req.Create;
 			}
 
 			export interface Get {}

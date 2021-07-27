@@ -3,9 +3,8 @@
 .rsContactInfoAndPaymentCard {
 	background-color: theme-var($primaryBackgroundColor);
 	.contactInfo {
-		grid-template-columns: 35% 35%;
-		gap: 20px;
-		justify-content: center;
+		grid-template-columns: 50% 50%;
+		row-gap: 20px;
 		width: 100%;
 	}
 	.rsLabelInput {
@@ -27,8 +26,6 @@
 
 	#payment-form {
 		.useExistingCreditCard {
-			margin-top: 0 !important;
-			margin-left: 15px;
 			width: -moz-fit-content;
 		}
 		.creditCardInfo {
@@ -74,6 +71,10 @@
 			}
 		}
 		#payment-form {
+			.rsBox {
+				flex-direction: column;
+				justify-content: flex-start;
+			}
 			.creditCardInfo {
 				grid-template-columns: auto;
 				justify-content: start;

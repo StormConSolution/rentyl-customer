@@ -110,7 +110,8 @@ const BookingFlowCheckoutPage = () => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							rateCode: accommodation.rateCode,
+							//@ts-ignore
+							rateCode: accommodation.rateCode || accommodation.rate,
 							upsellPackages: accommodation.packages.map((item) => {
 								return {
 									id: item.id
@@ -170,7 +171,8 @@ const BookingFlowCheckoutPage = () => {
 			destinationId: destinationId,
 			adults: data.adults,
 			children: data.children,
-			rateCode: data.rateCode,
+			//@ts-ignore
+			rateCode: data.rateCode || data.rate || 'ITSTIME',
 			arrivalDate: data.arrivalDate,
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
@@ -250,7 +252,8 @@ const BookingFlowCheckoutPage = () => {
 				children,
 				accommodationId,
 				arrivalDate: checkinDate,
-				departureDate: checkoutDate
+				departureDate: checkoutDate,
+				packages: packages.map((item) => item.id)
 			};
 			newParams = [
 				...newParams.filter((stay: Verification) => {
@@ -304,7 +307,8 @@ const BookingFlowCheckoutPage = () => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						rateCode: accommodation.rateCode,
+						//@ts-ignore
+						rateCode: accommodation.rateCode || accommodation.rate,
 						upsellPackages: accommodation.packages.map((item) => {
 							return {
 								id: item.id

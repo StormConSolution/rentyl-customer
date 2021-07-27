@@ -3,6 +3,9 @@
 .rsDestinationPackageTile {
 	background-color: theme-var($primaryBackgroundColor);
 	display: flex;
+	margin: 0 auto;
+	width: 800px;
+	margin-bottom: 10px;
 	img {
 		margin-right: 16px;
 		width: 250px;
@@ -17,15 +20,17 @@
 	}
 
 	.rsAccordion {
-		width: 65%;
+		width: 300px;
+		margin-top: 20px;
 	}
 }
 
 .small {
 	.rsDestinationPackageTile {
+		width: 100%;
+		display: flex;
 		flex-direction: column;
 		align-items: center;
-
 		img {
 			width: 100%;
 			margin: 0 auto 10px;
@@ -37,8 +42,8 @@
 		}
 
 		.rsLabelButton {
-			left: auto;
-			right: auto;
+			left: 16px;
+			bottom: 16px;
 		}
 	}
 }

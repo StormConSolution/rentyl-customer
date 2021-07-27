@@ -149,7 +149,7 @@ const EditFlowModifyRoomPage = () => {
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (rateCode !== '') {
+			if (rateCode !== '' || rateCode === undefined) {
 				createSearchQueryObj['rate'] = rateCode;
 			} else {
 				createSearchQueryObj['rate'] = 'ITSTIME';
@@ -180,7 +180,8 @@ const EditFlowModifyRoomPage = () => {
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
-				rateCode: searchQueryObj.rate || 'ITSTIME'
+				//@ts-ignore
+				rateCode: searchQueryObj.rate || searchQueryObj.rateCode || 'ITSTIME'
 			};
 			try {
 				await reservationsService.updateReservation(stay);
