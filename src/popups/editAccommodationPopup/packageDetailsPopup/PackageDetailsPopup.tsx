@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './PackageDetailsPopup.scss';
 import { Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Paper from '../../../components/paper/Paper';
@@ -11,7 +12,7 @@ export interface PackageDetailsPopupProps extends PopupProps {
 
 const PackageDetailsPopup: React.FC<PackageDetailsPopupProps> = (props) => {
 	return (
-		<Popup opened={props.opened} preventCloseByBackgroundClick>
+		<Popup opened={props.opened}>
 			<Paper className={'rsPackageDetailsPopup'}>
 				<DestinationPackageTile
 					title={props.package.title}

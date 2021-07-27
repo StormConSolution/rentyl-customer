@@ -43,12 +43,14 @@ let existingCardId = 0;
 
 const BookingFlowCheckoutPage = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
 	const destinationId = params.data.destinationId;
+	const [usePoints, setUsePoints] = useState<boolean>(!!company.allowPointBooking);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
@@ -107,7 +109,8 @@ const BookingFlowCheckoutPage = () => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							rateCode: accommodation.rateCode,
+							//@ts-ignore
+							rateCode: accommodation.rateCode || accommodation.rate,
 							upsellPackages: accommodation.packages.map((item) => {
 								return {
 									id: item.id
@@ -146,8 +149,12 @@ const BookingFlowCheckoutPage = () => {
 	}, [creditCardForm]);
 
 	useEffect(() => {
-		setIsDisabled(!hasAgreedToTerms || !isFormValid);
-	}, [hasAgreedToTerms, isFormValid]);
+		if (usePoints) {
+			setIsDisabled(!usePoints || !hasAgreedToTerms);
+		} else {
+			setIsDisabled(!hasAgreedToTerms || !isFormValid);
+		}
+	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
 	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
 		let response = await reservationService.verifyAvailability({
@@ -155,7 +162,8 @@ const BookingFlowCheckoutPage = () => {
 			destinationId: destinationId,
 			adults: data.adults,
 			children: data.children,
-			rateCode: data.rateCode,
+			//@ts-ignore
+			rateCode: data.rateCode || data.rate || 'ITSTIME',
 			arrivalDate: data.arrivalDate,
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
@@ -235,7 +243,8 @@ const BookingFlowCheckoutPage = () => {
 				children,
 				accommodationId,
 				arrivalDate: checkinDate,
-				departureDate: checkoutDate
+				departureDate: checkoutDate,
+				packages: packages.map((item) => item.id)
 			};
 			newParams = [
 				...newParams.filter((stay: Verification) => {
@@ -266,7 +275,7 @@ const BookingFlowCheckoutPage = () => {
 
 	async function completeBooking() {
 		popupController.open(SpinningLoaderPopup);
-		if (!existingCardId && creditCardForm) {
+		if (!existingCardId && creditCardForm && !usePoints) {
 			let paymentObj = {
 				full_name: creditCardForm.full_name,
 				month: creditCardForm.month,
@@ -274,9 +283,12 @@ const BookingFlowCheckoutPage = () => {
 			};
 			window.Spreedly.tokenizeCreditCard(paymentObj);
 		} else {
-			if (!accommodations || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
+			if (!usePoints) {
+				if (!accommodations || !existingCardId)
+					throw new Error('Missing proper data or existing card is invalid');
+			}
 			let data = {
-				paymentMethodId: existingCardId,
+				paymentMethodId: !usePoints ? existingCardId : undefined,
 				destinationId: destinationId,
 				stays: accommodations.map((accommodation) => {
 					return {
@@ -286,7 +298,8 @@ const BookingFlowCheckoutPage = () => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						rateCode: accommodation.rateCode,
+						//@ts-ignore
+						rateCode: accommodation.rateCode || accommodation.rate,
 						upsellPackages: accommodation.packages.map((item) => {
 							return {
 								id: item.id
@@ -406,6 +419,7 @@ const BookingFlowCheckoutPage = () => {
 							changeRoom={changeRoom}
 							accommodationId={accommodation.accommodationId}
 							cancellable={true}
+							usePoints={usePoints}
 						/>
 					);
 				})}
@@ -419,14 +433,26 @@ const BookingFlowCheckoutPage = () => {
 				/>
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
-					<Label variant={'h2'}>
-						{StringUtils.formatMoney(
-							accommodations.reduce(
-								(total, accommodation) => (total += accommodation.prices.grandTotalCents),
-								0
-							)
-						)}
-					</Label>
+					{!usePoints ? (
+						<Label variant={'h2'}>
+							$
+							{StringUtils.formatMoney(
+								accommodations.reduce(
+									(total, accommodation) => (total += accommodation.prices.grandTotalCents),
+									0
+								)
+							)}
+						</Label>
+					) : (
+						<Label variant={'h2'}>
+							{StringUtils.addCommasToNumber(
+								accommodations.reduce(
+									(total, accommodation) => (total += accommodation.prices.grandTotalCents),
+									0
+								)
+							) + ' points'}
+						</Label>
+					)}
 				</Box>
 			</Paper>
 		);
@@ -472,6 +498,8 @@ const BookingFlowCheckoutPage = () => {
 							onExistingCardSelect={(value) => {
 								existingCardId = value;
 							}}
+							usePoints={usePoints}
+							setUsePoints={(value: boolean) => setUsePoints(value)}
 						/>
 						<Paper className={'policiesSection'} boxShadow borderRadius={'4px'} padding={'16px'}>
 							<Label variant={'h2'} mb={10}>

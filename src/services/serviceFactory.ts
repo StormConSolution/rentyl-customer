@@ -9,11 +9,13 @@ import UserAddressService from './userAddress/userAddress.service';
 import RewardService from './reward/reward.service';
 import UserPointService from './userPoint/userPoint.service';
 import PaymentService from './payment/payment.service';
+import CompanyService from './company/company.service';
 
 type ServiceKey =
 	| 'UserService'
 	| 'ReservationsService'
 	| 'ComparisonService'
+	| 'CompanyService'
 	| 'DestinationService'
 	| 'AccommodationService'
 	| 'CountryService'
@@ -30,6 +32,7 @@ class ServiceFactory {
 		this.services['UserService'] = new UserService();
 		this.services['ReservationsService'] = new ReservationsService();
 		this.services['ComparisonService'] = new ComparisonService();
+		this.services['CompanyService'] = new CompanyService();
 		this.services['DestinationService'] = new DestinationService();
 		this.services['AccommodationService'] = new AccommodationService();
 		this.services['CountryService'] = new CountryService();

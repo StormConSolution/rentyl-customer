@@ -32,6 +32,8 @@ interface ContactInfoAndPaymentCardProps {
 	isAuthorized: (isAuthorized: boolean) => void;
 	existingCardId?: number;
 	contactInfo?: Api.Reservation.Guest;
+	usePoints: boolean;
+	setUsePoints: (value: boolean) => void;
 }
 
 let phoneNumber = '';
@@ -40,6 +42,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	const numberRef = useRef<HTMLElement>(null);
 	const cvvRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const [isValidCard, setIsValidCard] = useState<boolean>(false);
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
@@ -92,6 +95,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [isValid, existingCardId]);
 
 	useEffect(() => {
+		if (props.usePoints) return;
 		async function init() {
 			const gatewayDetails: Api.Payment.Res.PublicData = await paymentService.getGateway();
 			window.Spreedly.init(gatewayDetails.publicData.token, {
@@ -100,7 +104,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			});
 		}
 		init().catch(console.error);
-	}, []);
+	}, [props.usePoints]);
 
 	useEffect(() => {
 		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
@@ -303,99 +307,119 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				updateControl={updateContactInfoForm}
 			/>
 			<hr />
-			<form id={'payment-form'} action={'/card-payment'}>
-				<Box display={'flex'}>
-					<Label variant={'h2'} mb={'10px'}>
-						Payment Information
-					</Label>
-					<LabelCheckbox
-						className={'useExistingCreditCard'}
-						value={1}
-						text={'Use Credit Card on file'}
-						onSelect={() => setUseExistingCreditCard(true)}
-						onDeselect={() => {
-							setExistingCardId(0);
-							setUseExistingCreditCard(false);
-							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
-						}}
-						isChecked={useExistingCreditCard}
-					/>
-				</Box>
-
-				<Select
-					className={!useExistingCreditCard ? 'hide' : ''}
-					options={renderSelectOptions()}
-					placeHolder={'Please Select A Card'}
-					showSelectedAsPlaceHolder
-					onChange={(value) => {
-						if (typeof value === 'number') {
-							setExistingCardId(value);
-							if (props.onExistingCardSelect) props.onExistingCardSelect(value);
-						} else if (value === null) {
-							setExistingCardId(0);
-							if (props.onExistingCardSelect) props.onExistingCardSelect(0);
-						}
-					}}
-				/>
-				<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
-					<LabelInput
-						title={'Name on Card'}
-						inputType={'text'}
-						control={creditCardObj.get('full_name')}
-						updateControl={updateCreditCardObj}
-					/>
-					<div ref={numberRef} id={'spreedly-number'}>
-						<Label id={'Number'} variant={'caption'} mb={10}>
-							Credit Card
-						</Label>
-					</div>
-					<div ref={cvvRef} id={'spreedly-cvv'}>
-						<Label id={'Cvv'} variant={'caption'} mb={10}>
-							CVV
-						</Label>
-					</div>
-					<LabelInput
-						className={'creditCardExpInput'}
-						maxLength={7}
-						title={'Expiration Date'}
-						inputType={'text'}
-						control={creditCardObj.get('expDate')}
-						updateControl={updateCreditCardObj}
-						placeholder={'MM/YYYY'}
-					/>
-				</Box>
+			{!!company.allowPointBooking && props.usePoints && (
 				<LabelCheckbox
-					value={1}
-					text={
-						<>
-							* By checking this box, you authorize your credit card network to monitor and share
-							transaction data with Fidel (our service provider) to earn points for your offline
-							purchases. You also acknowledge and agree that Fidel may share certain details of your
-							qualifying transactions with Spire Loyalty in accordance with the{' '}
-							<Link path={'/'}>
-								<span>Terms and Conditions</span>
-							</Link>
-							,{' '}
-							<Link path={'/'}>
-								<span>Privacy Policy</span>
-							</Link>{' '}
-							and{' '}
-							<Link path={'/'}>
-								<span>Fidel Privacy Policy</span>
-							</Link>
-							. You may opt-out of this optional service at any time by removing this card from your Spire
-							Loyalty account.
-						</>
-					}
-					isChecked={false}
-					onSelect={() => {
-						props.isAuthorized(true);
-					}}
-					onDeselect={() => {
-						props.isAuthorized(false);
-					}}
+					value={props.usePoints ? 1 : 0}
+					text={'Use Points'}
+					onSelect={() => props.setUsePoints(true)}
+					onDeselect={() => props.setUsePoints(false)}
+					isChecked={props.usePoints}
 				/>
-			</form>
+			)}
+			{company.allowCashBooking && !props.usePoints && (
+				<form id={'payment-form'} action={'/card-payment'}>
+					<Box display={'flex'}>
+						<Label variant={'h2'} mb={'10px'}>
+							Payment Information
+						</Label>
+						<LabelCheckbox
+							className={'useExistingCreditCard'}
+							value={1}
+							text={'Use Credit Card on file'}
+							onSelect={() => setUseExistingCreditCard(true)}
+							onDeselect={() => {
+								setExistingCardId(0);
+								setUseExistingCreditCard(false);
+								if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+							}}
+							isChecked={useExistingCreditCard}
+						/>
+						{!!company.allowPointBooking && (
+							<LabelCheckbox
+								value={props.usePoints ? 1 : 0}
+								text={'Use Points'}
+								onSelect={() => props.setUsePoints(true)}
+								onDeselect={() => props.setUsePoints(false)}
+								isChecked={props.usePoints}
+							/>
+						)}
+					</Box>
+
+					<Select
+						className={!useExistingCreditCard ? 'hide' : ''}
+						options={renderSelectOptions()}
+						placeHolder={'Please Select A Card'}
+						showSelectedAsPlaceHolder
+						onChange={(value) => {
+							if (typeof value === 'number') {
+								setExistingCardId(value);
+								if (props.onExistingCardSelect) props.onExistingCardSelect(value);
+							} else if (value === null) {
+								setExistingCardId(0);
+								if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+							}
+						}}
+					/>
+					<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
+						<LabelInput
+							title={'Name on Card'}
+							inputType={'text'}
+							control={creditCardObj.get('full_name')}
+							updateControl={updateCreditCardObj}
+						/>
+						<div ref={numberRef} id={'spreedly-number'}>
+							<Label id={'Number'} variant={'caption'} mb={10}>
+								Credit Card
+							</Label>
+						</div>
+						<div ref={cvvRef} id={'spreedly-cvv'}>
+							<Label id={'Cvv'} variant={'caption'} mb={10}>
+								CVV
+							</Label>
+						</div>
+						<LabelInput
+							className={'creditCardExpInput'}
+							maxLength={7}
+							title={'Expiration Date'}
+							inputType={'text'}
+							control={creditCardObj.get('expDate')}
+							updateControl={updateCreditCardObj}
+							placeholder={'MM/YYYY'}
+						/>
+					</Box>
+					<LabelCheckbox
+						value={1}
+						text={
+							<>
+								* By checking this box, you authorize your credit card network to monitor and share
+								transaction data with Fidel (our service provider) to earn points for your offline
+								purchases. You also acknowledge and agree that Fidel may share certain details of your
+								qualifying transactions with Spire Loyalty in accordance with the{' '}
+								<Link path={'/'}>
+									<span>Terms and Conditions</span>
+								</Link>
+								,{' '}
+								<Link path={'/'}>
+									<span>Privacy Policy</span>
+								</Link>{' '}
+								and{' '}
+								<Link path={'/'}>
+									<span>Fidel Privacy Policy</span>
+								</Link>
+								. You may opt-out of this optional service at any time by removing this card from your
+								Spire Loyalty account.
+							</>
+						}
+						isChecked={false}
+						onSelect={() => {
+							props.isAuthorized(true);
+						}}
+						onDeselect={() => {
+							props.isAuthorized(false);
+						}}
+					/>
+				</form>
+			)}
 		</Paper>
 	);
 };

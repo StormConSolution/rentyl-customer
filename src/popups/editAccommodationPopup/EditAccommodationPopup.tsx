@@ -8,13 +8,11 @@ import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import moment from 'moment';
-import rsToasts from '@bit/redsky.framework.toast';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { DateUtils } from '../../utils/utils';
-import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import PackageDetailsPopup, { PackageDetailsPopupProps } from './packageDetailsPopup/PackageDetailsPopup';
@@ -58,6 +56,20 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 		])
 	);
 	const [available, setAvailable] = useState<boolean>(true);
+
+	useEffect(() => {
+		async function getPackages() {
+			try {
+				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
+				const response = await reservationsService.getPackages(data);
+				setAvailablePackages(response.data.data);
+				setTotalPackages(response.data.total);
+			} catch {
+				console.error('An unexpected error happened on the server.');
+			}
+		}
+		getPackages().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function checkAvailability() {

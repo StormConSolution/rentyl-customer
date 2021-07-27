@@ -10,7 +10,7 @@ import { DateUtils } from '../../utils/utils';
 
 interface ReservationSummaryCardProps {
 	fullName: string;
-	paymentMethod: Api.Reservation.PaymentMethod;
+	paymentMethod?: Api.Reservation.PaymentMethod;
 	billingAddress: Api.Reservation.BillingAddressDetails;
 	priceDetails: Api.Reservation.PriceDetail;
 	packages: Api.Package.Res.Get[];
@@ -129,11 +129,13 @@ const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) =>
 					<Label variant={'h4'} mb={10}>
 						Payment Method
 					</Label>
-					<OtherPaymentCard
-						name={props.paymentMethod.nameOnCard}
-						cardNumber={props.paymentMethod.cardNumber}
-						expDate={`${props.paymentMethod?.expirationMonth}/${props.paymentMethod?.expirationYear}`}
-					/>
+					{props.paymentMethod && (
+						<OtherPaymentCard
+							name={props.paymentMethod.nameOnCard}
+							cardNumber={props.paymentMethod.cardNumber}
+							expDate={`${props.paymentMethod?.expirationMonth}/${props.paymentMethod?.expirationYear}`}
+						/>
+					)}
 				</Box>
 				{!ObjectUtils.isEmptyObject(props.billingAddress) && (
 					<Box>

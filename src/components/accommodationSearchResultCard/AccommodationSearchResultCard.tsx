@@ -12,6 +12,8 @@ import StarRating, { Rating } from '../starRating/StarRating';
 import './AccommodationSearchResultCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../labelButton/LabelButton';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 export interface AccommodationSearchResultCardProps {
 	id: number | string;
@@ -37,6 +39,7 @@ export interface AccommodationSearchResultCardProps {
 
 const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
 	function renderCarouselImages(imagePaths: string[]): JSX.Element[] {
 		return imagePaths.map((imagePath, index) => {
@@ -53,12 +56,15 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						{props.name}
 					</Label>
 					<Label variant="body2" className="costs">
-						${StringUtils.formatMoney(props.ratePerNightInCents)} or{' '}
-						{addCommasToNumber(props.pointsRatePerNight)} points / night
+						{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}
+						{company.allowCashBooking && company.allowPointBooking && ' or '}
+						{company.allowPointBooking && addCommasToNumber(props.ratePerNightInCents) + ' points'} / night
 					</Label>
-					<Label variant="caption" className="taxAndFees">
-						+ taxes &amp; fees
-					</Label>
+					{company.allowCashBooking && (
+						<Label variant="caption" className="taxAndFees">
+							+ taxes &amp; fees
+						</Label>
+					)}
 					{/*<StarRating rating={props.starRating} size="small16px" />*/}
 					{!props.hideButtons && (
 						<LabelButton
@@ -93,13 +99,19 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						{props.name}
 					</Label>
 					<div>
-						<Label variant="h4" className="costs">
-							${StringUtils.formatMoney(props.ratePerNightInCents)} or{' '}
-							{addCommasToNumber(props.pointsRatePerNight)} points/night
-						</Label>
-						<Label variant="caption" className="taxAndFees">
-							+ taxes &amp; fees
-						</Label>
+						{company && (
+							<Label variant="h4" className="costs">
+								{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}{' '}
+								{company.allowCashBooking && company.allowPointBooking && ' or '}
+								{company.allowPointBooking && addCommasToNumber(props.pointsRatePerNight) + ' points'}
+								/night
+							</Label>
+						)}
+						{company && company.allowCashBooking && (
+							<Label variant="caption" className="taxAndFees">
+								+ taxes &amp; fees
+							</Label>
+						)}
 					</div>
 					{/*<div>*/}
 					{/*	<StarRating rating={props.starRating} size="small16px" />*/}

@@ -15,7 +15,6 @@ import rsToasts from '@bit/redsky.framework.toast';
 import { HttpStatusCode } from '../../utils/http';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import AccommodationService from '../../services/accommodation/accommodation.service';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import LoadingPage from '../loadingPage/LoadingPage';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';

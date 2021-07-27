@@ -25,6 +25,14 @@ class WebUtils extends BaseWebUtils {
 		}
 		return convertedData;
 	}
+
+	/**
+	 * Checks to see if browser is pointed to localhost
+	 * @returns true if in localhost otherwise false
+	 */
+	static isLocalHost(): boolean {
+		return window.location.host.includes('localhost');
+	}
 }
 
 class DateUtils extends BaseDateUtils {

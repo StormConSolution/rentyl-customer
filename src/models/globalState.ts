@@ -11,7 +11,8 @@ import * as React from 'react';
 enum GlobalStateKeys {
 	COMPARISON_CARD = 'DestinationComparison',
 	USER_TOKEN = 'UserToken',
-	USER = 'User'
+	USER = 'User',
+	COMPANY = 'Company'
 }
 
 export interface ComparisonCardInfo {
@@ -28,6 +29,7 @@ class GlobalState {
 	destinationComparison: RecoilState<ComparisonCardInfo[]>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
+	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 
 	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
 
@@ -45,6 +47,18 @@ class GlobalState {
 		this.userToken = atom<string>({
 			key: GlobalStateKeys.USER_TOKEN,
 			default: this.loadFromLocalStorage<string>(GlobalStateKeys.USER_TOKEN, '')
+		});
+
+		this.company = atom<Api.Company.Res.GetCompanyAndClientVariables>({
+			key: GlobalStateKeys.COMPANY,
+			default: {
+				id: 0,
+				name: '',
+				squareLogoUrl: '',
+				wideLogoUrl: '',
+				allowPointBooking: 0,
+				allowCashBooking: 0
+			}
 		});
 
 		// The following is stored in local storage automatically

@@ -156,7 +156,7 @@ const EditFlowModifyRoomPage = () => {
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (rateCode !== '') {
+			if (rateCode !== '' || rateCode === undefined) {
 				createSearchQueryObj['rate'] = rateCode;
 			} else {
 				createSearchQueryObj['rate'] = 'ITSTIME';
@@ -179,6 +179,7 @@ const EditFlowModifyRoomPage = () => {
 			popupController.open(SpinningLoaderPopup);
 			let stay: Api.Reservation.Req.Update = {
 				id: reservation.id,
+				paymentMethodId: reservation.paymentMethod?.id,
 				guest: reservation.guest,
 				accommodationId: id,
 				adults: searchQueryObj.adults,
@@ -186,7 +187,8 @@ const EditFlowModifyRoomPage = () => {
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
-				rateCode: searchQueryObj.rate || ''
+				//@ts-ignore
+				rateCode: searchQueryObj.rate || searchQueryObj.rateCode || 'ITSTIME'
 			};
 			try {
 				await reservationsService.updateReservation(stay);
