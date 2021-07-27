@@ -16,11 +16,14 @@ import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
 import AccountOverview from './popups/accountOverview/AccountOverview';
 import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
+import useCompanyInfo from './customHooks/useCompanyInfo';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
+
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
+	const isCompanyLoaded = useCompanyInfo();
 
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
@@ -31,11 +34,12 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		if (loginStatus === LoginStatus.UNKNOWN) return;
+		if (loginStatus === LoginStatus.UNKNOWN || !isCompanyLoaded) return;
 		router.tryToLoadInitialPath();
-	}, [loginStatus]);
+	}, [loginStatus, isCompanyLoaded]);
 
 	function renderViewsBasedOnLoginStatus() {
+		if (!isCompanyLoaded) return null;
 		switch (loginStatus) {
 			case LoginStatus.UNKNOWN:
 				return null;

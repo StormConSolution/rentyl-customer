@@ -1,5 +1,6 @@
 import HttpClient from '@bit/redsky.framework.rs.http';
 import packageJson from '../../package.json';
+import { WebUtils } from './utils';
 
 export enum HttpStatusCode {
 	BAD_REQUEST = 400,
@@ -15,15 +16,27 @@ export enum HttpStatusCode {
 	NETWORK_CONNECT_TIMEOUT = 599
 }
 
+function getCompanyId() {
+	let urlParams = new URLSearchParams(window.location.search);
+	if (!urlParams.has('company_id')) {
+		console.error('missing company id on local host');
+		throw new Error('Missing company Id');
+	}
+	return parseInt(urlParams.get('company_id') || '1');
+}
+
+let headers: any = {
+	'Content-Type': 'application/json',
+	'Access-Control-Allow-Origin': '*',
+	Accept: 'application/json, text/plain, */*',
+	'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT'
+};
+
+if (WebUtils.isLocalHost()) headers['company-id'] = getCompanyId();
+
 const http = new HttpClient({
 	baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : packageJson.uri,
-	headers: {
-		'company-id': `1`,
-		'Content-Type': 'application/json',
-		'Access-Control-Allow-Origin': '*',
-		Accept: 'application/json, text/plain, */*',
-		'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT'
-	}
+	headers
 });
 
 export default http;

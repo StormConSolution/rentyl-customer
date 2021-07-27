@@ -6,6 +6,8 @@ import { addCommasToNumber } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
@@ -18,6 +20,7 @@ export interface DestinationSummaryAccommodationListProps {
 interface AccommodationListRowProp extends Api.Destination.Res.Accommodation {}
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
 		return (
 			<div className="accommodationRow" key={index}>
@@ -28,12 +31,16 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 				<Label variant={'caption'}>{accommodation.roomCount}</Label>
 				<Label variant={'caption'}>{accommodation.maxOccupantCount}</Label>
 				<div>
-					<Label variant="h3" className="rate">
-						${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
-					</Label>
-					<Label variant="body2" className="points">
-						{addCommasToNumber(accommodation.prices[0].priceCents)} pts.
-					</Label>
+					{company.allowCashBooking === 1 && (
+						<Label variant="h3" className="rate">
+							${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
+						</Label>
+					)}
+					{company.allowPointBooking === 1 && (
+						<Label variant={company.allowCashBooking !== 1 ? 'h4' : 'body2'} className="points">
+							{addCommasToNumber(accommodation.prices[0].priceCents)} pts
+						</Label>
+					)}
 				</div>
 				<div>
 					<LabelButton

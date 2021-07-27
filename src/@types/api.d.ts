@@ -48,10 +48,7 @@ declare namespace Api {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
 				accommodationTypeCode: string;
-				accommodationDescription: string;
-				maxOccupantCount: number;
-				extraBeds: 0 | 1;
-				adaCompliant: 0 | 1;
+				accommodationTypeDescription: string;
 				media: Media[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
@@ -363,6 +360,11 @@ declare namespace Api {
 			export interface Update extends Model.Company {}
 			export interface Role extends Model.UserRole {}
 			export interface Get extends Model.Company {}
+			export interface GetCompanyAndClientVariables
+				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
+				allowPointBooking: 0 | 1;
+				allowCashBooking: 0 | 1;
+			}
 		}
 	}
 
@@ -566,7 +568,6 @@ declare namespace Api {
 					icon: string;
 				}[];
 			}
-			[];
 			export interface Availability {
 				id: number;
 				name: string;
@@ -938,7 +939,7 @@ declare namespace Api {
 			}
 			export interface Create extends Verification {
 				rateCode: string;
-				paymentMethodId: number;
+				paymentMethodId?: number;
 				guest: Guest;
 			}
 			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
@@ -973,7 +974,7 @@ declare namespace Api {
 
 				export interface Create {
 					destinationId: number;
-					paymentMethodId: number;
+					paymentMethodId?: number;
 					stays: Stay[];
 				}
 			}
@@ -989,7 +990,7 @@ declare namespace Api {
 				userId: number;
 				guest: Guest;
 				billingAddress: BillingAddressDetails;
-				paymentMethod: PaymentMethod;
+				paymentMethod?: PaymentMethod;
 				destination: DestinationDetails;
 				accommodation: AccommodationDetails;
 				arrivalDate: Date | string;
@@ -1062,7 +1063,7 @@ declare namespace Api {
 					externalCancellationId: string;
 					adultCount: number;
 					childCount: number;
-					externalConfirmationId: string | null;
+					externalConfirmationId: string;
 					confirmationDate: Date | string;
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
@@ -1073,7 +1074,7 @@ declare namespace Api {
 					parentReservationId: number;
 					itineraryId: string;
 					billingAddress: BillingAddressDetails;
-					paymentMethod: PaymentMethod;
+					paymentMethod?: PaymentMethod;
 					destination: DestinationDetails;
 					stays: Itinerary.Stay[];
 				}

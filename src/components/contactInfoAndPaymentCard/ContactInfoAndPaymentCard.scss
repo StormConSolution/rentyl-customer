@@ -29,7 +29,7 @@
 		.useExistingCreditCard {
 			margin-top: 0 !important;
 			margin-left: 15px;
-			width: auto;
+			width: -moz-fit-content;
 		}
 		.creditCardInfo {
 			display: grid;
@@ -46,8 +46,8 @@
 		}
 		.rsLabelCheckbox {
 			height: 100%;
-			align-items: flex-start;
-			margin-top: 10px;
+			width: -moz-fit-content;
+			align-items: center;
 			a {
 				span {
 					color: theme-var($buttonLinkColor);

@@ -174,7 +174,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 													let stay: Api.Reservation.Req.Update = {
 														id: item.id,
 														rateCode: 'ITSTIME',
-														paymentMethodId: item.paymentMethod.id,
+														paymentMethodId: item.paymentMethod?.id || undefined,
 														guest: item.guest,
 														accommodationId: item.accommodation.id,
 														adults,
