@@ -36,7 +36,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
-	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;

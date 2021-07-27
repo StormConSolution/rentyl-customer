@@ -16,15 +16,14 @@ import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
 import AccountOverview from './popups/accountOverview/AccountOverview';
 import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
-import serviceFactory from './services/serviceFactory';
-import CompanyService from './services/company/company.service';
-import globalState, { setRecoilExternalValue } from './models/globalState';
+import useCompanyInfo from './customHooks/useCompanyInfo';
 
 function App() {
+	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
+
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
-	const companyService = serviceFactory.get<CompanyService>('CompanyService');
-	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
+	const isCompanyLoaded = useCompanyInfo();
 
 	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
@@ -32,19 +31,15 @@ function App() {
 		AOS.init({
 			duration: 1000
 		});
-		async function getCompanyInfo() {
-			let res = await companyService.getCompanyDetails();
-			setRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company, res);
-		}
-		getCompanyInfo().catch(console.error);
 	}, []);
 
 	useEffect(() => {
-		if (loginStatus === LoginStatus.UNKNOWN) return;
+		if (loginStatus === LoginStatus.UNKNOWN || !isCompanyLoaded) return;
 		router.tryToLoadInitialPath();
-	}, [loginStatus]);
+	}, [loginStatus, isCompanyLoaded]);
 
 	function renderViewsBasedOnLoginStatus() {
+		if (!isCompanyLoaded) return null;
 		switch (loginStatus) {
 			case LoginStatus.UNKNOWN:
 				return null;

@@ -37,7 +37,6 @@ interface BookingCartTotalsCardProps {
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
-	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		for (let i in props.costPerNight) {

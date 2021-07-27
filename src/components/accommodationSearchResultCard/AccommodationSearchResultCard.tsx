@@ -60,7 +60,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						{company.allowCashBooking && company.allowPointBooking && ' or '}
 						{company.allowPointBooking && addCommasToNumber(props.ratePerNightInCents) + ' points'} / night
 					</Label>
-					{!company.allowCashBooking && (
+					{company.allowCashBooking && (
 						<Label variant="caption" className="taxAndFees">
 							+ taxes &amp; fees
 						</Label>
@@ -99,13 +99,15 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						{props.name}
 					</Label>
 					<div>
-						<Label variant="h4" className="costs">
-							{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}{' '}
-							{company.allowCashBooking && company.allowPointBooking && ' or '}
-							{company.allowPointBooking && addCommasToNumber(props.pointsRatePerNight) + ' points'}
-							/night
-						</Label>
-						{company.allowCashBooking && (
+						{company && (
+							<Label variant="h4" className="costs">
+								{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}{' '}
+								{company.allowCashBooking && company.allowPointBooking && ' or '}
+								{company.allowPointBooking && addCommasToNumber(props.pointsRatePerNight) + ' points'}
+								/night
+							</Label>
+						)}
+						{company && company.allowCashBooking && (
 							<Label variant="caption" className="taxAndFees">
 								+ taxes &amp; fees
 							</Label>
