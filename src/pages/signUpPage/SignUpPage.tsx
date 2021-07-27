@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './SignUpPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Box from '../../components/box/Box';
@@ -21,14 +21,36 @@ import { formatPhoneNumber, removeAllExceptNumbers, removeExtraSpacesReturnsTabs
 import { useSetRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
 import router from '../../utils/router';
+import LabelSelect from '../../components/labelSelect/LabelSelect';
+import UserAddressService from '../../services/userAddress/userAddress.service';
+import CountryService from '../../services/country/country.service';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 let phoneNumber = '';
+let country = 'US';
+let state = '';
 
 const SignUpPage: React.FC = () => {
 	let userService = serviceFactory.get<UserService>('UserService');
+	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
+	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const size = useWindowResizeChange();
 	const setUser = useSetRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
+	const [isValidForm, setIsValidForm] = useState<boolean>(false);
 	const [formIsValid, setFormIsValid] = useState<boolean>(false);
+	const [stateList, setStateList] = useState<{ value: number | string; text: number | string; selected: boolean }[]>(
+		[]
+	);
+	const [countryList, setCountryList] = useState<
+		{ value: number | string; text: number | string; selected: boolean }[]
+	>([]);
+	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('address1', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
+			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
+			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')])
+		])
+	);
 	const [signUpForm, setSignUpForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('firstName', '', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
@@ -64,6 +86,42 @@ const SignUpPage: React.FC = () => {
 
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 
+	useEffect(() => {
+		async function getCountries() {
+			try {
+				let countries = await countryService.getAllCountries();
+				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
+			} catch (e) {
+				console.error('getCountries', e);
+				throw rsToasts.error('An unexpected error occurred on the server.', '', 5000);
+			}
+		}
+		getCountries().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getStates() {
+			let selectedCountry = countryList.find((item) => item.selected);
+			if (!selectedCountry) return;
+			try {
+				let response = await countryService.getStates(`${selectedCountry.value}`);
+				if (response.data.data.states) {
+					let newStates = formatStateOrCountryListForSelect(response.data.data.states);
+					setStateList(newStates);
+				}
+			} catch (e) {
+				rsToasts.error(e.message, '', 5000);
+			}
+		}
+		getStates().catch(console.error);
+	}, [countryList]);
+
+	function formatStateOrCountryListForSelect(statesOrCountries: any[]) {
+		return statesOrCountries.map((item) => {
+			return { value: item.isoCode, text: item.name, selected: item.isoCode === 'US' };
+		});
+	}
+
 	function isSignUpFormFilledOut(): boolean {
 		return (
 			!!signUpForm.get('firstName').value.toString().length &&
@@ -90,7 +148,24 @@ const SignUpPage: React.FC = () => {
 		setSignUpForm(signUpForm.clone());
 	}
 
+	async function updateNewAddressObj(control: RsFormControl) {
+		if (control.key === 'zip') control.value = +control.value;
+		newAddressObj.update(control);
+		setIsValidForm(isFormFilledOut());
+		setNewAddressObj(newAddressObj.clone());
+	}
+
+	function isFormFilledOut(): boolean {
+		return (
+			!!newAddressObj.get('address1').value.toString().length &&
+			!!newAddressObj.get('city').value.toString().length &&
+			!!newAddressObj.get('zip').value.toString().length &&
+			!!state.length
+		);
+	}
+
 	async function signUp() {
+		popupController.open(SpinningLoaderPopup);
 		if (!phoneNumber.length || phoneNumber.length < 3) {
 			return rsToasts.error('Phone number is required');
 		}
@@ -106,10 +181,17 @@ const SignUpPage: React.FC = () => {
 		delete newCustomer.firstName;
 		delete newCustomer.lastName;
 		delete newCustomer.confirmPassword;
+
+		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
+		addressObj['type'] = 'BOTH';
+		addressObj['state'] = state;
+		addressObj['isDefault'] = 1;
+		addressObj['country'] = country;
 		try {
-			let res = await userService.createNewCustomer(newCustomer);
-			if (res.data) {
+			let res = await userService.createNewCustomer({ ...newCustomer, address: addressObj });
+			if (res) {
 				rsToasts.success('Account Created');
+				popupController.close(SpinningLoaderPopup);
 				if (params.data !== 0 && params.data.includes('arrivalDate')) {
 					router.navigate(`/signin?data=${params.data}`).catch(console.error);
 				} else {
@@ -117,6 +199,7 @@ const SignUpPage: React.FC = () => {
 				}
 			}
 		} catch (e) {
+			popupController.close(SpinningLoaderPopup);
 			axiosErrorHandler(e, {
 				[HttpStatusCode.CONFLICT]: () => {
 					throw rsToasts.error('This email is already in use.');
@@ -125,6 +208,16 @@ const SignUpPage: React.FC = () => {
 			console.error('Signup new customer', e);
 			throw rsToasts.error('An unexpected error occurred on the server.');
 		}
+	}
+
+	async function saveAddress(userId: number) {
+		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
+		addressObj['userId'] = userId;
+		addressObj['type'] = 'BOTH';
+		addressObj['state'] = state;
+		addressObj['isDefault'] = 1;
+		addressObj['country'] = country;
+		await userAddressService.create(addressObj);
 	}
 
 	return (
@@ -146,101 +239,163 @@ const SignUpPage: React.FC = () => {
 							et justo duo dolores et
 						</Label>
 					</Box>
-					<Box className={'formWrapper'} marginLeft={size === 'small' ? 0 : 38}>
-						<Paper
-							className={'formPaper'}
-							width={size === 'small' ? '335px' : '604px'}
-							height={size === 'small' ? '725px' : '675px'}
-							boxShadow
-							backgroundColor={'#FCFBF8'}
-							position={'relative'}
+
+					<Paper
+						className={'formPaper'}
+						width={size === 'small' ? '335px' : '604px'}
+						height={size === 'small' ? '800px' : '825px'}
+						boxShadow
+						backgroundColor={'#FCFBF8'}
+						position={'relative'}
+					>
+						<Box
+							display={size === 'small' ? 'block' : 'flex'}
+							justifyContent={'space-between'}
+							flexDirection={'column'}
+							padding={size === 'small' ? '20px' : '48px 92px'}
 						>
-							<Box padding={size === 'small' ? '20px' : '48px 92px'}>
-								<Box display={size === 'small' ? 'block' : 'flex'} justifyContent={'space-between'}>
-									<LabelInput
-										title={'First Name'}
-										inputType={'text'}
-										control={signUpForm.get('firstName')}
-										updateControl={updateUserObjForm}
-									/>
-									<LabelInput
-										title={'Last Name'}
-										inputType={'text'}
-										control={signUpForm.get('lastName')}
-										updateControl={updateUserObjForm}
-									/>
-								</Box>
+							<Box display={'flex'}>
+								{' '}
 								<LabelInput
-									title={'Email'}
+									title={'First Name'}
 									inputType={'text'}
-									isEmailInput
-									control={signUpForm.get('primaryEmail')}
+									control={signUpForm.get('firstName')}
 									updateControl={updateUserObjForm}
 								/>
 								<LabelInput
-									title={'Phone'}
+									title={'Last Name'}
 									inputType={'text'}
-									isPhoneInput
+									control={signUpForm.get('lastName')}
+									updateControl={updateUserObjForm}
+								/>
+							</Box>
+							<LabelInput
+								className={'inputStretched'}
+								title={'Address'}
+								inputType={'text'}
+								control={newAddressObj.get('address1')}
+								updateControl={updateNewAddressObj}
+							/>
+							<Box display={'flex'}>
+								<LabelInput
+									title={'City'}
+									inputType={'text'}
+									control={newAddressObj.get('city')}
+									updateControl={updateNewAddressObj}
+								/>
+								<LabelInput
+									title={'Zip Code'}
+									inputType={'number'}
+									control={newAddressObj.get('zip')}
+									updateControl={updateNewAddressObj}
+								/>
+							</Box>
+							<Box display={'flex'} className={'countryState'}>
+								<LabelSelect
+									title={'State'}
 									onChange={(value) => {
-										phoneNumber = value.toString();
+										let newStateList = [...stateList];
+										newStateList = newStateList.map((item) => {
+											return {
+												value: item.value,
+												text: item.text,
+												selected: item.value === value
+											};
+										});
+										setStateList(newStateList);
+										state = value || '';
+										setIsValidForm(isFormFilledOut());
 									}}
+									selectOptions={stateList}
 								/>
-								<LabelInput
-									title={'Password'}
-									inputType={'password'}
-									control={signUpForm.get('password')}
-									updateControl={updateUserObjForm}
+								<LabelSelect
+									title={'Country'}
+									onChange={(value) => {
+										let newCountryList = [...countryList];
+										newCountryList = newCountryList.map((item) => {
+											return {
+												value: item.value,
+												text: item.text,
+												selected: item.value === value
+											};
+										});
+										setCountryList(newCountryList);
+										country = value || '';
+										setIsValidForm(isFormFilledOut());
+									}}
+									selectOptions={countryList}
 								/>
-								<LabelInput
-									title={'Confirm Password'}
-									inputType={'password'}
-									control={signUpForm.get('confirmPassword')}
-									updateControl={updateUserObjForm}
-								/>
-
-								<LabelButton
-									look={!formIsValid ? 'containedSecondary' : 'containedPrimary'}
-									variant={'button'}
-									label={'Sign Up'}
-									onClick={signUp}
-									disabled={!formIsValid}
-								/>
-
-								<div className={'termsAndPrivacy'}>
-									By signing up you are agreeing to the <a href={'/'}>Terms & Conditions</a> and{' '}
-									<a href={'/'}>Privacy Policy.</a>
-								</div>
 							</Box>
-							<Box
-								className={'signInBottomBox'}
-								display={'flex'}
-								flexDirection={'column'}
-								justifyContent={'center'}
-								alignItems={'center'}
-								marginTop={'auto'}
-								height={'100px'}
-								borderTop={'1px solid #DEDEDE'}
-							>
-								<Label variant={'body1'}>Already have an account?</Label>
-								<LabelLink path={'/signin'} externalLink={false} label={'Sign In'} variant={'button'} />
-							</Box>
-						</Paper>
-						<Paper
-							className={'successMsgPaper'}
-							width={size === 'small' ? '335px' : '604px'}
-							height={size === 'small' ? '146px' : '200px'}
-							boxShadow
-							backgroundColor={'#FFFFFF'}
-							position={'relative'}
+
+							<LabelInput
+								title={'Phone'}
+								inputType={'text'}
+								isPhoneInput
+								onChange={(value) => {
+									phoneNumber = value.toString();
+								}}
+							/>
+							<LabelInput
+								title={'Email'}
+								inputType={'text'}
+								isEmailInput
+								control={signUpForm.get('primaryEmail')}
+								updateControl={updateUserObjForm}
+							/>
+							<LabelInput
+								title={'Password'}
+								inputType={'password'}
+								control={signUpForm.get('password')}
+								updateControl={updateUserObjForm}
+							/>
+							<LabelInput
+								title={'Confirm Password'}
+								inputType={'password'}
+								control={signUpForm.get('confirmPassword')}
+								updateControl={updateUserObjForm}
+							/>
+
+							<LabelButton
+								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
+								variant={'button'}
+								label={'Sign Up'}
+								onClick={signUp}
+								disabled={!formIsValid || !isValidForm}
+							/>
+
+							<div className={'termsAndPrivacy'}>
+								By signing up you are agreeing to the <a href={'/'}>Terms & Conditions</a> and{' '}
+								<a href={'/'}>Privacy Policy.</a>
+							</div>
+						</Box>
+						<Box
+							className={'signInBottomBox'}
+							display={'flex'}
+							flexDirection={'column'}
+							justifyContent={'center'}
+							alignItems={'center'}
+							marginTop={'auto'}
+							height={'100px'}
 						>
-							<Label className={'successText'} variant={size === 'small' ? 'h2' : 'h1'}>
-								Thank you for signing up
-							</Label>
-							<Label className={'successText'} variant={'body1'}>
-								You will receive an email shortly to confirm your account.
-							</Label>
-						</Paper>
-					</Box>
+							<Label variant={'body1'}>Already have an account?</Label>
+							<LabelLink path={'/signin'} externalLink={false} label={'Sign In'} variant={'button'} />
+						</Box>
+					</Paper>
+					<Paper
+						className={'successMsgPaper'}
+						width={size === 'small' ? '335px' : '604px'}
+						height={size === 'small' ? '146px' : '200px'}
+						boxShadow
+						backgroundColor={'#FFFFFF'}
+						position={'relative'}
+					>
+						<Label className={'successText'} variant={size === 'small' ? 'h2' : 'h1'}>
+							Thank you for signing up
+						</Label>
+						<Label className={'successText'} variant={'body1'}>
+							You will receive an email shortly to confirm your account.
+						</Label>
+					</Paper>
 				</Box>
 				<Footer links={FooterLinkTestData} />
 			</div>
