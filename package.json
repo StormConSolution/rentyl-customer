@@ -4,7 +4,7 @@
 	"main": "src/App.tsx",
 	"license": "UNLICENSED",
 	"private": true,
-	"uri": "https://staging.spireloyalty.com/api/v1",
+	"uri": "https://sand.spireloyalty.com/api/v1",
 	"dependencies": {
 		"@babel/plugin-syntax-jsx": "^7.12.1",
 		"@babel/preset-typescript": "^7.12.7",
