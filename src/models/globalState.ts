@@ -64,7 +64,6 @@ class GlobalState {
 		// The following is stored in local storage automatically
 		this.saveToStorageList.push({ key: GlobalStateKeys.USER_TOKEN, state: this.userToken });
 		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
-		this.saveToStorageList.push({ key: GlobalStateKeys.COMPANY, state: this.company });
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {
