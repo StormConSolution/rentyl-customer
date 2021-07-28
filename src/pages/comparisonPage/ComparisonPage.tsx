@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './ComparisonPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
@@ -20,6 +20,7 @@ import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import IconToolTip from '../../components/iconToolTip/IconToolTip';
+import { ObjectUtils } from '../../utils/utils';
 
 export interface TableData {
 	description: JSX.Element[];
@@ -35,6 +36,7 @@ const ComparisonPage: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
+	const comparisonRef = useRef(comparisonItems);
 	const [accommodationTextList, setAccommodationTextList] = useState<(string | number)[]>([]);
 	const [accommodationIdList, setAccommodationIdList] = useState<number[]>([]);
 	const [accommodationDetailList, setAccommodationDetailList] = useState<Api.Accommodation.Res.Details[]>([]);
@@ -43,14 +45,15 @@ const ComparisonPage: React.FC = () => {
 	useEffect(() => {
 		let modifiedComparisonItems: ComparisonCardInfo[] = comparisonService.setDefaultAccommodations(comparisonItems);
 		setComparisonItems(modifiedComparisonItems);
-		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 		setWaitToLoad(false);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 	}, []);
 
 	useEffect(() => {
 		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
-			document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
+			if (!ObjectUtils.isArrayWithData(comparisonRef.current))
+				document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
+			else document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
 		});
 		return () => {
 			router.unsubscribeFromBeforeRouterNavigate(id);
@@ -58,6 +61,7 @@ const ComparisonPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
+		comparisonRef.current = comparisonItems;
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];
 		for (let item of comparisonItems) {
