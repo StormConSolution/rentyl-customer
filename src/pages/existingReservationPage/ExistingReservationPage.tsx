@@ -160,10 +160,12 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 												children: item.childCount,
 												startDate: item.arrivalDate,
 												endDate: item.departureDate,
-												packages: [],
+												packages: item.upsellPackages || [],
+												rateCode: item.rateCode,
 												onApplyChanges: (
 													adults: number,
 													children: number,
+													rateCode: string,
 													checkinDate: string | Date,
 													checkoutDate: string | Date,
 													originalStartDate: string | Date,
@@ -173,7 +175,7 @@ const ExistingReservationPage: React.FC<ReservationPageProps> = (props) => {
 													popupController.open(SpinningLoaderPopup);
 													let stay: Api.Reservation.Req.Update = {
 														id: item.id,
-														rateCode: 'ITSTIME',
+														rateCode: item.rateCode,
 														paymentMethodId: item.paymentMethod?.id || undefined,
 														guest: item.guest,
 														accommodationId: item.accommodation.id,

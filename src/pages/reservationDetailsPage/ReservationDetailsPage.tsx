@@ -174,6 +174,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 															onApplyChanges: (
 																adults: number,
 																children: number,
+																rateCode: string,
 																checkinDate: string | Date,
 																checkoutDate: string | Date,
 																originalStartDate: string | Date,

@@ -49,7 +49,7 @@ const EditFlowModifyRoomPage = () => {
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.destinationId
 	});
-	const [rateCode, setRateCode] = useState<string>('ITSTIME');
+	const [rateCode, setRateCode] = useState<string>('');
 	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -78,8 +78,8 @@ const EditFlowModifyRoomPage = () => {
 
 			try {
 				popupController.open(SpinningLoaderPopup);
-				if (newSearchQueryObj.rate === '' || newSearchQueryObj.rate === undefined)
-					delete newSearchQueryObj.rate;
+				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
+					delete newSearchQueryObj.rateCode;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
 				//can't use getByPage as it doesn't return with the info needed for the cards.
@@ -110,7 +110,7 @@ const EditFlowModifyRoomPage = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rate',
+			| 'rateCode',
 		value: any
 	) {
 		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
@@ -149,10 +149,8 @@ const EditFlowModifyRoomPage = () => {
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (rateCode !== '' || rateCode === undefined) {
-				createSearchQueryObj['rate'] = rateCode;
-			} else {
-				createSearchQueryObj['rate'] = 'ITSTIME';
+			if (rateCode !== '' || rateCode !== undefined) {
+				createSearchQueryObj['rateCode'] = rateCode;
 			}
 			return createSearchQueryObj;
 		});
@@ -180,8 +178,7 @@ const EditFlowModifyRoomPage = () => {
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
-				//@ts-ignore
-				rateCode: searchQueryObj.rate || searchQueryObj.rateCode || 'ITSTIME'
+				rateCode: searchQueryObj.rateCode
 			};
 			try {
 				await reservationsService.updateReservation(stay);
@@ -381,7 +378,7 @@ const EditFlowModifyRoomPage = () => {
 								<RateCodeSelect
 									apply={(value) => {
 										setRateCode(value);
-										updateSearchQueryObj('rate', value);
+										updateSearchQueryObj('rateCode', value);
 									}}
 									code={rateCode}
 									valid={!validCode}

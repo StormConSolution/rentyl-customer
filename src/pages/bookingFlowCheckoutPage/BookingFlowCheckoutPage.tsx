@@ -110,8 +110,7 @@ const BookingFlowCheckoutPage = () => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							//@ts-ignore
-							rateCode: accommodation.rateCode || accommodation.rate,
+							rateCode: accommodation.rateCode,
 							upsellPackages: accommodation.packages.map((item) => {
 								return {
 									id: item.id
@@ -171,8 +170,7 @@ const BookingFlowCheckoutPage = () => {
 			destinationId: destinationId,
 			adults: data.adults,
 			children: data.children,
-			//@ts-ignore
-			rateCode: data.rateCode || data.rate || 'ITSTIME',
+			rateCode: data.rateCode,
 			arrivalDate: data.arrivalDate,
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
@@ -242,7 +240,8 @@ const BookingFlowCheckoutPage = () => {
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
 		packages: Api.Package.Res.Get[],
-		accommodationId: number
+		accommodationId: number,
+		rateCode?: string
 	) {
 		popupController.close(EditAccommodationPopup);
 		try {
@@ -251,6 +250,7 @@ const BookingFlowCheckoutPage = () => {
 				adults,
 				children,
 				accommodationId,
+				rateCode,
 				arrivalDate: checkinDate,
 				departureDate: checkoutDate,
 				packages: packages.map((item) => item.id)
@@ -307,8 +307,7 @@ const BookingFlowCheckoutPage = () => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						//@ts-ignore
-						rateCode: accommodation.rateCode || accommodation.rate,
+						rateCode: accommodation.rateCode,
 						upsellPackages: accommodation.packages.map((item) => {
 							return {
 								id: item.id
@@ -399,10 +398,12 @@ const BookingFlowCheckoutPage = () => {
 									adults: accommodation.adultCount,
 									children: accommodation.childCount,
 									destinationId: destinationId,
+									rateCode: accommodation.rateCode,
 									endDate: checkoutDate,
 									onApplyChanges(
 										adults: number,
 										children: number,
+										rateCode: string,
 										checkinDate: string | Date,
 										checkoutDate: string | Date,
 										originalStartDate: string | Date,
@@ -418,7 +419,8 @@ const BookingFlowCheckoutPage = () => {
 											originalStartDate,
 											originalEndDate,
 											packages,
-											id
+											id,
+											rateCode
 										);
 									},
 									packages: accommodation.packages,

@@ -6,12 +6,9 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime, DateUtils } from '../../../utils/utils';
-import moment from 'moment';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
 } from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
-import { useRecoilValue } from 'recoil';
-import globalState from '../../../models/globalState';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;

@@ -82,7 +82,7 @@ const EditFlowModifyPaymentPage = () => {
 						popupController.close(SpinningLoaderPopup);
 						let stay: Api.Reservation.Req.Update = {
 							id: reservation.id,
-							rateCode: 'ITSTIME',
+							rateCode: reservation.rateCode || '',
 							paymentMethodId: result.id,
 							guest: contactInfo,
 							accommodationId: reservation.accommodation.id,
