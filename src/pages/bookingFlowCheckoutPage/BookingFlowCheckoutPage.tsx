@@ -214,7 +214,12 @@ const BookingFlowCheckoutPage = () => {
 		setAccommodations(newAccommodationList);
 		let data = {
 			destinationId,
-			stays: newAccommodationList
+			stays: newAccommodationList.map((accommodation) => {
+				return {
+					...accommodation,
+					packages: accommodation.packages.map((item: Api.Package.Res.Get) => item.id)
+				};
+			})
 		};
 		if (!newAccommodationList.length) {
 			await router.navigate('/reservation/availability').catch(console.error);

@@ -1,9 +1,7 @@
 @import '../../themes/themes';
 
 .rsBookingFlowAddRoomPage {
-	.rs-page-content-wrapper {
-		margin-top: 80px;
-	}
+	margin-top: 80px;
 	.rsRateCodeSelect {
 		margin-bottom: 30px;
 		padding-bottom: 30px;
@@ -13,6 +11,15 @@
 		margin: 35px auto;
 		img {
 			min-width: 100px;
+		}
+	}
+
+	.backLink {
+		color: theme-var($buttonLinkColor);
+		width: fit-content;
+		width: -moz-fit-content;
+		&:hover {
+			cursor: pointer;
 		}
 	}
 }

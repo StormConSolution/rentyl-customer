@@ -242,6 +242,9 @@ const BookingFlowAddRoomPage = () => {
 	return (
 		<Page className={'rsBookingFlowAddRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<Label onClick={() => router.back()} variant={'caption'} className={'backLink'}>
+					{'<'} Back
+				</Label>
 				{params.data.edit && !!editingAccommodation && (
 					<AccommodationSearchResultCard
 						currentRoom={true}
