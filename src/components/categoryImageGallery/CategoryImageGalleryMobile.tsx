@@ -12,6 +12,7 @@ import Carousel from '../carousel/Carousel';
 import MobileLightBoxTwoPopup, {
 	MobileLightBoxTwoPopupProps
 } from '../../popups/mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
+import { ObjectUtils } from '../../utils/utils';
 
 interface CategoryImageGalleryMobileProps {
 	accommodationCategories: Api.AccommodationCategory.Details[];
@@ -22,17 +23,27 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 
 	function renderOptions() {
 		let firstRun = true;
-		return props.accommodationCategories.map((item, index) => {
-			if (!selected && firstRun) {
-				setSelected(item.id);
-				firstRun = false;
-			}
-			return {
-				value: item.id,
-				text: item.title,
-				selected: selected === item.id
-			};
-		});
+		return props.accommodationCategories
+			.map((item, index) => {
+				if (!selected && firstRun) {
+					setSelected(item.id);
+					firstRun = false;
+				}
+				if (!ObjectUtils.isArrayWithData(item.media)) {
+					return {
+						value: 'DELETE',
+						text: item.title,
+						selected: selected === item.id
+					};
+				} else {
+					return {
+						value: item.id,
+						text: item.title,
+						selected: selected === item.id
+					};
+				}
+			})
+			.filter((item) => item.value !== 'DELETE');
 	}
 
 	function renderImages(): React.ReactNodeArray {
