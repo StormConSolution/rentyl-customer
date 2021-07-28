@@ -45,12 +45,12 @@ const ExistingItineraryPage: React.FC = () => {
 
 		let prevReservations = reservations.filter((item) => {
 			let date = new Date(item.departureDate);
-			return date.getTime() < Date.now();
+			return date.getTime() < Date.now() && !item.externalCancelNumber;
 		});
 
 		let currentRes = reservations.filter((item) => {
 			let date = new Date(item.departureDate);
-			return date.getTime() > Date.now();
+			return date.getTime() > Date.now() && !item.externalCancelNumber;
 		});
 
 		setUpComingReservations(currentRes);
@@ -75,7 +75,6 @@ const ExistingItineraryPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(upComingReservations)) return;
 
 		let itineraries = groupMatchingItineraries(upComingReservations);
-		console.log(itineraries);
 		return itineraries.map((item, index) => {
 			let reservation = item.reservations[0];
 			return (
@@ -93,10 +92,6 @@ const ExistingItineraryPage: React.FC = () => {
 					totalCostCents={reservation.priceDetail.grandTotalCents}
 					totalPoints={1000} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
-					// onViewDetailsClick={() => {
-					// 	if (item.reservations.length > 1)
-					// 		router.navigate('/reservations/itinerary/details?ii=' + reservation.itineraryId).catch(console.error);
-					// }}
 					cancelPermitted={reservation.cancellationPermitted}
 				/>
 			);
@@ -125,9 +120,6 @@ const ExistingItineraryPage: React.FC = () => {
 					totalCostCents={reservation.priceDetail.grandTotalCents}
 					totalPoints={1000} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
-					// onViewDetailsClick={() => {
-					// 	router.navigate('/reservations/itinerary/details?ii=' + reservation.itineraryId).catch(console.error);
-					// }}
 					cancelPermitted={0}
 				/>
 			);

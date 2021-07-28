@@ -30,6 +30,7 @@ interface ReservationDetailsAccordionProps {
 	phone: string;
 	additionalDetails: string;
 	onDetailsClick: () => void;
+	isCancelable?: boolean;
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
 	isOpen?: boolean;
@@ -152,14 +153,16 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 	function renderLinks() {
 		return (
 			<>
-				<LabelButton
-					look={'none'}
-					variant={'body1'}
-					label={'REMOVE'}
-					onClick={() => {
-						if (props.onRemove) props.onRemove();
-					}}
-				/>
+				{props.isCancelable && (
+					<LabelButton
+						look={'none'}
+						variant={'body1'}
+						label={'REMOVE'}
+						onClick={() => {
+							if (props.onRemove) props.onRemove();
+						}}
+					/>
+				)}
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
@@ -168,14 +171,15 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						if (props.onChangeRoom) props.onChangeRoom();
 					}}
 				/>
-				<LabelButton
-					look={'none'}
-					variant={'body1'}
-					label={'EDIT SERVICE'}
-					onClick={() => {
-						if (props.onEditService) props.onEditService();
-					}}
-				/>
+				{/*THIS IS TEMP*/}
+				{/*<LabelButton*/}
+				{/*	look={'none'}*/}
+				{/*	variant={'body1'}*/}
+				{/*	label={'EDIT SERVICE'}*/}
+				{/*	onClick={() => {*/}
+				{/*		if (props.onEditService) props.onEditService();*/}
+				{/*	}}*/}
+				{/*/>*/}
 				<LabelButton
 					look={'none'}
 					variant={'body1'}

@@ -69,6 +69,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 			let res = await reservationsService.update(newData);
 			setReservation({ ...res });
 			popupController.close(SpinningLoaderPopup);
+			popupController.closeAll();
 		} catch (e) {
 			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
 				rsToasts.error('Cannot update a past reservation', 'Failed To update', 5000);
@@ -126,6 +127,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							email={reservation.guest.email}
 							phone={reservation.guest.phone}
 							additionalDetails={reservation.additionalDetails}
+							isCancelable={!!reservation.cancellationPermitted}
 							onDetailsClick={() => {
 								console.log('hello');
 							}}
@@ -144,10 +146,16 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 							onRemove={() => {
 								popupController.open<ConfirmRemovePopupProps>(ConfirmRemovePopup, {
 									onRemove: async () => {
+										popupController.open(SpinningLoaderPopup);
 										try {
 											let res = await reservationsService.cancel(reservation.id);
+											if (res) {
+												popupController.close(SpinningLoaderPopup);
+												router.navigate('/reservations').catch(console.error);
+											}
 										} catch (e) {
 											console.error(e.message);
+											popupController.close(SpinningLoaderPopup);
 										}
 									}
 								});
@@ -162,7 +170,13 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 									arrivalDate: reservation.arrivalDate,
 									departureDate: reservation.departureDate,
 									onApplyChanges: (data) => {
-										updateReservation(data).catch(console.error);
+										let newData: any = { ...data };
+										newData.rateCode = 'ITSTIME';
+										newData.paymentMethodId = reservation.paymentMethod?.id;
+										newData.guest = reservation.guest;
+										newData.accommodationId = reservation.accommodation.id;
+										newData.numberOfAccommodations = 1;
+										updateReservation(newData).catch(console.error);
 									}
 								});
 							}}
