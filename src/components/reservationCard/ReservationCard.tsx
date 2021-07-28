@@ -3,10 +3,8 @@ import './ReservationCard.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Icon from '@bit/redsky.framework.rs.icon';
 import LabelLink from '../labelLink/LabelLink';
 import { addCommasToNumber } from '../../utils/utils';
-import router from '../../utils/router';
 import ReservationInfoCard from '../reservationInfoCard/ReservationInfoCard';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 
@@ -17,15 +15,13 @@ interface ReservationCardProps {
 	address: string;
 	reservationDates: { startDate: string | Date; endDate: string | Date };
 	propertyType: string;
-	sleeps: number;
+	itineraryId: string;
 	maxOccupancy: number;
 	amenities: string[];
 	totalCostCents: number;
 	totalPoints: number;
-	onViewDetailsClick: () => void;
+	linkPath: string;
 	cancelPermitted: 0 | 1;
-	cancelPolicy: string;
-	edit?: () => void;
 }
 
 const ReservationCard: React.FC<ReservationCardProps> = (props) => {
@@ -45,13 +41,10 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 				<ReservationInfoCard
 					reservationDates={props.reservationDates}
 					propertyType={props.propertyType}
-					sleeps={props.sleeps}
+					itineraryId={props.itineraryId}
 					maxOccupancy={props.maxOccupancy}
 					amenities={props.amenities}
-					toggleConfirmation={() => {}}
 					cancelPermitted={props.cancelPermitted}
-					cancelPolicy={props.cancelPolicy}
-					edit={props.edit}
 				/>
 			</Box>
 			<Paper className={'columnThree'} boxShadow padding={'25px 40px'}>
@@ -67,7 +60,7 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 					</Label>
 					<Label variant={'h2'}>{addCommasToNumber(props.totalPoints)}</Label>
 				</div>
-				<LabelLink path={'/'} label={'view details'} variant={'caption'} onClick={props.onViewDetailsClick} />
+				<LabelLink path={props.linkPath} label={'view details'} variant={'caption'} />
 			</Paper>
 		</Box>
 	);

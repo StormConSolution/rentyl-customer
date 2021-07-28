@@ -28,6 +28,23 @@ interface LabelInputProps {
 	iconImage?: string;
 	iconSize?: number;
 	className?: string;
+	labelVariant?:
+		| 'h1'
+		| 'h2'
+		| 'h3'
+		| 'h4'
+		| 'h5'
+		| 'h6'
+		| 'link1'
+		| 'link2'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
+		| string;
 }
 
 const LabelInput: React.FC<LabelInputProps> = (props) => {
@@ -67,7 +84,7 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 
 	return (
 		<div className={`rsLabelInput ${props.className || ''}`}>
-			<Label variant={'caption'}>{props.title}</Label>
+			<Label variant={props.labelVariant || 'caption'}>{props.title}</Label>
 			{!!props.iconImage && (
 				<div className="iconHolder">
 					<Icon iconImg={props.iconImage} size={props.iconSize} />

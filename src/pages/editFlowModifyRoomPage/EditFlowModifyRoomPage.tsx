@@ -8,7 +8,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -24,6 +24,9 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import ReservationsService from '../../services/reservations/reservations.service';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import LabelButton from '../../components/labelButton/LabelButton';
+import ConfirmChangeRoomPopup, {
+	ConfirmChangeRoomPopupProps
+} from '../../popups/confirmChangeRoomPopup/ConfirmChangeRoomPopup';
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
@@ -39,6 +42,8 @@ const EditFlowModifyRoomPage = () => {
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		startDate: moment(reservation?.arrivalDate).format('YYYY-MM-DD'),
 		endDate: !!reservation
@@ -97,6 +102,8 @@ const EditFlowModifyRoomPage = () => {
 	}, [searchQueryObj]);
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		setStartDateControl(startDate);
+		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
@@ -199,49 +206,46 @@ const EditFlowModifyRoomPage = () => {
 		return destinations.map((destination, index) => {
 			let urls: string[] = getImageUrls(destination);
 			return (
-				<AccommodationSearchResultCard
-					key={index}
-					id={destination.id}
-					name={destination.name}
-					maxSleeps={destination.maxSleeps}
-					squareFeet={2500}
-					description={destination.longDescription}
-					ratePerNightInCents={destination.costPerNightCents}
-					pointsRatePerNight={destination.pointsPerNight}
-					amenityIconNames={destination.featureIcons}
-					pointsEarnable={destination.pointsEarned}
-					hideButtons={true}
-					roomStats={[
-						{
-							label: 'Sleeps',
-							datum: destination.maxSleeps
-						},
-						{
-							label: 'Max Occupancy',
-							datum: destination.maxOccupancyCount
-						},
-						{
-							label: 'ADA Compliant',
-							datum: destination.adaCompliant ? 'Yes' : 'No'
-						},
-						{
-							label: 'Extra Bed',
-							datum: destination.extraBeds ? 'Yes' : 'No'
-						}
-					]}
-					onBookNowClick={() => {
-						popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-							bodyText: 'This will change your current room, are you sure?',
-							cancelText: 'No',
-							confirm(): void {
-								bookNow(destination.id);
+				<>
+					<AccommodationSearchResultCard
+						key={index}
+						id={destination.id}
+						name={destination.name}
+						maxSleeps={destination.maxSleeps}
+						squareFeet={2500}
+						description={destination.longDescription}
+						ratePerNightInCents={destination.costPerNightCents}
+						pointsRatePerNight={destination.pointsPerNight}
+						amenityIconNames={destination.featureIcons}
+						pointsEarnable={destination.pointsEarned}
+						hideButtons={true}
+						roomStats={[
+							{
+								label: 'Sleeps',
+								datum: destination.maxSleeps
 							},
-							confirmText: 'Yes',
-							title: 'Change Room'
-						});
-					}}
-					carouselImagePaths={urls}
-				/>
+							{
+								label: 'Max Occupancy',
+								datum: destination.maxOccupancyCount
+							},
+							{
+								label: 'ADA Compliant',
+								datum: destination.adaCompliant ? 'Yes' : 'No'
+							},
+							{
+								label: 'Extra Bed',
+								datum: destination.extraBeds ? 'Yes' : 'No'
+							}
+						]}
+						onBookNowClick={() => {
+							popupController.open<ConfirmChangeRoomPopupProps>(ConfirmChangeRoomPopup, {
+								onUpdateRoomClick: () => bookNow(destination.id)
+							});
+						}}
+						carouselImagePaths={urls}
+					/>
+					<hr />
+				</>
 			);
 		});
 	}
@@ -249,60 +253,51 @@ const EditFlowModifyRoomPage = () => {
 	return (
 		<Page className={'rsEditFlowModifyRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box
-					display={'flex'}
-					className={'editingNotification'}
-					alignItems={'center'}
-					justifyContent={'space-around'}
-				>
-					<Label variant={'h2'}>You are editing your reservation</Label>
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Dismiss Edits'}
-						onClick={() => {
-							router.back();
-						}}
-					/>
-				</Box>
 				{!!reservation && (
-					<AccommodationSearchResultCard
-						currentRoom={true}
-						id={reservation.destination.id}
-						name={reservation.destination.name}
-						maxSleeps={reservation.accommodation.maxSleeps}
-						squareFeet={2500}
-						description={reservation.accommodation.longDescription}
-						ratePerNightInCents={reservation.priceDetail.accommodationTotalInCents}
-						pointsRatePerNight={0}
-						hideButtons={true}
-						roomStats={[
-							{
-								label: 'Sleeps',
-								datum: reservation.accommodation.maxSleeps
-							},
-							{
-								label: 'Max Occupancy',
-								datum: reservation.accommodation.maxOccupantCount
-							},
-							{
-								label: 'ADA Compliant',
-								datum: reservation.accommodation.adaCompliant === 1 ? 'Yes' : 'No'
-							},
-							{
-								label: 'Extra Bed',
-								datum: reservation.accommodation.extraBed
-							}
-						]}
-						carouselImagePaths={['']}
-						amenityIconNames={reservation.accommodation.featureIcons}
-						onBookNowClick={() => {
-							router.back();
-						}}
-						pointsEarnable={0}
-					/>
+					<>
+						<Label className={'filterLabel'} variant={'h1'} mb={20}>
+							Current Room/Property
+						</Label>
+						<hr />
+						<AccommodationSearchResultCard
+							currentRoom={true}
+							id={reservation.destination.id}
+							name={reservation.accommodation.name}
+							maxSleeps={reservation.accommodation.maxSleeps}
+							squareFeet={2500}
+							description={reservation.accommodation.longDescription}
+							ratePerNightInCents={reservation.priceDetail.accommodationTotalInCents}
+							pointsRatePerNight={0}
+							hideButtons={true}
+							roomStats={[
+								{
+									label: 'Sleeps',
+									datum: reservation.accommodation.maxSleeps
+								},
+								{
+									label: 'Max Occupancy',
+									datum: reservation.accommodation.maxOccupantCount
+								},
+								{
+									label: 'ADA Compliant',
+									datum: reservation.accommodation.adaCompliant === 1 ? 'Yes' : 'No'
+								},
+								{
+									label: 'Extra Bed',
+									datum: reservation.accommodation.extraBed
+								}
+							]}
+							carouselImagePaths={['']}
+							amenityIconNames={reservation.accommodation.featureIcons}
+							onBookNowClick={() => {
+								router.back();
+							}}
+							pointsEarnable={0}
+						/>
+						<hr />
+					</>
 				)}
-				<Label className={'filterLabel'} variant={'h1'}>
+				<Label className={'filterLabel'} variant={'h1'} mb={20}>
 					Filter by
 				</Label>
 
@@ -343,8 +338,8 @@ const EditFlowModifyRoomPage = () => {
 					<>
 						<FilterBar
 							className={'filterBar'}
-							startDate={moment(searchQueryObj.startDate)}
-							endDate={moment(searchQueryObj.endDate)}
+							startDate={startDateControl}
+							endDate={endDateControl}
 							onDatesChange={onDatesChange}
 							focusedInput={focusedInput}
 							onFocusChange={setFocusedInput}

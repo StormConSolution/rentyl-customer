@@ -24,7 +24,7 @@ const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 	}
 
 	return (
-		<Box className={'rsRateCodeSelect'} display={'grid'}>
+		<Box className={'rsRateCodeSelect'}>
 			<div className={'labelGroup'}>
 				{props.valid && (
 					<Label variant={'body1'} color={'red'}>

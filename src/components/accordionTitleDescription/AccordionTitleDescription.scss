@@ -1,0 +1,9 @@
+@import '../../themes/themes';
+.rsAccordionTitleDescription {
+	.rsLabel {
+		color: theme-var($primaryTextColor);
+		&.h4 {
+			text-transform: uppercase;
+		}
+	}
+}

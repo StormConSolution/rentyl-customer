@@ -1,0 +1,73 @@
+@import '../../themes/themes';
+
+.rsItineraryDetailsPage {
+	.rsHeroImage {
+		position: relative;
+		margin-bottom: 95px;
+		.rsItineraryInfoCard {
+			position: absolute;
+			bottom: -55px;
+			left: 95px;
+		}
+	}
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 16px 0;
+	}
+
+	.contentWrapper {
+		display: grid;
+		grid-template-columns: 700px 475px;
+		column-gap: 64px;
+		padding: 0 95px;
+		box-sizing: border-box;
+		.rsReservationDetailsAccordion {
+			margin-bottom: 40px;
+		}
+
+		.rsItineraryCostSummaryCard {
+			margin-bottom: 40px;
+		}
+		.paymentInfoCard {
+			.currentCardWrapper {
+				display: grid;
+				grid-template-columns: auto auto;
+				row-gap: 24px;
+			}
+
+			.newPaymentOptions {
+				transition: height 300ms;
+				display: grid;
+				grid-template-columns: auto auto;
+				grid-template-rows: 70px 50px;
+				row-gap: 24px;
+				height: 0;
+				overflow: hidden;
+				&.show {
+					height: 250px;
+				}
+			}
+
+			.rsLabelButton {
+				transition: right 300ms, opacity 300ms;
+				&.editCancelBtn {
+					margin-left: auto;
+				}
+				&.hideBtn {
+					position: absolute;
+					margin-right: 8px;
+					opacity: 0;
+					right: -8px;
+				}
+				&.showBtn {
+					position: absolute;
+					right: 108px;
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

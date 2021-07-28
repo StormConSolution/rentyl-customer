@@ -942,6 +942,7 @@ declare namespace Api {
 				rateCode: string;
 				paymentMethodId?: number;
 				guest: Guest;
+				additionalDetails?: string;
 			}
 			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
 				id: number;
@@ -971,6 +972,7 @@ declare namespace Api {
 					rateCode: string;
 					upsellPackages?: UpsellPackage[];
 					guest: Guest;
+					additionalDetails?: string;
 				}
 
 				export interface Create {
@@ -1000,15 +1002,17 @@ declare namespace Api {
 				canceledOn: Date | string;
 				externalReservationId: string;
 				externalCancellationId: string;
+				externalCancelNumber: string;
 				adultCount: number;
 				childCount: number;
-				externalConfirmationId: string | null;
+				externalConfirmationId: string;
 				confirmationDate: Date | string;
 				nightCount: number;
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
 				upsellPackages: BookingPackageDetails[];
+				additionalDetails: string;
 			}
 			export interface Availability {
 				[key: string]: Redis.Availability;
@@ -1070,6 +1074,7 @@ declare namespace Api {
 					cancellationPermitted: 0 | 1;
 					guest: Guest;
 					upsellPackages: BookingPackageDetails[];
+					additionalDetails: string;
 				}
 				export interface Get {
 					parentReservationId: number;
@@ -1362,7 +1367,6 @@ declare namespace Api {
 				phone?: string;
 				birthDate?: Date | string;
 				address?: Api.UserAddress.Req.Create;
-				newsLetter?: 0 | 1;
 				emailNotification?: 0 | 1;
 			}
 
@@ -1375,6 +1379,7 @@ declare namespace Api {
 				primaryEmail?: string;
 				phone?: string;
 				birthDate?: Date | string;
+				emailNotification?: 0 | 1;
 			}
 
 			export interface Login {
@@ -1473,7 +1478,7 @@ declare namespace Api {
 				state?: string;
 				zip: number;
 				country: string;
-				isDefault: boolean | number;
+				isDefault: 0 | 1;
 			}
 			export interface Get {
 				id?: number;

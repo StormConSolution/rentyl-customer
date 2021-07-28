@@ -2,6 +2,7 @@ import * as React from 'react';
 import './LabelButton.scss';
 import Button from '@bit/redsky.framework.rs.button';
 import Label from '@bit/redsky.framework.rs.label';
+import { MouseEvent } from 'react';
 
 interface LabelButtonProps {
 	look: 'containedPrimary' | 'containedSecondary' | 'none';
@@ -26,9 +27,10 @@ interface LabelButtonProps {
 		| 'error';
 	label: string;
 	className?: string;
-	onClick?: () => void;
+	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 	disabled?: boolean;
 	buttonType?: 'button' | 'submit';
+	buttonRef?: React.RefObject<any>;
 }
 
 const LabelButton: React.FC<LabelButtonProps> = (props) => {
@@ -39,6 +41,7 @@ const LabelButton: React.FC<LabelButtonProps> = (props) => {
 			onClick={props.onClick}
 			disabled={props.disabled}
 			type={props.buttonType}
+			buttonRef={props.buttonRef}
 		>
 			<Label variant={props.variant}>{props.label}</Label>
 		</Button>
