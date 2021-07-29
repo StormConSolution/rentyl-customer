@@ -152,8 +152,6 @@ const EditFlowModifyRoomPage = () => {
 			}
 			if (rateCode !== '' || rateCode !== undefined) {
 				createSearchQueryObj['rateCode'] = reservation?.rateCode;
-			} else {
-				createSearchQueryObj['rateCode'] = reservation?.rateCode;
 			}
 			return createSearchQueryObj;
 		});
