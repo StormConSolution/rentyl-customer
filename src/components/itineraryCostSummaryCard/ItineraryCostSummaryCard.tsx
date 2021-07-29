@@ -5,6 +5,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import { useEffect, useState } from 'react';
+import { DateUtils } from '../../utils/utils';
 
 interface ItineraryCostSummaryCardProps {
 	destinationName: string;
@@ -41,7 +42,7 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 				return acc + item;
 			})
 		);
-	});
+	}, [props.reservation]);
 
 	function renderReservations() {
 		return props.reservation.map((item, index) => {
@@ -51,20 +52,14 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 						<Label variant={'h4'}>{item.name}</Label>
 						<Label variant={'h4'}>${StringUtils.formatMoney(item.cost)}</Label>
 					</Box>
-					<Label variant={'body1'}>{`${new Date(item.arrivalDate).toDateString()} - ${new Date(
-						item.departureDate
-					).toDateString()}`}</Label>
+					<Label variant={'body1'}>{`${DateUtils.displayUserDate(
+						item.arrivalDate
+					)} - ${DateUtils.displayUserDate(item.departureDate)}`}</Label>
 					<Label variant={'body1'}>{item.nights} Nights</Label>
 				</div>
 			);
 		});
 	}
-
-	// function renderTaxesAndFees() {
-	// 	let taxes = props.reservation.reduce((acc: number, value) => {
-	// 		return acc + value.taxesAndFees;
-	// 	});
-	// }
 
 	return (
 		<Paper className={'rsItineraryCostSummaryCard'} boxShadow>
@@ -81,7 +76,7 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 			<hr />
 			<Box display={'flex'} justifyContent={'space-between'}>
 				<Label variant={'h2'}>Total:</Label>
-				<Label variant={'h2'}>${StringUtils.formatMoney(totalCost)}</Label>
+				<Label variant={'h2'}>${StringUtils.formatMoney(totalCost + taxesAndFees)}</Label>
 			</Box>
 		</Paper>
 	);

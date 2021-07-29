@@ -11,7 +11,7 @@ import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { addCommasToNumber, formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -40,8 +40,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({

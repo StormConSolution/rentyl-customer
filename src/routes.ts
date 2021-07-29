@@ -25,7 +25,6 @@ import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDe
 import BookingFlowCheckoutPage from './pages/bookingFlowCheckoutPage/BookingFlowCheckoutPage';
 import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
 import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
-import EditFlowModifyPaymentPage from './pages/editFlowModifyPaymentPage/EditFlowModifyPaymentPage';
 import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModifyRoomPage';
 import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 
@@ -73,10 +72,6 @@ const routes: RouteDetails[] = [
 	{
 		path: '/reservations',
 		page: ExistingItineraryPage
-	},
-	{
-		path: '/reservations/payment',
-		page: EditFlowModifyPaymentPage
 	},
 	{
 		path: '/reservations/edit-room',
