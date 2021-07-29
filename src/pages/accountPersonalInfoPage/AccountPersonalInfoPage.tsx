@@ -42,7 +42,18 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 			new RsFormControl('old', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide your current password here')
 			]),
-			new RsFormControl('new', '', [new RsValidator(RsValidatorEnum.REQ, 'Please provide a new password')]),
+			new RsFormControl('new', '', [
+				new RsValidator(
+					RsValidatorEnum.CUSTOM,
+					'Password must have: Minimum 8 characters, 1 Uppercase letter, 1 Lowercase letter, 1 Number or 1 Special character',
+					(control) => {
+						return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
+							control.value.toString()
+						);
+					}
+				),
+				new RsValidator(RsValidatorEnum.REQ, 'Please provide a new password')
+			]),
 			new RsFormControl('retypeNewPassword', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please retype your new password'),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Password does not match', (control) => {
