@@ -107,6 +107,7 @@ declare namespace Model {
 		companyId: number;
 		accommodationId: number;
 		title: string;
+		mediaId: number;
 	}
 
 	export interface AccommodationLayoutRoom {
@@ -237,8 +238,6 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
-		allowPointBooking: 0 | 1;
-		allowCashBooking: 0 | 1;
 	}
 
 	export interface CompanyAffiliate {
@@ -436,6 +435,8 @@ declare namespace Model {
 		description: string;
 		code: string;
 		isActive: 0 | 1;
+		startDate: Date | string;
+		endDate: Date | string;
 	}
 
 	export interface PaymentMethod {
@@ -483,6 +484,11 @@ declare namespace Model {
 		userId: number;
 		destinationId: number;
 		accommodationId: number;
+		guestFirstName: string;
+		guestLastName: string;
+		guestPhone: string;
+		guestEmail: string;
+		rateCode: string;
 		bookingSourceId: number;
 		marketSegmentId: number;
 		orderId: number;
@@ -511,6 +517,13 @@ declare namespace Model {
 		parentReservationId: number;
 		externalReservationId: string;
 		externalCancellationId: string;
+		itineraryId: string;
+		additionalDetails: string;
+	}
+
+	export interface ReservationUpsellPackage {
+		reservationId: number;
+		upsellPackageId: number;
 	}
 
 	export interface Review {

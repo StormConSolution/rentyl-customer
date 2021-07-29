@@ -36,7 +36,7 @@ declare namespace Api {
 				endDate: Date | string;
 				adults: number;
 				children: number;
-				rate?: string;
+				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
 				pagination: RedSky.PagePagination;
@@ -490,7 +490,7 @@ declare namespace Api {
 				endDate: Date | string;
 				adults: number;
 				children: number;
-				rate?: string;
+				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
 				pagination: RedSky.PagePagination;
@@ -996,6 +996,7 @@ declare namespace Api {
 				paymentMethod?: PaymentMethod;
 				destination: DestinationDetails;
 				accommodation: AccommodationDetails;
+				rateCode: string;
 				arrivalDate: Date | string;
 				departureDate: Date | string;
 				status: string;
@@ -1064,6 +1065,7 @@ declare namespace Api {
 					departureDate: Date | string;
 					status: string;
 					canceledOn: Date | string;
+					rateCode: string;
 					externalReservationId: string;
 					externalCancellationId: string;
 					adultCount: number;

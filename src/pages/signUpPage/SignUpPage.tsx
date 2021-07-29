@@ -149,7 +149,9 @@ const SignUpPage: React.FC = () => {
 	}
 
 	async function updateNewAddressObj(control: RsFormControl) {
-		if (control.key === 'zip') control.value = +control.value;
+		if (control.key === 'zip' && typeof control.value === 'string') {
+			control.value = +control.value.replace(/[^0-9]/g, '');
+		}
 		newAddressObj.update(control);
 		setIsValidForm(isFormFilledOut());
 		setNewAddressObj(newAddressObj.clone());

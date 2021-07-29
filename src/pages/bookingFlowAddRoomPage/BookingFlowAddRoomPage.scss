@@ -26,6 +26,15 @@
 			}
 		}
 	}
+
+	.backLink {
+		color: theme-var($buttonLinkColor);
+		width: fit-content;
+		width: -moz-fit-content;
+		&:hover {
+			cursor: pointer;
+		}
+	}
 }
 
 .small {

@@ -244,15 +244,9 @@ const ComparisonPage: React.FC = () => {
 					backgroundColor={'#FFFFFF'}
 					padding={size === 'small' ? '5px' : '0'}
 				>
-					<LabelLink
-						className={'destinationPath'}
-						path={'/reservation/availability'}
-						label={'back to destination results'}
-						variant={'caption'}
-						iconLeft={'icon-chevron-left'}
-						iconSize={8}
-						iconColor={'#004b98'}
-					/>
+					<Label variant={'caption'} onClick={() => router.back()} className={'backNavigation'}>
+						{'<'} back to previous page
+					</Label>
 					<table className={'comparisonTable'}>
 						<thead>
 							<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>

@@ -102,7 +102,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rate',
+			| 'rateCode',
 		value: any
 	) {
 		if (key === 'adults' && value === 0) {
@@ -336,7 +336,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 									<RateCodeSelect
 										apply={(value) => {
 											setRateCode(value);
-											updateSearchQueryObj('rate', value);
+											updateSearchQueryObj('rateCode', value);
 										}}
 										code={rateCode}
 										valid={!validCode}

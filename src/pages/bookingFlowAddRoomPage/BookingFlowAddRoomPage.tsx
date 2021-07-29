@@ -42,9 +42,9 @@ const BookingFlowAddRoomPage = () => {
 		children: params.data.stays[0].children,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.data.destinationId,
-		rate: params.data.stays[0].rateCode
+		rateCode: params.data.stays[0].rateCode
 	});
-	const [rateCode, setRateCode] = useState<string>(params.data.stays[0].rate);
+	const [rateCode, setRateCode] = useState<string>(params.data.stays[0].rateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
@@ -71,8 +71,8 @@ const BookingFlowAddRoomPage = () => {
 
 			try {
 				popupController.open(SpinningLoaderPopup);
-				if (newSearchQueryObj.rate === '' || newSearchQueryObj.rate === undefined)
-					delete newSearchQueryObj.rate;
+				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
+					delete newSearchQueryObj.rateCode;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
 				//can't use getByPage as it doesn't return with the info needed for the cards.
@@ -103,7 +103,7 @@ const BookingFlowAddRoomPage = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rate',
+			| 'rateCode',
 		value: any
 	) {
 		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
@@ -143,7 +143,7 @@ const BookingFlowAddRoomPage = () => {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
 			if (rateCode !== '') {
-				createSearchQueryObj['rate'] = rateCode;
+				createSearchQueryObj['rateCode'] = rateCode;
 			}
 			return createSearchQueryObj;
 		});
@@ -185,7 +185,7 @@ const BookingFlowAddRoomPage = () => {
 			newRoom: {
 				adults: searchQueryObj.adults,
 				children: searchQueryObj.children,
-				rate: searchQueryObj.rate,
+				rateCode: searchQueryObj.rateCode,
 				accommodationId: id,
 				arrivalDate: searchQueryObj.startDate,
 				departureDate: searchQueryObj.endDate,
@@ -242,6 +242,9 @@ const BookingFlowAddRoomPage = () => {
 	return (
 		<Page className={'rsBookingFlowAddRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<Label onClick={() => router.back()} variant={'caption'} className={'backLink'}>
+					{'<'} Back
+				</Label>
 				{params.data.edit && !!editingAccommodation && (
 					<AccommodationSearchResultCard
 						currentRoom={true}
@@ -374,7 +377,7 @@ const BookingFlowAddRoomPage = () => {
 								<RateCodeSelect
 									apply={(value) => {
 										setRateCode(value);
-										updateSearchQueryObj('rate', value);
+										updateSearchQueryObj('rateCode', value);
 									}}
 									code={rateCode}
 									valid={!validCode}

@@ -46,7 +46,11 @@
 		}
 
 		.completeBookingBtn {
-			margin: 20px auto 120px;
+			margin: 20px auto 0;
+		}
+
+		.notEnoughPoints {
+			text-align: center;
 		}
 	}
 }

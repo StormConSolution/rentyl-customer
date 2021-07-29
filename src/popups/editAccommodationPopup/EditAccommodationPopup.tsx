@@ -27,6 +27,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 	onApplyChanges: (
 		adults: number,
 		children: number,
+		rateCode: string,
 		checkinDate: string | Date,
 		checkoutDate: string | Date,
 		originalStartDate: string | Date,
@@ -35,6 +36,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 	) => void;
 	destinationId: number;
 	accommodationId: number;
+	rateCode?: string;
 }
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
@@ -87,6 +89,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					),
 					numberOfAccommodations: 1
 				};
+				if (props.rateCode) data.rateCode = props.rateCode;
 				await reservationsService.verifyAvailability(data);
 				popupController.close(SpinningLoaderPopup);
 				setAvailable(true);
@@ -211,6 +214,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 							props.onApplyChanges(
 								parseInt(guestForm.get('adults').value.toString()),
 								parseInt(guestForm.get('children').value.toString()),
+								props.rateCode || '',
 								startDate?.format('YYYY-MM-DD') || '',
 								endDate?.format('YYYY-MM-DD') || '',
 								props.startDate,

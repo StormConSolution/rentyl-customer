@@ -55,6 +55,7 @@ const BookingFlowCheckoutPage = () => {
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
+	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
@@ -109,8 +110,7 @@ const BookingFlowCheckoutPage = () => {
 							departureDate: accommodation.departureDate,
 							adultCount: accommodation.adultCount,
 							childCount: accommodation.childCount,
-							//@ts-ignore
-							rateCode: accommodation.rateCode || accommodation.rate,
+							rateCode: accommodation.rateCode,
 							upsellPackages: accommodation.packages.map((item) => {
 								return {
 									id: item.id
@@ -150,7 +150,15 @@ const BookingFlowCheckoutPage = () => {
 
 	useEffect(() => {
 		if (usePoints) {
-			setIsDisabled(!usePoints || !hasAgreedToTerms);
+			if (user) {
+				setHasEnoughPoints(
+					accommodations.reduce(
+						(total, accommodation) => (total += accommodation.prices.grandTotalCents),
+						0
+					) < user.availablePoints
+				);
+			}
+			setIsDisabled(!hasAgreedToTerms || !hasEnoughPoints);
 		} else {
 			setIsDisabled(!hasAgreedToTerms || !isFormValid);
 		}
@@ -162,8 +170,7 @@ const BookingFlowCheckoutPage = () => {
 			destinationId: destinationId,
 			adults: data.adults,
 			children: data.children,
-			//@ts-ignore
-			rateCode: data.rateCode || data.rate || 'ITSTIME',
+			rateCode: data.rateCode,
 			arrivalDate: data.arrivalDate,
 			departureDate: data.departureDate,
 			numberOfAccommodations: 1
@@ -207,7 +214,12 @@ const BookingFlowCheckoutPage = () => {
 		setAccommodations(newAccommodationList);
 		let data = {
 			destinationId,
-			stays: newAccommodationList
+			stays: newAccommodationList.map((accommodation) => {
+				return {
+					...accommodation,
+					packages: accommodation.packages.map((item: Api.Package.Res.Get) => item.id)
+				};
+			})
 		};
 		if (!newAccommodationList.length) {
 			await router.navigate('/reservation/availability').catch(console.error);
@@ -233,7 +245,8 @@ const BookingFlowCheckoutPage = () => {
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
 		packages: Api.Package.Res.Get[],
-		accommodationId: number
+		accommodationId: number,
+		rateCode?: string
 	) {
 		popupController.close(EditAccommodationPopup);
 		try {
@@ -242,6 +255,7 @@ const BookingFlowCheckoutPage = () => {
 				adults,
 				children,
 				accommodationId,
+				rateCode,
 				arrivalDate: checkinDate,
 				departureDate: checkoutDate,
 				packages: packages.map((item) => item.id)
@@ -298,8 +312,7 @@ const BookingFlowCheckoutPage = () => {
 						departureDate: accommodation.departureDate,
 						adultCount: accommodation.adultCount,
 						childCount: accommodation.childCount,
-						//@ts-ignore
-						rateCode: accommodation.rateCode || accommodation.rate,
+						rateCode: accommodation.rateCode,
 						upsellPackages: accommodation.packages.map((item) => {
 							return {
 								id: item.id
@@ -390,10 +403,12 @@ const BookingFlowCheckoutPage = () => {
 									adults: accommodation.adultCount,
 									children: accommodation.childCount,
 									destinationId: destinationId,
+									rateCode: accommodation.rateCode,
 									endDate: checkoutDate,
 									onApplyChanges(
 										adults: number,
 										children: number,
+										rateCode: string,
 										checkinDate: string | Date,
 										checkoutDate: string | Date,
 										originalStartDate: string | Date,
@@ -409,7 +424,8 @@ const BookingFlowCheckoutPage = () => {
 											originalStartDate,
 											originalEndDate,
 											packages,
-											id
+											id,
+											rateCode
 										);
 									},
 									packages: accommodation.packages,
@@ -553,6 +569,15 @@ const BookingFlowCheckoutPage = () => {
 							}}
 							disabled={isDisabled}
 						/>
+						<Label
+							color={'red'}
+							variant={'body1'}
+							mb={120}
+							width={'fit-content'}
+							className={'notEnoughPoints'}
+						>
+							{usePoints && !hasEnoughPoints && 'Not Enough Points'}
+						</Label>
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}
 				</Box>
