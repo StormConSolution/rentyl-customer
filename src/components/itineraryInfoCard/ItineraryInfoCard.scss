@@ -1,0 +1,17 @@
+@import '../../themes/themes';
+.rsItineraryInfoCard {
+	width: 700px;
+	background: theme-var($primaryBackgroundColor);
+	.logoImg {
+		margin-left: 8px;
+		width: 70px;
+	}
+	.rsLabelLink {
+		position: absolute;
+		top: 27px;
+		left: 40px;
+	}
+	.rsLabelButton {
+		margin: 0 auto;
+	}
+}

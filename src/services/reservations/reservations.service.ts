@@ -27,8 +27,18 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
+	async getItinerary(data: Api.Reservation.Req.Itinerary.Get) {
+		let response = await http.get<RsResponseData<Api.Reservation.Res.Itinerary.Get>>('reservation/itinerary', data);
+		return response.data.data;
+	}
+
 	async get(id: number): Promise<Api.Reservation.Res.Get> {
 		let response = await http.get<RsResponseData<Api.Reservation.Res.Get>>('reservation', { id });
+		return response.data.data;
+	}
+
+	async update(data: Api.Reservation.Req.Update, isGuest?: boolean): Promise<Api.Reservation.Res.Get> {
+		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
 		return response.data.data;
 	}
 

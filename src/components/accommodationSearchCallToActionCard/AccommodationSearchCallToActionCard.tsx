@@ -100,7 +100,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 			<Paper
 				boxShadow
 				className={`rsAccommodationSearchCallToActionCard ${props.className || ''}`}
-				height={'280px'}
+				// height={'280px'}
 				width={'180px'}
 				backgroundColor={'#fcfbf8'}
 				padding={'13px 22px 16px'}

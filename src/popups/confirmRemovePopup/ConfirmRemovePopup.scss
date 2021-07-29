@@ -1,0 +1,20 @@
+@import '../../themes/themes';
+.rsConfirmRemovePopup {
+	background: theme-var($primaryBackgroundColor);
+	width: 400px;
+	padding: 50px 40px;
+	position: relative;
+
+	.rsLabel {
+		&.h3 {
+			text-align: center;
+		}
+	}
+	.rsIcon {
+		&.icon-close {
+			position: absolute;
+			top: 21px;
+			right: 21px;
+		}
+	}
+}

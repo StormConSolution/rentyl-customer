@@ -22,4 +22,11 @@ declare namespace Misc {
 		text: number | string;
 		selected: boolean;
 	}
+
+	export interface ReservationContactInfoDetails {
+		contactInfo: string;
+		email: string;
+		phone: string;
+		additionalDetails: string;
+	}
 }

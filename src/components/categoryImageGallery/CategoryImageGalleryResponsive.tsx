@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { popupController } from '@bit/redsky.framework.rs.996';
 import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { ObjectUtils } from '@bit/redsky.framework.rs.http/dist/Utils';
 
 interface CategoryImageGalleryResponsiveProps {
 	accommodationCategories: Api.AccommodationCategory.Details[];
@@ -23,18 +24,20 @@ const CategoryImageGalleryResponsive: React.FC<CategoryImageGalleryResponsivePro
 				setSelected(item.id);
 				firstRun = false;
 			}
-			return (
-				<LabelButton
-					key={item.id}
-					look={'none'}
-					variant={'button'}
-					className={`tab ${selected === item.id ? 'selected' : ''}`}
-					label={item.title}
-					onClick={() => {
-						setSelected(item.id);
-					}}
-				/>
-			);
+			if (!ObjectUtils.isArrayWithData(item.media)) return false;
+			else
+				return (
+					<LabelButton
+						key={item.id}
+						look={'none'}
+						variant={'button'}
+						className={`tab ${selected === item.id ? 'selected' : ''}`}
+						label={item.title}
+						onClick={() => {
+							setSelected(item.id);
+						}}
+					/>
+				);
 		});
 	}
 

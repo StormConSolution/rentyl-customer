@@ -2,12 +2,7 @@
 
 .rsAccommodationSearchResultCard {
 	display: flex;
-	div {
-		margin: 0;
-	}
-	> div {
-		position: relative;
-	}
+	position: relative;
 	.rsCarousel {
 		position: relative;
 		height: 280px;
@@ -53,22 +48,17 @@
 		position: relative;
 		width: 290px;
 		padding: 20px 0 20px 20px;
-		&:after {
-			content: '';
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			background-color: theme-var($iconAndHighlightTextColor);
-			left: 0;
-			top: 0;
-			opacity: 15%;
-		}
+		background-color: #f7f1db;
 
 		.amenityIcons {
 			.rsIcon::before {
 				color: theme-var($primaryTextColor);
 			}
 		}
+	}
+
+	.rsAccommodationSearchCallToActionCard {
+		align-self: flex-end;
 	}
 }
 
@@ -95,10 +85,6 @@
 			}
 			.rsStarRating {
 				margin-bottom: 20px;
-			}
-			.rsLabelButton {
-				position: absolute;
-				bottom: 0;
 			}
 		}
 	}

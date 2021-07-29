@@ -1,0 +1,22 @@
+@import '../../themes/themes';
+
+.rsEditReservationDetailsPopup {
+	background: theme-var($primaryBackgroundColor);
+	width: 400px;
+	padding: 50px 40px;
+	position: relative;
+
+	.guestWrapper {
+		.rsLabelInput {
+			width: 95px;
+		}
+	}
+
+	.rsIcon {
+		&.icon-close {
+			position: absolute;
+			top: 21px;
+			right: 21px;
+		}
+	}
+}

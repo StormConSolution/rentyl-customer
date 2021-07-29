@@ -30,6 +30,7 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 
 interface AccommodationDetailsPageProps {}
 
@@ -152,7 +153,8 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 					icon: value.icon
 				};
 			});
-			return <CategoryFeatureIcons key={item.title} title={item.title} features={features} />;
+			if (!ObjectUtils.isArrayWithData(features)) return [];
+			else return <CategoryFeatureIcons key={item.title} title={item.title} features={features} />;
 		});
 	}
 
@@ -178,7 +180,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	) : (
 		<Page className={'rsAccommodationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box className={'sectionOne'} marginBottom={'210px'}>
+				<Box className={'sectionOne'} marginBottom={size === 'small' ? '325px' : '210px'}>
 					<HeroImage image={accommodationDetails.heroUrl} height={'630px'} mobileHeight={'420px'} />
 					<Box className={'rsAccommodationInfoCardWrapper'} display={'flex'} alignItems={'flex-end'}>
 						<AccommodationInfoCard

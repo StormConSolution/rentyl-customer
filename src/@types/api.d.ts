@@ -1003,9 +1003,10 @@ declare namespace Api {
 				canceledOn: Date | string;
 				externalReservationId: string;
 				externalCancellationId: string;
+				externalCancelNumber: string;
 				adultCount: number;
 				childCount: number;
-				externalConfirmationId: string | null;
+				externalConfirmationId: string;
 				confirmationDate: Date | string;
 				nightCount: number;
 				priceDetail: PriceDetail;

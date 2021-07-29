@@ -124,7 +124,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 				<Box className="detailCardHolder" alignSelf={'flex-end'}>
 					<AccommodationSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
 				</Box>
-				<div>
+				<Box display={'flex'}>
 					<AccommodationSearchCallToActionCard
 						maxSleeps={props.maxSleeps}
 						points={props.pointsEarnable}
@@ -136,7 +136,7 @@ const AccommodationSearchResultCard: React.FC<AccommodationSearchResultCardProps
 						hideButtons={props.hideButtons}
 						currentRoom={props.currentRoom}
 					/>
-				</div>
+				</Box>
 			</Box>
 		);
 	}

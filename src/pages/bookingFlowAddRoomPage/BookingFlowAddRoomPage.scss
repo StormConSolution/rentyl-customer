@@ -1,16 +1,29 @@
 @import '../../themes/themes';
 
 .rsBookingFlowAddRoomPage {
-	margin-top: 80px;
-	.rsRateCodeSelect {
-		margin-bottom: 30px;
-		padding-bottom: 30px;
-		border-bottom: 1px solid theme-var($greyLineColor);
-	}
-	.rsAccommodationSearchResultCard {
-		margin: 35px auto;
-		img {
-			min-width: 100px;
+	.rs-page-content-wrapper {
+		max-width: 1160px !important;
+		padding-top: 120px;
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 20px 0;
+		}
+
+		.rsAccordion {
+			border-bottom: 1px solid theme-var($greyLineColor);
+			.articleItemChildren {
+				margin-bottom: 10px;
+			}
+		}
+		.rsAccommodationSearchResultCard {
+			margin: 35px auto;
+
+			img {
+				min-width: 100px;
+			}
 		}
 	}
 
