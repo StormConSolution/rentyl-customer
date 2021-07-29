@@ -34,6 +34,7 @@ const EditFlowModifyRoomPage = () => {
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
@@ -186,9 +187,10 @@ const EditFlowModifyRoomPage = () => {
 				await reservationsService.updateReservation(stay);
 				router.navigate(`/reservations`).catch(console.error);
 				popupController.closeAll();
-			} catch {
+			} catch (e) {
 				popupController.closeAll();
-				rsToasts.error('Something unexpected happend on the server');
+				setErrorMessage(e.message);
+				rsToasts.error(e.message, 'Update Failed', 3000);
 			}
 		}
 	}
@@ -249,6 +251,9 @@ const EditFlowModifyRoomPage = () => {
 					<>
 						<Label className={'filterLabel'} variant={'h1'} mb={20}>
 							Current Room/Property
+						</Label>
+						<Label className={'error'} color={'red'} variant={'h4'}>
+							{errorMessage}
 						</Label>
 						<hr />
 						<AccommodationSearchResultCard
