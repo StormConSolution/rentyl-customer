@@ -8,18 +8,14 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Paper from '../../components/paper/Paper';
-import LabelLink from '../../components/labelLink/LabelLink';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
-import LinkButton from '../../components/linkButton/LinkButton';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
-import Icon from '@bit/redsky.framework.rs.icon';
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
@@ -54,7 +50,7 @@ const ItineraryDetailsPage: React.FC = () => {
 	function renderReservations() {
 		if (!itinerary || !ObjectUtils.isArrayWithData(itinerary.stays)) return;
 
-		return itinerary.stays.map((item, index) => {
+		return itinerary.stays.map((item) => {
 			return (
 				<ReservationDetailsAccordion
 					reservationId={item.reservationId}
@@ -70,9 +66,9 @@ const ItineraryDetailsPage: React.FC = () => {
 					extraBed={item.accommodation.extraBed}
 					floorCount={item.accommodation.floorCount}
 					featureIcons={item.accommodation.featureIcons}
-					contactInfo={`${item.guest.firstName} ${item.guest.lastName}`}
-					email={item.guest.email}
-					phone={item.guest.phone}
+					contactInfo={`${item.guest?.firstName} ${item.guest?.lastName}`}
+					email={item.guest?.email}
+					phone={item.guest?.phone}
 					additionalDetails={item.additionalDetails}
 					onDetailsClick={() => {
 						router
@@ -96,7 +92,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					zip: itinerary.destination.zip,
 					city: itinerary.destination.city
 				}}
-				reservation={itinerary.stays.map((item, index) => {
+				reservation={itinerary.stays.map((item) => {
 					return {
 						name: item.accommodation.name,
 						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
@@ -120,7 +116,7 @@ const ItineraryDetailsPage: React.FC = () => {
 				}
 			];
 
-		return user.paymentMethods.map((item, index) => {
+		return user.paymentMethods.map((item) => {
 			return {
 				selected: !!newPaymentMethod ? newPaymentMethod.id === item.id : false,
 				text: item.cardNumber,

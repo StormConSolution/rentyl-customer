@@ -3,7 +3,7 @@ import './ReservationDetailsCostSummaryCard.scss';
 import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { convertTwentyFourHourTime } from '../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils } from '../../utils/utils';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 
@@ -26,7 +26,7 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 		for (let i in props.costPerNight) {
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={i}>
-					<Label variant={'body1'}>{new Date(i).toDateString()}</Label>
+					<Label variant={'body1'}>{DateUtils.displayUserDate(i)}</Label>
 					<Label variant={'body1'} marginLeft={'auto'}>
 						${StringUtils.formatMoney(props.costPerNight[i])}
 					</Label>
@@ -54,9 +54,9 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Label variant={'h4'} mb={4}>
 				{props.accommodationName}
 			</Label>
-			<Label variant={'body1'}>{`${new Date(props.arrivalDate).toDateString()} - ${new Date(
+			<Label variant={'body1'}>{`${DateUtils.displayUserDate(props.arrivalDate)} - ${DateUtils.displayUserDate(
 				props.departureDate
-			).toDateString()}`}</Label>
+			)}`}</Label>
 			<hr />
 			<Box display={'flex'} mb={16}>
 				<Box marginRight={44}>
