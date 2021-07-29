@@ -133,8 +133,8 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					/>
 				</Box>
 				<DateRangeSelector
-					startDate={moment(startDate)}
-					endDate={moment(endDate)}
+					startDate={startDate}
+					endDate={endDate}
 					onDatesChange={onDatesChange}
 					monthsToShow={2}
 					focusedInput={focusedInput}

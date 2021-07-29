@@ -12,26 +12,19 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
-import rsToasts, { RsToasts } from '@bit/redsky.framework.toast';
+import rsToasts from '@bit/redsky.framework.toast';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
-import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
 import Paper from '../../components/paper/Paper';
 import { convertTwentyFourHourTime } from '../../utils/utils';
 import ConfirmRemovePopup, { ConfirmRemovePopupProps } from '../../popups/confirmRemovePopup/ConfirmRemovePopup';
-import EditAccommodationPopup, {
-	EditAccommodationPopupProps
-} from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import EditReservationDetailsPopup, {
-	EditDetailsObj,
 	EditReservationDetailsPopupProps
 } from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
-interface ReservationDetailsPageProps {}
-
-const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) => {
+const ReservationDetailsPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
@@ -60,7 +53,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 		else return '';
 	}
 
-	async function updateReservation(data: any, isGuest?: boolean) {
+	async function updateReservation(data: any) {
 		if (!reservation) return;
 		let newData: any = { ...data, id: reservation.id };
 
@@ -139,7 +132,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 									email: data.email,
 									phone: data.phone
 								};
-								updateReservation({ guest, additionalDetails: data.additionalDetails }, true).catch(
+								updateReservation({ guest, additionalDetails: data.additionalDetails }).catch(
 									console.error
 								);
 							}}
@@ -150,7 +143,7 @@ const ReservationDetailsPage: React.FC<ReservationDetailsPageProps> = (props) =>
 										try {
 											let res = await reservationsService.cancel(reservation.id);
 											if (res) {
-												popupController.close(SpinningLoaderPopup);
+												popupController.closeAll();
 												router.navigate('/reservations').catch(console.error);
 											}
 										} catch (e) {
