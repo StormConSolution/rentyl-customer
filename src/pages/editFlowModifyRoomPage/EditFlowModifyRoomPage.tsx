@@ -188,7 +188,7 @@ const EditFlowModifyRoomPage = () => {
 			} catch (e) {
 				popupController.closeAll();
 				setErrorMessage(e.message);
-				rsToasts.error(e.message, 'Update Failed', 3000);
+				rsToasts.error(e.msg, 'Update Failure', 3000);
 			}
 		}
 	}
