@@ -7,9 +7,13 @@
 	.guests {
 		display: flex;
 		justify-content: center;
-		gap: 10px;
+		gap: 15px;
 		.rsLabelInput {
-			width: 90px;
+			width: 95px;
+
+			.rsLabel {
+				margin-left: 10px;
+			}
 		}
 	}
 
@@ -17,8 +21,13 @@
 		cursor: pointer;
 	}
 	.rsDateRangeSelector {
+		background-color: theme-var($secondaryBackgroundColor);
 		display: grid;
 		place-items: center;
 		margin: 10px 0;
+
+		.DateRangePickerInput {
+			background-color: theme-var($secondaryBackgroundColor);
+		}
 	}
 }

@@ -67,9 +67,10 @@ const ReservationDetailsPage: React.FC = () => {
 			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
 				rsToasts.error('Cannot update a past reservation', 'Failed To update', 5000);
 			} else {
+				rsToasts.error(e.message, 'Failed To Update', 3000);
 				console.error(e.message);
 			}
-			popupController.close(SpinningLoaderPopup);
+			popupController.closeAll();
 		}
 	}
 
