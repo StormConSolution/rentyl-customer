@@ -198,7 +198,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					</Label>
 				)}
 				<br />
-				<Box display={'flex'} justifyContent={'center'} alignItems={'center'}>
+				<Box display={'flex'} justifyContent={'space-around'} alignItems={'center'}>
 					<LabelButton
 						look={'containedSecondary'}
 						variant={'button'}
@@ -208,7 +208,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}
-						label={'Apply Changes'}
+						label={'Apply'}
 						disabled={!available}
 						onClick={() => {
 							props.onApplyChanges(

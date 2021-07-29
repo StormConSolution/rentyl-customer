@@ -8,10 +8,8 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import FilterReservationPopup, {
@@ -22,8 +20,6 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import ReservationsService from '../../services/reservations/reservations.service';
-import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
-import LabelButton from '../../components/labelButton/LabelButton';
 import ConfirmChangeRoomPopup, {
 	ConfirmChangeRoomPopupProps
 } from '../../popups/confirmChangeRoomPopup/ConfirmChangeRoomPopup';
@@ -54,14 +50,13 @@ const EditFlowModifyRoomPage = () => {
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.destinationId
 	});
-	const [rateCode, setRateCode] = useState<string>('');
-	const [validCode, setValidCode] = useState<boolean>(true);
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
 			try {
 				let res = await reservationsService.get(id);
 				setReservation(res);
+				updateSearchQueryObj('rateCode', res.rateCode);
 			} catch (e) {
 				rsToasts.error('Something unexpected happened on the server.');
 				router.navigate('/reservations').catch(console.error);
@@ -90,11 +85,9 @@ const EditFlowModifyRoomPage = () => {
 				//can't use getByPage as it doesn't return with the info needed for the cards.
 				// setAvailabilityTotal(res.total)
 				setDestinations(res);
-				setValidCode(rateCode === '' || (!!res && res.length > 0));
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
-				setValidCode(rateCode === '' || rateCode === undefined);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -157,7 +150,9 @@ const EditFlowModifyRoomPage = () => {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
 			if (rateCode !== '' || rateCode !== undefined) {
-				createSearchQueryObj['rateCode'] = rateCode;
+				createSearchQueryObj['rateCode'] = reservation?.rateCode;
+			} else {
+				createSearchQueryObj['rateCode'] = reservation?.rateCode;
 			}
 			return createSearchQueryObj;
 		});
@@ -190,9 +185,9 @@ const EditFlowModifyRoomPage = () => {
 			try {
 				await reservationsService.updateReservation(stay);
 				router.navigate(`/reservations`).catch(console.error);
-				popupController.close(SpinningLoaderPopup);
+				popupController.closeAll();
 			} catch {
-				popupController.close(SpinningLoaderPopup);
+				popupController.closeAll();
 				rsToasts.error('Something unexpected happend on the server');
 			}
 		}
@@ -366,20 +361,6 @@ const EditFlowModifyRoomPage = () => {
 							initialPriceMin={
 								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 							}
-						/>
-						<Accordion
-							hideHoverEffect
-							children={
-								<RateCodeSelect
-									apply={(value) => {
-										setRateCode(value);
-										updateSearchQueryObj('rateCode', value);
-									}}
-									code={rateCode}
-									valid={!validCode}
-								/>
-							}
-							titleReact={<Label variant={'button'}>toggle rate code</Label>}
 						/>
 					</>
 				)}
