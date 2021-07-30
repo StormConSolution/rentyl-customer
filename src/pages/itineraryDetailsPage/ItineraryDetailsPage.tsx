@@ -116,13 +116,15 @@ const ItineraryDetailsPage: React.FC = () => {
 				}
 			];
 
-		return user.paymentMethods.map((item) => {
-			return {
-				selected: !!newPaymentMethod ? newPaymentMethod.id === item.id : false,
-				text: item.cardNumber,
-				value: item.id
-			};
-		});
+		return user.paymentMethods
+			.filter((item) => item.systemProvider === 'adyen')
+			.map((item) => {
+				return {
+					selected: !!newPaymentMethod ? newPaymentMethod.id === item.id : false,
+					text: item.cardNumber,
+					value: item.id
+				};
+			});
 	}
 
 	async function saveNewPaymentMethod() {
