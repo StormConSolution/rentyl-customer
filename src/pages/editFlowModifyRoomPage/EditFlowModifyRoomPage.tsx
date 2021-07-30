@@ -282,7 +282,7 @@ const EditFlowModifyRoomPage = () => {
 									datum: reservation.accommodation.extraBed
 								}
 							]}
-							carouselImagePaths={['']}
+							carouselImagePaths={[reservation.accommodation.heroUrl]}
 							amenityIconNames={reservation.accommodation.featureIcons}
 							onBookNowClick={() => {
 								router.back();

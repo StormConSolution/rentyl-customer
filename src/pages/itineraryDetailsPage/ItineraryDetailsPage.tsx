@@ -203,7 +203,9 @@ const ItineraryDetailsPage: React.FC = () => {
 													if (!user) return;
 													if (typeof value === 'number') {
 														return setNewPaymentMethod(
-															user.paymentMethods.find((item) => item.id === value)
+															user.paymentMethods
+																.filter((item) => item.systemProvider === 'adyen')
+																.find((item) => item.id === value)
 														);
 													}
 													setNewPaymentMethod(undefined);
