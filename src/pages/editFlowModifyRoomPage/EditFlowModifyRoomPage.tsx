@@ -157,7 +157,9 @@ const EditFlowModifyRoomPage = () => {
 		});
 	}
 
-	function getImageUrls(destination: Api.Accommodation.Res.Availability): string[] {
+	function getImageUrls(
+		destination: Api.Accommodation.Res.Availability | Api.Reservation.AccommodationDetails
+	): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
 				return urlObj.urls.large?.toString() || '';
@@ -282,7 +284,7 @@ const EditFlowModifyRoomPage = () => {
 									datum: reservation.accommodation.extraBed
 								}
 							]}
-							carouselImagePaths={['']}
+							carouselImagePaths={getImageUrls(reservation.accommodation)}
 							amenityIconNames={reservation.accommodation.featureIcons}
 							onBookNowClick={() => {
 								router.back();

@@ -860,6 +860,7 @@ declare namespace Api {
 			extraBed: 1 | 0;
 			adaCompliant: 1 | 0;
 			maxOccupantCount: number;
+			media: Media[];
 		}
 		export interface DestinationDetails {
 			id: number;
@@ -876,6 +877,7 @@ declare namespace Api {
 			logoUrl: string;
 			heroUrl: string;
 			policies: { type: Model.DestinationPolicyType; value: string }[];
+			media: Media[];
 		}
 		interface PriceDetail {
 			accommodationDailyCostsInCents: { [date: string]: number };
