@@ -37,11 +37,11 @@ export default class DestinationService extends Service {
 
 	async searchAvailableAccommodationsByDestination(
 		data: Api.Accommodation.Req.Availability
-	): Promise<Api.Accommodation.Res.Availability[]> {
+	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
 		const response = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
 			'/accommodation/availability',
 			WebUtils.convertDataForUrlParams(data)
 		);
-		return response.data.data;
+		return response.data;
 	}
 }

@@ -106,7 +106,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		value: any
 	) {
 		if (key === 'adults' && value === 0) {
-			throw rsToasts.error('There must be at least one adult.');
+			value = 1;
 		}
 		if (key === 'adults' && isNaN(value)) {
 			throw rsToasts.error('# of adults must be a number');

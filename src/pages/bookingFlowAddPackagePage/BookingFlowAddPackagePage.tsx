@@ -10,6 +10,8 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import Footer from '../../components/footer/Footer';
 
 const BookingFlowAddPackagePage = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -37,7 +39,7 @@ const BookingFlowAddPackagePage = () => {
 	}, []);
 
 	function renderPackages() {
-		return addedPackages.map((item, index) => {
+		return addedPackages.map((item) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
 			if (defaultImage === undefined && item.media.length > 0) {
 				defaultImage = item.media[0];
@@ -61,7 +63,7 @@ const BookingFlowAddPackagePage = () => {
 	}
 
 	function renderAvailablePackages() {
-		return availablePackages.map((item, index) => {
+		return availablePackages.map((item) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
 			let isAdded = addedPackages.find((value) => value.id === item.id);
 			if (isAdded) return false;
@@ -112,6 +114,7 @@ const BookingFlowAddPackagePage = () => {
 					}}
 				/>
 			</div>
+			<Footer links={FooterLinkTestData} />
 		</Page>
 	);
 };
