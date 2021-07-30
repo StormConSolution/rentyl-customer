@@ -273,7 +273,7 @@ const BookingFlowAddRoomPage = () => {
 								datum: editingAccommodation.extraBeds ? 'Yes' : 'No'
 							}
 						]}
-						carouselImagePaths={[editingAccommodation.heroUrl]}
+						carouselImagePaths={editingAccommodation.media.map((media) => media.urls.large || '')}
 						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
 						onBookNowClick={() => {
 							let data = params.data;
