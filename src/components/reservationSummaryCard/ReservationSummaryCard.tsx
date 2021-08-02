@@ -13,7 +13,7 @@ interface ReservationSummaryCardProps {
 	paymentMethod?: Api.Reservation.PaymentMethod;
 	billingAddress: Api.Reservation.BillingAddressDetails;
 	priceDetails: Api.Reservation.PriceDetail;
-	packages: Api.Package.Res.Get[];
+	packages: Api.UpsellPackage.Res.Get[];
 }
 
 const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) => {
