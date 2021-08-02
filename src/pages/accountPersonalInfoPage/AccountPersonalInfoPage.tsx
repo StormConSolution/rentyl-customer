@@ -199,18 +199,20 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							control={updateUserPassword.get('old')}
 							updateControl={updateUserPasswordForm}
 						/>
-						<Box display={'flex'} justifyContent={'space-between'}>
+						<Box display={'grid'} className={'passwordCheck'}>
 							<LabelInput
 								title={'New Password'}
 								inputType={'password'}
 								control={updateUserPassword.get('new')}
 								updateControl={updateUserPasswordForm}
+								labelVariant={'caption'}
 							/>
 							<LabelInput
 								title={'Retype new password'}
 								inputType={'password'}
 								control={updateUserPassword.get('retypeNewPassword')}
 								updateControl={updateUserPasswordForm}
+								labelVariant={'caption'}
 							/>
 						</Box>
 						<LabelButton

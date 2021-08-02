@@ -454,6 +454,7 @@ declare namespace Api {
 			export interface Update {
 				id: number;
 				description?: string;
+				locationDescription?: string;
 				status?: string;
 				address1?: string;
 				address2?: string;
@@ -520,6 +521,7 @@ declare namespace Api {
 				externalId: string;
 				name: string;
 				description: string;
+				locationDescription: string;
 				code: string;
 				status: string;
 				address1: string;
