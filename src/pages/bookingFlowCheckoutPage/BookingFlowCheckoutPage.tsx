@@ -63,6 +63,7 @@ const BookingFlowCheckoutPage = () => {
 		phone: user?.phone || '',
 		email: user?.primaryEmail || ''
 	});
+	const [additionalDetails, setAdditionalDetails] = useState<string>('');
 	const [destinationName, setDestinationName] = useState<string>('');
 	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
 	const [creditCardForm, setCreditCardForm] = useState<{
@@ -116,7 +117,8 @@ const BookingFlowCheckoutPage = () => {
 									id: item.id
 								};
 							}),
-							guest: guestInfo
+							guest: guestInfo,
+							additionalDetails: additionalDetails
 						};
 					})
 				};
@@ -318,7 +320,8 @@ const BookingFlowCheckoutPage = () => {
 								id: item.id
 							};
 						}),
-						guest: guestInfo
+						guest: guestInfo,
+						additionalDetails: additionalDetails
 					};
 				})
 			};
@@ -496,6 +499,8 @@ const BookingFlowCheckoutPage = () => {
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
 							onContactChange={(value) => {
+								setAdditionalDetails(value.details || '');
+								delete value['details'];
 								setGuestInfo(value);
 							}}
 							onCreditCardChange={(value) => {

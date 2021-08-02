@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './ContactInfoAndPaymentCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../labelInput/LabelInput';
 import Paper from '../paper/Paper';
-import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
@@ -18,7 +18,7 @@ import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
 type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoForm extends Api.Reservation.Guest {
-	details: string;
+	details?: string;
 }
 
 interface ContactInfo extends ContactInfoForm {
@@ -81,7 +81,9 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			new RsFormControl('email', props.contactInfo?.email || user?.primaryEmail || '', [
 				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
 			]),
-			new RsFormControl('data', '', [])
+			new RsFormControl('details', '', [
+				new RsValidator(RsValidatorEnum.MAX, 'Must be less than 500 characters', 500)
+			])
 		])
 	);
 
@@ -292,6 +294,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					isPhoneInput
 					onChange={(value) => {
 						phoneNumber = value;
+						props.onContactChange({ ...contactInfoForm.toModel(), phone: phoneNumber });
 					}}
 					initialValue={user?.phone}
 				/>
@@ -303,7 +306,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			<LabelInput
 				title={''}
 				inputType={'textarea'}
-				control={contactInfoForm.get('data')}
+				control={contactInfoForm.get('details')}
 				updateControl={updateContactInfoForm}
 			/>
 			<hr />
