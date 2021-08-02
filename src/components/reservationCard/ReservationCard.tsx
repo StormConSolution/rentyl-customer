@@ -22,6 +22,7 @@ interface ReservationCardProps {
 	totalPoints: number;
 	linkPath: string;
 	cancelPermitted: 0 | 1;
+	itineraryTotal: number;
 }
 
 const ReservationCard: React.FC<ReservationCardProps> = (props) => {
@@ -50,9 +51,9 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 			<Paper className={'columnThree'} boxShadow padding={'25px 40px'}>
 				<div>
 					<Label variant={'caption'} mb={5}>
-						Total Amount Paid
+						Total Price
 					</Label>
-					<Label variant={'h2'}>${StringUtils.formatMoney(props.totalCostCents)}</Label>
+					<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
 				</div>
 				<div>
 					<Label variant={'caption'} mb={5}>

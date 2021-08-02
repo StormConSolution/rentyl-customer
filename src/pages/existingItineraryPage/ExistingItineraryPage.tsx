@@ -93,6 +93,10 @@ const ExistingItineraryPage: React.FC = () => {
 					totalPoints={1000} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={reservation.cancellationPermitted}
+					itineraryTotal={item.reservations.reduce(
+						(total, reservation) => (total += reservation.priceDetail.grandTotalCents),
+						0
+					)}
 				/>
 			);
 		});
@@ -121,6 +125,10 @@ const ExistingItineraryPage: React.FC = () => {
 					totalPoints={1000} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={0}
+					itineraryTotal={item.reservations.reduce(
+						(total, reservation) => (total += reservation.priceDetail.grandTotalCents),
+						0
+					)}
 				/>
 			);
 		});
