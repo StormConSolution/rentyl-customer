@@ -116,15 +116,13 @@ const ItineraryDetailsPage: React.FC = () => {
 				}
 			];
 
-		return user.paymentMethods
-			.filter((item) => item.systemProvider === 'adyen')
-			.map((item) => {
-				return {
-					selected: !!newPaymentMethod ? newPaymentMethod.id === item.id : false,
-					text: item.cardNumber,
-					value: item.id
-				};
-			});
+		return user.paymentMethods.map((item) => {
+			return {
+				selected: !!newPaymentMethod ? newPaymentMethod.id === item.id : false,
+				text: item.cardNumber,
+				value: item.id
+			};
+		});
 	}
 
 	async function saveNewPaymentMethod() {
@@ -205,9 +203,7 @@ const ItineraryDetailsPage: React.FC = () => {
 													if (!user) return;
 													if (typeof value === 'number') {
 														return setNewPaymentMethod(
-															user.paymentMethods
-																.filter((item) => item.systemProvider === 'adyen')
-																.find((item) => item.id === value)
+															user.paymentMethods.find((item) => item.id === value)
 														);
 													}
 													setNewPaymentMethod(undefined);
