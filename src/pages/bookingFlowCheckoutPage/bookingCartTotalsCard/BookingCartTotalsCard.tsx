@@ -24,7 +24,7 @@ interface BookingCartTotalsCardProps {
 	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Api.Package.Res.Get[];
+	packages?: Api.UpsellPackage.Res.Get[];
 	accommodationId?: number;
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;

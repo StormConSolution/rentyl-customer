@@ -71,13 +71,13 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getPackagesByIds(data: Api.Package.Req.Get): Promise<RsResponseData<Api.Package.Res.Get[]>> {
-		let response = await http.get<RsResponseData<Api.Package.Res.Get[]>>('package', data);
+	async getPackagesByIds(data: Api.UpsellPackage.Req.Get): Promise<RsResponseData<Api.UpsellPackage.Res.Get[]>> {
+		let response = await http.get<RsResponseData<Api.UpsellPackage.Res.Get[]>>('package', data);
 		return response.data;
 	}
 
-	async getPackages(data: Api.Package.Req.GetByPage): Promise<RsResponseData<Api.Package.Res.GetByPage>> {
-		let response = await http.get<Api.Package.Res.GetByPage>('package/paged', {});
+	async getPackages(data: Api.UpsellPackage.Req.GetByPage): Promise<RsResponseData<Api.UpsellPackage.Res.GetByPage>> {
+		let response = await http.get<Api.UpsellPackage.Res.GetByPage>('package/paged', {});
 		return response;
 	}
 }
