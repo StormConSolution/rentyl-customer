@@ -537,7 +537,7 @@ declare namespace Api {
 					Feature.Details,
 					'affiliateId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
 				>[];
-				packages: Package.Details[];
+				packages: UpsellPackage.Details[];
 				accommodations: {
 					id: number;
 					name: string;
@@ -739,7 +739,7 @@ declare namespace Api {
 		}
 	}
 
-	export namespace Package {
+	export namespace UpsellPackage {
 		export interface Details extends Model.Packages {
 			media: Media[];
 		}
@@ -1048,7 +1048,7 @@ declare namespace Api {
 				totalInCents: number;
 			}
 
-			export interface BookingPackageDetails extends Api.Package.Details {
+			export interface BookingPackageDetails extends Api.UpsellPackage.Details {
 				priceCents: number;
 			}
 			export interface Policies {

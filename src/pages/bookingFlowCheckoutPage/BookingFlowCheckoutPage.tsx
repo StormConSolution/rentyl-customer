@@ -32,7 +32,7 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	prices: Api.Reservation.PriceDetail;
 	checkInTime: string;
 	checkoutTime: string;
-	packages: Api.Package.Res.Get[];
+	packages: Api.UpsellPackage.Res.Get[];
 }
 
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
@@ -218,7 +218,7 @@ const BookingFlowCheckoutPage = () => {
 			stays: newAccommodationList.map((accommodation) => {
 				return {
 					...accommodation,
-					packages: accommodation.packages.map((item: Api.Package.Res.Get) => item.id)
+					packages: accommodation.packages.map((item: Api.UpsellPackage.Res.Get) => item.id)
 				};
 			})
 		};
@@ -245,7 +245,7 @@ const BookingFlowCheckoutPage = () => {
 		checkoutDate: string | Date,
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
-		packages: Api.Package.Res.Get[],
+		packages: Api.UpsellPackage.Res.Get[],
 		accommodationId: number,
 		rateCode?: string
 	) {
@@ -414,7 +414,7 @@ const BookingFlowCheckoutPage = () => {
 										checkoutDate: string | Date,
 										originalStartDate: string | Date,
 										originalEndDate: string | Date,
-										packages: Api.Package.Res.Get[]
+										packages: Api.UpsellPackage.Res.Get[]
 									): void {
 										popupController.close(AccommodationOptionsPopup);
 										editRoom(
