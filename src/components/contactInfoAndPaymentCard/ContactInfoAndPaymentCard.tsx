@@ -18,7 +18,7 @@ import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 
 type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoForm extends Api.Reservation.Guest {
-	details: string;
+	details?: string;
 }
 
 interface ContactInfo extends ContactInfoForm {
@@ -81,7 +81,9 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			new RsFormControl('email', props.contactInfo?.email || user?.primaryEmail || '', [
 				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
 			]),
-			new RsFormControl('data', '', [])
+			new RsFormControl('details', '', [
+				new RsValidator(RsValidatorEnum.MAX, 'Must be less than 500 characters', 500)
+			])
 		])
 	);
 
@@ -301,7 +303,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			<LabelInput
 				title={''}
 				inputType={'textarea'}
-				control={contactInfoForm.get('data')}
+				control={contactInfoForm.get('details')}
 				updateControl={updateContactInfoForm}
 			/>
 			<hr />
