@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import globalState, { setRecoilExternalValue } from '../models/globalState';
 import serviceFactory from '../services/serviceFactory';
 import CompanyService from '../services/company/company.service';
-import router from '../utils/router';
-import { WebUtils } from '../utils/utils';
-import http from '../utils/http';
 
 export default function useCompanyInfo(): boolean {
 	const [isCompanyLoaded, setIsCompanyLoaded] = useState<boolean>(false);

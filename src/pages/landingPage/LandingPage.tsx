@@ -20,6 +20,7 @@ import serviceFactory from '../../services/serviceFactory';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import RewardService from '../../services/reward/reward.service';
+import useCustomPageText from '../../customHooks/useCustomPageText';
 
 interface LandingPageProps {}
 
@@ -29,6 +30,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [activeRewards, setActiveRewards] = useState<number>(0);
 	const [featuredRewards, setFeaturedRewards] = useState<Misc.FeaturedCategory[]>();
+
+	const text = useCustomPageText('LandingPage');
 
 	useEffect(() => {
 		async function getFeatureRewards() {
@@ -74,9 +77,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 				>
 					<Box>
 						<div className={'heroText'}>
-							Rewarding the way you
+							{text('heroTitle1', 'Rewarding the way you')}
 							<br />
-							<span>live, work, and play</span>
+							<span>{text('heroTitle2', 'live, work, and play')}</span>
 						</div>
 						<LabelButton
 							look={'containedPrimary'}

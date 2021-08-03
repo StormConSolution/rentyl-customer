@@ -57,7 +57,8 @@ class GlobalState {
 				squareLogoUrl: '',
 				wideLogoUrl: '',
 				allowPointBooking: 0,
-				allowCashBooking: 0
+				allowCashBooking: 0,
+				customPages: {}
 			}
 		});
 
