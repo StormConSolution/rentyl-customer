@@ -8,7 +8,6 @@ import './icons/cmsIcons/style.css';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 import rsToasts from '@bit/redsky.framework.toast';
 import useLoginState, { LoginStatus } from './customHooks/useLoginState';
-import CustomToast from './components/customToast/CustomToast';
 import AppBar from './components/appBar/AppBar';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -17,17 +16,17 @@ import router from './utils/router';
 import AccountOverview from './popups/accountOverview/AccountOverview';
 import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
 import useCompanyInfo from './customHooks/useCompanyInfo';
+import { useSetCustomToast } from './customHooks/useSetCustomToast';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
 
+	useSetCustomToast();
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
 	const isCompanyLoaded = useCompanyInfo();
 
-	// Code to setup our toast delegates (Will render CustomToast when called)
 	useEffect(() => {
-		rsToasts.setRenderDelegate(CustomToast);
 		AOS.init({
 			duration: 1000
 		});
@@ -39,7 +38,7 @@ function App() {
 	}, [loginStatus, isCompanyLoaded]);
 
 	function renderViewsBasedOnLoginStatus() {
-		if (!isCompanyLoaded) return null;
+		if (!isCompanyLoaded) return <>Loading...</>;
 		switch (loginStatus) {
 			case LoginStatus.UNKNOWN:
 				return null;
