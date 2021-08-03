@@ -10,22 +10,22 @@ function getBrowserLanguage(): string {
 export default function useCustomPageText(pageName: string): (key: string, defaultValue: string) => string {
 	let companyVariables = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	let pageText: { [key: string]: any } = {};
+	let text = function (key: string, defaultValue: string): string {
+		if (!pageText[key]) return defaultValue;
+		return pageText[key][language] || pageText[key]['en'] || defaultValue;
+	};
+
 	if (
 		!companyVariables ||
 		!('customPages' in companyVariables) ||
 		!('pages' in companyVariables.customPages) ||
 		!(pageName in companyVariables.customPages.pages)
 	) {
-		console.error('Missing Page Named: ' + pageName);
+		return text;
 	}
 	pageText = companyVariables.customPages.pages[pageName];
 
 	const language = getBrowserLanguage();
-
-	let text = function (key: string, defaultValue: string): string {
-		if (!pageText[key]) return defaultValue;
-		return pageText[key][language] || pageText[key]['en'] || defaultValue;
-	};
 
 	return text;
 }
