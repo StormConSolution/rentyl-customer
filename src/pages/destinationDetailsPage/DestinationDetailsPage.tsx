@@ -452,11 +452,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				>
 					<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
 						<Label variant={'h1'}>Location</Label>
-						<Label variant={'body2'}>
-							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-							invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-							et justo duo dolores et ea rebum. Stet clita kasd.
-						</Label>
+						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
 						<Label variant={'body2'}>
 							<Icon iconImg={'icon-map-solid'} size={12} />
 							{destinationDetails.address1} {destinationDetails.city}, {destinationDetails.state}{' '}
