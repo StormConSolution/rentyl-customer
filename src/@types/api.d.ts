@@ -364,6 +364,7 @@ declare namespace Api {
 				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
+				customPages: any;
 			}
 		}
 	}
@@ -948,6 +949,10 @@ declare namespace Api {
 			}
 			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
 				id: number;
+			}
+			export interface UpdatePayment {
+				itineraryNumber: string; // this will be changing to reservation VARY soon
+				paymentMethodId: number;
 			}
 			export interface Get {
 				id: number;
