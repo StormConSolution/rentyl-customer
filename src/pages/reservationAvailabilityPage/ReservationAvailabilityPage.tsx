@@ -106,7 +106,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 		value: any
 	) {
 		if (key === 'adults' && value === 0) {
-			value = 1;
+			//this should never evaluate to true with current implementations.
+			throw rsToasts.error('Must have at least 1 adult');
 		}
 		if (key === 'adults' && isNaN(value)) {
 			throw rsToasts.error('# of adults must be a number');
@@ -302,7 +303,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 								onFocusChange={setFocusedInput}
 								monthsToShow={2}
 								onChangeAdults={(value) => {
-									if (value === '') value = 0;
+									if (value === '' || parseInt(value) === NaN) return;
 									updateSearchQueryObj('adults', parseInt(value));
 								}}
 								onChangeChildren={(value) => {
