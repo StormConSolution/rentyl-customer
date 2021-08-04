@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './ContactInfoAndPaymentCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelInput from '../labelInput/LabelInput';
 import Paper from '../paper/Paper';
-import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
@@ -292,6 +292,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					isPhoneInput
 					onChange={(value) => {
 						phoneNumber = value;
+						props.onContactChange({ ...contactInfoForm.toModel<ContactInfoForm>(), phone: phoneNumber });
 					}}
 					initialValue={user?.phone}
 				/>

@@ -8,7 +8,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer, StringUtils } from '../../utils/utils';
+import { formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -74,11 +74,9 @@ const BookingFlowAddRoomPage = () => {
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
-				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
-				//can't use getByPage as it doesn't return with the info needed for the cards.
-				// setAvailabilityTotal(res.total)
-				setDestinations(res);
-				setValidCode(rateCode === '' || (!!res && res.length > 0));
+				setAvailabilityTotal(res.total || 0);
+				setDestinations(res.data);
+				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
