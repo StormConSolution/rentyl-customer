@@ -292,7 +292,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					isPhoneInput
 					onChange={(value) => {
 						phoneNumber = value;
-						props.onContactChange({ ...contactInfoForm.toModel(), phone: phoneNumber });
+						props.onContactChange({ ...contactInfoForm.toModel<ContactInfoForm>(), phone: phoneNumber });
 					}}
 					initialValue={user?.phone}
 				/>

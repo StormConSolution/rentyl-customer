@@ -76,7 +76,7 @@ const BookingFlowAddRoomPage = () => {
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
-				setValidCode(rateCode === '' || (!!res && res.data.length > 0));
+				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('An unexpected error has occurred on the server.');
