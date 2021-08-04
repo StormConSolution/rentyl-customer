@@ -22,7 +22,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
-import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -128,17 +128,16 @@ const ItineraryDetailsPage: React.FC = () => {
 	//This will need to be changed to the Reservation level in the future
 	//need for certification
 	async function saveNewPaymentMethod() {
-		popupController.open(SpinningLoaderPopup);
+		if (!newPaymentMethod || !itinerary) return;
+		popupController.open<SpinningLoaderPopupProps>(SpinningLoaderPopup, {});
 		try {
-			if (newPaymentMethod && itinerary) {
-				let response = await reservationService.updatePaymentMethod({
-					itineraryNumber: params.itineraryId,
-					paymentMethodId: newPaymentMethod.id
-				});
-				setItinerary(response);
-				popupController.close(SpinningLoaderPopup);
-				rsToasts.success('successfully updated payment method.');
-			}
+			let response = await reservationService.updatePaymentMethod({
+				itineraryNumber: params.itineraryId,
+				paymentMethodId: newPaymentMethod.id
+			});
+			setItinerary(response);
+			popupController.close(SpinningLoaderPopup);
+			rsToasts.success('successfully updated payment method.');
 		} catch (e) {
 			rsToasts.error(e);
 			popupController.close(SpinningLoaderPopup);
