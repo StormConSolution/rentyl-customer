@@ -42,6 +42,15 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
+	//this will change to reservation level later.
+	async updatePaymentMethod(data: Api.Reservation.Req.UpdatePayment): Promise<Api.Reservation.Res.Itinerary.Get> {
+		let response = await http.put<RsResponseData<Api.Reservation.Res.Itinerary.Get>>(
+			'reservation/payment-method',
+			data
+		);
+		return response.data.data;
+	}
+
 	async getByPage(
 		page: number,
 		perPage: number,
