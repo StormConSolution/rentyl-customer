@@ -54,11 +54,16 @@ const RewardDetailPage: React.FC = () => {
 
 	function renderEnabledOrDisabledButton() {
 		if (user) {
+			let hasEnoughPoints: boolean = false;
+			if (reward) {
+				hasEnoughPoints = user.availablePoints - reward.pointCost > 0;
+			}
 			return (
 				<LabelButton
 					className={'buyButton'}
-					look={'containedPrimary'}
+					look={hasEnoughPoints ? 'containedPrimary' : 'containedSecondary'}
 					variant={'button'}
+					// disabled={!hasEnoughPoints}
 					label={'buy with points'}
 					onClick={() =>
 						router.navigate(`/reward/purchase?ri=${reward ? reward.id : ''}&vc=${params.voucherCode}`)
