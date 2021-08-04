@@ -137,9 +137,9 @@ const ItineraryDetailsPage: React.FC = () => {
 			});
 			setItinerary(response);
 			popupController.close(SpinningLoaderPopup);
-			rsToasts.success('successfully updated payment method.');
+			rsToasts.success('Successfully updated payment method.');
 		} catch (e) {
-			rsToasts.error(e);
+			rsToasts.error(e.message || 'A server error has occurred');
 			popupController.close(SpinningLoaderPopup);
 		}
 	}
