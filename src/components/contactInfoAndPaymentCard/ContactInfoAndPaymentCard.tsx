@@ -190,7 +190,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				return item.message;
 			});
 			popupController.closeAll();
-			return rsToasts.error(errorMessages.join(' '), '', 8000);
+			return rsToasts.error(errorMessages.join(' '), "Can't Contact Payment Provider", 8000);
 		});
 
 		return () => {

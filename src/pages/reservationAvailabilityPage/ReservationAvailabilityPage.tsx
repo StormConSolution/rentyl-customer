@@ -85,7 +85,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				setValidCode(rateCode === '' || (!!res.data.data && res.data.data.length > 0));
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error('An unexpected error has occurred on the server.');
+				rsToasts.error('Cannot find available reservations, try again.');
 				setValidCode(rateCode === '');
 				popupController.close(SpinningLoaderPopup);
 			}

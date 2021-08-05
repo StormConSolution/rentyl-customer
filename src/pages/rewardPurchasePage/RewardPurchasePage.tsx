@@ -38,7 +38,7 @@ const RewardPurchasePage: React.FC = () => {
 				let res = await rewardService.getRewardById(Number(params.reward));
 				setReward(res);
 			} catch (e) {
-				rsToasts.error('An unexpected error occurred on the server.');
+				rsToasts.error('Reward Item no longer exists.');
 			}
 		}
 		getRewardDetails().catch(console.error);
@@ -60,7 +60,7 @@ const RewardPurchasePage: React.FC = () => {
 			rsToasts.success('You have claimed your voucher');
 			router.navigate(`/reward/confirm?ri=${params.reward}&vc=${params.voucherCode}`).catch(console.error);
 		} catch (e) {
-			rsToasts.error('An unexpected error occurred on the server.');
+			rsToasts.error('Unable to claim reward.');
 		}
 	}
 

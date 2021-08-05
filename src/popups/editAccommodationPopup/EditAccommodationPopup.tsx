@@ -66,8 +66,8 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 				const response = await reservationsService.getPackages(data);
 				setAvailablePackages(response.data.data);
 				setTotalPackages(response.data.total);
-			} catch {
-				console.error('An unexpected error happened on the server.');
+			} catch (e) {
+				console.error('get packages: ', e);
 			}
 		}
 		getPackages().catch(console.error);

@@ -1,4 +1,21 @@
 @import '../../themes/themes';
 
 .rsOrderConfirmationPage {
+	min-height: 100vh;
+
+	.confirmationHeader {
+		margin-top: 80px;
+		width: 100%;
+		.orderDate {
+			width: 230px;
+		}
+	}
+	.rewardImage {
+		background-size: cover;
+	}
+
+	.rsFooter {
+		position: fixed;
+		bottom: 0;
+	}
 }

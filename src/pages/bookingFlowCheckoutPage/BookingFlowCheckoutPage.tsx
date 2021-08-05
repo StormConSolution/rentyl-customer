@@ -87,7 +87,7 @@ const BookingFlowCheckoutPage = () => {
 				if (rooms) setAccommodations(rooms);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error('These dates are no longer available');
 				router.navigate('/reservation/availability').catch(console.error);
 				popupController.close(SpinningLoaderPopup);
 			}
@@ -285,7 +285,7 @@ const BookingFlowCheckoutPage = () => {
 				setAccommodations([...copiedAccommodations, stay]);
 			}
 		} catch (e) {
-			rsToasts.error('Something unexpected happened.');
+			rsToasts.error('Unable to change room details');
 		}
 	}
 

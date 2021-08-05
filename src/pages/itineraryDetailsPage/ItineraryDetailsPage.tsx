@@ -38,10 +38,9 @@ const ItineraryDetailsPage: React.FC = () => {
 			if (!params.itineraryId) return;
 			try {
 				let res = await reservationService.getItinerary({ itineraryId: params.itineraryId });
-				console.log(res);
 				setItinerary(res);
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error('Unable to get itinerary details', 'Itinerary unavailable');
 			}
 		}
 		getItineraryDetails().catch(console.error);

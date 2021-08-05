@@ -72,7 +72,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				let dest = await destinationService.getDestinationDetails(id);
 				if (dest.data.data) setDestinationDetails(dest.data.data);
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error('Cannot get details for this destination');
 			}
 		}
 

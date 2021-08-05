@@ -30,7 +30,7 @@ const BookingFlowAddPackagePage = () => {
 				setAddedPackages(packages.filter((item) => params.data.newRoom.packages.includes(item.id)));
 				setTotalPackages(response.data.total);
 			} catch {
-				console.error('An unexpected error happened on the server.');
+				console.error('Cannot get a list of add-on packages.');
 			}
 		}
 		getPackages().catch(console.error);

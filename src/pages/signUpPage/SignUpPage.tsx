@@ -93,7 +93,7 @@ const SignUpPage: React.FC = () => {
 				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('An unexpected error occurred on the server.', '', 5000);
+				throw rsToasts.error('Unable to get a list of countries.', '', 5000);
 			}
 		}
 		getCountries().catch(console.error);
@@ -110,7 +110,7 @@ const SignUpPage: React.FC = () => {
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error(e.message, '', 5000);
+				rsToasts.error('Unable to get states for the selected country', '', 5000);
 			}
 		}
 		getStates().catch(console.error);
@@ -208,7 +208,7 @@ const SignUpPage: React.FC = () => {
 				}
 			});
 			console.error('Signup new customer', e);
-			throw rsToasts.error('An unexpected error occurred on the server.');
+			throw rsToasts.error('Unable to create account, try again.');
 		}
 	}
 

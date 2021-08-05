@@ -9,6 +9,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Box from '../../components/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import { DateUtils } from '../../utils/utils';
 
 const OrderConfirmationPage = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -27,21 +28,53 @@ const OrderConfirmationPage = () => {
 				let res = await rewardService.getRewardById(Number(params.reward));
 				setReward(res);
 			} catch (e) {
-				rsToasts.error('An unexpected error occurred on the server.');
+				rsToasts.error('Reward no longer exists.');
 			}
 		}
 		getRewardDetails().catch(console.error);
 	}, []);
+
+	function renderStyle() {
+		if (!reward) return;
+		let styles: any = {
+			width: '200px',
+			height: '200px',
+			backgroundImage: `url(${reward.media[0].urls.large})`
+		};
+		return styles;
+	}
+
 	return (
 		<Page className={'rsOrderConfirmationPage'}>
-			<Box>
-				<Label variant={'h1'}>Order Confirmation</Label>
-				<Box display={'flex'}>
-					<Label variant={'h3'}>Ordered</Label>
-					<Label variant={'body1'}></Label>{' '}
+			<div className={'rs-page-content-wrapper'}>
+				<Box display={'flex'} justifyContent={'space-between'} className={'confirmationHeader'}>
+					<Label variant={'h1'}>Order Confirmation</Label>
+					<Box
+						display={'flex'}
+						alignItems={'center'}
+						justifyContent={'space-between'}
+						className={'orderDate'}
+					>
+						<Label variant={'h3'}>Ordered: </Label>
+						<Label variant={'body1'}>
+							{DateUtils.displayDate(new Date())} {DateUtils.displayTime(new Date())}
+						</Label>
+					</Box>
 				</Box>
-			</Box>
-			<Footer links={FooterLinkTestData} />
+				<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+					<Box display={'flex'}>
+						<div style={renderStyle()} className={'rewardImage'} />
+						<Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} margin={20}>
+							<Label variant={'body1'}>{reward?.description}</Label>
+							<Label variant={'h3'}>Item #{reward?.upc}</Label>
+							<Label variant={'h3'}>Gift Certificate # {params.voucherCode}</Label>
+							<Label variant={'caption'}>Redemption Instructions</Label>
+						</Box>
+					</Box>
+					<Label variant={'h3'}>{reward?.pointCost} Points</Label>
+				</Box>
+				<Footer links={FooterLinkTestData} />
+			</div>
 		</Page>
 	);
 };
