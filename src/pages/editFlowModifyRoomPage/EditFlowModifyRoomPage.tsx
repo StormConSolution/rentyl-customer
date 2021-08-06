@@ -82,10 +82,8 @@ const EditFlowModifyRoomPage = () => {
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
-				// we need totals, but it seems like the information needed for this page and the endpoint give the wrong data?
-				//can't use getByPage as it doesn't return with the info needed for the cards.
-				// setAvailabilityTotal(res.total)
-				setDestinations(res);
+				setAvailabilityTotal(res.total || 0);
+				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('Unable to get available accommodations.');

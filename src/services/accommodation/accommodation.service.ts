@@ -25,12 +25,14 @@ export default class AccommodationService extends Service {
 		return res.data.data;
 	}
 
-	async availability(data: Api.Accommodation.Req.Availability) {
-		let res = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
+	async availability(
+		data: Api.Accommodation.Req.Availability
+	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
+		let res = await http.get<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>>(
 			'accommodation/availability',
 			WebUtils.convertDataForUrlParams(data)
 		);
-		return res.data.data;
+		return res.data;
 	}
 
 	async getManyAccommodationDetails(accommodationIds: number[]) {

@@ -3,7 +3,7 @@ import './SpinningLoaderPopup.scss';
 import { Popup } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 
-interface SpinningLoaderPopupProps extends PopupProps {}
+export interface SpinningLoaderPopupProps extends PopupProps {}
 
 const SpinningLoaderPopup: React.FC<SpinningLoaderPopupProps> = (props) => {
 	return (

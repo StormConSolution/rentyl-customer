@@ -25,6 +25,7 @@ import LabelSelect from '../../components/labelSelect/LabelSelect';
 import UserAddressService from '../../services/userAddress/userAddress.service';
 import CountryService from '../../services/country/country.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 let phoneNumber = '';
 let country = 'US';
@@ -36,6 +37,9 @@ const SignUpPage: React.FC = () => {
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const size = useWindowResizeChange();
 	const setUser = useSetRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
+	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
+	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
+	const [hasSpecialCharacter, setHasSpecialCharacter] = useState<boolean>(false);
 	const [isValidForm, setIsValidForm] = useState<boolean>(false);
 	const [formIsValid, setFormIsValid] = useState<boolean>(false);
 	const [stateList, setStateList] = useState<{ value: number | string; text: number | string; selected: boolean }[]>(
@@ -61,15 +65,11 @@ const SignUpPage: React.FC = () => {
 			]),
 			new RsFormControl('password', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide a password'),
-				new RsValidator(
-					RsValidatorEnum.CUSTOM,
-					'Password must have: Minimum 8 characters, 1 Uppercase letter, 1 Lowercase letter, 1 Number or 1 Special character',
-					(control) => {
-						return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
-							control.value.toString()
-						);
-					}
-				),
+				new RsValidator(RsValidatorEnum.CUSTOM, '', (control) => {
+					return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
+						control.value.toString()
+					);
+				}),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Password must not be password', (control) => {
 					return control.value.toString() !== 'password';
 				})
@@ -133,6 +133,17 @@ const SignUpPage: React.FC = () => {
 	}
 
 	function updateUserObjForm(control: RsFormControl) {
+		if (control.key === 'password') {
+			const password = control.value.toString();
+			//check for 8 minimum characters
+			setHasEnoughCharacters(password.length >= 8);
+			//check for at least 1 capital
+			const upperCheck = new RegExp(/[A-Z]/g);
+			setHasUpperCase(upperCheck.test(password));
+			//check for a number or special character
+			const specialCharacter = new RegExp(/[0-9!\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]/g);
+			setHasSpecialCharacter(specialCharacter.test(password));
+		}
 		if (control.key === 'phone' && control.value.toString().length === 10) {
 			let newValue = formatPhoneNumber(control.value.toString());
 			control.value = newValue;
@@ -245,7 +256,7 @@ const SignUpPage: React.FC = () => {
 					<Paper
 						className={'formPaper'}
 						width={size === 'small' ? '335px' : '604px'}
-						height={size === 'small' ? '800px' : '825px'}
+						height={size === 'small' ? '900px' : '925px'}
 						boxShadow
 						backgroundColor={'#FCFBF8'}
 						position={'relative'}
@@ -257,7 +268,6 @@ const SignUpPage: React.FC = () => {
 							padding={size === 'small' ? '20px' : '48px 92px'}
 						>
 							<Box display={'flex'}>
-								{' '}
 								<LabelInput
 									title={'First Name'}
 									inputType={'text'}
@@ -350,6 +360,33 @@ const SignUpPage: React.FC = () => {
 								control={signUpForm.get('password')}
 								updateControl={updateUserObjForm}
 							/>
+							<Box display={'flex'} className={'passwordCheck'}>
+								<Icon
+									iconImg={!hasEnoughCharacters ? 'icon-solid-plus' : 'icon-solid-check'}
+									color={!hasEnoughCharacters ? 'red' : 'green'}
+								/>
+								<Label variant={'caption'} color={!hasEnoughCharacters ? 'red' : 'green'}>
+									At least 8 characters{' '}
+								</Label>
+							</Box>
+							<Box display={'flex'} className={'passwordCheck'}>
+								<Icon
+									iconImg={!hasUpperCase ? 'icon-solid-plus' : 'icon-solid-check'}
+									color={!hasUpperCase ? 'red' : 'green'}
+								/>
+								<Label variant={'caption'} color={!hasUpperCase ? 'red' : 'green'}>
+									1 uppercase
+								</Label>
+							</Box>
+							<Box display={'flex'} className={'passwordCheck'}>
+								<Icon
+									iconImg={!hasSpecialCharacter ? 'icon-solid-plus' : 'icon-solid-check'}
+									color={!hasSpecialCharacter ? 'red' : 'green'}
+								/>
+								<Label variant={'caption'} color={!hasSpecialCharacter ? 'red' : 'green'}>
+									1 number or special character
+								</Label>
+							</Box>
 							<LabelInput
 								title={'Confirm Password'}
 								inputType={'password'}

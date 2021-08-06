@@ -17,13 +17,13 @@ export interface AccommodationSearchDetailCardProps {
 
 const AccommodationSearchDetailCard: React.FC<AccommodationSearchDetailCardProps> = (props) => {
 	function renderAmenityIcons(iconPaths: Array<string>): Array<JSX.Element> {
-		return iconPaths.map((icon) => <Icon iconImg={icon} />);
+		return iconPaths.map((icon, index) => <Icon key={index} iconImg={icon} />);
 	}
 
 	function renderStats(stats: Array<AccommodationStat>): Array<JSX.Element> {
-		return stats.map((stat) => {
+		return stats.map((stat, index) => {
 			return (
-				<Box className="roomStat">
+				<Box className="roomStat" key={index}>
 					<Label variant="caption">{stat.label}</Label>
 					<Label variant="body2">{stat.datum}</Label>
 				</Box>

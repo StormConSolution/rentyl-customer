@@ -152,15 +152,16 @@ const BookingFlowCheckoutPage = () => {
 
 	useEffect(() => {
 		if (usePoints) {
+			let updateHasEnoughPoints: boolean = true;
 			if (user) {
-				setHasEnoughPoints(
+				updateHasEnoughPoints =
 					accommodations.reduce(
 						(total, accommodation) => (total += accommodation.prices.grandTotalCents),
 						0
-					) < user.availablePoints
-				);
+					) < user.availablePoints;
+				setHasEnoughPoints(updateHasEnoughPoints);
 			}
-			setIsDisabled(!hasAgreedToTerms || !hasEnoughPoints);
+			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints);
 		} else {
 			setIsDisabled(!hasAgreedToTerms || !isFormValid);
 		}
