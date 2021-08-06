@@ -158,7 +158,7 @@ const RewardPurchasePage: React.FC = () => {
 							<LabelButton
 								className={'placeOrderButton'}
 								look={hasEnoughPoints ? 'containedPrimary' : 'containedSecondary'}
-								//disabled={!hasEnoughPoints}
+								disabled={!hasEnoughPoints}
 								variant={'button'}
 								label={'Place Order'}
 								onClick={claimRewardVoucher}
