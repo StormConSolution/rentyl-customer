@@ -37,6 +37,12 @@
 		align-items: center;
 		justify-content: space-between;
 		text-align: center;
+		div {
+			height: 50%;
+			display: flex;
+			justify-content: flex-end;
+			flex-direction: column;
+		}
 		.rsLabelLink {
 			.rsLabel {
 				color: theme-var($buttonLinkColor);

@@ -42,6 +42,10 @@ class DateUtils extends BaseDateUtils {
 		dateToReturn.setTime(dateToReturn.getTime() + timeZoneOffset);
 		return dateToReturn.toDateString();
 	}
+
+	static daysBetween(date1: string | Date, date2: string | Date) {
+		return Math.abs(new Date(date1).getTime() - new Date(date2).getTime()) / (3600000 * 24);
+	}
 }
 
 export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils };
