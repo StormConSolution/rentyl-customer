@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
 import { DateUtils, formatPhoneNumber, ObjectUtils } from '../../utils/utils';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ReservationDetailsAccordionProps {
 	reservationId: number;
@@ -172,15 +173,14 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						if (props.onChangeRoom) props.onChangeRoom();
 					}}
 				/>
-				{/*THIS IS TEMP*/}
-				{/*<LabelButton*/}
-				{/*	look={'none'}*/}
-				{/*	variant={'body1'}*/}
-				{/*	label={'EDIT SERVICE'}*/}
-				{/*	onClick={() => {*/}
-				{/*		if (props.onEditService) props.onEditService();*/}
-				{/*	}}*/}
-				{/*/>*/}
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT SERVICE'}
+					onClick={() => {
+						if (props.onEditService) props.onEditService();
+					}}
+				/>
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
@@ -197,7 +197,14 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 		if (!ObjectUtils.isArrayWithData(props.upsellPackages)) return [];
 
 		return props.upsellPackages.map((item, index) => {
-			return <AccordionTitleDescription title={'Service'} description={item.title} />;
+			return (
+				<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+					<AccordionTitleDescription title={'Service'} description={item.title} />
+					<Label maxWidth={'60%'} variant={'body2'}>
+						{item.description}
+					</Label>
+				</Box>
+			);
 		});
 	}
 

@@ -70,6 +70,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					email={item.guest?.email}
 					phone={item.guest?.phone}
 					additionalDetails={item.additionalDetails}
+					upsellPackages={item.upsellPackages}
 					onDetailsClick={() => {
 						router
 							.navigate('/reservations/itinerary/reservation/details?ri=' + item.reservationId)

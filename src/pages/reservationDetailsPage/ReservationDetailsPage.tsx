@@ -122,6 +122,7 @@ const ReservationDetailsPage: React.FC = () => {
 							phone={reservation.guest.phone}
 							additionalDetails={reservation.additionalDetails}
 							isCancelable={!!reservation.cancellationPermitted}
+							upsellPackages={reservation.upsellPackages}
 							onDetailsClick={() => {
 								console.log('hello');
 							}}

@@ -27,7 +27,7 @@ const ItineraryInfoCard: React.FC<ItineraryInfoCardProps> = (props) => {
 	return (
 		<Paper className={'rsItineraryInfoCard'} boxShadow>
 			<LabelLink path={props.backButton.link} label={props.backButton.label} variant={'caption'} />
-			<Label marginTop={size === 'small' ? 24 : 85} variant={'h3'}>
+			<Label marginTop={size === 'small' ? 24 : 50} variant={'h3'}>
 				Your Itinerary at <img className={'logoImg'} src={props.logoImgUrl} alt={props.name} />
 			</Label>
 			<Box margin={size === 'small' ? '15px auto 25px' : '40px auto 50px'} maxWidth={'477px'}>
