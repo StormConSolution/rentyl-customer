@@ -285,7 +285,9 @@ const EditFlowModifyRoomPage = () => {
 							carouselImagePaths={getImageUrls(reservation.accommodation)}
 							amenityIconNames={reservation.accommodation.featureIcons}
 							onBookNowClick={() => {
-								router.back();
+								router.navigate(
+									`/reservations/itinerary/reservation/details?ri=${params.reservationId}`
+								);
 							}}
 							pointsEarnable={0}
 						/>

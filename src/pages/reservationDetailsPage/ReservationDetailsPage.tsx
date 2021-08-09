@@ -205,6 +205,8 @@ const ReservationDetailsPage: React.FC = () => {
 								]}
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
+								points={reservation.priceDetail.grandTotalCents}
+								paidWithPoints={!reservation.paymentMethod}
 							/>
 							<Label variant={'h1'} mb={40}>
 								Policies

@@ -33,6 +33,7 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	checkInTime: string;
 	checkoutTime: string;
 	packages: Api.UpsellPackage.Res.Get[];
+	points: number;
 }
 
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
@@ -56,6 +57,7 @@ const BookingFlowCheckoutPage = () => {
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
+	const [priceInPoints, setPriceInPoints] = useState<number>(0);
 	const [accommodations, setAccommodations] = useState<Stay[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
@@ -84,7 +86,19 @@ const BookingFlowCheckoutPage = () => {
 						return await addAccommodation(accommodation);
 					})
 				);
-				if (rooms) setAccommodations(rooms);
+				if (rooms) {
+					setAccommodations(rooms);
+
+					setPriceInPoints(
+						rooms.reduce(
+							(total, accommodation) =>
+								(total += roundPointsToThousand(
+									StringUtils.convertCentsToPoints(accommodation.prices.grandTotalCents, 10)
+								)),
+							0
+						)
+					);
+				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('These dates are no longer available');
@@ -154,18 +168,18 @@ const BookingFlowCheckoutPage = () => {
 		if (usePoints) {
 			let updateHasEnoughPoints: boolean = true;
 			if (user) {
-				updateHasEnoughPoints =
-					accommodations.reduce(
-						(total, accommodation) => (total += accommodation.prices.grandTotalCents),
-						0
-					) < user.availablePoints;
+				updateHasEnoughPoints = priceInPoints < user.availablePoints;
 				setHasEnoughPoints(updateHasEnoughPoints);
 			}
 			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints);
 		} else {
 			setIsDisabled(!hasAgreedToTerms || !isFormValid);
 		}
-	}, [hasAgreedToTerms, isFormValid, usePoints]);
+	}, [hasAgreedToTerms, isFormValid, usePoints, priceInPoints]);
+
+	function roundPointsToThousand(num: number): number {
+		return Math.ceil(num / 1000) * 1000;
+	}
 
 	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
 		let response = await reservationService.verifyAvailability({
@@ -195,7 +209,8 @@ const BookingFlowCheckoutPage = () => {
 			checkInTime: res.checkInTime,
 			checkoutTime: res.checkoutTime,
 			guest: guestInfo,
-			packages: packageResponse?.data || []
+			packages: packageResponse?.data || [],
+			points: roundPointsToThousand(StringUtils.convertCentsToPoints(res.prices.accommodationTotalInCents, 10))
 		};
 		setPolicies(res.policies);
 		setDestinationName(res.destinationName);
@@ -439,6 +454,7 @@ const BookingFlowCheckoutPage = () => {
 							changeRoom={changeRoom}
 							accommodationId={accommodation.accommodationId}
 							cancellable={true}
+							points={accommodation.points}
 							usePoints={usePoints}
 						/>
 					);
@@ -466,10 +482,7 @@ const BookingFlowCheckoutPage = () => {
 					) : (
 						<Label variant={'h2'}>
 							{StringUtils.addCommasToNumber(
-								accommodations.reduce(
-									(total, accommodation) => (total += accommodation.prices.grandTotalCents),
-									0
-								)
+								accommodations.reduce((total, accommodation) => (total += accommodation.points), 0)
 							) + ' points'}
 						</Label>
 					)}

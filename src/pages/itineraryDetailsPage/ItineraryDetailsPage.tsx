@@ -99,9 +99,11 @@ const ItineraryDetailsPage: React.FC = () => {
 						cost: item.priceDetail.accommodationTotalInCents,
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
-						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents
+						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
+						points: item.priceDetail.grandTotalCents
 					};
 				})}
+				paidWithPoints={!itinerary.paymentMethod}
 			/>
 		);
 	}
