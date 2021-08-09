@@ -9,8 +9,9 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Box from '../../components/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import { DateUtils } from '../../utils/utils';
+import { addCommasToNumber, DateUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
+import Paper from '../../components/paper/Paper';
 
 const OrderConfirmationPage = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -51,32 +52,47 @@ const OrderConfirmationPage = () => {
 	) : (
 		<Page className={'rsOrderConfirmationPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box display={'flex'} justifyContent={'space-between'} className={'confirmationHeader'}>
-					<Label variant={'h1'}>Order Confirmation</Label>
-					<Box
-						display={'flex'}
-						alignItems={'center'}
-						justifyContent={'space-between'}
-						className={'orderDate'}
-					>
-						<Label variant={'h3'}>Ordered: </Label>
-						<Label variant={'body1'}>
-							{DateUtils.displayDate(new Date())} {DateUtils.displayTime(new Date())}
-						</Label>
-					</Box>
-				</Box>
-				<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-					<Box display={'flex'}>
-						<div style={renderStyle()} className={'rewardImage'} />
-						<Box display={'flex'} flexDirection={'column'} justifyContent={'space-between'} margin={20}>
-							<Label variant={'body1'}>{reward.description}</Label>
-							<Label variant={'h3'}>Item #{reward.upc}</Label>
-							<Label variant={'h3'}>Gift Certificate # {params.voucherCode}</Label>
-							<Label variant={'caption'}>Redemption Instructions</Label>
+				<Label variant={'h1'} mt={80} mb={80}>
+					Thank you for your order
+				</Label>
+
+				<Paper boxShadow padding={'50px'}>
+					<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+						<div>
+							<Label variant={'h2'} mb={30}>
+								Order Confirmation
+							</Label>
+							<Label variant={'body1'}>Order Number: </Label>
+						</div>
+						<Box display={'flex'} alignItems={'center'}>
+							<Label variant={'h3'} mr={4}>
+								Ordered:
+							</Label>
+							<Label variant={'body1'}>
+								{DateUtils.displayDate(new Date())} {DateUtils.displayTime(new Date())}
+							</Label>
 						</Box>
 					</Box>
-					<Label variant={'h3'}>{reward.pointCost} Points</Label>
-				</Box>
+					<hr />
+					<Box display={'flex'} alignItems={'center'}>
+						<Box display={'flex'} alignItems={'center'}>
+							<img src={reward.media[0].urls.large} alt={'Order Image'} />
+							<div>
+								<Label variant={'h3'} mb={10}>
+									{reward.description}
+								</Label>
+								<Label variant={'h4'} mb={10}>
+									Item #{reward.upc}
+								</Label>
+								<Label variant={'h4'}>Gift Certificate # {params.voucherCode}</Label>
+								<Label variant={'body1'}>{reward.redemptionInstructions}</Label>
+							</div>
+						</Box>
+						<Label variant={'h3'} className={'pointsLabel'}>
+							{addCommasToNumber(reward.pointCost)} <span>points</span>
+						</Label>
+					</Box>
+				</Paper>
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

@@ -7,6 +7,7 @@ declare namespace Model {
 	export type UserAddressType = 'SHIPPING' | 'BILLING' | 'BOTH';
 	export type UserAccessScopeTypes =
 		| 'USER'
+		| 'COMPANY'
 		| 'POINTS'
 		| 'TEST'
 		| 'USER_POINTS'
@@ -552,6 +553,7 @@ declare namespace Model {
 		pointCost: number;
 		monetaryValueInCents: number;
 		description: string;
+		redemptionInstructions: string;
 		upc: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;

@@ -1,21 +1,52 @@
 @import '../../themes/themes';
 
 .rsOrderConfirmationPage {
-	min-height: 100vh;
+	//min-height: 100vh;
+	.rsPaper {
+		background-color: theme-var($secondaryBackgroundColor);
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 16px 0;
+		}
+		img {
+			width: 200px;
+			height: 200px;
+			object-fit: contain;
+			margin-right: 80px;
+		}
+
+		.pointsLabel {
+			margin-left: auto;
+			color: theme-var($iconAndHighlightTextColor);
+			span {
+				font-size: 16px;
+				line-height: 20px;
+				font-weight: $regular;
+				letter-spacing: 0;
+			}
+		}
+	}
 
 	.confirmationHeader {
-		margin-top: 80px;
-		width: 100%;
 		.orderDate {
 			width: 230px;
 		}
 	}
-	.rewardImage {
-		background-size: cover;
+
+	.orderDate {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 	}
 
-	.rsFooter {
-		position: fixed;
-		bottom: 0;
+	.pointCost {
+		text-align: start;
+	}
+
+	.rewardImage {
+		background-size: cover;
 	}
 }
