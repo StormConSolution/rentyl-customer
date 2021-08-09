@@ -118,3 +118,13 @@
 		}
 	}
 }
+
+.small {
+	.rsReservationDetailsAccordion {
+		width: 100%;
+
+		.accordionReservationGrid {
+			grid-template-columns: 195px;
+		}
+	}
+}

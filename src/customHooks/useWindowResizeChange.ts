@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 
 const DefaultBreakpoints = {};
 
-const MobileAndDown = 1160;
+// const MobileAndDown = 1160;
+const MobileAndDown = 640;
 
 interface BreakPoints {
 	[name: string]: number;

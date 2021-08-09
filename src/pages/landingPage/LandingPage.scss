@@ -213,7 +213,6 @@
 		.tanBox {
 			height: 388px;
 		}
-
 		.heroImgAndText {
 			width: 321px;
 			height: 423px;
@@ -331,7 +330,6 @@
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
-
 			.sectionFourCardsWrapper {
 				grid-template-columns: auto;
 			}
@@ -353,6 +351,8 @@
 
 			.rsInfoCard {
 				margin: 0 auto 15px;
+				width: 335px !important;
+				height: 95px !important;
 			}
 		}
 		.sectionFive {

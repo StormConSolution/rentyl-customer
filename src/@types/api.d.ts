@@ -14,6 +14,7 @@ declare namespace Api {
 				name?: string;
 				shortDescription?: string;
 				longDescription?: string;
+				roomCount?: number;
 				address1?: string;
 				address2?: string;
 				city?: string;
@@ -69,6 +70,7 @@ declare namespace Api {
 				featureIcons: string[]; //*Limit it to the first five*
 				maxSleeps: number;
 				maxOccupancyCount: number;
+				roomCount: number;
 				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;
 				extraBeds: 0 | 1;
@@ -364,6 +366,7 @@ declare namespace Api {
 				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
+				customPages: any;
 			}
 		}
 	}
@@ -454,6 +457,7 @@ declare namespace Api {
 			export interface Update {
 				id: number;
 				description?: string;
+				locationDescription?: string;
 				status?: string;
 				address1?: string;
 				address2?: string;
@@ -520,6 +524,7 @@ declare namespace Api {
 				externalId: string;
 				name: string;
 				description: string;
+				locationDescription: string;
 				code: string;
 				status: string;
 				address1: string;
@@ -535,13 +540,14 @@ declare namespace Api {
 					Feature.Details,
 					'affiliateId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
 				>[];
-				packages: Package.Details[];
+				packages: UpsellPackage.Details[];
 				accommodations: {
 					id: number;
 					name: string;
 					shortDescription: string;
 					longDescription: string;
 					maxOccupantCount: number;
+					status: Model.AccommodationStatusType;
 				}[];
 				accommodationTypes: {
 					id: number;
@@ -737,7 +743,7 @@ declare namespace Api {
 		}
 	}
 
-	export namespace Package {
+	export namespace UpsellPackage {
 		export interface Details extends Model.Packages {
 			media: Media[];
 		}
@@ -949,6 +955,10 @@ declare namespace Api {
 			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
 				id: number;
 			}
+			export interface UpdatePayment {
+				itineraryNumber: string; // this will be changing to reservation VARY soon
+				paymentMethodId: number;
+			}
 			export interface Get {
 				id: number;
 			}
@@ -1046,7 +1056,7 @@ declare namespace Api {
 				totalInCents: number;
 			}
 
-			export interface BookingPackageDetails extends Api.Package.Details {
+			export interface BookingPackageDetails extends Api.UpsellPackage.Details {
 				priceCents: number;
 			}
 			export interface Policies {
@@ -1461,10 +1471,7 @@ declare namespace Api {
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
-			export interface GetByPage {
-				data: Omit<Filtered, 'paymentMethods'>[];
-				total: number;
-			}
+			export interface GetByPage extends Omit<Filtered, 'paymentMethods'> {}
 			export interface VerifyLogin extends Filtered {}
 			export interface UserPoint extends Model.UserPoint {}
 		}

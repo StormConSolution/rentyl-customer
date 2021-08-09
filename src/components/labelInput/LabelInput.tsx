@@ -15,7 +15,7 @@ interface LabelInputProps {
 	onChange?: (value: any) => void;
 	control?: RsFormControl;
 	updateControl?: (updateControl: RsFormControl) => void;
-	inputType: 'text' | 'textarea' | 'number' | 'password' | 'tel' | 'email';
+	inputType: 'text' | 'password' | 'number' | 'textarea' | 'tel' | 'email' | 'hidden' | 'date';
 	initialValue?: string;
 	placeholder?: string;
 	disabled?: boolean;

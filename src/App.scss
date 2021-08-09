@@ -93,14 +93,9 @@ body {
 	-webkit-appearance: none;
 }
 
-.rsInput[type='number'] {
-	-moz-appearance: textfield;
-}
-
 .rsSelect {
 	&.outlined {
 		height: 40px;
-		//padding: 0 10px;
 		border-radius: 0;
 		border: 1px solid theme-var($greyLineColor);
 

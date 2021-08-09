@@ -6,6 +6,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../labelButton/LabelButton';
 import router from '../../utils/router';
 import Paper from '../paper/Paper';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface NavButtons {
 	link: string;
@@ -21,13 +22,15 @@ interface ItineraryInfoCardProps {
 }
 
 const ItineraryInfoCard: React.FC<ItineraryInfoCardProps> = (props) => {
+	const size = useWindowResizeChange();
+
 	return (
-		<Paper className={'rsItineraryInfoCard'} boxShadow padding={'40px'}>
+		<Paper className={'rsItineraryInfoCard'} boxShadow>
 			<LabelLink path={props.backButton.link} label={props.backButton.label} variant={'caption'} />
-			<Label marginTop={85} variant={'h3'}>
+			<Label marginTop={size === 'small' ? 24 : 85} variant={'h3'}>
 				Your Itinerary at <img className={'logoImg'} src={props.logoImgUrl} alt={props.name} />
 			</Label>
-			<Box margin={'40px auto 50px'} width={'477px'}>
+			<Box margin={size === 'small' ? '15px auto 25px' : '40px auto 50px'} maxWidth={'477px'}>
 				<Label margin={'0 auto 16px'} variant={'h1'}>
 					{props.name}
 				</Label>

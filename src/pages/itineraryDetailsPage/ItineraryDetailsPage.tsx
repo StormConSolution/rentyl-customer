@@ -137,7 +137,7 @@ const ItineraryDetailsPage: React.FC = () => {
 				<HeroImage
 					image={require('../../images/itineraryDetailsPage/heroImg.jpg')}
 					height={'464px'}
-					mobileHeight={'464px'}
+					mobileHeight={'400px'}
 				>
 					<ItineraryInfoCard
 						backButton={{

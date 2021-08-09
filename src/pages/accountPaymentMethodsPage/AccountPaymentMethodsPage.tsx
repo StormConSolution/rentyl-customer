@@ -212,7 +212,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 		let primaryCard = existingCardList.find((item) => item.isPrimary);
 		if (!primaryCard) primaryCard = existingCardList[0];
 
-		let nonPrimaryCards = existingCardList.filter((item) => !item.isPrimary && item.systemProvider === 'adyen');
+		let nonPrimaryCards = existingCardList.filter((item) => !item.isPrimary);
 		setPrimaryCard(primaryCard);
 		setNonPrimaryCardList(nonPrimaryCards);
 	}, [existingCardList]);

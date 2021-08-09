@@ -25,7 +25,7 @@ const ExistingItineraryPage: React.FC = () => {
 
 		async function getReservationsForUser() {
 			try {
-				let res = await reservationService.getByPage(1, 100, 'userId', 'ASC', 'exact', [
+				let res = await reservationService.getByPage(1, 500, 'userId', 'ASC', 'exact', [
 					{
 						column: 'userId',
 						value: user!.id

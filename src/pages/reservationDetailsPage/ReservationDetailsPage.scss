@@ -32,3 +32,22 @@
 		}
 	}
 }
+
+.small {
+	.rsReservationDetailsPage {
+		.rsHeroImage {
+			padding: 0 16px;
+			box-sizing: border-box;
+			.rsItineraryInfoCard {
+				position: relative;
+				bottom: -85px;
+				left: auto;
+			}
+		}
+
+		.contentWrapper {
+			grid-template-columns: 100%;
+			padding: 0 16px;
+		}
+	}
+}
