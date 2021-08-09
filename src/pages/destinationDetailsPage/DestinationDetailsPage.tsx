@@ -36,6 +36,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
+import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 
 interface DestinationDetailsPageProps {}
 
@@ -56,6 +57,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
+	const [totalResults, setTotalResults] = useState<number>(0);
+	const perPage = 5;
+	const [page, setPage] = useState<number>(1);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		destinationId: params.destinationId,
@@ -90,8 +94,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				newSearchQueryObj.priceRangeMin *= 100;
 			}
 			try {
-				let availableStays = await accommodationService.availability(newSearchQueryObj);
-				setAvailabilityStayList(availableStays);
+				let result = await accommodationService.availability(newSearchQueryObj);
+				setTotalResults(result.total || 0);
+				setAvailabilityStayList(result.data);
 			} catch (e) {
 				console.error(e);
 			}
@@ -452,11 +457,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				>
 					<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
 						<Label variant={'h1'}>Location</Label>
-						<Label variant={'body2'}>
-							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-							invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-							et justo duo dolores et ea rebum. Stet clita kasd.
-						</Label>
+						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
 						<Label variant={'body2'}>
 							<Icon iconImg={'icon-map-solid'} size={12} />
 							{destinationDetails.address1} {destinationDetails.city}, {destinationDetails.state}{' '}
@@ -551,6 +552,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					)}
 					<hr />
 					<div className={'accommodationCardWrapper'}>{renderAccommodations()}</div>
+					<PaginationButtons
+						selectedRowsPerPage={5}
+						total={totalResults}
+						setSelectedPage={(newPage) => {
+							updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
+							setPage(newPage);
+						}}
+						currentPageNumber={page}
+					/>
 				</div>
 				<Footer links={FooterLinkTestData} />
 			</div>

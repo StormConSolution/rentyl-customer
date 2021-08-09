@@ -6,7 +6,7 @@ import Paper from '../../../components/paper/Paper';
 import DestinationPackageTile from '../../../components/destinationPackageTile/DestinationPackageTile';
 
 export interface PackageDetailsPopupProps extends PopupProps {
-	package: Api.Package.Res.Get;
+	package: Api.UpsellPackage.Res.Get;
 	onAdd: () => void;
 }
 

@@ -32,7 +32,7 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	prices: Api.Reservation.PriceDetail;
 	checkInTime: string;
 	checkoutTime: string;
-	packages: Api.Package.Res.Get[];
+	packages: Api.UpsellPackage.Res.Get[];
 }
 
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
@@ -63,6 +63,7 @@ const BookingFlowCheckoutPage = () => {
 		phone: user?.phone || '',
 		email: user?.primaryEmail || ''
 	});
+	const [additionalDetails, setAdditionalDetails] = useState<string>('');
 	const [destinationName, setDestinationName] = useState<string>('');
 	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
 	const [creditCardForm, setCreditCardForm] = useState<{
@@ -116,7 +117,8 @@ const BookingFlowCheckoutPage = () => {
 									id: item.id
 								};
 							}),
-							guest: guestInfo
+							guest: guestInfo,
+							additionalDetails: additionalDetails
 						};
 					})
 				};
@@ -150,15 +152,16 @@ const BookingFlowCheckoutPage = () => {
 
 	useEffect(() => {
 		if (usePoints) {
+			let updateHasEnoughPoints: boolean = true;
 			if (user) {
-				setHasEnoughPoints(
+				updateHasEnoughPoints =
 					accommodations.reduce(
 						(total, accommodation) => (total += accommodation.prices.grandTotalCents),
 						0
-					) < user.availablePoints
-				);
+					) < user.availablePoints;
+				setHasEnoughPoints(updateHasEnoughPoints);
 			}
-			setIsDisabled(!hasAgreedToTerms || !hasEnoughPoints);
+			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints);
 		} else {
 			setIsDisabled(!hasAgreedToTerms || !isFormValid);
 		}
@@ -217,7 +220,7 @@ const BookingFlowCheckoutPage = () => {
 			stays: newAccommodationList.map((accommodation) => {
 				return {
 					...accommodation,
-					packages: accommodation.packages.map((item: Api.Package.Res.Get) => item.id)
+					packages: accommodation.packages.map((item: Api.UpsellPackage.Res.Get) => item.id)
 				};
 			})
 		};
@@ -244,7 +247,7 @@ const BookingFlowCheckoutPage = () => {
 		checkoutDate: string | Date,
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
-		packages: Api.Package.Res.Get[],
+		packages: Api.UpsellPackage.Res.Get[],
 		accommodationId: number,
 		rateCode?: string
 	) {
@@ -318,7 +321,8 @@ const BookingFlowCheckoutPage = () => {
 								id: item.id
 							};
 						}),
-						guest: guestInfo
+						guest: guestInfo,
+						additionalDetails: additionalDetails
 					};
 				})
 			};
@@ -413,7 +417,7 @@ const BookingFlowCheckoutPage = () => {
 										checkoutDate: string | Date,
 										originalStartDate: string | Date,
 										originalEndDate: string | Date,
-										packages: Api.Package.Res.Get[]
+										packages: Api.UpsellPackage.Res.Get[]
 									): void {
 										popupController.close(AccommodationOptionsPopup);
 										editRoom(
@@ -496,6 +500,8 @@ const BookingFlowCheckoutPage = () => {
 					<Box width={size === 'small' ? '100%' : '50%'} className={'colOne'}>
 						<ContactInfoAndPaymentCard
 							onContactChange={(value) => {
+								setAdditionalDetails(value.details || '');
+								delete value['details'];
 								setGuestInfo(value);
 							}}
 							onCreditCardChange={(value) => {

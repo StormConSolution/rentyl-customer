@@ -27,7 +27,7 @@ const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
 					<div className={'pendingPointsContainer'}>
 						<Label variant={'h4'}>Points Pending</Label>
 						<Label className={'pendingPointsNumber'} variant={'h1'}>
-							{user.pendingPoints}
+							{addCommasToNumber(user.pendingPoints)}
 						</Label>
 					</div>
 				</div>

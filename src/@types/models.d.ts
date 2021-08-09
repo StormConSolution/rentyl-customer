@@ -277,6 +277,7 @@ declare namespace Model {
 		companyId: number;
 		name: string;
 		description: string;
+		locationDescription: string;
 		code: string;
 		status: string;
 		address1: string;

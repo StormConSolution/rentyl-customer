@@ -23,7 +23,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 	children: number;
 	startDate: Date | string;
 	endDate: Date | string;
-	packages: Api.Package.Res.Get[];
+	packages: Api.UpsellPackage.Res.Get[];
 	onApplyChanges: (
 		adults: number,
 		children: number,
@@ -32,7 +32,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 		checkoutDate: string | Date,
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
-		packages: Api.Package.Res.Get[]
+		packages: Api.UpsellPackage.Res.Get[]
 	) => void;
 	destinationId: number;
 	accommodationId: number;
@@ -41,8 +41,8 @@ export interface EditAccommodationPopupProps extends PopupProps {
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const [availablePackages, setAvailablePackages] = useState<Api.Package.Res.Get[]>([]);
-	const [addedPackages, setAddedPackages] = useState<Api.Package.Res.Get[]>(props.packages);
+	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Get[]>([]);
+	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Get[]>(props.packages);
 	const [totalPackages, setTotalPackages] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(
@@ -62,7 +62,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
+				let data: Api.UpsellPackage.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
 				const response = await reservationsService.getPackages(data);
 				setAvailablePackages(response.data.data);
 				setTotalPackages(response.data.total);

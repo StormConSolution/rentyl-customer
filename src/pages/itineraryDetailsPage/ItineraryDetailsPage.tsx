@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ItineraryDetailsPage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -22,6 +22,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
+import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -38,7 +39,6 @@ const ItineraryDetailsPage: React.FC = () => {
 			if (!params.itineraryId) return;
 			try {
 				let res = await reservationService.getItinerary({ itineraryId: params.itineraryId });
-				console.log(res);
 				setItinerary(res);
 			} catch (e) {
 				rsToasts.error(e.message);
@@ -125,8 +125,23 @@ const ItineraryDetailsPage: React.FC = () => {
 		});
 	}
 
+	//This will need to be changed to the Reservation level in the future
+	//need for certification
 	async function saveNewPaymentMethod() {
-		console.log(newPaymentMethod);
+		if (!newPaymentMethod || !itinerary) return;
+		popupController.open<SpinningLoaderPopupProps>(SpinningLoaderPopup, {});
+		try {
+			let response = await reservationService.updatePaymentMethod({
+				itineraryNumber: params.itineraryId,
+				paymentMethodId: newPaymentMethod.id
+			});
+			setItinerary(response);
+			popupController.close(SpinningLoaderPopup);
+			rsToasts.success('Successfully updated payment method.');
+		} catch (e) {
+			rsToasts.error(e.message || 'A server error has occurred');
+			popupController.close(SpinningLoaderPopup);
+		}
 	}
 
 	return !itinerary || !user ? (
@@ -139,19 +154,21 @@ const ItineraryDetailsPage: React.FC = () => {
 					height={'464px'}
 					mobileHeight={'400px'}
 				>
-					<ItineraryInfoCard
-						backButton={{
-							link: '/reservations',
-							label: '< Back to itineraries'
-						}}
-						logoImgUrl={itinerary.destination.logoUrl}
-						name={itinerary.destination.name}
-						description={itinerary.destination.description}
-						callToActionButton={{
-							link: `/destination/details?di=${itinerary.destination.id}`,
-							label: 'View Destination'
-						}}
-					/>
+					{itinerary.destination && (
+						<ItineraryInfoCard
+							backButton={{
+								link: '/reservations',
+								label: '< Back to itineraries'
+							}}
+							logoImgUrl={itinerary.destination.logoUrl}
+							name={itinerary.destination.name}
+							description={itinerary.destination.description}
+							callToActionButton={{
+								link: `/destination/details?di=${itinerary.destination.id}`,
+								label: 'View Destination'
+							}}
+						/>
+					)}
 				</HeroImage>
 				<div className={'contentWrapper'}>
 					<div className={'reservationsWrapper'}>

@@ -44,6 +44,9 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="# of Adults"
 				initialValue={props.adultsInitialInput || '2'}
 				onChange={debounce(async (value) => {
+					if (parseInt(value) !== NaN && parseInt(value) < 1) {
+						value = 1;
+					}
 					props.onChangeAdults(value);
 				}, 300)}
 			/>

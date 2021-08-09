@@ -19,6 +19,7 @@ import { useRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -29,6 +30,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
 	const [passwordFormValid, setPasswordFormValid] = useState<boolean>(false);
+	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
+	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
+	const [hasSpecialCharacter, setHasSpecialCharacter] = useState<boolean>(false);
 	const [updateUserObj, setUpdateUserObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('fullName', user?.firstName + ' ' + user?.lastName || '', [
@@ -43,15 +47,11 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide your current password here')
 			]),
 			new RsFormControl('new', '', [
-				new RsValidator(
-					RsValidatorEnum.CUSTOM,
-					'Password must have: Minimum 8 characters, 1 Uppercase letter, 1 Lowercase letter, 1 Number or 1 Special character',
-					(control) => {
-						return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
-							control.value.toString()
-						);
-					}
-				),
+				new RsValidator(RsValidatorEnum.CUSTOM, '', (control) => {
+					return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
+						control.value.toString()
+					);
+				}),
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide a new password')
 			]),
 			new RsFormControl('retypeNewPassword', '', [
@@ -93,6 +93,17 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 	}
 
 	async function updateUserPasswordForm(control: RsFormControl) {
+		if (control.key === 'new') {
+			const password = control.value.toString();
+			//check for 8 minimum characters
+			setHasEnoughCharacters(password.length >= 8);
+			//check for at least 1 capital
+			const upperCheck = new RegExp(/[A-Z]/g);
+			setHasUpperCase(upperCheck.test(password));
+			//check for a number or special character
+			const specialCharacter = new RegExp(/[0-9!\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]/g);
+			setHasSpecialCharacter(specialCharacter.test(password));
+		}
 		updateUserPassword.update(control);
 		let isFormValid = await updateUserPassword.isValid();
 		setPasswordFormValid(isPasswordFormFilledOut() && isFormValid);
@@ -199,19 +210,49 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							control={updateUserPassword.get('old')}
 							updateControl={updateUserPasswordForm}
 						/>
-						<Box display={'flex'} justifyContent={'space-between'}>
+						<Box display={'grid'} className={'passwordCheck'}>
 							<LabelInput
 								title={'New Password'}
 								inputType={'password'}
 								control={updateUserPassword.get('new')}
 								updateControl={updateUserPasswordForm}
+								labelVariant={'caption'}
 							/>
+
 							<LabelInput
 								title={'Retype new password'}
 								inputType={'password'}
 								control={updateUserPassword.get('retypeNewPassword')}
 								updateControl={updateUserPasswordForm}
+								labelVariant={'caption'}
 							/>
+						</Box>
+						<Box display={'flex'} className={'passwordCheck'}>
+							<Icon
+								iconImg={!hasEnoughCharacters ? 'icon-solid-plus' : 'icon-solid-check'}
+								color={!hasEnoughCharacters ? 'red' : 'green'}
+							/>
+							<Label variant={'caption'} color={!hasEnoughCharacters ? 'red' : 'green'}>
+								At least 8 characters{' '}
+							</Label>
+						</Box>
+						<Box display={'flex'} className={'passwordCheck'}>
+							<Icon
+								iconImg={!hasUpperCase ? 'icon-solid-plus' : 'icon-solid-check'}
+								color={!hasUpperCase ? 'red' : 'green'}
+							/>
+							<Label variant={'caption'} color={!hasUpperCase ? 'red' : 'green'}>
+								1 uppercase
+							</Label>
+						</Box>
+						<Box display={'flex'} className={'passwordCheck'}>
+							<Icon
+								iconImg={!hasSpecialCharacter ? 'icon-solid-plus' : 'icon-solid-check'}
+								color={!hasSpecialCharacter ? 'red' : 'green'}
+							/>
+							<Label variant={'caption'} color={!hasSpecialCharacter ? 'red' : 'green'}>
+								1 number or special character
+							</Label>
 						</Box>
 						<LabelButton
 							key={2}

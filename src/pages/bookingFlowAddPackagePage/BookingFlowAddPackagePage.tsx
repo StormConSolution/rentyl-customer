@@ -10,22 +10,24 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
+import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import Footer from '../../components/footer/Footer';
 
 const BookingFlowAddPackagePage = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
-	const [addedPackages, setAddedPackages] = useState<Api.Package.Details[]>([]);
-	const [availablePackages, setAvailablePackages] = useState<Api.Package.Details[]>([]);
+	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Details[]>([]);
+	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Details[]>([]);
 	const [totalPackages, setTotalPackages] = useState<number>(0);
 
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				let data: Api.Package.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
+				let data: Api.UpsellPackage.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
 				const response = await reservationsService.getPackages(data);
 				setAvailablePackages(response.data.data);
-				let packages: Api.Package.Details[] = response.data.data;
+				let packages: Api.UpsellPackage.Details[] = response.data.data;
 				setAvailablePackages(packages.filter((item) => !params.data.newRoom.packages.includes(item.id)));
 				setAddedPackages(packages.filter((item) => params.data.newRoom.packages.includes(item.id)));
 				setTotalPackages(response.data.total);
@@ -37,7 +39,7 @@ const BookingFlowAddPackagePage = () => {
 	}, []);
 
 	function renderPackages() {
-		return addedPackages.map((item, index) => {
+		return addedPackages.map((item) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
 			if (defaultImage === undefined && item.media.length > 0) {
 				defaultImage = item.media[0];
@@ -61,7 +63,7 @@ const BookingFlowAddPackagePage = () => {
 	}
 
 	function renderAvailablePackages() {
-		return availablePackages.map((item, index) => {
+		return availablePackages.map((item) => {
 			let defaultImage = item.media.find((value) => value.isPrimary);
 			let isAdded = addedPackages.find((value) => value.id === item.id);
 			if (isAdded) return false;
@@ -112,6 +114,7 @@ const BookingFlowAddPackagePage = () => {
 					}}
 				/>
 			</div>
+			<Footer links={FooterLinkTestData} />
 		</Page>
 	);
 };
