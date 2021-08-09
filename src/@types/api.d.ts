@@ -14,6 +14,7 @@ declare namespace Api {
 				name?: string;
 				shortDescription?: string;
 				longDescription?: string;
+				roomCount?: number;
 				address1?: string;
 				address2?: string;
 				city?: string;
@@ -69,6 +70,7 @@ declare namespace Api {
 				featureIcons: string[]; //*Limit it to the first five*
 				maxSleeps: number;
 				maxOccupancyCount: number;
+				roomCount: number;
 				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;
 				extraBeds: 0 | 1;
@@ -545,6 +547,7 @@ declare namespace Api {
 					shortDescription: string;
 					longDescription: string;
 					maxOccupantCount: number;
+					status: Model.AccommodationStatusType;
 				}[];
 				accommodationTypes: {
 					id: number;
@@ -741,7 +744,7 @@ declare namespace Api {
 	}
 
 	export namespace UpsellPackage {
-		export interface Details extends Model.Packages {
+		export interface Details extends Model.UpsellPackage {
 			media: Media[];
 		}
 		export namespace Req {
@@ -1012,7 +1015,6 @@ declare namespace Api {
 				canceledOn: Date | string;
 				externalReservationId: string;
 				externalCancellationId: string;
-				externalCancelNumber: string;
 				adultCount: number;
 				childCount: number;
 				externalConfirmationId: string;
@@ -1468,10 +1470,7 @@ declare namespace Api {
 			export interface ForgotPassword extends Filtered {}
 			export interface ResetPassword extends Filtered {}
 			export interface ValidateGuid extends Filtered {}
-			export interface GetByPage {
-				data: Omit<Filtered, 'paymentMethods'>[];
-				total: number;
-			}
+			export interface GetByPage extends Omit<Filtered, 'paymentMethods'> {}
 			export interface VerifyLogin extends Filtered {}
 			export interface UserPoint extends Model.UserPoint {}
 		}
