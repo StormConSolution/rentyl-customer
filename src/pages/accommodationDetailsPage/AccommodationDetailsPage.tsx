@@ -72,7 +72,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 					if (destination.data.data) setDestinationDetails(destination.data.data);
 				}
 			} catch (e) {
-				rsToasts.error(e.message, '', 5000);
+				rsToasts.error('Cannot find details, please try again', '', 5000);
 			}
 		}
 		getAccommodationDetails(params.accommodationId);

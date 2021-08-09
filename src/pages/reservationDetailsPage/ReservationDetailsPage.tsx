@@ -38,7 +38,7 @@ const ReservationDetailsPage: React.FC = () => {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 			} catch (e) {
-				rsToasts.error(e.message);
+				rsToasts.error('Unable to get reservation information');
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);

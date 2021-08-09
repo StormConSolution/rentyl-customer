@@ -36,7 +36,7 @@ const RewardDetailPage: React.FC = () => {
 				setReward(res);
 				if (res.media) setImageCount(res.media.length);
 			} catch (e) {
-				rsToasts.error('An unexpected error occurred on the server.');
+				rsToasts.error('Cannot find reward.');
 			}
 		}
 		getRewardDetails().catch(console.error);

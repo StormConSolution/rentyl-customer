@@ -79,7 +79,7 @@ const BookingFlowAddRoomPage = () => {
 				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error('An unexpected error has occurred on the server.');
+				rsToasts.error('Unable to get a list of accommodations');
 				setValidCode(rateCode === '' || rateCode === undefined);
 				popupController.close(SpinningLoaderPopup);
 			}
