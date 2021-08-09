@@ -3,9 +3,9 @@ import './BookingCartTotalsCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
+import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { convertTwentyFourHourTime, DateUtils } from '../../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils, StringUtils } from '../../../utils/utils';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
 } from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
@@ -37,9 +37,8 @@ interface BookingCartTotalsCardProps {
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
-		let difference: number = props.points - props.accommodationTotalInCents / 10;
+		let difference: number = props.points - StringUtils.convertCentsToPoints(props.accommodationTotalInCents, 10);
 		let offset: number = difference / DateUtils.daysBetween(props.checkInDate, props.checkoutDate);
-		// for (let i in props.costPerNight) {
 		Object.keys(props.costPerNight).forEach((night, index) => {
 			let point: number =
 				index === Object.keys(props.costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
@@ -55,7 +54,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 							</Label>
 						) : (
 							<Label variant={'body2'}>
-								{StringUtils.addCommasToNumber(props.costPerNight[night] / 10 + point)} points
+								{StringUtils.addCommasToNumber(
+									StringUtils.convertCentsToPoints(props.costPerNight[night], 10) + point
+								)}{' '}
+								points
 							</Label>
 						)}
 					</div>
@@ -90,7 +92,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'body2'} marginLeft={'auto'}>
 						{!props.usePoints
 							? '$' + StringUtils.formatMoney(item.amount)
-							: StringUtils.addCommasToNumber(item.amount / 10) + ' pts'}
+							: StringUtils.addCommasToNumber(StringUtils.convertCentsToPoints(item.amount, 10)) + ' pts'}
 					</Label>
 				</Box>
 			);

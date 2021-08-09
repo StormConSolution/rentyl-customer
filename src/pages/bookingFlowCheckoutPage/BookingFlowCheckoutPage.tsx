@@ -92,7 +92,9 @@ const BookingFlowCheckoutPage = () => {
 					setPriceInPoints(
 						rooms.reduce(
 							(total, accommodation) =>
-								(total += roundPointsToThousand(accommodation.prices.grandTotalCents / 10)),
+								(total += roundPointsToThousand(
+									StringUtils.convertCentsToPoints(accommodation.prices.grandTotalCents, 10)
+								)),
 							0
 						)
 					);
@@ -208,7 +210,7 @@ const BookingFlowCheckoutPage = () => {
 			checkoutTime: res.checkoutTime,
 			guest: guestInfo,
 			packages: packageResponse?.data || [],
-			points: roundPointsToThousand(res.prices.accommodationTotalInCents / 10)
+			points: roundPointsToThousand(StringUtils.convertCentsToPoints(res.prices.accommodationTotalInCents, 10))
 		};
 		setPolicies(res.policies);
 		setDestinationName(res.destinationName);

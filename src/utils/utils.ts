@@ -7,7 +7,11 @@ import {
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
 
-class StringUtils extends BaseStringUtils {}
+class StringUtils extends BaseStringUtils {
+	static convertCentsToPoints(cents: number, ratio: number): number {
+		return Math.round(cents / 100) * ratio;
+	}
+}
 
 class ObjectUtils extends BaseObjectUtils {}
 
