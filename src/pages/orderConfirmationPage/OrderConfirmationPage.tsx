@@ -57,7 +57,7 @@ const OrderConfirmationPage = () => {
 				</Label>
 
 				<Paper boxShadow padding={'50px'}>
-					<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+					<Box display={'flex'} justifyContent={'space-between'} className={'confirmationHeader'}>
 						<div>
 							<Label variant={'h2'} mb={30}>
 								Order Confirmation
@@ -74,7 +74,7 @@ const OrderConfirmationPage = () => {
 						</Box>
 					</Box>
 					<hr />
-					<Box display={'flex'} alignItems={'center'}>
+					<Box display={'flex'} className={'confirmationBody'}>
 						<Box display={'flex'} alignItems={'center'}>
 							<img src={reward.media[0].urls.large} alt={'Order Image'} />
 							<div>

@@ -1,9 +1,17 @@
 @import '../../themes/themes';
 
 .rsOrderConfirmationPage {
-	//min-height: 100vh;
 	.rsPaper {
 		background-color: theme-var($secondaryBackgroundColor);
+
+		.confirmationHeader {
+			align-items: center;
+		}
+
+		.confirmationBody {
+			align-items: center;
+		}
+
 		hr {
 			height: 1px;
 			width: 100%;
@@ -48,5 +56,23 @@
 
 	.rewardImage {
 		background-size: cover;
+	}
+}
+
+.small .rsOrderConfirmationPage {
+	.confirmationHeader {
+		flex-direction: column;
+		align-items: start;
+	}
+
+	.confirmationBody {
+		flex-direction: column;
+		align-items: start;
+		.rsBox {
+			flex-direction: column;
+		}
+		.rsLabel {
+			margin: 0;
+		}
 	}
 }
