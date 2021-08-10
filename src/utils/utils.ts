@@ -7,7 +7,11 @@ import {
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
 
-class StringUtils extends BaseStringUtils {}
+class StringUtils extends BaseStringUtils {
+	static convertCentsToPoints(cents: number, ratio: number): number {
+		return Math.round(cents / 100) * ratio;
+	}
+}
 
 class ObjectUtils extends BaseObjectUtils {}
 
@@ -41,6 +45,10 @@ class DateUtils extends BaseDateUtils {
 		let timeZoneOffset = dateToReturn.getTimezoneOffset() * 60000;
 		dateToReturn.setTime(dateToReturn.getTime() + timeZoneOffset);
 		return dateToReturn.toDateString();
+	}
+
+	static daysBetween(date1: string | Date, date2: string | Date) {
+		return Math.abs(new Date(date1).getTime() - new Date(date2).getTime()) / (3600000 * 24);
 	}
 }
 

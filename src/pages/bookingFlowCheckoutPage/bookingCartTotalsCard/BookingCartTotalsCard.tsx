@@ -3,9 +3,9 @@ import './BookingCartTotalsCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import { ObjectUtils, StringUtils } from '@bit/redsky.framework.rs.utils';
+import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { convertTwentyFourHourTime, DateUtils } from '../../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils, StringUtils } from '../../../utils/utils';
 import AccommodationOptionsPopup, {
 	AccommodationOptionsPopupProps
 } from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
@@ -30,32 +30,40 @@ interface BookingCartTotalsCardProps {
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	cancellable: boolean;
+	points: number;
 	usePoints: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
-		for (let i in props.costPerNight) {
+		let difference: number = props.points - StringUtils.convertCentsToPoints(props.accommodationTotalInCents, 10);
+		let offset: number = difference / DateUtils.daysBetween(props.checkInDate, props.checkoutDate);
+		Object.keys(props.costPerNight).forEach((night, index) => {
+			let point: number =
+				index === Object.keys(props.costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
 			itemizedCostPerNight.push(
-				<Box display={'flex'} alignItems={'center'} key={i}>
+				<Box display={'flex'} alignItems={'center'} key={night}>
 					<Label variant={'body2'} width={'170px'}>
-						{DateUtils.displayUserDate(i)}
+						{DateUtils.displayUserDate(night)}
 					</Label>
 					<div>
 						{!props.usePoints ? (
 							<Label variant={'body2'} marginLeft={'auto'}>
-								${StringUtils.formatMoney(props.costPerNight[i])}
+								${StringUtils.formatMoney(props.costPerNight[night])}
 							</Label>
 						) : (
 							<Label variant={'body2'}>
-								{StringUtils.addCommasToNumber(props.costPerNight[i])} points
+								{StringUtils.addCommasToNumber(
+									StringUtils.convertCentsToPoints(props.costPerNight[night], 10) + point
+								)}{' '}
+								points
 							</Label>
 						)}
 					</div>
 				</Box>
 			);
-		}
+		});
 		return itemizedCostPerNight;
 	}
 
@@ -84,7 +92,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'body2'} marginLeft={'auto'}>
 						{!props.usePoints
 							? '$' + StringUtils.formatMoney(item.amount)
-							: StringUtils.addCommasToNumber(item.amount) + ' pts'}
+							: StringUtils.addCommasToNumber(StringUtils.convertCentsToPoints(item.amount, 10)) + ' pts'}
 					</Label>
 				</Box>
 			);
@@ -216,7 +224,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h4'} marginLeft={'auto'}>
 						{!props.usePoints
 							? '$' + StringUtils.formatMoney(props.accommodationTotalInCents)
-							: StringUtils.addCommasToNumber(props.accommodationTotalInCents) + 'pts'}
+							: StringUtils.addCommasToNumber(props.points) + ' pts'}
 					</Label>
 				</Box>
 			</Accordion>
@@ -235,23 +243,25 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 				</Box>
 			</Accordion>
-			<Accordion
-				titleReact={
-					<Label variant={'h4'} width={'170px'}>
-						Taxes and Fees
-					</Label>
-				}
-			>
-				{renderTaxesAndFees()}
-				<Box alignItems={'center'} display={'flex'}>
-					<Label variant={'h4'}>Total</Label>
-					<Label variant={'h4'} marginLeft={'auto'}>
-						{!props.usePoints
-							? '$' + StringUtils.formatMoney(props.taxAndFeeTotalInCent)
-							: StringUtils.addCommasToNumber(props.taxAndFeeTotalInCent) + ' pts'}
-					</Label>
-				</Box>
-			</Accordion>
+			{!props.usePoints && (
+				<Accordion
+					titleReact={
+						<Label variant={'h4'} width={'170px'}>
+							Taxes and Fees
+						</Label>
+					}
+				>
+					{renderTaxesAndFees()}
+					<Box alignItems={'center'} display={'flex'}>
+						<Label variant={'h4'}>Total</Label>
+						<Label variant={'h4'} marginLeft={'auto'}>
+							{!props.usePoints
+								? '$' + StringUtils.formatMoney(props.taxAndFeeTotalInCent)
+								: StringUtils.addCommasToNumber(props.taxAndFeeTotalInCent) + ' pts'}
+						</Label>
+					</Box>
+				</Accordion>
+			)}
 			<Box display={'flex'} alignItems={'center'}>
 				<Label variant={'h3'} width={'170px'}>
 					Total:
@@ -262,7 +272,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 				) : (
 					<Label variant={'h3'} marginLeft={'auto'}>
-						{StringUtils.addCommasToNumber(getCartTotal()) + ' pts'}
+						{StringUtils.addCommasToNumber(props.points) + ' pts'}
 					</Label>
 				)}
 			</Box>

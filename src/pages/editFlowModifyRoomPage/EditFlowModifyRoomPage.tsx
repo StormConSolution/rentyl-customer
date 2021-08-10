@@ -59,7 +59,7 @@ const EditFlowModifyRoomPage = () => {
 				setReservation(res);
 				updateSearchQueryObj('rateCode', res.rateCode);
 			} catch (e) {
-				rsToasts.error('Something unexpected happened on the server.');
+				rsToasts.error('Cannot find reservation.');
 				router.navigate('/reservations').catch(console.error);
 			}
 		}
@@ -86,7 +86,7 @@ const EditFlowModifyRoomPage = () => {
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error('An unexpected error has occurred on the server.');
+				rsToasts.error('Unable to get available accommodations.');
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -285,7 +285,9 @@ const EditFlowModifyRoomPage = () => {
 							carouselImagePaths={getImageUrls(reservation.accommodation)}
 							amenityIconNames={reservation.accommodation.featureIcons}
 							onBookNowClick={() => {
-								router.back();
+								router.navigate(
+									`/reservations/itinerary/reservation/details?ri=${params.reservationId}`
+								);
 							}}
 							pointsEarnable={0}
 						/>

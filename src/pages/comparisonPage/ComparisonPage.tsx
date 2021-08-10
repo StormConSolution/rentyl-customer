@@ -86,10 +86,10 @@ const ComparisonPage: React.FC = () => {
 				let res = await accommodationService.getManyAccommodationDetails(accommodationIdList);
 				setAccommodationDetailList(res);
 			} catch (e) {
-				rsToasts.error('An unexpected error has occurred on the server.');
+				rsToasts.error('Unable to get details for these locations.');
 				axiosErrorHandler(e, {
 					[HttpStatusCode.NOT_FOUND]: () => {
-						rsToasts.error('An unexpected error has occurred on the server.', '', 5000);
+						rsToasts.error('Unable to get details for these locations.', '', 5000);
 					}
 				});
 			}

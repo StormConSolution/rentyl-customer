@@ -547,6 +547,7 @@ declare namespace Model {
 		pointCost: number;
 		monetaryValueInCents: number;
 		description: string;
+		redemptionInstructions: string;
 		upc: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;

@@ -23,6 +23,7 @@ interface ReservationCardProps {
 	linkPath: string;
 	cancelPermitted: 0 | 1;
 	itineraryTotal: number;
+	paidWithPoints: boolean;
 }
 
 const ReservationCard: React.FC<ReservationCardProps> = (props) => {
@@ -49,18 +50,21 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 				/>
 			</Box>
 			<Paper className={'columnThree'} boxShadow padding={'25px 40px'}>
-				<div>
-					<Label variant={'caption'} mb={5}>
-						Total Price
-					</Label>
-					<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
-				</div>
-				<div>
-					<Label variant={'caption'} mb={5}>
-						Points Paid
-					</Label>
-					<Label variant={'h2'}>{addCommasToNumber(props.totalPoints)}</Label>
-				</div>
+				{!props.paidWithPoints ? (
+					<div>
+						<Label variant={'caption'} mb={5}>
+							Total Price
+						</Label>
+						<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
+					</div>
+				) : (
+					<div>
+						<Label variant={'caption'} mb={5}>
+							Points Paid
+						</Label>
+						<Label variant={'h2'}>{addCommasToNumber(props.totalPoints)}</Label>
+					</div>
+				)}
 				<LabelLink path={props.linkPath} label={'view details'} variant={'caption'} />
 			</Paper>
 		</Box>

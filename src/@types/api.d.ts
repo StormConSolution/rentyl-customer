@@ -1115,6 +1115,7 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
+				redemptionInstructions?: string;
 				upc: string;
 				mediaDetails?: MediaDetails[];
 				categoryIds: number[];
@@ -1144,6 +1145,7 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
+				redemptionInstructions: string;
 				upc: string;
 				isActive: 0 | 1;
 				createdOn: Date | string;
