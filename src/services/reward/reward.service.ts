@@ -1,6 +1,8 @@
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import http from '../../utils/http';
 import { Service } from '../Service';
+import serviceFactory from '../serviceFactory';
+import UserService from '../user/user.service';
 import modelFactory from '../../models/modelFactory';
 import RewardModel from '../../models/reward/reward.model';
 import StandardOrderTypes = RedSky.StandardOrderTypes;
@@ -9,6 +11,7 @@ import FilterQueryValue = RedSky.FilterQueryValue;
 
 export default class RewardService extends Service {
 	rewardModel: RewardModel = modelFactory.get<RewardModel>('RewardModel');
+	userService = serviceFactory.get<UserService>('UserService');
 
 	async getRewardById(id: number): Promise<Api.Reward.Res.Get> {
 		const response = await http.get<RsResponseData<Api.Reward.Res.Get>>('reward', { id });
@@ -36,10 +39,15 @@ export default class RewardService extends Service {
 
 	async claimRewardVoucher(data: Api.Reward.Voucher.Req.Claim) {
 		const res = await http.put<RsResponseData<Api.Reward.Voucher.Res.Claim>>('reward/voucher/claim', data);
+		this.refreshUser();
 		return res.data.data;
 	}
 
 	async getAllForRewardItemPage() {
 		return this.rewardModel.getAllForRewardItemPage();
+	}
+
+	private refreshUser() {
+		this.userService.refreshUser().catch(console.error);
 	}
 }

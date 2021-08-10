@@ -1,6 +1,8 @@
 import modelFactory from '../../models/modelFactory';
 import { Service } from '../Service';
 import ReservationsModel from '../../models/reservations/reservations.model';
+import serviceFactory from '../serviceFactory';
+import UserService from '../user/user.service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import StandardOrderTypes = RedSky.StandardOrderTypes;
@@ -9,6 +11,7 @@ import FilterQueryValue = RedSky.FilterQueryValue;
 
 export default class ReservationsService extends Service {
 	reservationsModel: ReservationsModel = modelFactory.get<ReservationsModel>('ReservationsModel');
+	userService = serviceFactory.get<UserService>('UserService');
 
 	async verifyAvailability(data: Api.Reservation.Req.Verification) {
 		return await http.get<RsResponseData<Api.Reservation.Res.Verification>>('reservation/verification', data);
@@ -16,6 +19,7 @@ export default class ReservationsService extends Service {
 
 	async create(data: Api.Reservation.Req.Create) {
 		let response = await http.post<RsResponseData<Api.Reservation.Res.Create>>('reservation', data);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -24,6 +28,7 @@ export default class ReservationsService extends Service {
 			'reservation/itinerary',
 			data
 		);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -39,6 +44,7 @@ export default class ReservationsService extends Service {
 
 	async update(data: Api.Reservation.Req.Update, isGuest?: boolean): Promise<Api.Reservation.Res.Get> {
 		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -48,6 +54,7 @@ export default class ReservationsService extends Service {
 			'reservation/payment-method',
 			data
 		);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -72,11 +79,13 @@ export default class ReservationsService extends Service {
 
 	async updateReservation(data: Api.Reservation.Req.Update) {
 		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
+		this.refreshUser();
 		return response.data.data;
 	}
 
 	async cancel(id: number): Promise<Api.Reservation.Res.Cancel> {
 		let response = await http.post<RsResponseData<Api.Reservation.Res.Cancel>>('reservation/cancel', { id });
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -86,7 +95,10 @@ export default class ReservationsService extends Service {
 	}
 
 	async getPackages(data: Api.UpsellPackage.Req.GetByPage): Promise<RsResponseData<Api.UpsellPackage.Res.GetByPage>> {
-		let response = await http.get<Api.UpsellPackage.Res.GetByPage>('package/paged', {});
-		return response;
+		return await http.get<Api.UpsellPackage.Res.GetByPage>('package/paged', {});
+	}
+
+	private refreshUser() {
+		this.userService.refreshUser().catch(console.error);
 	}
 }

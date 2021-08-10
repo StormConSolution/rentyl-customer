@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './RewardPurchasePage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import RewardHeaderBar from '../../components/rewardHeaderBar/RewardHeaderBar';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
@@ -16,11 +15,12 @@ import router from '../../utils/router';
 import rsToasts from '@bit/redsky.framework.toast';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { addCommasToNumber } from '../../utils/utils';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 const RewardPurchasePage: React.FC = () => {
-	const userService = serviceFactory.get<UserService>('UserService');
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
-	const user = userService.getCurrentUser();
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [reward, setReward] = useState<Api.Reward.Res.Get>();
 	const [termsAndConditionsIsChecked, setTermsAndConditionsIsChecked] = useState<boolean>(true);
 	const params = router.getPageUrlParams<{ reward: number; voucherCode: string }>([
