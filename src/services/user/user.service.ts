@@ -4,7 +4,12 @@ import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import modelFactory from '../../models/modelFactory';
 import { Service } from '../Service';
 import UserModel from '../../models/user/user.model';
-import globalState, { getRecoilExternalValue, setRecoilExternalValue } from '../../models/globalState';
+import globalState, {
+	clearPersistentState,
+	getRecoilExternalValue,
+	setRecoilExternalValue
+} from '../../models/globalState';
+import router from '../../utils/router';
 
 export default class UserService extends Service {
 	userModel: UserModel = modelFactory.get<UserModel>('UserModel');
@@ -54,6 +59,8 @@ export default class UserService extends Service {
 
 	async refreshUser(): Promise<void> {
 		const user = getRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user);
+		const token = getRecoilExternalValue<string>(globalState.userToken);
+		console.log('token', token);
 		if (!user) return;
 		this.loginUserByToken(user.token).catch(console.error);
 	}
@@ -64,6 +71,8 @@ export default class UserService extends Service {
 
 	logout() {
 		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, undefined);
+		clearPersistentState();
+		router.navigate('/').catch(console.error);
 	}
 
 	async updatePassword(data: Api.User.Req.UpdatePassword) {
