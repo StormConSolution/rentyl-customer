@@ -1,6 +1,5 @@
 import { Model } from './Model';
 import UserModel from './user/user.model';
-import ReservationsModel from './reservations/reservations.model';
 import AccommodationsModel from './accommodations/accommodations.model';
 import RewardModel from './reward/reward.model';
 
@@ -12,7 +11,6 @@ class ModelFactory {
 	create() {
 		// Add new models here to the factory
 		this.models['UserModel'] = new UserModel();
-		this.models['ReservationsModel'] = new ReservationsModel();
 		this.models['AccommodationsModel'] = new AccommodationsModel();
 		this.models['RewardModel'] = new RewardModel();
 

@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
-import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
@@ -24,14 +23,27 @@ const ExistingItineraryPage: React.FC = () => {
 		if (!user) return;
 
 		async function getReservationsForUser() {
+			let pageQuery: RedSky.PageQuery = {
+				filter: {
+					matchType: 'exact',
+					searchTerm: [
+						{
+							column: 'userId',
+							value: user!.id
+						}
+					]
+				},
+				pagination: {
+					page: 1,
+					perPage: 500
+				},
+				sort: {
+					field: 'userId',
+					order: 'ASC'
+				}
+			};
 			try {
-				let res = await reservationService.getByPage(1, 500, 'userId', 'ASC', 'exact', [
-					{
-						column: 'userId',
-						value: user!.id
-					}
-				]);
-
+				let res = await reservationService.getByPage(pageQuery);
 				setReservations(res.data);
 			} catch (e) {
 				console.error(e);
@@ -134,7 +146,7 @@ const ExistingItineraryPage: React.FC = () => {
 		});
 	}
 
-	return !user ? (
+	return !user || !reservations ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsExistingItineraryPage'}>

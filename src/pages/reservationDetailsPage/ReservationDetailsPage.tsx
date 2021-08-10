@@ -123,6 +123,10 @@ const ReservationDetailsPage: React.FC = () => {
 							additionalDetails={reservation.additionalDetails}
 							isCancelable={!!reservation.cancellationPermitted}
 							upsellPackages={reservation.upsellPackages}
+							onEditService={() => {
+								if (!reservation) return;
+								router.navigate(`/reservations/edit-services?ri=${reservation.id}`);
+							}}
 							onDetailsClick={() => {
 								console.log('hello');
 							}}

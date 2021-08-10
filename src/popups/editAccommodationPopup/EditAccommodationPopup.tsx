@@ -17,6 +17,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import PackageDetailsPopup, { PackageDetailsPopupProps } from './packageDetailsPopup/PackageDetailsPopup';
 import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
+import PackageService from '../../services/package/package.service';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	adults: number;
@@ -41,9 +42,9 @@ export interface EditAccommodationPopupProps extends PopupProps {
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Get[]>([]);
 	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Get[]>(props.packages);
-	const [totalPackages, setTotalPackages] = useState<number>(0);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(
 		moment(new Date(DateUtils.displayUserDate(props.startDate)))
@@ -62,10 +63,8 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				let data: Api.UpsellPackage.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
-				const response = await reservationsService.getPackages(data);
-				setAvailablePackages(response.data.data);
-				setTotalPackages(response.data.total);
+				const response = await packageService.forDestination(props.destinationId);
+				setAvailablePackages(response);
 			} catch {
 				console.error('An unexpected error happened on the server.');
 			}

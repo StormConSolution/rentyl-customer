@@ -27,6 +27,7 @@ import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAd
 import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
 import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModifyRoomPage';
 import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
+import EditExistingServicesPage from './pages/editExistingServicesPage/EditExistingServicesPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -76,6 +77,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/reservations/edit-room',
 		page: EditFlowModifyRoomPage
+	},
+	{
+		path: '/reservations/edit-services',
+		page: EditExistingServicesPage
 	},
 	{
 		path: '/reservations/itinerary/details',
