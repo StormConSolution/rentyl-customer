@@ -12,7 +12,6 @@ import RewardCategoryCard from './rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -21,10 +20,11 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 const RewardItemPage: React.FC = () => {
-	const userService = serviceFactory.get<UserService>('UserService');
-	let user = userService.getCurrentUser();
+	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const size = useWindowResizeChange();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);

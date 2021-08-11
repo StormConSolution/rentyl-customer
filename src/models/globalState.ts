@@ -31,7 +31,7 @@ class GlobalState {
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 
-	saveToStorageList: { key: string; state: RecoilState<any> }[] = [];
+	saveToStorageList: string[] = [];
 
 	constructor() {
 		this.destinationComparison = atom<ComparisonCardInfo[]>({
@@ -63,8 +63,7 @@ class GlobalState {
 		});
 
 		// The following is stored in local storage automatically
-		this.saveToStorageList.push({ key: GlobalStateKeys.USER_TOKEN, state: this.userToken });
-		this.saveToStorageList.push({ key: GlobalStateKeys.COMPARISON_CARD, state: this.destinationComparison });
+		this.saveToStorageList = [GlobalStateKeys.USER_TOKEN, GlobalStateKeys.COMPARISON_CARD];
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {
@@ -85,16 +84,16 @@ export function clearPersistentState() {
 
 export const GlobalStateObserver: React.FC = () => {
 	useRecoilTransactionObserver_UNSTABLE(({ snapshot }) => {
-		for (let storageItems of globalState.saveToStorageList) {
-			let state = snapshot.getLoadable(storageItems.state).contents;
-			if (typeof state === 'object') state = JSON.stringify(state);
-			localStorage.setItem(KEY_PREFIX + storageItems.key, state);
-		}
-
-		if (process.env.NODE_ENV === 'development') {
-			for (const item of snapshot.getNodes_UNSTABLE({ isModified: true })) {
+		for (const item of snapshot.getNodes_UNSTABLE({ isModified: true })) {
+			let value = snapshot.getLoadable(item).contents as string;
+			if (process.env.NODE_ENV === 'development') {
 				console.log('Recoil item changed: ', item.key);
-				console.log('Value: ', snapshot.getLoadable(item).contents);
+				console.log('Value: ', value);
+			}
+
+			if (globalState.saveToStorageList.includes(item.key)) {
+				if (typeof value === 'object') value = JSON.stringify(value);
+				localStorage.setItem(KEY_PREFIX + item.key, value);
 			}
 		}
 	});

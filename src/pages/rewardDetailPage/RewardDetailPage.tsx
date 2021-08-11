@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './RewardDetailPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import RewardService from '../../services/reward/reward.service';
 import router from '../../utils/router';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -14,11 +13,12 @@ import { addCommasToNumber, capitalize } from '../../utils/utils';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import rsToasts from '@bit/redsky.framework.toast';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 const RewardDetailPage: React.FC = () => {
-	const userService = serviceFactory.get<UserService>('UserService');
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
-	const user = userService.getCurrentUser();
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [reward, setReward] = useState<Api.Reward.Res.Get>();
 	const [imageCount, setImageCount] = useState<number>(0);
 	const params = router.getPageUrlParams<{ reward: string; voucherCode: string }>([

@@ -1,15 +1,24 @@
 import { WebUtils } from '../../utils/utils';
 import { Service } from '../Service';
+import serviceFactory from '../serviceFactory';
+import UserService from '../user/user.service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 
 export default class ReservationsService extends Service {
+	private userService!: UserService;
+
+	start() {
+		this.userService = serviceFactory.get<UserService>('UserService');
+	}
+
 	async verifyAvailability(data: Api.Reservation.Req.Verification) {
 		return await http.get<RsResponseData<Api.Reservation.Res.Verification>>('reservation/verification', data);
 	}
 
 	async create(data: Api.Reservation.Req.Create) {
 		let response = await http.post<RsResponseData<Api.Reservation.Res.Create>>('reservation', data);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -18,6 +27,7 @@ export default class ReservationsService extends Service {
 			'reservation/itinerary',
 			data
 		);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -33,6 +43,7 @@ export default class ReservationsService extends Service {
 
 	async update(data: Api.Reservation.Req.Update): Promise<Api.Reservation.Res.Get> {
 		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -42,6 +53,7 @@ export default class ReservationsService extends Service {
 			'reservation/payment-method',
 			data
 		);
+		this.refreshUser();
 		return response.data.data;
 	}
 
@@ -62,16 +74,22 @@ export default class ReservationsService extends Service {
 
 	async updateReservation(data: Api.Reservation.Req.Update) {
 		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
+		this.refreshUser();
 		return response.data.data;
 	}
 
 	async cancel(id: number): Promise<Api.Reservation.Res.Cancel> {
 		let response = await http.post<RsResponseData<Api.Reservation.Res.Cancel>>('reservation/cancel', { id });
+		this.refreshUser();
 		return response.data.data;
 	}
 
 	async getPackagesByIds(data: Api.UpsellPackage.Req.Get): Promise<RsResponseData<Api.UpsellPackage.Res.Get[]>> {
 		let response = await http.get<RsResponseData<Api.UpsellPackage.Res.Get[]>>('package', data);
 		return response.data;
+	}
+
+	private refreshUser() {
+		this.userService.refreshUser().catch(console.error);
 	}
 }

@@ -5,8 +5,6 @@ import AccommodationsModel from '../../models/accommodations/accommodations.mode
 import modelFactory from '../../models/modelFactory';
 import { WebUtils } from '../../utils/utils';
 import FilterQueryValue = RedSky.FilterQueryValue;
-import MatchTypes = RedSky.MatchTypes;
-import StandardOrderTypes = RedSky.StandardOrderTypes;
 
 export default class AccommodationService extends Service {
 	accommodationsModel: AccommodationsModel = modelFactory.get<AccommodationsModel>('AccommodationsModel');
