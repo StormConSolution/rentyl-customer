@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './EditExistingServicesPage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
@@ -17,11 +17,13 @@ import { WebUtils } from '../../utils/utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 const EditExistingServicesPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
+	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
 	const [currentReservationPackages, setCurrentReservationPackages] = useState<
 		Api.UpsellPackage.Res.forDestination[]
@@ -48,6 +50,7 @@ const EditExistingServicesPage: React.FC = () => {
 			try {
 				let reservation = await reservationsService.get(params.reservationId);
 				if (reservation) {
+					setReservation(reservation);
 					setCurrentReservationPackages(reservation.upsellPackages);
 					setDefaultReservationUpsellPackages(
 						reservation.upsellPackages
@@ -60,7 +63,7 @@ const EditExistingServicesPage: React.FC = () => {
 					setDestinationPackages(otherDestinationServices);
 				}
 			} catch (e) {
-				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error');
+				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
 			}
 		}
 
@@ -117,6 +120,31 @@ const EditExistingServicesPage: React.FC = () => {
 		});
 	}
 
+	async function updateReservationServices() {
+		if (!reservation) return;
+		popupController.open(SpinningLoaderPopup);
+		let newCurrentReservationPackages = [...currentReservationPackages];
+		let data: Api.Reservation.Req.Update = {
+			id: reservation.id,
+			rateCode: reservation.rateCode,
+			paymentMethodId: reservation.paymentMethod?.id,
+			guest: reservation.guest,
+			accommodationId: reservation.accommodation.id,
+			numberOfAccommodations: 1,
+			upsellPackages: newCurrentReservationPackages
+		};
+		try {
+			let res = await reservationsService.update(data);
+			popupController.close(SpinningLoaderPopup);
+			router
+				.navigate(`/reservations/itinerary/reservation/details?ri=${params.reservationId}`)
+				.catch(console.error);
+		} catch (e) {
+			rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+			popupController.close(SpinningLoaderPopup);
+		}
+	}
+
 	return !user ? (
 		<LoadingPage />
 	) : (
@@ -143,7 +171,9 @@ const EditExistingServicesPage: React.FC = () => {
 							look={'containedPrimary'}
 							variant={'button'}
 							label={'Save'}
-							onClick={() => {}}
+							onClick={() => {
+								updateReservationServices();
+							}}
 						/>
 					</Box>
 				</Box>

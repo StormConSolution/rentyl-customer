@@ -43,7 +43,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			let point: number =
 				index === Object.keys(props.costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
 			itemizedCostPerNight.push(
-				<Box display={'flex'} alignItems={'center'} key={night}>
+				<Box display={'flex'} alignItems={'center'} key={night} justifyContent={'space-between'}>
 					<Label variant={'body2'} width={'170px'}>
 						{DateUtils.displayUserDate(night)}
 					</Label>

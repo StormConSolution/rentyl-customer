@@ -127,9 +127,6 @@ const ReservationDetailsPage: React.FC = () => {
 								if (!reservation) return;
 								router.navigate(`/reservations/edit-services?ri=${reservation.id}`);
 							}}
-							onDetailsClick={() => {
-								console.log('hello');
-							}}
 							onSave={(data) => {
 								let guestNameSplit = data.contactInfo.split(' ').filter((item) => item.length > 0);
 								let guest = {
@@ -170,7 +167,7 @@ const ReservationDetailsPage: React.FC = () => {
 									departureDate: reservation.departureDate,
 									onApplyChanges: (data) => {
 										let newData: any = { ...data };
-										newData.rateCode = 'ITSTIME';
+										newData.rateCode = reservation.rateCode;
 										newData.paymentMethodId = reservation.paymentMethod?.id;
 										newData.guest = reservation.guest;
 										newData.accommodationId = reservation.accommodation.id;

@@ -582,21 +582,21 @@ const BookingFlowCheckoutPage = () => {
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
 							variant={'button'}
-							label={'complete booking'}
+							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'complete booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);
 							}}
 							disabled={isDisabled}
 						/>
-						<Label
-							color={'red'}
-							variant={'body1'}
-							mb={120}
-							width={'fit-content'}
-							className={'notEnoughPoints'}
-						>
-							{usePoints && !hasEnoughPoints && 'Not Enough Points'}
-						</Label>
+						{/*<Label*/}
+						{/*	color={'red'}*/}
+						{/*	variant={'body1'}*/}
+						{/*	mb={120}*/}
+						{/*	width={'fit-content'}*/}
+						{/*	className={'notEnoughPoints'}*/}
+						{/*>*/}
+						{/*	*/}
+						{/*</Label>*/}
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}
 				</Box>

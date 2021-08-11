@@ -72,11 +72,6 @@ const ItineraryDetailsPage: React.FC = () => {
 					phone={item.guest?.phone}
 					additionalDetails={item.additionalDetails}
 					upsellPackages={item.upsellPackages}
-					onDetailsClick={() => {
-						router
-							.navigate('/reservations/itinerary/reservation/details?ri=' + item.reservationId)
-							.catch(console.error);
-					}}
 				/>
 			);
 		});

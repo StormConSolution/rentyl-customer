@@ -90,17 +90,18 @@ const BookingFlowAddPackagePage = () => {
 			<div className={'rs-page-content-wrapper'}>
 				<Box className={'addedPackages'}>
 					<Label variant={'h2'}>Added Packages</Label>
-					{renderPackages()}
 					<hr />
+					{renderPackages()}
 				</Box>
 				<Box className={'availablePackages'}>
 					<Label variant={'h2'}>Available Packages</Label>
+					<hr />
 					{renderAvailablePackages()}
 				</Box>
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'button'}
-					label={'Checkout'}
+					label={'Continue To Checkout'}
 					onClick={() => {
 						let data = params.data;
 						data.newRoom.packages = addedPackages.map((item) => item.id);

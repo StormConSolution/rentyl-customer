@@ -31,7 +31,6 @@ interface ReservationDetailsAccordionProps {
 	phone: string;
 	additionalDetails: string;
 	upsellPackages: Api.UpsellPackage.Details[];
-	onDetailsClick: () => void;
 	isCancelable?: boolean;
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
