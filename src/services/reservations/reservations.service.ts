@@ -1,4 +1,3 @@
-import modelFactory from '../../models/modelFactory';
 import { WebUtils } from '../../utils/utils';
 import { Service } from '../Service';
 import http from '../../utils/http';

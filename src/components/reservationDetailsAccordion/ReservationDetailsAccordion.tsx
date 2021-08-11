@@ -198,7 +198,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 
 		return props.upsellPackages.map((item, index) => {
 			return (
-				<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+				<Box key={index} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 					<AccordionTitleDescription title={'Service'} description={item.title} />
 					<Label maxWidth={'60%'} variant={'body2'}>
 						{item.description}

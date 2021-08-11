@@ -132,13 +132,18 @@ const EditExistingServicesPage: React.FC = () => {
 							look={!isModified ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Cancel'}
-							onClick={() => {}}
+							onClick={() => {
+								router
+									.navigate(`/reservations/itinerary/reservation/details?ri=${params.reservationId}`)
+									.catch(console.error);
+							}}
 						/>
 						<LabelButton
 							className={isModified ? 'showBtn' : 'hideBtn'}
 							look={'containedPrimary'}
 							variant={'button'}
 							label={'Save'}
+							onClick={() => {}}
 						/>
 					</Box>
 				</Box>

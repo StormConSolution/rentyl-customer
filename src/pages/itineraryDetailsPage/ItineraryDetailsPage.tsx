@@ -53,6 +53,7 @@ const ItineraryDetailsPage: React.FC = () => {
 		return itinerary.stays.map((item) => {
 			return (
 				<ReservationDetailsAccordion
+					key={item.reservationId}
 					reservationId={item.reservationId}
 					accommodationName={item.accommodation.name}
 					arrivalDate={item.arrivalDate}
@@ -247,16 +248,6 @@ const ItineraryDetailsPage: React.FC = () => {
 													  }`
 													: ''
 											}
-										/>
-										<LabelCheckbox
-											value={'test'}
-											text={'* I agree with the Privacy Terms and booking conditions'}
-											onSelect={() => {
-												console.log('Yes');
-											}}
-											onDeselect={() => {
-												console.log('No');
-											}}
 										/>
 									</div>
 									<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>

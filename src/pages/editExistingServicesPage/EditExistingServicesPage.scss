@@ -40,3 +40,14 @@
 		}
 	}
 }
+
+.small {
+	.rsEditExistingServicesPage {
+		.rs-page-content-wrapper {
+			padding: 80px 10px 0;
+			.rsBox:first-of-type {
+				align-items: flex-end;
+			}
+		}
+	}
+}
