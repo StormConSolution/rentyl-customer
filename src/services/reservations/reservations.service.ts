@@ -11,7 +11,11 @@ import FilterQueryValue = RedSky.FilterQueryValue;
 
 export default class ReservationsService extends Service {
 	reservationsModel: ReservationsModel = modelFactory.get<ReservationsModel>('ReservationsModel');
-	userService = serviceFactory.get<UserService>('UserService');
+	private userService!: UserService;
+
+	start() {
+		this.userService = serviceFactory.get<UserService>('UserService');
+	}
 
 	async verifyAvailability(data: Api.Reservation.Req.Verification) {
 		return await http.get<RsResponseData<Api.Reservation.Res.Verification>>('reservation/verification', data);

@@ -37,8 +37,11 @@ export default class PaymentService extends Service {
 		) => void;
 	}[] = [];
 
-	private userService = serviceFactory.get<UserService>('UserService');
+	private userService!: UserService;
 
+	start() {
+		this.userService = serviceFactory.get<UserService>('UserService');
+	}
 	constructor() {
 		super();
 

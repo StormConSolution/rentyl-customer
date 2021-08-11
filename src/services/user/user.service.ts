@@ -60,7 +60,6 @@ export default class UserService extends Service {
 	async refreshUser(): Promise<void> {
 		const user = getRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user);
 		const token = getRecoilExternalValue<string>(globalState.userToken);
-		console.log('token', token);
 		if (!user) return;
 		this.loginUserByToken(user.token).catch(console.error);
 	}
