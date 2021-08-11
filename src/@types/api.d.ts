@@ -744,7 +744,7 @@ declare namespace Api {
 	}
 
 	export namespace UpsellPackage {
-		export interface Details extends Model.Packages {
+		export interface Details extends Model.UpsellPackage {
 			media: Media[];
 		}
 		export namespace Req {
@@ -1021,7 +1021,6 @@ declare namespace Api {
 				canceledOn: Date | string;
 				externalReservationId: string;
 				externalCancellationId: string;
-				externalCancelNumber: string;
 				adultCount: number;
 				childCount: number;
 				externalConfirmationId: string;
@@ -1122,6 +1121,7 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
+				redemptionInstructions?: string;
 				upc: string;
 				mediaDetails?: MediaDetails[];
 				categoryIds: number[];
@@ -1151,6 +1151,7 @@ declare namespace Api {
 				destinationId?: number;
 				affiliateId?: number;
 				description: string;
+				redemptionInstructions: string;
 				upc: string;
 				isActive: 0 | 1;
 				createdOn: Date | string;

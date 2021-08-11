@@ -27,6 +27,7 @@ const RewardPurchasePage: React.FC = () => {
 		{ key: 'ri', default: '', type: 'string', alias: 'reward' },
 		{ key: 'vc', default: '', type: 'string', alias: 'voucherCode' }
 	]);
+	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(false);
 
 	useEffect(() => {
 		async function getRewardDetails() {
@@ -37,11 +38,17 @@ const RewardPurchasePage: React.FC = () => {
 				let res = await rewardService.getRewardById(Number(params.reward));
 				setReward(res);
 			} catch (e) {
-				rsToasts.error('An unexpected error occurred on the server.');
+				rsToasts.error('Reward Item no longer exists.');
 			}
 		}
 		getRewardDetails().catch(console.error);
 	}, []);
+
+	useEffect(() => {
+		if (user && reward) {
+			setHasEnoughPoints(user.availablePoints - reward.pointCost > 0);
+		}
+	}, [reward, user]);
 
 	async function claimRewardVoucher() {
 		if (!termsAndConditionsIsChecked) {
@@ -51,9 +58,9 @@ const RewardPurchasePage: React.FC = () => {
 		try {
 			await rewardService.claimRewardVoucher({ rewardId: Number(params.reward), code: params.voucherCode });
 			rsToasts.success('You have claimed your voucher');
-			router.navigate('/reward').catch(console.error);
+			router.navigate(`/reward/confirm?ri=${params.reward}&vc=${params.voucherCode}`).catch(console.error);
 		} catch (e) {
-			rsToasts.error('An unexpected error occurred on the server.');
+			rsToasts.error('Unable to claim reward.');
 		}
 	}
 
@@ -150,7 +157,8 @@ const RewardPurchasePage: React.FC = () => {
 						<div className={'placeOrderButtonContainer'}>
 							<LabelButton
 								className={'placeOrderButton'}
-								look={'containedPrimary'}
+								look={hasEnoughPoints ? 'containedPrimary' : 'containedSecondary'}
+								disabled={!hasEnoughPoints}
 								variant={'button'}
 								label={'Place Order'}
 								onClick={claimRewardVoucher}

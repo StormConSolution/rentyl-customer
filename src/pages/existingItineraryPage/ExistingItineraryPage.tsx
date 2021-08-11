@@ -57,12 +57,12 @@ const ExistingItineraryPage: React.FC = () => {
 
 		let prevReservations = reservations.filter((item) => {
 			let date = new Date(item.departureDate);
-			return date.getTime() < Date.now() && !item.externalCancelNumber;
+			return date.getTime() < Date.now() && !item.externalCancellationId;
 		});
 
 		let currentRes = reservations.filter((item) => {
 			let date = new Date(item.departureDate);
-			return date.getTime() > Date.now() && !item.externalCancelNumber;
+			return date.getTime() > Date.now() && !item.externalCancellationId;
 		});
 
 		setUpComingReservations(currentRes);
@@ -102,13 +102,14 @@ const ExistingItineraryPage: React.FC = () => {
 					maxOccupancy={reservation.accommodation.maxOccupantCount}
 					amenities={reservation.accommodation.featureIcons}
 					totalCostCents={reservation.priceDetail.grandTotalCents}
-					totalPoints={1000} //This needs to be added to the endpoint.
+					totalPoints={reservation.priceDetail.grandTotalCents} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={reservation.cancellationPermitted}
 					itineraryTotal={item.reservations.reduce(
 						(total, reservation) => (total += reservation.priceDetail.grandTotalCents),
 						0
 					)}
+					paidWithPoints={!reservation.paymentMethod}
 				/>
 			);
 		});
@@ -134,13 +135,14 @@ const ExistingItineraryPage: React.FC = () => {
 					maxOccupancy={reservation.accommodation.maxOccupantCount}
 					amenities={reservation.accommodation.featureIcons}
 					totalCostCents={reservation.priceDetail.grandTotalCents}
-					totalPoints={1000} //This needs to be added to the endpoint.
+					totalPoints={reservation.priceDetail.grandTotalCents} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={0}
 					itineraryTotal={item.reservations.reduce(
 						(total, reservation) => (total += reservation.priceDetail.grandTotalCents),
 						0
 					)}
+					paidWithPoints={!reservation.paymentMethod}
 				/>
 			);
 		});

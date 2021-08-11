@@ -7,6 +7,7 @@ declare namespace Model {
 	export type UserAddressType = 'SHIPPING' | 'BILLING' | 'BOTH';
 	export type UserAccessScopeTypes =
 		| 'USER'
+		| 'COMPANY'
 		| 'POINTS'
 		| 'TEST'
 		| 'USER_POINTS'
@@ -428,7 +429,7 @@ declare namespace Model {
 		modifiedOn: Date | string;
 	}
 
-	export interface Packages {
+	export interface UpsellPackage {
 		id: number;
 		companyId: number;
 		destinationId: number;
@@ -494,16 +495,12 @@ declare namespace Model {
 		marketSegmentId: number;
 		orderId: number;
 		userPaymentMethodId: number;
-		reservationNumber: string;
 		arrivalDate: Date | string;
 		departureDate: Date | string;
 		status: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
 		canceledOn: Date | string;
-		externalReservationNumber: string;
-		cancelNumber: string;
-		externalCancelNumber: string;
 		adultCount: number;
 		childCount: number;
 		infantCount: number;
@@ -512,8 +509,6 @@ declare namespace Model {
 		nightCount: number;
 		metaData: any;
 		externalConfirmationId: string;
-		confirmationCode: string;
-		itineraryNumber: string;
 		cancellationPermitted: 0 | 1;
 		parentReservationId: number;
 		externalReservationId: string;
@@ -552,6 +547,7 @@ declare namespace Model {
 		pointCost: number;
 		monetaryValueInCents: number;
 		description: string;
+		redemptionInstructions: string;
 		upc: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;

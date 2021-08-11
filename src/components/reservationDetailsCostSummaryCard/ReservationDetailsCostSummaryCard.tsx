@@ -18,6 +18,8 @@ interface ReservationDetailsCostSummaryCartProps {
 	taxAndFeeTotalsInCents: { name: string; amount: number }[];
 	costPerNight: { [date: string]: number };
 	grandTotalCents: number;
+	points: number;
+	paidWithPoints: boolean;
 }
 
 const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryCartProps> = (props) => {
@@ -27,9 +29,15 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={i}>
 					<Label variant={'body1'}>{DateUtils.displayUserDate(i)}</Label>
-					<Label variant={'body1'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(props.costPerNight[i])}
-					</Label>
+					{!props.paidWithPoints ? (
+						<Label variant={'body1'} marginLeft={'auto'}>
+							${StringUtils.formatMoney(props.costPerNight[i])}
+						</Label>
+					) : (
+						<Label variant={'body1'} marginLeft={'auto'}>
+							{props.costPerNight[i]} points
+						</Label>
+					)}
 				</Box>
 			);
 		}
@@ -80,15 +88,21 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Accordion isOpen titleReact={<Label variant={'h4'}>DATES</Label>}>
 				{renderItemizedCostPerNight()}
 			</Accordion>
-			<Label variant={'body1'}>{Object.keys(props.costPerNight).length} Nights</Label>
+			<Label variant={'body1'}>{DateUtils.daysBetween(props.departureDate, props.arrivalDate)} Nights</Label>
 			<hr />
-			<Accordion isOpen titleReact={<Label variant={'h4'}>TAXES AND FEES</Label>}>
-				{renderTaxesAndFees()}
-			</Accordion>
-			<hr />
+			{!props.paidWithPoints && (
+				<Accordion isOpen titleReact={<Label variant={'h4'}>TAXES AND FEES</Label>}>
+					{renderTaxesAndFees()}
+				</Accordion>
+			)}
+			{!props.paidWithPoints && <hr />}
 			<Box display={'flex'} justifyContent={'space-between'}>
 				<Label variant={'h2'}>Total:</Label>
-				<Label variant={'h2'}>{StringUtils.formatMoney(props.grandTotalCents)}</Label>
+				{!props.paidWithPoints ? (
+					<Label variant={'h2'}>${StringUtils.formatMoney(props.grandTotalCents)}</Label>
+				) : (
+					<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.points)} Points</Label>
+				)}
 			</Box>
 		</Paper>
 	);

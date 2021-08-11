@@ -69,7 +69,7 @@ const AccountAddressPage: React.FC = () => {
 				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('An unexpected error occurred on the server.', '', 5000);
+				throw rsToasts.error('Country list is unavailable.', '', 5000);
 			}
 		}
 		getCountries().catch(console.error);
@@ -86,7 +86,7 @@ const AccountAddressPage: React.FC = () => {
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error(e.message, '', 5000);
+				rsToasts.error('Unable to get states for given country', '', 5000);
 			}
 		}
 		getStates().catch(console.error);
@@ -136,7 +136,7 @@ const AccountAddressPage: React.FC = () => {
 			});
 			setAddressList(addresses);
 		} catch (e) {
-			rsToasts.error(e.message, '', 5000);
+			rsToasts.error('Address update failed, try again', '', 5000);
 		}
 	}
 
@@ -192,7 +192,7 @@ const AccountAddressPage: React.FC = () => {
 			newAddressObj.resetToInitialValue();
 			setAddressList(newAddressList);
 		} catch (e) {
-			rsToasts.error(e.message, '', 5000);
+			rsToasts.error('Unable to save address, try again', '', 5000);
 		}
 	}
 

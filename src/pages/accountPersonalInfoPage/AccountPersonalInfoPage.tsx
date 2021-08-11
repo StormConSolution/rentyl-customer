@@ -127,7 +127,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 				setUser(response.data.data);
 			}
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error('Update failed, try again');
 		}
 	}
 
@@ -140,7 +140,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 			let response = await userService.updatePassword(newPasswordForm);
 			if (response.data.data) rsToasts.success('Password Updated!');
 		} catch (e) {
-			rsToasts.error(e.message);
+			rsToasts.error('Failed to update password');
 		}
 	}
 

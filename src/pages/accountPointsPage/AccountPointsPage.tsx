@@ -48,7 +48,7 @@ const AccountPointsPage: React.FC = () => {
 					setPointHistory(res);
 				}
 			} catch (e) {
-				rsToasts.error('An unexpected error occurred on the server.');
+				rsToasts.error('Unable to get points for user.');
 			}
 		}
 		getUserPoints().catch(console.error);

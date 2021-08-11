@@ -28,6 +28,7 @@ import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/Booking
 import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModifyRoomPage';
 import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 import EditExistingServicesPage from './pages/editExistingServicesPage/EditExistingServicesPage';
+import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
 
 const routes: RouteDetails[] = [
 	{
@@ -127,6 +128,10 @@ const routes: RouteDetails[] = [
 	{
 		path: '/reward/purchase',
 		page: RewardPurchasePage
+	},
+	{
+		path: '/reward/confirm',
+		page: OrderConfirmationPage
 	},
 	{
 		path: '/destination/details',

@@ -51,7 +51,7 @@ const RewardItemPage: React.FC = () => {
 				try {
 					if (params.categories) urlSelectedCategories = JSON.parse(params.categories);
 				} catch (e) {
-					rsToasts.error('An unexpected error occurred on the server.');
+					rsToasts.error('Cannot get a list of categories.');
 				}
 				let allActiveCategories = await rewardService.getAllActiveCategories();
 				let data = await rewardService.getAllForRewardItemPage();
@@ -94,7 +94,7 @@ const RewardItemPage: React.FC = () => {
 					setCategoryPagedList(pagedCategories.data.data);
 					setCardTotal(pagedCategories.data.total ? pagedCategories.data.total : 0);
 				} catch (e) {
-					rsToasts.error('An unexpected error occurred on the server.');
+					rsToasts.error('Cannot get the list of rewards.');
 				}
 			} else {
 				let filter = formatFilterQuery();
