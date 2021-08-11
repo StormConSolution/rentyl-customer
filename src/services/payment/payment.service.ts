@@ -1,6 +1,8 @@
 import http from '../../utils/http';
 import { Service } from '../Service';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
+import serviceFactory from '../serviceFactory';
+import UserService from '../user/user.service';
 
 interface InputPropertiesOptions {
 	cardType?: string;
@@ -35,6 +37,11 @@ export default class PaymentService extends Service {
 		) => void;
 	}[] = [];
 
+	private userService!: UserService;
+
+	start() {
+		this.userService = serviceFactory.get<UserService>('UserService');
+	}
 	constructor() {
 		super();
 
@@ -131,6 +138,7 @@ export default class PaymentService extends Service {
 
 	async addPaymentMethod(data: Api.Payment.Req.Create): Promise<Api.Payment.Res.Create> {
 		let axiosResponse = await http.post<RsResponseData<Api.Payment.Res.Create>>('payment', data);
+		this.refreshUser();
 		return axiosResponse.data.data;
 	}
 
@@ -141,10 +149,17 @@ export default class PaymentService extends Service {
 
 	async update(data: Api.Payment.Req.Update): Promise<Api.Payment.Res.Update> {
 		let res = await http.put<RsResponseData<Api.Payment.Res.Update>>('payment', data);
+		this.refreshUser();
 		return res.data.data;
 	}
 
 	async delete(id: number): Promise<Api.Payment.Res.Delete> {
-		return await http.delete('payment', { id });
+		let result = await http.delete('payment', { id });
+		this.refreshUser();
+		return result;
+	}
+
+	private refreshUser() {
+		this.userService.refreshUser().catch(console.error);
 	}
 }

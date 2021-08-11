@@ -128,7 +128,7 @@ const AccountAddressPage: React.FC = () => {
 		let data = { id: addressId, isDefault: 1 };
 		try {
 			let response = await userAddressService.update(data);
-			if (response.data.data) rsToasts.success('Update Successful', '', 5000);
+			if (response) rsToasts.success('Update Successful', '', 5000);
 
 			let addresses = [...addressList];
 			addresses = addresses.map((item) => {
@@ -202,7 +202,7 @@ const AccountAddressPage: React.FC = () => {
 			let response = await userAddressService.delete(id);
 			let newAddressList = addressList.filter((item) => item.id !== id);
 			setAddressList(newAddressList);
-			if (response.data.data) rsToasts.success('Delete Successful', '', 5000);
+			if (response) rsToasts.success('Delete Successful', '', 5000);
 		} catch (e) {}
 	}
 
