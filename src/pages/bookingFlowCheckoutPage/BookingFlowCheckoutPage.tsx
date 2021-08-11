@@ -588,15 +588,6 @@ const BookingFlowCheckoutPage = () => {
 							}}
 							disabled={isDisabled}
 						/>
-						{/*<Label*/}
-						{/*	color={'red'}*/}
-						{/*	variant={'body1'}*/}
-						{/*	mb={120}*/}
-						{/*	width={'fit-content'}*/}
-						{/*	className={'notEnoughPoints'}*/}
-						{/*>*/}
-						{/*	*/}
-						{/*</Label>*/}
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}
 				</Box>

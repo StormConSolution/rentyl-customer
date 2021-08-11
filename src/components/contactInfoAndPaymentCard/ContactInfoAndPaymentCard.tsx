@@ -308,15 +308,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				updateControl={updateContactInfoForm}
 			/>
 			<hr />
-			{/*{!!company.allowPointBooking && props.usePoints && (*/}
-			{/*	<LabelCheckbox*/}
-			{/*		value={props.usePoints ? 1 : 0}*/}
-			{/*		text={'Use Points'}*/}
-			{/*		onSelect={() => props.setUsePoints(true)}*/}
-			{/*		onDeselect={() => props.setUsePoints(false)}*/}
-			{/*		isChecked={props.usePoints}*/}
-			{/*	/>*/}
-			{/*)}*/}
 
 			<form id={'payment-form'} action={'/card-payment'}>
 				<Box display={'flex'}>
