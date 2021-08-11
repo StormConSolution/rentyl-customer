@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const DefaultBreakpoints = {};
-
+//Temp fix below will change after mobile vs. desktop fix.
 // const MobileAndDown = 1160;
 const MobileAndDown = 640;
 
