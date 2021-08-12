@@ -759,7 +759,7 @@ declare namespace Api {
 				ids?: number[];
 			}
 
-			export interface forDestination {
+			export interface ForDestination {
 				destinationId: number;
 			}
 
@@ -772,7 +772,7 @@ declare namespace Api {
 		export namespace Res {
 			export interface Update extends Details {}
 			export interface Get extends Details {}
-			export interface forDestination extends Api.Reservation.Res.BookingPackageDetails {}
+			export interface ForDestination extends Api.Reservation.Res.BookingPackageDetails {}
 			export interface GetByPage {
 				data: Details[];
 				total: number;
