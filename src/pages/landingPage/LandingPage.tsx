@@ -68,7 +68,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	return (
 		<Page className={'rsLandingPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<div className={'tanBox'} />
 				<Box
 					className={'heroImgAndText'}
 					display={'flex'}

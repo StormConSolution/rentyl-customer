@@ -1,0 +1,53 @@
+@import '../../themes/themes';
+.rsEditExistingPackagesPage {
+	.rs-page-content-wrapper {
+		max-width: 1160px !important;
+		padding-top: 120px;
+
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 20px 0;
+		}
+		.rsDestinationPackageTile {
+			margin-bottom: 50px;
+		}
+
+		.cancelSaveButtons {
+			position: relative;
+			margin-left: auto;
+			.rsLabelButton {
+				transition: right 500ms, opacity 500ms;
+				top: 0;
+				&.cancelButton {
+					position: relative;
+					z-index: 99;
+				}
+				&.hideBtn {
+					position: absolute;
+					margin-right: 8px;
+					opacity: 0;
+					right: -8px;
+				}
+				&.showBtn {
+					position: absolute;
+					right: 130px;
+					opacity: 1;
+				}
+			}
+		}
+	}
+}
+
+.small {
+	.rsEditExistingPackagesPage {
+		.rs-page-content-wrapper {
+			padding: 80px 10px 0;
+			.rsBox:first-of-type {
+				align-items: flex-end;
+			}
+		}
+	}
+}

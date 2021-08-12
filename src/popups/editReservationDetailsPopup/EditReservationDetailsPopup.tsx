@@ -15,6 +15,7 @@ import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelec
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface EditDetailsObj {
 	adults: number;
@@ -35,6 +36,7 @@ export interface EditReservationDetailsPopupProps extends PopupProps {
 
 const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = (props) => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const size = useWindowResizeChange();
 	const [canUpdateDetails, setCanUpdateDetails] = useState<boolean>(false);
 	const [isInvalidDates, setIsInvalidDates] = useState<boolean>(false);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
@@ -163,7 +165,7 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 							startDate={startDateControl}
 							endDate={endDateControl}
 							onDatesChange={onDatesChange}
-							monthsToShow={2}
+							monthsToShow={size === 'small' ? 1 : 2}
 							focusedInput={focusedInput}
 							onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
 							startDateLabel={'CHECK IN'}

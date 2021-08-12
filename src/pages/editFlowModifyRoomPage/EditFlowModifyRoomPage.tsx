@@ -387,8 +387,8 @@ const EditFlowModifyRoomPage = () => {
 					}}
 					total={availabilityTotal}
 				/>
+				<Footer links={FooterLinkTestData} />
 			</div>
-			<Footer links={FooterLinkTestData} />
 		</Page>
 	);
 };

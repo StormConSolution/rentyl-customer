@@ -3,15 +3,6 @@
 .rsDestinationPackageTile {
 	background-color: theme-var($primaryBackgroundColor);
 	display: flex;
-	margin: 0 auto;
-	width: 800px;
-	margin-bottom: 10px;
-	img {
-		margin-right: 16px;
-		width: 250px;
-		height: 150px;
-		object-fit: cover;
-	}
 
 	.rsLabelButton {
 		position: absolute;
@@ -20,8 +11,28 @@
 	}
 
 	.rsAccordion {
-		width: 300px;
+		width: 400px;
 		margin-top: 20px;
+	}
+
+	.rsCarousel {
+		margin-right: 16px;
+		height: 250px;
+		width: 250px;
+		min-width: 250px;
+		.carouselParent {
+			overflow-x: hidden;
+			max-height: 250px;
+		}
+		.imageWrapper {
+			width: 250px;
+			height: 250px;
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
 	}
 }
 
@@ -44,6 +55,7 @@
 		.rsLabelButton {
 			left: 16px;
 			bottom: 16px;
+			right: auto;
 		}
 	}
 }

@@ -2,6 +2,7 @@
 .rsItineraryInfoCard {
 	width: 700px;
 	background: theme-var($primaryBackgroundColor);
+	padding: 40px;
 	.logoImg {
 		margin-left: 8px;
 		width: 70px;
@@ -13,5 +14,13 @@
 	}
 	.rsLabelButton {
 		margin: 0 auto;
+	}
+}
+
+.small {
+	.rsItineraryInfoCard {
+		width: 100%;
+		text-align: center;
+		padding: 24px 16px;
 	}
 }

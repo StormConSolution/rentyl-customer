@@ -1,13 +1,22 @@
 @import '../../themes/themes';
 .rsBookingFlowAddPackagePage {
 	.rs-page-content-wrapper {
-		padding-top: 120px !important;
-		> .rsLabelButton {
-			margin: 0 auto;
+		max-width: 1160px !important;
+		padding-top: 120px;
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 20px 0;
 		}
 
-		.addedPackages {
-			margin-top: 80px;
+		.rsDestinationPackageTile {
+			margin-bottom: 50px;
+		}
+
+		.rsLabelButton {
+			margin: 20px auto;
 		}
 	}
 }

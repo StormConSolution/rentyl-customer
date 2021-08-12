@@ -8,18 +8,36 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import LabelButton from '../labelButton/LabelButton';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import Carousel from '../carousel/Carousel';
+import { useEffect, useState } from 'react';
 
 interface DestinationPackageTileProps {
 	title: string;
 	description: string;
 	priceCents: number;
-	imgUrl: string;
+	imgPaths: string[];
 	onAddPackage?: () => void;
 	text?: string;
 }
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
+	const [showControls, setShowControls] = useState<boolean>(true);
+
+	useEffect(() => {
+		if (props.imgPaths.length <= 1) setShowControls(false);
+	}, [props.imgPaths]);
+
+	function renderPictures(picturePaths: string[]): JSX.Element[] {
+		return picturePaths.map((path: string) => {
+			return (
+				<Box className={'imageWrapper'}>
+					<img src={path} alt="" />
+				</Box>
+			);
+		});
+	}
+
 	return (
 		<Paper
 			className={'rsDestinationPackageTile'}
@@ -28,7 +46,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			padding={'16px'}
 			position={'relative'}
 		>
-			<img src={props.imgUrl} alt={''} />
+			<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
 			<div>
 				<Label variant={'h2'}>{props.title}</Label>
 				<Accordion

@@ -758,6 +758,11 @@ declare namespace Api {
 				id?: number;
 				ids?: number[];
 			}
+
+			export interface ForDestination {
+				destinationId: number;
+			}
+
 			export interface GetByPage {
 				pagination: string;
 				sort: string;
@@ -767,6 +772,7 @@ declare namespace Api {
 		export namespace Res {
 			export interface Update extends Details {}
 			export interface Get extends Details {}
+			export interface ForDestination extends Api.Reservation.Res.BookingPackageDetails {}
 			export interface GetByPage {
 				data: Details[];
 				total: number;

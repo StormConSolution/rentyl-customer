@@ -53,6 +53,7 @@ const ItineraryDetailsPage: React.FC = () => {
 		return itinerary.stays.map((item) => {
 			return (
 				<ReservationDetailsAccordion
+					key={item.reservationId}
 					reservationId={item.reservationId}
 					accommodationName={item.accommodation.name}
 					arrivalDate={item.arrivalDate}
@@ -70,11 +71,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					email={item.guest?.email}
 					phone={item.guest?.phone}
 					additionalDetails={item.additionalDetails}
-					onDetailsClick={() => {
-						router
-							.navigate('/reservations/itinerary/reservation/details?ri=' + item.reservationId)
-							.catch(console.error);
-					}}
+					upsellPackages={item.upsellPackages}
 				/>
 			);
 		});
@@ -154,7 +151,7 @@ const ItineraryDetailsPage: React.FC = () => {
 				<HeroImage
 					image={require('../../images/itineraryDetailsPage/heroImg.jpg')}
 					height={'464px'}
-					mobileHeight={'464px'}
+					mobileHeight={'400px'}
 				>
 					{itinerary.destination && (
 						<ItineraryInfoCard
@@ -248,16 +245,6 @@ const ItineraryDetailsPage: React.FC = () => {
 													  }`
 													: ''
 											}
-										/>
-										<LabelCheckbox
-											value={'test'}
-											text={'* I agree with the Privacy Terms and booking conditions'}
-											onSelect={() => {
-												console.log('Yes');
-											}}
-											onDeselect={() => {
-												console.log('No');
-											}}
 										/>
 									</div>
 									<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>

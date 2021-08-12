@@ -1,16 +1,11 @@
-import modelFactory from '../../models/modelFactory';
+import { WebUtils } from '../../utils/utils';
 import { Service } from '../Service';
-import ReservationsModel from '../../models/reservations/reservations.model';
 import serviceFactory from '../serviceFactory';
 import UserService from '../user/user.service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
-import StandardOrderTypes = RedSky.StandardOrderTypes;
-import MatchTypes = RedSky.MatchTypes;
-import FilterQueryValue = RedSky.FilterQueryValue;
 
 export default class ReservationsService extends Service {
-	reservationsModel: ReservationsModel = modelFactory.get<ReservationsModel>('ReservationsModel');
 	private userService!: UserService;
 
 	start() {
@@ -46,7 +41,7 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async update(data: Api.Reservation.Req.Update, isGuest?: boolean): Promise<Api.Reservation.Res.Get> {
+	async update(data: Api.Reservation.Req.Update): Promise<Api.Reservation.Res.Get> {
 		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
 		this.refreshUser();
 		return response.data.data;
@@ -62,15 +57,11 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getByPage(
-		page: number,
-		perPage: number,
-		sortField?: string,
-		sortOrder?: StandardOrderTypes,
-		matchType?: MatchTypes,
-		filter?: FilterQueryValue[]
-	) {
-		let response = await this.reservationsModel.getByPage(page, perPage, sortField, sortOrder, matchType, filter);
+	async getByPage(pageQuery: RedSky.PageQuery) {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reservation.Res.Get[]>>(
+			'reservation/paged',
+			WebUtils.convertDataForUrlParams(pageQuery)
+		);
 		return response.data;
 	}
 
@@ -96,10 +87,6 @@ export default class ReservationsService extends Service {
 	async getPackagesByIds(data: Api.UpsellPackage.Req.Get): Promise<RsResponseData<Api.UpsellPackage.Res.Get[]>> {
 		let response = await http.get<RsResponseData<Api.UpsellPackage.Res.Get[]>>('package', data);
 		return response.data;
-	}
-
-	async getPackages(data: Api.UpsellPackage.Req.GetByPage): Promise<RsResponseData<Api.UpsellPackage.Res.GetByPage>> {
-		return await http.get<Api.UpsellPackage.Res.GetByPage>('package/paged', {});
 	}
 
 	private refreshUser() {

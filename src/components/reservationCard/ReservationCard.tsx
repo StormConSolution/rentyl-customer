@@ -7,9 +7,11 @@ import LabelLink from '../labelLink/LabelLink';
 import { addCommasToNumber } from '../../utils/utils';
 import ReservationInfoCard from '../reservationInfoCard/ReservationInfoCard';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
+import Carousel from '../carousel/Carousel';
+import { useEffect, useState } from 'react';
 
 interface ReservationCardProps {
-	imgPath: string;
+	imgPaths: string[];
 	logo: string;
 	title: string;
 	address: string;
@@ -27,10 +29,26 @@ interface ReservationCardProps {
 }
 
 const ReservationCard: React.FC<ReservationCardProps> = (props) => {
+	const [showControls, setShowControls] = useState<boolean>(true);
+
+	useEffect(() => {
+		if (props.imgPaths.length <= 1) setShowControls(false);
+	}, [props.imgPaths]);
+
+	function renderPictures(picturePaths: string[]): JSX.Element[] {
+		return picturePaths.map((path: string) => {
+			return (
+				<Box className={'imageWrapper'}>
+					<img src={path} alt="Reservation Card Image" />
+				</Box>
+			);
+		});
+	}
+
 	return (
 		<Box className={'rsReservationCard'}>
 			<div className={'columnOne'}>
-				<img src={props.imgPath} alt={'Reservation Card Image'} />
+				<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
 			</div>
 			<Box className={'columnTwo'} position={'relative'}>
 				<Box className={'rowOne'} display={'flex'} alignItems={'center'}>

@@ -12,25 +12,23 @@ import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
+import PackageService from '../../services/package/package.service';
 
 const BookingFlowAddPackagePage = () => {
-	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
 	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Details[]>([]);
 	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Details[]>([]);
-	const [totalPackages, setTotalPackages] = useState<number>(0);
 
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				let data: Api.UpsellPackage.Req.GetByPage = { filter: '', pagination: '', sort: 'ASC' };
-				const response = await reservationsService.getPackages(data);
-				setAvailablePackages(response.data.data);
-				let packages: Api.UpsellPackage.Details[] = response.data.data;
+				const response = await packageService.forDestination(params.data.destinationId);
+				setAvailablePackages(response);
+				let packages: Api.UpsellPackage.Details[] = response;
 				setAvailablePackages(packages.filter((item) => !params.data.newRoom.packages.includes(item.id)));
 				setAddedPackages(packages.filter((item) => params.data.newRoom.packages.includes(item.id)));
-				setTotalPackages(response.data.total);
 			} catch {
 				console.error('Cannot get a list of add-on packages.');
 			}
@@ -40,17 +38,15 @@ const BookingFlowAddPackagePage = () => {
 
 	function renderPackages() {
 		return addedPackages.map((item) => {
-			let defaultImage = item.media.find((value) => value.isPrimary);
-			if (defaultImage === undefined && item.media.length > 0) {
-				defaultImage = item.media[0];
-			}
 			return (
 				<DestinationPackageTile
 					key={item.id}
 					title={item.title}
 					description={item.description}
 					priceCents={0}
-					imgUrl={defaultImage?.urls.large || ''}
+					imgPaths={item.media.map((item) => {
+						return item.urls.large;
+					})}
 					onAddPackage={() => {
 						setAvailablePackages([...availablePackages, item]);
 						let newPackages = addedPackages.filter((addedPackage) => addedPackage.id !== item.id);
@@ -64,7 +60,6 @@ const BookingFlowAddPackagePage = () => {
 
 	function renderAvailablePackages() {
 		return availablePackages.map((item) => {
-			let defaultImage = item.media.find((value) => value.isPrimary);
 			let isAdded = addedPackages.find((value) => value.id === item.id);
 			if (isAdded) return false;
 			return (
@@ -73,7 +68,9 @@ const BookingFlowAddPackagePage = () => {
 					title={item.title}
 					description={item.description}
 					priceCents={0}
-					imgUrl={defaultImage?.urls.large || ''}
+					imgPaths={item.media.map((item, index) => {
+						return item.urls.large;
+					})}
 					onAddPackage={() => {
 						let newPackages = [...addedPackages, item];
 						setAddedPackages(newPackages);
@@ -93,17 +90,18 @@ const BookingFlowAddPackagePage = () => {
 			<div className={'rs-page-content-wrapper'}>
 				<Box className={'addedPackages'}>
 					<Label variant={'h2'}>Added Packages</Label>
-					{renderPackages()}
 					<hr />
+					{renderPackages()}
 				</Box>
 				<Box className={'availablePackages'}>
 					<Label variant={'h2'}>Available Packages</Label>
+					<hr />
 					{renderAvailablePackages()}
 				</Box>
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'button'}
-					label={'Checkout'}
+					label={'Continue To Checkout'}
 					onClick={() => {
 						let data = params.data;
 						data.newRoom.packages = addedPackages.map((item) => item.id);

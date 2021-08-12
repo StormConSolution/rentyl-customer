@@ -9,7 +9,8 @@ import LabelInput from '../labelInput/LabelInput';
 import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
-import { DateUtils, formatPhoneNumber } from '../../utils/utils';
+import { DateUtils, formatPhoneNumber, ObjectUtils } from '../../utils/utils';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ReservationDetailsAccordionProps {
 	reservationId: number;
@@ -29,7 +30,7 @@ interface ReservationDetailsAccordionProps {
 	email: string;
 	phone: string;
 	additionalDetails: string;
-	onDetailsClick: () => void;
+	upsellPackages: Api.UpsellPackage.Details[];
 	isCancelable?: boolean;
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
@@ -171,15 +172,14 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						if (props.onChangeRoom) props.onChangeRoom();
 					}}
 				/>
-				{/*THIS IS TEMP*/}
-				{/*<LabelButton*/}
-				{/*	look={'none'}*/}
-				{/*	variant={'body1'}*/}
-				{/*	label={'EDIT SERVICE'}*/}
-				{/*	onClick={() => {*/}
-				{/*		if (props.onEditService) props.onEditService();*/}
-				{/*	}}*/}
-				{/*/>*/}
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT SERVICE'}
+					onClick={() => {
+						if (props.onEditService) props.onEditService();
+					}}
+				/>
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
@@ -190,6 +190,21 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 				/>
 			</>
 		);
+	}
+
+	function renderUpsellPackages() {
+		if (!ObjectUtils.isArrayWithData(props.upsellPackages)) return [];
+
+		return props.upsellPackages.map((item, index) => {
+			return (
+				<Box key={index} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+					<AccordionTitleDescription title={'Service'} description={item.title} />
+					<Label maxWidth={'60%'} variant={'body2'}>
+						{item.description}
+					</Label>
+				</Box>
+			);
+		});
 	}
 
 	return (
@@ -225,6 +240,8 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					<AccordionTitleDescription title={'Floor Count'} description={props.floorCount} />
 					<AccordionTitleDescription title={'Amenities'} description={renderAmenities(props.featureIcons)} />
 				</div>
+				<hr />
+				{renderUpsellPackages()}
 				<hr />
 				{renderContactInfo()}
 				<Box position={'relative'} display={'flex'} margin={'40px 0 24px auto'} width={210}>

@@ -21,9 +21,18 @@
 		background-image: url('../../images/landingPage/hero-image.png');
 		background-repeat: no-repeat;
 		background-position: center;
-		width: 1257px;
+		width: 100%;
 		height: 729px;
 		margin-bottom: 135px;
+		&:before {
+			content: '';
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: linear-gradient(180deg, white 0%, rgba(255, 255, 255, 0) 19%);
+		}
 		.heroText {
 			font-size: 60px;
 			line-height: 70px;
@@ -213,9 +222,8 @@
 		.tanBox {
 			height: 388px;
 		}
-
 		.heroImgAndText {
-			width: 321px;
+			width: 100%;
 			height: 423px;
 			padding-left: 20px;
 			.heroText {
@@ -331,7 +339,6 @@
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
-
 			.sectionFourCardsWrapper {
 				grid-template-columns: auto;
 			}
@@ -353,6 +360,8 @@
 
 			.rsInfoCard {
 				margin: 0 auto 15px;
+				width: 335px !important;
+				height: 95px !important;
 			}
 		}
 		.sectionFive {

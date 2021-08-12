@@ -82,7 +82,7 @@ const ReservationDetailsPage: React.FC = () => {
 				<HeroImage
 					image={require('../../images/itineraryDetailsPage/heroImg.jpg')}
 					height={'464px'}
-					mobileHeight={'464px'}
+					mobileHeight={'400px'}
 				>
 					<ItineraryInfoCard
 						backButton={{
@@ -122,8 +122,10 @@ const ReservationDetailsPage: React.FC = () => {
 							phone={reservation.guest.phone}
 							additionalDetails={reservation.additionalDetails}
 							isCancelable={!!reservation.cancellationPermitted}
-							onDetailsClick={() => {
-								console.log('hello');
+							upsellPackages={reservation.upsellPackages}
+							onEditService={() => {
+								if (!reservation) return;
+								router.navigate(`/reservations/edit-services?ri=${reservation.id}`);
 							}}
 							onSave={(data) => {
 								let guestNameSplit = data.contactInfo.split(' ').filter((item) => item.length > 0);
@@ -165,7 +167,7 @@ const ReservationDetailsPage: React.FC = () => {
 									departureDate: reservation.departureDate,
 									onApplyChanges: (data) => {
 										let newData: any = { ...data };
-										newData.rateCode = 'ITSTIME';
+										newData.rateCode = reservation.rateCode;
 										newData.paymentMethodId = reservation.paymentMethod?.id;
 										newData.guest = reservation.guest;
 										newData.accommodationId = reservation.accommodation.id;
