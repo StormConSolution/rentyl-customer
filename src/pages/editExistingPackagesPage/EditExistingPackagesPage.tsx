@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './EditExistingServicesPage.scss';
+import './EditExistingPackagesPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
@@ -19,7 +19,7 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
-const EditExistingServicesPage: React.FC = () => {
+const EditExistingPackagesPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
@@ -148,7 +148,7 @@ const EditExistingServicesPage: React.FC = () => {
 	return !user ? (
 		<LoadingPage />
 	) : (
-		<Page className={'rsEditExistingServicesPage'}>
+		<Page className={'rsEditExistingPackagesPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<Box display={'flex'}>
 					<Label className={'filterLabel'} variant={'h1'}>
@@ -190,4 +190,4 @@ const EditExistingServicesPage: React.FC = () => {
 	);
 };
 
-export default EditExistingServicesPage;
+export default EditExistingPackagesPage;
