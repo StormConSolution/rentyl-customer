@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import './AccountOverview.scss';
 import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
-import Box from '../../components/box/Box';
 import { addCommasToNumber } from '../../utils/utils';
 import LabelLink from '../../components/labelLink/LabelLink';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -12,6 +11,7 @@ import globalState from '../../models/globalState';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface AccountOverviewProps {
 	isOpen: boolean;

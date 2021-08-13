@@ -1,9 +1,9 @@
 import * as React from 'react';
 import './ViewHeader.scss';
-import Box from '../box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Chip from '@bit/redsky.framework.rs.chip';
 import Button from '@bit/redsky.framework.rs.button';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface ViewHeaderProps {
 	title?: string;

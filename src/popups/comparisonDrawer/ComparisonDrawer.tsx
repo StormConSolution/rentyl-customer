@@ -1,30 +1,18 @@
 import * as React from 'react';
 import './ComparisonDrawer.scss';
 import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
-import Box from '../../components/box/Box';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
-import LabelSelect from '../../components/labelSelect/LabelSelect';
-import { useEffect, useState } from 'react';
 import DestinationService from '../../services/destination/destination.service';
 import { ObjectUtils } from '../../utils/utils';
-import AccommodationService from '../../services/accommodation/accommodation.service';
-import FilterQueryValue = RedSky.FilterQueryValue;
+import { Box } from '@bit/redsky.framework.rs.996';
 
-interface Accommodation {
-	id: number;
-	name: string;
-	shortDescription: string;
-	longDescription: string;
-	maxOccupantCount: number;
-}
 const ComparisonDrawer: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
-	const destinationsService = serviceFactory.get<DestinationService>('DestinationService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
 

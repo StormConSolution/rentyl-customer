@@ -8,8 +8,17 @@
 		margin: 0 0 40px 0;
 	}
 
-	.rsReservationCard {
+	.rsReservationCardResponsive {
 		width: 100%;
 		margin-bottom: 50px;
+	}
+}
+
+.small {
+	.rsExistingItineraryPage {
+		padding: 0 16px;
+		.rsReservationCardMobile {
+			margin: 0 auto 50px;
+		}
 	}
 }

@@ -1,11 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import Box from '../box/Box';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
 import { addCommasToNumber, removeAllExceptNumbers } from '../../utils/utils';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;

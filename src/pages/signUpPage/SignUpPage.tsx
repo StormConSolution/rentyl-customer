@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import './SignUpPage.scss';
-import { Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import Box from '../../components/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';

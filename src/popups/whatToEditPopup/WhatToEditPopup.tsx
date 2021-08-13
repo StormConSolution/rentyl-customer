@@ -1,12 +1,11 @@
 import * as React from 'react';
 import './WhatToEditPopup.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { Popup, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Paper from '../../components/paper/Paper';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
-import Box from '../../components/box/Box';
 
 export interface WhatToEditPopupProps extends PopupProps {
 	cancel: () => void;

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import Box from '../box/Box';
+
 import './AppBar.scss';
-import { Link } from '@bit/redsky.framework.rs.996';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import LabelButton from '../labelButton/LabelButton';
