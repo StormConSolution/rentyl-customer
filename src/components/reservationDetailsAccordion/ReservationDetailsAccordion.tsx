@@ -175,7 +175,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
-					label={'EDIT SERVICE'}
+					label={'EDIT PACKAGES'}
 					onClick={() => {
 						if (props.onEditService) props.onEditService();
 					}}

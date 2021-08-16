@@ -122,9 +122,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 
 		try {
 			let response = await userService.update(newUpdatedUserObj);
-			if (response.data.data) {
+			if (response) {
 				rsToasts.success('Update Successful!!!');
-				setUser(response.data.data);
+				setUser(response);
 			}
 		} catch (e) {
 			rsToasts.error('Update failed, try again');
@@ -270,15 +270,13 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 						<Label variant={'h2'}>Notification Preferences</Label>
 						<LabelCheckbox
 							value={''}
-							isChecked={true}
+							isChecked={!!user.allowEmailNotification}
 							text={'I want to receive e-mails with the latest promotions, offers, and Spire updates'}
 							onSelect={() => {
-								// Waiting for backend
-								console.log('Selected');
+								userService.update({ id: user?.id, allowEmailNotification: 1 }).catch(console.error);
 							}}
 							onDeselect={() => {
-								// Waiting for backend
-								console.log('De-selected');
+								userService.update({ id: user?.id, allowEmailNotification: 0 }).catch(console.error);
 							}}
 						/>
 					</Box>

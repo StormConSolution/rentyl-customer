@@ -18,4 +18,41 @@
 			padding: 0;
 		}
 	}
+
+	.whiteBox {
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		flex-direction: column;
+		transition: width 250ms, height 250ms;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		background: theme-var($primaryBackgroundColor);
+		position: absolute;
+		border-radius: 20px 0;
+		top: 25px;
+		right: 0;
+		height: 0;
+		width: 0;
+		overflow: hidden;
+		box-sizing: border-box;
+		.rsLabelButton {
+			margin-bottom: 8px;
+			margin-left: 30px;
+			.rsLabel {
+				color: theme-var($buttonLinkColor);
+			}
+			&:first-of-type {
+				margin-top: 20px;
+			}
+			&:hover {
+				.rsLabel {
+					text-decoration: underline;
+				}
+			}
+		}
+		&.open {
+			height: 160px;
+			width: 180px;
+		}
+	}
 }

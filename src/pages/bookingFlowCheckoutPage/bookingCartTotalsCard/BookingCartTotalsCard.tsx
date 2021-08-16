@@ -6,9 +6,8 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime, DateUtils, StringUtils } from '../../../utils/utils';
-import AccommodationOptionsPopup, {
-	AccommodationOptionsPopupProps
-} from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import { useState } from 'react';
+import LabelButton from '../../../components/labelButton/LabelButton';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -29,12 +28,60 @@ interface BookingCartTotalsCardProps {
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	editPackages?: () => void;
 	cancellable: boolean;
 	points: number;
 	usePoints: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
+	const [showOptions, setShowOptions] = useState<boolean>(false);
+
+	function renderEditOptions() {
+		return (
+			<div className={`whiteBox ${showOptions ? 'open' : ''}`}>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'REMOVE'}
+					onClick={(e) => {
+						e.stopPropagation();
+						if (props.remove)
+							props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'CHANGE ROOM'}
+					onClick={(e) => {
+						e.stopPropagation();
+						if (props.changeRoom)
+							props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT PACKAGES'}
+					onClick={(e) => {
+						e.stopPropagation();
+						if (props.editPackages) props.editPackages();
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT DETAILS'}
+					onClick={(e) => {
+						e.stopPropagation();
+						if (props.edit) props.edit(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+					}}
+				/>
+			</div>
+		);
+	}
+
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		let difference: number = props.points - StringUtils.convertCentsToPoints(props.accommodationTotalInCents, 10);
@@ -149,43 +196,19 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h4'} width={'170px'}>
 						{props.accommodationName}
 					</Label>
-					{props.edit && (
-						<Icon
-							iconImg={'icon-edit'}
-							cursorPointer
-							onClick={(event) => {
-								event.stopPropagation();
-								popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
-									onChangeRoom: () => {
-										popupController.close(AccommodationOptionsPopup);
-										if (props.changeRoom)
-											props.changeRoom(
-												props.accommodationId || 0,
-												props.checkInDate,
-												props.checkoutDate
-											);
-									},
-									onEditRoom: () => {
-										if (props.edit)
-											props.edit(
-												props.accommodationId || 0,
-												props.checkInDate,
-												props.checkoutDate
-											);
-									},
-									onRemove: () => {
-										if (props.remove)
-											props.remove(
-												props.accommodationId || 0,
-												props.checkInDate,
-												props.checkoutDate
-											);
-									},
-									cancellable: props.cancellable
-								});
-							}}
-						/>
-					)}
+					<div style={{ position: 'relative' }}>
+						{props.edit && (
+							<Icon
+								iconImg={'icon-edit'}
+								cursorPointer
+								onClick={(event) => {
+									event.stopPropagation();
+									setShowOptions((prev) => !prev);
+								}}
+							/>
+						)}
+						{renderEditOptions()}
+					</div>
 				</Box>
 			}
 		>

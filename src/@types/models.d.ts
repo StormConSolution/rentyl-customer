@@ -665,6 +665,7 @@ declare namespace Model {
 		loginExpiresOn: Date | string;
 		loginVerificationExpiresOn: Date | string;
 		loginVerificationGuid: string;
+		allowEmailNotification: 0 | 1;
 	}
 
 	export interface UserAction {
