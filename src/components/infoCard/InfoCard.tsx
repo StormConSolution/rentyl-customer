@@ -3,8 +3,8 @@ import './InfoCard.scss';
 import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
-import Box from '../box/Box';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface InfoCardProps {
 	title?: string;

@@ -2,11 +2,9 @@ import * as React from 'react';
 import './DestinationInfoCard.scss';
 import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
-import StarRating from '../starRating/StarRating';
-import Box from '../box/Box';
-import LabelLink from '../labelLink/LabelLink';
 import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface DestinationInfoCardProps {
 	destinationId: number;

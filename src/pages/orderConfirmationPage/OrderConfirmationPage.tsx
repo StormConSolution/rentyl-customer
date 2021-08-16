@@ -1,4 +1,4 @@
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page } from '@bit/redsky.framework.rs.996';
 import React, { useEffect, useState } from 'react';
 import './OrderConfirmationPage.scss';
 import router from '../../utils/router';
@@ -7,7 +7,6 @@ import RewardService from '../../services/reward/reward.service';
 import serviceFactory from '../../services/serviceFactory';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
-import Box from '../../components/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { addCommasToNumber, DateUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';

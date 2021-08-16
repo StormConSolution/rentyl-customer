@@ -1,0 +1,27 @@
+@import '../../../themes/themes';
+
+.rsReservationCardMobile {
+	width: 345px;
+	.rsCarousel {
+		margin: 0 auto 16px;
+		height: 290px;
+		width: 345px;
+		min-width: 345px;
+		.carouselParent {
+			overflow-x: hidden;
+		}
+		.imageWrapper {
+			width: 345px;
+			height: 290px;
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+	}
+
+	.logoImg {
+		max-width: 100px;
+	}
+}

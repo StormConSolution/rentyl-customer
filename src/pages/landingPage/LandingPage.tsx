@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './LandingPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
-import Box from '../../components/box/Box';
+import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import InfoCard from '../../components/infoCard/InfoCard';

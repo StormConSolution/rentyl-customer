@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Popup, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Popup, popupController } from '@bit/redsky.framework.rs.996';
 import './EditAccommodationPopup.scss';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
-import Box from '../../components/box/Box';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';

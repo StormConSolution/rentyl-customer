@@ -1,9 +1,8 @@
 import * as React from 'react';
 import './Footer.scss';
-import Box from '../box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { Link } from '@bit/redsky.framework.rs.996';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect } from 'react';
 

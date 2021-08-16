@@ -1,8 +1,7 @@
 import * as React from 'react';
 import './ConfirmOptionPopup.scss';
-import { Popup, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
-import Box from '../../components/box/Box';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Paper from '../../components/paper/Paper';
 import LabelButton from '../../components/labelButton/LabelButton';

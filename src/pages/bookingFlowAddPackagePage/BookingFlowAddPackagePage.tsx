@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './BookingFlowAddPackagePage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import router from '../../utils/router';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
-import Box from '../../components/box/Box';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
-import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
