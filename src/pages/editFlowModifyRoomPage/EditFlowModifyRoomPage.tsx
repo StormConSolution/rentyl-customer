@@ -242,6 +242,15 @@ const EditFlowModifyRoomPage = () => {
 		});
 	}
 
+	function getReservationCostPerNight(): number {
+		if (!reservation) return 0;
+		let costPerNightAvg: number = 0;
+		Object.keys(reservation.priceDetail.accommodationDailyCostsInCents).forEach((item) => {
+			costPerNightAvg += reservation.priceDetail.accommodationDailyCostsInCents[item];
+		});
+		return costPerNightAvg / Object.keys(reservation.priceDetail.accommodationDailyCostsInCents).length;
+	}
+
 	return (
 		<Page className={'rsEditFlowModifyRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -261,7 +270,7 @@ const EditFlowModifyRoomPage = () => {
 							maxSleeps={reservation.accommodation.maxSleeps}
 							squareFeet={2500}
 							description={reservation.accommodation.longDescription}
-							ratePerNightInCents={reservation.priceDetail.accommodationTotalInCents}
+							ratePerNightInCents={getReservationCostPerNight()}
 							pointsRatePerNight={0}
 							hideButtons={true}
 							roomStats={[
@@ -279,7 +288,7 @@ const EditFlowModifyRoomPage = () => {
 								},
 								{
 									label: 'Extra Bed',
-									datum: reservation.accommodation.extraBed
+									datum: reservation.accommodation.extraBed ? 'Yes' : 'No'
 								}
 							]}
 							carouselImagePaths={getImageUrls(reservation.accommodation)}

@@ -7,6 +7,7 @@ import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
@@ -19,19 +20,31 @@ export interface DestinationSummaryAccommodationListProps {
 interface AccommodationListRowProp extends Api.Destination.Res.Accommodation {}
 
 const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodationListProps> = (props) => {
+	const size = useWindowResizeChange();
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	function renderAccommodationListRow(accommodation: AccommodationListRowProp, index: number): JSX.Element {
 		return (
-			<div className="accommodationRow" key={index}>
+			<div
+				className="accommodationRow"
+				key={index}
+				onClick={(event: React.MouseEvent) => {
+					if (size !== 'small') return;
+					props.onDetailsClick(accommodation.id);
+				}}
+			>
 				<Label variant={'caption'}>{accommodation.name}</Label>
-				<Label display={'flex'} className={'icons'}>
-					{renderIcons(accommodation.features)}
-				</Label>
-				<Label variant={'caption'}>{accommodation.roomCount}</Label>
-				<Label variant={'caption'}>{accommodation.maxOccupantCount}</Label>
+				{size !== 'small' && (
+					<>
+						<Label display={'flex'} className={'icons'}>
+							{renderIcons(accommodation.features)}
+						</Label>
+						<Label variant={'caption'}>{accommodation.roomCount}</Label>
+						<Label variant={'caption'}>{accommodation.maxOccupantCount}</Label>
+					</>
+				)}
 				<div>
 					{company.allowCashBooking === 1 && (
-						<Label variant="h3" className="rate">
+						<Label variant="h4" className="rate">
 							${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
 						</Label>
 					)}
@@ -44,16 +57,18 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						</Label>
 					)}
 				</div>
-				<div>
-					<LabelButton
-						variant="caption"
-						look="containedSecondary"
-						label="Details"
-						onClick={() => {
-							props.onDetailsClick(accommodation.id);
-						}}
-					/>
-				</div>
+				{size !== 'small' && (
+					<div>
+						<LabelButton
+							variant="caption"
+							look="containedSecondary"
+							label="Details"
+							onClick={() => {
+								props.onDetailsClick(accommodation.id);
+							}}
+						/>
+					</div>
+				)}
 				<div>
 					<LabelButton
 						variant="caption"
@@ -64,7 +79,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						}}
 					/>
 				</div>
-				{!!props.onAddCompareClick && (
+				{size !== 'small' && !!props.onAddCompareClick && (
 					<Label
 						className={'comparePlusText'}
 						variant="caption"
@@ -94,23 +109,17 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 	}
 
 	return (
-		<div className="rsDestinationSummaryAccomodationList">
+		<div className="rsDestinationSummaryAccommodationList">
 			<div className="accommodationRow header">
-				<div>
-					<Label variant="h4">{props.accommodationType}</Label>
-				</div>
-				<div>
-					<Label variant="h4">Amenities</Label>
-				</div>
-				<div>
-					<Label variant="h4">Bedrooms</Label>
-				</div>
-				<div>
-					<Label variant="h4">Guests</Label>
-				</div>
-				<div>
-					<Label variant="h4">Rate/Night</Label>
-				</div>
+				<Label variant="caption">{props.accommodationType}</Label>
+				{size !== 'small' && (
+					<>
+						<Label variant="caption">Amenities</Label>
+						<Label variant="caption">Bedrooms</Label>
+						<Label variant="caption">Guests</Label>{' '}
+					</>
+				)}
+				<Label variant="caption">Rate/Night</Label>
 				<div>&nbsp;</div>
 			</div>
 			<div className={'availableAccommodationRows'}>{renderAccommodationList(props.accommodations, 0)}</div>

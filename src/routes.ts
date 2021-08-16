@@ -29,6 +29,9 @@ import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModif
 import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExistingPackagesPage';
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
+import globalState, { getRecoilExternalValue } from './models/globalState';
+
+// const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
 const routes: RouteDetails[] = [
 	{
@@ -65,7 +68,8 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/password-reset',
-		page: ResetPasswordPage
+		page: ResetPasswordPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservation/availability',
@@ -192,6 +196,14 @@ const routes: RouteDetails[] = [
 		}
 	}
 ];
+
+function verifyRoute() {
+	routes.forEach((item) => {
+		console.log(item.page);
+	});
+	if (window.location.hostname.includes('rentyl')) return '/not-found';
+	return true;
+}
 
 export default routes;
 (window as any).routes = routes;

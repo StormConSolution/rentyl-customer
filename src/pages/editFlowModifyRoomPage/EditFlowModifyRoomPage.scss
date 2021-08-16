@@ -24,11 +24,9 @@
 				margin-bottom: 10px;
 			}
 		}
-		.rsAccommodationSearchResultCard {
+		.rsAccommodationSearchResultCardMobile,
+		.rsAccommodationSearchResultCardResponsive {
 			margin: 35px auto;
-			img {
-				min-width: 100px;
-			}
 		}
 	}
 }
@@ -37,16 +35,6 @@
 	.rsEditFlowModifyRoomPage {
 		.rs-page-content-wrapper {
 			padding-top: 100px;
-
-			.rsAccommodationSearchResultCard {
-				img {
-					width: 100%;
-				}
-
-				.rsAccommodationSearchCallToActionCard {
-					max-width: 700px;
-				}
-			}
 		}
 	}
 }

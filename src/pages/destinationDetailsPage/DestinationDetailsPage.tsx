@@ -41,8 +41,10 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
-	const params = router.getPageUrlParams<{ destinationId: number }>([
-		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
+	const params = router.getPageUrlParams<{ destinationId: number; startDate?: string; endDate?: string }>([
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
+		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
 	]);
 	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLElement>(null);
@@ -81,6 +83,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		}
 
 		getDestinationDetails(params.destinationId).catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		if (!params.startDate && !params.endDate) return;
+		onDatesChange(moment(params.startDate), moment(params.endDate));
 	}, []);
 
 	useEffect(() => {
@@ -169,6 +176,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
+		if (!destinationDetails) return;
+		router.updateUrlParams({
+			di: destinationDetails.id,
+			startDate: formatFilterDateForServer(startDate, 'start'),
+			endDate: formatFilterDateForServer(endDate, 'end')
+		});
 	}
 
 	function updateSearchQueryObj(
@@ -544,6 +557,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 											if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
 											return createSearchQueryObj;
 										});
+										if (!destinationDetails) return;
+										router.updateUrlParams({
+											di: destinationDetails.id,
+											startDate: formatFilterDateForServer(startDate, 'start'),
+											endDate: formatFilterDateForServer(endDate, 'end')
+										});
 									},
 									preventCloseByBackgroundClick: false
 								});
@@ -558,6 +577,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						setSelectedPage={(newPage) => {
 							updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
 							setPage(newPage);
+							let availableStaysSection = availableStaysRef.current!.offsetTop;
+							window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
 						}}
 						currentPageNumber={page}
 					/>

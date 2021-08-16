@@ -8,9 +8,12 @@ import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import router from '../../utils/router';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
 	const size = useWindowResizeChange();
 	let scrollDirection = useWindowScrollChange();
@@ -18,7 +21,7 @@ const AppBar: React.FC = () => {
 	return (
 		<div ref={appBarRef} className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'}`}>
 			<Link path={'/'}>
-				<img src={require('../../images/FullLogo-StandardBlack.png')} alt={'company logo'} width={'111px'} />
+				<img src={company.wideLogoUrl} alt={company.name} width={'111px'} />
 			</Link>
 
 			<Box display={'flex'} alignItems={'center'}>

@@ -12,6 +12,8 @@ import LinkButton from '../linkButton/LinkButton';
 import { Rating } from '../starRating/StarRating';
 import TabbedDestinationSummary, { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import './DestinationSearchResultCard.scss';
+import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
+import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
 
 export interface DestinationSearchResultCardProps {
 	className?: string;
@@ -29,90 +31,31 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box className={'imageWrapper'}>
-					<img src={path} alt="" />
-				</Box>
-			);
-		});
-	}
-
-	function isSummaryOverviewTab(tab: DestinationSummaryTab) {
-		return tab.content.hasOwnProperty('amenities');
-	}
-
-	function getAmenityIcons() {
-		const overviewTab = props.summaryTabs.filter(isSummaryOverviewTab)[0];
-		if (!overviewTab) return;
-		return (overviewTab.content as DestinationSummaryOverviewProps).amenities;
-	}
-
-	function renderSmallLayout(): JSX.Element {
-		return (
-			<Box className={`rsDestinationSearchResultCard ${props.className || ''}`}>
-				<img alt={props.destinationName} src={props.picturePaths[0]} />
-				<div className="info">
-					<div className="nameAndAddress">
-						<Label variant="h4">{props.destinationName}</Label>
-						<Label variant="caption">
-							<Icon iconImg="icon-map" />
-							{props.address}
-						</Label>
-					</div>
-					{/*<StarRating size="small16px" rating={props.starRating} />  we don't have this information in the database yet*/}
-					<DestinationSummaryOverview finePrint="" amenities={getAmenityIcons()} />
-				</div>
-				<div className="buttonHolder">
-					<LinkButton
-						className="addCompare"
-						label="Add to compare +"
-						onClick={props.onAddCompareClick}
-						path=""
-						buttonSecondary
-					/>
-					<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
-				</div>
-			</Box>
-		);
-	}
-
-	function renderLargeLayout() {
-		return (
-			<Box className={`rsDestinationSearchResultCard ${props.className || ''}`}>
-				<Carousel showControls children={renderPictures(props.picturePaths)} />
-				<div className="info">
-					<img alt={props.destinationName} src={props.logoImagePath} className="destinationLogo" />
-					<div className="nameAndAddress">
-						<Label variant="h2">{props.destinationName}</Label>
-						<Label variant="caption">{props.address}</Label>
-					</div>
-					<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
-					{/*<StarRating size="small16px" rating={props.starRating} /> we don't have this information in the database yet*/}
-					{/*<LabelLink*/}
-					{/*	className="ratings"*/}
-					{/*	label="View ratings >"*/}
-					{/*	path={props.reviewPath}*/}
-					{/*	variant="caption"*/}
-					{/*	externalLink={false}*/}
-					{/*/>*/}
-					<LabelLink
-						className="addCompare"
-						label="Add to compare +"
-						variant="caption"
-						onClick={props.onAddCompareClick}
-						path=""
-						externalLink={false}
-					/>
-
-					<TabbedDestinationSummary tabs={props.summaryTabs} />
-				</div>
-			</Box>
-		);
-	}
-
-	return size === 'small' ? renderSmallLayout() : renderLargeLayout();
+	return size === 'small' ? (
+		<DestinationSearchResultCardMobile
+			destinationName={props.destinationName}
+			address={props.address}
+			logoImagePath={props.logoImagePath}
+			picturePaths={props.picturePaths}
+			starRating={props.starRating}
+			reviewPath={props.reviewPath}
+			destinationDetailsPath={props.destinationDetailsPath}
+			summaryTabs={props.summaryTabs}
+			onAddCompareClick={props.onAddCompareClick}
+		/>
+	) : (
+		<DestinationSearchResultCardResponsive
+			destinationName={props.destinationName}
+			address={props.address}
+			logoImagePath={props.logoImagePath}
+			picturePaths={props.picturePaths}
+			starRating={props.starRating}
+			reviewPath={props.reviewPath}
+			destinationDetailsPath={props.destinationDetailsPath}
+			summaryTabs={props.summaryTabs}
+			onAddCompareClick={props.onAddCompareClick}
+		/>
+	);
 };
 
 export default DestinationSearchResultCard;
