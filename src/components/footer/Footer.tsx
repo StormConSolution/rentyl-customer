@@ -5,6 +5,8 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 export interface FooterLink {
 	text: string;
@@ -16,6 +18,8 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = (props) => {
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
+
 	useEffect(() => {
 		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
 			setTimeout(() => {
@@ -47,8 +51,8 @@ const Footer: React.FC<FooterProps> = (props) => {
 		<Box className={'rsFooter'}>
 			<Box className={'footerNavigation'} display={'grid'}>
 				<img
-					src={require('../../images/spire-logo.png')}
-					alt={'Company Logo'}
+					src={company.squareLogoUrl}
+					alt={company.name}
 					onClick={() => {
 						router.navigate('/').catch(console.error);
 					}}

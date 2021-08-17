@@ -1,0 +1,65 @@
+@import '../../../themes/themes';
+
+.rsAccommodationSearchResultCardResponsive {
+	border-bottom: 1px solid theme-var($greyLineColor);
+	box-sizing: border-box;
+	padding-bottom: 20px;
+	display: flex;
+	position: relative;
+	.rsCarousel {
+		position: relative;
+		height: 280px;
+		width: 278px;
+		min-width: 278px;
+		.carouselParent {
+			overflow-x: hidden;
+		}
+		.accommodationGalleryImage {
+			width: 278px;
+			height: 280px;
+			object-fit: cover;
+		}
+	}
+
+	.info {
+		margin-left: 40px;
+		margin-right: 15px;
+		width: 100%;
+		> div {
+			display: flex;
+			.rsLabel {
+				margin: auto 0;
+				&:last-of-type {
+					margin-left: 5px;
+				}
+			}
+			.rsStarRating {
+				margin-right: 15px;
+			}
+			&.accommodationDescription {
+				margin-top: 15px;
+				height: clamp(100px, 150px, 183px);
+			}
+		}
+	}
+
+	> div.detailCardHolder {
+		align-self: end;
+	}
+
+	.rsAccommodationSearchDetailCard {
+		position: relative;
+		width: 290px;
+		background-color: #f7f1db;
+
+		.amenityIcons {
+			.rsIcon::before {
+				color: theme-var($primaryTextColor);
+			}
+		}
+	}
+
+	.rsAccommodationSearchCallToActionCard {
+		align-self: flex-end;
+	}
+}

@@ -1,14 +1,8 @@
 @import '../../themes/themes.scss';
 
 .rsAccommodationSearchDetailCard {
-	position: relative;
-	div {
-		margin: 0;
-	}
-	> div {
-		position: relative;
-		margin: 20px 0 0 20px;
-	}
+	padding: 40px 0 40px 40px;
+	box-sizing: border-box;
 
 	.amenityIcons {
 		display: inline-block;

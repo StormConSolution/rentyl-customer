@@ -84,10 +84,12 @@
 			margin: 20px 0;
 		}
 
-		.rsAccommodationSearchResultCard {
-			margin-bottom: 30px;
-			padding-bottom: 30px;
-			border-bottom: 1px solid theme-var($greyLineColor);
+		.accommodationCardWrapper {
+			box-sizing: border-box;
+			.rsAccommodationSearchResultCardMobile,
+			.rsAccommodationSearchResultCardResponsive {
+				margin-bottom: 25px;
+			}
 		}
 	}
 }
@@ -131,6 +133,8 @@
 
 		.sectionFive {
 			width: 100%;
+			padding: 0 10px;
+			box-sizing: border-box;
 		}
 	}
 }

@@ -1,6 +1,5 @@
 import { RouteDetails } from '@bit/redsky.framework.rs.996';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
-import DashboardPage from './pages/dashboardPage/DashboardPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import SignUpPage from './pages/signUpPage/SignUpPage';
@@ -29,18 +28,14 @@ import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModif
 import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExistingPackagesPage';
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
+import globalState, { getRecoilExternalValue } from './models/globalState';
+
+// const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
 const routes: RouteDetails[] = [
 	{
 		path: '/',
 		page: LandingPage,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/dashboard',
-		page: DashboardPage,
 		options: {
 			view: 'landingPage'
 		}
@@ -65,7 +60,8 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/password-reset',
-		page: ResetPasswordPage
+		page: ResetPasswordPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservation/availability',
@@ -192,6 +188,14 @@ const routes: RouteDetails[] = [
 		}
 	}
 ];
+
+function verifyRoute() {
+	routes.forEach((item) => {
+		console.log(item.page);
+	});
+	if (window.location.hostname.includes('rentyl')) return '/not-found';
+	return true;
+}
 
 export default routes;
 (window as any).routes = routes;

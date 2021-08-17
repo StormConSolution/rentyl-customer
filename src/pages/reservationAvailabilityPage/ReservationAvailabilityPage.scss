@@ -29,10 +29,12 @@
 		padding-left: 20px;
 	}
 
-	.rsDestinationSearchResultCard {
-		padding-bottom: 20px;
-		padding-top: 30px;
-		border-bottom: 1px solid theme-var($greyLineColor);
+	.rsDestinationSearchResultCardResponsive,
+	.rsDestinationSearchResultCardMobile {
+		margin-bottom: 30px;
+		//padding-bottom: 20px;
+		//padding-top: 30px;
+		//border-bottom: 1px solid theme-var($greyLineColor);
 	}
 
 	.toggleCode:hover {

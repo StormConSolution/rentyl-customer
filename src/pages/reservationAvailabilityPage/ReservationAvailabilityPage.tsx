@@ -55,6 +55,16 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [rateCode, setRateCode] = useState<string>('');
 	const [validCode, setValidCode] = useState<boolean>(true);
 
+	const params = router.getPageUrlParams<{ startDate: string; endDate: string }>([
+		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
+	]);
+
+	useEffect(() => {
+		if (!params.startDate && !params.endDate) return;
+		onDatesChange(moment(params.startDate), moment(params.endDate));
+	}, []);
+
 	useEffect(() => {
 		async function getReservations() {
 			if (
@@ -164,6 +174,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 			}
 			return createSearchQueryObj;
 		});
+		router.updateUrlParams({
+			startDate: formatFilterDateForServer(checkinDate, 'start'),
+			endDate: formatFilterDateForServer(checkoutDate, 'end')
+		});
 	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
@@ -171,6 +185,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
+		router.updateUrlParams({
+			startDate: formatFilterDateForServer(startDate, 'start'),
+			endDate: formatFilterDateForServer(endDate, 'end')
+		});
 	}
 
 	function renderDestinationSearchResultCards() {
@@ -188,7 +206,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					picturePaths={urls}
 					starRating={4.5}
 					reviewPath={''}
-					destinationDetailsPath={`/destination/details?di=${destination.id}`}
+					destinationDetailsPath={
+						!!params.startDate && !!params.endDate
+							? `/destination/details?di=${destination.id}&startDate=${params.startDate}&endDate=${params.endDate}`
+							: `/destination/details?di=${destination.id}`
+					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
 						comparisonService.addToComparison(recoilComparisonState, {
@@ -378,7 +400,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					className={'searchResultsWrapper'}
 					bgcolor={'#ffffff'}
 					width={size === 'small' ? '100%' : '1165px'}
-					padding={size === 'small' ? '0 30px 20px' : '0 140px 60px'}
+					padding={size === 'small' ? '0 10px 20px' : '0 140px 60px'}
 					boxSizing={'border-box'}
 				>
 					{renderDestinationSearchResultCards()}

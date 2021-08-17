@@ -26,7 +26,7 @@
 	.contentSection {
 		.summaryContent {
 			display: none;
-			height: 130px;
+			max-height: 130px;
 			margin-top: 14px;
 			&.active {
 				display: block;
@@ -34,6 +34,16 @@
 
 			> div {
 				height: 100%;
+			}
+		}
+	}
+}
+
+.small {
+	.rsTabbedDestinationSummary {
+		.contentSection {
+			.summaryContent {
+				overflow-y: scroll;
 			}
 		}
 	}

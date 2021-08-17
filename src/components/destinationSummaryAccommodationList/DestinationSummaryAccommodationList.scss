@@ -1,17 +1,14 @@
 @import '../../themes/themes.scss';
 
-.rsDestinationSummaryAccomodationList {
+.rsDestinationSummaryAccommodationList {
 	div {
 		margin: 0;
 	}
 	.availableAccommodationRows {
-		height: 100%;
 		overflow-y: auto;
-		.rsLabel {
-			padding-left: 5px;
-		}
+		height: calc(100% - 26px);
 		.icons {
-			justify-content: center;
+			justify-content: flex-start;
 			.rsIcon:before {
 				color: theme-var($primaryTextColor);
 			}
@@ -23,11 +20,19 @@
 	.accommodationRow {
 		display: grid;
 		grid-template-columns: 162px 114px 84px 81px 93px 90px 110px 88px;
-		text-align: center;
+		padding: 5px 0;
+		box-sizing: border-box;
+		&.header {
+		}
 		.rsLabel.caption {
 			overflow: hidden;
 			white-space: nowrap;
 			text-overflow: ellipsis;
+		}
+
+		.points {
+			font-size: 12px;
+			line-height: 12px;
 		}
 		div {
 			margin: auto 0;
@@ -44,6 +49,18 @@
 		button.rsButton {
 			height: 28px;
 			padding: 0 12px;
+			box-shadow: unset;
+		}
+	}
+}
+
+.small {
+	.rsDestinationSummaryAccommodationList {
+		.accommodationRow {
+			grid-template-columns: 162px 80px 1fr 50px;
+			.rsIcon {
+				place-self: center;
+			}
 		}
 	}
 }

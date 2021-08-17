@@ -356,6 +356,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 					margin={'0 auto 170px'}
 					width={'100%'}
 					display={'flex'}
+					flexWrap={'wrap'}
 					justifyContent={'center'}
 				>
 					<img src={require('../../images/landingPage/coffee.png')} alt={'coffee guy'} />
