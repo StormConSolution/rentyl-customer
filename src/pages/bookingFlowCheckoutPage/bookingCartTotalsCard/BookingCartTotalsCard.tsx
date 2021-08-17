@@ -6,7 +6,7 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime, DateUtils, StringUtils } from '../../../utils/utils';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
 
 interface BookingCartTotalsCardProps {
@@ -35,11 +35,30 @@ interface BookingCartTotalsCardProps {
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
+	const whiteBox = useRef<HTMLElement>(null);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
+
+	useEffect(() => {
+		function handleClickOutside(event: any) {
+			if (
+				whiteBox &&
+				whiteBox.current &&
+				!whiteBox.current.contains(event.target) &&
+				!event.target.className.includes('editButton') &&
+				!event.target.parentNode.className.includes('editButton')
+			) {
+				setShowOptions(false);
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
 
 	function renderEditOptions() {
 		return (
-			<div className={`whiteBox ${showOptions ? 'open' : ''}`}>
+			<div ref={whiteBox} className={`whiteBox ${showOptions ? 'open' : ''}`}>
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
@@ -199,11 +218,12 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<div style={{ position: 'relative' }}>
 						{props.edit && (
 							<Icon
+								className={'editButton'}
 								iconImg={'icon-edit'}
 								cursorPointer
 								onClick={(event) => {
 									event.stopPropagation();
-									setShowOptions((prev) => !prev);
+									setShowOptions(!showOptions);
 								}}
 							/>
 						)}

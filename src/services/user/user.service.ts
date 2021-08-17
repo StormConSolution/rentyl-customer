@@ -66,7 +66,7 @@ export default class UserService extends Service {
 
 	async update(data: Api.User.Req.Update): Promise<Api.User.Res.Detail> {
 		let response = await http.put<RsResponseData<Api.User.Res.Detail>>('user', data);
-		this.onAfterLogin(response.data.data);
+		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, response.data.data);
 		return response.data.data;
 	}
 

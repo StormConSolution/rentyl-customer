@@ -122,10 +122,8 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 
 		try {
 			let response = await userService.update(newUpdatedUserObj);
-			if (response) {
-				rsToasts.success('Update Successful!!!');
-				setUser(response);
-			}
+			rsToasts.success('Update Successful!!!');
+			setUser(response);
 		} catch (e) {
 			rsToasts.error('Update failed, try again');
 		}

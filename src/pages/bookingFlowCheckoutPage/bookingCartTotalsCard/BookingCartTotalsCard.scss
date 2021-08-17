@@ -2,6 +2,7 @@
 
 .rsBookingCartTotalsCard {
 	background: theme-var($primaryBackgroundColor);
+	overflow: visible;
 
 	.articleItemHeader {
 		padding: 0;
@@ -21,6 +22,7 @@
 
 	.whiteBox {
 		display: flex;
+		z-index: 2;
 		justify-content: center;
 		align-items: flex-start;
 		flex-direction: column;
