@@ -64,7 +64,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					variant={'body1'}
 					label={'REMOVE'}
 					onClick={(e) => {
-						e.stopPropagation();
 						if (props.remove)
 							props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
 					}}
@@ -74,7 +73,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					variant={'body1'}
 					label={'CHANGE ROOM'}
 					onClick={(e) => {
-						e.stopPropagation();
 						if (props.changeRoom)
 							props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
 					}}
@@ -84,7 +82,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					variant={'body1'}
 					label={'EDIT PACKAGES'}
 					onClick={(e) => {
-						e.stopPropagation();
 						if (props.editPackages) props.editPackages();
 					}}
 				/>
