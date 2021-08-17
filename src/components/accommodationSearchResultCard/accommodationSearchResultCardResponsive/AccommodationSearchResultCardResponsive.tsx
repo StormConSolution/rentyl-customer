@@ -53,7 +53,7 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 				<div>
 					{company && (
 						<Label variant="h4" className="costs">
-							{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}{' '}
+							{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}
 							{company.allowCashBooking && company.allowPointBooking && ' or '}
 							{company.allowPointBooking && addCommasToNumber(props.pointsRatePerNight) + ' points'}
 							/night

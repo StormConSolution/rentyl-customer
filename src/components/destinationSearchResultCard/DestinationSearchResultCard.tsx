@@ -1,14 +1,5 @@
-import { Box } from '@bit/redsky.framework.rs.996';
-import Icon from '@bit/redsky.framework.rs.icon';
-import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import Carousel from '../carousel/Carousel';
-import DestinationSummaryOverview, {
-	DestinationSummaryOverviewProps
-} from '../destinationSummaryOverview/DestinationSummaryOverview';
-import LabelLink from '../labelLink/LabelLink';
-import LinkButton from '../linkButton/LinkButton';
 import { Rating } from '../starRating/StarRating';
 import TabbedDestinationSummary, { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import './DestinationSearchResultCard.scss';
