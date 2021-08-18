@@ -1356,6 +1356,7 @@ declare namespace Api {
 			loginExpiresOn: Date | string;
 			loginVerificationExpiresOn: Date | string;
 			paymentMethods: PaymentMethod[];
+			allowEmailNotification: 0 | 1;
 		}
 
 		export interface Model extends Model.User {
@@ -1400,7 +1401,7 @@ declare namespace Api {
 				primaryEmail?: string;
 				phone?: string;
 				birthDate?: Date | string;
-				emailNotification?: 0 | 1;
+				allowEmailNotification?: 0 | 1;
 			}
 
 			export interface Login {
