@@ -175,7 +175,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
-					label={'EDIT SERVICE'}
+					label={'EDIT PACKAGE'}
 					onClick={() => {
 						if (props.onEditService) props.onEditService();
 					}}
@@ -198,7 +198,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 		return props.upsellPackages.map((item, index) => {
 			return (
 				<Box key={index} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-					<AccordionTitleDescription title={'Service'} description={item.title} />
+					<AccordionTitleDescription title={'Package'} description={item.title} />
 					<Label maxWidth={'60%'} variant={'body2'}>
 						{item.description}
 					</Label>

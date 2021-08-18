@@ -39,6 +39,9 @@ declare namespace Model {
 	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
 	export type PaymentSystemProviders = 'adyen' | 'spreedly' | 'mock';
 	export type OffsiteLoyaltySystemProviders = 'fidel';
+	export type UpsellPackagePricingType = 'PerGuest' | 'PerStay' | 'PerNight' | 'PerGuestPerNight';
+	export type CurrencyCode = 'USD'; // Add more if/when we add multicurrency support
+	export type ReviewStatus = 'PUBLISHED' | 'UNPUBLISHED' | 'FLAGGED' | 'UNVERIFIED';
 
 	export interface Accommodation {
 		id: number;
@@ -293,6 +296,8 @@ declare namespace Model {
 		externalSystemId: string;
 		modifiedOn: Date | string;
 		chainId: number;
+		reviewRating: number;
+		reviewCount: number;
 	}
 
 	export type DestinationPolicy = {
@@ -520,22 +525,25 @@ declare namespace Model {
 	export interface ReservationUpsellPackage {
 		reservationId: number;
 		upsellPackageId: number;
+		priceDetail: object;
 	}
 
 	export interface Review {
 		id: number;
 		companyId: number;
 		userId: number;
-		source: string;
-		sourceId: number;
+		destinationId: number;
+		accommodationId: number;
+		verifyUserId: number;
 		message: string;
-		score: number;
+		rating: number;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isVerified: 0 | 1;
-		verifyUserId: number;
 		verifiedOn: Date | string;
-		status: string;
+		status: ReviewStatus;
+		packageIds: number[];
+		stayStartDate: Date | string;
+		stayEndDate: Date | string;
 	}
 
 	export interface Reward {

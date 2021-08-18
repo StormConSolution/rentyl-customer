@@ -16,15 +16,20 @@ const BookingFlowAddPackagePage = () => {
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
-	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Details[]>([]);
-	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Details[]>([]);
+	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
+	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
 
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				const response = await packageService.forDestination(params.data.destinationId);
-				setAvailablePackages(response);
-				let packages: Api.UpsellPackage.Details[] = response;
+				const response = await packageService.getAvailable({
+					destinationId: params.data.destinationId,
+					startDate: params.data.newRoom.arrivalDate,
+					endDate: params.data.newRoom.departureDate,
+					pagination: { page: 1, perPage: 5 }
+				});
+				setAvailablePackages(response.data);
+				let packages: Api.UpsellPackage.Res.Available[] = response.data;
 				setAvailablePackages(packages.filter((item) => !params.data.newRoom.packages.includes(item.id)));
 				setAddedPackages(packages.filter((item) => params.data.newRoom.packages.includes(item.id)));
 			} catch {
@@ -41,7 +46,7 @@ const BookingFlowAddPackagePage = () => {
 					key={item.id}
 					title={item.title}
 					description={item.description}
-					priceCents={0}
+					priceCents={item.priceCents}
 					imgPaths={item.media.map((item) => {
 						return item.urls.large;
 					})}
@@ -65,7 +70,7 @@ const BookingFlowAddPackagePage = () => {
 					key={item.id}
 					title={item.title}
 					description={item.description}
-					priceCents={0}
+					priceCents={item.priceCents}
 					imgPaths={item.media.map((item, index) => {
 						return item.urls.large;
 					})}

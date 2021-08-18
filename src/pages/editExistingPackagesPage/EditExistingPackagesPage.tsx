@@ -25,10 +25,8 @@ const EditExistingPackagesPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
-	const [currentReservationPackages, setCurrentReservationPackages] = useState<
-		Api.UpsellPackage.Res.ForDestination[]
-	>([]);
-	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.ForDestination[]>([]);
+	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
+	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
@@ -59,8 +57,13 @@ const EditExistingPackagesPage: React.FC = () => {
 							})
 							.sort((a, b) => a - b)
 					);
-					let otherDestinationServices = await packageService.forDestination(reservation.destination.id);
-					setDestinationPackages(otherDestinationServices);
+					let otherDestinationPackages = await packageService.getAvailable({
+						destinationId: reservation.destination.id,
+						startDate: reservation.arrivalDate,
+						endDate: reservation.departureDate,
+						pagination: { page: 1, perPage: 5 }
+					});
+					setDestinationPackages(otherDestinationPackages.data);
 				}
 			} catch (e) {
 				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
@@ -79,7 +82,7 @@ const EditExistingPackagesPage: React.FC = () => {
 					text={'Remove'}
 					title={item.title}
 					description={item.description}
-					priceCents={item.priceCents}
+					priceCents={0}
 					imgPaths={item.media.map((item) => {
 						return item.urls.large;
 					})}
@@ -112,7 +115,20 @@ const EditExistingPackagesPage: React.FC = () => {
 						})}
 						onAddPackage={() => {
 							setCurrentReservationPackages((prevState) => {
-								return [...prevState, item];
+								let convertedPackage: Api.UpsellPackage.Res.Booked = {
+									code: item.code,
+									companyId: item.companyId,
+									description: item.description,
+									destinationId: item.destinationId,
+									endDate: item.endDate,
+									id: item.id,
+									isActive: item.isActive,
+									media: item.media,
+									priceDetails: { priceCents: item.priceCents },
+									startDate: item.startDate,
+									title: item.title
+								};
+								return [...prevState, convertedPackage];
 							});
 						}}
 					/>
@@ -120,7 +136,7 @@ const EditExistingPackagesPage: React.FC = () => {
 		});
 	}
 
-	async function updateReservationServices() {
+	async function updateReservationPackages() {
 		if (!reservation) return;
 		popupController.open(SpinningLoaderPopup);
 		let newCurrentReservationPackages = [...currentReservationPackages];
@@ -152,7 +168,7 @@ const EditExistingPackagesPage: React.FC = () => {
 			<div className={'rs-page-content-wrapper'}>
 				<Box display={'flex'}>
 					<Label className={'filterLabel'} variant={'h1'}>
-						Your Current Services
+						Your Current Packages
 					</Label>
 					<Box className={'cancelSaveButtons'}>
 						<LabelButton
@@ -172,7 +188,7 @@ const EditExistingPackagesPage: React.FC = () => {
 							variant={'button'}
 							label={'Save'}
 							onClick={() => {
-								updateReservationServices();
+								updateReservationPackages();
 							}}
 						/>
 					</Box>
