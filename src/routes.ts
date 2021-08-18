@@ -30,15 +30,14 @@ import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExist
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
 import globalState, { getRecoilExternalValue } from './models/globalState';
 
-// const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
-
 const routes: RouteDetails[] = [
 	{
 		path: '/',
 		page: LandingPage,
 		options: {
 			view: 'landingPage'
-		}
+		},
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/success',
@@ -189,11 +188,27 @@ const routes: RouteDetails[] = [
 	}
 ];
 
-function verifyRoute() {
-	routes.forEach((item) => {
-		console.log(item.page);
-	});
-	if (window.location.hostname.includes('rentyl')) return '/not-found';
+function verifyRoute(): boolean | string {
+	const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables | undefined>(
+		globalState.company
+	);
+	console.log(
+		routes.map((item) => {
+			return {
+				//@ts-ignore
+				page: item.page.name,
+				route: item.path,
+				reRoute: ''
+			};
+		})
+	);
+
+	// let allowRoute = true;
+	// company?.customPages.forEach((item:string) => {
+	// 	routes.forEach((route) => {
+	// 	});
+	//
+	// })
 	return true;
 }
 

@@ -30,11 +30,6 @@ export default class DestinationService extends Service {
 		);
 	}
 
-	async getAvailablePackages(destinationId: number): Promise<Api.UpsellPackage.Res.GetByPage> {
-		const response = await http.get<RsResponseData<Api.UpsellPackage.Res.GetByPage>>('/package/paged');
-		return response.data.data;
-	}
-
 	async searchAvailableAccommodationsByDestination(
 		data: Api.Accommodation.Req.Availability
 	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {

@@ -328,28 +328,24 @@ declare namespace Api {
 	}
 
 	export namespace Company {
+		interface UnauthorizedPages {
+			page: string;
+			route: string;
+			reRoute: string;
+		}
 		export namespace Req {
-			export interface Create {
+			export interface Create extends Partial<Omit<Model.Company, 'id' | 'createdOn' | 'modifiedOn'>> {
 				name: string;
-				description?: string;
-				industryIds: number[];
-				addressLine1: string;
-				addressLine2?: string;
-				city: string;
-				state: string;
-				zip: string;
-				country: string;
-				isBuyer: boolean | number;
-				website: string;
-				domainName: string;
+				vanityUrls: string[];
+				newAdminEmail: string;
+				newAdminPassword: string;
 			}
 			export interface Get {
 				id?: number;
 				ids?: number[];
 			}
-			export interface Update extends Omit<Model.Company, 'id'> {
-				id?: number;
-				ids?: number[];
+			export interface Update extends Partial<Omit<Model.Company, 'createdOn' | 'modifiedOn'>> {
+				id: number;
 			}
 			export interface Delete {
 				id?: number;
@@ -366,7 +362,8 @@ declare namespace Api {
 				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
-				customPages: any;
+				customPages: { [key: string]: any };
+				unauthorizedPages: UnauthorizedPages[];
 			}
 		}
 	}
@@ -750,33 +747,29 @@ declare namespace Api {
 		export namespace Req {
 			export interface Update {
 				id: number;
-				title?: string;
-				description?: string;
+				isActive?: 1 | 0;
+				startDate?: string | Date;
+				endDate?: string | Date;
 				mediaIds?: MediaDetails[];
 			}
 			export interface Get {
 				id?: number;
 				ids?: number[];
 			}
-
 			export interface ForDestination {
 				destinationId: number;
 			}
-
-			export interface GetByPage {
-				pagination: string;
-				sort: string;
-				filter: string;
+			export interface Availability {
+				destinationId: number;
+				startDate: Date | string;
+				endDate: Date | string;
+				pagination: RedSky.PagePagination;
 			}
 		}
 		export namespace Res {
 			export interface Update extends Details {}
 			export interface Get extends Details {}
 			export interface ForDestination extends Api.Reservation.Res.BookingPackageDetails {}
-			export interface GetByPage {
-				data: Details[];
-				total: number;
-			}
 		}
 	}
 
@@ -1103,6 +1096,55 @@ declare namespace Api {
 					destination: DestinationDetails;
 					stays: Itinerary.Stay[];
 				}
+			}
+		}
+	}
+
+	export namespace Review {
+		export namespace Req {
+			export interface Create {
+				destinationId: number;
+				accommodationId?: number;
+				message: string;
+				rating: number;
+				packageIds?: number[];
+				stayStartDate?: Date | string;
+				stayEndDate?: Date | string;
+			}
+			export interface Update {
+				id: number;
+				accommodationId?: number;
+				message?: string;
+				rating?: number;
+				packageIds?: number[];
+				stayStartDate?: Date | string;
+				stayEndDate?: Date | string;
+			}
+			export interface Delete {
+				id: number;
+			}
+			export interface ForDestination {
+				destinationId: number;
+			}
+			export interface ForUser {
+				userId: number;
+			}
+			export interface Get {
+				id: number;
+			}
+			export interface Verify {
+				reviewId: number;
+			}
+			export interface UnPublish {
+				reviewId: number;
+			}
+		}
+		export namespace Res {
+			export interface Get extends Model.Review {}
+			export interface Create extends Get {}
+			export interface Update extends Get {}
+			export interface Delete {
+				id: number;
 			}
 		}
 	}

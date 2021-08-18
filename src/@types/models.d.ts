@@ -39,6 +39,9 @@ declare namespace Model {
 	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
 	export type PaymentSystemProviders = 'adyen' | 'spreedly' | 'mock';
 	export type OffsiteLoyaltySystemProviders = 'fidel';
+	export type UpsellPackagePricingType = 'PerGuest' | 'PerStay' | 'PerNight' | 'PerGuestPerNight';
+	export type CurrencyCode = 'USD'; // Add more if/when we add multicurrency support
+	export type ReviewStatus = 'PUBLISHED' | 'UNPUBLISHED' | 'FLAGGED' | 'UNVERIFIED';
 
 	export interface Accommodation {
 		id: number;
@@ -225,12 +228,10 @@ declare namespace Model {
 		name: string;
 		squareLogoUrl: string;
 		wideLogoUrl: string;
-		website: string;
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		hostname: string;
-		vanityUrls: string;
+		vanityUrls: string[];
 		privacyPolicyUrl: string;
 		termsConditionsUrl: string;
 		returnPolicyUrl: string;
@@ -271,6 +272,10 @@ declare namespace Model {
 		companyId: number;
 		ap2FactorLoginTimeoutDays: number;
 		ap2FactorLoginVerificationTimeoutHours: number;
+		allowPointBooking: 1 | 0;
+		allowCashBooking: 1 | 0;
+		customPages: { [key: string]: any };
+		unauthorizedPages: string[];
 	}
 
 	export interface Destination {
@@ -293,6 +298,8 @@ declare namespace Model {
 		externalSystemId: string;
 		modifiedOn: Date | string;
 		chainId: number;
+		reviewRating: number;
+		reviewCount: number;
 	}
 
 	export type DestinationPolicy = {
@@ -526,16 +533,18 @@ declare namespace Model {
 		id: number;
 		companyId: number;
 		userId: number;
-		source: string;
-		sourceId: number;
+		destinationId: number;
+		accommodationId: number;
+		verifyUserId: number;
 		message: string;
-		score: number;
+		rating: number;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		isVerified: 0 | 1;
-		verifyUserId: number;
 		verifiedOn: Date | string;
-		status: string;
+		status: ReviewStatus;
+		packageIds: number[];
+		stayStartDate: Date | string;
+		stayEndDate: Date | string;
 	}
 
 	export interface Reward {
