@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './ReservationDetailsAccordion.scss';
 import AccordionTitleDescription from '../accordionTitleDescription/AccordionTitleDescription';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../labelButton/LabelButton';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -175,7 +175,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
-					label={'EDIT PACKAGE'}
+					label={'EDIT PACKAGES'}
 					onClick={() => {
 						if (props.onEditService) props.onEditService();
 					}}

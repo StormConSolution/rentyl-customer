@@ -63,8 +63,10 @@ export default class UserService extends Service {
 		this.loginUserByToken(user.token).catch(console.error);
 	}
 
-	async update(data: Api.User.Req.Update) {
-		return await http.put<RsResponseData<Api.User.Res.Detail>>('user', data);
+	async update(data: Api.User.Req.Update): Promise<Api.User.Res.Detail> {
+		let response = await http.put<RsResponseData<Api.User.Res.Detail>>('user', data);
+		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, response.data.data);
+		return response.data.data;
 	}
 
 	logout() {

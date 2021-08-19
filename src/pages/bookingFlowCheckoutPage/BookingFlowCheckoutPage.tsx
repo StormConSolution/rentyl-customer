@@ -38,6 +38,15 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	policies: { type: Model.DestinationPolicyType; value: string }[];
 }
 
+interface StayParams {
+	adults: number;
+	children: number;
+	accommodationId: number;
+	arrivalDate: string;
+	departureDate: string;
+	packages: number[];
+}
+
 interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
 	packages?: number[];
 }
@@ -440,6 +449,25 @@ const BookingFlowCheckoutPage = () => {
 										confirmText: 'Remove',
 										title: 'Remove accommodation'
 									});
+								}}
+								editPackages={() => {
+									const stays: StayParams = params.data.stays.filter(
+										(stay: StayParams) => stay.accommodationId !== accommodation.accommodationId
+									);
+									let newRoom = {
+										adults: accommodation.adultCount,
+										children: accommodation.childCount,
+										accommodationId: accommodation.accommodationId,
+										arrivalDate: accommodation.arrivalDate,
+										departureDate: accommodation.departureDate,
+										packages: accommodation.packages.map((item) => item.id)
+									};
+									let data = JSON.stringify({
+										destinationId: params.data.destinationId,
+										stays,
+										newRoom
+									});
+									router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 								}}
 								edit={(id, checkInDate, checkoutDate) => {
 									popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {

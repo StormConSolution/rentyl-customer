@@ -147,6 +147,11 @@ const ReservationDetailsPage: React.FC = () => {
 											let res = await reservationsService.cancel(reservation.id);
 											if (res) {
 												popupController.closeAll();
+												rsToasts.success(
+													`Successfully cancelled ${reservation?.externalConfirmationId}`,
+													'',
+													5000
+												);
 												router.navigate('/reservations').catch(console.error);
 											}
 										} catch (e) {

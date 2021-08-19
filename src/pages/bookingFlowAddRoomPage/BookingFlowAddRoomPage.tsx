@@ -41,8 +41,8 @@ const BookingFlowAddRoomPage = () => {
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		startDate: moment(params.data.stays[0].arrivalDate).format('YYYY-MM-DD'),
 		endDate: moment(params.data.stays[0].departureDate).format('YYYY-MM-DD'),
-		adults: params.data.stays[0].adults,
-		children: params.data.stays[0].children,
+		adults: params.data.stays[0].adultCount,
+		children: params.data.stays[0].childCount,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.data.destinationId,
 		rateCode: params.data.stays[0].rateCode
