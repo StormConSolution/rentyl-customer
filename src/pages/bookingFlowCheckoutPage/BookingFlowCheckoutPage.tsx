@@ -205,7 +205,6 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
-		console.log(data);
 		try {
 			let verifyData: Api.Reservation.Req.Verification = {
 				accommodationId: data.accommodationId,

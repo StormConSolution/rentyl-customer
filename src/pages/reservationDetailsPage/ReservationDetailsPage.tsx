@@ -210,6 +210,7 @@ const ReservationDetailsPage: React.FC = () => {
 									...reservation.priceDetail.feeTotalsInCents,
 									...reservation.priceDetail.taxTotalsInCents
 								]}
+								upsellPackages={reservation.upsellPackages}
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
 								points={reservation.priceDetail.grandTotalCents}
