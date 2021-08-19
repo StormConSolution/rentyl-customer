@@ -4,7 +4,7 @@ import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PackageService from '../../services/package/package.service';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
@@ -18,12 +18,17 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 
 const EditExistingPackagesPage: React.FC = () => {
+	const filterRef = useRef<HTMLElement>(null);
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
+	const [page, setPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(5);
+	const [total, setTotal] = useState<number>(0);
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
 	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
 	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
@@ -57,21 +62,30 @@ const EditExistingPackagesPage: React.FC = () => {
 							})
 							.sort((a, b) => a - b)
 					);
-					let otherDestinationPackages = await packageService.getAvailable({
-						destinationId: reservation.destination.id,
-						startDate: reservation.arrivalDate,
-						endDate: reservation.departureDate,
-						pagination: { page: 1, perPage: 5 }
-					});
-					setDestinationPackages(otherDestinationPackages.data);
+					await getPackages();
 				}
 			} catch (e) {
 				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
 			}
 		}
-
 		getServices().catch(console.error);
 	}, []);
+
+	useEffect(() => {
+		getPackages().catch(console.error);
+	}, [page, perPage, reservation]);
+
+	async function getPackages() {
+		if (!reservation) return;
+		let otherDestinationPackages = await packageService.getAvailable({
+			destinationId: reservation.destination.id,
+			startDate: reservation.arrivalDate,
+			endDate: reservation.departureDate,
+			pagination: { page, perPage }
+		});
+		setDestinationPackages(otherDestinationPackages.data);
+		setTotal(otherDestinationPackages.total || 0);
+	}
 
 	function renderCurrentReservationPackages() {
 		if (!ObjectUtils.isArrayWithData(currentReservationPackages)) return;
@@ -124,7 +138,7 @@ const EditExistingPackagesPage: React.FC = () => {
 									id: item.id,
 									isActive: item.isActive,
 									media: item.media,
-									priceDetails: { priceCents: item.priceCents },
+									priceDetail: { amountAfterTax: item.priceCents, amountBeforeTax: item.priceCents },
 									startDate: item.startDate,
 									title: item.title
 								};
@@ -193,6 +207,7 @@ const EditExistingPackagesPage: React.FC = () => {
 						/>
 					</Box>
 				</Box>
+				<div ref={filterRef} />
 				<hr />
 				{renderCurrentReservationPackages()}
 				<Label className={'filterLabel'} variant={'h1'}>
@@ -200,6 +215,16 @@ const EditExistingPackagesPage: React.FC = () => {
 				</Label>
 				<hr />
 				{renderDestinationPackages()}
+				<PaginationButtons
+					selectedRowsPerPage={perPage}
+					currentPageNumber={page}
+					setSelectedPage={(newPage) => {
+						setPage(newPage);
+						let filterSection = filterRef.current!.offsetTop;
+						window.scrollTo({ top: filterSection, behavior: 'smooth' });
+					}}
+					total={total}
+				/>
 				<Footer links={FooterLinkTestData} />
 			</div>
 		</Page>

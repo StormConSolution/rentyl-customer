@@ -329,33 +329,27 @@ declare namespace Api {
 
 	export namespace Company {
 		export namespace Req {
-			export interface Create {
+			export interface Create extends Partial<Omit<Model.Company, 'id' | 'createdOn' | 'modifiedOn'>> {
 				name: string;
-				description?: string;
-				industryIds: number[];
-				addressLine1: string;
-				addressLine2?: string;
-				city: string;
-				state: string;
-				zip: string;
-				country: string;
-				isBuyer: boolean | number;
-				website: string;
-				domainName: string;
+				vanityUrls: string[];
+				newAdminEmail: string;
+				newAdminPassword: string;
 			}
 			export interface Get {
 				id?: number;
 				ids?: number[];
 			}
-			export interface Update extends Omit<Model.Company, 'id'> {
-				id?: number;
-				ids?: number[];
+			export interface Update extends Partial<Omit<Model.Company, 'createdOn' | 'modifiedOn'>> {
+				id: number;
 			}
 			export interface Delete {
 				id?: number;
 				ids?: number[];
 			}
 			export interface Role {}
+			export interface UpdateUnauthorizedPages {
+				unauthorizedPages: string[];
+			}
 		}
 		export namespace Res {
 			export interface Create extends Model.Company {}
@@ -367,6 +361,7 @@ declare namespace Api {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
 				customPages: any;
+				unauthorizedPages: string[];
 			}
 		}
 	}
@@ -1341,6 +1336,7 @@ declare namespace Api {
 			}
 			export interface Availability {
 				destinationId: number;
+				packageIds?: number[];
 				startDate: Date | string;
 				endDate: Date | string;
 				pagination: RedSky.PagePagination;
@@ -1353,7 +1349,11 @@ declare namespace Api {
 				priceCents: number;
 			}
 			export interface Booked extends Details {
-				priceDetails: object;
+				priceDetail: PriceDetail;
+			}
+			export interface PriceDetail {
+				amountBeforeTax: number;
+				amountAfterTax: number;
 			}
 			// Deprecated
 			export interface ForDestination extends Api.UpsellPackage.Res.Available {}

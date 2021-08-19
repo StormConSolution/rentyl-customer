@@ -79,7 +79,6 @@ const BookingFlowCheckoutPage = () => {
 		if (!params) return;
 		async function getAccommodationDetails() {
 			params.data.numberOfAccommodations = 1;
-			popupController.open(SpinningLoaderPopup);
 			let rooms: Stay[] = [];
 			for (const accommodation of params.data.stays) {
 				const response = await addAccommodation(accommodation);
@@ -120,7 +119,6 @@ const BookingFlowCheckoutPage = () => {
 				rsToasts.error('Accommodations are no longer available');
 				router.navigate('/reservation/availability').catch(console.error);
 			}
-			popupController.close(SpinningLoaderPopup);
 		}
 
 		getAccommodationDetails().catch(console.error);
@@ -198,8 +196,9 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
+		console.log(data);
 		try {
-			let response = await reservationService.verifyAvailability({
+			let verifyData: Api.Reservation.Req.Verification = {
 				accommodationId: data.accommodationId,
 				destinationId: destinationId,
 				adults: data.adults,
@@ -207,8 +206,16 @@ const BookingFlowCheckoutPage = () => {
 				rateCode: data.rateCode,
 				arrivalDate: data.arrivalDate,
 				departureDate: data.departureDate,
-				numberOfAccommodations: 1
-			});
+				numberOfAccommodations: 1,
+				upsellPackages: data.packages
+					? data.packages.map((item: number) => {
+							return { id: item };
+					  })
+					: []
+			};
+			if (!!!verifyData.rateCode) delete verifyData.rateCode;
+			if (!ObjectUtils.isArrayWithData(verifyData.upsellPackages)) delete verifyData.upsellPackages;
+			let response = await reservationService.verifyAvailability(verifyData);
 			let stay: Stay = {
 				accommodationId: data.accommodationId,
 				accommodationName: response.accommodationName,
@@ -286,7 +293,7 @@ const BookingFlowCheckoutPage = () => {
 		popupController.close(EditAccommodationPopup);
 		try {
 			let newParams = params.data.stays;
-			const editedRoom: Omit<Verification, 'destinationId'> = {
+			const editedRoom: Omit<Verification, 'destinationId' | 'packages'> = {
 				adults,
 				children,
 				accommodationId,
@@ -488,16 +495,23 @@ const BookingFlowCheckoutPage = () => {
 						<Label variant={'h2'}>
 							$
 							{StringUtils.formatMoney(
-								accommodations.reduce(
-									(total, accommodation) => (total += accommodation.prices.grandTotalCents),
-									0
-								)
+								accommodations.reduce((total, accommodation) => {
+									let packageTotal = accommodation.packages.reduce((sum, item) => {
+										return sum + item.priceDetail.amountAfterTax * 100;
+									}, 0);
+									return total + accommodation.prices.grandTotalCents + packageTotal;
+								}, 0)
 							)}
 						</Label>
 					) : (
 						<Label variant={'h2'}>
 							{StringUtils.addCommasToNumber(
-								accommodations.reduce((total, accommodation) => (total += accommodation.points), 0)
+								accommodations.reduce((total, accommodation) => {
+									let packageTotal = accommodation.packages.reduce((sum, item) => {
+										return sum + Math.floor(item.priceDetail.amountAfterTax * 10);
+									}, 0);
+									return total + accommodation.points + packageTotal;
+								}, 0)
 							) + ' points'}
 						</Label>
 					)}

@@ -228,12 +228,10 @@ declare namespace Model {
 		name: string;
 		squareLogoUrl: string;
 		wideLogoUrl: string;
-		website: string;
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		hostname: string;
-		vanityUrls: string;
+		vanityUrls: string[];
 		privacyPolicyUrl: string;
 		termsConditionsUrl: string;
 		returnPolicyUrl: string;
@@ -274,6 +272,10 @@ declare namespace Model {
 		companyId: number;
 		ap2FactorLoginTimeoutDays: number;
 		ap2FactorLoginVerificationTimeoutHours: number;
+		allowPointBooking: 0 | 1;
+		allowCashBooking: 0 | 1;
+		customPages: any;
+		unauthorizedPages: string[];
 	}
 
 	export interface Destination {
@@ -525,7 +527,7 @@ declare namespace Model {
 	export interface ReservationUpsellPackage {
 		reservationId: number;
 		upsellPackageId: number;
-		priceDetail: object;
+		priceDetail: string | null;
 	}
 
 	export interface Review {

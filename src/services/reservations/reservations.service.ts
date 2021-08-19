@@ -15,7 +15,7 @@ export default class ReservationsService extends Service {
 	async verifyAvailability(data: Api.Reservation.Req.Verification): Promise<Api.Reservation.Res.Verification> {
 		let response = await http.get<RsResponseData<Api.Reservation.Res.Verification>>(
 			'reservation/verification',
-			data
+			WebUtils.convertDataForUrlParams(data)
 		);
 		return response.data.data;
 	}
