@@ -19,8 +19,7 @@ export function useUpdateExistingPages() {
 				};
 			});
 			try {
-				const response = await companyService.updateAvailablePages({ availablePages: newPages });
-				if (response) console.log('PAGES UPDATED');
+				await companyService.updateAvailablePages({ availablePages: newPages });
 			} catch (e) {
 				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
 			}
