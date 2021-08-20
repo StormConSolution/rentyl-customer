@@ -1024,7 +1024,7 @@ declare namespace Api {
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
-				upsellPackages: BookingPackageDetails[];
+				upsellPackages: UpsellPackage.Res.Booked[];
 				additionalDetails: string;
 			}
 			export interface Availability {
@@ -1040,7 +1040,7 @@ declare namespace Api {
 				accommodationName: string;
 				destinationName: string;
 				rateCode: string;
-				upsellPackages: BookingPackageDetails[];
+				upsellPackages: UpsellPackage.Res.Booked[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 				prices: PriceDetail;
 			}
@@ -1087,7 +1087,7 @@ declare namespace Api {
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
 					guest: Guest;
-					upsellPackages: BookingPackageDetails[];
+					upsellPackages: UpsellPackage.Res.Booked[];
 					additionalDetails: string;
 				}
 				export interface Get {
@@ -1354,6 +1354,52 @@ declare namespace Api {
 		export namespace Req {}
 		export namespace Res {
 			export type OffsiteResponse = true | false;
+		}
+	}
+
+	export namespace UpsellPackage {
+		export interface Details extends Model.UpsellPackage {
+			media: Media[];
+		}
+		export namespace Req {
+			export interface Update {
+				id: number;
+				isActive?: 1 | 0;
+				startDate?: string | Date;
+				endDate?: string | Date;
+				mediaIds?: MediaDetails[];
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			// Deprecated
+			export interface ForDestination {
+				destinationId: number;
+			}
+			export interface Availability {
+				destinationId: number;
+				packageIds?: number[];
+				startDate: Date | string;
+				endDate: Date | string;
+				pagination: RedSky.PagePagination;
+			}
+		}
+		export namespace Res {
+			export interface Update extends Details {}
+			export interface Get extends Details {}
+			export interface Available extends Details {
+				priceCents: number;
+			}
+			export interface Booked extends Details {
+				priceDetail: PriceDetail;
+			}
+			export interface PriceDetail {
+				amountBeforeTax: number;
+				amountAfterTax: number;
+			}
+			// Deprecated
+			export interface ForDestination extends Api.UpsellPackage.Res.Available {}
 		}
 	}
 
