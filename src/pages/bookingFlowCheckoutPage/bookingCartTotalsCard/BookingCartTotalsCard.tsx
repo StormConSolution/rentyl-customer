@@ -79,7 +79,11 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				if (!ObjectUtils.isArrayWithData(verifyData.upsellPackages)) delete verifyData.upsellPackages;
 				let response = await reservationService.verifyAvailability(verifyData);
 				setVerifiedAccommodation(response);
-				setPointTotal(MiscUtils.roundPointsToThousand(response.prices.grandTotalCents));
+				setPointTotal(
+					MiscUtils.roundPointsToThousand(
+						MiscUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
+					)
+				);
 				props.addAccommodation(response);
 				setVerifyStatus('available');
 			} catch (e) {
@@ -299,13 +303,21 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h4'}>Total:</Label>
 					<Label variant={'h4'} marginLeft={'auto'}>
 						{MiscUtils.displayPointsOrCash(
-							verifiedAccommodation.prices.accommodationTotalInCents,
+							props.usePoints
+								? MiscUtils.roundPointsToThousand(
+										MiscUtils.convertCentsToPoints(
+											verifiedAccommodation.prices.accommodationTotalInCents,
+											10
+										)
+								  ) * 10
+								: verifiedAccommodation.prices.accommodationTotalInCents,
 							pointsOrCash()
 						)}
 					</Label>
 				</Box>
 			</Accordion>
 			<Accordion
+				isOpen
 				titleReact={
 					<Label variant={'h4'} width={'170px'}>
 						Packages
@@ -349,8 +361,16 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				</Label>
 				<Label variant={'h3'} marginLeft={'auto'}>
 					{MiscUtils.displayPointsOrCash(
-						verifiedAccommodation.prices.grandTotalCents +
-							totalPackages(verifiedAccommodation.upsellPackages || []),
+						props.usePoints
+							? MiscUtils.roundPointsToThousand(
+									MiscUtils.convertCentsToPoints(
+										verifiedAccommodation.prices.accommodationTotalInCents,
+										10
+									)
+							  ) *
+									10 +
+									totalPackages(verifiedAccommodation.upsellPackages)
+							: verifiedAccommodation.prices.grandTotalCents,
 						pointsOrCash()
 					)}
 				</Label>

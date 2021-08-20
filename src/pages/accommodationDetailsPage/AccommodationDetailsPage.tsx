@@ -69,7 +69,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 					let destination = await destinationService.getDestinationDetails(
 						accommodation.data.data.destinationId
 					);
-					if (destination.data.data) setDestinationDetails(destination.data.data);
+					if (destination) setDestinationDetails(destination);
 				}
 			} catch (e) {
 				rsToasts.error('Cannot find details, please try again', '', 5000);

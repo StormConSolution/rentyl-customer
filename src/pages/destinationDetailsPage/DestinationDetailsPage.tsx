@@ -76,7 +76,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		async function getDestinationDetails(id: number) {
 			try {
 				let dest = await destinationService.getDestinationDetails(id);
-				if (dest.data.data) setDestinationDetails(dest.data.data);
+				if (dest) setDestinationDetails(dest);
 			} catch (e) {
 				rsToasts.error('Cannot get details for this destination');
 			}

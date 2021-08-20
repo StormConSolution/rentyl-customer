@@ -15,7 +15,10 @@ export default class PackageService extends Service {
 	}
 
 	async getPackagesByIds(data: Api.UpsellPackage.Req.Get): Promise<Api.UpsellPackage.Details[]> {
-		let response = await http.get<RsResponseData<Api.UpsellPackage.Details[]>>('/package', { data });
+		let response = await http.get<RsResponseData<Api.UpsellPackage.Details[]>>(
+			'/package',
+			WebUtils.convertDataForUrlParams({ ids: data })
+		);
 		return response.data.data;
 	}
 }

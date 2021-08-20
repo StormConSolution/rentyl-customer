@@ -54,7 +54,7 @@ const BookingFlowAddPackagePage = () => {
 					destinationId: params.data.destinationId,
 					startDate: params.data.newRoom.arrivalDate,
 					endDate: params.data.newRoom.departureDate,
-					pagination: { page: 1, perPage: 5 }
+					pagination: { page, perPage }
 				});
 				setAvailablePackages(response.data);
 				setTotal(response.total || 0);
@@ -117,11 +117,13 @@ const BookingFlowAddPackagePage = () => {
 	) : (
 		<Page className={'rsBookingFlowAddPackagePage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box className={'addedPackages'}>
-					<Label variant={'h2'}>Added Packages</Label>
-					<hr />
-					{renderPackages()}
-				</Box>
+				{addedPackages.length > 0 && (
+					<Box className={'addedPackages'}>
+						<Label variant={'h2'}>Added Packages</Label>
+						<hr />
+						{renderPackages()}
+					</Box>
+				)}
 				<div ref={filterRef} />
 				<Box className={'availablePackages'}>
 					<Label variant={'h2'}>Available Packages</Label>
