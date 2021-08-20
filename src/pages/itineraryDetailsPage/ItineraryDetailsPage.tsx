@@ -90,10 +90,16 @@ const ItineraryDetailsPage: React.FC = () => {
 					city: itinerary.destination.city
 				}}
 				reservation={itinerary.stays.map((item) => {
+					const upsellPackageCosts: number = item.upsellPackages.reduce((total, usPackage) => {
+						return total + usPackage.priceDetail.amountAfterTax;
+					}, 0);
+					const cost: number =
+						item.priceDetail.accommodationTotalInCents + parseFloat(upsellPackageCosts * 100 + '');
+
 					return {
 						name: item.accommodation.name,
 						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
-						cost: item.priceDetail.accommodationTotalInCents,
+						cost,
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
 						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,

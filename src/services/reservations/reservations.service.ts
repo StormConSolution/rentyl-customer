@@ -12,8 +12,12 @@ export default class ReservationsService extends Service {
 		this.userService = serviceFactory.get<UserService>('UserService');
 	}
 
-	async verifyAvailability(data: Api.Reservation.Req.Verification) {
-		return await http.get<RsResponseData<Api.Reservation.Res.Verification>>('reservation/verification', data);
+	async verifyAvailability(data: Api.Reservation.Req.Verification): Promise<Api.Reservation.Res.Verification> {
+		let response = await http.get<RsResponseData<Api.Reservation.Res.Verification>>(
+			'reservation/verification',
+			WebUtils.convertDataForUrlParams(data)
+		);
+		return response.data.data;
 	}
 
 	async create(data: Api.Reservation.Req.Create) {

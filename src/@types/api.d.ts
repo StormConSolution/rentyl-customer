@@ -329,33 +329,27 @@ declare namespace Api {
 
 	export namespace Company {
 		export namespace Req {
-			export interface Create {
+			export interface Create extends Partial<Omit<Model.Company, 'id' | 'createdOn' | 'modifiedOn'>> {
 				name: string;
-				description?: string;
-				industryIds: number[];
-				addressLine1: string;
-				addressLine2?: string;
-				city: string;
-				state: string;
-				zip: string;
-				country: string;
-				isBuyer: boolean | number;
-				website: string;
-				domainName: string;
+				vanityUrls: string[];
+				newAdminEmail: string;
+				newAdminPassword: string;
 			}
 			export interface Get {
 				id?: number;
 				ids?: number[];
 			}
-			export interface Update extends Omit<Model.Company, 'id'> {
-				id?: number;
-				ids?: number[];
+			export interface Update extends Partial<Omit<Model.Company, 'createdOn' | 'modifiedOn'>> {
+				id: number;
 			}
 			export interface Delete {
 				id?: number;
 				ids?: number[];
 			}
 			export interface Role {}
+			export interface UpdateUnauthorizedPages {
+				unauthorizedPages: string[];
+			}
 		}
 		export namespace Res {
 			export interface Create extends Model.Company {}
@@ -367,6 +361,7 @@ declare namespace Api {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
 				customPages: any;
+				unauthorizedPages: string[];
 			}
 		}
 	}
@@ -743,43 +738,6 @@ declare namespace Api {
 		}
 	}
 
-	export namespace UpsellPackage {
-		export interface Details extends Model.UpsellPackage {
-			media: Media[];
-		}
-		export namespace Req {
-			export interface Update {
-				id: number;
-				title?: string;
-				description?: string;
-				mediaIds?: MediaDetails[];
-			}
-			export interface Get {
-				id?: number;
-				ids?: number[];
-			}
-
-			export interface ForDestination {
-				destinationId: number;
-			}
-
-			export interface GetByPage {
-				pagination: string;
-				sort: string;
-				filter: string;
-			}
-		}
-		export namespace Res {
-			export interface Update extends Details {}
-			export interface Get extends Details {}
-			export interface ForDestination extends Api.Reservation.Res.BookingPackageDetails {}
-			export interface GetByPage {
-				data: Details[];
-				total: number;
-			}
-		}
-	}
-
 	export namespace Payment {
 		export interface PmData {
 			address1: string;
@@ -1029,7 +987,7 @@ declare namespace Api {
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
-				upsellPackages: BookingPackageDetails[];
+				upsellPackages: UpsellPackage.Res.Booked[];
 				additionalDetails: string;
 			}
 			export interface Availability {
@@ -1045,7 +1003,7 @@ declare namespace Api {
 				accommodationName: string;
 				destinationName: string;
 				rateCode: string;
-				upsellPackages: BookingPackageDetails[];
+				upsellPackages: UpsellPackage.Res.Booked[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 				prices: PriceDetail;
 			}
@@ -1061,9 +1019,6 @@ declare namespace Api {
 				totalInCents: number;
 			}
 
-			export interface BookingPackageDetails extends Api.UpsellPackage.Details {
-				priceCents: number;
-			}
 			export interface Policies {
 				guaranteePolicy: string;
 				cancelPolicy: string;
@@ -1092,7 +1047,7 @@ declare namespace Api {
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
 					guest: Guest;
-					upsellPackages: BookingPackageDetails[];
+					upsellPackages: UpsellPackage.Res.Booked[];
 					additionalDetails: string;
 				}
 				export interface Get {
@@ -1103,6 +1058,55 @@ declare namespace Api {
 					destination: DestinationDetails;
 					stays: Itinerary.Stay[];
 				}
+			}
+		}
+	}
+
+	export namespace Review {
+		export namespace Req {
+			export interface Create {
+				destinationId: number;
+				accommodationId?: number;
+				message: string;
+				rating: number;
+				packageIds?: number[];
+				stayStartDate?: Date | string;
+				stayEndDate?: Date | string;
+			}
+			export interface Update {
+				id: number;
+				accommodationId?: number;
+				message?: string;
+				rating?: number;
+				packageIds?: number[];
+				stayStartDate?: Date | string;
+				stayEndDate?: Date | string;
+			}
+			export interface Delete {
+				id: number;
+			}
+			export interface ForDestination {
+				destinationId: number;
+			}
+			export interface ForUser {
+				userId: number;
+			}
+			export interface Get {
+				id: number;
+			}
+			export interface Verify {
+				reviewId: number;
+			}
+			export interface UnPublish {
+				reviewId: number;
+			}
+		}
+		export namespace Res {
+			export interface Get extends Model.Review {}
+			export interface Create extends Get {}
+			export interface Update extends Get {}
+			export interface Delete {
+				id: number;
 			}
 		}
 	}
@@ -1307,6 +1311,52 @@ declare namespace Api {
 		export namespace Req {}
 		export namespace Res {
 			export type OffsiteResponse = true | false;
+		}
+	}
+
+	export namespace UpsellPackage {
+		export interface Details extends Model.UpsellPackage {
+			media: Media[];
+		}
+		export namespace Req {
+			export interface Update {
+				id: number;
+				isActive?: 1 | 0;
+				startDate?: string | Date;
+				endDate?: string | Date;
+				mediaIds?: MediaDetails[];
+			}
+			export interface Get {
+				id?: number;
+				ids?: number[];
+			}
+			// Deprecated
+			export interface ForDestination {
+				destinationId: number;
+			}
+			export interface Availability {
+				destinationId: number;
+				packageIds?: number[];
+				startDate: Date | string;
+				endDate: Date | string;
+				pagination: RedSky.PagePagination;
+			}
+		}
+		export namespace Res {
+			export interface Update extends Details {}
+			export interface Get extends Details {}
+			export interface Available extends Details {
+				priceCents: number;
+			}
+			export interface Booked extends Details {
+				priceDetail: PriceDetail;
+			}
+			export interface PriceDetail {
+				amountBeforeTax: number;
+				amountAfterTax: number;
+			}
+			// Deprecated
+			export interface ForDestination extends Api.UpsellPackage.Res.Available {}
 		}
 	}
 

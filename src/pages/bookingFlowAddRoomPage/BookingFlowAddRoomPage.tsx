@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './BookingFlowAddRoomPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
@@ -24,6 +24,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 
 const BookingFlowAddRoomPage = () => {
+	const filterRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
@@ -35,6 +36,8 @@ const BookingFlowAddRoomPage = () => {
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		startDate: moment(params.data.stays[0].arrivalDate).format('YYYY-MM-DD'),
 		endDate: moment(params.data.stays[0].departureDate).format('YYYY-MM-DD'),
@@ -88,6 +91,8 @@ const BookingFlowAddRoomPage = () => {
 	}, [searchQueryObj]);
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		setStartDateControl(startDate);
+		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
@@ -296,6 +301,7 @@ const BookingFlowAddRoomPage = () => {
 						pointsEarnable={0}
 					/>
 				)}
+				<div ref={filterRef} />
 				<Label className={'filterLabel'} variant={'h1'}>
 					Filter by
 				</Label>
@@ -337,8 +343,8 @@ const BookingFlowAddRoomPage = () => {
 					<>
 						<FilterBar
 							className={'filterBar'}
-							startDate={moment(searchQueryObj.startDate)}
-							endDate={moment(searchQueryObj.endDate)}
+							startDate={startDateControl}
+							endDate={endDateControl}
 							onDatesChange={onDatesChange}
 							focusedInput={focusedInput}
 							onFocusChange={setFocusedInput}
@@ -400,6 +406,8 @@ const BookingFlowAddRoomPage = () => {
 					setSelectedPage={(newPage) => {
 						updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
 						setPage(newPage);
+						let filterSection = filterRef.current!.offsetTop;
+						window.scrollTo({ top: filterSection, behavior: 'smooth' });
 					}}
 					total={availabilityTotal}
 				/>

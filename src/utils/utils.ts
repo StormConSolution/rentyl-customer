@@ -9,7 +9,7 @@ import moment from 'moment';
 
 class StringUtils extends BaseStringUtils {
 	static convertCentsToPoints(cents: number, ratio: number): number {
-		return Math.round(cents / 100) * ratio;
+		return (cents / 100) * ratio;
 	}
 }
 

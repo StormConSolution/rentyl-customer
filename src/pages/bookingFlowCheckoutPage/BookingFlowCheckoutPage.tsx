@@ -32,8 +32,10 @@ interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommo
 	prices: Api.Reservation.PriceDetail;
 	checkInTime: string;
 	checkoutTime: string;
-	packages: Api.UpsellPackage.Res.Get[];
+	packages: Api.UpsellPackage.Res.Booked[];
 	points: number;
+	destinationName: string;
+	policies: { type: Model.DestinationPolicyType; value: string }[];
 }
 
 interface StayParams {
@@ -75,8 +77,6 @@ const BookingFlowCheckoutPage = () => {
 		email: user?.primaryEmail || ''
 	});
 	const [additionalDetails, setAdditionalDetails] = useState<string>('');
-	const [destinationName, setDestinationName] = useState<string>('');
-	const [policies, setPolicies] = useState<{ type: Model.DestinationPolicyType; value: string }[]>([]);
 	const [creditCardForm, setCreditCardForm] = useState<{
 		full_name: string;
 		month: number;
@@ -88,31 +88,45 @@ const BookingFlowCheckoutPage = () => {
 		if (!params) return;
 		async function getAccommodationDetails() {
 			params.data.numberOfAccommodations = 1;
-			try {
-				popupController.open(SpinningLoaderPopup);
-				const rooms: Stay[] = await Promise.all(
-					params.data.stays.map(async (accommodation: Verification) => {
-						return await addAccommodation(accommodation);
-					})
-				);
-				if (rooms) {
-					setAccommodations(rooms);
-
-					setPriceInPoints(
-						rooms.reduce(
-							(total, accommodation) =>
-								(total += roundPointsToThousand(
-									StringUtils.convertCentsToPoints(accommodation.prices.grandTotalCents, 10)
-								)),
-							0
-						)
-					);
+			let rooms: Stay[] = [];
+			for (const accommodation of params.data.stays) {
+				const response = await addAccommodation(accommodation);
+				if (response) {
+					rooms.push(response);
 				}
-				popupController.close(SpinningLoaderPopup);
-			} catch (e) {
-				rsToasts.error('These dates are no longer available');
+			}
+			if (ObjectUtils.isArrayWithData(rooms)) {
+				setAccommodations(rooms);
+				setPriceInPoints(
+					rooms.reduce((total, accommodation) => {
+						return (
+							total +
+							roundPointsToThousand(
+								StringUtils.convertCentsToPoints(accommodation.prices.grandTotalCents, 10)
+							)
+						);
+					}, 0)
+				);
+				if (rooms.length < params.data.stays.length) {
+					delete params.data.numberOfAccommodations;
+					let data = JSON.stringify({
+						destinationId: params.data.destinationId,
+						stays: rooms.map((stay) => {
+							return {
+								adults: stay.adultCount,
+								children: stay.childCount,
+								accommodationId: stay.accommodationId,
+								arrivalDate: stay.arrivalDate,
+								departureDate: stay.departureDate,
+								packages: stay.packages.map((item) => item.id)
+							};
+						})
+					});
+					router.updateUrlParams({ data });
+				}
+			} else {
+				rsToasts.error('Accommodations are no longer available');
 				router.navigate('/reservation/availability').catch(console.error);
-				popupController.close(SpinningLoaderPopup);
 			}
 		}
 
@@ -191,39 +205,49 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
-		let response = await reservationService.verifyAvailability({
-			accommodationId: data.accommodationId,
-			destinationId: destinationId,
-			adults: data.adults,
-			children: data.children,
-			rateCode: data.rateCode,
-			arrivalDate: data.arrivalDate,
-			departureDate: data.departureDate,
-			numberOfAccommodations: 1
-		});
-		let packageResponse;
-		if (ObjectUtils.isArrayWithData(data.packages)) {
-			packageResponse = await reservationService.getPackagesByIds({ ids: data.packages });
+		try {
+			let verifyData: Api.Reservation.Req.Verification = {
+				accommodationId: data.accommodationId,
+				destinationId: destinationId,
+				adults: data.adults,
+				children: data.children,
+				rateCode: data.rateCode,
+				arrivalDate: data.arrivalDate,
+				departureDate: data.departureDate,
+				numberOfAccommodations: 1,
+				upsellPackages: data.packages
+					? data.packages.map((item: number) => {
+							return { id: item };
+					  })
+					: []
+			};
+			if (!!!verifyData.rateCode) delete verifyData.rateCode;
+			if (!ObjectUtils.isArrayWithData(verifyData.upsellPackages)) delete verifyData.upsellPackages;
+			let response = await reservationService.verifyAvailability(verifyData);
+			let stay: Stay = {
+				accommodationId: data.accommodationId,
+				accommodationName: response.accommodationName,
+				arrivalDate: response.checkInDate,
+				departureDate: response.checkoutDate,
+				adultCount: response.adults,
+				childCount: response.children,
+				rateCode: response.rateCode,
+				prices: response.prices,
+				checkInTime: response.checkInTime,
+				checkoutTime: response.checkoutTime,
+				guest: guestInfo,
+				packages: response.upsellPackages,
+				points: roundPointsToThousand(
+					StringUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
+				),
+				policies: response.policies,
+				destinationName: response.destinationName
+			};
+			return stay;
+		} catch (e) {
+			return undefined;
+			rsToasts.error('Accommodation no longer available, removed from list', 'Unavailable');
 		}
-		let res = response.data.data;
-		let stay: Stay = {
-			accommodationId: data.accommodationId,
-			accommodationName: res.accommodationName,
-			arrivalDate: res.checkInDate,
-			departureDate: res.checkoutDate,
-			adultCount: res.adults,
-			childCount: res.children,
-			rateCode: res.rateCode,
-			prices: res.prices,
-			checkInTime: res.checkInTime,
-			checkoutTime: res.checkoutTime,
-			guest: guestInfo,
-			packages: packageResponse?.data || [],
-			points: roundPointsToThousand(StringUtils.convertCentsToPoints(res.prices.accommodationTotalInCents, 10))
-		};
-		setPolicies(res.policies);
-		setDestinationName(res.destinationName);
-		return stay;
 	}
 
 	async function removeAccommodation(
@@ -271,21 +295,19 @@ const BookingFlowCheckoutPage = () => {
 		checkoutDate: string | Date,
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
-		packages: Api.UpsellPackage.Res.Get[],
 		accommodationId: number,
 		rateCode?: string
 	) {
 		popupController.close(EditAccommodationPopup);
 		try {
 			let newParams = params.data.stays;
-			const editedRoom: Omit<Verification, 'destinationId'> = {
+			const editedRoom: Omit<Verification, 'destinationId' | 'packages'> = {
 				adults,
 				children,
 				accommodationId,
 				rateCode,
 				arrivalDate: checkinDate,
-				departureDate: checkoutDate,
-				packages: packages.map((item) => item.id)
+				departureDate: checkoutDate
 			};
 			newParams = [
 				...newParams.filter((stay: Verification) => {
@@ -368,7 +390,8 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	function renderPolicies() {
-		return policies.map((item) => {
+		if (!accommodations[0].policies) return;
+		return accommodations[0].policies.map((item) => {
 			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
 			return (
 				<>
@@ -392,101 +415,99 @@ const BookingFlowCheckoutPage = () => {
 			>
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
-				{accommodations.map((accommodation, index) => {
-					return (
-						<BookingCartTotalsCard
-							key={index}
-							checkInTime={accommodation.checkInTime}
-							checkoutTime={accommodation.checkoutTime}
-							checkInDate={accommodation.arrivalDate}
-							checkoutDate={accommodation.departureDate}
-							accommodationName={accommodation.accommodationName}
-							accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
-							taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
-							feeTotalsInCents={accommodation.prices.feeTotalsInCents}
-							taxTotalsInCents={accommodation.prices.taxTotalsInCents}
-							costPerNight={accommodation.prices.accommodationDailyCostsInCents}
-							adults={accommodation.adultCount}
-							children={accommodation.childCount}
-							grandTotalCents={accommodation.prices.grandTotalCents}
-							packages={accommodation.packages}
-							remove={() => {
-								popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-									bodyText: 'Are you sure you want to remove this?',
-									cancelText: 'Do not remove',
-									confirm(): void {
-										removeAccommodation(
-											accommodation.accommodationId,
-											accommodation.arrivalDate,
-											accommodation.departureDate
-										).catch(console.error);
-									},
-									confirmText: 'Remove',
-									title: 'Remove accommodation'
-								});
-							}}
-							editPackages={() => {
-								const stays: StayParams = params.data.stays.filter(
-									(stay: StayParams) => stay.accommodationId !== accommodation.accommodationId
-								);
-								let newRoom = {
-									adults: accommodation.adultCount,
-									children: accommodation.childCount,
-									accommodationId: accommodation.accommodationId,
-									arrivalDate: accommodation.arrivalDate,
-									departureDate: accommodation.departureDate,
-									packages: accommodation.packages.map((item) => item.id)
-								};
-								let data = JSON.stringify({
-									destinationId: params.data.destinationId,
-									stays,
-									newRoom
-								});
-								router.navigate(`/booking/packages?data=${data}`).catch(console.error);
-							}}
-							edit={(id, checkInDate, checkoutDate) => {
-								popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
-									accommodationId: id,
-									adults: accommodation.adultCount,
-									children: accommodation.childCount,
-									destinationId: destinationId,
-									rateCode: accommodation.rateCode,
-									endDate: checkoutDate,
-									onApplyChanges(
-										adults: number,
-										children: number,
-										rateCode: string,
-										checkinDate: string | Date,
-										checkoutDate: string | Date,
-										originalStartDate: string | Date,
-										originalEndDate: string | Date,
-										packages: Api.UpsellPackage.Res.Get[]
-									): void {
-										popupController.close(AccommodationOptionsPopup);
-										editRoom(
-											adults,
-											children,
-											checkinDate,
-											checkoutDate,
-											originalStartDate,
-											originalEndDate,
-											packages,
-											id,
-											rateCode
-										);
-									},
-									packages: accommodation.packages,
-									startDate: checkInDate
-								});
-							}}
-							changeRoom={changeRoom}
-							accommodationId={accommodation.accommodationId}
-							cancellable={true}
-							points={accommodation.points}
-							usePoints={usePoints}
-						/>
-					);
-				})}
+				{accommodations &&
+					accommodations.map((accommodation, index) => {
+						return (
+							<BookingCartTotalsCard
+								key={index}
+								checkInTime={accommodation.checkInTime}
+								checkoutTime={accommodation.checkoutTime}
+								checkInDate={accommodation.arrivalDate}
+								checkoutDate={accommodation.departureDate}
+								accommodationName={accommodation.accommodationName}
+								accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
+								taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
+								feeTotalsInCents={accommodation.prices.feeTotalsInCents}
+								taxTotalsInCents={accommodation.prices.taxTotalsInCents}
+								costPerNight={accommodation.prices.accommodationDailyCostsInCents}
+								adults={accommodation.adultCount}
+								children={accommodation.childCount}
+								grandTotalCents={accommodation.prices.grandTotalCents}
+								packages={accommodation.packages}
+								remove={() => {
+									popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
+										bodyText: 'Are you sure you want to remove this?',
+										cancelText: 'Do not remove',
+										confirm(): void {
+											removeAccommodation(
+												accommodation.accommodationId,
+												accommodation.arrivalDate,
+												accommodation.departureDate
+											).catch(console.error);
+										},
+										confirmText: 'Remove',
+										title: 'Remove accommodation'
+									});
+								}}
+								editPackages={() => {
+									const stays: StayParams = params.data.stays.filter(
+										(stay: StayParams) => stay.accommodationId !== accommodation.accommodationId
+									);
+									let newRoom = {
+										adults: accommodation.adultCount,
+										children: accommodation.childCount,
+										accommodationId: accommodation.accommodationId,
+										arrivalDate: accommodation.arrivalDate,
+										departureDate: accommodation.departureDate,
+										packages: accommodation.packages.map((item) => item.id)
+									};
+									let data = JSON.stringify({
+										destinationId: params.data.destinationId,
+										stays,
+										newRoom
+									});
+									router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+								}}
+								edit={(id, checkInDate, checkoutDate) => {
+									popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+										accommodationId: id,
+										adults: accommodation.adultCount,
+										children: accommodation.childCount,
+										destinationId: destinationId,
+										rateCode: accommodation.rateCode,
+										endDate: checkoutDate,
+										onApplyChanges(
+											adults: number,
+											children: number,
+											rateCode: string,
+											checkinDate: string | Date,
+											checkoutDate: string | Date,
+											originalStartDate: string | Date,
+											originalEndDate: string | Date
+										): void {
+											popupController.close(AccommodationOptionsPopup);
+											editRoom(
+												adults,
+												children,
+												checkinDate,
+												checkoutDate,
+												originalStartDate,
+												originalEndDate,
+												id,
+												rateCode
+											).catch(console.error);
+										},
+										startDate: checkInDate
+									});
+								}}
+								changeRoom={changeRoom}
+								accommodationId={accommodation.accommodationId}
+								cancellable={true}
+								points={accommodation.points}
+								usePoints={usePoints}
+							/>
+						);
+					})}
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'button'}
@@ -501,16 +522,23 @@ const BookingFlowCheckoutPage = () => {
 						<Label variant={'h2'}>
 							$
 							{StringUtils.formatMoney(
-								accommodations.reduce(
-									(total, accommodation) => (total += accommodation.prices.grandTotalCents),
-									0
-								)
+								accommodations.reduce((total, accommodation) => {
+									let packageTotal = accommodation.packages.reduce((sum, item) => {
+										return sum + item.priceDetail.amountAfterTax * 100;
+									}, 0);
+									return total + accommodation.prices.grandTotalCents + packageTotal;
+								}, 0)
 							)}
 						</Label>
 					) : (
 						<Label variant={'h2'}>
 							{StringUtils.addCommasToNumber(
-								accommodations.reduce((total, accommodation) => (total += accommodation.points), 0)
+								accommodations.reduce((total, accommodation) => {
+									let packageTotal = accommodation.packages.reduce((sum, item) => {
+										return sum + Math.floor(item.priceDetail.amountAfterTax * 10);
+									}, 0);
+									return total + accommodation.points + packageTotal;
+								}, 0)
 							) + ' points'}
 						</Label>
 					)}
@@ -519,7 +547,7 @@ const BookingFlowCheckoutPage = () => {
 		);
 	}
 
-	return !accommodations ? (
+	return !ObjectUtils.isArrayWithData(accommodations) ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowPage'}>
@@ -583,7 +611,7 @@ const BookingFlowCheckoutPage = () => {
 								</Box>
 							</Box>
 							<Label variant={'body1'} mb={10}>
-								{destinationName}
+								{accommodations[0].destinationName}
 							</Label>
 							{renderPolicies()}
 						</Paper>
