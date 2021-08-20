@@ -328,11 +328,6 @@ declare namespace Api {
 	}
 
 	export namespace Company {
-		interface UnauthorizedPages {
-			page: string;
-			route: string;
-			reRoute: string;
-		}
 		export namespace Req {
 			export interface Create extends Partial<Omit<Model.Company, 'id' | 'createdOn' | 'modifiedOn'>> {
 				name: string;
@@ -352,6 +347,12 @@ declare namespace Api {
 				ids?: number[];
 			}
 			export interface Role {}
+			export interface UpdateUnauthorizedPages {
+				unauthorizedPages: Model.PageGuard[];
+			}
+			export interface UpdateAvailablePages {
+				availablePages: Model.PageGuard[];
+			}
 		}
 		export namespace Res {
 			export interface Create extends Model.Company {}
@@ -363,8 +364,9 @@ declare namespace Api {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
 				customPages: { [key: string]: any };
-				unauthorizedPages: UnauthorizedPages[];
+				unauthorizedPages: Model.PageGuard[];
 			}
+			export interface GetAvailablePages extends Model.PageGuard {}
 		}
 	}
 
@@ -1138,6 +1140,9 @@ declare namespace Api {
 			export interface UnPublish {
 				reviewId: number;
 			}
+			export interface Publish {
+				reviewId: number;
+			}
 		}
 		export namespace Res {
 			export interface Get extends Model.Review {}
@@ -1398,6 +1403,7 @@ declare namespace Api {
 			loginExpiresOn: Date | string;
 			loginVerificationExpiresOn: Date | string;
 			paymentMethods: PaymentMethod[];
+			allowEmailNotification: 0 | 1;
 		}
 
 		export interface Model extends Model.User {
@@ -1442,7 +1448,7 @@ declare namespace Api {
 				primaryEmail?: string;
 				phone?: string;
 				birthDate?: Date | string;
-				emailNotification?: 0 | 1;
+				allowEmailNotification?: 0 | 1;
 			}
 
 			export interface Login {

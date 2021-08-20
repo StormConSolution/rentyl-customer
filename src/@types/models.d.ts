@@ -42,6 +42,12 @@ declare namespace Model {
 	export type UpsellPackagePricingType = 'PerGuest' | 'PerStay' | 'PerNight' | 'PerGuestPerNight';
 	export type CurrencyCode = 'USD'; // Add more if/when we add multicurrency support
 	export type ReviewStatus = 'PUBLISHED' | 'UNPUBLISHED' | 'FLAGGED' | 'UNVERIFIED';
+	export type PageGuard = {
+		page: string;
+		route: string;
+		reRoute: string;
+		isActive: 1 | 0;
+	};
 
 	export interface Accommodation {
 		id: number;
@@ -275,7 +281,7 @@ declare namespace Model {
 		allowPointBooking: 1 | 0;
 		allowCashBooking: 1 | 0;
 		customPages: { [key: string]: any };
-		unauthorizedPages: string[];
+		unauthorizedPages: PageGuard[];
 	}
 
 	export interface Destination {
@@ -674,6 +680,7 @@ declare namespace Model {
 		loginExpiresOn: Date | string;
 		loginVerificationExpiresOn: Date | string;
 		loginVerificationGuid: string;
+		allowEmailNotification: 0 | 1;
 	}
 
 	export interface UserAction {
@@ -777,13 +784,6 @@ declare namespace Model {
 		id: number;
 		userId: number;
 		createdOn: Date | string;
-	}
-
-	export interface UserSetting {
-		id: number;
-		userId: number;
-		allowNewsLetter: 0 | 1;
-		allowEmailNotification: 0 | 1;
 	}
 
 	export interface UserSocialMedia {
