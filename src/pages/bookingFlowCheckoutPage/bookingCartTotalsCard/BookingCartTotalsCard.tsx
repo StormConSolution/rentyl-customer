@@ -6,9 +6,8 @@ import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { convertTwentyFourHourTime, DateUtils, StringUtils } from '../../../utils/utils';
-import AccommodationOptionsPopup, {
-	AccommodationOptionsPopupProps
-} from '../../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
+import { useEffect, useRef, useState } from 'react';
+import LabelButton from '../../../components/labelButton/LabelButton';
 
 interface BookingCartTotalsCardProps {
 	checkInTime: string;
@@ -24,17 +23,81 @@ interface BookingCartTotalsCardProps {
 	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Api.UpsellPackage.Res.Get[];
+	packages?: Api.UpsellPackage.Res.Booked[];
 	accommodationId?: number;
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	editPackages?: () => void;
 	cancellable: boolean;
 	points: number;
 	usePoints: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
+	const whiteBox = useRef<HTMLElement>(null);
+	const [showOptions, setShowOptions] = useState<boolean>(false);
+
+	useEffect(() => {
+		function handleClickOutside(event: any) {
+			if (
+				whiteBox &&
+				whiteBox.current &&
+				!whiteBox.current.contains(event.target) &&
+				!event.target.className.includes('editButton') &&
+				!event.target.parentNode.className.includes('editButton')
+			) {
+				setShowOptions(false);
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
+
+	function renderEditOptions() {
+		return (
+			<div ref={whiteBox} className={`whiteBox ${showOptions ? 'open' : ''}`}>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'REMOVE'}
+					onClick={(e) => {
+						if (props.remove)
+							props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'CHANGE ROOM'}
+					onClick={(e) => {
+						if (props.changeRoom)
+							props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT PACKAGES'}
+					onClick={(e) => {
+						if (props.editPackages) props.editPackages();
+					}}
+				/>
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'EDIT DETAILS'}
+					onClick={(e) => {
+						e.stopPropagation();
+						if (props.edit) props.edit(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+					}}
+				/>
+			</div>
+		);
+	}
+
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		let difference: number = props.points - StringUtils.convertCentsToPoints(props.accommodationTotalInCents, 10);
@@ -103,16 +166,22 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 
 	function getPackageTotal() {
 		if (!ObjectUtils.isArrayWithData(props.packages)) return `${StringUtils.formatMoney(0)}`;
-		//Does not have any price detail on it
-		let total = props.packages?.reduce((sum, item) => (sum += 0), 0);
-		return props.usePoints ? `${StringUtils.formatMoney(total || 0)}` : StringUtils.addCommasToNumber(total);
+		let total = props.packages?.reduce((sum, item) => {
+			return sum + item.priceDetail.amountAfterTax;
+		}, 0);
+		total = total || 0;
+		return !props.usePoints
+			? `${StringUtils.formatMoney(total * 100)}`
+			: StringUtils.addCommasToNumber(Math.floor(total * 10));
 	}
 
 	function getCartTotal() {
 		if (props.grandTotalCents && !ObjectUtils.isArrayWithData(props.packages)) {
 			return !props.usePoints ? `${StringUtils.formatMoney(props.grandTotalCents)}` : props.grandTotalCents;
 		} else if (props.packages && ObjectUtils.isArrayWithData(props.packages)) {
-			const packagesTotals = props.packages.reduce((total, item) => (total += 0), props.grandTotalCents);
+			const packagesTotals = props.packages.reduce((total, item) => {
+				return total + item.priceDetail.amountAfterTax * 100;
+			}, props.grandTotalCents);
 			return !props.usePoints ? `${StringUtils.formatMoney(packagesTotals)}` : packagesTotals;
 		}
 	}
@@ -128,10 +197,12 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Box display={'flex'} marginLeft={'auto'}>
 						{!props.usePoints ? (
 							<Label variant={'body2'} display={'flex'}>
-								${StringUtils.formatMoney(0)}
+								${StringUtils.formatMoney(Math.floor(item.priceDetail.amountAfterTax * 100))}
 							</Label>
 						) : (
-							<Label variant={'body2'}>{StringUtils.addCommasToNumber(0)} points</Label>
+							<Label variant={'body2'}>
+								{StringUtils.addCommasToNumber(Math.floor(item.priceDetail.amountAfterTax * 10))} points
+							</Label>
 						)}
 					</Box>
 				</Box>
@@ -149,43 +220,20 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h4'} width={'170px'}>
 						{props.accommodationName}
 					</Label>
-					{props.edit && (
-						<Icon
-							iconImg={'icon-edit'}
-							cursorPointer
-							onClick={(event) => {
-								event.stopPropagation();
-								popupController.open<AccommodationOptionsPopupProps>(AccommodationOptionsPopup, {
-									onChangeRoom: () => {
-										popupController.close(AccommodationOptionsPopup);
-										if (props.changeRoom)
-											props.changeRoom(
-												props.accommodationId || 0,
-												props.checkInDate,
-												props.checkoutDate
-											);
-									},
-									onEditRoom: () => {
-										if (props.edit)
-											props.edit(
-												props.accommodationId || 0,
-												props.checkInDate,
-												props.checkoutDate
-											);
-									},
-									onRemove: () => {
-										if (props.remove)
-											props.remove(
-												props.accommodationId || 0,
-												props.checkInDate,
-												props.checkoutDate
-											);
-									},
-									cancellable: props.cancellable
-								});
-							}}
-						/>
-					)}
+					<div style={{ position: 'relative' }}>
+						{props.edit && (
+							<Icon
+								className={'editButton'}
+								iconImg={'icon-edit'}
+								cursorPointer
+								onClick={(event) => {
+									event.stopPropagation();
+									setShowOptions(!showOptions);
+								}}
+							/>
+						)}
+						{renderEditOptions()}
+					</div>
 				</Box>
 			}
 		>
@@ -272,7 +320,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 				) : (
 					<Label variant={'h3'} marginLeft={'auto'}>
-						{StringUtils.addCommasToNumber(props.points) + ' pts'}
+						{StringUtils.addCommasToNumber(props.points + parseInt(getPackageTotal())) + ' pts'}
 					</Label>
 				)}
 			</Box>

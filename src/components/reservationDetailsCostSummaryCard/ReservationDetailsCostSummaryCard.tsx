@@ -16,6 +16,7 @@ interface ReservationDetailsCostSummaryCartProps {
 	adultCount: number;
 	childCount: number;
 	taxAndFeeTotalsInCents: { name: string; amount: number }[];
+	upsellPackages: Api.UpsellPackage.Res.Booked[];
 	costPerNight: { [date: string]: number };
 	grandTotalCents: number;
 	points: number;
@@ -42,6 +43,19 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			);
 		}
 		return itemizedCostPerNight;
+	}
+
+	function renderUpsellPackages() {
+		return props.upsellPackages.map((item) => {
+			return (
+				<Box display={'flex'} alignItems={'center'} key={item.id}>
+					<Label variant={'body1'}>{item.title}</Label>
+					<Label variant={'body1'} marginLeft={'auto'}>
+						${item.priceDetail.amountAfterTax}
+					</Label>
+				</Box>
+			);
+		});
 	}
 
 	function renderTaxesAndFees() {
@@ -90,6 +104,14 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			</Accordion>
 			<Label variant={'body1'}>{DateUtils.daysBetween(props.departureDate, props.arrivalDate)} Nights</Label>
 			<hr />
+			{props.upsellPackages.length > 0 && (
+				<>
+					<Accordion isOpen titleReact={<Label variant={'h4'}>PACKAGES</Label>}>
+						{renderUpsellPackages()}
+					</Accordion>
+					<hr />
+				</>
+			)}
 			{!props.paidWithPoints && (
 				<Accordion isOpen titleReact={<Label variant={'h4'}>TAXES AND FEES</Label>}>
 					{renderTaxesAndFees()}
@@ -99,9 +121,27 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Box display={'flex'} justifyContent={'space-between'}>
 				<Label variant={'h2'}>Total:</Label>
 				{!props.paidWithPoints ? (
-					<Label variant={'h2'}>${StringUtils.formatMoney(props.grandTotalCents)}</Label>
+					<Label variant={'h2'}>
+						$
+						{StringUtils.formatMoney(
+							props.grandTotalCents +
+								props.upsellPackages.reduce((total, item) => {
+									return total + item.priceDetail.amountAfterTax * 100;
+								}, 0)
+						)}
+					</Label>
 				) : (
-					<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.points)} Points</Label>
+					<Label variant={'h2'}>
+						{StringUtils.addCommasToNumber(
+							props.points +
+								Math.floor(
+									props.upsellPackages.reduce((total, item) => {
+										return total + item.priceDetail.amountAfterTax * 10;
+									}, 0)
+								)
+						)}{' '}
+						Points
+					</Label>
 				)}
 			</Box>
 		</Paper>

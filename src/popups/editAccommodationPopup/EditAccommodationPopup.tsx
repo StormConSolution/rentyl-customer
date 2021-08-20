@@ -23,7 +23,6 @@ export interface EditAccommodationPopupProps extends PopupProps {
 	children: number;
 	startDate: Date | string;
 	endDate: Date | string;
-	packages: Api.UpsellPackage.Res.Get[];
 	onApplyChanges: (
 		adults: number,
 		children: number,
@@ -31,8 +30,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 		checkinDate: string | Date,
 		checkoutDate: string | Date,
 		originalStartDate: string | Date,
-		originalEndDate: string | Date,
-		packages: Api.UpsellPackage.Res.Get[]
+		originalEndDate: string | Date
 	) => void;
 	destinationId: number;
 	accommodationId: number;
@@ -42,8 +40,6 @@ export interface EditAccommodationPopupProps extends PopupProps {
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
-	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Get[]>([]);
-	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Get[]>(props.packages);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(
 		moment(new Date(DateUtils.displayUserDate(props.startDate)))
@@ -62,8 +58,12 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				const response = await packageService.forDestination(props.destinationId);
-				setAvailablePackages(response);
+				const response = await packageService.getAvailable({
+					destinationId: props.destinationId,
+					startDate: props.startDate,
+					endDate: props.endDate,
+					pagination: { page: 1, perPage: 5 }
+				});
 			} catch {
 				console.error('An unexpected error happened on the server.');
 			}
@@ -140,56 +140,6 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					startDateLabel={'check in'}
 					endDateLabel={'check out'}
 				/>
-				<Box className={'addedPackages'}>
-					<Label variant={'h3'}>Packages</Label>
-
-					{addedPackages.map((item) => (
-						<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-							<Label variant={'body1'}>{item.title}</Label>
-							<Icon
-								iconImg={'icon-trash'}
-								size={12}
-								cursorPointer
-								onClick={() => {
-									setAddedPackages(
-										addedPackages.filter((addedPackage) => addedPackage.id !== item.id)
-									);
-									setAvailablePackages([...availablePackages, item]);
-								}}
-							/>
-						</Box>
-					))}
-				</Box>
-				<hr />
-				<Box className={'availablePackages'}>
-					<Label variant={'h3'}>Available Packages</Label>
-					{availablePackages
-						.filter((item) => !addedPackages.map((added) => added.id).includes(item.id))
-						.map((item) => (
-							<Label
-								key={item.id}
-								className={'availablePackage'}
-								variant={'body1'}
-								onClick={() => {
-									popupController.open<PackageDetailsPopupProps>(PackageDetailsPopup, {
-										onAdd(): void {
-											setAvailablePackages(
-												availablePackages.filter(
-													(availablePackage) => availablePackage.id !== item.id
-												)
-											);
-											setAddedPackages([...addedPackages, item]);
-											popupController.close(PackageDetailsPopup);
-										},
-										package: item,
-										preventCloseByBackgroundClick: false
-									});
-								}}
-							>
-								{item.title}
-							</Label>
-						))}
-				</Box>
 				{!available && (
 					<Label variant={'body1'} color={'red'}>
 						These dates are unavailable, please pick new dates
@@ -216,8 +166,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 								startDate?.format('YYYY-MM-DD') || '',
 								endDate?.format('YYYY-MM-DD') || '',
 								props.startDate,
-								props.endDate,
-								addedPackages
+								props.endDate
 							);
 							popupController.closeAll();
 						}}

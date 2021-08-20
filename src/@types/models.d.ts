@@ -533,6 +533,7 @@ declare namespace Model {
 	export interface ReservationUpsellPackage {
 		reservationId: number;
 		upsellPackageId: number;
+		priceDetail: string | null;
 	}
 
 	export interface Review {

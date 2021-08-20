@@ -147,6 +147,11 @@ const ReservationDetailsPage: React.FC = () => {
 											let res = await reservationsService.cancel(reservation.id);
 											if (res) {
 												popupController.closeAll();
+												rsToasts.success(
+													`Successfully cancelled ${reservation?.externalConfirmationId}`,
+													'',
+													5000
+												);
 												router.navigate('/reservations').catch(console.error);
 											}
 										} catch (e) {
@@ -205,6 +210,7 @@ const ReservationDetailsPage: React.FC = () => {
 									...reservation.priceDetail.feeTotalsInCents,
 									...reservation.priceDetail.taxTotalsInCents
 								]}
+								upsellPackages={reservation.upsellPackages}
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
 								points={reservation.priceDetail.grandTotalCents}

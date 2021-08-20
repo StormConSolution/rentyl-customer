@@ -59,13 +59,14 @@ export default class UserService extends Service {
 
 	async refreshUser(): Promise<void> {
 		const user = getRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user);
-		const token = getRecoilExternalValue<string>(globalState.userToken);
 		if (!user) return;
 		this.loginUserByToken(user.token).catch(console.error);
 	}
 
-	async update(data: Api.User.Req.Update) {
-		return await http.put<RsResponseData<Api.User.Res.Detail>>('user', data);
+	async update(data: Api.User.Req.Update): Promise<Api.User.Res.Detail> {
+		let response = await http.put<RsResponseData<Api.User.Res.Detail>>('user', data);
+		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, response.data.data);
+		return response.data.data;
 	}
 
 	logout() {

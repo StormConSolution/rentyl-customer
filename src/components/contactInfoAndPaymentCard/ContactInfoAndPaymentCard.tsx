@@ -318,7 +318,10 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						className={'useExistingCreditCard'}
 						value={1}
 						text={'Use Credit Card on file'}
-						onSelect={() => setUseExistingCreditCard(true)}
+						onSelect={() => {
+							setUseExistingCreditCard(true);
+							props.setUsePoints(false);
+						}}
 						onDeselect={() => {
 							setExistingCardId(0);
 							setUseExistingCreditCard(false);
@@ -330,7 +333,11 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 						<LabelCheckbox
 							value={props.usePoints ? 1 : 0}
 							text={'Use Points'}
-							onSelect={() => props.setUsePoints(true)}
+							onSelect={() => {
+								props.setUsePoints(true);
+								setUseExistingCreditCard(false);
+								if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+							}}
 							onDeselect={() => props.setUsePoints(false)}
 							isChecked={props.usePoints}
 						/>

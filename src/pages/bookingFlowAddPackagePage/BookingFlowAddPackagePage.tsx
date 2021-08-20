@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './BookingFlowAddPackagePage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -11,28 +11,59 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import PackageService from '../../services/package/package.service';
+import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 
 const BookingFlowAddPackagePage = () => {
+	const filterRef = useRef<HTMLElement>(null);
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
-	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Details[]>([]);
-	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Details[]>([]);
+	const [page, setPage] = useState<number>(1);
+	const [perPage, setPerPage] = useState<number>(5);
+	const [total, setTotal] = useState<number>(0);
+	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
+	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
+
+	useEffect(() => {
+		async function getAddedPackages() {
+			const addedPackages = await packageService.getPackagesByIds(params.data.newRoom.packages);
+			let convertedPackages: Api.UpsellPackage.Res.Available[] = addedPackages.map((item) => {
+				return {
+					priceCents: 0,
+					media: item.media,
+					id: item.id,
+					companyId: item.companyId,
+					destinationId: item.destinationId,
+					title: item.title,
+					description: item.description,
+					code: item.code,
+					isActive: item.isActive,
+					startDate: item.startDate,
+					endDate: item.endDate
+				};
+			});
+			setAddedPackages(convertedPackages);
+		}
+		getAddedPackages().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function getPackages() {
 			try {
-				const response = await packageService.forDestination(params.data.destinationId);
-				setAvailablePackages(response);
-				let packages: Api.UpsellPackage.Details[] = response;
-				setAvailablePackages(packages.filter((item) => !params.data.newRoom.packages.includes(item.id)));
-				setAddedPackages(packages.filter((item) => params.data.newRoom.packages.includes(item.id)));
+				const response = await packageService.getAvailable({
+					destinationId: params.data.destinationId,
+					startDate: params.data.newRoom.arrivalDate,
+					endDate: params.data.newRoom.departureDate,
+					pagination: { page: 1, perPage: 5 }
+				});
+				setAvailablePackages(response.data);
+				setTotal(response.total || 0);
 			} catch {
 				console.error('Cannot get a list of add-on packages.');
 			}
 		}
 		getPackages().catch(console.error);
-	}, []);
+	}, [page, perPage]);
 
 	function renderPackages() {
 		return addedPackages.map((item) => {
@@ -41,7 +72,7 @@ const BookingFlowAddPackagePage = () => {
 					key={item.id}
 					title={item.title}
 					description={item.description}
-					priceCents={0}
+					priceCents={item.priceCents}
 					imgPaths={item.media.map((item) => {
 						return item.urls.large;
 					})}
@@ -65,7 +96,7 @@ const BookingFlowAddPackagePage = () => {
 					key={item.id}
 					title={item.title}
 					description={item.description}
-					priceCents={0}
+					priceCents={item.priceCents}
 					imgPaths={item.media.map((item, index) => {
 						return item.urls.large;
 					})}
@@ -91,6 +122,7 @@ const BookingFlowAddPackagePage = () => {
 					<hr />
 					{renderPackages()}
 				</Box>
+				<div ref={filterRef} />
 				<Box className={'availablePackages'}>
 					<Label variant={'h2'}>Available Packages</Label>
 					<hr />
@@ -110,6 +142,16 @@ const BookingFlowAddPackagePage = () => {
 					}}
 				/>
 			</div>
+			<PaginationButtons
+				selectedRowsPerPage={perPage}
+				currentPageNumber={page}
+				setSelectedPage={(newPage) => {
+					setPage(newPage);
+					let filterSection = filterRef.current!.offsetTop;
+					window.scrollTo({ top: filterSection, behavior: 'smooth' });
+				}}
+				total={total}
+			/>
 			<Footer links={FooterLinkTestData} />
 		</Page>
 	);
