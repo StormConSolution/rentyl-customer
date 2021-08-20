@@ -105,11 +105,13 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Label variant={'body1'}>{DateUtils.daysBetween(props.departureDate, props.arrivalDate)} Nights</Label>
 			<hr />
 			{props.upsellPackages.length > 0 && (
-				<Accordion isOpen titleReact={<Label variant={'h4'}>PACKAGES</Label>}>
-					{renderUpsellPackages()}
-				</Accordion>
+				<>
+					<Accordion isOpen titleReact={<Label variant={'h4'}>PACKAGES</Label>}>
+						{renderUpsellPackages()}
+					</Accordion>
+					<hr />
+				</>
 			)}
-			{props.upsellPackages.length > 0 && <hr />}
 			{!props.paidWithPoints && (
 				<Accordion isOpen titleReact={<Label variant={'h4'}>TAXES AND FEES</Label>}>
 					{renderTaxesAndFees()}
