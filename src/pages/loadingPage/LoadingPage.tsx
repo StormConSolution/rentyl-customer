@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 const LoadingPage: React.FC = () => {
 	useEffect(() => {
 		let timerId = setTimeout(() => {
-			router.back();
+			// router.back();
 		}, 10000);
 		return () => {
 			clearTimeout(timerId);

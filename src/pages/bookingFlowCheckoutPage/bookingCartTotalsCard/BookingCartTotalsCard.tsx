@@ -5,38 +5,39 @@ import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { convertTwentyFourHourTime, DateUtils, StringUtils } from '../../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils, MiscUtils, StringUtils } from '../../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
+import serviceFactory from '../../../services/serviceFactory';
+import ReservationsService from '../../../services/reservations/reservations.service';
+import rsToasts from '@bit/redsky.framework.toast';
+import { prependOnceListener } from 'cluster';
 
 interface BookingCartTotalsCardProps {
-	checkInTime: string;
-	checkoutTime: string;
-	checkInDate: string | Date;
-	checkoutDate: string | Date;
-	accommodationName: string;
-	feeTotalsInCents: { name: string; amount: number }[];
-	taxTotalsInCents: { name: string; amount: number }[];
-	costPerNight: { [date: string]: number };
-	grandTotalCents: number;
-	taxAndFeeTotalInCent: number;
-	accommodationTotalInCents: number;
 	adults: number;
 	children: number;
-	packages?: Api.UpsellPackage.Res.Booked[];
-	accommodationId?: number;
+	accommodationId: number;
+	arrivalDate: string;
+	departureDate: string;
+	upsellPackages: number[];
+	destinationId: number;
+	rateCode?: string;
+	addAccommodation: (accommodation: Api.Reservation.Res.Verification) => void;
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	editPackages?: () => void;
 	cancellable: boolean;
-	points: number;
 	usePoints: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
+	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const whiteBox = useRef<HTMLElement>(null);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
+	const [verifyStatus, setVerifyStatus] = useState<'verifying' | 'available' | 'notAvailable'>('verifying');
+	const [verifiedAccommodation, setVerifiedAccommodation] = useState<Api.Reservation.Res.Verification>();
+	const [pointTotal, setPointTotal] = useState<number>(0);
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
@@ -56,6 +57,50 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		};
 	}, []);
 
+	useEffect(() => {
+		async function verifyAvailability() {
+			try {
+				let verifyData: Api.Reservation.Req.Verification = {
+					accommodationId: props.accommodationId,
+					destinationId: props.destinationId,
+					adults: props.adults,
+					children: props.children,
+					rateCode: props.rateCode,
+					arrivalDate: props.arrivalDate,
+					departureDate: props.departureDate,
+					numberOfAccommodations: 1,
+					upsellPackages: props.upsellPackages
+						? props.upsellPackages.map((item: number) => {
+								return { id: item };
+						  })
+						: []
+				};
+				if (!!!verifyData.rateCode) delete verifyData.rateCode;
+				if (!ObjectUtils.isArrayWithData(verifyData.upsellPackages)) delete verifyData.upsellPackages;
+				let response = await reservationService.verifyAvailability(verifyData);
+				setVerifiedAccommodation(response);
+				setPointTotal(MiscUtils.roundPointsToThousand(response.prices.grandTotalCents));
+				props.addAccommodation(response);
+				setVerifyStatus('available');
+			} catch (e) {
+				setVerifyStatus('notAvailable');
+				rsToasts.error('This accommodation is no longer available for these dates');
+			}
+		}
+		verifyAvailability().catch(console.error);
+	}, []);
+
+	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
+		return packages.reduce((total, item) => {
+			//currently prices are saved as floats so 23.61 instead of in cents like everything else 2361
+			return total + item.priceDetail.amountAfterTax * 100;
+		}, 0);
+	}
+
+	function pointsOrCash(): 'points' | 'cash' {
+		return props.usePoints ? 'points' : 'cash';
+	}
+
 	function renderEditOptions() {
 		return (
 			<div ref={whiteBox} className={`whiteBox ${showOptions ? 'open' : ''}`}>
@@ -65,7 +110,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					label={'REMOVE'}
 					onClick={(e) => {
 						if (props.remove)
-							props.remove(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+							props.remove(props.accommodationId || 0, props.arrivalDate, props.departureDate);
 					}}
 				/>
 				<LabelButton
@@ -74,7 +119,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					label={'CHANGE ROOM'}
 					onClick={(e) => {
 						if (props.changeRoom)
-							props.changeRoom(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+							props.changeRoom(props.accommodationId || 0, props.arrivalDate, props.departureDate);
 					}}
 				/>
 				<LabelButton
@@ -91,7 +136,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					label={'EDIT DETAILS'}
 					onClick={(e) => {
 						e.stopPropagation();
-						if (props.edit) props.edit(props.accommodationId || 0, props.checkInDate, props.checkoutDate);
+						if (props.edit) props.edit(props.accommodationId || 0, props.arrivalDate, props.departureDate);
 					}}
 				/>
 			</div>
@@ -99,30 +144,29 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderItemizedCostPerNight() {
+		if (!verifiedAccommodation) return;
 		let itemizedCostPerNight: React.ReactNodeArray = [];
-		let difference: number = props.points - StringUtils.convertCentsToPoints(props.accommodationTotalInCents, 10);
-		let offset: number = difference / DateUtils.daysBetween(props.checkInDate, props.checkoutDate);
-		Object.keys(props.costPerNight).forEach((night, index) => {
-			let point: number =
-				index === Object.keys(props.costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
+		let difference: number =
+			pointTotal - MiscUtils.convertCentsToPoints(verifiedAccommodation.prices.accommodationTotalInCents, 10);
+		let offset: number =
+			(difference /
+				DateUtils.daysBetween(verifiedAccommodation.checkInDate, verifiedAccommodation.checkoutDate)) *
+			10;
+		Object.keys(verifiedAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
+			const costPerNight = verifiedAccommodation.prices.accommodationDailyCostsInCents;
+			let point: number = index === Object.keys(costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={night} justifyContent={'space-between'}>
 					<Label variant={'body2'} width={'170px'}>
 						{DateUtils.displayUserDate(night)}
 					</Label>
 					<div>
-						{!props.usePoints ? (
-							<Label variant={'body2'} marginLeft={'auto'}>
-								${StringUtils.formatMoney(props.costPerNight[night])}
-							</Label>
-						) : (
-							<Label variant={'body2'}>
-								{StringUtils.addCommasToNumber(
-									StringUtils.convertCentsToPoints(props.costPerNight[night], 10) + point
-								)}{' '}
-								points
-							</Label>
-						)}
+						<Label variant={'body2'} marginLeft={'auto'}>
+							{MiscUtils.displayPointsOrCash(
+								props.usePoints ? costPerNight[night] + point : costPerNight[night],
+								props.usePoints ? 'points' : 'cash'
+							)}
+						</Label>
 					</div>
 				</Box>
 			);
@@ -131,31 +175,28 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderTaxesAndFees() {
+		if (!verifiedAccommodation) return;
 		let index = 0;
-		let taxes = props.taxTotalsInCents.map((item) => {
+		let taxes = verifiedAccommodation.prices.taxTotalsInCents.map((item) => {
 			return (
 				<Box display={'flex'} alignItems={'center'} key={++index}>
 					<Label variant={'body2'} width={'170px'}>
 						{item.name}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						{!props.usePoints
-							? '$' + StringUtils.formatMoney(item.amount)
-							: StringUtils.addCommasToNumber(item.amount) + ' pts'}
+						{MiscUtils.displayPointsOrCash(item.amount, pointsOrCash())}
 					</Label>
 				</Box>
 			);
 		});
-		let fees = props.feeTotalsInCents.map((item) => {
+		let fees = verifiedAccommodation?.prices.feeTotalsInCents.map((item) => {
 			return (
 				<Box display={'flex'} alignItems={'center'} key={++index}>
 					<Label variant={'body2'} width={'170px'}>
 						{item.name}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						{!props.usePoints
-							? '$' + StringUtils.formatMoney(item.amount)
-							: StringUtils.addCommasToNumber(StringUtils.convertCentsToPoints(item.amount, 10)) + ' pts'}
+						{MiscUtils.displayPointsOrCash(item.amount, pointsOrCash())}
 					</Label>
 				</Box>
 			);
@@ -164,45 +205,22 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		return [...taxes, ...fees];
 	}
 
-	function getPackageTotal() {
-		if (!ObjectUtils.isArrayWithData(props.packages)) return `${StringUtils.formatMoney(0)}`;
-		let total = props.packages?.reduce((sum, item) => {
-			return sum + item.priceDetail.amountAfterTax;
-		}, 0);
-		total = total || 0;
-		return !props.usePoints
-			? `${StringUtils.formatMoney(total * 100)}`
-			: StringUtils.addCommasToNumber(Math.floor(total * 10));
-	}
-
-	function getCartTotal() {
-		if (props.grandTotalCents && !ObjectUtils.isArrayWithData(props.packages)) {
-			return !props.usePoints ? `${StringUtils.formatMoney(props.grandTotalCents)}` : props.grandTotalCents;
-		} else if (props.packages && ObjectUtils.isArrayWithData(props.packages)) {
-			const packagesTotals = props.packages.reduce((total, item) => {
-				return total + item.priceDetail.amountAfterTax * 100;
-			}, props.grandTotalCents);
-			return !props.usePoints ? `${StringUtils.formatMoney(packagesTotals)}` : packagesTotals;
-		}
-	}
-
 	function renderPackages() {
-		if (!props.packages || !ObjectUtils.isArrayWithData(props.packages)) return [];
-		return props.packages.map((item, index) => {
+		if (
+			!verifiedAccommodation?.upsellPackages ||
+			!ObjectUtils.isArrayWithData(verifiedAccommodation.upsellPackages)
+		)
+			return [];
+		return verifiedAccommodation.upsellPackages.map((item, index) => {
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
 						{item.title}
 					</Label>
 					<Box display={'flex'} marginLeft={'auto'}>
-						{!props.usePoints ? (
-							<Label variant={'body2'} display={'flex'}>
-								${StringUtils.formatMoney(Math.floor(item.priceDetail.amountAfterTax * 100))}
-							</Label>
-						) : (
-							<Label variant={'body2'}>
-								{StringUtils.addCommasToNumber(Math.floor(item.priceDetail.amountAfterTax * 10))} points
-							</Label>
+						{MiscUtils.displayPointsOrCash(
+							Math.floor(item.priceDetail.amountAfterTax * 100),
+							pointsOrCash()
 						)}
 					</Box>
 				</Box>
@@ -210,15 +228,19 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		});
 	}
 
-	return (
+	return !verifiedAccommodation ? (
+		<div className={'rsBookingCartTotalsCard'}>
+			<Label variant={'h1'}>Verifying Availability...</Label>{' '}
+		</div>
+	) : (
 		<Accordion
 			isOpen
-			className={'rsBookingCartTotalsCard'}
+			className={`rsBookingCartTotalsCard ${verifyStatus}`}
 			hideHoverEffect
 			titleReact={
 				<Box display={'flex'} alignItems={'center'}>
 					<Label variant={'h4'} width={'170px'}>
-						{props.accommodationName}
+						{verifiedAccommodation.accommodationName}
 					</Label>
 					<div style={{ position: 'relative' }}>
 						{props.edit && (
@@ -240,28 +262,34 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			<Box display={'flex'}>
 				<Box marginRight={'50px'}>
 					<Label variant={'h4'}>Check-in</Label>
-					<Label variant={'body1'}>After {convertTwentyFourHourTime(props.checkInTime)}</Label>
+					<Label variant={'body1'}>
+						After {convertTwentyFourHourTime(verifiedAccommodation.checkInTime)}
+					</Label>
 				</Box>
 				<Box>
 					<Label variant={'h4'}>Check-out</Label>
-					<Label variant={'body1'}>Before {convertTwentyFourHourTime(props.checkoutTime)}</Label>
+					<Label variant={'body1'}>
+						Before {convertTwentyFourHourTime(verifiedAccommodation.checkoutTime)}
+					</Label>
 				</Box>
 			</Box>
 			<hr />
 			<Box marginBottom={'10px'}>
 				<Label variant={'body1'}>
-					{DateUtils.displayUserDate(props.checkInDate)}
+					{DateUtils.displayUserDate(verifiedAccommodation.checkInDate)}
 					{' - '}
-					{DateUtils.displayUserDate(props.checkoutDate)}
+					{DateUtils.displayUserDate(verifiedAccommodation.checkoutDate)}
 				</Label>
-				<Label variant={'body1'}>{props.adults} Adults</Label>
-				<Label variant={'body1'}>{props.children} Children</Label>
+				<Label variant={'body1'}>{verifiedAccommodation.adults} Adults</Label>
+				<Label variant={'body1'}>{verifiedAccommodation.children} Children</Label>
 			</Box>
 
 			<Accordion
 				titleReact={
 					<Box display={'flex'} alignItems={'center'}>
-						<Label variant={'h4'}>{Object.keys(props.costPerNight).length} Nights</Label>
+						<Label variant={'h4'}>
+							{Object.keys(verifiedAccommodation.prices.accommodationDailyCostsInCents).length} Nights
+						</Label>
 					</Box>
 				}
 				isOpen
@@ -270,9 +298,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				<Box display={'flex'} alignItems={'center'}>
 					<Label variant={'h4'}>Total:</Label>
 					<Label variant={'h4'} marginLeft={'auto'}>
-						{!props.usePoints
-							? '$' + StringUtils.formatMoney(props.accommodationTotalInCents)
-							: StringUtils.addCommasToNumber(props.points) + ' pts'}
+						{MiscUtils.displayPointsOrCash(
+							verifiedAccommodation.prices.accommodationTotalInCents,
+							pointsOrCash()
+						)}
 					</Label>
 				</Box>
 			</Accordion>
@@ -287,7 +316,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				<Box display={'flex'} justifyContent={'space-between'}>
 					<Label variant={'h4'}>Total: </Label>
 					<Label variant={'h4'} marginLeft={'auto'}>
-						{!props.usePoints ? '$' + getPackageTotal() : getPackageTotal() + ' pts'}
+						{MiscUtils.displayPointsOrCash(
+							totalPackages(verifiedAccommodation.upsellPackages || []),
+							pointsOrCash()
+						)}
 					</Label>
 				</Box>
 			</Accordion>
@@ -303,9 +335,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Box alignItems={'center'} display={'flex'}>
 						<Label variant={'h4'}>Total</Label>
 						<Label variant={'h4'} marginLeft={'auto'}>
-							{!props.usePoints
-								? '$' + StringUtils.formatMoney(props.taxAndFeeTotalInCent)
-								: StringUtils.addCommasToNumber(props.taxAndFeeTotalInCent) + ' pts'}
+							{MiscUtils.displayPointsOrCash(
+								verifiedAccommodation?.prices.taxAndFeeTotalInCents,
+								pointsOrCash()
+							)}
 						</Label>
 					</Box>
 				</Accordion>
@@ -314,15 +347,13 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				<Label variant={'h3'} width={'170px'}>
 					Total:
 				</Label>
-				{!props.usePoints ? (
-					<Label variant={'h3'} marginLeft={'auto'}>
-						${getCartTotal()}
-					</Label>
-				) : (
-					<Label variant={'h3'} marginLeft={'auto'}>
-						{StringUtils.addCommasToNumber(props.points + parseInt(getPackageTotal())) + ' pts'}
-					</Label>
-				)}
+				<Label variant={'h3'} marginLeft={'auto'}>
+					{MiscUtils.displayPointsOrCash(
+						verifiedAccommodation.prices.grandTotalCents +
+							totalPackages(verifiedAccommodation.upsellPackages || []),
+						pointsOrCash()
+					)}
+				</Label>
 			</Box>
 			<hr />
 		</Accordion>

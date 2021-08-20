@@ -8,8 +8,9 @@ export default class DestinationService extends Service {
 		let response = await http.get<Api.Destination.Res.GetByPage>('destination/paged');
 		return response.data.data;
 	}
-	async getDestinationById(id: Api.Destination.Req.Get) {
-		return await http.get<RsResponseData<Api.Destination.Res.Get>>('destination', id);
+	async getDestinationById(id: Api.Destination.Req.Get): Promise<Api.Destination.Res.Get> {
+		let response = await http.get<RsResponseData<Api.Destination.Res.Get>>('destination', id);
+		return response.data.data;
 	}
 
 	async getDestinationByIds(ids: Api.Destination.Req.Get[]) {
