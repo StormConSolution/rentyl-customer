@@ -14,10 +14,10 @@ export default class PackageService extends Service {
 		return response.data;
 	}
 
-	async getPackagesByIds(data: Api.UpsellPackage.Req.Get): Promise<Api.UpsellPackage.Details[]> {
-		let response = await http.get<RsResponseData<Api.UpsellPackage.Details[]>>(
-			'/package',
-			WebUtils.convertDataForUrlParams({ ids: data })
+	async getPackagesByIds(data: Api.UpsellPackage.Req.Availability): Promise<Api.UpsellPackage.Res.Available[]> {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.UpsellPackage.Details[]>>(
+			'/package/availability',
+			WebUtils.convertDataForUrlParams(data)
 		);
 		return response.data.data;
 	}

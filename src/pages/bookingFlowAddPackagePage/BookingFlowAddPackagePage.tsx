@@ -26,23 +26,17 @@ const BookingFlowAddPackagePage = () => {
 
 	useEffect(() => {
 		async function getAddedPackages() {
-			const addedPackages = await packageService.getPackagesByIds(params.data.newRoom.packages);
-			let convertedPackages: Api.UpsellPackage.Res.Available[] = addedPackages.map((item) => {
-				return {
-					priceCents: 0,
-					media: item.media,
-					id: item.id,
-					companyId: item.companyId,
-					destinationId: item.destinationId,
-					title: item.title,
-					description: item.description,
-					code: item.code,
-					isActive: item.isActive,
-					startDate: item.startDate,
-					endDate: item.endDate
-				};
+			const addedPackages = await packageService.getPackagesByIds({
+				destinationId: params.data.destinationId,
+				packageIds: params.data.newRoom.packages,
+				startDate: params.data.newRoom.arrivalDate,
+				endDate: params.data.newRoom.departureDate,
+				pagination: {
+					page: 1,
+					perPage: 5
+				}
 			});
-			setAddedPackages(convertedPackages);
+			setAddedPackages(addedPackages);
 		}
 		getAddedPackages().catch(console.error);
 	}, []);
