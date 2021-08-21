@@ -13,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { convertTwentyFourHourTime, DateUtils, MiscUtils, ObjectUtils } from '../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils, NumberUtils, ObjectUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -162,8 +162,8 @@ const BookingFlowCheckoutPage = () => {
 			if (usePoints)
 				return (
 					total +
-					MiscUtils.roundPointsToThousand(
-						MiscUtils.convertCentsToPoints(accommodation.prices.accommodationTotalInCents, 10)
+					NumberUtils.roundPointsToThousand(
+						NumberUtils.convertCentsToPoints(accommodation.prices.accommodationTotalInCents, 10)
 					) *
 						10 +
 					accommodation.upsellPackages.reduce((sum, item) => {
@@ -429,7 +429,7 @@ const BookingFlowCheckoutPage = () => {
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>
-						{MiscUtils.displayPointsOrCash(totalAccommodations(), usePoints ? 'points' : 'cash')}
+						{NumberUtils.displayPointsOrCash(totalAccommodations(), usePoints ? 'points' : 'cash')}
 					</Label>
 				</Box>
 			</Paper>

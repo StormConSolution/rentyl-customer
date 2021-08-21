@@ -3,7 +3,8 @@ import {
 	ObjectUtils as BaseObjectUtils,
 	RegionUtils as BaseRegionUtils,
 	WebUtils as BaseWebUtils,
-	DateUtils as BaseDateUtils
+	DateUtils as BaseDateUtils,
+	NumberUtils as BaseNumberUtils
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
 
@@ -48,7 +49,7 @@ class DateUtils extends BaseDateUtils {
 	}
 }
 
-class MiscUtils {
+class NumberUtils extends BaseNumberUtils {
 	static convertCentsToPoints(cents: number, ratio: number): number {
 		return Math.floor((cents / 100) * ratio);
 	}
@@ -60,7 +61,7 @@ class MiscUtils {
 	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string {
 		switch (type) {
 			case 'points':
-				return addCommasToNumber(MiscUtils.convertCentsToPoints(cents, 10)) + ' points';
+				return addCommasToNumber(NumberUtils.convertCentsToPoints(cents, 10)) + ' points';
 				break;
 			case 'cash':
 				return '$' + StringUtils.formatMoney(cents);
@@ -71,7 +72,7 @@ class MiscUtils {
 	}
 }
 
-export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils, MiscUtils };
+export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils, NumberUtils };
 
 export function formatDateTime(dateTime: string | Date) {
 	if (dateTime === 'N/A') return dateTime;

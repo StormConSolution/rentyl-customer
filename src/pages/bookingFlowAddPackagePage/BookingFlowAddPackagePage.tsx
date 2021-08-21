@@ -33,7 +33,7 @@ const BookingFlowAddPackagePage = () => {
 				endDate: params.data.newRoom.departureDate,
 				pagination: {
 					page: 1,
-					perPage: 5
+					perPage: params.data.newRoom.packages.length || 5
 				}
 			});
 			setAddedPackages(addedPackages);
