@@ -105,10 +105,12 @@ const ExistingItineraryPage: React.FC = () => {
 					totalPoints={reservation.priceDetail.grandTotalCents} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={reservation.cancellationPermitted}
-					itineraryTotal={item.reservations.reduce(
-						(total, reservation) => (total += reservation.priceDetail.grandTotalCents),
-						0
-					)}
+					itineraryTotal={item.reservations.reduce((total, reservation) => {
+						let packageTotal = reservation.upsellPackages.reduce((sum, item) => {
+							return sum + item.priceDetail.amountAfterTax * 100;
+						}, 0);
+						return total + reservation.priceDetail.grandTotalCents + packageTotal;
+					}, 0)}
 					paidWithPoints={!reservation.paymentMethod}
 				/>
 			);

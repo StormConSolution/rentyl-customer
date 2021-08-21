@@ -1,7 +1,7 @@
 import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
-import { addCommasToNumber, StringUtils } from '../../utils/utils';
+import { addCommasToNumber, NumberUtils, StringUtils } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
@@ -51,7 +51,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 					{company.allowPointBooking === 1 && (
 						<Label variant={company.allowCashBooking !== 1 ? 'h4' : 'body2'} className="points">
 							{addCommasToNumber(
-								StringUtils.convertCentsToPoints(accommodation.prices[0].priceCents, 10)
+								NumberUtils.convertCentsToPoints(accommodation.prices[0].priceCents, 10)
 							)}{' '}
 							pts
 						</Label>

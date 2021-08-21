@@ -13,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { convertTwentyFourHourTime, ObjectUtils, StringUtils } from '../../utils/utils';
+import { convertTwentyFourHourTime, DateUtils, NumberUtils, ObjectUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -26,29 +26,16 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
+import DestinationService from '../../services/destination/destination.service';
 
-interface Stay extends Omit<Api.Reservation.Req.Itinerary.Stay, 'numberOfAccommodations'> {
-	accommodationName: string;
-	prices: Api.Reservation.PriceDetail;
-	checkInTime: string;
-	checkoutTime: string;
-	packages: Api.UpsellPackage.Res.Booked[];
-	points: number;
-	destinationName: string;
-	policies: { type: Model.DestinationPolicyType; value: string }[];
-}
-
-interface StayParams {
+export interface StayParams {
 	adults: number;
 	children: number;
 	accommodationId: number;
 	arrivalDate: string;
 	departureDate: string;
 	packages: number[];
-}
-
-interface Verification extends Omit<Api.Reservation.Req.Verification, 'numberOfAccommodations'> {
-	packages?: number[];
+	rateCode?: string;
 }
 
 let existingCardId = 0;
@@ -58,6 +45,7 @@ const BookingFlowCheckoutPage = () => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	params.data = JSON.parse(params.data);
@@ -68,8 +56,9 @@ const BookingFlowCheckoutPage = () => {
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
-	const [priceInPoints, setPriceInPoints] = useState<number>(0);
-	const [accommodations, setAccommodations] = useState<Stay[]>([]);
+	const [verifiedAccommodations, setVerifiedAccommodations] = useState<Api.Reservation.Res.Verification[]>([]);
+	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
+	const [accommodations, setAccommodations] = useState<StayParams[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
 		lastName: user?.lastName || '',
@@ -86,51 +75,19 @@ const BookingFlowCheckoutPage = () => {
 
 	useEffect(() => {
 		if (!params) return;
-		async function getAccommodationDetails() {
-			params.data.numberOfAccommodations = 1;
-			let rooms: Stay[] = [];
-			for (const accommodation of params.data.stays) {
-				const response = await addAccommodation(accommodation);
-				if (response) {
-					rooms.push(response);
-				}
-			}
-			if (ObjectUtils.isArrayWithData(rooms)) {
-				setAccommodations(rooms);
-				setPriceInPoints(
-					rooms.reduce((total, accommodation) => {
-						return (
-							total +
-							roundPointsToThousand(
-								StringUtils.convertCentsToPoints(accommodation.prices.grandTotalCents, 10)
-							)
-						);
-					}, 0)
-				);
-				if (rooms.length < params.data.stays.length) {
-					delete params.data.numberOfAccommodations;
-					let data = JSON.stringify({
-						destinationId: params.data.destinationId,
-						stays: rooms.map((stay) => {
-							return {
-								adults: stay.adultCount,
-								children: stay.childCount,
-								accommodationId: stay.accommodationId,
-								arrivalDate: stay.arrivalDate,
-								departureDate: stay.departureDate,
-								packages: stay.packages.map((item) => item.id)
-							};
-						})
-					});
-					router.updateUrlParams({ data });
-				}
-			} else {
-				rsToasts.error('Accommodations are no longer available');
+		if (!params.data.destinationId || !params.data.stays)
+			router.navigate('/reservation/availability').catch(console.error);
+		async function getDestinationDetails() {
+			try {
+				let destination = await destinationService.getDestinationDetails(params.data.destinationId);
+				setDestinationDetails(destination);
+			} catch (e) {
+				rsToasts.error('Unable to get destination information', 'Server Error');
 				router.navigate('/reservation/availability').catch(console.error);
 			}
 		}
-
-		getAccommodationDetails().catch(console.error);
+		getDestinationDetails().catch(console.error);
+		setAccommodations(params.data.stays);
 	}, []);
 
 	useEffect(() => {
@@ -140,16 +97,16 @@ const BookingFlowCheckoutPage = () => {
 				let data = {
 					paymentMethodId: 0,
 					destinationId: destinationId,
-					stays: accommodations.map((accommodation) => {
+					stays: verifiedAccommodations.map((accommodation, index) => {
 						return {
-							accommodationId: accommodation.accommodationId,
+							accommodationId: accommodations[index].accommodationId,
 							numberOfAccommodations: 1,
-							arrivalDate: accommodation.arrivalDate,
-							departureDate: accommodation.departureDate,
-							adultCount: accommodation.adultCount,
-							childCount: accommodation.childCount,
+							arrivalDate: accommodation.checkInDate,
+							departureDate: accommodation.checkoutDate,
+							adultCount: accommodation.adults,
+							childCount: accommodation.children,
 							rateCode: accommodation.rateCode,
-							upsellPackages: accommodation.packages.map((item) => {
+							upsellPackages: accommodation.upsellPackages.map((item) => {
 								return {
 									id: item.id
 								};
@@ -191,63 +148,35 @@ const BookingFlowCheckoutPage = () => {
 		if (usePoints) {
 			let updateHasEnoughPoints: boolean = true;
 			if (user) {
-				updateHasEnoughPoints = priceInPoints < user.availablePoints;
+				updateHasEnoughPoints = 0 < user.availablePoints;
 				setHasEnoughPoints(updateHasEnoughPoints);
 			}
 			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints);
 		} else {
 			setIsDisabled(!hasAgreedToTerms || !isFormValid);
 		}
-	}, [hasAgreedToTerms, isFormValid, usePoints, priceInPoints]);
+	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
-	function roundPointsToThousand(num: number): number {
-		return Math.ceil(num / 1000) * 1000;
+	function totalAccommodations(): number {
+		let value = verifiedAccommodations.reduce((total, accommodation) => {
+			if (usePoints)
+				return (
+					total +
+					NumberUtils.roundPointsToThousand(
+						NumberUtils.convertCentsToPoints(accommodation.prices.accommodationTotalInCents, 10)
+					) *
+						10 +
+					accommodation.upsellPackages.reduce((sum, item) => {
+						return item.priceDetail.amountAfterTax * 100;
+					}, 0)
+				);
+			return total + accommodation.prices.grandTotalCents;
+		}, 0);
+		return value;
 	}
 
-	async function addAccommodation(data: Verification): Promise<Stay | undefined> {
-		try {
-			let verifyData: Api.Reservation.Req.Verification = {
-				accommodationId: data.accommodationId,
-				destinationId: destinationId,
-				adults: data.adults,
-				children: data.children,
-				rateCode: data.rateCode,
-				arrivalDate: data.arrivalDate,
-				departureDate: data.departureDate,
-				numberOfAccommodations: 1,
-				upsellPackages: data.packages
-					? data.packages.map((item: number) => {
-							return { id: item };
-					  })
-					: []
-			};
-			if (!!!verifyData.rateCode) delete verifyData.rateCode;
-			if (!ObjectUtils.isArrayWithData(verifyData.upsellPackages)) delete verifyData.upsellPackages;
-			let response = await reservationService.verifyAvailability(verifyData);
-			let stay: Stay = {
-				accommodationId: data.accommodationId,
-				accommodationName: response.accommodationName,
-				arrivalDate: response.checkInDate,
-				departureDate: response.checkoutDate,
-				adultCount: response.adults,
-				childCount: response.children,
-				rateCode: response.rateCode,
-				prices: response.prices,
-				checkInTime: response.checkInTime,
-				checkoutTime: response.checkoutTime,
-				guest: guestInfo,
-				packages: response.upsellPackages,
-				points: roundPointsToThousand(
-					StringUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
-				),
-				policies: response.policies,
-				destinationName: response.destinationName
-			};
-			return stay;
-		} catch (e) {
-			return undefined;
-			rsToasts.error('Accommodation no longer available, removed from list', 'Unavailable');
-		}
+	function addAccommodation(accommodation: Api.Reservation.Res.Verification) {
+		setVerifiedAccommodations([...verifiedAccommodations, accommodation]);
 	}
 
 	async function removeAccommodation(
@@ -268,7 +197,7 @@ const BookingFlowCheckoutPage = () => {
 			stays: newAccommodationList.map((accommodation) => {
 				return {
 					...accommodation,
-					packages: accommodation.packages.map((item: Api.UpsellPackage.Res.Get) => item.id)
+					packages: accommodation.packages
 				};
 			})
 		};
@@ -301,16 +230,17 @@ const BookingFlowCheckoutPage = () => {
 		popupController.close(EditAccommodationPopup);
 		try {
 			let newParams = params.data.stays;
-			const editedRoom: Omit<Verification, 'destinationId' | 'packages'> = {
+			const editedRoom: StayParams = {
 				adults,
 				children,
 				accommodationId,
-				rateCode,
-				arrivalDate: checkinDate,
-				departureDate: checkoutDate
+				arrivalDate: DateUtils.displayUserDate(checkinDate),
+				departureDate: DateUtils.displayUserDate(checkoutDate),
+				packages: [],
+				rateCode: rateCode || ''
 			};
 			newParams = [
-				...newParams.filter((stay: Verification) => {
+				...newParams.filter((stay: StayParams) => {
 					return (
 						stay.arrivalDate !== originalStartDate ||
 						stay.departureDate !== originalEndDate ||
@@ -319,18 +249,8 @@ const BookingFlowCheckoutPage = () => {
 				}),
 				editedRoom
 			];
+			setAccommodations(newParams);
 			router.updateUrlParams({ data: JSON.stringify({ destinationId: destinationId, stays: newParams }) });
-			const stay = await addAccommodation({ ...editedRoom, destinationId });
-			if (stay) {
-				let copiedAccommodations = accommodations.filter((accommodation) => {
-					return (
-						accommodation.accommodationId !== accommodationId ||
-						accommodation.arrivalDate !== originalStartDate ||
-						accommodation.departureDate !== originalEndDate
-					);
-				});
-				setAccommodations([...copiedAccommodations, stay]);
-			}
 		} catch (e) {
 			rsToasts.error('Unable to change room details');
 		}
@@ -353,24 +273,22 @@ const BookingFlowCheckoutPage = () => {
 			let data = {
 				paymentMethodId: !usePoints ? existingCardId : undefined,
 				destinationId: destinationId,
-				stays: accommodations.map((accommodation) => {
-					return {
-						accommodationId: accommodation.accommodationId,
-						numberOfAccommodations: 1,
-						arrivalDate: accommodation.arrivalDate,
-						departureDate: accommodation.departureDate,
-						adultCount: accommodation.adultCount,
-						childCount: accommodation.childCount,
-						rateCode: accommodation.rateCode,
-						upsellPackages: accommodation.packages.map((item) => {
-							return {
-								id: item.id
-							};
-						}),
-						guest: guestInfo,
-						additionalDetails: additionalDetails
-					};
-				})
+				stays: verifiedAccommodations.map(
+					(accommodation, index): Api.Reservation.Req.Itinerary.Stay => {
+						return {
+							accommodationId: accommodations[index].accommodationId,
+							numberOfAccommodations: 1,
+							arrivalDate: accommodation.checkInDate,
+							departureDate: accommodation.checkoutDate,
+							adultCount: accommodation.adults,
+							childCount: accommodation.children,
+							rateCode: accommodation.rateCode,
+							upsellPackages: accommodation.upsellPackages,
+							guest: guestInfo,
+							additionalDetails: additionalDetails
+						};
+					}
+				)
 			};
 			try {
 				let res = await reservationService.createItinerary(data);
@@ -390,8 +308,8 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	function renderPolicies() {
-		if (!accommodations[0].policies) return;
-		return accommodations[0].policies.map((item) => {
+		if (!destinationDetails?.policies) return;
+		return destinationDetails.policies.map((item) => {
 			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
 			return (
 				<>
@@ -419,21 +337,15 @@ const BookingFlowCheckoutPage = () => {
 					accommodations.map((accommodation, index) => {
 						return (
 							<BookingCartTotalsCard
-								key={index}
-								checkInTime={accommodation.checkInTime}
-								checkoutTime={accommodation.checkoutTime}
-								checkInDate={accommodation.arrivalDate}
-								checkoutDate={accommodation.departureDate}
-								accommodationName={accommodation.accommodationName}
-								accommodationTotalInCents={accommodation.prices.accommodationTotalInCents}
-								taxAndFeeTotalInCent={accommodation.prices.taxAndFeeTotalInCents}
-								feeTotalsInCents={accommodation.prices.feeTotalsInCents}
-								taxTotalsInCents={accommodation.prices.taxTotalsInCents}
-								costPerNight={accommodation.prices.accommodationDailyCostsInCents}
-								adults={accommodation.adultCount}
-								children={accommodation.childCount}
-								grandTotalCents={accommodation.prices.grandTotalCents}
-								packages={accommodation.packages}
+								adults={accommodation.adults}
+								children={accommodation.children}
+								accommodationId={accommodation.accommodationId}
+								arrivalDate={accommodation.arrivalDate}
+								departureDate={accommodation.departureDate}
+								upsellPackages={accommodation.packages}
+								destinationId={params.data.destinationId}
+								rateCode={accommodation.rateCode}
+								addAccommodation={addAccommodation}
 								remove={() => {
 									popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
 										bodyText: 'Are you sure you want to remove this?',
@@ -454,12 +366,12 @@ const BookingFlowCheckoutPage = () => {
 										(stay: StayParams) => stay.accommodationId !== accommodation.accommodationId
 									);
 									let newRoom = {
-										adults: accommodation.adultCount,
-										children: accommodation.childCount,
+										adults: accommodation.adults,
+										children: accommodation.children,
 										accommodationId: accommodation.accommodationId,
 										arrivalDate: accommodation.arrivalDate,
 										departureDate: accommodation.departureDate,
-										packages: accommodation.packages.map((item) => item.id)
+										packages: accommodation.packages
 									};
 									let data = JSON.stringify({
 										destinationId: params.data.destinationId,
@@ -471,8 +383,8 @@ const BookingFlowCheckoutPage = () => {
 								edit={(id, checkInDate, checkoutDate) => {
 									popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
 										accommodationId: id,
-										adults: accommodation.adultCount,
-										children: accommodation.childCount,
+										adults: accommodation.adults,
+										children: accommodation.children,
 										destinationId: destinationId,
 										rateCode: accommodation.rateCode,
 										endDate: checkoutDate,
@@ -501,9 +413,7 @@ const BookingFlowCheckoutPage = () => {
 									});
 								}}
 								changeRoom={changeRoom}
-								accommodationId={accommodation.accommodationId}
 								cancellable={true}
-								points={accommodation.points}
 								usePoints={usePoints}
 							/>
 						);
@@ -518,30 +428,9 @@ const BookingFlowCheckoutPage = () => {
 				/>
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
-					{!usePoints ? (
-						<Label variant={'h2'}>
-							$
-							{StringUtils.formatMoney(
-								accommodations.reduce((total, accommodation) => {
-									let packageTotal = accommodation.packages.reduce((sum, item) => {
-										return sum + item.priceDetail.amountAfterTax * 100;
-									}, 0);
-									return total + accommodation.prices.grandTotalCents + packageTotal;
-								}, 0)
-							)}
-						</Label>
-					) : (
-						<Label variant={'h2'}>
-							{StringUtils.addCommasToNumber(
-								accommodations.reduce((total, accommodation) => {
-									let packageTotal = accommodation.packages.reduce((sum, item) => {
-										return sum + Math.floor(item.priceDetail.amountAfterTax * 10);
-									}, 0);
-									return total + accommodation.points + packageTotal;
-								}, 0)
-							) + ' points'}
-						</Label>
-					)}
+					<Label variant={'h2'}>
+						{NumberUtils.displayPointsOrCash(totalAccommodations(), usePoints ? 'points' : 'cash')}
+					</Label>
 				</Box>
 			</Paper>
 		);
@@ -599,19 +488,15 @@ const BookingFlowCheckoutPage = () => {
 							<Box display={'flex'} mb={10}>
 								<Box marginRight={'50px'}>
 									<Label variant={'h4'}>Check-in</Label>
-									<Label variant={'body1'}>
-										After {convertTwentyFourHourTime(accommodations[0]?.checkInTime)}
-									</Label>
+									<Label variant={'body1'}>After {convertTwentyFourHourTime(1600)}</Label>
 								</Box>
 								<Box>
 									<Label variant={'h4'}>Check-out</Label>
-									<Label variant={'body1'}>
-										Before {convertTwentyFourHourTime(accommodations[0]?.checkoutTime)}
-									</Label>
+									<Label variant={'body1'}>Before {convertTwentyFourHourTime(1000)}</Label>
 								</Box>
 							</Box>
 							<Label variant={'body1'} mb={10}>
-								{accommodations[0].destinationName}
+								{destinationDetails?.name}
 							</Label>
 							{renderPolicies()}
 						</Paper>

@@ -96,7 +96,7 @@ const EditExistingPackagesPage: React.FC = () => {
 					text={'Remove'}
 					title={item.title}
 					description={item.description}
-					priceCents={0}
+					priceCents={item.priceDetail.amountAfterTax * 100}
 					imgPaths={item.media.map((item) => {
 						return item.urls.large;
 					})}
