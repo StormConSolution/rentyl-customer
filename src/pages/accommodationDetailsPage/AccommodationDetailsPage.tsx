@@ -41,13 +41,10 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
-
 	const size = useWindowResizeChange();
-
 	const params = router.getPageUrlParams<{ accommodationId: number }>([
 		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' }
 	]);
-
 	const [available, setAvailable] = useState<boolean>(true);
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
@@ -57,7 +54,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 	const [availabilityObj, setAvailabilityObj] = useState({
 		arrivalDate: '',
 		departureDate: '',
-		adults: 0
+		adults: 1
 	});
 
 	useEffect(() => {
@@ -89,7 +86,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 			availabilityObj.adults < 1
 		)
 			return;
-		popupController.open(SpinningLoaderPopup);
 		if (!accommodationDetails || !destinationDetails) return false;
 		try {
 			let data: Api.Reservation.Req.Verification = {
@@ -102,11 +98,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 				numberOfAccommodations: 1
 			};
 			await reservationsService.verifyAvailability(data);
-			popupController.close(SpinningLoaderPopup);
 			setAvailable(true);
 			return true;
 		} catch {
-			popupController.close(SpinningLoaderPopup);
 			setAvailable(false);
 			return false;
 		}
