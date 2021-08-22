@@ -25,6 +25,7 @@ const BookingFlowAddPackagePage = () => {
 	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
 
 	useEffect(() => {
+		if (!params.data.newRoom.packages) return;
 		async function getAddedPackages() {
 			const addedPackages = await packageService.getPackagesByIds({
 				destinationId: params.data.destinationId,

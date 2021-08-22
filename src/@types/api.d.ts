@@ -348,7 +348,10 @@ declare namespace Api {
 			}
 			export interface Role {}
 			export interface UpdateUnauthorizedPages {
-				unauthorizedPages: string[];
+				unauthorizedPages: Model.PageGuard[];
+			}
+			export interface UpdateAvailablePages {
+				availablePages: Model.PageGuard[];
 			}
 		}
 		export namespace Res {
@@ -360,9 +363,10 @@ declare namespace Api {
 				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
 				allowPointBooking: 0 | 1;
 				allowCashBooking: 0 | 1;
-				customPages: any;
-				unauthorizedPages: string[];
+				customPages: { [key: string]: any };
+				unauthorizedPages: Model.PageGuard[];
 			}
+			export interface GetAvailablePages extends Model.PageGuard {}
 		}
 	}
 
@@ -855,7 +859,9 @@ declare namespace Api {
 			feeTotalsInCents: { name: string; amount: number }[];
 			taxTotalsInCents: { name: string; amount: number }[];
 			taxAndFeeTotalInCents: number;
+			upsellPackageTotalInCents: number;
 			grandTotalCents: number;
+			grandTotalPoints: number;
 		}
 
 		export interface PaymentMethod {
@@ -1098,6 +1104,9 @@ declare namespace Api {
 				reviewId: number;
 			}
 			export interface UnPublish {
+				reviewId: number;
+			}
+			export interface Publish {
 				reviewId: number;
 			}
 		}

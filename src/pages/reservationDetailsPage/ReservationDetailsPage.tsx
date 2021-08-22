@@ -213,7 +213,7 @@ const ReservationDetailsPage: React.FC = () => {
 								upsellPackages={reservation.upsellPackages}
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
-								points={reservation.priceDetail.grandTotalCents}
+								points={reservation.priceDetail.grandTotalPoints}
 								paidWithPoints={!reservation.paymentMethod}
 							/>
 							<Label variant={'h1'} mb={40}>
