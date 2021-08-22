@@ -21,7 +21,7 @@ interface ItineraryCostSummaryCardProps {
 		arrivalDate: string | Date;
 		departureDate: string | Date;
 		nights: number;
-		cost: number;
+		subtotalCostCents: number;
 		taxesAndFees: number;
 		points: number;
 	}[];
@@ -29,21 +29,14 @@ interface ItineraryCostSummaryCardProps {
 }
 
 const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props) => {
-	const [taxesAndFees, setTaxesAndFees] = useState<number>(0);
-	const [totalCost, setTotalCost] = useState<number>(0);
-	useEffect(() => {
-		setTotalCost(
-			props.reservation.reduce((acc: number, item) => {
-				if (props.paidWithPoints) return acc + item.points;
-				return acc + item.cost;
-			}, 0)
-		);
-		setTaxesAndFees(
-			props.reservation.reduce((acc: number, item) => {
-				return acc + item.taxesAndFees;
-			}, 0)
-		);
-	}, [props.reservation]);
+	let grandTotalCents = 0;
+	let grandTotalTaxFeeCents = 0;
+	let grandTotalPoints = 0;
+	props.reservation.forEach((reservation) => {
+		grandTotalCents += reservation.subtotalCostCents;
+		grandTotalTaxFeeCents += reservation.taxesAndFees;
+		grandTotalPoints += reservation.points;
+	});
 
 	function renderReservations() {
 		return props.reservation.map((item, index) => {
@@ -52,7 +45,7 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 					<Box display={'flex'} justifyContent={'space-between'}>
 						<Label variant={'h4'}>{item.name}</Label>
 						{!props.paidWithPoints ? (
-							<Label variant={'h4'}>${StringUtils.formatMoney(item.cost)}</Label>
+							<Label variant={'h4'}>${StringUtils.formatMoney(item.subtotalCostCents)}</Label>
 						) : (
 							<Label variant={'h4'}>{StringUtils.addCommasToNumber(item.points)} points</Label>
 						)}
@@ -79,16 +72,16 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 			{!props.paidWithPoints && (
 				<Box display={'flex'} justifyContent={'space-between'}>
 					<Label variant={'h4'}>TAXES AND FEES</Label>
-					<Label variant={'h4'}>${StringUtils.formatMoney(taxesAndFees)}</Label>
+					<Label variant={'h4'}>${StringUtils.formatMoney(grandTotalTaxFeeCents)}</Label>
 				</Box>
 			)}
 			{!props.paidWithPoints && <hr />}
 			<Box display={'flex'} justifyContent={'space-between'}>
 				<Label variant={'h2'}>Total:</Label>
 				{!props.paidWithPoints ? (
-					<Label variant={'h2'}>${StringUtils.formatMoney(totalCost + taxesAndFees)}</Label>
+					<Label variant={'h2'}>${StringUtils.formatMoney(grandTotalCents + grandTotalTaxFeeCents)}</Label>
 				) : (
-					<Label variant={'h2'}>{StringUtils.addCommasToNumber(totalCost)} Points</Label>
+					<Label variant={'h2'}>{StringUtils.addCommasToNumber(grandTotalPoints)} Points</Label>
 				)}
 			</Box>
 		</Paper>

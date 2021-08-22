@@ -93,7 +93,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					return {
 						name: item.accommodation.name,
 						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
-						cost: item.priceDetail.grandTotalCents,
+						subtotalCostCents: item.priceDetail.grandTotalCents - item.priceDetail.taxAndFeeTotalInCents,
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
 						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
