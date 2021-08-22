@@ -153,7 +153,6 @@ const EditExistingPackagesPage: React.FC = () => {
 	async function updateReservationPackages() {
 		if (!reservation) return;
 		popupController.open(SpinningLoaderPopup);
-		let newCurrentReservationPackages = [...currentReservationPackages];
 		let data: Api.Reservation.Req.Update = {
 			id: reservation.id,
 			rateCode: reservation.rateCode,
@@ -161,10 +160,12 @@ const EditExistingPackagesPage: React.FC = () => {
 			guest: reservation.guest,
 			accommodationId: reservation.accommodation.id,
 			numberOfAccommodations: 1,
-			upsellPackages: newCurrentReservationPackages
+			upsellPackages: currentReservationPackages.map((booked) => {
+				return { id: booked.id };
+			})
 		};
 		try {
-			let res = await reservationsService.update(data);
+			await reservationsService.update(data);
 			popupController.close(SpinningLoaderPopup);
 			router
 				.navigate(`/reservations/itinerary/reservation/details?ri=${params.reservationId}`)
