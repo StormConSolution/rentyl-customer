@@ -228,20 +228,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						delete data.pagination;
 						delete data.startDate;
 						delete data.endDate;
-						data = JSON.stringify(data);
+						data = JSON.stringify({ destinationId: destinationDetails.id, newRoom: data });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
 							});
 						} else {
-							router
-								.navigate(
-									`/booking/packages?data=${JSON.stringify({
-										destinationId: destinationDetails.id,
-										newRoom: JSON.parse(data)
-									})}`
-								)
-								.catch(console.error);
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
 					}}
 					onViewDetailsClick={() => {
