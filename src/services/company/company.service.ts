@@ -9,7 +9,7 @@ export default class CompanyService extends Service {
 		return res.data.data;
 	}
 
-	async updateAvailablePages(data: Api.Company.Req.UpdateAvailablePages) {
+	async updateAvailablePages(data: Api.Company.Req.UpdateAvailablePages): Promise<boolean> {
 		const response = await http.put<RedSky.RsResponseData<boolean>>('/company/available-pages', data);
 		return response.data.data;
 	}
