@@ -234,7 +234,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 								query: data
 							});
 						} else {
-							router.navigate(`/booking/packages?data=${JSON.stringify(data)}`).catch(console.error);
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
 					}}
 					onViewDetailsClick={() => {
