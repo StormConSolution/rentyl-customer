@@ -27,6 +27,11 @@ const BookingFlowAddPackagePage = () => {
 	useEffect(() => {
 		if (!params.data.newRoom.packages) return;
 		async function getAddedPackages() {
+			if (!ObjectUtils.isArrayWithData(params.data.newRoom.packages)) {
+				setAddedPackages([]);
+				return;
+			}
+
 			const addedPackages = await packageService.getPackagesByIds({
 				destinationId: params.data.destinationId,
 				packageIds: params.data.newRoom.packages,

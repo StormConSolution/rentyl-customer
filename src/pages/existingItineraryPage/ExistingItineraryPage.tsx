@@ -87,35 +87,31 @@ const ExistingItineraryPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(upComingReservations)) return;
 
 		let itineraries = groupMatchingItineraries(upComingReservations);
-		if (!ObjectUtils.isArrayWithData(itineraries))
-			return itineraries.map((item, index) => {
-				let reservation = item.reservations[0];
-				return (
-					<ReservationCard
-						key={reservation.id}
-						itineraryId={item.itineraryId}
-						imgPaths={reservation.destination.media.map((item) => item.urls.large)}
-						logo={reservation.destination.logoUrl}
-						title={'Itinerary-' + reservation.destination.name}
-						address={`${reservation.destination.address1}, ${reservation.destination.city}, ${reservation.destination.state} ${reservation.destination.zip}`}
-						reservationDates={{ startDate: reservation.arrivalDate, endDate: reservation.departureDate }}
-						propertyType={'VIP Suite'}
-						maxOccupancy={reservation.accommodation.maxOccupantCount}
-						amenities={reservation.accommodation.featureIcons}
-						totalCostCents={reservation.priceDetail.grandTotalCents}
-						totalPoints={reservation.priceDetail.grandTotalPoints}
-						linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
-						cancelPermitted={reservation.cancellationPermitted}
-						itineraryTotal={item.reservations.reduce((total, reservation) => {
-							let packageTotal = reservation.upsellPackages.reduce((sum, item) => {
-								return sum + item.priceDetail.amountAfterTax * 100;
-							}, 0);
-							return total + reservation.priceDetail.grandTotalCents + packageTotal;
-						}, 0)}
-						paidWithPoints={!reservation.paymentMethod}
-					/>
-				);
-			});
+
+		return itineraries.map((item, index) => {
+			let reservation = item.reservations[0];
+			return (
+				<ReservationCard
+					key={reservation.id}
+					itineraryId={item.itineraryId}
+					imgPaths={reservation.destination.media.map((item) => item.urls.large)}
+					logo={reservation.destination.logoUrl}
+					title={'Itinerary-' + reservation.destination.name}
+					address={`${reservation.destination.address1}, ${reservation.destination.city}, ${reservation.destination.state} ${reservation.destination.zip}`}
+					reservationDates={{ startDate: reservation.arrivalDate, endDate: reservation.departureDate }}
+					propertyType={'VIP Suite'}
+					maxOccupancy={reservation.accommodation.maxOccupantCount}
+					amenities={reservation.accommodation.featureIcons}
+					totalPoints={reservation.priceDetail.grandTotalPoints}
+					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
+					cancelPermitted={reservation.cancellationPermitted}
+					itineraryTotal={item.reservations.reduce((total, reservation) => {
+						return total + reservation.priceDetail.grandTotalCents;
+					}, 0)}
+					paidWithPoints={!reservation.paymentMethod}
+				/>
+			);
+		});
 	}
 
 	function renderPrevReservations() {
@@ -137,14 +133,12 @@ const ExistingItineraryPage: React.FC = () => {
 					propertyType={'VIP Suite'}
 					maxOccupancy={reservation.accommodation.maxOccupantCount}
 					amenities={reservation.accommodation.featureIcons}
-					totalCostCents={reservation.priceDetail.grandTotalCents}
 					totalPoints={reservation.priceDetail.grandTotalCents} //This needs to be added to the endpoint.
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={0}
-					itineraryTotal={item.reservations.reduce(
-						(total, reservation) => (total += reservation.priceDetail.grandTotalCents),
-						0
-					)}
+					itineraryTotal={item.reservations.reduce((total, reservation) => {
+						return total + reservation.priceDetail.grandTotalCents;
+					}, 0)}
 					paidWithPoints={!reservation.paymentMethod}
 				/>
 			);

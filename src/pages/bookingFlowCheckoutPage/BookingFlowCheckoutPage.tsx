@@ -167,7 +167,7 @@ const BookingFlowCheckoutPage = () => {
 					) *
 						10 +
 					accommodation.upsellPackages.reduce((sum, item) => {
-						return item.priceDetail.amountAfterTax * 100;
+						return item.priceDetail.amountAfterTax;
 					}, 0)
 				);
 			return total + accommodation.prices.grandTotalCents;
