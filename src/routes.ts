@@ -30,12 +30,11 @@ import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExist
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
 import globalState, { getRecoilExternalValue } from './models/globalState';
 
-// const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
-
-const routes: RouteDetails[] = [
+export const routes: RouteDetails[] = [
 	{
 		path: '/',
 		page: LandingPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
@@ -43,6 +42,7 @@ const routes: RouteDetails[] = [
 	{
 		path: '/success',
 		page: SuccessPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
@@ -50,13 +50,15 @@ const routes: RouteDetails[] = [
 	{
 		path: '/signin',
 		page: SignInPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
 	},
 	{
 		path: '/signup',
-		page: SignUpPage
+		page: SignUpPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/password-reset',
@@ -65,35 +67,43 @@ const routes: RouteDetails[] = [
 	},
 	{
 		path: '/reservation/availability',
-		page: ReservationAvailabilityPage
+		page: ReservationAvailabilityPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservations',
-		page: ExistingItineraryPage
+		page: ExistingItineraryPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservations/edit-room',
-		page: EditFlowModifyRoomPage
+		page: EditFlowModifyRoomPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservations/edit-services',
-		page: EditExistingPackagesPage
+		page: EditExistingPackagesPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservations/itinerary/details',
-		page: ItineraryDetailsPage
+		page: ItineraryDetailsPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reservations/itinerary/reservation/details',
-		page: ReservationDetailsPage
+		page: ReservationDetailsPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/compare',
-		page: ComparisonPage
+		page: ComparisonPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/booking',
 		page: BookingFlowCheckoutPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
@@ -101,37 +111,45 @@ const routes: RouteDetails[] = [
 	{
 		path: '/booking/checkout',
 		page: BookingFlowCheckoutPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
 	},
 	{
 		path: '/booking/add-room',
-		page: BookingFlowAddRoomPage
+		page: BookingFlowAddRoomPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/booking/packages',
-		page: BookingFlowAddPackagePage
+		page: BookingFlowAddPackagePage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reward',
-		page: RewardItemPage
+		page: RewardItemPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reward/details',
-		page: RewardDetailPage
+		page: RewardDetailPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reward/purchase',
-		page: RewardPurchasePage
+		page: RewardPurchasePage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/reward/confirm',
-		page: OrderConfirmationPage
+		page: OrderConfirmationPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/destination/details',
 		page: DestinationDetailsPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
@@ -139,6 +157,7 @@ const routes: RouteDetails[] = [
 	{
 		path: '/account/personal-info',
 		page: AccountPersonalInfoPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
@@ -146,17 +165,20 @@ const routes: RouteDetails[] = [
 	{
 		path: '/account/address',
 		page: AccountAddressPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
 	},
 	{
 		path: '/account/points',
-		page: AccountPointsPage
+		page: AccountPointsPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/account/payment-methods',
 		page: AccountPaymentMethodsPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
@@ -164,37 +186,44 @@ const routes: RouteDetails[] = [
 	{
 		path: '/accommodation/details',
 		page: AccommodationDetailsPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
 	},
 	{
 		path: '/about-spire-points',
-		page: AboutSpirePointsPage
+		page: AboutSpirePointsPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/about-spire',
-		page: AboutSpirePage
+		page: AboutSpirePage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/features-and-benefits',
-		page: FeaturesAndBenefitsPage
+		page: FeaturesAndBenefitsPage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '*',
 		page: NotFoundPage,
+		routeGuard: verifyRoute,
 		options: {
 			view: 'home'
 		}
 	}
 ];
 
-function verifyRoute() {
-	routes.forEach((item) => {
-		console.log(item.page);
-	});
-	if (window.location.hostname.includes('rentyl')) return '/not-found';
-	return true;
+function verifyRoute(path: string): boolean | string {
+	const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables | undefined>(
+		globalState.company
+	);
+	if (!company) return true;
+	let isUnauthorized = company.unauthorizedPages.find((item) => item.route === path);
+	if (!!isUnauthorized) return isUnauthorized.reRoute;
+	else return true;
 }
 
 export default routes;

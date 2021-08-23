@@ -17,6 +17,7 @@ import AccountOverview from './popups/accountOverview/AccountOverview';
 import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
 import useCompanyInfo from './customHooks/useCompanyInfo';
 import { useSetCustomToast } from './customHooks/useSetCustomToast';
+import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
@@ -25,6 +26,7 @@ function App() {
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
 	const isCompanyLoaded = useCompanyInfo();
+	useUpdateExistingPages();
 
 	useEffect(() => {
 		AOS.init({

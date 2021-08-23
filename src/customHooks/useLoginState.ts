@@ -3,6 +3,7 @@ import globalState, { clearPersistentState } from '../models/globalState';
 import serviceFactory from '../services/serviceFactory';
 import UserService from '../services/user/user.service';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import router from '../utils/router';
 
 export enum LoginStatus {
 	UNKNOWN,
@@ -15,6 +16,7 @@ export default function useLoginState() {
 	const [userToken, setUserToken] = useRecoilState<string>(globalState.userToken);
 	const userService = serviceFactory.get<UserService>('UserService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const params = router.getPageUrlParams<{ token: string }>([{ key: 'token', default: '', type: 'string' }]);
 
 	useEffect(() => {
 		// Determine if our token is valid or not
@@ -30,13 +32,16 @@ export default function useLoginState() {
 
 	useEffect(() => {
 		async function initialStartup() {
-			if (!userToken) {
+			let token = userToken;
+			if (params.token) token = params.token;
+
+			if (!token) {
 				setLoginStatus(LoginStatus.LOGGED_OUT);
 				return;
 			}
 
 			try {
-				await userService.loginUserByToken(userToken);
+				await userService.loginUserByToken(token);
 				setLoginStatus(LoginStatus.LOGGED_IN);
 			} catch (e) {
 				clearPersistentState();

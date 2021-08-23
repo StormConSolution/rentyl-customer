@@ -93,7 +93,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								variant={'h4'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signup').catch(console.error);
+									router.navigate('/account/points').catch(console.error);
 								}}
 							/>
 						</Box>
