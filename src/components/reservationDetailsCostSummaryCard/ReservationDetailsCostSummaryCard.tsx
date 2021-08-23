@@ -51,7 +51,7 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 				<Box display={'flex'} alignItems={'center'} key={item.id}>
 					<Label variant={'body1'}>{item.title}</Label>
 					<Label variant={'body1'} marginLeft={'auto'}>
-						${item.priceDetail.amountAfterTax}
+						${StringUtils.formatMoney(item.priceDetail.amountAfterTax)}
 					</Label>
 				</Box>
 			);
@@ -121,27 +121,9 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Box display={'flex'} justifyContent={'space-between'}>
 				<Label variant={'h2'}>Total:</Label>
 				{!props.paidWithPoints ? (
-					<Label variant={'h2'}>
-						$
-						{StringUtils.formatMoney(
-							props.grandTotalCents +
-								props.upsellPackages.reduce((total, item) => {
-									return total + item.priceDetail.amountAfterTax * 100;
-								}, 0)
-						)}
-					</Label>
+					<Label variant={'h2'}>${StringUtils.formatMoney(props.grandTotalCents)}</Label>
 				) : (
-					<Label variant={'h2'}>
-						{StringUtils.addCommasToNumber(
-							props.points +
-								Math.floor(
-									props.upsellPackages.reduce((total, item) => {
-										return total + item.priceDetail.amountAfterTax * 10;
-									}, 0)
-								)
-						)}{' '}
-						Points
-					</Label>
+					<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.points)} Points</Label>
 				)}
 			</Box>
 		</Paper>

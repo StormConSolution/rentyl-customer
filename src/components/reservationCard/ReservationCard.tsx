@@ -14,7 +14,6 @@ interface ReservationCardProps {
 	itineraryId: string;
 	maxOccupancy: number;
 	amenities: string[];
-	totalCostCents: number;
 	totalPoints: number;
 	linkPath: string;
 	cancelPermitted: 0 | 1;
@@ -35,7 +34,6 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 			itineraryId={props.itineraryId}
 			maxOccupancy={props.maxOccupancy}
 			amenities={props.amenities}
-			totalCostCents={props.totalCostCents}
 			totalPoints={props.totalPoints}
 			linkPath={props.linkPath}
 			cancelPermitted={props.cancelPermitted}
@@ -53,7 +51,6 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 			itineraryId={props.itineraryId}
 			maxOccupancy={props.maxOccupancy}
 			amenities={props.amenities}
-			totalCostCents={props.totalCostCents}
 			totalPoints={props.totalPoints}
 			linkPath={props.linkPath}
 			cancelPermitted={props.cancelPermitted}

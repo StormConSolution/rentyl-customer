@@ -94,8 +94,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
 		return packages.reduce((total, item) => {
-			//currently prices are saved as floats so 23.61 instead of in cents like everything else 2361
-			return total + item.priceDetail.amountAfterTax * 100;
+			return total + item.priceDetail.amountAfterTax;
 		}, 0);
 	}
 
@@ -220,10 +219,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						{item.title}
 					</Label>
 					<Box display={'flex'} marginLeft={'auto'}>
-						{NumberUtils.displayPointsOrCash(
-							Math.floor(item.priceDetail.amountAfterTax * 100),
-							pointsOrCash()
-						)}
+						{NumberUtils.displayPointsOrCash(Math.floor(item.priceDetail.amountAfterTax), pointsOrCash())}
 					</Box>
 				</Box>
 			);

@@ -20,7 +20,6 @@ interface ReservationCardResponsiveProps {
 	itineraryId: string;
 	maxOccupancy: number;
 	amenities: string[];
-	totalCostCents: number;
 	totalPoints: number;
 	linkPath: string;
 	cancelPermitted: 0 | 1;

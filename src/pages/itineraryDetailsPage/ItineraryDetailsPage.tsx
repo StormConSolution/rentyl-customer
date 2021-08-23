@@ -93,11 +93,17 @@ const ItineraryDetailsPage: React.FC = () => {
 					return {
 						name: item.accommodation.name,
 						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
-						subtotalCostCents: item.priceDetail.grandTotalCents - item.priceDetail.taxAndFeeTotalInCents,
+						subtotalCostCents:
+							item.priceDetail.grandTotalCents -
+							item.priceDetail.taxAndFeeTotalInCents -
+							item.priceDetail.upsellPackageTotalInCents,
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
 						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
-						points: item.priceDetail.grandTotalPoints
+						points: item.priceDetail.grandTotalPoints,
+						packagesTotalCostCents: item.upsellPackages.reduce((accumulate, booked) => {
+							return accumulate + booked.priceDetail.amountBeforeTax;
+						}, 0)
 					};
 				})}
 				paidWithPoints={!itinerary.paymentMethod}
