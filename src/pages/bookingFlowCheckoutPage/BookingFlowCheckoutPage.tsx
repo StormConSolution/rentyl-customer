@@ -191,6 +191,9 @@ const BookingFlowCheckoutPage = () => {
 				};
 			})
 		};
+		let copy = [...verifiedAccommodations];
+		copy.splice(index, 1);
+		setVerifiedAccommodations(copy);
 		if (!newAccommodationList.length) {
 			await router.navigate('/reservation/availability').catch(console.error);
 		} else router.updateUrlParams({ data: JSON.stringify(data) });
