@@ -510,13 +510,7 @@ const BookingFlowCheckoutPage = () => {
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
 							variant={'button'}
-							label={
-								usePoints && !hasEnoughPoints
-									? 'Not Enough Points'
-									: verifiedAccommodations.length === accommodations.length
-									? 'complete booking'
-									: 'Unavailable'
-							}
+							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'Complete Booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);
 							}}

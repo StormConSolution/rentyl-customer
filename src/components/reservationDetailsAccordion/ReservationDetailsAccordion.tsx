@@ -9,7 +9,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
-import { DateUtils, formatPhoneNumber, ObjectUtils } from '../../utils/utils';
+import { DateUtils, formatPhoneNumber, ObjectUtils, StringUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ReservationDetailsAccordionProps {
@@ -51,8 +51,8 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 			new RsFormControl('contactInfo', props.contactInfo || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'A name is required'),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Must have first and last name', (control) => {
-					let name = control.value.toString();
-					return name.split(' ').length === 2;
+					let name = StringUtils.removeLineEndings(control.value.toString());
+					return name.split(' ').length > 1;
 				})
 			]),
 			new RsFormControl('email', props.email || '', [

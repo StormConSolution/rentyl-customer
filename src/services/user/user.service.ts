@@ -78,17 +78,6 @@ export default class UserService extends Service {
 		return await http.put<RsResponseData<boolean>>('user/password', data);
 	}
 
-	// async getPaginatedList(
-	// 	page: number,
-	// 	perPage: number,
-	// 	sortField?: string,
-	// 	sortOrder?: RedSky.StandardOrderTypes,
-	// 	filter?: RedSky.FilterQuery | null,
-	// 	alternatePath?: string
-	// ) {
-	// 	return await this.userModel.getPaginatedList<any>(page, perPage, sortField, sortOrder, filter, alternatePath);
-	// }
-
 	private async onAfterLogin(user: Api.User.Res.Detail) {
 		let axiosConfig = http.currentConfig();
 		axiosConfig.headers = { ...axiosConfig.headers, token: user.token };

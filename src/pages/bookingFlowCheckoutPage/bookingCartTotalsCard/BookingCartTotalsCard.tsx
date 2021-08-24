@@ -402,7 +402,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	return verifyStatus === 'verifying' ? (
 		<div className={'rsBookingCartTotalsCard'}>
 			<div className={'loader'} />
-			{/*<Label variant={'h1'}>Verifying Availability...</Label>{' '}*/}
 		</div>
 	) : verifyStatus === 'available' ? (
 		renderCard()
