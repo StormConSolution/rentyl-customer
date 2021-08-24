@@ -30,10 +30,6 @@ import DestinationService from '../../services/destination/destination.service';
 
 let existingCardId = 0;
 
-interface VerifiedStay extends Api.Reservation.Res.Verification {
-	uuid?: number;
-}
-
 const BookingFlowCheckoutPage = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
@@ -51,7 +47,9 @@ const BookingFlowCheckoutPage = () => {
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
 	const [grandTotal, setGrandTotal] = useState<number>(0);
-	const [verifiedAccommodations, setVerifiedAccommodations] = useState<VerifiedStay[]>([]);
+	const [verifiedAccommodations, setVerifiedAccommodations] = useState<{
+		[uuid: number]: Api.Reservation.Res.Verification;
+	}>({});
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [stayParams, setStayParams] = useState<Misc.StayParams[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
@@ -90,39 +88,37 @@ const BookingFlowCheckoutPage = () => {
 	}, []);
 
 	useEffect(() => {
-		let value = verifiedAccommodations.reduce((total, accommodation) => {
+		let value = Object.values(verifiedAccommodations).reduce((total, accommodation) => {
 			if (usePoints) return total + accommodation.prices.grandTotalPoints;
 			return total + accommodation.prices.grandTotalCents;
 		}, 0);
 		setGrandTotal(value);
-		console.log('Verify', verifiedAccommodations);
 	}, [verifiedAccommodations, usePoints]);
 
 	useEffect(() => {
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
+				let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
+				Object.values(verifiedAccommodations).forEach((verification) => {
+					let accommodation = {
+						accommodationId: verification.accommodationId,
+						numberOfAccommodations: 1,
+						arrivalDate: verification.checkInDate,
+						departureDate: verification.checkoutDate,
+						adultCount: verification.adults,
+						childCount: verification.children,
+						rateCode: verification.rateCode,
+						upsellPackages: verification.upsellPackages,
+						guest: guestInfo,
+						additionalDetails: additionalDetails
+					};
+					stays.push(accommodation);
+				});
 				let data = {
 					paymentMethodId: 0,
 					destinationId: destinationId,
-					stays: verifiedAccommodations.map((accommodation, index) => {
-						return {
-							accommodationId: stayParams[index].accommodationId,
-							numberOfAccommodations: 1,
-							arrivalDate: accommodation.checkInDate,
-							departureDate: accommodation.checkoutDate,
-							adultCount: accommodation.adults,
-							childCount: accommodation.children,
-							rateCode: accommodation.rateCode,
-							upsellPackages: accommodation.upsellPackages.map((item) => {
-								return {
-									id: item.id
-								};
-							}),
-							guest: guestInfo,
-							additionalDetails: additionalDetails
-						};
-					})
+					stays
 				};
 				try {
 					const result = await paymentService.addPaymentMethod({
@@ -171,27 +167,23 @@ const BookingFlowCheckoutPage = () => {
 
 	function addAccommodation(accommodation: Api.Reservation.Res.Verification, uuid: number) {
 		setVerifiedAccommodations((prev) => {
-			let copy = [...prev];
-			let index = copy.findIndex((stay) => stay.uuid === uuid);
-			if (index === -1) copy.push(accommodation);
-			else copy.splice(index, 1, accommodation);
-			return copy;
+			prev[uuid] = accommodation;
+			return prev;
 		});
 		// setVerifiedAccommodations((prev) => {
 		// 	let newVerifiedAccommodations = [...prev];
 		// 	let existingAccommodation = newVerifiedAccommodations.find((item, position) => {
-		// 		return item.accommodationName === accommodation.accommodationName;
+		// 		return item.uuid === uuid;
 		// 	});
 		// 	if (!!existingAccommodation) {
 		// 		newVerifiedAccommodations = newVerifiedAccommodations.map((item) => {
 		// 			if (!!existingAccommodation) {
-		// 				if (item.accommodationName === existingAccommodation.accommodationName)
-		// 					return existingAccommodation;
+		// 				if (item.uuid === existingAccommodation.uuid) return existingAccommodation;
 		// 			}
 		// 			return item;
 		// 		});
 		// 	} else {
-		// 		newVerifiedAccommodations.push(accommodation!);
+		// 		newVerifiedAccommodations.push(accommodation);
 		// 	}
 		// 	return newVerifiedAccommodations;
 		// });
@@ -209,12 +201,11 @@ const BookingFlowCheckoutPage = () => {
 				};
 			})
 		};
-		let copy = [...verifiedAccommodations];
-		copy.splice(
-			copy.findIndex((stay) => stay.uuid === uuid),
-			1
-		);
-		setVerifiedAccommodations(copy);
+
+		setVerifiedAccommodations((prev) => {
+			delete prev[uuid];
+			return prev;
+		});
 		if (!newAccommodationList.length) {
 			await router.navigate('/reservation/availability').catch(console.error);
 		} else router.updateUrlParams({ data: JSON.stringify(data) });
@@ -284,25 +275,26 @@ const BookingFlowCheckoutPage = () => {
 			if (!usePoints) {
 				if (!stayParams || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
 			}
+			let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
+			Object.values(verifiedAccommodations).forEach((verification) => {
+				let accommodation = {
+					accommodationId: verification.accommodationId,
+					numberOfAccommodations: 1,
+					arrivalDate: verification.checkInDate,
+					departureDate: verification.checkoutDate,
+					adultCount: verification.adults,
+					childCount: verification.children,
+					rateCode: verification.rateCode,
+					upsellPackages: verification.upsellPackages,
+					guest: guestInfo,
+					additionalDetails: additionalDetails
+				};
+				stays.push(accommodation);
+			});
 			let data = {
 				paymentMethodId: !usePoints ? existingCardId : undefined,
 				destinationId: destinationId,
-				stays: verifiedAccommodations.map(
-					(accommodation, index): Api.Reservation.Req.Itinerary.Stay => {
-						return {
-							accommodationId: stayParams[index].accommodationId,
-							numberOfAccommodations: 1,
-							arrivalDate: accommodation.checkInDate,
-							departureDate: accommodation.checkoutDate,
-							adultCount: accommodation.adults,
-							childCount: accommodation.children,
-							rateCode: accommodation.rateCode,
-							upsellPackages: accommodation.upsellPackages,
-							guest: guestInfo,
-							additionalDetails: additionalDetails
-						};
-					}
-				)
+				stays
 			};
 			try {
 				let res = await reservationService.createItinerary(data);
@@ -362,12 +354,12 @@ const BookingFlowCheckoutPage = () => {
 								destinationId={params.data.destinationId}
 								rateCode={accommodation.rateCode}
 								addAccommodation={addAccommodation}
-								remove={() => {
+								remove={(uuid: number) => {
 									popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
 										bodyText: 'Are you sure you want to remove this?',
 										cancelText: 'Do not remove',
 										confirm(): void {
-											removeAccommodation(index).catch(console.error);
+											removeAccommodation(uuid).catch(console.error);
 										},
 										confirmText: 'Remove',
 										title: 'Remove accommodation'
