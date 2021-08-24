@@ -225,10 +225,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						{item.title}
 					</Label>
 					<Box display={'flex'} marginLeft={'auto'}>
-						{NumberUtils.displayPointsOrCash(
-							NumberUtils.convertCentsToPoints(item.priceDetail.amountAfterTax, 10),
-							pointsOrCash()
-						)}
+						{NumberUtils.displayPointsOrCash(item.priceDetail.amountAfterTax, pointsOrCash())}
 					</Box>
 				</Box>
 			);
