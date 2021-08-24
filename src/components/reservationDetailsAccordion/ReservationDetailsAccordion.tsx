@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './ReservationDetailsAccordion.scss';
 import AccordionTitleDescription from '../accordionTitleDescription/AccordionTitleDescription';
 import { Box } from '@bit/redsky.framework.rs.996';
@@ -6,7 +7,6 @@ import LabelButton from '../labelButton/LabelButton';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../labelInput/LabelInput';
-import { useEffect, useRef, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
 import { DateUtils, formatPhoneNumber, ObjectUtils } from '../../utils/utils';
@@ -44,11 +44,16 @@ interface ReservationDetailsAccordionProps {
 const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = (props) => {
 	const whiteBox = useRef<HTMLElement>(null);
 	const [isModified, setIsModified] = useState<boolean>(false);
+	const [isValid, setIsValid] = useState<boolean>(true);
 	const [toggleBtn, setToggleBtn] = useState<boolean>(false);
 	const [reservationDetails, setReservationDetails] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('contactInfo', props.contactInfo || '', [
-				new RsValidator(RsValidatorEnum.REQ, 'A name is required')
+				new RsValidator(RsValidatorEnum.REQ, 'A name is required'),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Must have first and last name', (control) => {
+					let name = control.value.toString();
+					return name.split(' ').length === 2;
+				})
 			]),
 			new RsFormControl('email', props.email || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Email Required'),
@@ -80,8 +85,13 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 	}, []);
 
 	useEffect(() => {
-		if (reservationDetails.isModified()) setIsModified(true);
-		else setIsModified(false);
+		async function checkIfValid() {
+			setIsValid(await reservationDetails.isValid());
+		}
+		if (reservationDetails.isModified()) {
+			setIsModified(true);
+			checkIfValid().catch(console.error);
+		} else setIsModified(false);
 	}, [reservationDetails]);
 
 	function renderAmenities(amenities: string[]) {
@@ -250,7 +260,9 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						look={'containedPrimary'}
 						variant={'button'}
 						label={'Save'}
+						disabled={!isValid}
 						onClick={() => {
+							if (!isValid) return;
 							let newReservationDetails: Misc.ReservationContactInfoDetails = reservationDetails.toModel();
 							if (props.onSave) props.onSave(newReservationDetails);
 							reservationDetails.updateInitialValues();

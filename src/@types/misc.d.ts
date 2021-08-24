@@ -29,4 +29,19 @@ declare namespace Misc {
 		phone: string;
 		additionalDetails: string;
 	}
+
+	export interface StayParams {
+		adults: number;
+		children: number;
+		accommodationId: number;
+		arrivalDate: string;
+		departureDate: string;
+		packages: number[];
+		rateCode?: string;
+	}
+
+	export interface DateRange {
+		startDate: string;
+		endDate: string;
+	}
 }

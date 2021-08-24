@@ -1348,7 +1348,7 @@ declare namespace Api {
 				packageIds?: number[];
 				startDate: Date | string;
 				endDate: Date | string;
-				pagination: RedSky.PagePagination;
+				pagination?: RedSky.PagePagination;
 			}
 		}
 		export namespace Res {

@@ -3,7 +3,6 @@ import SparkMD5 from 'spark-md5';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
 import modelFactory from '../../models/modelFactory';
 import { Service } from '../Service';
-import UserModel from '../../models/user/user.model';
 import globalState, {
 	clearPersistentState,
 	getRecoilExternalValue,
@@ -12,8 +11,6 @@ import globalState, {
 import router from '../../utils/router';
 
 export default class UserService extends Service {
-	userModel: UserModel = modelFactory.get<UserModel>('UserModel');
-
 	async loginUserByPassword(username: string, password: string) {
 		password = SparkMD5.hash(password);
 		let axiosResponse = await http.post<RsResponseData<Api.User.Res.Detail>>('user/login', {
@@ -81,16 +78,16 @@ export default class UserService extends Service {
 		return await http.put<RsResponseData<boolean>>('user/password', data);
 	}
 
-	async getPaginatedList(
-		page: number,
-		perPage: number,
-		sortField?: string,
-		sortOrder?: RedSky.StandardOrderTypes,
-		filter?: RedSky.FilterQuery | null,
-		alternatePath?: string
-	) {
-		return await this.userModel.getPaginatedList<any>(page, perPage, sortField, sortOrder, filter, alternatePath);
-	}
+	// async getPaginatedList(
+	// 	page: number,
+	// 	perPage: number,
+	// 	sortField?: string,
+	// 	sortOrder?: RedSky.StandardOrderTypes,
+	// 	filter?: RedSky.FilterQuery | null,
+	// 	alternatePath?: string
+	// ) {
+	// 	return await this.userModel.getPaginatedList<any>(page, perPage, sortField, sortOrder, filter, alternatePath);
+	// }
 
 	private async onAfterLogin(user: Api.User.Res.Detail) {
 		let axiosConfig = http.currentConfig();

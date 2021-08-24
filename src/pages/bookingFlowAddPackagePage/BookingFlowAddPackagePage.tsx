@@ -6,18 +6,23 @@ import router from '../../utils/router';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
-import { ObjectUtils } from '../../utils/utils';
+import { ObjectUtils, StringUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import PackageService from '../../services/package/package.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-
+import StayParams = Misc.StayParams;
+interface PackageParams {
+	destinationId: number;
+	newRoom: StayParams;
+	stays?: StayParams[];
+}
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
-	params.data = JSON.parse(params.data);
+	const data: PackageParams = JSON.parse(params.data);
 	const [page, setPage] = useState<number>(1);
 	const [perPage, setPerPage] = useState<number>(5);
 	const [total, setTotal] = useState<number>(0);
@@ -25,22 +30,16 @@ const BookingFlowAddPackagePage = () => {
 	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
 
 	useEffect(() => {
-		if (!params.data.newRoom.packages) return;
+		if (!ObjectUtils.isArrayWithData(data.newRoom.packages)) {
+			setAddedPackages([]);
+			return;
+		}
 		async function getAddedPackages() {
-			if (!ObjectUtils.isArrayWithData(params.data.newRoom.packages)) {
-				setAddedPackages([]);
-				return;
-			}
-
 			const addedPackages = await packageService.getPackagesByIds({
-				destinationId: params.data.destinationId,
-				packageIds: params.data.newRoom.packages,
-				startDate: params.data.newRoom.arrivalDate,
-				endDate: params.data.newRoom.departureDate,
-				pagination: {
-					page: 1,
-					perPage: params.data.newRoom.packages.length || 5
-				}
+				destinationId: data.destinationId,
+				packageIds: data.newRoom.packages,
+				startDate: data.newRoom.arrivalDate,
+				endDate: data.newRoom.departureDate
 			});
 			setAddedPackages(addedPackages);
 		}
@@ -51,9 +50,9 @@ const BookingFlowAddPackagePage = () => {
 		async function getPackages() {
 			try {
 				const response = await packageService.getAvailable({
-					destinationId: params.data.destinationId,
-					startDate: params.data.newRoom.arrivalDate,
-					endDate: params.data.newRoom.departureDate,
+					destinationId: data.destinationId,
+					startDate: data.newRoom.arrivalDate,
+					endDate: data.newRoom.departureDate,
 					pagination: { page, perPage }
 				});
 				setAvailablePackages(response.data);
@@ -135,12 +134,15 @@ const BookingFlowAddPackagePage = () => {
 					variant={'button'}
 					label={'Continue To Checkout'}
 					onClick={() => {
-						let data = params.data;
-						data.newRoom.packages = addedPackages.map((item) => item.id);
-						if (data.stays) data.stays = [...data.stays, data.newRoom];
-						else data.stays = [data.newRoom];
-						delete data.newRoom;
-						router.navigate(`/booking/checkout?data=${JSON.stringify(data)}`).catch(console.error);
+						let stay: StayParams = data.newRoom;
+						stay.packages = addedPackages.map((item) => item.id);
+						let stays: StayParams[] = data.stays || [];
+						stays.push(stay);
+						router
+							.navigate(
+								`/booking/checkout?data=${JSON.stringify({ destinationId: data.destinationId, stays })}`
+							)
+							.catch(console.error);
 					}}
 				/>
 			</div>

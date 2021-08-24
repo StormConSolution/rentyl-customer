@@ -11,7 +11,7 @@ import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, StringUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -30,6 +30,8 @@ import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import DateRange = Misc.DateRange;
+import StayParams = Misc.StayParams;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -90,9 +92,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
-				setDestinations(res.data.data);
-				setAvailabilityTotal(res.data.total);
-				setValidCode(rateCode === '' || (!!res.data.data && res.data.data.length > 0));
+				setDestinations(res.data);
+				setAvailabilityTotal(res.total || 0);
+				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToasts.error('Cannot find available reservations, try again.');
@@ -174,9 +176,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 			}
 			return createSearchQueryObj;
 		});
-		router.updateUrlParams({
+		const dates: DateRange = {
 			startDate: formatFilterDateForServer(checkinDate, 'start'),
 			endDate: formatFilterDateForServer(checkoutDate, 'end')
+		};
+		router.updateUrlParams({
+			...dates
 		});
 	}
 
@@ -254,15 +259,16 @@ const ReservationAvailabilityPage: React.FC = () => {
 					},
 					onBookNowClick: (accommodationId) => {
 						let data: any = { ...searchQueryObj };
-						data.accommodationId = accommodationId;
-						data.arrivalDate = data.startDate;
-						data.departureDate = data.endDate;
-						data.packages = [];
-						delete data.pagination;
-						delete data.startDate;
-						delete data.endDate;
-						data = JSON.stringify({ destinationId: destination.id, newRoom: data });
-
+						let newRoom: StayParams = {
+							adults: data.adults,
+							children: data.children,
+							accommodationId: accommodationId,
+							arrivalDate: data.startDate,
+							departureDate: data.endDate,
+							packages: []
+						};
+						if (data.rateCode) newRoom.rateCode = data.rateCode;
+						data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data

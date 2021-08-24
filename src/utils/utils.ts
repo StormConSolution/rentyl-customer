@@ -7,8 +7,29 @@ import {
 	NumberUtils as BaseNumberUtils
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
+import router from './router';
 
-class StringUtils extends BaseStringUtils {}
+class StringUtils extends BaseStringUtils {
+	static setAddPackagesParams(data: {
+		destinationId: number;
+		newRoom: Misc.StayParams;
+		stays?: Misc.StayParams[];
+	}): string {
+		return JSON.stringify(data);
+	}
+
+	static setCheckoutParams(data: { destinationId: number; stays: Misc.StayParams[] }): string {
+		return `destinationId=${data.destinationId}&stays=${JSON.stringify(data.stays)}`;
+	}
+
+	static getCheckoutParms() {
+		const params = router.getPageUrlParams<{ destinationId: number; stays: Misc.StayParams[] }>([
+			{ key: 'destinationId', default: 0, type: 'integer', alias: 'destinationId' },
+			{ key: 'stays', default: '', type: 'string', alias: 'stays' }
+		]);
+		params.stays = ObjectUtils.smartParse(params.stays);
+	}
+}
 
 class ObjectUtils extends BaseObjectUtils {}
 
@@ -61,7 +82,7 @@ class NumberUtils extends BaseNumberUtils {
 	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string {
 		switch (type) {
 			case 'points':
-				return addCommasToNumber(NumberUtils.convertCentsToPoints(cents, 10)) + ' points';
+				return addCommasToNumber(cents) + ' points';
 				break;
 			case 'cash':
 				return '$' + StringUtils.formatMoney(cents);

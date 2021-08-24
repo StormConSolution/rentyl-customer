@@ -55,7 +55,7 @@ const BookingFlowAddRoomPage = () => {
 		async function checkForEdit() {
 			if (params.data.edit) {
 				let result = await accommodationService.getAccommodationDetails(params.data.edit.id);
-				setEditingAccommodation(result.data.data);
+				setEditingAccommodation(result);
 			}
 		}
 		checkForEdit().catch(console.error);

@@ -13,8 +13,9 @@ export default class DestinationService extends Service {
 		return response.data.data;
 	}
 
-	async getDestinationByIds(ids: Api.Destination.Req.Get[]) {
-		return await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
+	async getDestinationByIds(ids: Api.Destination.Req.Get[]): Promise<Api.Destination.Res.Get[]> {
+		let response = await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
+		return response.data.data;
 	}
 	async getDestinationDetails(destinationId: number): Promise<Api.Destination.Res.Details> {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Details>>('destination/details', {
@@ -23,11 +24,14 @@ export default class DestinationService extends Service {
 		return response.data.data;
 	}
 
-	async searchAvailableReservations(data: Api.Destination.Req.Availability) {
-		return await http.get<Api.Destination.Res.GetByPageAvailability>(
+	async searchAvailableReservations(
+		data: Api.Destination.Req.Availability
+	): Promise<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>> {
+		let response = await http.get<RsResponseData<Api.Destination.Res.GetByPageAvailability>>(
 			'destination/availability',
 			WebUtils.convertDataForUrlParams(data)
 		);
+		return response.data;
 	}
 
 	async searchAvailableAccommodationsByDestination(
