@@ -49,7 +49,7 @@ const BookingFlowCheckoutPage = () => {
 	const [grandTotal, setGrandTotal] = useState<number>(0);
 	const [verifiedAccommodations, setVerifiedAccommodations] = useState<Api.Reservation.Res.Verification[]>([]);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
-	const [accommodations, setAccommodations] = useState<Misc.StayParams[]>([]);
+	const [stayParams, setStayParams] = useState<Misc.StayParams[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
 		lastName: user?.lastName || '',
@@ -78,7 +78,7 @@ const BookingFlowCheckoutPage = () => {
 			}
 		}
 		getDestinationDetails().catch(console.error);
-		setAccommodations(params.data.stays);
+		setStayParams(params.data.stays);
 	}, []);
 
 	useEffect(() => {
@@ -87,6 +87,7 @@ const BookingFlowCheckoutPage = () => {
 			return total + accommodation.prices.grandTotalCents;
 		}, 0);
 		setGrandTotal(value);
+		console.log('Verify', verifiedAccommodations);
 	}, [verifiedAccommodations, usePoints]);
 
 	useEffect(() => {
@@ -98,7 +99,7 @@ const BookingFlowCheckoutPage = () => {
 					destinationId: destinationId,
 					stays: verifiedAccommodations.map((accommodation, index) => {
 						return {
-							accommodationId: accommodations[index].accommodationId,
+							accommodationId: stayParams[index].accommodationId,
 							numberOfAccommodations: 1,
 							arrivalDate: accommodation.checkInDate,
 							departureDate: accommodation.checkoutDate,
@@ -157,15 +158,30 @@ const BookingFlowCheckoutPage = () => {
 	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
 	function addAccommodation(accommodation: Api.Reservation.Res.Verification, index: number) {
-		let copy = [...verifiedAccommodations];
-		copy.splice(index, 1, accommodation);
-		setVerifiedAccommodations(copy);
+		setVerifiedAccommodations((prev) => {
+			let newVerifiedAccommodations = [...prev];
+			let existingAccommodation = newVerifiedAccommodations.find((item, position) => {
+				return item.accommodationName === accommodation.accommodationName;
+			});
+			if (!!existingAccommodation) {
+				newVerifiedAccommodations = newVerifiedAccommodations.map((item) => {
+					if (!!existingAccommodation) {
+						if (item.accommodationName === existingAccommodation.accommodationName)
+							return existingAccommodation;
+					}
+					return item;
+				});
+			} else {
+				newVerifiedAccommodations.push(accommodation!);
+			}
+			return newVerifiedAccommodations;
+		});
 	}
 
 	async function removeAccommodation(index: number): Promise<void> {
-		let newAccommodationList = [...accommodations];
+		let newAccommodationList = [...stayParams];
 		newAccommodationList.splice(index, 1);
-		setAccommodations(newAccommodationList);
+		setStayParams(newAccommodationList);
 		let data = {
 			destinationId,
 			stays: newAccommodationList.map((accommodation) => {
@@ -205,7 +221,7 @@ const BookingFlowCheckoutPage = () => {
 				rateCode: rateCode || ''
 			};
 			newParams.splice(index, 1, editedRoom);
-			setAccommodations(newParams);
+			setStayParams(newParams);
 			router.updateUrlParams({ data: JSON.stringify({ destinationId: destinationId, stays: newParams }) });
 		} catch (e) {
 			rsToasts.error('Unable to change room details');
@@ -239,8 +255,7 @@ const BookingFlowCheckoutPage = () => {
 			window.Spreedly.tokenizeCreditCard(paymentObj);
 		} else {
 			if (!usePoints) {
-				if (!accommodations || !existingCardId)
-					throw new Error('Missing proper data or existing card is invalid');
+				if (!stayParams || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
 			}
 			let data = {
 				paymentMethodId: !usePoints ? existingCardId : undefined,
@@ -248,7 +263,7 @@ const BookingFlowCheckoutPage = () => {
 				stays: verifiedAccommodations.map(
 					(accommodation, index): Api.Reservation.Req.Itinerary.Stay => {
 						return {
-							accommodationId: accommodations[index].accommodationId,
+							accommodationId: stayParams[index].accommodationId,
 							numberOfAccommodations: 1,
 							arrivalDate: accommodation.checkInDate,
 							departureDate: accommodation.checkoutDate,
@@ -305,8 +320,8 @@ const BookingFlowCheckoutPage = () => {
 			>
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
-				{accommodations &&
-					accommodations.map((accommodation, index) => {
+				{stayParams &&
+					stayParams.map((accommodation, index) => {
 						return (
 							<BookingCartTotalsCard
 								key={index}
@@ -413,7 +428,7 @@ const BookingFlowCheckoutPage = () => {
 		);
 	}
 
-	return !ObjectUtils.isArrayWithData(accommodations) ? (
+	return !ObjectUtils.isArrayWithData(stayParams) ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowPage'}>
