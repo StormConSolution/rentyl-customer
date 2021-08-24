@@ -13,6 +13,7 @@ import ReservationsService from '../../../services/reservations/reservations.ser
 import rsToasts from '@bit/redsky.framework.toast';
 
 interface BookingCartTotalsCardProps {
+	index: number;
 	adults: number;
 	children: number;
 	accommodationId: number;
@@ -21,10 +22,15 @@ interface BookingCartTotalsCardProps {
 	upsellPackages: number[];
 	destinationId: number;
 	rateCode?: string;
-	addAccommodation: (accommodation: Api.Reservation.Res.Verification) => void;
+	addAccommodation: (accommodation: Api.Reservation.Res.Verification, index: number) => void;
 	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
 	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	changeRoom?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	changeRoom?: (
+		accommodation: number,
+		checkInDate: string | Date,
+		checkoutDate: string | Date,
+		packages: number[]
+	) => void;
 	editPackages?: () => void;
 	cancellable: boolean;
 	usePoints: boolean;
@@ -82,7 +88,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						NumberUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
 					)
 				);
-				props.addAccommodation(response);
+				props.addAccommodation(response, props.index);
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
@@ -121,7 +127,12 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					label={'CHANGE ROOM'}
 					onClick={(e) => {
 						if (props.changeRoom)
-							props.changeRoom(props.accommodationId || 0, props.arrivalDate, props.departureDate);
+							props.changeRoom(
+								props.accommodationId || 0,
+								props.arrivalDate,
+								props.departureDate,
+								props.upsellPackages
+							);
 					}}
 				/>
 				<LabelButton

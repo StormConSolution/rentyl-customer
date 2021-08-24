@@ -156,22 +156,15 @@ const BookingFlowCheckoutPage = () => {
 		}
 	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
-	function addAccommodation(accommodation: Api.Reservation.Res.Verification) {
-		setVerifiedAccommodations((prev) => [...prev, accommodation]);
+	function addAccommodation(accommodation: Api.Reservation.Res.Verification, index: number) {
+		let copy = [...verifiedAccommodations];
+		copy.splice(index, 1, accommodation);
+		setVerifiedAccommodations(copy);
 	}
 
-	async function removeAccommodation(
-		accommodationId: number,
-		checkInDate: string | Date,
-		checkoutDate: string | Date
-	): Promise<void> {
-		let newAccommodationList = accommodations.filter((accommodation) => {
-			return (
-				accommodation.accommodationId !== accommodationId ||
-				checkInDate !== accommodation.arrivalDate ||
-				checkoutDate !== accommodation.departureDate
-			);
-		});
+	async function removeAccommodation(index: number): Promise<void> {
+		let newAccommodationList = [...accommodations];
+		newAccommodationList.splice(index, 1);
 		setAccommodations(newAccommodationList);
 		let data = {
 			destinationId,
@@ -188,6 +181,7 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	async function editRoom(
+		index: number,
 		adults: number,
 		children: number,
 		checkinDate: string | Date,
@@ -210,16 +204,7 @@ const BookingFlowCheckoutPage = () => {
 				packages,
 				rateCode: rateCode || ''
 			};
-			newParams = [
-				...newParams.filter((stay: Misc.StayParams) => {
-					return (
-						stay.arrivalDate !== originalStartDate ||
-						stay.departureDate !== originalEndDate ||
-						stay.accommodationId !== accommodationId
-					);
-				}),
-				editedRoom
-			];
+			newParams.splice(index, 1, editedRoom);
 			setAccommodations(newParams);
 			router.updateUrlParams({ data: JSON.stringify({ destinationId: destinationId, stays: newParams }) });
 		} catch (e) {
@@ -227,12 +212,17 @@ const BookingFlowCheckoutPage = () => {
 		}
 	}
 
-	function changeRoom(accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) {
+	function changeRoom(
+		accommodation: number,
+		checkInDate: string | Date,
+		checkoutDate: string | Date,
+		packages: number[]
+	) {
 		router
 			.navigate(
 				`/booking/add-room?data=${JSON.stringify({
 					...params.data,
-					edit: { id: accommodation, startDate: checkInDate, endDate: checkoutDate }
+					edit: { id: accommodation, startDate: checkInDate, endDate: checkoutDate, packages }
 				})}`
 			)
 			.catch(console.error);
@@ -320,6 +310,7 @@ const BookingFlowCheckoutPage = () => {
 						return (
 							<BookingCartTotalsCard
 								key={index}
+								index={index}
 								adults={accommodation.adults}
 								children={accommodation.children}
 								accommodationId={accommodation.accommodationId}
@@ -334,11 +325,7 @@ const BookingFlowCheckoutPage = () => {
 										bodyText: 'Are you sure you want to remove this?',
 										cancelText: 'Do not remove',
 										confirm(): void {
-											removeAccommodation(
-												accommodation.accommodationId,
-												accommodation.arrivalDate,
-												accommodation.departureDate
-											).catch(console.error);
+											removeAccommodation(index).catch(console.error);
 										},
 										confirmText: 'Remove',
 										title: 'Remove accommodation'
@@ -366,6 +353,7 @@ const BookingFlowCheckoutPage = () => {
 								}}
 								edit={(id, checkInDate, checkoutDate) => {
 									popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+										index: index,
 										accommodationId: id,
 										adults: accommodation.adults,
 										children: accommodation.children,
@@ -373,6 +361,7 @@ const BookingFlowCheckoutPage = () => {
 										rateCode: accommodation.rateCode,
 										endDate: checkoutDate,
 										onApplyChanges(
+											index: number,
 											adults: number,
 											children: number,
 											rateCode: string,
@@ -383,6 +372,7 @@ const BookingFlowCheckoutPage = () => {
 										): void {
 											popupController.close(AccommodationOptionsPopup);
 											editRoom(
+												index,
 												adults,
 												children,
 												checkinDate,
