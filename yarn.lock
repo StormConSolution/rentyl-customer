@@ -1098,13 +1098,13 @@
   dependencies:
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.accordion@0.0.25":
-  version "0.0.25"
-  resolved "https://node.bit.dev/redsky.framework.rs.accordion/-/redsky.framework.rs.accordion-0.0.25.tgz#ce526f5f8f9828ebe7e5278c836175ef55660fde"
-  integrity sha1-zlJvX4+YKOvn5SeMg2F171VmD94=
+"@bit/redsky.framework.rs.accordion@0.0.26":
+  version "0.0.26"
+  resolved "https://node.bit.dev/redsky.framework.rs.accordion/-/redsky.framework.rs.accordion-0.0.26.tgz#edc1510100e9deba8060d20dace35d7be6ca7656"
+  integrity sha1-7cFRAQDp3rqAYNINrONde+bKdlY=
   dependencies:
     "@bit/redsky.framework.rs.icon" "0.0.38"
-    react "^16.12.0"
+    react "^17.0.2"
     resize-observer-polyfill "^1.5.1"
 
 "@bit/redsky.framework.rs.avatar@0.0.5":
@@ -7946,6 +7946,14 @@ react@^16.12.0, react@^16.13.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
+
+react@^17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
