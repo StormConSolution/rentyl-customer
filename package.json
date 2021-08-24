@@ -9,7 +9,7 @@
 		"@babel/plugin-syntax-jsx": "^7.12.1",
 		"@babel/preset-typescript": "^7.12.7",
 		"@bit/redsky.framework.rs.996": "0.0.33",
-		"@bit/redsky.framework.rs.accordion": "0.0.28",
+		"@bit/redsky.framework.rs.accordion": "0.0.29",
 		"@bit/redsky.framework.rs.avatar": "0.0.5",
 		"@bit/redsky.framework.rs.button": "0.0.41",
 		"@bit/redsky.framework.rs.chip": "0.0.9",
