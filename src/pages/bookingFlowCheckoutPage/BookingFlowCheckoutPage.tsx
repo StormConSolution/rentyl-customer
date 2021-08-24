@@ -13,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { convertTwentyFourHourTime, DateUtils, NumberUtils, ObjectUtils } from '../../utils/utils';
+import { addCommasToNumber, convertTwentyFourHourTime, DateUtils, ObjectUtils, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -27,16 +27,6 @@ import globalState from '../../models/globalState';
 import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
-
-export interface StayParams {
-	adults: number;
-	children: number;
-	accommodationId: number;
-	arrivalDate: string;
-	departureDate: string;
-	packages: number[];
-	rateCode?: string;
-}
 
 let existingCardId = 0;
 
@@ -56,9 +46,10 @@ const BookingFlowCheckoutPage = () => {
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
+	const [grandTotal, setGrandTotal] = useState<number>(0);
 	const [verifiedAccommodations, setVerifiedAccommodations] = useState<Api.Reservation.Res.Verification[]>([]);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
-	const [accommodations, setAccommodations] = useState<StayParams[]>([]);
+	const [accommodations, setAccommodations] = useState<Misc.StayParams[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
 		lastName: user?.lastName || '',
@@ -89,6 +80,14 @@ const BookingFlowCheckoutPage = () => {
 		getDestinationDetails().catch(console.error);
 		setAccommodations(params.data.stays);
 	}, []);
+
+	useEffect(() => {
+		let value = verifiedAccommodations.reduce((total, accommodation) => {
+			if (usePoints) return total + accommodation.prices.grandTotalPoints;
+			return total + accommodation.prices.grandTotalCents;
+		}, 0);
+		setGrandTotal(value);
+	}, [verifiedAccommodations, usePoints]);
 
 	useEffect(() => {
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
@@ -157,26 +156,8 @@ const BookingFlowCheckoutPage = () => {
 		}
 	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
-	function totalAccommodations(): number {
-		let value = verifiedAccommodations.reduce((total, accommodation) => {
-			if (usePoints)
-				return (
-					total +
-					NumberUtils.roundPointsToThousand(
-						NumberUtils.convertCentsToPoints(accommodation.prices.accommodationTotalInCents, 10)
-					) *
-						10 +
-					accommodation.upsellPackages.reduce((sum, item) => {
-						return item.priceDetail.amountAfterTax;
-					}, 0)
-				);
-			return total + accommodation.prices.grandTotalCents;
-		}, 0);
-		return value;
-	}
-
 	function addAccommodation(accommodation: Api.Reservation.Res.Verification) {
-		setVerifiedAccommodations([...verifiedAccommodations, accommodation]);
+		setVerifiedAccommodations((prev) => [...prev, accommodation]);
 	}
 
 	async function removeAccommodation(
@@ -206,17 +187,6 @@ const BookingFlowCheckoutPage = () => {
 		} else router.updateUrlParams({ data: JSON.stringify(data) });
 	}
 
-	function changeRoom(accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) {
-		router
-			.navigate(
-				`/booking/add-room?data=${JSON.stringify({
-					...params.data,
-					edit: { id: accommodation, startDate: checkInDate, endDate: checkoutDate }
-				})}`
-			)
-			.catch(console.error);
-	}
-
 	async function editRoom(
 		adults: number,
 		children: number,
@@ -225,22 +195,23 @@ const BookingFlowCheckoutPage = () => {
 		originalStartDate: string | Date,
 		originalEndDate: string | Date,
 		accommodationId: number,
+		packages: number[],
 		rateCode?: string
 	) {
 		popupController.close(EditAccommodationPopup);
 		try {
 			let newParams = params.data.stays;
-			const editedRoom: StayParams = {
+			const editedRoom: Misc.StayParams = {
 				adults,
 				children,
 				accommodationId,
 				arrivalDate: DateUtils.displayUserDate(checkinDate),
 				departureDate: DateUtils.displayUserDate(checkoutDate),
-				packages: [],
+				packages,
 				rateCode: rateCode || ''
 			};
 			newParams = [
-				...newParams.filter((stay: StayParams) => {
+				...newParams.filter((stay: Misc.StayParams) => {
 					return (
 						stay.arrivalDate !== originalStartDate ||
 						stay.departureDate !== originalEndDate ||
@@ -254,6 +225,17 @@ const BookingFlowCheckoutPage = () => {
 		} catch (e) {
 			rsToasts.error('Unable to change room details');
 		}
+	}
+
+	function changeRoom(accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) {
+		router
+			.navigate(
+				`/booking/add-room?data=${JSON.stringify({
+					...params.data,
+					edit: { id: accommodation, startDate: checkInDate, endDate: checkoutDate }
+				})}`
+			)
+			.catch(console.error);
 	}
 
 	async function completeBooking() {
@@ -337,6 +319,7 @@ const BookingFlowCheckoutPage = () => {
 					accommodations.map((accommodation, index) => {
 						return (
 							<BookingCartTotalsCard
+								key={index}
 								adults={accommodation.adults}
 								children={accommodation.children}
 								accommodationId={accommodation.accommodationId}
@@ -362,8 +345,9 @@ const BookingFlowCheckoutPage = () => {
 									});
 								}}
 								editPackages={() => {
-									const stays: StayParams = params.data.stays.filter(
-										(stay: StayParams) => stay.accommodationId !== accommodation.accommodationId
+									const stays: Misc.StayParams[] = params.data.stays.filter(
+										(stay: Misc.StayParams) =>
+											stay.accommodationId !== accommodation.accommodationId
 									);
 									let newRoom = {
 										adults: accommodation.adults,
@@ -406,6 +390,7 @@ const BookingFlowCheckoutPage = () => {
 												originalStartDate,
 												originalEndDate,
 												id,
+												accommodation.packages,
 												rateCode
 											).catch(console.error);
 										},
@@ -429,7 +414,9 @@ const BookingFlowCheckoutPage = () => {
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>
-						{NumberUtils.displayPointsOrCash(totalAccommodations(), usePoints ? 'points' : 'cash')}
+						{usePoints
+							? `${addCommasToNumber(grandTotal)} Points`
+							: `$${StringUtils.formatMoney(grandTotal)}`}
 					</Label>
 				</Box>
 			</Paper>
@@ -523,7 +510,7 @@ const BookingFlowCheckoutPage = () => {
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
 							variant={'button'}
-							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'complete booking'}
+							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'Complete Booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);
 							}}

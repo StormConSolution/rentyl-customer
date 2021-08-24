@@ -13,7 +13,7 @@ export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
 	accommodations: AccommodationListRowProp[];
 	onDetailsClick: (accommodationId: number | string) => void;
-	onBookNowClick: (accommodationId: number | string) => void;
+	onBookNowClick: (accommodationId: number) => void;
 	onAddCompareClick?: (accommodationId: number | string) => void;
 }
 

@@ -1,22 +1,19 @@
 import { Service } from '../Service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
-import AccommodationsModel from '../../models/accommodations/accommodations.model';
-import modelFactory from '../../models/modelFactory';
 import { WebUtils } from '../../utils/utils';
 import FilterQueryValue = RedSky.FilterQueryValue;
 
 export default class AccommodationService extends Service {
-	accommodationsModel: AccommodationsModel = modelFactory.get<AccommodationsModel>('AccommodationsModel');
-
-	async getAccommodationDetails(accommodationId: number) {
-		return await http.get<RsResponseData<Api.Accommodation.Res.Details>>('accommodation/details', {
+	async getAccommodationDetails(accommodationId: number): Promise<Api.Accommodation.Res.Details> {
+		let response = await http.get<RsResponseData<Api.Accommodation.Res.Details>>('accommodation/details', {
 			accommodationId
 		});
+		return response.data.data;
 	}
 
-	async getByPage(filter?: FilterQueryValue[]): Promise<Api.Accommodation.Res.GetByPage> {
-		let res = await http.get<RsResponseData<Api.Accommodation.Res.GetByPage>>(
+	async getByPage(filter?: FilterQueryValue[]): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.GetByPage>> {
+		let res = await http.get<RedSky.RsPagedResponseData<Api.Accommodation.Res.GetByPage>>(
 			'accommodation/paged',
 			WebUtils.convertDataForUrlParams(filter)
 		);
@@ -33,8 +30,15 @@ export default class AccommodationService extends Service {
 		return res.data;
 	}
 
-	async getManyAccommodationDetails(accommodationIds: number[]) {
-		return this.accommodationsModel.getManyAccommodationDetails(accommodationIds);
+	async getManyAccommodationDetails(accommodationIds: number[]): Promise<Api.Accommodation.Res.Details[]> {
+		let accommodations: Api.Accommodation.Res.Details[] = [];
+		for (let id in accommodationIds) {
+			let res = await http.get<RsResponseData<Api.Accommodation.Res.Details>>('accommodation/details', {
+				accommodationId: id
+			});
+			accommodations.push(res.data.data);
+		}
+		return accommodations;
 	}
 
 	async getAccommodationTypeByIds(ids: number[]) {
@@ -44,7 +48,7 @@ export default class AccommodationService extends Service {
 		);
 		return res.data.data;
 	}
-	async getAccommodationTypeById(id: number) {
+	async getAccommodationTypeById(id: number): Promise<Api.Destination.Res.AccommodationType[]> {
 		let res = await http.get<RsResponseData<Api.Destination.Res.AccommodationType[]>>(
 			'destination/accommodationType',
 			{ id }
