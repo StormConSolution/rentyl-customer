@@ -6,7 +6,7 @@
 	}
 	.availableAccommodationRows {
 		overflow-y: auto;
-		height: calc(100% - 26px);
+		height: 100%;
 		.icons {
 			justify-content: flex-start;
 			.rsIcon:before {

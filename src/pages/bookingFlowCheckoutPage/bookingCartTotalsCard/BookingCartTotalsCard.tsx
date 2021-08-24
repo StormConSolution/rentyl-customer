@@ -1,17 +1,16 @@
 import * as React from 'react';
 import './BookingCartTotalsCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { convertTwentyFourHourTime, DateUtils, NumberUtils } from '../../../utils/utils';
+import { DateUtils, NumberUtils, StringUtils } from '../../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
 import serviceFactory from '../../../services/serviceFactory';
 import ReservationsService from '../../../services/reservations/reservations.service';
 import rsToasts from '@bit/redsky.framework.toast';
-import { prependOnceListener } from 'cluster';
 
 interface BookingCartTotalsCardProps {
 	adults: number;
@@ -261,13 +260,13 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				<Box marginRight={'50px'}>
 					<Label variant={'h4'}>Check-in</Label>
 					<Label variant={'body1'}>
-						After {convertTwentyFourHourTime(verifiedAccommodation.checkInTime)}
+						After {StringUtils.convertTwentyFourHourTime(verifiedAccommodation.checkInTime)}
 					</Label>
 				</Box>
 				<Box>
 					<Label variant={'h4'}>Check-out</Label>
 					<Label variant={'body1'}>
-						Before {convertTwentyFourHourTime(verifiedAccommodation.checkoutTime)}
+						Before {StringUtils.convertTwentyFourHourTime(verifiedAccommodation.checkoutTime)}
 					</Label>
 				</Box>
 			</Box>

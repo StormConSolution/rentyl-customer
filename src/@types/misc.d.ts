@@ -29,4 +29,11 @@ declare namespace Misc {
 		phone: string;
 		additionalDetails: string;
 	}
+
+	export interface INavData {
+		title: string;
+		route: string;
+		isSectionHeader: boolean;
+		isSignedIn: boolean;
+	}
 }

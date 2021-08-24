@@ -3,7 +3,7 @@ import './ReservationDetailsCostSummaryCard.scss';
 import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { convertTwentyFourHourTime, DateUtils } from '../../utils/utils';
+import { DateUtils } from '../../utils/utils';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 
@@ -85,13 +85,13 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 					<Label variant={'h4'} mb={8}>
 						CHECK-IN
 					</Label>
-					<Label variant={'body1'}>{convertTwentyFourHourTime(props.checkInTime)}</Label>
+					<Label variant={'body1'}>{StringUtils.convertTwentyFourHourTime(props.checkInTime)}</Label>
 				</Box>
 				<div>
 					<Label variant={'h4'} mb={8}>
 						CHECK-OUT
 					</Label>
-					<Label variant={'body1'}>{convertTwentyFourHourTime(props.checkOutTime)}</Label>
+					<Label variant={'body1'}>{StringUtils.convertTwentyFourHourTime(props.checkOutTime)}</Label>
 				</div>
 			</Box>
 			<hr />

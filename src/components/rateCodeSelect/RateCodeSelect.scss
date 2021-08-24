@@ -1,12 +1,9 @@
 .rsRateCodeSelect {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	//grid-template-columns: 400px 400px;
-
-	//.applyButton {
-	//	place-self: end;
-	//}
+	align-items: flex-end;
+	.rsLabelButton {
+		margin-left: 15px;
+	}
 }
 
 .small {

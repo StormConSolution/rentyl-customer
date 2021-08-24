@@ -10,6 +10,7 @@ import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import router from '../../utils/router';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import { isRouteUnauthorized } from '../../utils/utils';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
@@ -25,7 +26,7 @@ const AppBar: React.FC = () => {
 			</Link>
 
 			<Box display={'flex'} alignItems={'center'}>
-				{!size && (
+				{!size && !isRouteUnauthorized('/about-spire') && (
 					<LabelButton
 						look={'containedPrimary'}
 						variant={'button'}

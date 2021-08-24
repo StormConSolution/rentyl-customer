@@ -355,6 +355,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							</Label>
 							<Accordion
 								hideHoverEffect
+								hideChevron
 								children={
 									<RateCodeSelect
 										apply={(value) => {

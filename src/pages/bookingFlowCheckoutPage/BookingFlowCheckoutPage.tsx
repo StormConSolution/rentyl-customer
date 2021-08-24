@@ -13,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { convertTwentyFourHourTime, DateUtils, NumberUtils, ObjectUtils } from '../../utils/utils';
+import { DateUtils, NumberUtils, ObjectUtils, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -488,11 +488,13 @@ const BookingFlowCheckoutPage = () => {
 							<Box display={'flex'} mb={10}>
 								<Box marginRight={'50px'}>
 									<Label variant={'h4'}>Check-in</Label>
-									<Label variant={'body1'}>After {convertTwentyFourHourTime(1600)}</Label>
+									<Label variant={'body1'}>After {StringUtils.convertTwentyFourHourTime(1600)}</Label>
 								</Box>
 								<Box>
 									<Label variant={'h4'}>Check-out</Label>
-									<Label variant={'body1'}>Before {convertTwentyFourHourTime(1000)}</Label>
+									<Label variant={'body1'}>
+										Before {StringUtils.convertTwentyFourHourTime(1000)}
+									</Label>
 								</Box>
 							</Box>
 							<Label variant={'body1'} mb={10}>
