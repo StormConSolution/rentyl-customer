@@ -19,13 +19,13 @@ import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
 import PackageService from '../../services/package/package.service';
 
 export interface EditAccommodationPopupProps extends PopupProps {
-	index: number;
+	uuid: number;
 	adults: number;
 	children: number;
 	startDate: Date | string;
 	endDate: Date | string;
 	onApplyChanges: (
-		index: number,
+		uuid: number,
 		adults: number,
 		children: number,
 		rateCode: string,
@@ -145,7 +145,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						disabled={!available}
 						onClick={() => {
 							props.onApplyChanges(
-								props.index,
+								props.uuid,
 								parseInt(guestForm.get('adults').value.toString()),
 								parseInt(guestForm.get('children').value.toString()),
 								props.rateCode || '',

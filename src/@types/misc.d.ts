@@ -31,6 +31,7 @@ declare namespace Misc {
 	}
 
 	export interface StayParams {
+		uuid?: number;
 		adults: number;
 		children: number;
 		accommodationId: number;

@@ -13,7 +13,7 @@ import ReservationsService from '../../../services/reservations/reservations.ser
 import rsToasts from '@bit/redsky.framework.toast';
 
 interface BookingCartTotalsCardProps {
-	index: number;
+	uuid: number;
 	adults: number;
 	children: number;
 	accommodationId: number;
@@ -23,8 +23,8 @@ interface BookingCartTotalsCardProps {
 	destinationId: number;
 	rateCode?: string;
 	addAccommodation: (accommodation: Api.Reservation.Res.Verification, index: number) => void;
-	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
+	remove?: (uuid: number) => void;
+	edit?: (uuid: number) => void;
 	changeRoom?: (
 		accommodation: number,
 		checkInDate: string | Date,
@@ -88,7 +88,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						NumberUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
 					)
 				);
-				props.addAccommodation(response, props.index);
+				props.addAccommodation(response, props.uuid);
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
@@ -117,8 +117,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					variant={'body1'}
 					label={'REMOVE'}
 					onClick={(e) => {
-						if (props.remove)
-							props.remove(props.accommodationId || 0, props.arrivalDate, props.departureDate);
+						if (props.remove) props.remove(props.uuid);
 					}}
 				/>
 				<LabelButton
@@ -149,7 +148,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					label={'EDIT DETAILS'}
 					onClick={(e) => {
 						e.stopPropagation();
-						if (props.edit) props.edit(props.accommodationId || 0, props.arrivalDate, props.departureDate);
+						if (props.edit) props.edit(props.uuid);
 					}}
 				/>
 			</div>
