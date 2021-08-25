@@ -6,40 +6,45 @@ import router from '../../utils/router';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
-import { ObjectUtils, StringUtils } from '../../utils/utils';
+import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import PackageService from '../../services/package/package.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import StayParams = Misc.StayParams;
-interface PackageParams {
-	destinationId: number;
-	newRoom: StayParams;
-	stays?: StayParams[];
-}
+import rsToasts from '@bit/redsky.framework.toast';
+
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const packageService = serviceFactory.get<PackageService>('PackageService');
-	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
-	const data: PackageParams = JSON.parse(params.data);
+	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
+		{ key: 'data', default: 0, type: 'string', alias: 'data' }
+	]);
+	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
 	const [page, setPage] = useState<number>(1);
-	const [perPage, setPerPage] = useState<number>(5);
+	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
 	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
 	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
 
 	useEffect(() => {
-		if (!ObjectUtils.isArrayWithData(data.newRoom.packages)) {
+		if (!params.data.newRoom) {
+			rsToasts.error('Invalid URL given, returning to home', 'Invalid URL');
+			router.navigate('/reservation/availability').catch(console.error);
+			return;
+		}
+
+		if (!ObjectUtils.isArrayWithData(params.data?.newRoom?.packages)) {
 			setAddedPackages([]);
 			return;
 		}
 		async function getAddedPackages() {
+			if (!params.data.newRoom) return;
 			const addedPackages = await packageService.getPackagesByIds({
-				destinationId: data.destinationId,
-				packageIds: data.newRoom.packages,
-				startDate: data.newRoom.arrivalDate,
-				endDate: data.newRoom.departureDate
+				destinationId: params.data.destinationId,
+				packageIds: params.data.newRoom.packages,
+				startDate: params.data.newRoom.arrivalDate,
+				endDate: params.data.newRoom.departureDate
 			});
 			setAddedPackages(addedPackages);
 		}
@@ -49,10 +54,11 @@ const BookingFlowAddPackagePage = () => {
 	useEffect(() => {
 		async function getPackages() {
 			try {
+				if (!params.data.newRoom) return;
 				const response = await packageService.getAvailable({
-					destinationId: data.destinationId,
-					startDate: data.newRoom.arrivalDate,
-					endDate: data.newRoom.departureDate,
+					destinationId: params.data.destinationId,
+					startDate: params.data.newRoom.arrivalDate,
+					endDate: params.data.newRoom.departureDate,
 					pagination: { page, perPage }
 				});
 				setAvailablePackages(response.data);
@@ -134,15 +140,17 @@ const BookingFlowAddPackagePage = () => {
 					variant={'button'}
 					label={'Continue To Checkout'}
 					onClick={() => {
-						let stay: StayParams = data.newRoom;
-						stay.packages = addedPackages.map((item) => item.id);
-						let stays: StayParams[] = data.stays || [];
-						stays.push(stay);
-						router
-							.navigate(
-								`/booking/checkout?data=${JSON.stringify({ destinationId: data.destinationId, stays })}`
-							)
-							.catch(console.error);
+						if (!params.data.newRoom) return;
+						let newStay: Misc.StayParams = params.data.newRoom;
+						newStay.packages = addedPackages.map((item) => item.id);
+						let stays: Misc.StayParams[] = params.data.stays || [];
+						stays.push(newStay);
+
+						let bookingParams: Misc.BookingParams = {
+							destinationId: params.data.destinationId,
+							stays
+						};
+						router.navigate(`/booking/checkout?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 					}}
 				/>
 			</div>
