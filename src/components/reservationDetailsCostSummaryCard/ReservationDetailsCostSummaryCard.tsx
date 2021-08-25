@@ -18,6 +18,7 @@ interface ReservationDetailsCostSummaryCartProps {
 	taxAndFeeTotalsInCents: { name: string; amount: number }[];
 	upsellPackages: Api.UpsellPackage.Res.Booked[];
 	costPerNight: { [date: string]: number };
+	accommodationTotalCents: number;
 	grandTotalCents: number;
 	points: number;
 	paidWithPoints: boolean;
@@ -100,14 +101,29 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Label variant={'body1'}>{`${props.childCount} Children`}</Label>
 			<hr />
 			<Accordion isOpen titleReact={<Label variant={'h4'}>DATES</Label>}>
+				<Label variant={'body1'}>{DateUtils.daysBetween(props.departureDate, props.arrivalDate)} Nights</Label>
 				{renderItemizedCostPerNight()}
+				<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+					<Label variant={'h4'}>Total: </Label>
+					<Label variant={'h4'}>${StringUtils.formatMoney(props.accommodationTotalCents)}</Label>
+				</Box>
 			</Accordion>
-			<Label variant={'body1'}>{DateUtils.daysBetween(props.departureDate, props.arrivalDate)} Nights</Label>
+
 			<hr />
 			{props.upsellPackages.length > 0 && (
 				<>
 					<Accordion isOpen titleReact={<Label variant={'h4'}>PACKAGES</Label>}>
 						{renderUpsellPackages()}
+						<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+							<Label variant={'h4'}>Total: </Label>
+							<Label variant={'h4'}>
+								{StringUtils.formatMoney(
+									props.upsellPackages.reduce((total, item) => {
+										return total + item.priceDetail.amountAfterTax;
+									}, 0)
+								)}
+							</Label>
+						</Box>
 					</Accordion>
 					<hr />
 				</>
@@ -115,6 +131,14 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			{!props.paidWithPoints && (
 				<Accordion isOpen titleReact={<Label variant={'h4'}>TAXES AND FEES</Label>}>
 					{renderTaxesAndFees()}
+					<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+						<Label variant={'h4'}>Total: </Label>
+						<Label variant={'h4'}>
+							{StringUtils.formatMoney(
+								props.taxAndFeeTotalsInCents.reduce((total, item) => total + item.amount, 0)
+							)}
+						</Label>
+					</Box>
 				</Accordion>
 			)}
 			{!props.paidWithPoints && <hr />}

@@ -1,7 +1,7 @@
 import React from 'react';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { Rating } from '../starRating/StarRating';
-import TabbedDestinationSummary, { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
+import { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
 import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
 

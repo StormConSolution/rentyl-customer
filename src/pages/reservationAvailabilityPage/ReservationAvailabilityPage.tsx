@@ -255,7 +255,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					accommodationType: 'Suites',
 					accommodations: accommodationsList,
 					onDetailsClick: (accommodationId) => {
-						router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
+						let dates =
+							!!searchQueryObj.startDate && !!searchQueryObj.endDate
+								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+								: '';
+						router.navigate(`/accommodation/details?ai=${accommodationId}${dates}`).catch(console.error);
 					},
 					onBookNowClick: (accommodationId) => {
 						let data: any = { ...searchQueryObj };
