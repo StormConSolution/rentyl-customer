@@ -742,39 +742,6 @@ declare namespace Api {
 		}
 	}
 
-	export namespace UpsellPackage {
-		export interface Details extends Model.UpsellPackage {
-			media: Media[];
-		}
-		export namespace Req {
-			export interface Update {
-				id: number;
-				isActive?: 1 | 0;
-				startDate?: string | Date;
-				endDate?: string | Date;
-				mediaIds?: MediaDetails[];
-			}
-			export interface Get {
-				id?: number;
-				ids?: number[];
-			}
-			export interface ForDestination {
-				destinationId: number;
-			}
-			export interface Availability {
-				destinationId: number;
-				startDate: Date | string;
-				endDate: Date | string;
-				pagination: RedSky.PagePagination;
-			}
-		}
-		export namespace Res {
-			export interface Update extends Details {}
-			export interface Get extends Details {}
-			export interface ForDestination extends Api.Reservation.Res.BookingPackageDetails {}
-		}
-	}
-
 	export namespace Payment {
 		export interface PmData {
 			address1: string;
@@ -1039,6 +1006,7 @@ declare namespace Api {
 				checkoutDate: string | Date;
 				adults: number;
 				children: number;
+				accommodationId: number;
 				accommodationName: string;
 				destinationName: string;
 				rateCode: string;
@@ -1058,9 +1026,6 @@ declare namespace Api {
 				totalInCents: number;
 			}
 
-			export interface BookingPackageDetails extends Api.UpsellPackage.Details {
-				priceCents: number;
-			}
 			export interface Policies {
 				guaranteePolicy: string;
 				cancelPolicy: string;
@@ -1366,6 +1331,8 @@ declare namespace Api {
 		export namespace Req {
 			export interface Update {
 				id: number;
+				title?: string;
+				description?: string;
 				isActive?: 1 | 0;
 				startDate?: string | Date;
 				endDate?: string | Date;

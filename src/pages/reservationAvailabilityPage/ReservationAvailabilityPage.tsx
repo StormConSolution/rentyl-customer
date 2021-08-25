@@ -260,6 +260,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					onBookNowClick: (accommodationId) => {
 						let data: any = { ...searchQueryObj };
 						let newRoom: StayParams = {
+							uuid: Date.now(),
 							adults: data.adults,
 							children: data.children,
 							accommodationId: accommodationId,

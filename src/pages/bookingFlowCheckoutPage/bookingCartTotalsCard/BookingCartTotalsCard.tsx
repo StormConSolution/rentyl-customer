@@ -11,9 +11,11 @@ import LabelButton from '../../../components/labelButton/LabelButton';
 import serviceFactory from '../../../services/serviceFactory';
 import ReservationsService from '../../../services/reservations/reservations.service';
 import rsToasts from '@bit/redsky.framework.toast';
+import { useRecoilState } from 'recoil';
+import globalState from '../../../models/globalState';
 
 interface BookingCartTotalsCardProps {
-	index: number;
+	uuid: number;
 	adults: number;
 	children: number;
 	accommodationId: number;
@@ -22,15 +24,9 @@ interface BookingCartTotalsCardProps {
 	upsellPackages: number[];
 	destinationId: number;
 	rateCode?: string;
-	addAccommodation: (accommodation: Api.Reservation.Res.Verification, index: number) => void;
-	remove?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	edit?: (accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) => void;
-	changeRoom?: (
-		accommodation: number,
-		checkInDate: string | Date,
-		checkoutDate: string | Date,
-		packages: number[]
-	) => void;
+	removeAccommodation: (needsConfirmation: boolean) => void;
+	editAccommodation: () => void;
+	changeRoom: () => void;
 	editPackages?: () => void;
 	cancellable: boolean;
 	usePoints: boolean;
@@ -41,8 +37,11 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const whiteBox = useRef<HTMLElement>(null);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [verifyStatus, setVerifyStatus] = useState<'verifying' | 'available' | 'notAvailable'>('verifying');
-	const [verifiedAccommodation, setVerifiedAccommodation] = useState<Api.Reservation.Res.Verification>();
+	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<{
+		[uuid: number]: Api.Reservation.Res.Verification;
+	}>(globalState.verifiedAccommodations);
 	const [pointTotal, setPointTotal] = useState<number>(0);
+	const localAccommodation = verifiedAccommodation[props.uuid];
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
@@ -71,32 +70,38 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					destinationId: props.destinationId,
 					adults: props.adults,
 					children: props.children,
-					rateCode: props.rateCode,
 					arrivalDate: props.arrivalDate,
 					departureDate: props.departureDate,
-					numberOfAccommodations: 1,
-					upsellPackages: props.upsellPackages.map((item: number) => {
-						return { id: item };
-					})
+					numberOfAccommodations: 1
 				};
-				if (!verifyData.rateCode) delete verifyData.rateCode;
-				if (!ObjectUtils.isArrayWithData(verifyData.upsellPackages)) delete verifyData.upsellPackages;
+				if (props.rateCode) verifyData.rateCode = props.rateCode;
+				if (ObjectUtils.isArrayWithData(props.upsellPackages)) {
+					verifyData.upsellPackages = props.upsellPackages.map((item: number) => {
+						return { id: item };
+					});
+				}
+
 				let response = await reservationService.verifyAvailability(verifyData);
-				setVerifiedAccommodation(response);
+				setVerifiedAccommodation((prev) => {
+					return { ...prev, [props.uuid]: response };
+				});
 				setPointTotal(
 					NumberUtils.roundPointsToThousand(
 						NumberUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
 					)
 				);
-				props.addAccommodation(response, props.index);
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
-				rsToasts.error('This accommodation is no longer available for these dates');
+				rsToasts.error('This accommodation is no longer available for these dates', 'No Longer Available');
+				let updatedVerifiedAccommodation = { ...verifiedAccommodation };
+				delete updatedVerifiedAccommodation[props.uuid];
+				setVerifiedAccommodation(updatedVerifiedAccommodation);
+				props.removeAccommodation(false);
 			}
 		}
 		verifyAvailability().catch(console.error);
-	}, [props.adults, props.children, props.arrivalDate, props.departureDate, props.upsellPackages]);
+	}, [props.adults, props.children, props.arrivalDate, props.departureDate]);
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
 		return packages.reduce((total, item) => {
@@ -117,8 +122,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					variant={'body1'}
 					label={'REMOVE'}
 					onClick={(e) => {
-						if (props.remove)
-							props.remove(props.accommodationId || 0, props.arrivalDate, props.departureDate);
+						e.stopPropagation();
+						props.removeAccommodation(true);
 					}}
 				/>
 				<LabelButton
@@ -126,13 +131,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					variant={'body1'}
 					label={'CHANGE ROOM'}
 					onClick={(e) => {
-						if (props.changeRoom)
-							props.changeRoom(
-								props.accommodationId || 0,
-								props.arrivalDate,
-								props.departureDate,
-								props.upsellPackages
-							);
+						props.changeRoom();
 					}}
 				/>
 				<LabelButton
@@ -149,7 +148,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					label={'EDIT DETAILS'}
 					onClick={(e) => {
 						e.stopPropagation();
-						if (props.edit) props.edit(props.accommodationId || 0, props.arrivalDate, props.departureDate);
+						props.editAccommodation();
 					}}
 				/>
 			</div>
@@ -157,16 +156,14 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderItemizedCostPerNight() {
-		if (!verifiedAccommodation) return;
+		if (!localAccommodation) return;
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		let difference: number =
-			pointTotal - NumberUtils.convertCentsToPoints(verifiedAccommodation.prices.accommodationTotalInCents, 10);
+			pointTotal - NumberUtils.convertCentsToPoints(localAccommodation.prices.accommodationTotalInCents, 10);
 		let offset: number =
-			(difference /
-				DateUtils.daysBetween(verifiedAccommodation.checkInDate, verifiedAccommodation.checkoutDate)) *
-			10;
-		Object.keys(verifiedAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
-			const costPerNight = verifiedAccommodation.prices.accommodationDailyCostsInCents;
+			(difference / DateUtils.daysBetween(localAccommodation.checkInDate, localAccommodation.checkoutDate)) * 10;
+		Object.keys(localAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
+			const costPerNight = localAccommodation.prices.accommodationDailyCostsInCents;
 			let point: number = index === Object.keys(costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={night} justifyContent={'space-between'}>
@@ -190,9 +187,9 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderTaxesAndFees() {
-		if (!verifiedAccommodation) return;
+		if (!localAccommodation) return;
 		let index = 0;
-		let taxes = verifiedAccommodation.prices.taxTotalsInCents.map((item) => {
+		let taxes = localAccommodation.prices.taxTotalsInCents.map((item) => {
 			return (
 				<Box display={'flex'} alignItems={'center'} key={++index}>
 					<Label variant={'body2'} width={'170px'}>
@@ -207,7 +204,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				</Box>
 			);
 		});
-		let fees = verifiedAccommodation.prices.feeTotalsInCents.map((item) => {
+		let fees = localAccommodation.prices.feeTotalsInCents.map((item) => {
 			return (
 				<Box display={'flex'} alignItems={'center'} key={++index}>
 					<Label variant={'body2'} width={'170px'}>
@@ -224,12 +221,9 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderPackages() {
-		if (
-			!verifiedAccommodation?.upsellPackages ||
-			!ObjectUtils.isArrayWithData(verifiedAccommodation.upsellPackages)
-		)
+		if (!localAccommodation?.upsellPackages || !ObjectUtils.isArrayWithData(localAccommodation.upsellPackages))
 			return [];
-		return verifiedAccommodation.upsellPackages.map((item, index) => {
+		return localAccommodation.upsellPackages.map((item, index) => {
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
@@ -269,7 +263,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	}
 
 	function renderCard() {
-		if (!verifiedAccommodation) return null;
+		if (!localAccommodation) return null;
 		return (
 			<Accordion
 				isOpen
@@ -278,20 +272,18 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				titleReact={
 					<Box display={'flex'} alignItems={'center'}>
 						<Label variant={'h4'} width={'170px'}>
-							{verifiedAccommodation.accommodationName}
+							{localAccommodation.accommodationName}
 						</Label>
 						<div style={{ position: 'relative' }}>
-							{props.edit && (
-								<Icon
-									className={'editButton'}
-									iconImg={'icon-edit'}
-									cursorPointer
-									onClick={(event) => {
-										event.stopPropagation();
-										setShowOptions(!showOptions);
-									}}
-								/>
-							)}
+							<Icon
+								className={'editButton'}
+								iconImg={'icon-edit'}
+								cursorPointer
+								onClick={(event) => {
+									event.stopPropagation();
+									setShowOptions(!showOptions);
+								}}
+							/>
 							{renderEditOptions()}
 						</div>
 					</Box>
@@ -301,32 +293,32 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Box marginRight={'50px'}>
 						<Label variant={'h4'}>Check-in</Label>
 						<Label variant={'body1'}>
-							After {convertTwentyFourHourTime(verifiedAccommodation.checkInTime)}
+							After {convertTwentyFourHourTime(localAccommodation.checkInTime)}
 						</Label>
 					</Box>
 					<Box>
 						<Label variant={'h4'}>Check-out</Label>
 						<Label variant={'body1'}>
-							Before {convertTwentyFourHourTime(verifiedAccommodation.checkoutTime)}
+							Before {convertTwentyFourHourTime(localAccommodation.checkoutTime)}
 						</Label>
 					</Box>
 				</Box>
 				<hr />
 				<Box marginBottom={'10px'}>
 					<Label variant={'body1'}>
-						{DateUtils.displayUserDate(verifiedAccommodation.checkInDate)}
+						{DateUtils.displayUserDate(localAccommodation.checkInDate)}
 						{' - '}
-						{DateUtils.displayUserDate(verifiedAccommodation.checkoutDate)}
+						{DateUtils.displayUserDate(localAccommodation.checkoutDate)}
 					</Label>
-					<Label variant={'body1'}>{verifiedAccommodation.adults} Adults</Label>
-					<Label variant={'body1'}>{verifiedAccommodation.children} Children</Label>
+					<Label variant={'body1'}>{localAccommodation.adults} Adults</Label>
+					<Label variant={'body1'}>{localAccommodation.children} Children</Label>
 				</Box>
 
 				<Accordion
 					titleReact={
 						<Box display={'flex'} alignItems={'center'}>
 							<Label variant={'h4'}>
-								{Object.keys(verifiedAccommodation.prices.accommodationDailyCostsInCents).length} Nights
+								{Object.keys(localAccommodation.prices.accommodationDailyCostsInCents).length} Nights
 							</Label>
 						</Box>
 					}
@@ -339,10 +331,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 							{NumberUtils.displayPointsOrCash(
 								props.usePoints
 									? NumberUtils.convertCentsToPoints(
-											verifiedAccommodation.prices.accommodationTotalInCents,
+											localAccommodation.prices.accommodationTotalInCents,
 											10
 									  )
-									: verifiedAccommodation.prices.accommodationTotalInCents,
+									: localAccommodation.prices.accommodationTotalInCents,
 								pointsOrCash()
 							)}
 						</Label>
@@ -361,7 +353,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						<Label variant={'h4'}>Total: </Label>
 						<Label variant={'h4'} marginLeft={'auto'}>
 							{NumberUtils.displayPointsOrCash(
-								totalPackages(verifiedAccommodation.upsellPackages || []),
+								totalPackages(localAccommodation.upsellPackages || []),
 								pointsOrCash()
 							)}
 						</Label>
@@ -381,10 +373,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 							{NumberUtils.displayPointsOrCash(
 								props.usePoints
 									? NumberUtils.convertCentsToPoints(
-											verifiedAccommodation.prices.taxAndFeeTotalInCents,
+											localAccommodation.prices.taxAndFeeTotalInCents,
 											10
 									  )
-									: verifiedAccommodation.prices.taxAndFeeTotalInCents,
+									: localAccommodation.prices.taxAndFeeTotalInCents,
 								pointsOrCash()
 							)}
 						</Label>
@@ -397,8 +389,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h3'} marginLeft={'auto'}>
 						{NumberUtils.displayPointsOrCash(
 							props.usePoints
-								? verifiedAccommodation.prices.grandTotalPoints
-								: verifiedAccommodation.prices.grandTotalCents,
+								? localAccommodation.prices.grandTotalPoints
+								: localAccommodation.prices.grandTotalCents,
 							pointsOrCash()
 						)}
 					</Label>

@@ -12,7 +12,8 @@ enum GlobalStateKeys {
 	COMPARISON_CARD = 'DestinationComparison',
 	USER_TOKEN = 'UserToken',
 	USER = 'User',
-	COMPANY = 'Company'
+	COMPANY = 'Company',
+	VERIFIED_ACCOMMODATIONS = 'VerifiedAccommodations'
 }
 
 export interface ComparisonCardInfo {
@@ -30,6 +31,7 @@ class GlobalState {
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
+	verifiedAccommodations: RecoilState<{ [uuid: number]: Api.Reservation.Res.Verification }>;
 
 	saveToStorageList: string[] = [];
 
@@ -61,6 +63,11 @@ class GlobalState {
 				customPages: {},
 				unauthorizedPages: []
 			}
+		});
+
+		this.verifiedAccommodations = atom<{ [uuid: number]: Api.Reservation.Res.Verification }>({
+			key: GlobalStateKeys.VERIFIED_ACCOMMODATIONS,
+			default: {}
 		});
 
 		// The following is stored in local storage automatically
