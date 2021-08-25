@@ -55,18 +55,20 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const initialStartDate = params.startDate ? moment(params.startDate) : moment();
+	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		destinationId: params.destinationId,
-		startDate: moment().format('YYYY-MM-DD'),
-		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
+		startDate: initialStartDate.format('YYYY-MM-DD'),
+		endDate: initialEndDate.format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
@@ -83,11 +85,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		}
 
 		getDestinationDetails(params.destinationId).catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		if (!params.startDate && !params.endDate) return;
-		onDatesChange(moment(params.startDate), moment(params.endDate));
 	}, []);
 
 	useEffect(() => {
@@ -220,15 +217,16 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 					maxSleeps={item.maxSleeps}
 					onBookNowClick={() => {
 						if (!destinationDetails) return;
-						let data: any = { ...searchQueryObj };
-						data.accommodationId = item.id;
-						data.arrivalDate = data.startDate;
-						data.departureDate = data.endDate;
-						delete data.destinationId;
-						delete data.pagination;
-						delete data.startDate;
-						delete data.endDate;
-						data = JSON.stringify({ destinationId: destinationDetails.id, newRoom: data });
+						const newRoom: Misc.StayParams = {
+							uuid: Date.now(),
+							accommodationId: item.id,
+							adults: searchQueryObj.adults,
+							children: searchQueryObj.children,
+							arrivalDate: searchQueryObj.startDate as string,
+							departureDate: searchQueryObj.endDate as string,
+							packages: []
+						};
+						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
 								query: data
@@ -238,7 +236,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						}
 					}}
 					onViewDetailsClick={() => {
-						router.navigate(`/accommodation/details?ai=${item.id}`).catch(console.error);
+						const dates =
+							!!searchQueryObj.startDate && !!searchQueryObj.endDate
+								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+								: '';
+						router.navigate(`/accommodation/details?ai=${item.id}${dates}`).catch(console.error);
 					}}
 					onCompareClick={() => {
 						if (!destinationDetails) return;
