@@ -14,7 +14,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { addCommasToNumber, DateUtils, formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
