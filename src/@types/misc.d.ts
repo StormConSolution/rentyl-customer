@@ -52,4 +52,11 @@ declare namespace Misc {
 		startDate: string;
 		endDate: string;
 	}
+
+	export interface INavData {
+		title: string;
+		route: string;
+		isSectionHeader: boolean;
+		isSignedIn: boolean;
+	}
 }

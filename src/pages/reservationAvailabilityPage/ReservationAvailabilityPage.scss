@@ -32,9 +32,6 @@
 	.rsDestinationSearchResultCardResponsive,
 	.rsDestinationSearchResultCardMobile {
 		margin-bottom: 30px;
-		//padding-bottom: 20px;
-		//padding-top: 30px;
-		//border-bottom: 1px solid theme-var($greyLineColor);
 	}
 
 	.toggleCode:hover {
@@ -43,7 +40,8 @@
 	}
 
 	.rsAccordion {
-		max-width: 800px;
+		width: fit-content;
+		width: -moz-fit-content;
 		.articleItemHeader {
 			padding: 0;
 			.rsLabel {
@@ -62,7 +60,5 @@
 			cursor: pointer;
 			margin: auto 0;
 		}
-	}
-	.rsDestinationSearchResultCard {
 	}
 }

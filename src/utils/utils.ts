@@ -7,6 +7,8 @@ import {
 	NumberUtils as BaseNumberUtils
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
+import globalState, { getRecoilExternalValue } from '../models/globalState';
+
 import router from './router';
 
 class StringUtils extends BaseStringUtils {
@@ -164,54 +166,12 @@ export function formatPhoneNumber(phone: string | number) {
 	return cleaned;
 }
 
-export function removeAllExceptNumbers(string: string): string {
-	if (!string) return '';
-	return string.replace(/\D+/g, '');
-}
+export function isRouteUnauthorized(route: string): boolean {
+	const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables | undefined>(
+		globalState.company
+	);
+	if (!company) return true;
+	let isUnauthorized = company.unauthorizedPages.find((item) => item.route === route);
 
-export function validateEmail(mail: string) {
-	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail);
-}
-
-export function removeExtraSpacesReturnsTabs(string: string) {
-	let strippedString = string.replace(/\r?\n|\t|\r/g, ' ').match(/[^ ]+/g);
-	if (strippedString) return strippedString.join(' ');
-	else return '';
-}
-
-export function capitalize(s: string) {
-	return s.toLowerCase().replace(/\b./g, function (a) {
-		return a.toUpperCase();
-	});
-}
-
-export function convertTwentyFourHourTime(time: string | number): string {
-	if (!time) return '';
-
-	let sanitizedTime: number = parseInt(removeAllExceptNumbers(time.toString()));
-	if (sanitizedTime > 1259) {
-		sanitizedTime = sanitizedTime - 1200;
-		if (sanitizedTime.toString().length === 3) {
-			let minutes = sanitizedTime.toString().slice(-2);
-			let hour = sanitizedTime.toString().slice(0, 1);
-			return `${hour}:${minutes} PM`;
-		} else if (sanitizedTime.toString().length === 4) {
-			let minutes = sanitizedTime.toString().slice(-2);
-			let hours = sanitizedTime.toString().slice(0, 2);
-			return `${hours}:${minutes} PM`;
-		} else {
-			return '';
-		}
-	}
-	if (sanitizedTime.toString().length === 3) {
-		let minutes = sanitizedTime.toString().slice(-2);
-		let hour = sanitizedTime.toString().slice(0, 1);
-		return `${hour}:${minutes} AM`;
-	} else if (sanitizedTime.toString().length === 4) {
-		let minutes = sanitizedTime.toString().slice(-2);
-		let hours = sanitizedTime.toString().slice(0, 2);
-		return `${hours}:${minutes} ${hours === '12' ? 'PM' : 'AM'}`;
-	} else {
-		return '';
-	}
+	return !!isUnauthorized;
 }

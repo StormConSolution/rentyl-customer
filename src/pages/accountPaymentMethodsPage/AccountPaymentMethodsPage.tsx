@@ -362,6 +362,11 @@ const AccountPaymentMethodsPage: React.FC = () => {
 									Card Number
 								</Label>
 							</div>
+							<div ref={cvvRef} id={'spreedly-cvv'}>
+								<Label variant={'caption'} mb={10}>
+									CVV
+								</Label>
+							</div>
 							<LabelInput
 								className={'creditCardExpInput'}
 								maxLength={7}
@@ -371,11 +376,6 @@ const AccountPaymentMethodsPage: React.FC = () => {
 								updateControl={updateCreditCardObj}
 								placeholder={'MM/YYYY'}
 							/>
-							<div ref={cvvRef} id={'spreedly-cvv'}>
-								<Label variant={'caption'} mb={10}>
-									CVV
-								</Label>
-							</div>
 						</form>
 
 						<LabelCheckbox

@@ -3,7 +3,7 @@ import './RewardItemCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import IconLabel from '../../../components/iconLabel/IconLabel';
 import router from '../../../utils/router';
-import { addCommasToNumber, capitalize } from '../../../utils/utils';
+import { addCommasToNumber, StringUtils } from '../../../utils/utils';
 
 interface RewardItemCardProps {
 	imgPath: string;
@@ -44,7 +44,7 @@ const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
 				<img className={'rewardImg'} src={props.imgPath} alt={'rewardImage'} height={'250px'} width={'278px'} />
 			</div>
 			<Label className={'rewardName'} variant={'h2'}>
-				{capitalize(props.title)}
+				{StringUtils.capitalizeFirst(props.title)}
 			</Label>
 			<Label className={'rewardPoints'} variant={'h3'}>
 				{addCommasToNumber(props.points as number)} Points

@@ -9,7 +9,7 @@ import Carousel from '../../components/carousel/Carousel';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardHeaderBar from '../../components/rewardHeaderBar/RewardHeaderBar';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { addCommasToNumber, capitalize } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -46,9 +46,9 @@ const RewardDetailPage: React.FC = () => {
 		if (!user || !reward) return;
 		let points = user.availablePoints - reward.pointCost;
 		if (points > 0) {
-			return `${addCommasToNumber(points)} available after purchase.`;
+			return `${StringUtils.addCommasToNumber(points)} available after purchase.`;
 		} else {
-			return `Only ${addCommasToNumber(reward.pointCost - user.availablePoints)} left to go..`;
+			return `Only ${StringUtils.addCommasToNumber(reward.pointCost - user.availablePoints)} left to go..`;
 		}
 	}
 
@@ -108,7 +108,7 @@ const RewardDetailPage: React.FC = () => {
 					</div>
 					<div className={'rewardDetailsRight'}>
 						<Label className={'rewardName'} variant={'h1'}>
-							{capitalize(reward.name)}
+							{StringUtils.capitalizeFirst(reward.name)}
 						</Label>
 						<Label className={'rewardUpc'} variant={'h4'}>
 							Item# {reward.upc}
@@ -121,7 +121,7 @@ const RewardDetailPage: React.FC = () => {
 								Point Cost
 							</Label>
 							<Label className={'pointCost'} variant={'h1'}>
-								{addCommasToNumber(reward.pointCost)}
+								{StringUtils.addCommasToNumber(reward.pointCost)}
 							</Label>
 						</div>
 						<div className={'buttonContainer'}>{renderEnabledOrDisabledButton()}</div>

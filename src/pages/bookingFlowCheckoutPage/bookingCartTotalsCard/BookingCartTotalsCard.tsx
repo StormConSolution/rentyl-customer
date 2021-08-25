@@ -5,7 +5,7 @@ import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { convertTwentyFourHourTime, DateUtils, NumberUtils } from '../../../utils/utils';
+import { DateUtils, NumberUtils, StringUtils } from '../../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
 import serviceFactory from '../../../services/serviceFactory';
@@ -293,13 +293,13 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Box marginRight={'50px'}>
 						<Label variant={'h4'}>Check-in</Label>
 						<Label variant={'body1'}>
-							After {convertTwentyFourHourTime(localAccommodation.checkInTime)}
+							After {StringUtils.convertTwentyFourHourTime(localAccommodation.checkInTime)}
 						</Label>
 					</Box>
 					<Box>
 						<Label variant={'h4'}>Check-out</Label>
 						<Label variant={'body1'}>
-							Before {convertTwentyFourHourTime(localAccommodation.checkoutTime)}
+							Before {StringUtils.convertTwentyFourHourTime(localAccommodation.checkoutTime)}
 						</Label>
 					</Box>
 				</Box>

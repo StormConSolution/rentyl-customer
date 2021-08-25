@@ -5,7 +5,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import Input from '@bit/redsky.framework.rs.input';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { formatPhoneNumber, validateEmail } from '../../utils/utils';
+import { formatPhoneNumber, StringUtils } from '../../utils/utils';
 import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -63,7 +63,7 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 			props.onChange(value.value);
 			return;
 		}
-		if (props.isEmailInput && !validateEmail(value.value)) return setIsValid(false);
+		if (props.isEmailInput && !StringUtils.validateEmail(value.value)) return setIsValid(false);
 		else setIsValid(true);
 		if (props.inputType === 'tel') return props.onChange(formatPhoneNumber(value.value));
 		props.onChange(
