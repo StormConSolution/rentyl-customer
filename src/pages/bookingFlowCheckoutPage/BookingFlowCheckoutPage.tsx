@@ -7,13 +7,14 @@ import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
+import moment from 'moment';
 import BookingCartTotalsCard from './bookingCartTotalsCard/BookingCartTotalsCard';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { DateUtils, NumberUtils, ObjectUtils, StringUtils } from '../../utils/utils';
+import { addCommasToNumber, DateUtils, formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
@@ -22,21 +23,10 @@ import EditAccommodationPopup, {
 	EditAccommodationPopupProps
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
-import AccommodationOptionsPopup from '../../popups/accommodationOptionsPopup/AccommodationOptionsPopup';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
-
-export interface StayParams {
-	adults: number;
-	children: number;
-	accommodationId: number;
-	arrivalDate: string;
-	departureDate: string;
-	packages: number[];
-	rateCode?: string;
-}
 
 let existingCardId = 0;
 
@@ -47,18 +37,25 @@ const BookingFlowCheckoutPage = () => {
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
-	params.data = JSON.parse(params.data);
+	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
+		{ key: 'data', default: 0, type: 'string', alias: 'data' }
+	]);
+	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
 	const destinationId = params.data.destinationId;
+	const stayParams = params.data.stays;
 	const [usePoints, setUsePoints] = useState<boolean>(!!company.allowPointBooking);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
-	const [verifiedAccommodations, setVerifiedAccommodations] = useState<Api.Reservation.Res.Verification[]>([]);
+	const [grandTotal, setGrandTotal] = useState<number>(0);
+
+	const [verifiedAccommodations, setVerifiedAccommodations] = useRecoilState<{
+		[uuid: number]: Api.Reservation.Res.Verification;
+	}>(globalState.verifiedAccommodations);
+
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
-	const [accommodations, setAccommodations] = useState<StayParams[]>([]);
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
 		firstName: user?.firstName || '',
 		lastName: user?.lastName || '',
@@ -73,13 +70,18 @@ const BookingFlowCheckoutPage = () => {
 		cardId: number;
 	}>();
 
+	const [_, setRefreshPage] = useState<number>(0);
+
+	useEffect(() => {
+		setVerifiedAccommodations([]);
+	}, []);
+
 	useEffect(() => {
 		if (!params) return;
-		if (!params.data.destinationId || !params.data.stays)
-			router.navigate('/reservation/availability').catch(console.error);
+		if (!destinationId || !stayParams) router.navigate('/reservation/availability').catch(console.error);
 		async function getDestinationDetails() {
 			try {
-				let destination = await destinationService.getDestinationDetails(params.data.destinationId);
+				let destination = await destinationService.getDestinationDetails(destinationId);
 				setDestinationDetails(destination);
 			} catch (e) {
 				rsToasts.error('Unable to get destination information', 'Server Error');
@@ -87,34 +89,40 @@ const BookingFlowCheckoutPage = () => {
 			}
 		}
 		getDestinationDetails().catch(console.error);
-		setAccommodations(params.data.stays);
 	}, []);
+
+	useEffect(() => {
+		let value = Object.values(verifiedAccommodations).reduce((total, accommodation) => {
+			if (usePoints) return total + accommodation.prices.grandTotalPoints;
+			return total + accommodation.prices.grandTotalCents;
+		}, 0);
+		setGrandTotal(value);
+	}, [verifiedAccommodations, usePoints]);
 
 	useEffect(() => {
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
+				let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
+				Object.values(verifiedAccommodations).forEach((verification) => {
+					let accommodation = {
+						accommodationId: verification.accommodationId,
+						numberOfAccommodations: 1,
+						arrivalDate: verification.checkInDate,
+						departureDate: verification.checkoutDate,
+						adultCount: verification.adults,
+						childCount: verification.children,
+						rateCode: verification.rateCode,
+						upsellPackages: verification.upsellPackages,
+						guest: guestInfo,
+						additionalDetails: additionalDetails
+					};
+					stays.push(accommodation);
+				});
 				let data = {
 					paymentMethodId: 0,
 					destinationId: destinationId,
-					stays: verifiedAccommodations.map((accommodation, index) => {
-						return {
-							accommodationId: accommodations[index].accommodationId,
-							numberOfAccommodations: 1,
-							arrivalDate: accommodation.checkInDate,
-							departureDate: accommodation.checkoutDate,
-							adultCount: accommodation.adults,
-							childCount: accommodation.children,
-							rateCode: accommodation.rateCode,
-							upsellPackages: accommodation.upsellPackages.map((item) => {
-								return {
-									id: item.id
-								};
-							}),
-							guest: guestInfo,
-							additionalDetails: additionalDetails
-						};
-					})
+					stays
 				};
 				try {
 					const result = await paymentService.addPaymentMethod({
@@ -157,103 +165,69 @@ const BookingFlowCheckoutPage = () => {
 		}
 	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
-	function totalAccommodations(): number {
-		let value = verifiedAccommodations.reduce((total, accommodation) => {
-			if (usePoints)
-				return (
-					total +
-					NumberUtils.roundPointsToThousand(
-						NumberUtils.convertCentsToPoints(accommodation.prices.accommodationTotalInCents, 10)
-					) *
-						10 +
-					accommodation.upsellPackages.reduce((sum, item) => {
-						return item.priceDetail.amountAfterTax;
-					}, 0)
-				);
-			return total + accommodation.prices.grandTotalCents;
-		}, 0);
-		return value;
-	}
-
-	function addAccommodation(accommodation: Api.Reservation.Res.Verification) {
-		setVerifiedAccommodations([...verifiedAccommodations, accommodation]);
-	}
-
-	async function removeAccommodation(
-		accommodationId: number,
-		checkInDate: string | Date,
-		checkoutDate: string | Date
-	): Promise<void> {
-		let newAccommodationList = accommodations.filter((accommodation) => {
-			return (
-				accommodation.accommodationId !== accommodationId ||
-				checkInDate !== accommodation.arrivalDate ||
-				checkoutDate !== accommodation.departureDate
-			);
-		});
-		setAccommodations(newAccommodationList);
-		let data = {
-			destinationId,
-			stays: newAccommodationList.map((accommodation) => {
-				return {
-					...accommodation,
-					packages: accommodation.packages
-				};
-			})
-		};
-		if (!newAccommodationList.length) {
+	async function removeAccommodation(uuid: number): Promise<void> {
+		const newStayList = stayParams.filter((stay) => stay.uuid !== uuid);
+		if (!newStayList.length) {
 			await router.navigate('/reservation/availability').catch(console.error);
-		} else router.updateUrlParams({ data: JSON.stringify(data) });
+			return;
+		}
+
+		let updatedVerifiedAccommodation = { ...verifiedAccommodations };
+		delete updatedVerifiedAccommodation[uuid];
+		setVerifiedAccommodations(updatedVerifiedAccommodation);
+
+		let bookingParams: Misc.BookingParams = {
+			destinationId,
+			stays: newStayList
+		};
+
+		router.updateUrlParams({ data: JSON.stringify(bookingParams) });
+		setRefreshPage((prev) => {
+			return prev + 1;
+		});
 	}
 
-	function changeRoom(accommodation: number, checkInDate: string | Date, checkoutDate: string | Date) {
-		router
-			.navigate(
-				`/booking/add-room?data=${JSON.stringify({
-					...params.data,
-					edit: { id: accommodation, startDate: checkInDate, endDate: checkoutDate }
-				})}`
-			)
-			.catch(console.error);
-	}
-
-	async function editRoom(
+	function editAccommodation(
+		uuid: number,
 		adults: number,
 		children: number,
 		checkinDate: string | Date,
 		checkoutDate: string | Date,
-		originalStartDate: string | Date,
-		originalEndDate: string | Date,
 		accommodationId: number,
+		packages: number[],
 		rateCode?: string
 	) {
 		popupController.close(EditAccommodationPopup);
-		try {
-			let newParams = params.data.stays;
-			const editedRoom: StayParams = {
-				adults,
-				children,
-				accommodationId,
-				arrivalDate: DateUtils.displayUserDate(checkinDate),
-				departureDate: DateUtils.displayUserDate(checkoutDate),
-				packages: [],
-				rateCode: rateCode || ''
-			};
-			newParams = [
-				...newParams.filter((stay: StayParams) => {
-					return (
-						stay.arrivalDate !== originalStartDate ||
-						stay.departureDate !== originalEndDate ||
-						stay.accommodationId !== accommodationId
-					);
-				}),
-				editedRoom
-			];
-			setAccommodations(newParams);
-			router.updateUrlParams({ data: JSON.stringify({ destinationId: destinationId, stays: newParams }) });
-		} catch (e) {
-			rsToasts.error('Unable to change room details');
+		let newParams: Misc.StayParams[] = [...stayParams];
+
+		let index = newParams.findIndex((param) => param.uuid === uuid);
+		if (index === -1) {
+			console.error('Could not find index?');
+			return;
 		}
+
+		newParams[index] = {
+			uuid,
+			adults,
+			children,
+			accommodationId,
+			arrivalDate: formatFilterDateForServer(moment(checkinDate), 'start'),
+			departureDate: formatFilterDateForServer(moment(checkoutDate), 'end'),
+			packages,
+			rateCode: rateCode || ''
+		};
+		router.updateUrlParams({ data: JSON.stringify({ destinationId: destinationId, stays: newParams }) });
+		setRefreshPage((prev) => {
+			return prev + 1;
+		});
+	}
+
+	function changeRoom(uuid: number) {
+		let bookingParams: Misc.BookingParams = {
+			...params.data,
+			editUuid: uuid
+		};
+		router.navigate(`/booking/add-room?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 	}
 
 	async function completeBooking() {
@@ -267,28 +241,28 @@ const BookingFlowCheckoutPage = () => {
 			window.Spreedly.tokenizeCreditCard(paymentObj);
 		} else {
 			if (!usePoints) {
-				if (!accommodations || !existingCardId)
-					throw new Error('Missing proper data or existing card is invalid');
+				if (!stayParams || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
 			}
-			let data = {
+			let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
+			Object.values(verifiedAccommodations).forEach((verification) => {
+				let accommodation: Api.Reservation.Req.Itinerary.Stay = {
+					accommodationId: verification.accommodationId,
+					numberOfAccommodations: 1,
+					arrivalDate: verification.checkInDate,
+					departureDate: verification.checkoutDate,
+					adultCount: verification.adults,
+					childCount: verification.children,
+					rateCode: verification.rateCode,
+					upsellPackages: verification.upsellPackages,
+					guest: guestInfo,
+					additionalDetails: additionalDetails
+				};
+				stays.push(accommodation);
+			});
+			let data: Api.Reservation.Req.Itinerary.Create = {
 				paymentMethodId: !usePoints ? existingCardId : undefined,
 				destinationId: destinationId,
-				stays: verifiedAccommodations.map(
-					(accommodation, index): Api.Reservation.Req.Itinerary.Stay => {
-						return {
-							accommodationId: accommodations[index].accommodationId,
-							numberOfAccommodations: 1,
-							arrivalDate: accommodation.checkInDate,
-							departureDate: accommodation.checkoutDate,
-							adultCount: accommodation.adults,
-							childCount: accommodation.children,
-							rateCode: accommodation.rateCode,
-							upsellPackages: accommodation.upsellPackages,
-							guest: guestInfo,
-							additionalDetails: additionalDetails
-						};
-					}
-				)
+				stays
 			};
 			try {
 				let res = await reservationService.createItinerary(data);
@@ -309,17 +283,105 @@ const BookingFlowCheckoutPage = () => {
 
 	function renderPolicies() {
 		if (!destinationDetails?.policies) return;
-		return destinationDetails.policies.map((item) => {
+		return destinationDetails.policies.map((item, index) => {
 			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
 			return (
-				<>
+				<div key={index}>
 					<Label variant={'h4'}>{item.type}</Label>
 					<Label variant={'body1'} mb={10}>
 						{item.value}
 					</Label>
-				</>
+				</div>
 			);
 		});
+	}
+
+	function renderAccommodationCards() {
+		return (
+			stayParams &&
+			stayParams.map((accommodation) => {
+				return (
+					<BookingCartTotalsCard
+						key={accommodation.uuid}
+						uuid={accommodation.uuid}
+						adults={accommodation.adults}
+						children={accommodation.children}
+						accommodationId={accommodation.accommodationId}
+						arrivalDate={accommodation.arrivalDate}
+						departureDate={accommodation.departureDate}
+						upsellPackages={accommodation.packages}
+						destinationId={destinationId}
+						rateCode={accommodation.rateCode}
+						removeAccommodation={(needsConfirmation: boolean) => {
+							if (!needsConfirmation) {
+								removeAccommodation(accommodation.uuid).catch(console.error);
+								return;
+							}
+
+							popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
+								bodyText: 'Are you sure you want to remove this?',
+								cancelText: 'Do not remove',
+								confirm: () => {
+									removeAccommodation(accommodation.uuid).catch(console.error);
+								},
+								confirmText: 'Remove',
+								title: 'Remove accommodation'
+							});
+						}}
+						editPackages={() => {
+							const stays: Misc.StayParams[] = stayParams.filter(
+								(stay: Misc.StayParams) => stay.uuid !== accommodation.uuid
+							);
+							let newRoom: Misc.StayParams = {
+								...accommodation
+							};
+							let data = JSON.stringify({
+								destinationId,
+								stays,
+								newRoom
+							});
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+						}}
+						editAccommodation={() => {
+							popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
+								uuid: accommodation.uuid,
+								accommodationId: accommodation.accommodationId,
+								adults: accommodation.adults,
+								children: accommodation.children,
+								destinationId: destinationId,
+								rateCode: accommodation.rateCode,
+								startDate: accommodation.arrivalDate,
+								endDate: accommodation.departureDate,
+								onApplyChanges(
+									uuid: number,
+									adults: number,
+									children: number,
+									rateCode: string,
+									checkinDate: string | Date,
+									checkoutDate: string | Date
+								) {
+									editAccommodation(
+										uuid,
+										adults,
+										children,
+										checkinDate,
+										checkoutDate,
+										accommodation.accommodationId,
+										accommodation.packages,
+										rateCode
+									);
+								}
+							});
+						}}
+						changeRoom={() => {
+							changeRoom(accommodation.uuid);
+						}}
+						cancellable={true}
+						usePoints={usePoints}
+					/>
+				);
+			})
+		);
 	}
 
 	function renderAccommodationDetails() {
@@ -333,91 +395,7 @@ const BookingFlowCheckoutPage = () => {
 			>
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
-				{accommodations &&
-					accommodations.map((accommodation, index) => {
-						return (
-							<BookingCartTotalsCard
-								adults={accommodation.adults}
-								children={accommodation.children}
-								accommodationId={accommodation.accommodationId}
-								arrivalDate={accommodation.arrivalDate}
-								departureDate={accommodation.departureDate}
-								upsellPackages={accommodation.packages}
-								destinationId={params.data.destinationId}
-								rateCode={accommodation.rateCode}
-								addAccommodation={addAccommodation}
-								remove={() => {
-									popupController.open<ConfirmOptionPopupProps>(ConfirmOptionPopup, {
-										bodyText: 'Are you sure you want to remove this?',
-										cancelText: 'Do not remove',
-										confirm(): void {
-											removeAccommodation(
-												accommodation.accommodationId,
-												accommodation.arrivalDate,
-												accommodation.departureDate
-											).catch(console.error);
-										},
-										confirmText: 'Remove',
-										title: 'Remove accommodation'
-									});
-								}}
-								editPackages={() => {
-									const stays: StayParams = params.data.stays.filter(
-										(stay: StayParams) => stay.accommodationId !== accommodation.accommodationId
-									);
-									let newRoom = {
-										adults: accommodation.adults,
-										children: accommodation.children,
-										accommodationId: accommodation.accommodationId,
-										arrivalDate: accommodation.arrivalDate,
-										departureDate: accommodation.departureDate,
-										packages: accommodation.packages
-									};
-									let data = JSON.stringify({
-										destinationId: params.data.destinationId,
-										stays,
-										newRoom
-									});
-									router.navigate(`/booking/packages?data=${data}`).catch(console.error);
-								}}
-								edit={(id, checkInDate, checkoutDate) => {
-									popupController.open<EditAccommodationPopupProps>(EditAccommodationPopup, {
-										accommodationId: id,
-										adults: accommodation.adults,
-										children: accommodation.children,
-										destinationId: destinationId,
-										rateCode: accommodation.rateCode,
-										endDate: checkoutDate,
-										onApplyChanges(
-											adults: number,
-											children: number,
-											rateCode: string,
-											checkinDate: string | Date,
-											checkoutDate: string | Date,
-											originalStartDate: string | Date,
-											originalEndDate: string | Date
-										): void {
-											popupController.close(AccommodationOptionsPopup);
-											editRoom(
-												adults,
-												children,
-												checkinDate,
-												checkoutDate,
-												originalStartDate,
-												originalEndDate,
-												id,
-												rateCode
-											).catch(console.error);
-										},
-										startDate: checkInDate
-									});
-								}}
-								changeRoom={changeRoom}
-								cancellable={true}
-								usePoints={usePoints}
-							/>
-						);
-					})}
+				{renderAccommodationCards()}
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'button'}
@@ -429,14 +407,16 @@ const BookingFlowCheckoutPage = () => {
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>
-						{NumberUtils.displayPointsOrCash(totalAccommodations(), usePoints ? 'points' : 'cash')}
+						{usePoints
+							? `${StringUtils.addCommasToNumber(grandTotal)} Points`
+							: `$${StringUtils.formatMoney(grandTotal)}`}
 					</Label>
 				</Box>
 			</Paper>
 		);
 	}
 
-	return !ObjectUtils.isArrayWithData(accommodations) ? (
+	return !ObjectUtils.isArrayWithData(stayParams) ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowPage'}>
@@ -525,7 +505,7 @@ const BookingFlowCheckoutPage = () => {
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
 							variant={'button'}
-							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'complete booking'}
+							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'Complete Booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);
 							}}

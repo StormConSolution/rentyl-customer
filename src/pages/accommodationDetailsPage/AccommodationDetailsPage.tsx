@@ -61,13 +61,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		async function getAccommodationDetails(id: number) {
 			try {
 				let accommodation = await accommodationService.getAccommodationDetails(id);
-				if (accommodation.data.data) {
-					setAccommodationDetails(accommodation.data.data);
-					let destination = await destinationService.getDestinationDetails(
-						accommodation.data.data.destinationId
-					);
-					if (destination) setDestinationDetails(destination);
-				}
+				setAccommodationDetails(accommodation);
+				let destination = await destinationService.getDestinationDetails(accommodation.destinationId);
+				setDestinationDetails(destination);
 			} catch (e) {
 				rsToasts.error('Cannot find details, please try again', '', 5000);
 			}

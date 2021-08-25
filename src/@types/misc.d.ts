@@ -30,6 +30,29 @@ declare namespace Misc {
 		additionalDetails: string;
 	}
 
+	export interface BookingParams {
+		destinationId: number;
+		stays: StayParams[];
+		newRoom?: StayParams;
+		editUuid?: number;
+	}
+
+	export interface StayParams {
+		uuid: number;
+		adults: number;
+		children: number;
+		accommodationId: number;
+		arrivalDate: string;
+		departureDate: string;
+		packages: number[];
+		rateCode?: string;
+	}
+
+	export interface DateRange {
+		startDate: string;
+		endDate: string;
+	}
+
 	export interface INavData {
 		title: string;
 		route: string;

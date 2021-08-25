@@ -19,11 +19,13 @@ import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
 import PackageService from '../../services/package/package.service';
 
 export interface EditAccommodationPopupProps extends PopupProps {
+	uuid: number;
 	adults: number;
 	children: number;
 	startDate: Date | string;
 	endDate: Date | string;
 	onApplyChanges: (
+		uuid: number,
 		adults: number,
 		children: number,
 		rateCode: string,
@@ -39,7 +41,6 @@ export interface EditAccommodationPopupProps extends PopupProps {
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(
 		moment(new Date(DateUtils.displayUserDate(props.startDate)))
@@ -54,22 +55,6 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 		])
 	);
 	const [available, setAvailable] = useState<boolean>(true);
-
-	useEffect(() => {
-		async function getPackages() {
-			try {
-				const response = await packageService.getAvailable({
-					destinationId: props.destinationId,
-					startDate: props.startDate,
-					endDate: props.endDate,
-					pagination: { page: 1, perPage: 5 }
-				});
-			} catch {
-				console.error('An unexpected error happened on the server.');
-			}
-		}
-		getPackages().catch(console.error);
-	}, []);
 
 	useEffect(() => {
 		async function checkAvailability() {
@@ -160,6 +145,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						disabled={!available}
 						onClick={() => {
 							props.onApplyChanges(
+								props.uuid,
 								parseInt(guestForm.get('adults').value.toString()),
 								parseInt(guestForm.get('children').value.toString()),
 								props.rateCode || '',

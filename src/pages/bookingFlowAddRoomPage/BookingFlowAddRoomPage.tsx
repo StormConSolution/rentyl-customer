@@ -8,7 +8,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -22,12 +22,18 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Footer from '../../components/footer/Footer';
 import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import BookingParams = Misc.BookingParams;
 
 const BookingFlowAddRoomPage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
-	params.data = JSON.parse(params.data);
+	const params = router.getPageUrlParams<{ data: BookingParams }>([
+		{ key: 'data', default: 0, type: 'string', alias: 'data' }
+	]);
+	params.data = ObjectUtils.smartParse(params.data);
+	const editStayDetails = params.data.stays.find((item) => {
+		return item.uuid === params.data.editUuid;
+	});
 
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
@@ -35,27 +41,35 @@ const BookingFlowAddRoomPage = () => {
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
+	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
+
+	const initialStartDate = editStayDetails?.arrivalDate ? moment(editStayDetails?.arrivalDate) : moment(new Date());
+	const initialEndDate = editStayDetails?.departureDate
+		? moment(editStayDetails?.departureDate)
+		: moment(editStayDetails?.departureDate).add(2, 'days');
+
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
-		startDate: moment(params.data.stays[0].arrivalDate).format('YYYY-MM-DD'),
-		endDate: moment(params.data.stays[0].departureDate).format('YYYY-MM-DD'),
-		adults: params.data.stays[0].adults,
-		children: params.data.stays[0].children,
+		startDate: initialStartDate.format('YYYY-MM-DD'),
+		endDate: initialEndDate.format('YYYY-MM-DD'),
+		adults: editStayDetails?.adults || 1,
+		children: editStayDetails?.children || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.data.destinationId,
-		rateCode: params.data.stays[0].rateCode
+		rateCode: editStayDetails?.rateCode || params.data.stays[0].rateCode || ''
 	});
-	const [rateCode, setRateCode] = useState<string>(params.data.stays[0].rateCode);
+
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
+
+	const [rateCode, setRateCode] = useState<string | undefined>(params.data.stays[0].rateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
 	useEffect(() => {
 		async function checkForEdit() {
-			if (params.data.edit) {
-				let result = await accommodationService.getAccommodationDetails(params.data.edit.id);
-				setEditingAccommodation(result.data.data);
+			if (editStayDetails) {
+				let result = await accommodationService.getAccommodationDetails(editStayDetails.accommodationId);
+				setEditingAccommodation(result);
 			}
 		}
 		checkForEdit().catch(console.error);
@@ -78,7 +92,7 @@ const BookingFlowAddRoomPage = () => {
 					delete newSearchQueryObj.rateCode;
 				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
-				setDestinations(res.data);
+				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
@@ -161,80 +175,69 @@ const BookingFlowAddRoomPage = () => {
 		return [];
 	}
 
-	function bookNow(id: number) {
-		const edited: { id: number; startDate: string; endDate: string; packages: any } = params.data.edit;
+	function bookNow(accommodationId: number) {
 		let stays = params.data.stays;
-		if (edited) {
-			stays = params.data.stays.filter(
-				(stay: {
-					adults: number;
-					children: number;
-					accommodationId: number;
-					arrivalDate: string;
-					departureDate: string;
-				}) => {
-					return (
-						stay.accommodationId !== edited.id ||
-						stay.arrivalDate !== edited.startDate ||
-						stay.departureDate !== edited.endDate
-					);
-				}
-			);
+		if (editStayDetails) {
+			stays = params.data.stays.filter((stay) => {
+				return stay.uuid !== editStayDetails.uuid;
+			});
 		}
 
-		let data = JSON.stringify({
+		let newRoom: Misc.StayParams = {
+			uuid: editStayDetails?.uuid || Date.now(),
+			accommodationId,
+			adults: searchQueryObj.adults,
+			children: searchQueryObj.children,
+			rateCode: searchQueryObj.rateCode,
+			arrivalDate: searchQueryObj.startDate as string,
+			departureDate: searchQueryObj.endDate as string,
+			packages: editStayDetails?.packages || []
+		};
+
+		let bookingParams: Misc.BookingParams = {
 			destinationId: params.data.destinationId,
 			stays,
-			newRoom: {
-				adults: searchQueryObj.adults,
-				children: searchQueryObj.children,
-				rateCode: searchQueryObj.rateCode,
-				accommodationId: id,
-				arrivalDate: searchQueryObj.startDate,
-				departureDate: searchQueryObj.endDate,
-				packages: edited?.packages ? edited.packages : []
-			}
-		});
-		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+			newRoom
+		};
+		router.navigate(`/booking/packages?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 	}
 
 	function renderDestinationSearchResultCards() {
-		if (!destinations) return;
-		return destinations.map((destination, index) => {
-			let urls: string[] = getImageUrls(destination);
+		return accommodations.map((accommodation, index) => {
+			let urls: string[] = getImageUrls(accommodation);
 			return (
 				<AccommodationSearchResultCard
 					key={index}
-					id={destination.id}
-					name={destination.name}
-					maxSleeps={destination.maxSleeps}
+					id={accommodation.id}
+					name={accommodation.name}
+					maxSleeps={accommodation.maxSleeps}
 					squareFeet={2500}
-					description={destination.longDescription}
-					ratePerNightInCents={destination.costPerNightCents}
-					pointsRatePerNight={destination.pointsPerNight}
-					amenityIconNames={destination.featureIcons}
-					pointsEarnable={destination.pointsEarned}
+					description={accommodation.longDescription}
+					ratePerNightInCents={accommodation.costPerNightCents}
+					pointsRatePerNight={accommodation.pointsPerNight}
+					amenityIconNames={accommodation.featureIcons}
+					pointsEarnable={accommodation.pointsEarned}
 					hideButtons={true}
 					roomStats={[
 						{
 							label: 'Sleeps',
-							datum: destination.maxSleeps
+							datum: accommodation.maxSleeps
 						},
 						{
 							label: 'Max Occupancy',
-							datum: destination.maxOccupancyCount
+							datum: accommodation.maxOccupancyCount
 						},
 						{
 							label: 'ADA Compliant',
-							datum: destination.adaCompliant ? 'Yes' : 'No'
+							datum: accommodation.adaCompliant ? 'Yes' : 'No'
 						},
 						{
 							label: 'Extra Bed',
-							datum: destination.extraBeds ? 'Yes' : 'No'
+							datum: accommodation.extraBeds ? 'Yes' : 'No'
 						}
 					]}
 					onBookNowClick={() => {
-						bookNow(destination.id);
+						bookNow(accommodation.id);
 					}}
 					carouselImagePaths={urls}
 				/>
@@ -248,7 +251,7 @@ const BookingFlowAddRoomPage = () => {
 				<Label onClick={() => router.back()} variant={'caption'} className={'backLink'}>
 					{'<'} Back
 				</Label>
-				{params.data.edit && !!editingAccommodation && (
+				{editStayDetails && !!editingAccommodation && (
 					<AccommodationSearchResultCard
 						currentRoom={true}
 						id={editingAccommodation.id}
@@ -279,24 +282,7 @@ const BookingFlowAddRoomPage = () => {
 						carouselImagePaths={editingAccommodation.media.map((media) => media.urls.large || '')}
 						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
 						onBookNowClick={() => {
-							let data = params.data;
-							data.newRoom = data.stays.splice(
-								data.stays.findIndex(
-									(room: {
-										adults: number;
-										children: number;
-										accommodationId: number;
-										arrivalDate: string;
-										departureDate: string;
-									}) =>
-										room.accommodationId === data.edit.id &&
-										room.arrivalDate === data.edit.startDate &&
-										room.departureDate === data.edit.endDate
-								),
-								1
-							)[0];
-							delete data.edit;
-							router.navigate(`/booking/packages?data=${JSON.stringify(data)}`);
+							bookNow(editStayDetails.accommodationId);
 						}}
 						pointsEarnable={0}
 					/>

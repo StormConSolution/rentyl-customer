@@ -1,7 +1,7 @@
 import { Service } from '../Service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
-import { WebUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 
 export default class PackageService extends Service {
 	async getAvailable(
@@ -17,7 +17,7 @@ export default class PackageService extends Service {
 	async getPackagesByIds(data: Api.UpsellPackage.Req.Availability): Promise<Api.UpsellPackage.Res.Available[]> {
 		let response = await http.get<RedSky.RsPagedResponseData<Api.UpsellPackage.Details[]>>(
 			'/package/availability',
-			WebUtils.convertDataForUrlParams(data)
+			data
 		);
 		return response.data.data;
 	}

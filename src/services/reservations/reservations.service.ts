@@ -20,12 +20,6 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async create(data: Api.Reservation.Req.Create) {
-		let response = await http.post<RsResponseData<Api.Reservation.Res.Create>>('reservation', data);
-		this.refreshUser();
-		return response.data.data;
-	}
-
 	async createItinerary(data: Api.Reservation.Req.Itinerary.Create): Promise<Api.Reservation.Res.Itinerary.Get> {
 		const response = await http.post<RsResponseData<Api.Reservation.Res.Itinerary.Get>>(
 			'reservation/itinerary',
@@ -35,7 +29,7 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getItinerary(data: Api.Reservation.Req.Itinerary.Get) {
+	async getItinerary(data: Api.Reservation.Req.Itinerary.Get): Promise<Api.Reservation.Res.Itinerary.Get> {
 		let response = await http.get<RsResponseData<Api.Reservation.Res.Itinerary.Get>>('reservation/itinerary', data);
 		return response.data.data;
 	}
@@ -61,7 +55,7 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getByPage(pageQuery: RedSky.PageQuery) {
+	async getByPage(pageQuery: RedSky.PageQuery): Promise<RedSky.RsPagedResponseData<Api.Reservation.Res.Get[]>> {
 		let response = await http.get<RedSky.RsPagedResponseData<Api.Reservation.Res.Get[]>>(
 			'reservation/paged',
 			WebUtils.convertDataForUrlParams(pageQuery)
@@ -69,14 +63,14 @@ export default class ReservationsService extends Service {
 		return response.data;
 	}
 
-	async upcoming(limit: number) {
+	async upcoming(limit: number): Promise<Api.Reservation.Res.Upcoming[]> {
 		let response = await http.get<RsResponseData<Api.Reservation.Res.Upcoming[]>>('reservation/upcoming', {
 			limit
 		});
 		return response.data.data;
 	}
 
-	async updateReservation(data: Api.Reservation.Req.Update) {
+	async updateReservation(data: Api.Reservation.Req.Update): Promise<Api.Reservation.Res.Get> {
 		let response = await http.put<RsResponseData<Api.Reservation.Res.Get>>('reservation', data);
 		this.refreshUser();
 		return response.data.data;

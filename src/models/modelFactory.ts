@@ -1,6 +1,4 @@
 import { Model } from './Model';
-import UserModel from './user/user.model';
-import AccommodationsModel from './accommodations/accommodations.model';
 import RewardModel from './reward/reward.model';
 
 type ModelKey = 'UserModel' | 'ReservationsModel' | 'AccommodationsModel' | 'RewardModel';
@@ -10,8 +8,6 @@ class ModelFactory {
 
 	create() {
 		// Add new models here to the factory
-		this.models['UserModel'] = new UserModel();
-		this.models['AccommodationsModel'] = new AccommodationsModel();
 		this.models['RewardModel'] = new RewardModel();
 
 		for (let key in this.models) {

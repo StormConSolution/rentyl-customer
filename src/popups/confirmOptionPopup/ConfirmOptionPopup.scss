@@ -1,4 +1,6 @@
 .rsConfirmOptionPopup {
+	position: relative;
+
 	.rsPaper {
 		padding: 15px;
 		width: 423px;
@@ -16,9 +18,9 @@
 	}
 
 	.icon-close {
-		position: relative;
-		left: 95%;
-		top: 15%;
+		position: absolute;
+		right: 15px;
+		top: 10px;
 	}
 }
 
