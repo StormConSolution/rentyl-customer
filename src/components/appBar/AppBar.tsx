@@ -10,6 +10,7 @@ import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import router from '../../utils/router';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import LinkButton from '../linkButton/LinkButton';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
@@ -26,13 +27,12 @@ const AppBar: React.FC = () => {
 
 			<Box display={'flex'} alignItems={'center'}>
 				{!size && (
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
+					<LinkButton
 						label={'Learn about spire loyalty'}
 						onClick={() => {
 							router.navigate('/about-spire').catch(console.error);
 						}}
+						path={'/about-spire'}
 					/>
 				)}
 				<Icon

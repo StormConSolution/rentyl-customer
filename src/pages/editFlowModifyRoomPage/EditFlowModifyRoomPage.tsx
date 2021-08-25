@@ -8,7 +8,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -58,6 +58,10 @@ const EditFlowModifyRoomPage = () => {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 				updateSearchQueryObj('rateCode', res.rateCode);
+				onDatesChange(
+					moment(DateUtils.displayUserDate(res.arrivalDate)),
+					moment(DateUtils.displayUserDate(res.departureDate))
+				);
 			} catch (e) {
 				rsToasts.error('Cannot find reservation.');
 				router.navigate('/reservations').catch(console.error);

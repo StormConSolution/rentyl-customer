@@ -64,6 +64,18 @@ const BookingFlowAddPackagePage = () => {
 				setAvailablePackages(response.data);
 				setTotal(response.total || 0);
 			} catch {
+				rsToasts.error('No packages available, redirecting', 'No Packages');
+				if (!params.data.newRoom) return;
+				let stays: Misc.StayParams[] = params.data.stays || [];
+				stays.push(params.data.newRoom);
+				router
+					.navigate(
+						`/booking/checkout?data=${JSON.stringify({
+							destinationId: params.data.destinationId,
+							stays
+						})}`
+					)
+					.catch(console.error);
 				console.error('Cannot get a list of add-on packages.');
 			}
 		}

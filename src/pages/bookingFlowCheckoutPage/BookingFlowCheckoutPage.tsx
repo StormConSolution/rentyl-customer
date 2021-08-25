@@ -34,6 +34,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 let existingCardId = 0;
 
@@ -403,13 +404,12 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
+				<LinkButton
 					label={'Add Room'}
 					onClick={() => {
 						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`).catch(console.error);
 					}}
+					path={`/booking/add-room?data=${JSON.stringify(params.data)}`}
 				/>
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
