@@ -404,13 +404,7 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LinkButton
-					label={'Add Room'}
-					onClick={() => {
-						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`).catch(console.error);
-					}}
-					path={`/booking/add-room?data=${JSON.stringify(params.data)}`}
-				/>
+				<LinkButton label={'Add Room'} path={`/booking/add-room?data=${JSON.stringify(params.data)}`} />
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>

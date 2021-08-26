@@ -26,15 +26,7 @@ const AppBar: React.FC = () => {
 			</Link>
 
 			<Box display={'flex'} alignItems={'center'}>
-				{!size && (
-					<LinkButton
-						label={'Learn about spire loyalty'}
-						onClick={() => {
-							router.navigate('/about-spire').catch(console.error);
-						}}
-						path={'/about-spire'}
-					/>
-				)}
+				{!size && <LinkButton label={'Learn about spire loyalty'} path={'/about-spire'} />}
 				<Icon
 					iconImg={'icon-hamburger-menu'}
 					color={'#003A76'}
