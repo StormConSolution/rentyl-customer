@@ -35,8 +35,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	useEffect(() => {
 		async function getFeatureRewards() {
 			try {
-				let data = await rewardService.getAllForRewardItemPage();
-				if (data) setFeaturedRewards(data.featuredCategories);
+				// let data = await rewardService.getAllForRewardItemPage();
+				// if (data) setFeaturedRewards(data.featuredCategories);
 			} catch (e) {
 				console.log(e.message);
 			}

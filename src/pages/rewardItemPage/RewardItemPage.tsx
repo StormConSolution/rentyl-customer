@@ -53,8 +53,8 @@ const RewardItemPage: React.FC = () => {
 				} catch (e) {
 					rsToasts.error('Cannot get a list of categories.');
 				}
-				let allActiveCategories = await rewardService.getAllActiveCategories();
-				let data = await rewardService.getAllForRewardItemPage();
+				let activeCategoriesResponse = await rewardService.getAllActiveCategories();
+				let allActiveCategories: Api.Reward.Category.Res.Get[] = activeCategoriesResponse.data;
 				let selectCategories = allActiveCategories.map((category) => {
 					return {
 						value: category.id,
@@ -62,9 +62,14 @@ const RewardItemPage: React.FC = () => {
 						text: category.name
 					};
 				});
+				let featuredCategories = await rewardService.getPagedCategories({
+					pagination: { page: 1, perPage: 100 },
+					filter: { matchType: 'exact', searchTerm: [{ column: 'isFeatured', value: 1 }] }
+				});
 				setCategorySelectList(selectCategories);
-				setFeaturedCategory(data.featuredCategories);
-				setDestinationSelectList(data.destinationSelect);
+				let vendorList = await rewardService.getVendorsInSelectFormat();
+				setFeaturedCategory(featuredCategories.data);
+				setDestinationSelectList(vendorList);
 				setWaitToLoad(false);
 			} catch (e) {
 				console.error(e);
@@ -78,21 +83,21 @@ const RewardItemPage: React.FC = () => {
 			setCardTotal(0);
 			if (ObjectUtils.isArrayWithData(params.categories) || params.categories === '') {
 				try {
-					let pagedCategories = await rewardService.getPagedCategories(
-						page,
-						perPage,
-						'name',
-						'ASC',
-						'exact',
-						[
-							{
-								column: 'isActive',
-								value: 1
-							}
-						]
-					);
-					setCategoryPagedList(pagedCategories.data.data);
-					setCardTotal(pagedCategories.data.total ? pagedCategories.data.total : 0);
+					const pagedCategories = await rewardService.getPagedCategories({
+						pagination: { page, perPage },
+						sort: { field: 'name', order: 'ASC' },
+						filter: {
+							matchType: 'exact',
+							searchTerm: [
+								{
+									column: 'isActive',
+									value: 1
+								}
+							]
+						}
+					});
+					setCategoryPagedList(pagedCategories.data);
+					setCardTotal(pagedCategories.total || 0);
 				} catch (e) {
 					rsToasts.error('Cannot get the list of rewards.');
 				}
