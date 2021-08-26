@@ -87,7 +87,7 @@ const ReservationDetailsPage: React.FC = () => {
 					<ItineraryInfoCard
 						backButton={{
 							link: '/reservations/itinerary/details?ii=' + reservation.itineraryId,
-							label: '< Back to itineraries'
+							label: '< Back to itinerary Details'
 						}}
 						logoImgUrl={reservation.destination.logoUrl}
 						name={reservation.accommodation.name}
@@ -190,6 +190,7 @@ const ReservationDetailsPage: React.FC = () => {
 									.catch(console.error);
 							}}
 							isEdit
+							isPastReservation={new Date(reservation.arrivalDate).getTime() < Date.now()}
 							isOpen
 						/>
 					</div>

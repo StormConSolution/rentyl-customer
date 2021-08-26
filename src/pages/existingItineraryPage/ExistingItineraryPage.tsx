@@ -56,12 +56,12 @@ const ExistingItineraryPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(reservations)) return;
 
 		let prevReservations = reservations.filter((item) => {
-			let date = new Date(item.departureDate);
+			let date = new Date(item.arrivalDate);
 			return date.getTime() < Date.now() && !item.externalCancellationId;
 		});
 
 		let currentRes = reservations.filter((item) => {
-			let date = new Date(item.departureDate);
+			let date = new Date(item.arrivalDate);
 			return date.getTime() > Date.now() && !item.externalCancellationId;
 		});
 

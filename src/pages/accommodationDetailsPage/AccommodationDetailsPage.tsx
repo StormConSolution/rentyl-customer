@@ -116,10 +116,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		);
 	}
 
-	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults', value: any) {
+	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults' | 'rateCode', value: any) {
 		setAvailabilityObj((prev) => {
 			let createAvailabilityObj: any = { ...prev };
-			createAvailabilityObj[key] = value;
+			if (value === '') delete createAvailabilityObj[key];
+			else createAvailabilityObj[key] = value;
 			return createAvailabilityObj;
 		});
 	}
@@ -209,6 +210,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							}}
 							onGuestChange={(value) => {
 								updateAvailabilityObj('adults', +value);
+							}}
+							onRateCodeChange={(value) => {
+								updateAvailabilityObj('rateCode', value);
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {

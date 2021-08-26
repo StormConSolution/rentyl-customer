@@ -5,6 +5,7 @@
 		width: 93px;
 		line-height: 21px;
 	}
+
 	.checkOutLabel {
 		margin-left: 18px;
 	}
@@ -42,6 +43,9 @@
 	.rsLabelInput {
 		margin: 5px auto 0;
 		width: 90px;
+		&.rateCode {
+			width: 100%;
+		}
 		input {
 			text-align: center;
 		}

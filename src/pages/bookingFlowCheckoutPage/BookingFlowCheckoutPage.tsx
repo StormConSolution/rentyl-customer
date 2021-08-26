@@ -43,7 +43,9 @@ const BookingFlowCheckoutPage = () => {
 	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
 	const destinationId = params.data.destinationId;
 	const stayParams = params.data.stays;
-	const [usePoints, setUsePoints] = useState<boolean>(!!company.allowPointBooking);
+	const [usePoints, setUsePoints] = useState<boolean>(
+		company.allowPointBooking && company.allowCashBooking ? false : !!company.allowPointBooking
+	);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
