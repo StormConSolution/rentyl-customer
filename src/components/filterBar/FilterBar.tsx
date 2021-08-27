@@ -4,7 +4,7 @@ import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
-import { addCommasToNumber, removeAllExceptNumbers } from '../../utils/utils';
+import { addCommasToNumber, StringUtils } from '../../utils/utils';
 import { Box } from '@bit/redsky.framework.rs.996';
 
 export interface FilterBarProps {
@@ -65,7 +65,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Price Min"
 				initialValue={`$${addCommasToNumber(props.initialPriceMin)}` || ''}
 				onChange={debounce(async (value) => {
-					props.onChangePriceMin(removeAllExceptNumbers(value));
+					props.onChangePriceMin(StringUtils.removeLineEndings(value));
 				}, 500)}
 			/>
 			<LabelInput
@@ -74,7 +74,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Price Max"
 				initialValue={`$${addCommasToNumber(props.initialPriceMax)}` || ''}
 				onChange={debounce(async (value) => {
-					props.onChangePriceMax(removeAllExceptNumbers(value));
+					props.onChangePriceMax(StringUtils.removeLineEndings(value));
 				}, 500)}
 			/>
 		</Box>

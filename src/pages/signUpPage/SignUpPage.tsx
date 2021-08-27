@@ -16,7 +16,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import { HttpStatusCode } from '../../utils/http';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatPhoneNumber, removeAllExceptNumbers, removeExtraSpacesReturnsTabs } from '../../utils/utils';
+import { formatPhoneNumber, StringUtils } from '../../utils/utils';
 import { useSetRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
 import router from '../../utils/router';
@@ -147,10 +147,10 @@ const SignUpPage: React.FC = () => {
 			let newValue = formatPhoneNumber(control.value.toString());
 			control.value = newValue;
 		} else if (control.key === 'phone' && control.value.toString().length > 10) {
-			let newValue = removeAllExceptNumbers(control.value.toString());
+			let newValue = StringUtils.removeAllExceptNumbers(control.value.toString());
 			control.value = newValue;
 		} else if (control.key === 'firstName' || control.key === 'lastName') {
-			let newValue = removeExtraSpacesReturnsTabs(control.value.toString());
+			let newValue = StringUtils.removeLineEndings(control.value.toString());
 			control.value = newValue;
 		}
 		signUpForm.update(control);
@@ -179,6 +179,7 @@ const SignUpPage: React.FC = () => {
 	async function signUp() {
 		popupController.open(SpinningLoaderPopup);
 		if (!phoneNumber.length || phoneNumber.length < 3) {
+			popupController.close(SpinningLoaderPopup);
 			return rsToasts.error('Phone number is required');
 		}
 
@@ -222,16 +223,6 @@ const SignUpPage: React.FC = () => {
 		}
 	}
 
-	async function saveAddress(userId: number) {
-		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
-		addressObj['userId'] = userId;
-		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
-		addressObj['isDefault'] = 1;
-		addressObj['country'] = country;
-		await userAddressService.create(addressObj);
-	}
-
 	return (
 		<Page className={'rsSignUpPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -266,7 +257,7 @@ const SignUpPage: React.FC = () => {
 							flexDirection={'column'}
 							padding={size === 'small' ? '20px' : '48px 92px'}
 						>
-							<Box display={'flex'}>
+							<Box display={'flex'} justifyContent={'space-between'}>
 								<LabelInput
 									title={'First Name'}
 									inputType={'text'}
@@ -287,7 +278,7 @@ const SignUpPage: React.FC = () => {
 								control={newAddressObj.get('address1')}
 								updateControl={updateNewAddressObj}
 							/>
-							<Box display={'flex'}>
+							<Box display={'flex'} justifyContent={'space-between'}>
 								<LabelInput
 									title={'City'}
 									inputType={'text'}

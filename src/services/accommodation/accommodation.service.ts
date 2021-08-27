@@ -32,7 +32,7 @@ export default class AccommodationService extends Service {
 
 	async getManyAccommodationDetails(accommodationIds: number[]): Promise<Api.Accommodation.Res.Details[]> {
 		let accommodations: Api.Accommodation.Res.Details[] = [];
-		for (let id in accommodationIds) {
+		for (let id of accommodationIds) {
 			let res = await http.get<RsResponseData<Api.Accommodation.Res.Details>>('accommodation/details', {
 				accommodationId: id
 			});

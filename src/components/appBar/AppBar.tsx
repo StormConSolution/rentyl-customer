@@ -4,12 +4,11 @@ import './AppBar.scss';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import NavDrawer from '../../popups/navDrawer/NavDrawer';
-import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
-import router from '../../utils/router';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
+import { isRouteUnauthorized } from '../../utils/utils';
 import LinkButton from '../linkButton/LinkButton';
 
 const AppBar: React.FC = () => {
@@ -26,7 +25,9 @@ const AppBar: React.FC = () => {
 			</Link>
 
 			<Box display={'flex'} alignItems={'center'}>
-				{!size && <LinkButton label={'Learn about spire loyalty'} path={'/about-spire'} />}
+				{!size && !isRouteUnauthorized('/about-spire') && (
+					<LinkButton label={'Learn about spire loyalty'} path={'/about-spire'} />
+				)}
 				<Icon
 					iconImg={'icon-hamburger-menu'}
 					color={'#003A76'}

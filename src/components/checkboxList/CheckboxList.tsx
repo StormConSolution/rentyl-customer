@@ -3,7 +3,7 @@ import './CheckboxList.scss';
 import { SelectOptions } from '../Select/Select';
 import IconLabel from '../iconLabel/IconLabel';
 import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
-import { capitalize } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 
 interface CheckboxListProps {
 	onChange: (selectedValues: (string | number)[], options: SelectOptions[]) => void;
@@ -69,7 +69,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 				<LabelCheckbox
 					key={i}
 					value={props.options[i].value}
-					text={capitalize(props.options[i].text.toString())}
+					text={StringUtils.capitalizeFirst(props.options[i].text.toString())}
 					isChecked={props.options[i].selected}
 					onSelect={(value) => {
 						onSelectCheckbox(value);

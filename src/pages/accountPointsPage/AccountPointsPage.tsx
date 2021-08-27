@@ -18,7 +18,7 @@ import globalState from '../../models/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { SelectOptions } from '../../components/Select/Select';
-import { capitalize, formatDateForUser } from '../../utils/utils';
+import { formatDateForUser, StringUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 
 const AccountPointsPage: React.FC = () => {
@@ -101,7 +101,7 @@ const AccountPointsPage: React.FC = () => {
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
 					<img className={'pointImage'} src={getMedia(point)} alt={''} />
 					<Box className={'pendingPointsDetailsContainer'}>
-						<Label variant={'h3'}>{capitalize(point.title)}</Label>
+						<Label variant={'h3'}>{StringUtils.capitalizeFirst(point.title)}</Label>
 						<Label className={'pointType'} variant={'caption'}>
 							{point.pointType}
 						</Label>
