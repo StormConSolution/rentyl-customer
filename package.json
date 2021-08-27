@@ -7,7 +7,7 @@
 	"uri": "https://sand.spireloyalty.com/api/v1",
 	"dependencies": {
 		"@babel/plugin-syntax-jsx": "^7.12.1",
-		"@babel/preset-typescript": "^7.12.7",
+		"@babel/preset-typescript": "7.12.7",
 		"@bit/redsky.framework.rs.996": "0.0.33",
 		"@bit/redsky.framework.rs.accordion": "0.0.29",
 		"@bit/redsky.framework.rs.avatar": "0.0.5",
@@ -57,7 +57,7 @@
 		"spark-md5": "^3.0.1",
 		"style-loader": "^1.1.3",
 		"ts-loader": "^6.2.2",
-		"typescript": "^4.0.3",
+		"typescript": "4.0.3",
 		"url-loader": "^4.0.0",
 		"webpack": "^4.42.0",
 		"webpack-cli": "^3.3.11",
