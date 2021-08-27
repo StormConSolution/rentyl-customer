@@ -301,7 +301,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 								city={destinationDetails.city}
 								state={destinationDetails.state}
 								zip={destinationDetails.zip}
-								rating={4.5}
+								rating={destinationDetails.reviewRating}
 								longDescription={destinationDetails.description}
 								onViewAvailableStaysClick={() => {
 									let availableStaysSection = availableStaysRef.current!.offsetTop;

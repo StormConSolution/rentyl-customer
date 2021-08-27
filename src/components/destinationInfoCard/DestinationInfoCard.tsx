@@ -16,7 +16,7 @@ interface DestinationInfoCardProps {
 	city: string;
 	state: string;
 	zip: number | string;
-	rating: 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
+	rating: number;
 	longDescription: string;
 	onViewAvailableStaysClick?: () => void;
 }

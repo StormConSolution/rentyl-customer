@@ -606,6 +606,8 @@ declare namespace Api {
 				country: string;
 				logoUrl: string;
 				heroUrl: string;
+				reviewRating: number;
+				reviewCount: number;
 				media: Media[];
 				features: Omit<
 					Feature.Details,
@@ -661,6 +663,8 @@ declare namespace Api {
 				zip: string;
 				country: string;
 				logoUrl: string;
+				reviewRating: number;
+				reviewCount: number;
 				media: Media[];
 				features: {
 					id: number;
