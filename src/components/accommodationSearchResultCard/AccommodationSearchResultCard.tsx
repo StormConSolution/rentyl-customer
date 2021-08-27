@@ -1,6 +1,5 @@
 import React from 'react';
 import { AccommodationStat } from '../accommodationSearchDetailCard/AccommodationSearchDetailCard';
-import StarRating, { Rating } from '../starRating/StarRating';
 import './AccommodationSearchResultCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import AccommodationSearchResultCardMobile from './accommodationSearchResultCardMobile/AccommodationSearchResultCardMobile';

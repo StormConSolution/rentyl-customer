@@ -2,20 +2,22 @@ import React from 'react';
 import './StarRating.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 
-export type Rating = 0 | 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
-
 interface starRatingProps {
 	size: 'small16px' | 'medium24px' | 'large32px';
-	rating: Rating;
+	rating: number;
 	className?: string;
 }
 
 const StarRating: React.FC<starRatingProps> = (props) => {
+	function roundDownToHalfValue(val: number) {
+		return Math.floor(val * 2) / 2;
+	}
+
 	function createStarRating() {
 		let htmlElement: JSX.Element[] = [];
 		for (let i = 0; i < 5; i++) {
-			if (i < props.rating) {
-				if (i + 0.5 === props.rating) htmlElement.push(halfStar(i));
+			if (i < roundDownToHalfValue(props.rating)) {
+				if (i + 0.5 === roundDownToHalfValue(props.rating)) htmlElement.push(halfStar(i));
 				else htmlElement.push(wholeStar(i));
 			} else {
 				htmlElement.push(emptyStar(i));

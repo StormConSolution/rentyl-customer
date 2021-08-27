@@ -210,7 +210,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					logoImagePath={destination.logoUrl}
 					picturePaths={urls}
 					starRating={4.5}
-					reviewPath={''}
+					reviewPath={`/destination/reviews?di=${destination.id}`}
 					destinationDetailsPath={
 						!!params.startDate && !!params.endDate
 							? `/destination/details?di=${destination.id}&startDate=${params.startDate}&endDate=${params.endDate}`

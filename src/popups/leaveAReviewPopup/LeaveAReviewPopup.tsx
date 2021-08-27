@@ -1,0 +1,124 @@
+import * as React from 'react';
+import './LeaveAReviewPopup.scss';
+import { Box, Popup, popupController } from '@bit/redsky.framework.rs.996';
+import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
+import Paper from '../../components/paper/Paper';
+import { useState } from 'react';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import { WebUtils } from '../../utils/utils';
+import LabelInput from '../../components/labelInput/LabelInput';
+import LabelButton from '../../components/labelButton/LabelButton';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import LabelSelect from '../../components/labelSelect/LabelSelect';
+import Icon from '@bit/redsky.framework.rs.icon';
+import StarRatingSelect from '../../components/starRatingSelect/StarRatingSelect';
+import rsToasts from '@bit/redsky.framework.toast';
+import serviceFactory from '../../services/serviceFactory';
+import ReviewService from '../../services/review/review.service';
+
+export interface LeaveAReviewPopupProps extends PopupProps {
+	destinationName: string;
+	destinationLogo: string;
+	stays: { id: number; name: string }[];
+}
+
+const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
+	const reviewService = serviceFactory.get<ReviewService>('ReviewService');
+
+	const [reviewDetails, setReviewDetails] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('message', '', [new RsValidator(RsValidatorEnum.REQ, 'Please provide a message')]),
+			new RsFormControl('reservationId', '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Please select which Reservation')
+			]),
+			new RsFormControl('rating', '', [])
+		])
+	);
+
+	function updateReviewDetails(control: RsFormControl) {
+		setReviewDetails(reviewDetails.clone().update(control));
+	}
+
+	function renderSelectOptions() {
+		return props.stays.map((item) => {
+			let selectedStay = reviewDetails.get('reservationId').value === item.id;
+			return { value: item.id, text: item.name, selected: selectedStay } as Misc.SelectOptions;
+		});
+	}
+
+	async function saveReview() {
+		let isValid = await reviewDetails.isValid();
+		if (!isValid) return rsToasts.error('Please Select a stay and add a message', 'Missing Info');
+		let data = reviewDetails.toModel<Api.Review.Req.Create>();
+		try {
+			let res = await reviewService.create(data);
+			if (res) {
+				rsToasts.success('Your review has been submitted', 'Success!!!');
+			}
+			popupController.close(LeaveAReviewPopup);
+		} catch (e) {
+			rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+		}
+	}
+
+	return (
+		<Popup opened={props.opened}>
+			<Paper className={'rsLeaveAReviewPopup'} position={'relative'}>
+				<Icon
+					iconImg={'icon-close'}
+					onClick={() => {
+						popupController.close(LeaveAReviewPopup);
+					}}
+					cursorPointer
+				/>
+				<Box display={'flex'} padding={'25px 50px'} alignItems={'center'}>
+					<img src={props.destinationLogo} alt={props.destinationName} />
+					<Label ml={20} variant={'h2'}>
+						{props.destinationName}
+					</Label>
+				</Box>
+				<hr />
+				<Box padding={'25px 50px'}>
+					<Label mb={8} variant={'h1'}>
+						Leave us a rating
+					</Label>
+					<StarRatingSelect
+						numberOfStars={5}
+						onRatingSelect={(value) => {
+							let newRating = reviewDetails.get('rating');
+							newRating.value = value;
+							updateReviewDetails(newRating);
+						}}
+					/>
+					<LabelSelect
+						autoCalculateWidth
+						title={'Select Your Stay'}
+						onChange={(value) => {
+							let newStay = reviewDetails.get('reservationId');
+							newStay.value = value;
+							updateReviewDetails(newStay);
+						}}
+						selectOptions={renderSelectOptions()}
+					/>
+					<LabelInput
+						title={''}
+						inputType={'textarea'}
+						control={reviewDetails.get('message')}
+						updateControl={updateReviewDetails}
+						placeholder={'Please give some details about your experience'}
+					/>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Submit Rating'}
+						onClick={() => {
+							saveReview().catch(console.error);
+						}}
+					/>
+				</Box>
+			</Paper>
+		</Popup>
+	);
+};
+
+export default LeaveAReviewPopup;

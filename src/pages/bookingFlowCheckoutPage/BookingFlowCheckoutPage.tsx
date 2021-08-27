@@ -286,12 +286,12 @@ const BookingFlowCheckoutPage = () => {
 		return destinationDetails.policies.map((item, index) => {
 			if (item.type === 'CheckIn' || item.type === 'CheckOut') return false;
 			return (
-				<div key={index}>
+				<React.Fragment key={index}>
 					<Label variant={'h4'}>{item.type}</Label>
 					<Label variant={'body1'} mb={10}>
 						{item.value}
 					</Label>
-				</div>
+				</React.Fragment>
 			);
 		});
 	}

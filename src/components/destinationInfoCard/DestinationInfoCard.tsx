@@ -5,6 +5,8 @@ import Label from '@bit/redsky.framework.rs.label';
 import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { Box } from '@bit/redsky.framework.rs.996';
+import LabelLink from '../labelLink/LabelLink';
+import StarRating from '../starRating/StarRating';
 
 interface DestinationInfoCardProps {
 	destinationId: number;
@@ -39,15 +41,15 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 				{props.address}, {props.state}, {props.city} {props.zip}
 			</Label>
 			<Label variant={size === 'small' ? 'h2' : 'h1'}>{props.destinationName}</Label>
-			{/*<Box display={'flex'} marginBottom={'15px'}>*/}
-			{/*	<StarRating size={'small16px'} rating={props.rating} />*/}
-			{/*	<LabelLink*/}
-			{/*		path={`/ratings?ri=${props.destinationId}`}*/}
-			{/*		externalLink={false}*/}
-			{/*		label={'view ratings'}*/}
-			{/*		variant={'button'}*/}
-			{/*	/>*/}
-			{/*</Box>*/}
+			<Box display={'flex'} marginBottom={'15px'}>
+				<StarRating size={'small16px'} rating={props.rating} />
+				<LabelLink
+					path={`/destination/reviews?di=${props.destinationId}`}
+					externalLink={false}
+					label={'view reviews'}
+					variant={'button'}
+				/>
+			</Box>
 			<Label variant={'body2'}>{props.longDescription}</Label>
 			<Box display={'flex'} marginTop={'30px'}>
 				<LabelButton

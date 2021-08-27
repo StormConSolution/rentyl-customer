@@ -2,14 +2,14 @@ import * as React from 'react';
 import './DestinationSearchResultCardMobile.scss';
 import Carousel from '../../carousel/Carousel';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { Rating } from '../../starRating/StarRating';
 import TabbedDestinationSummary, {
 	DestinationSummaryTab
 } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import Label from '@bit/redsky.framework.rs.label';
-import Paper from '../../paper/Paper';
 import LabelButton from '../../labelButton/LabelButton';
 import router from '../../../utils/router';
+import StarRating from '../../starRating/StarRating';
+import LabelLink from '../../labelLink/LabelLink';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -17,7 +17,7 @@ interface DestinationSearchResultCardMobileProps {
 	address: string;
 	logoImagePath: string;
 	picturePaths: string[];
-	starRating: Rating;
+	starRating: number;
 	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
@@ -42,6 +42,16 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 			<Label variant={'h1'} mb={8}>
 				{props.destinationName}
 			</Label>
+			<Box display={'flex'} mb={8}>
+				<StarRating size="small16px" rating={props.starRating} />
+				<LabelLink
+					className="ratings"
+					label="View Reviews >"
+					path={props.reviewPath}
+					variant="caption"
+					externalLink={false}
+				/>
+			</Box>
 			<Label variant={'body1'} mb={32}>
 				{props.address}
 			</Label>

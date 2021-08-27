@@ -31,6 +31,7 @@ interface LabelButtonProps {
 	disabled?: boolean;
 	buttonType?: 'button' | 'submit';
 	buttonRef?: React.RefObject<any>;
+	disableRipple?: boolean;
 }
 
 const LabelButton: React.FC<LabelButtonProps> = (props) => {
@@ -42,6 +43,7 @@ const LabelButton: React.FC<LabelButtonProps> = (props) => {
 			disabled={props.disabled}
 			type={props.buttonType}
 			buttonRef={props.buttonRef}
+			disableRipple={props.disableRipple}
 		>
 			<Label variant={props.variant}>{props.label}</Label>
 		</Button>

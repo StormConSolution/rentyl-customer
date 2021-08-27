@@ -23,6 +23,7 @@ import globalState from '../../models/globalState';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -149,6 +150,16 @@ const ItineraryDetailsPage: React.FC = () => {
 		}
 	}
 
+	function checkIfCanLeaveReview(): boolean {
+		if (!itinerary) return false;
+		let canReview = false;
+		itinerary.stays.forEach((item) => {
+			let date = new Date(item.departureDate);
+			canReview = date.getTime() < Date.now() && !item.externalCancellationId;
+		});
+		return canReview;
+	}
+
 	return !itinerary || !user ? (
 		<LoadingPage />
 	) : (
@@ -172,6 +183,17 @@ const ItineraryDetailsPage: React.FC = () => {
 								link: `/destination/details?di=${itinerary.destination.id}`,
 								label: 'View Destination'
 							}}
+							callToActionLeaveReview={() => {
+								if (!itinerary) return;
+								popupController.open<LeaveAReviewPopupProps>(LeaveAReviewPopup, {
+									destinationLogo: itinerary.destination.logoUrl,
+									destinationName: itinerary.destination.name,
+									stays: itinerary.stays.map((item) => {
+										return { id: item.reservationId, name: item.accommodation.name };
+									})
+								});
+							}}
+							canLeaveReview={checkIfCanLeaveReview()}
 						/>
 					)}
 				</HeroImage>
