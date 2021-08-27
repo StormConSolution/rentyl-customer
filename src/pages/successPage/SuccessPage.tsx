@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LabelLink from '../../components/labelLink/LabelLink';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 
 interface SuccessPageProps {}
 type SuccessData = {
