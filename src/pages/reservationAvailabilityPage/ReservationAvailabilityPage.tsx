@@ -127,10 +127,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (key === 'children' && isNaN(value)) {
 			throw rsToasts.error('# of children must be a number');
 		}
-		if (key === 'priceRangeMin' && isNaN(value)) {
+		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
 			throw rsToasts.error('Price min must be a number');
 		}
-		if (key === 'priceRangeMax' && isNaN(value)) {
+		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
 			throw rsToasts.error('Price max must be a number');
 		}
 		if (key === 'priceRangeMin' && searchQueryObj['priceRangeMax'] && value > searchQueryObj['priceRangeMax']) {

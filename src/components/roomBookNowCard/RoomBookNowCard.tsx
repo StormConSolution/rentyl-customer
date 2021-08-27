@@ -102,15 +102,14 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 						props.onGuestChange(value);
 					}}
 				/>
-				<Accordion title={'Toggle Rate Code'} hideChevron>
-					<LabelInput
-						className={'rateCode'}
-						title={'Rate Code'}
-						inputType={'text'}
-						initialValue={props.rateCode || ''}
-						onChange={(value) => props.onRateCodeChange(value)}
-					/>
-				</Accordion>
+				<LabelInput
+					className={'rateCode'}
+					title={'Rate Code'}
+					inputType={'text'}
+					placeholder={'Optional'}
+					initialValue={props.rateCode}
+					onChange={(value) => props.onRateCodeChange(value)}
+				/>
 				<Box className={'earnPointsBox'}>
 					<Label className={'earnLabel'} variant={'caption'}>
 						Earn Up To

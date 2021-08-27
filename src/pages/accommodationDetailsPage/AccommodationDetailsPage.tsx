@@ -59,6 +59,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		arrivalDate: string;
 		departureDate: string;
 		adults: number;
+		rateCode?: string;
 	}>({
 		arrivalDate: initialStartDate.format('YYYY-MM-DD'),
 		departureDate: initialEndDate.format('YYYY-MM-DD'),
@@ -168,6 +169,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 			departureDate: availabilityObj.departureDate,
 			packages: []
 		};
+		if (availabilityObj.rateCode) data.rateCode = availabilityObj.rateCode;
 		const stringedParams: string = JSON.stringify({
 			destinationId: destinationDetails.id,
 			newRoom: data
@@ -205,6 +207,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							focusedInput={focusedInput}
 							startDate={startDate}
 							endDate={endDate}
+							rateCode={availabilityObj.rateCode}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
 							}}
