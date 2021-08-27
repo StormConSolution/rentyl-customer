@@ -36,18 +36,6 @@ class ObjectUtils extends BaseObjectUtils {}
 class RegionUtils extends BaseRegionUtils {}
 
 class WebUtils extends BaseWebUtils {
-	static convertDataForUrlParams(data: any): any {
-		let convertedData: any = {};
-		for (let i in data) {
-			if (typeof data[i] === 'object') {
-				convertedData[i] = JSON.stringify(data[i]);
-			} else {
-				convertedData[i] = data[i];
-			}
-		}
-		return convertedData;
-	}
-
 	/**
 	 * Checks to see if browser is pointed to localhost
 	 * @returns true if in localhost otherwise false
@@ -64,10 +52,6 @@ class DateUtils extends BaseDateUtils {
 		dateToReturn.setTime(dateToReturn.getTime() + timeZoneOffset);
 		return dateToReturn.toDateString();
 	}
-
-	static daysBetween(date1: string | Date, date2: string | Date) {
-		return Math.abs(new Date(date1).getTime() - new Date(date2).getTime()) / (3600000 * 24);
-	}
 }
 
 class NumberUtils extends BaseNumberUtils {
@@ -82,11 +66,9 @@ class NumberUtils extends BaseNumberUtils {
 	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string {
 		switch (type) {
 			case 'points':
-				return addCommasToNumber(cents) + ' points';
-				break;
+				return StringUtils.addCommasToNumber(cents) + ' points';
 			case 'cash':
 				return '$' + StringUtils.formatMoney(cents);
-				break;
 			default:
 				return '';
 		}
@@ -120,12 +102,6 @@ export function formatFilterDateForServer(date: moment.Moment | null, startOrEnd
 	}
 }
 
-export function formatDateForUser(date: string | Date) {
-	if (date === 'N/A') return date;
-	let newDate = new Date(`${date}`);
-	return `${(newDate.getMonth() + 1).toString()}-${newDate.getDay()}-${newDate.getFullYear()}`;
-}
-
 export function formatDateForServer(date: string) {
 	let match = formatDate(date);
 	if (match) {
@@ -142,37 +118,6 @@ function formatDate(date: string) {
 	return cleaned.match(/^(\d{2})(\d{2})(\d{4})$/);
 }
 
-export function addCommasToNumber(intNum: any) {
-	if (isNaN(intNum)) return intNum;
-	return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-}
-
-export function formatPhoneNumber(phone: string | number) {
-	let cleaned = ('' + phone).replace(/\D/g, '');
-	let match: any;
-	if (cleaned.length <= 10) {
-		match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-		if (match) {
-			return `(${match[1]}) ${match[2]}-${match[3]}`;
-		}
-	} else {
-		match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
-		if (match) {
-			return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}`;
-		}
-	}
-	return cleaned;
-}
-
-export function removeAllExceptNumbers(string: string): string {
-	if (!string) return '';
-	return string.replace(/\D+/g, '');
-}
-
-export function validateEmail(mail: string) {
-	return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(mail);
-}
-
 export function removeExtraSpacesReturnsTabs(string: string) {
 	let strippedString = string.replace(/\r?\n|\t|\r/g, ' ').match(/[^ ]+/g);
 	if (strippedString) return strippedString.join(' ');
@@ -183,35 +128,4 @@ export function capitalize(s: string) {
 	return s.toLowerCase().replace(/\b./g, function (a) {
 		return a.toUpperCase();
 	});
-}
-
-export function convertTwentyFourHourTime(time: string | number): string {
-	if (!time) return '';
-
-	let sanitizedTime: number = parseInt(removeAllExceptNumbers(time.toString()));
-	if (sanitizedTime > 1259) {
-		sanitizedTime = sanitizedTime - 1200;
-		if (sanitizedTime.toString().length === 3) {
-			let minutes = sanitizedTime.toString().slice(-2);
-			let hour = sanitizedTime.toString().slice(0, 1);
-			return `${hour}:${minutes} PM`;
-		} else if (sanitizedTime.toString().length === 4) {
-			let minutes = sanitizedTime.toString().slice(-2);
-			let hours = sanitizedTime.toString().slice(0, 2);
-			return `${hours}:${minutes} PM`;
-		} else {
-			return '';
-		}
-	}
-	if (sanitizedTime.toString().length === 3) {
-		let minutes = sanitizedTime.toString().slice(-2);
-		let hour = sanitizedTime.toString().slice(0, 1);
-		return `${hour}:${minutes} AM`;
-	} else if (sanitizedTime.toString().length === 4) {
-		let minutes = sanitizedTime.toString().slice(-2);
-		let hours = sanitizedTime.toString().slice(0, 2);
-		return `${hours}:${minutes} ${hours === '12' ? 'PM' : 'AM'}`;
-	} else {
-		return '';
-	}
 }

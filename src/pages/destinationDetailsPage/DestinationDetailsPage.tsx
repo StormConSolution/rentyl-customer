@@ -30,7 +30,7 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import ComparisonService from '../../services/comparison/comparison.service';
 import LabelButton from '../../components/labelButton/LabelButton';
 import FilterReservationPopup, {
@@ -40,7 +40,7 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 
 interface DestinationDetailsPageProps {}
 
-const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
+const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const params = router.getPageUrlParams<{ destinationId: number; startDate?: string; endDate?: string }>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
@@ -132,7 +132,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	function renderFeatures() {
 		if (!destinationDetails || !destinationDetails.features) return;
 		let featureArray: any = [];
-		destinationDetails.features.forEach((item, index) => {
+		destinationDetails.features.forEach((item) => {
 			if (!item.isActive || item.isCarousel) return false;
 			let primaryMedia: any = '';
 			for (let value of item.media) {
@@ -202,7 +202,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
-		return availabilityStayList.map((item, index) => {
+		return availabilityStayList.map((item) => {
 			let media = item.media.map((value) => {
 				return value.urls.large;
 			});
@@ -248,7 +248,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							title: destinationDetails.name,
 							roomTypes: destinationDetails.accommodations
 								.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-								.map((value, index) => {
+								.map((value) => {
 									return {
 										value: value.id,
 										text: value.name,
@@ -471,7 +471,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						</Label>
 					</Box>
 					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-						<iframe frameBorder="0" src={renderMapSource()}></iframe>
+						<iframe frameBorder="0" src={renderMapSource()} />
 					</Box>
 				</Box>
 				<div className={'sectionFive'} ref={availableStaysRef}>

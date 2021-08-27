@@ -1,14 +1,14 @@
 import * as React from 'react';
 import './NavDrawer.scss';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../../components/labelLink/LabelLink';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 
 interface NavPopoutProps {
 	onClose: () => void;

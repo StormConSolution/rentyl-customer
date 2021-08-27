@@ -4,8 +4,8 @@ import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
-import { addCommasToNumber, removeAllExceptNumbers } from '../../utils/utils';
 import { Box } from '@bit/redsky.framework.rs.996';
+import { StringUtils } from '../../utils/utils';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
@@ -44,7 +44,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="# of Adults"
 				initialValue={props.adultsInitialInput || '2'}
 				onChange={debounce(async (value) => {
-					if (parseInt(value) !== NaN && parseInt(value) < 1) {
+					if (!isNaN(parseInt(value)) && parseInt(value) < 1) {
 						value = 1;
 					}
 					props.onChangeAdults(value);
@@ -63,18 +63,18 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className="priceMin"
 				inputType="text"
 				title="Price Min"
-				initialValue={`$${addCommasToNumber(props.initialPriceMin)}` || ''}
+				initialValue={`$${StringUtils.addCommasToNumber(props.initialPriceMin)}` || ''}
 				onChange={debounce(async (value) => {
-					props.onChangePriceMin(removeAllExceptNumbers(value));
+					props.onChangePriceMin(StringUtils.removeAllExceptNumbers(value));
 				}, 500)}
 			/>
 			<LabelInput
 				className="priceMax"
 				inputType="text"
 				title="Price Max"
-				initialValue={`$${addCommasToNumber(props.initialPriceMax)}` || ''}
+				initialValue={`$${StringUtils.addCommasToNumber(props.initialPriceMax)}` || ''}
 				onChange={debounce(async (value) => {
-					props.onChangePriceMax(removeAllExceptNumbers(value));
+					props.onChangePriceMax(StringUtils.removeAllExceptNumbers(value));
 				}, 500)}
 			/>
 		</Box>

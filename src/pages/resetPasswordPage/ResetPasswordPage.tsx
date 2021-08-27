@@ -58,7 +58,7 @@ const ResetPasswordPage: React.FC = () => {
 				setErrorMessage('');
 				let res = await userService.guidValidation(`${params.guid}`);
 				setGuid(params.guid);
-				setGuidResponse(!!res.data.data as boolean);
+				setGuidResponse(!!res as boolean);
 			} catch (e) {
 				setErrorMessage(
 					'The 24 hour time has elapsed. The reset password link is no longer valid. Please try again.'

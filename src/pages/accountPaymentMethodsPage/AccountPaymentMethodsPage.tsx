@@ -11,7 +11,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import { useEffect, useRef, useState } from 'react';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import PaymentService from '../../services/payment/payment.service';
@@ -72,7 +72,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
+		let readyId = paymentService.subscribeToSpreedlyReady(() => {
 			window.Spreedly.setStyle(
 				'number',
 				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
@@ -99,7 +99,6 @@ const AccountPaymentMethodsPage: React.FC = () => {
 				}
 			) => {
 				if (name === 'number') {
-					let numberParent = numberRef.current;
 					if (type === 'focus') {
 						window.Spreedly.setStyle('number', 'border: 1px solid #004b98;');
 					}
@@ -120,7 +119,6 @@ const AccountPaymentMethodsPage: React.FC = () => {
 					}
 				}
 				if (name === 'cvv') {
-					let cvvParent = cvvRef.current;
 					if (type === 'focus') {
 						window.Spreedly.setStyle('cvv', 'border: 1px solid #004b98;');
 					}
@@ -230,8 +228,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 			!control.value.toString().includes('/') &&
 			control.value.toString().length === 4
 		) {
-			let newValue = control.value.toString().slice(0, 2) + '/' + control.value.toString().slice(2, 4);
-			control.value = newValue;
+			control.value = control.value.toString().slice(0, 2) + '/' + control.value.toString().slice(2, 4);
 		}
 		creditCardObj.update(control);
 		let isFormValid = await creditCardObj.isValid();
@@ -243,11 +240,10 @@ const AccountPaymentMethodsPage: React.FC = () => {
 		if (!user) return;
 		popupController.open(SpinningLoaderPopup);
 		try {
-			let res = await paymentService.delete(id);
+			await paymentService.delete(id);
 			let newExistingCardList = [...existingCardList];
 			newExistingCardList = newExistingCardList.filter((item) => item.id !== id);
 			setExistingCardList(newExistingCardList);
-
 			popupController.close(SpinningLoaderPopup);
 		} catch (e) {
 			popupController.close(SpinningLoaderPopup);
@@ -312,7 +308,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 				width={'390px'}
 			>
 				<Box>
-					<img src={require('../../images/card-chip.png')} width={38} height={30} />
+					<img src={require('../../images/card-chip.png')} width={38} height={30} alt={'card chip'} />
 				</Box>
 				<Box display={'flex'} justifyContent={'space-between'}>
 					<Box>
@@ -414,10 +410,10 @@ const AccountPaymentMethodsPage: React.FC = () => {
 							value={'isPrimary'}
 							text={'Set as primary'}
 							isChecked={false}
-							onSelect={(value, text) => {
+							onSelect={() => {
 								isPrimary = 1;
 							}}
-							onDeselect={(value, text) => {
+							onDeselect={() => {
 								isPrimary = 0;
 							}}
 						/>

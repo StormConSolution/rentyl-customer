@@ -6,9 +6,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import serviceFactory from './services/serviceFactory';
-import modelFactory from './models/modelFactory';
 
 configure({ adapter: new Adapter() });
 
-modelFactory.create();
 serviceFactory.create();

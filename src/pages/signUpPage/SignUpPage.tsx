@@ -16,9 +16,9 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import { HttpStatusCode } from '../../utils/http';
 import rsToasts from '@bit/redsky.framework.toast';
-import { formatPhoneNumber, removeAllExceptNumbers, removeExtraSpacesReturnsTabs } from '../../utils/utils';
+import { removeExtraSpacesReturnsTabs, StringUtils } from '../../utils/utils';
 import { useSetRecoilState } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import router from '../../utils/router';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import UserAddressService from '../../services/userAddress/userAddress.service';
@@ -35,7 +35,6 @@ const SignUpPage: React.FC = () => {
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const size = useWindowResizeChange();
-	const setUser = useSetRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
 	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
 	const [hasSpecialCharacter, setHasSpecialCharacter] = useState<boolean>(false);
@@ -89,7 +88,7 @@ const SignUpPage: React.FC = () => {
 		async function getCountries() {
 			try {
 				let countries = await countryService.getAllCountries();
-				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
+				setCountryList(formatStateOrCountryListForSelect(countries.countries));
 			} catch (e) {
 				console.error('getCountries', e);
 				throw rsToasts.error('Unable to get a list of countries.', '', 5000);
@@ -104,8 +103,8 @@ const SignUpPage: React.FC = () => {
 			if (!selectedCountry) return;
 			try {
 				let response = await countryService.getStates(`${selectedCountry.value}`);
-				if (response.data.data.states) {
-					let newStates = formatStateOrCountryListForSelect(response.data.data.states);
+				if (response.states) {
+					let newStates = formatStateOrCountryListForSelect(response.states);
 					setStateList(newStates);
 				}
 			} catch (e) {
@@ -144,14 +143,11 @@ const SignUpPage: React.FC = () => {
 			setHasSpecialCharacter(specialCharacter.test(password));
 		}
 		if (control.key === 'phone' && control.value.toString().length === 10) {
-			let newValue = formatPhoneNumber(control.value.toString());
-			control.value = newValue;
+			control.value = StringUtils.formatPhoneNumber(control.value.toString());
 		} else if (control.key === 'phone' && control.value.toString().length > 10) {
-			let newValue = removeAllExceptNumbers(control.value.toString());
-			control.value = newValue;
+			control.value = StringUtils.removeAllExceptNumbers(control.value.toString());
 		} else if (control.key === 'firstName' || control.key === 'lastName') {
-			let newValue = removeExtraSpacesReturnsTabs(control.value.toString());
-			control.value = newValue;
+			control.value = removeExtraSpacesReturnsTabs(control.value.toString());
 		}
 		signUpForm.update(control);
 		setFormIsValid(isSignUpFormFilledOut());
@@ -220,16 +216,6 @@ const SignUpPage: React.FC = () => {
 			console.error('Signup new customer', e);
 			throw rsToasts.error('Unable to create account, try again.');
 		}
-	}
-
-	async function saveAddress(userId: number) {
-		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
-		addressObj['userId'] = userId;
-		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
-		addressObj['isDefault'] = 1;
-		addressObj['country'] = country;
-		await userAddressService.create(addressObj);
 	}
 
 	return (

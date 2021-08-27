@@ -1,14 +1,5 @@
-import { Box } from '@bit/redsky.framework.rs.996';
-import Label from '@bit/redsky.framework.rs.label';
-import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import React from 'react';
-import { addCommasToNumber } from '../../utils/utils';
-import Carousel from '../carousel/Carousel';
-import AccommodationSearchCallToActionCard from '../accommodationSearchCallToActionCard/AccommodationSearchCallToActionCard';
-import AccommodationSearchDetailCard, {
-	AccommodationStat
-} from '../accommodationSearchDetailCard/AccommodationSearchDetailCard';
-import StarRating, { Rating } from '../starRating/StarRating';
+import { AccommodationStat } from '../accommodationSearchDetailCard/AccommodationSearchDetailCard';
 import './AccommodationSearchResultCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import AccommodationSearchResultCardMobile from './accommodationSearchResultCardMobile/AccommodationSearchResultCardMobile';

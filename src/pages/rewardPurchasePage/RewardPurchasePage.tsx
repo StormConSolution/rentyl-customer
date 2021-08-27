@@ -14,9 +14,9 @@ import RewardService from '../../services/reward/reward.service';
 import router from '../../utils/router';
 import rsToasts from '@bit/redsky.framework.toast';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { addCommasToNumber } from '../../utils/utils';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
+import { StringUtils } from '../../utils/utils';
 
 const RewardPurchasePage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -100,7 +100,7 @@ const RewardPurchasePage: React.FC = () => {
 								</div>
 								<div className={'rewardPoints'}>
 									<Label className={'points'} variant={'h3'}>
-										{addCommasToNumber(reward.pointCost)}
+										{StringUtils.addCommasToNumber(reward.pointCost)}
 									</Label>
 								</div>
 							</div>
@@ -114,7 +114,7 @@ const RewardPurchasePage: React.FC = () => {
 								</Label>
 								<div className={'pointNumberAndLabel'}>
 									<Label className={'pointNumberLabel'} variant={'h1'}>
-										{addCommasToNumber(reward.pointCost)}
+										{StringUtils.addCommasToNumber(reward.pointCost)}
 									</Label>
 									<Label className={'pointsLabel'} variant={'h2'}>
 										points
@@ -150,7 +150,9 @@ const RewardPurchasePage: React.FC = () => {
 							<div className={'pointsAfterPurchase'}>
 								<Label className={'pointsAfterPurchaseLabel'} variant={'body1'}>
 									Point total after purchase:{' '}
-									{addCommasToNumber((user ? user.availablePoints : 0) - reward.pointCost)}
+									{StringUtils.addCommasToNumber(
+										(user ? user.availablePoints : 0) - reward.pointCost
+									)}
 								</Label>
 							</div>
 						</Paper>

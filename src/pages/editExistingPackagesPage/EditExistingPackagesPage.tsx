@@ -7,7 +7,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import { useEffect, useRef, useState } from 'react';
 import PackageService from '../../services/package/package.service';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
@@ -27,7 +27,7 @@ const EditExistingPackagesPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [page, setPage] = useState<number>(1);
-	const [perPage, setPerPage] = useState<number>(5);
+	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
 	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);

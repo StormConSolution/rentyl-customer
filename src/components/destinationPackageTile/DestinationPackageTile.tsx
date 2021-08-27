@@ -7,7 +7,7 @@ import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import LabelButton from '../labelButton/LabelButton';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import Carousel from '../carousel/Carousel';
 import { useEffect, useState } from 'react';
 

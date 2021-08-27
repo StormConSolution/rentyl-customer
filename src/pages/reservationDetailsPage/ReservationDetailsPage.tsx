@@ -11,18 +11,18 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
 import Paper from '../../components/paper/Paper';
-import { convertTwentyFourHourTime } from '../../utils/utils';
 import ConfirmRemovePopup, { ConfirmRemovePopupProps } from '../../popups/confirmRemovePopup/ConfirmRemovePopup';
 import EditReservationDetailsPopup, {
 	EditReservationDetailsPopupProps
 } from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import { StringUtils } from '../../utils/utils';
 
 const ReservationDetailsPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -226,7 +226,7 @@ const ReservationDetailsPage: React.FC = () => {
 											CHECK-IN
 										</Label>
 										<Label variant={'body1'}>
-											{convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
+											{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
 										</Label>
 									</Box>
 									<div>
@@ -234,7 +234,7 @@ const ReservationDetailsPage: React.FC = () => {
 											CHECK-OUT
 										</Label>
 										<Label variant={'body1'}>
-											{convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
+											{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
 										</Label>
 									</div>
 								</Box>

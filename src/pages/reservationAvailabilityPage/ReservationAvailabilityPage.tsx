@@ -9,7 +9,7 @@ import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { formatFilterDateForServer, StringUtils } from '../../utils/utils';
 import FilterReservationPopup, {
@@ -332,7 +332,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 								onFocusChange={setFocusedInput}
 								monthsToShow={2}
 								onChangeAdults={(value) => {
-									if (value === '' || parseInt(value) === NaN) return;
+									if (value === '' || isNaN(parseInt(value))) return;
 									updateSearchQueryObj('adults', parseInt(value));
 								}}
 								onChangeChildren={(value) => {

@@ -52,7 +52,7 @@ export default class RewardService extends Service {
 		return response.data;
 	}
 
-	async claimRewardVoucher(data: Api.Reward.Voucher.Req.Claim) {
+	async claimRewardVoucher(data: Api.Reward.Voucher.Req.Claim): Promise<Api.Reward.Voucher.Res.Claim> {
 		const res = await http.put<RsResponseData<Api.Reward.Voucher.Res.Claim>>('reward/voucher/claim', data);
 		this.refreshUser();
 		return res.data.data;

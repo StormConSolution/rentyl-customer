@@ -9,7 +9,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import router from '../../utils/router';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);

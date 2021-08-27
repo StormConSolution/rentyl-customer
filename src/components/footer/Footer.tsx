@@ -6,7 +6,7 @@ import { Box, Link } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 
 export interface FooterLink {
 	text: string;
@@ -21,7 +21,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
 	useEffect(() => {
-		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
+		let id = router.subscribeToBeforeRouterNavigate(() => {
 			setTimeout(() => {
 				window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 			}, 300);

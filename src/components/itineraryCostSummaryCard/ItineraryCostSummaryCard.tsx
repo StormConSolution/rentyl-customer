@@ -4,7 +4,6 @@ import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import { useEffect, useState } from 'react';
 import { DateUtils } from '../../utils/utils';
 
 interface ItineraryCostSummaryCardProps {
@@ -57,7 +56,11 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 						item.arrivalDate
 					)} - ${DateUtils.displayUserDate(item.departureDate)}`}</Label>
 					<Label variant={'body1'}>
-						{DateUtils.daysBetween(item.departureDate, item.arrivalDate)} Nights
+						{DateUtils.daysBetweenStartAndEndDates(
+							new Date(item.departureDate),
+							new Date(item.arrivalDate)
+						)}{' '}
+						Nights
 					</Label>
 				</div>
 			);

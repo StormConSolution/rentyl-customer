@@ -9,7 +9,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
-import { DateUtils, formatPhoneNumber, ObjectUtils, StringUtils } from '../../utils/utils';
+import { DateUtils, ObjectUtils, StringUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ReservationDetailsAccordionProps {
@@ -152,7 +152,10 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					<div className={'accordionReservationGrid'}>
 						<AccordionTitleDescription title={'Contact Info'} description={props.contactInfo} />
 						<AccordionTitleDescription title={'Email'} description={props.email} />
-						<AccordionTitleDescription title={'Phone'} description={formatPhoneNumber(props.phone)} />
+						<AccordionTitleDescription
+							title={'Phone'}
+							description={StringUtils.formatPhoneNumber(props.phone)}
+						/>
 					</div>
 					<hr />
 					<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
