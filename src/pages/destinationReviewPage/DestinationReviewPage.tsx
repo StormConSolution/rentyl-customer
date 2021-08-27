@@ -53,6 +53,7 @@ const DestinationReviewPage: React.FC = () => {
 
 			return (
 				<ReviewCard
+					key={item.id}
 					guestName={guestName}
 					createdOn={item.createdOn}
 					rating={item.rating}
