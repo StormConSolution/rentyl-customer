@@ -1,6 +1,5 @@
 import React from 'react';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { Rating } from '../starRating/StarRating';
 import { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
 import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
@@ -11,7 +10,7 @@ export interface DestinationSearchResultCardProps {
 	address: string;
 	logoImagePath: string;
 	picturePaths: string[];
-	starRating: Rating;
+	starRating: number;
 	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];

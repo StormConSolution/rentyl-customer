@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import './SignUpPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
@@ -25,6 +24,7 @@ import UserAddressService from '../../services/userAddress/userAddress.service';
 import CountryService from '../../services/country/country.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Icon from '@bit/redsky.framework.rs.icon';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 
 let phoneNumber = '';
 let country = 'US';
@@ -426,7 +426,7 @@ const SignUpPage: React.FC = () => {
 						</Label>
 					</Paper>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

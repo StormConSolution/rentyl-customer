@@ -1,0 +1,44 @@
+@import '../../themes/themes';
+.rsLeaveAReviewPopup {
+	background: theme-var($primaryBackgroundColor);
+	img {
+		width: 120px;
+	}
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 0;
+	}
+
+	.rsStarRatingSelect {
+		margin-bottom: 10px;
+	}
+
+	.rsLabelSelect {
+		margin-bottom: 20px;
+		.rsSelect {
+			background: #ffffff;
+		}
+	}
+
+	.rsLabelInput {
+		margin-bottom: 20px;
+		.rsInput {
+			&.textarea {
+				max-width: 100%;
+				height: 150px;
+				padding: 10px;
+			}
+		}
+	}
+
+	.rsIcon {
+		&.icon-close {
+			position: absolute;
+			top: 21px;
+			right: 21px;
+		}
+	}
+}

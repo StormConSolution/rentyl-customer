@@ -7,7 +7,7 @@ import ImageTitleLink from '../../components/imageTitleLink/ImageTitleLink';
 import Carousel from '../../components/carousel/Carousel';
 import InfoCard from '../../components/infoCard/InfoCard';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelLink from '../../components/labelLink/LabelLink';
 import Paper from '../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -171,7 +171,7 @@ const AboutSpirePointsPage: React.FC<AboutSpirePointsPageProps> = (props) => {
 					</div>
 					<img src={require('../../images/aboutSpirePointsPage/payment-image.png')} />
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);
