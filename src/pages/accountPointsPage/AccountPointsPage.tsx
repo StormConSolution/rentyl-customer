@@ -18,7 +18,7 @@ import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { SelectOptions } from '../../components/Select/Select';
-import { capitalize, DateUtils } from '../../utils/utils';
+import { DateUtils, StringUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 
 const AccountPointsPage: React.FC = () => {
