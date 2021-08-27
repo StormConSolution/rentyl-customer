@@ -10,7 +10,7 @@ import { HttpStatusCode } from '../../utils/http';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Paper from '../../components/paper/Paper';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelLink from '../../components/labelLink/LabelLink';
@@ -166,7 +166,7 @@ const ResetPasswordPage: React.FC = () => {
 					</Paper>
 				</div>
 			</HeroImage>
-			<Footer links={FooterLinkTestData} />
+			<Footer links={FooterLinks} />
 		</Page>
 	);
 };

@@ -5,7 +5,7 @@ import HeroImage from '../../components/heroImage/HeroImage';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Carousel from '../../components/carousel/Carousel';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface FeaturesAndBenefitsPageProps {}
@@ -113,7 +113,7 @@ const FeaturesAndBenefitsPage: React.FC<FeaturesAndBenefitsPageProps> = (props) 
 						</div>
 					</div>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

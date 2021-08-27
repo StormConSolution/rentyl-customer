@@ -10,7 +10,7 @@ import { HttpStatusCode } from '../../utils/http';
 import LabelLink from '../../components/labelLink/LabelLink';
 import LabelButton from '../../components/labelButton/LabelButton';
 import router from '../../utils/router';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import LabelInput from '../../components/labelInput/LabelInput';
 
@@ -159,7 +159,7 @@ const SignInPage: React.FC = () => {
 						</Box>
 					</Box>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

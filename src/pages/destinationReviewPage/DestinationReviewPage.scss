@@ -1,0 +1,35 @@
+@import '../../themes/themes';
+.rsDestinationReviewPage {
+	.rsHeroImage {
+		margin-bottom: 75px;
+		.tanBox {
+			position: absolute;
+			height: 75px;
+			width: 602px;
+			bottom: -75px;
+			right: 0;
+			background-color: #f7f1db;
+		}
+	}
+
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 20px 0;
+	}
+
+	.contentWrapper {
+		width: 1160px;
+		margin: 0 auto;
+
+		.rsReviewCard {
+			margin-bottom: 25px;
+			border-bottom: 1px solid theme-var($greyLineColor);
+			&:last-child {
+				border-bottom: unset;
+			}
+		}
+	}
+}

@@ -9,7 +9,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { removeExtraSpacesReturnsTabs, StringUtils } from '../../utils/utils';
@@ -20,6 +20,7 @@ import globalState from '../../state/globalState';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
+import { StringUtils } from '../../utils/utils';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -81,7 +82,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 
 	async function updateUserObjForm(control: RsFormControl) {
 		if (control.key === 'fullName') {
-			control.value = removeExtraSpacesReturnsTabs(control.value.toString());
+			control.value = StringUtils.removeLineEndings(control.value.toString());
 		}
 		updateUserObj.update(control);
 		let isFormValid = await updateUserObj.isValid();
@@ -277,7 +278,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 					</Box>
 				</Box>
 
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

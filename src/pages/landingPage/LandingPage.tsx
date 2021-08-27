@@ -13,7 +13,7 @@ import FeaturedDestinationCard from '../../components/featuredDestinationCard/Fe
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import { useRecoilValue } from 'recoil';
@@ -449,7 +449,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						)}
 					</Box>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

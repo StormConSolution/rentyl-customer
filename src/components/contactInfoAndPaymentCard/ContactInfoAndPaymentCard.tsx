@@ -253,7 +253,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		return user.paymentMethods.map((item) => {
 			return {
 				selected: item.id === existingCardId,
-				text: item.cardNumber,
+				text: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,
 				value: item.id
 			};
 		});
@@ -344,6 +344,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					<>
 						<Select
 							className={!useExistingCreditCard ? 'hide' : ''}
+							autoCalculateWidth
 							options={renderSelectOptions()}
 							placeHolder={'Please Select A Card'}
 							showSelectedAsPlaceHolder

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
@@ -302,7 +302,7 @@ const AccountAddressPage: React.FC = () => {
 						/>
 					</Box>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

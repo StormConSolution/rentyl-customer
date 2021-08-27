@@ -17,7 +17,7 @@ import FilterReservationPopup, {
 import IconLabel from '../../components/iconLabel/IconLabel';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import ReservationsService from '../../services/reservations/reservations.service';
 import ConfirmChangeRoomPopup, {
 	ConfirmChangeRoomPopupProps
@@ -396,7 +396,7 @@ const EditFlowModifyRoomPage = () => {
 					}}
 					total={availabilityTotal}
 				/>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

@@ -12,7 +12,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import Paper from '../../components/paper/Paper';
 import MultiSelect from '../../components/multiSelect/MultiSelect';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
@@ -101,7 +101,7 @@ const AccountPointsPage: React.FC = () => {
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
 					<img className={'pointImage'} src={getMedia(point)} alt={''} />
 					<Box className={'pendingPointsDetailsContainer'}>
-						<Label variant={'h3'}>{capitalize(point.title)}</Label>
+						<Label variant={'h3'}>{StringUtils.capitalizeFirst(point.title)}</Label>
 						<Label className={'pointType'} variant={'caption'}>
 							{point.pointType}
 						</Label>
@@ -206,7 +206,7 @@ const AccountPointsPage: React.FC = () => {
 							<div className={'completed pointTableContainer'}>{renderPoints('completed')}</div>
 						</div>
 					</Paper>
-					<Footer links={FooterLinkTestData} />
+					<Footer links={FooterLinks} />
 				</div>
 			</div>
 		</Page>

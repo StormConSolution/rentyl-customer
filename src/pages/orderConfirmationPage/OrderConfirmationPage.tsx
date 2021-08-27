@@ -6,7 +6,7 @@ import rsToasts from '@bit/redsky.framework.toast';
 import RewardService from '../../services/reward/reward.service';
 import serviceFactory from '../../services/serviceFactory';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { DateUtils, StringUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -82,7 +82,7 @@ const OrderConfirmationPage = () => {
 						</Label>
 					</Box>
 				</Paper>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

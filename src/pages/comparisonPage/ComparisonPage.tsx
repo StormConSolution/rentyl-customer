@@ -17,7 +17,7 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import LoadingPage from '../loadingPage/LoadingPage';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import IconToolTip from '../../components/iconToolTip/IconToolTip';
 import { ObjectUtils } from '../../utils/utils';
 
@@ -259,7 +259,7 @@ const ComparisonPage: React.FC = () => {
 						<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
 					</table>
 				</Paper>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

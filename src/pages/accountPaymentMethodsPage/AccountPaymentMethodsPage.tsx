@@ -19,7 +19,7 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import OtherPaymentCard from '../../components/otherPaymentsCard/OtherPaymentCard';
 import Footer from '../../components/footer/Footer';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 
 let isPrimary: 1 | 0 = 0;
 
@@ -358,6 +358,11 @@ const AccountPaymentMethodsPage: React.FC = () => {
 									Card Number
 								</Label>
 							</div>
+							<div ref={cvvRef} id={'spreedly-cvv'}>
+								<Label variant={'caption'} mb={10}>
+									CVV
+								</Label>
+							</div>
 							<LabelInput
 								className={'creditCardExpInput'}
 								maxLength={7}
@@ -367,11 +372,6 @@ const AccountPaymentMethodsPage: React.FC = () => {
 								updateControl={updateCreditCardObj}
 								placeholder={'MM/YYYY'}
 							/>
-							<div ref={cvvRef} id={'spreedly-cvv'}>
-								<Label variant={'caption'} mb={10}>
-									CVV
-								</Label>
-							</div>
 						</form>
 
 						<LabelCheckbox
@@ -433,7 +433,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 					<Label variant={'h4'}>Other payment methods</Label>
 					<Box className={'otherPaymentCardWrapper'}>{renderOtherPaymentCards()}</Box>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

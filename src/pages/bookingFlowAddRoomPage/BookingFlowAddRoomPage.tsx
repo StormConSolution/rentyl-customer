@@ -20,7 +20,7 @@ import IconLabel from '../../components/iconLabel/IconLabel';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import BookingParams = Misc.BookingParams;
 
 const BookingFlowAddRoomPage = () => {
@@ -396,7 +396,7 @@ const BookingFlowAddRoomPage = () => {
 					total={availabilityTotal}
 				/>
 			</div>
-			<Footer links={FooterLinkTestData} />
+			<Footer links={FooterLinks} />
 		</Page>
 	);
 };

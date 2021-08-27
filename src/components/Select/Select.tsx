@@ -13,6 +13,7 @@ interface SpireSelectProps {
 	showSelectedAsPlaceHolder?: boolean;
 	onChange: (value: string | number | null) => void;
 	options: SelectOptions[];
+	autoCalculateWidth?: boolean;
 }
 
 const Select: React.FC<SpireSelectProps> = (props) => {
@@ -113,8 +114,18 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 		}
 	}
 
+	function renderContainerWidth() {
+		if (!props.autoCalculateWidth) return {};
+
+		let containerWidth = 0;
+		props.options.forEach((item) => {
+			if (item.text.toString().length > containerWidth) containerWidth = item.text.toString().length;
+		});
+		return { width: containerWidth + 'ch' };
+	}
+
 	return (
-		<div ref={popupRef} className={`rsSelect ${props.className || ''}`}>
+		<div ref={popupRef} className={`rsSelect ${props.className || ''}`} style={renderContainerWidth()}>
 			<Box
 				className={'placeHolder'}
 				display={'flex'}

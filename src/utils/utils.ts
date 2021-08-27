@@ -7,6 +7,7 @@ import {
 	NumberUtils as BaseNumberUtils
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
+
 import router from './router';
 
 class StringUtils extends BaseStringUtils {
@@ -128,4 +129,14 @@ export function capitalize(s: string) {
 	return s.toLowerCase().replace(/\b./g, function (a) {
 		return a.toUpperCase();
 	});
+}
+
+export function isRouteUnauthorized(route: string): boolean {
+	const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables | undefined>(
+		globalState.company
+	);
+	if (!company) return true;
+	let isUnauthorized = company.unauthorizedPages.find((item) => item.route === route);
+
+	return !!isUnauthorized;
 }

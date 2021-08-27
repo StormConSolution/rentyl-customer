@@ -4,7 +4,7 @@ import { Box, Link, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 
 interface SuccessPageProps {}
 type SuccessData = {
@@ -28,7 +28,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props) => {
 						<br /> Access all your reservations <Link path={'/reservations'}>here</Link>.
 					</Label>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

@@ -6,7 +6,7 @@ import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -212,6 +212,7 @@ const ReservationDetailsPage: React.FC = () => {
 								]}
 								upsellPackages={reservation.upsellPackages}
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
+								accommodationTotalCents={reservation.priceDetail.accommodationTotalInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
 								points={reservation.priceDetail.grandTotalPoints}
 								paidWithPoints={!reservation.paymentMethod}
@@ -251,7 +252,7 @@ const ReservationDetailsPage: React.FC = () => {
 						</Box>
 					</div>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

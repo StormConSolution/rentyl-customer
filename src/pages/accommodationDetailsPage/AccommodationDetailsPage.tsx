@@ -19,7 +19,7 @@ import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import CategoryFeatureIcons from '../../components/categoryFeatureIcons/CategoryFeatureIcons';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import CategoryImageGallery from '../../components/categoryImageGallery/CategoryImageGallery';
 import moment from 'moment';
@@ -40,18 +40,26 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ accommodationId: number }>([
-		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' }
+	const params = router.getPageUrlParams<{ accommodationId: number; startDate?: string; endDate?: string }>([
+		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' },
+		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
 	]);
 	const [available, setAvailable] = useState<boolean>(true);
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [startDate, setStartDate] = useState<moment.Moment | null>(null);
-	const [endDate, setEndDate] = useState<moment.Moment | null>(null);
-	const [availabilityObj, setAvailabilityObj] = useState({
-		arrivalDate: '',
-		departureDate: '',
+	const initialStartDate = params.startDate ? moment(params.startDate) : moment();
+	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
+	const [startDate, setStartDate] = useState<moment.Moment | null>(initialStartDate);
+	const [endDate, setEndDate] = useState<moment.Moment | null>(initialEndDate);
+	const [availabilityObj, setAvailabilityObj] = useState<{
+		arrivalDate: string;
+		departureDate: string;
+		adults: number;
+	}>({
+		arrivalDate: initialStartDate.format('YYYY-MM-DD'),
+		departureDate: initialEndDate.format('YYYY-MM-DD'),
 		adults: 1
 	});
 
@@ -148,18 +156,25 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 
 	async function bookNow() {
 		if (!accommodationDetails || !destinationDetails) return;
-		let data: any = {
-			...availabilityObj,
+		let data: Misc.StayParams = {
+			uuid: Date.now(),
+			adults: availabilityObj.adults,
+			children: 0,
 			accommodationId: accommodationDetails.id,
-			children: 0
+			arrivalDate: availabilityObj.arrivalDate,
+			departureDate: availabilityObj.departureDate,
+			packages: []
 		};
-		data = JSON.stringify({ destinationId: destinationDetails.id, newRoom: data });
+		const stringedParams: string = JSON.stringify({
+			destinationId: destinationDetails.id,
+			newRoom: data
+		});
 		if (!user) {
 			popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
-				query: data
+				query: stringedParams
 			});
 		} else {
-			router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+			router.navigate(`/booking/packages?data=${stringedParams}`).catch(console.error);
 		}
 	}
 
@@ -247,7 +262,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 						{renderCategoryFeatures()}
 					</Box>
 				)}
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

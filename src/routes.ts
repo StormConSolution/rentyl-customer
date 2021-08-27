@@ -29,6 +29,7 @@ import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsP
 import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExistingPackagesPage';
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
 import globalState, { getRecoilExternalValue } from './state/globalState';
+import DestinationReviewPage from './pages/destinationReviewPage/DestinationReviewPage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -149,6 +150,14 @@ export const routes: RouteDetails[] = [
 	{
 		path: '/destination/details',
 		page: DestinationDetailsPage,
+		routeGuard: verifyRoute,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/destination/reviews',
+		page: DestinationReviewPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'

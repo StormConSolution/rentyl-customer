@@ -26,7 +26,7 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
@@ -209,8 +209,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 					address={`${destination.city}, ${destination.state}`}
 					logoImagePath={destination.logoUrl}
 					picturePaths={urls}
-					starRating={4.5}
-					reviewPath={''}
+					starRating={destination.reviewRating}
+					reviewPath={`/destination/reviews?di=${destination.id}`}
 					destinationDetailsPath={
 						!!params.startDate && !!params.endDate
 							? `/destination/details?di=${destination.id}&startDate=${params.startDate}&endDate=${params.endDate}`
@@ -255,7 +255,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					accommodationType: 'Suites',
 					accommodations: accommodationsList,
 					onDetailsClick: (accommodationId) => {
-						router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
+						let dates =
+							!!searchQueryObj.startDate && !!searchQueryObj.endDate
+								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+								: '';
+						router.navigate(`/accommodation/details?ai=${accommodationId}${dates}`).catch(console.error);
 					},
 					onBookNowClick: (accommodationId) => {
 						let data: any = { ...searchQueryObj };
@@ -362,6 +366,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							</Label>
 							<Accordion
 								hideHoverEffect
+								hideChevron
 								children={
 									<RateCodeSelect
 										apply={(value) => {
@@ -423,7 +428,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						total={availabilityTotal}
 					/>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

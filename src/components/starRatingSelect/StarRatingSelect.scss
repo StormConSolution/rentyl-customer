@@ -1,0 +1,25 @@
+@import '../../themes/themes';
+.rsStarRatingSelect {
+	display: flex;
+	.star {
+		cursor: pointer;
+		margin-right: 5px;
+		height: 24px;
+		width: 24px;
+		background: theme-var($iconAndHighlightTextColor);
+		clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+	}
+	.ratingInput {
+		display: none;
+	}
+
+	.ratingInput:checked ~ .ratingLabel .star {
+		background: #ddd;
+	}
+	.ratingGroup:hover .ratingLabel .star {
+		background: theme-var($iconAndHighlightTextColor);
+	}
+	.ratingInput:hover ~ .ratingLabel .star {
+		background: #ddd;
+	}
+}

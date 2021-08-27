@@ -7,6 +7,7 @@ import router from '../../utils/router';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import { isRouteUnauthorized } from '../../utils/utils';
 
 export interface FooterLink {
 	text: string;
@@ -33,6 +34,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 
 	function renderLinks(links: FooterLink[]) {
 		return links.map((link: FooterLink, index: number) => {
+			if (isRouteUnauthorized(link.path)) return false;
 			return (
 				<Link
 					path={link.path}

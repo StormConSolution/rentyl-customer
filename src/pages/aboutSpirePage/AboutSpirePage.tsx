@@ -10,7 +10,7 @@ import InfoCard from '../../components/infoCard/InfoCard';
 import LabelLink from '../../components/labelLink/LabelLink';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import { useEffect, useRef, useState } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import BookNowImage from '../../components/bookNowImage/BookNowImage';
@@ -330,7 +330,7 @@ const AboutSpirePage: React.FC = () => {
 					</Box>
 					<img src={require('../../images/aboutSpirePage/couple-beach.png')} alt={'Key Chain'} />
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

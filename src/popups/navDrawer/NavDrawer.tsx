@@ -9,6 +9,8 @@ import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import { isRouteUnauthorized } from '../../utils/utils';
+import { NavData } from './NavData';
 
 interface NavPopoutProps {
 	onClose: () => void;
@@ -33,80 +35,34 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 		};
 	}, []);
 
+	function renderNavLinks(forUser: boolean) {
+		return NavData.filter((item) => {
+			return forUser === item.isSignedIn;
+		}).map((item, index) => {
+			if (isRouteUnauthorized(item.route)) return false;
+
+			return (
+				<LabelLink
+					key={index}
+					path={item.route}
+					label={item.title}
+					variant={item.isSectionHeader ? 'h2' : 'h4'}
+					onClick={() => {
+						props.onClose();
+						router.navigate(item.route).catch(console.error);
+					}}
+				/>
+			);
+		});
+	}
+
 	return (
 		<>
 			<div ref={popupRef} className={props.isOpened ? `rsNavDrawer opened` : 'rsNavDrawer'}>
 				<Icon iconImg={'icon-close'} onClick={props.onClose} size={21} color={'#ffffff'} cursorPointer />
 				<Box mt={100} ml={40}>
-					<Box mb={30}>
-						<LabelLink
-							path={'/reward'}
-							label={'Redeem Points'}
-							variant={'h2'}
-							onClick={() => {
-								props.onClose();
-								router.navigate('/reward').catch(console.error);
-							}}
-						/>
-						<LabelLink
-							path={'/reservation/availability'}
-							label={'Browse Destinations'}
-							variant={'h4'}
-							onClick={() => {
-								props.onClose();
-								router.navigate('/reservation/availability').catch(console.error);
-							}}
-						/>
-						<LabelLink
-							path={'/about-spire-points'}
-							label={'Learn About Points'}
-							variant={'h4'}
-							onClick={() => {
-								props.onClose();
-								router.navigate('/about-spire-points').catch(console.error);
-							}}
-						/>
-					</Box>
-					{user && (
-						<Box mb={30}>
-							<LabelLink
-								path={'/account/personal-info'}
-								label={'My Account'}
-								variant={'h2'}
-								onClick={() => {
-									props.onClose();
-									router.navigate('/account/personal-info').catch(console.error);
-								}}
-							/>
-							<LabelLink
-								path={'/reservations'}
-								label={'Reservations'}
-								variant={'h4'}
-								onClick={() => {
-									props.onClose();
-									router.navigate('/reservations').catch(console.error);
-								}}
-							/>
-							<LabelLink
-								path={'/'}
-								label={'Manage/View points'}
-								variant={'h4'}
-								onClick={() => {
-									props.onClose();
-									router.navigate('/account/points').catch(console.error);
-								}}
-							/>
-						</Box>
-					)}
-					<LabelLink
-						path={'/about-spire'}
-						label={'About Spire Loyalty'}
-						variant={'h2'}
-						onClick={() => {
-							props.onClose();
-							router.navigate('/about-spire').catch(console.error);
-						}}
-					/>
+					<Box mb={30}>{renderNavLinks(false)}</Box>
+					{user && renderNavLinks(true)}
 				</Box>
 				<Box
 					display={'flex'}

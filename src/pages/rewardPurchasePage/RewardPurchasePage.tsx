@@ -8,7 +8,7 @@ import Paper from '../../components/paper/Paper';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import RewardService from '../../services/reward/reward.service';
 import router from '../../utils/router';
@@ -182,7 +182,7 @@ const RewardPurchasePage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

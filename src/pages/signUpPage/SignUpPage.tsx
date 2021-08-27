@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import './SignUpPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
@@ -25,6 +24,7 @@ import UserAddressService from '../../services/userAddress/userAddress.service';
 import CountryService from '../../services/country/country.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Icon from '@bit/redsky.framework.rs.icon';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 
 let phoneNumber = '';
 let country = 'US';
@@ -147,7 +147,7 @@ const SignUpPage: React.FC = () => {
 		} else if (control.key === 'phone' && control.value.toString().length > 10) {
 			control.value = StringUtils.removeAllExceptNumbers(control.value.toString());
 		} else if (control.key === 'firstName' || control.key === 'lastName') {
-			control.value = removeExtraSpacesReturnsTabs(control.value.toString());
+			control.value = StringUtils.removeLineEndings(control.value.toString());
 		}
 		signUpForm.update(control);
 		setFormIsValid(isSignUpFormFilledOut());
@@ -175,6 +175,7 @@ const SignUpPage: React.FC = () => {
 	async function signUp() {
 		popupController.open(SpinningLoaderPopup);
 		if (!phoneNumber.length || phoneNumber.length < 3) {
+			popupController.close(SpinningLoaderPopup);
 			return rsToasts.error('Phone number is required');
 		}
 
@@ -252,7 +253,7 @@ const SignUpPage: React.FC = () => {
 							flexDirection={'column'}
 							padding={size === 'small' ? '20px' : '48px 92px'}
 						>
-							<Box display={'flex'}>
+							<Box display={'flex'} justifyContent={'space-between'}>
 								<LabelInput
 									title={'First Name'}
 									inputType={'text'}
@@ -273,7 +274,7 @@ const SignUpPage: React.FC = () => {
 								control={newAddressObj.get('address1')}
 								updateControl={updateNewAddressObj}
 							/>
-							<Box display={'flex'}>
+							<Box display={'flex'} justifyContent={'space-between'}>
 								<LabelInput
 									title={'City'}
 									inputType={'text'}
@@ -421,7 +422,7 @@ const SignUpPage: React.FC = () => {
 						</Label>
 					</Paper>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

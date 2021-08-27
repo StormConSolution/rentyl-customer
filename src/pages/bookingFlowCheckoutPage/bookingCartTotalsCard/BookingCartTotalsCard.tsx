@@ -368,6 +368,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Box>
 				</Accordion>
 				<Accordion
+					isOpen
 					titleReact={
 						<Label variant={'h4'} width={'170px'}>
 							Taxes and Fees
