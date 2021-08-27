@@ -218,7 +218,7 @@ const SignUpPage: React.FC = () => {
 				}
 			});
 			console.error('Signup new customer', e);
-			throw rsToasts.error('Unable to create account, try again.');
+			throw rsToasts.error('Unable to create account, try again.', 'Unable To Create');
 		}
 	}
 
