@@ -10,7 +10,7 @@ import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import DestinationInfoCard from '../../components/destinationInfoCard/DestinationInfoCard';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import FeatureRoomCard from '../../components/featureRoomCard/FeatureRoomCard';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
@@ -301,7 +301,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 								city={destinationDetails.city}
 								state={destinationDetails.state}
 								zip={destinationDetails.zip}
-								rating={4.5}
+								rating={destinationDetails.reviewRating}
 								longDescription={destinationDetails.description}
 								onViewAvailableStaysClick={() => {
 									let availableStaysSection = availableStaysRef.current!.offsetTop;
@@ -578,7 +578,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						currentPageNumber={page}
 					/>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

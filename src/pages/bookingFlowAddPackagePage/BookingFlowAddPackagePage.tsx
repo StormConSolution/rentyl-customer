@@ -8,7 +8,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import PackageService from '../../services/package/package.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
@@ -176,7 +176,7 @@ const BookingFlowAddPackagePage = () => {
 				}}
 				total={total}
 			/>
-			<Footer links={FooterLinkTestData} />
+			<Footer links={FooterLinks} />
 		</Page>
 	);
 };

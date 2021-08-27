@@ -10,7 +10,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import RewardHeaderBar from '../../components/rewardHeaderBar/RewardHeaderBar';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { StringUtils } from '../../utils/utils';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilValue } from 'recoil';
@@ -130,7 +130,7 @@ const RewardDetailPage: React.FC = () => {
 						</Label>
 					</div>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

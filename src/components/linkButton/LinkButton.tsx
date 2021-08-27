@@ -9,12 +9,11 @@ interface LinkButtonProps {
 	label: string;
 	buttonSecondary?: boolean;
 	className?: string;
-	onClick?: () => void;
 }
 
 const LinkButton: React.FC<LinkButtonProps> = (props) => {
 	return (
-		<Link path={props.path} className={`rsLinkButton ${props.className || ''}`} onClick={props.onClick}>
+		<Link path={props.path} className={`rsLinkButton ${props.className || ''}`}>
 			<Button look={!props.buttonSecondary ? 'containedPrimary' : 'containedSecondary'}>
 				<Label variant={'caption'}>{props.label}</Label>
 			</Button>

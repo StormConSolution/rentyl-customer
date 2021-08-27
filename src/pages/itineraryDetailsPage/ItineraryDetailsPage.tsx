@@ -11,7 +11,7 @@ import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
@@ -23,6 +23,7 @@ import globalState from '../../models/globalState';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -149,6 +150,18 @@ const ItineraryDetailsPage: React.FC = () => {
 		}
 	}
 
+	function checkIfCanLeaveReview(): boolean {
+		if (!itinerary) return false;
+		let canReview = false;
+		itinerary.stays.forEach((item) => {
+			let date = new Date(item.departureDate);
+			if (date.getTime() < Date.now() && !item.externalCancellationId) {
+				canReview = date.getTime() < Date.now() && !item.externalCancellationId;
+			}
+		});
+		return canReview;
+	}
+
 	return !itinerary || !user ? (
 		<LoadingPage />
 	) : (
@@ -172,6 +185,17 @@ const ItineraryDetailsPage: React.FC = () => {
 								link: `/destination/details?di=${itinerary.destination.id}`,
 								label: 'View Destination'
 							}}
+							callToActionLeaveReview={() => {
+								if (!itinerary) return;
+								popupController.open<LeaveAReviewPopupProps>(LeaveAReviewPopup, {
+									destinationLogo: itinerary.destination.logoUrl,
+									destinationName: itinerary.destination.name,
+									stays: itinerary.stays.map((item) => {
+										return { id: item.reservationId, name: item.accommodation.name };
+									})
+								});
+							}}
+							canLeaveReview={checkIfCanLeaveReview()}
 						/>
 					)}
 				</HeroImage>
@@ -278,7 +302,7 @@ const ItineraryDetailsPage: React.FC = () => {
 						</Box>
 					</div>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

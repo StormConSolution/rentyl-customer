@@ -4,7 +4,6 @@ import { Box, Link, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
 import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
@@ -63,7 +62,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props) => {
 						))}
 					</Box>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

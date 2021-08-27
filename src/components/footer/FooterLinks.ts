@@ -1,6 +1,6 @@
 import { FooterLink } from './Footer';
 
-export const FooterLinkTestData: FooterLink[] = [
+export const FooterLinks: FooterLink[] = [
 	{
 		text: 'Browse Destinations',
 		path: '/reservation/availability'

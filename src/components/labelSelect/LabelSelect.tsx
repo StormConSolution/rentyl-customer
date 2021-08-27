@@ -10,6 +10,7 @@ interface LabelSelectProps {
 	className?: string;
 	placeHolder?: string;
 	showSelectedAsPlaceHolder?: boolean;
+	autoCalculateWidth?: boolean;
 }
 
 const LabelSelect: React.FC<LabelSelectProps> = (props) => {
@@ -21,6 +22,7 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 				options={props.selectOptions}
 				placeHolder={props.placeHolder}
 				showSelectedAsPlaceHolder={props.showSelectedAsPlaceHolder}
+				autoCalculateWidth={props.autoCalculateWidth}
 			/>
 		</div>
 	);

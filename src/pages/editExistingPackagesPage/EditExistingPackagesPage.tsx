@@ -15,7 +15,7 @@ import DestinationPackageTile from '../../components/destinationPackageTile/Dest
 import rsToasts from '@bit/redsky.framework.toast';
 import { WebUtils } from '../../utils/utils';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
@@ -226,7 +226,7 @@ const EditExistingPackagesPage: React.FC = () => {
 					}}
 					total={total}
 				/>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

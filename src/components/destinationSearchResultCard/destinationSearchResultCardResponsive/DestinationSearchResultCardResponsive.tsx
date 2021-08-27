@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './DestinationSearchResultCardResponsive.scss';
-import { Rating } from '../../starRating/StarRating';
 import TabbedDestinationSummary, {
 	DestinationSummaryTab
 } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
@@ -9,6 +8,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import LinkButton from '../../linkButton/LinkButton';
 import Carousel from '../../carousel/Carousel';
 import LabelLink from '../../labelLink/LabelLink';
+import StarRating from '../../starRating/StarRating';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -16,7 +16,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	address: string;
 	logoImagePath: string;
 	picturePaths: string[];
-	starRating: Rating;
+	starRating: number;
 	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
@@ -44,14 +44,14 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant="caption">{props.address}</Label>
 				</div>
 				<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
-				{/*<StarRating size="small16px" rating={props.starRating} /> we don't have this information in the database yet*/}
-				{/*<LabelLink*/}
-				{/*	className="ratings"*/}
-				{/*	label="View ratings >"*/}
-				{/*	path={props.reviewPath}*/}
-				{/*	variant="caption"*/}
-				{/*	externalLink={false}*/}
-				{/*/>*/}
+				<StarRating size="small16px" rating={props.starRating} />
+				<LabelLink
+					className="ratings"
+					label="View Reviews >"
+					path={props.reviewPath}
+					variant="caption"
+					externalLink={false}
+				/>
 				<LabelLink
 					className="addCompare"
 					label="Add to compare +"
