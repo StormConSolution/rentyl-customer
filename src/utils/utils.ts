@@ -85,10 +85,8 @@ class NumberUtils extends BaseNumberUtils {
 		switch (type) {
 			case 'points':
 				return addCommasToNumber(cents) + ' points';
-				break;
 			case 'cash':
 				return '$' + StringUtils.formatMoney(cents);
-				break;
 			default:
 				return '';
 		}

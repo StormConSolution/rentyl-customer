@@ -336,7 +336,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 								onFocusChange={setFocusedInput}
 								monthsToShow={2}
 								onChangeAdults={(value) => {
-									if (value === '' || parseInt(value) === NaN) return;
+									if (value === '' || isNaN(parseInt(value))) return;
 									updateSearchQueryObj('adults', parseInt(value));
 								}}
 								onChangeChildren={(value) => {

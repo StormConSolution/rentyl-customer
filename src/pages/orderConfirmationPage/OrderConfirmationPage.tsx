@@ -36,16 +36,6 @@ const OrderConfirmationPage = () => {
 		getRewardDetails().catch(console.error);
 	}, []);
 
-	function renderStyle() {
-		if (!reward) return;
-		let styles: any = {
-			width: '200px',
-			height: '200px',
-			backgroundImage: `url(${reward.media[0].urls.large})`
-		};
-		return styles;
-	}
-
 	return !reward ? (
 		<LoadingPage />
 	) : (

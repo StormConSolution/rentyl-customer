@@ -7,7 +7,6 @@ import globalState, { ComparisonCardInfo } from '../../models/globalState';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
-import DestinationService from '../../services/destination/destination.service';
 import { ObjectUtils } from '../../utils/utils';
 import { Box } from '@bit/redsky.framework.rs.996';
 

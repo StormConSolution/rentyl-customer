@@ -1,4 +1,3 @@
-import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
 import { addCommasToNumber, NumberUtils, StringUtils } from '../../utils/utils';
@@ -27,7 +26,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 			<div
 				className="accommodationRow"
 				key={index}
-				onClick={(event: React.MouseEvent) => {
+				onClick={() => {
 					if (size !== 'small') return;
 					props.onDetailsClick(accommodation.id);
 				}}
@@ -96,7 +95,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 
 	function renderIcons(icons: { id: number; title: string; icon: string }[]): JSX.Element[] {
 		return icons
-			.map((icon, index: number) => {
+			.map((icon) => {
 				return <IconToolTip iconImg={icon.icon} key={icon.id} title={icon.title} />;
 			})
 			.slice(0, 4);
