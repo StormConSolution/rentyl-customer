@@ -17,7 +17,7 @@ import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import RewardItemCard from './rewardItemCard/RewardItemCard';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { useRecoilValue } from 'recoil';
@@ -385,7 +385,7 @@ const RewardItemPage: React.FC = () => {
 					<div className={'cardContainer'}>{renderCards()}</div>
 					<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	) : (
@@ -418,7 +418,7 @@ const RewardItemPage: React.FC = () => {
 							<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 						</Box>
 					</Box>
-					<Footer links={FooterLinkTestData} />
+					<Footer links={FooterLinks} />
 				</div>
 			</div>
 		</Page>

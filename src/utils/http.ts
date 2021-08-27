@@ -42,7 +42,7 @@ let headers: any = {
 if (WebUtils.isLocalHost()) headers['company-id'] = getCompanyId();
 
 const http = new HttpClient({
-	baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api/v1' : packageJson.uri,
+	baseURL: '/api/v1',
 	headers
 });
 

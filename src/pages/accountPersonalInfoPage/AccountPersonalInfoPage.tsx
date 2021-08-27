@@ -9,7 +9,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -280,7 +280,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 					</Box>
 				</Box>
 
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

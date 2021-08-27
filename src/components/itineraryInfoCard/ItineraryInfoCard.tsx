@@ -2,7 +2,7 @@ import * as React from 'react';
 import './ItineraryInfoCard.scss';
 import LabelLink from '../labelLink/LabelLink';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../labelButton/LabelButton';
 import router from '../../utils/router';
 import Paper from '../paper/Paper';
@@ -19,6 +19,8 @@ interface ItineraryInfoCardProps {
 	name: string;
 	description: string;
 	callToActionButton: NavButtons;
+	callToActionLeaveReview?: () => void;
+	canLeaveReview?: boolean;
 }
 
 const ItineraryInfoCard: React.FC<ItineraryInfoCardProps> = (props) => {
@@ -38,14 +40,24 @@ const ItineraryInfoCard: React.FC<ItineraryInfoCardProps> = (props) => {
 					{props.description}
 				</Label>
 			</Box>
-			<LabelButton
-				look={'containedPrimary'}
-				variant={'button'}
-				label={props.callToActionButton.label}
-				onClick={() => {
-					router.navigate(props.callToActionButton.link).catch(console.error);
-				}}
-			/>
+			<Box display={'flex'} justifyContent={'space-evenly'}>
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'button'}
+					label={props.callToActionButton.label}
+					onClick={() => {
+						router.navigate(props.callToActionButton.link).catch(console.error);
+					}}
+				/>
+				{props.canLeaveReview && (
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Leave a review'}
+						onClick={props.callToActionLeaveReview}
+					/>
+				)}
+			</Box>
 		</Paper>
 	);
 };
