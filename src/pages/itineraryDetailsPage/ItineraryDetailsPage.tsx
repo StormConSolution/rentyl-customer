@@ -11,7 +11,7 @@ import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
@@ -155,7 +155,9 @@ const ItineraryDetailsPage: React.FC = () => {
 		let canReview = false;
 		itinerary.stays.forEach((item) => {
 			let date = new Date(item.departureDate);
-			canReview = date.getTime() < Date.now() && !item.externalCancellationId;
+			if (date.getTime() < Date.now() && !item.externalCancellationId) {
+				canReview = date.getTime() < Date.now() && !item.externalCancellationId;
+			}
 		});
 		return canReview;
 	}
@@ -300,7 +302,7 @@ const ItineraryDetailsPage: React.FC = () => {
 						</Box>
 					</div>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

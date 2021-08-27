@@ -26,7 +26,7 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
@@ -428,7 +428,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						total={availabilityTotal}
 					/>
 				</div>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

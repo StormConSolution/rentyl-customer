@@ -27,7 +27,7 @@ const StarRatingSelect: React.FC<StarRatingSelectProps> = (props) => {
 						className={'ratingInput'}
 						name={'rating'}
 						id={`rating-${i}`}
-						value={`${i}`}
+						value={i}
 						type="radio"
 						onClick={() => {
 							setSelectedValue(i + 1);

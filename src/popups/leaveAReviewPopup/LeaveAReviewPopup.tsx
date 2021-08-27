@@ -15,6 +15,7 @@ import StarRatingSelect from '../../components/starRatingSelect/StarRatingSelect
 import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import ReviewService from '../../services/review/review.service';
+import router from '../../utils/router';
 
 export interface LeaveAReviewPopupProps extends PopupProps {
 	destinationName: string;
@@ -52,9 +53,7 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 		let data = reviewDetails.toModel<Api.Review.Req.Create>();
 		try {
 			let res = await reviewService.create(data);
-			if (res) {
-				rsToasts.success('Your review has been submitted', 'Success!!!');
-			}
+			rsToasts.success('Your review has been submitted', 'Success!!!');
 			popupController.close(LeaveAReviewPopup);
 		} catch (e) {
 			rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);

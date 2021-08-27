@@ -19,7 +19,7 @@ import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import CategoryFeatureIcons from '../../components/categoryFeatureIcons/CategoryFeatureIcons';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import CategoryImageGallery from '../../components/categoryImageGallery/CategoryImageGallery';
 import moment from 'moment';
@@ -264,7 +264,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 						{renderCategoryFeatures()}
 					</Box>
 				)}
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

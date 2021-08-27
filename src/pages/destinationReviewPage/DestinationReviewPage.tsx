@@ -12,13 +12,14 @@ import serviceFactory from '../../services/serviceFactory';
 import ReviewService from '../../services/review/review.service';
 import ReviewCard from '../../components/reviewCard/ReviewCard';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import LoadingPage from '../loadingPage/LoadingPage';
-import LabelButton from '../../components/labelButton/LabelButton';
 import LinkButton from '../../components/linkButton/LinkButton';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const DestinationReviewPage: React.FC = () => {
-	const rewardService = serviceFactory.get<ReviewService>('ReviewService');
+	const reviewService = serviceFactory.get<ReviewService>('ReviewService');
+	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ destinationId: number }>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
 	]);
@@ -27,11 +28,11 @@ const DestinationReviewPage: React.FC = () => {
 	useEffect(() => {
 		async function getDestinationReviews() {
 			try {
-				let response = await rewardService.getForDestination(params.destinationId);
-				console.log(response);
+				let response = await reviewService.getForDestination(params.destinationId);
 				setDestinationReviews(response);
 			} catch (e) {
 				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+				router.back();
 			}
 		}
 		getDestinationReviews().catch(console.error);
@@ -77,7 +78,7 @@ const DestinationReviewPage: React.FC = () => {
 					<div className={'tanBox'} />
 				</HeroImage>
 				<Box className={'contentWrapper'}>
-					<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+					<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} flexWrap={'wrap'}>
 						<div>
 							<img src={require('../../images/encore-resort.png')} alt={destinationReviews.name} />
 							<Label variant={'h1'} margin={'15px 0 10px'}>
@@ -88,9 +89,6 @@ const DestinationReviewPage: React.FC = () => {
 						<LinkButton
 							path={`/destination/details?di=${params.destinationId}`}
 							label={'View Destination'}
-							onClick={() => {
-								router.navigate(`/destination/details?di=${params.destinationId}`).catch(console.error);
-							}}
 						/>
 					</Box>
 
@@ -98,7 +96,7 @@ const DestinationReviewPage: React.FC = () => {
 					{renderReviews()}
 				</Box>
 				<hr />
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

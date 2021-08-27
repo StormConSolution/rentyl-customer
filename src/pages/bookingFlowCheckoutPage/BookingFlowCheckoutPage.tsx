@@ -17,7 +17,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
-import { FooterLinkTestData } from '../../components/footer/FooterLinks';
+import { FooterLinks } from '../../components/footer/FooterLinks';
 import PaymentService from '../../services/payment/payment.service';
 import EditAccommodationPopup, {
 	EditAccommodationPopupProps
@@ -514,7 +514,7 @@ const BookingFlowCheckoutPage = () => {
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}
 				</Box>
-				<Footer links={FooterLinkTestData} />
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);
