@@ -12,6 +12,7 @@ export default function useCompanyInfo(): boolean {
 			let res = await companyService.getCompanyDetails();
 			setRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company, res);
 			setIsCompanyLoaded(true);
+			document.title = res.name;
 		}
 		getCompanyInfo().catch(console.error);
 	}, []);
