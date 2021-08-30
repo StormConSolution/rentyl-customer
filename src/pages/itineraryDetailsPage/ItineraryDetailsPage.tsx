@@ -138,7 +138,7 @@ const ItineraryDetailsPage: React.FC = () => {
 		popupController.open<SpinningLoaderPopupProps>(SpinningLoaderPopup, {});
 		try {
 			let response = await reservationService.updatePaymentMethod({
-				itineraryNumber: params.itineraryId,
+				itineraryId: params.itineraryId,
 				paymentMethodId: newPaymentMethod.id
 			});
 			setItinerary(response);

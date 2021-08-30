@@ -62,8 +62,8 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 				let data: Api.Reservation.Req.Verification = {
 					accommodationId: props.accommodationId,
 					destinationId: props.destinationId,
-					adults: parseInt(guestForm.get('adults').value.toString()),
-					children: parseInt(guestForm.get('children').value.toString()),
+					adultCount: parseInt(guestForm.get('adults').value.toString()),
+					childCount: parseInt(guestForm.get('children').value.toString()),
 					arrivalDate: DateUtils.clientToServerDate(
 						startDate ? startDate.toDate() : moment(props.startDate).toDate()
 					),
