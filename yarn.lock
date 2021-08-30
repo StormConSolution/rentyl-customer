@@ -1091,10 +1091,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bit/redsky.framework.rs.996@0.0.34":
-  version "0.0.34"
-  resolved "https://node.bit.dev/redsky.framework.rs.996/-/redsky.framework.rs.996-0.0.34.tgz#f21a5663e903426750193c78c9cc17f64bba6400"
-  integrity sha1-8hpWY+kDQmdQGTx4ycwX9ku6ZAA=
+"@bit/redsky.framework.rs.996@0.0.35":
+  version "0.0.35"
+  resolved "https://node.bit.dev/redsky.framework.rs.996/-/redsky.framework.rs.996-0.0.35.tgz#cb2ce11b323d662f8b061e2a17209bb156edaf27"
+  integrity sha1-yyzhGzI9Zi+LBh4qFyCbsVbtryc=
   dependencies:
     react "^17.0.2"
 
