@@ -223,7 +223,7 @@ const BookingFlowAddRoomPage = () => {
 						},
 						{
 							label: 'Max Occupancy',
-							datum: accommodation.maxOccupancyCount
+							datum: accommodation.maxOccupantCount
 						},
 						{
 							label: 'ADA Compliant',
@@ -283,6 +283,7 @@ const BookingFlowAddRoomPage = () => {
 							bookNow(editStayDetails.accommodationId);
 						}}
 						pointsEarnable={0}
+						hideButtons={true}
 					/>
 				)}
 				<div ref={filterRef} />

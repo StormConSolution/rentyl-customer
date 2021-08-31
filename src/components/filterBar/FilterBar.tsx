@@ -65,7 +65,9 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Price Min"
 				initialValue={`$${StringUtils.addCommasToNumber(props.initialPriceMin)}` || ''}
 				onChange={debounce(async (value) => {
-					props.onChangePriceMin(StringUtils.removeLineEndings(value));
+					props.onChangePriceMin(
+						value === '' ? 0 : StringUtils.removeLineEndings(value.replace(/[,$]/g, ''))
+					);
 				}, 500)}
 			/>
 			<LabelInput
@@ -74,7 +76,9 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Price Max"
 				initialValue={`$${StringUtils.addCommasToNumber(props.initialPriceMax)}` || ''}
 				onChange={debounce(async (value) => {
-					props.onChangePriceMax(StringUtils.removeLineEndings(value));
+					props.onChangePriceMax(
+						value === '' ? 0 : StringUtils.removeLineEndings(value.replace(/[,$]/g, ''))
+					);
 				}, 500)}
 			/>
 		</Box>

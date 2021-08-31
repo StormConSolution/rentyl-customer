@@ -93,10 +93,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					return {
 						name: item.accommodation.name,
 						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
-						subtotalCostCents:
-							item.priceDetail.grandTotalCents -
-							item.priceDetail.taxAndFeeTotalInCents -
-							item.priceDetail.upsellPackageTotalInCents,
+						subtotalCostCents: item.priceDetail.accommodationTotalInCents,
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
 						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
@@ -234,68 +231,79 @@ const ItineraryDetailsPage: React.FC = () => {
 											description={itinerary.paymentMethod.type}
 										/>
 									</div>
-									<hr />
-									<div className={editPaymentCard ? 'newPaymentOptions show' : 'newPaymentOptions'}>
-										<div>
-											<Label variant={'h4'} marginBottom={9}>
-												OTHER PAYMENT OPTIONS
-											</Label>
-											<Select
-												options={renderSelectOptions()}
-												placeHolder={'Please Select A Card'}
-												showSelectedAsPlaceHolder
-												onChange={(value) => {
-													if (!user) return;
-													if (typeof value === 'number') {
-														return setNewPaymentMethod(
-															user.paymentMethods.find((item) => item.id === value)
-														);
+									{new Date(itinerary.stays[0].arrivalDate).getTime() > Date.now() && (
+										<>
+											<hr />
+											<div
+												className={
+													editPaymentCard ? 'newPaymentOptions show' : 'newPaymentOptions'
+												}
+											>
+												<div>
+													<Label variant={'h4'} marginBottom={9}>
+														OTHER PAYMENT OPTIONS
+													</Label>
+													<Select
+														options={renderSelectOptions()}
+														placeHolder={'Please Select A Card'}
+														showSelectedAsPlaceHolder
+														onChange={(value) => {
+															if (!user) return;
+															if (typeof value === 'number') {
+																return setNewPaymentMethod(
+																	user.paymentMethods.find(
+																		(item) => item.id === value
+																	)
+																);
+															}
+															setNewPaymentMethod(undefined);
+														}}
+													/>
+												</div>
+												<AccordionTitleDescription
+													title={'Name on card'}
+													description={newPaymentMethod?.nameOnCard || ''}
+												/>
+												<AccordionTitleDescription
+													title={'Card Number'}
+													description={newPaymentMethod?.cardNumber || ''}
+												/>
+												<AccordionTitleDescription
+													title={'Expiration Date'}
+													description={
+														!!newPaymentMethod
+															? `${
+																	newPaymentMethod.expirationMonth +
+																	'/' +
+																	newPaymentMethod.expirationYear
+															  }`
+															: ''
 													}
-													setNewPaymentMethod(undefined);
-												}}
-											/>
-										</div>
-										<AccordionTitleDescription
-											title={'Name on card'}
-											description={newPaymentMethod?.nameOnCard || ''}
-										/>
-										<AccordionTitleDescription
-											title={'Card Number'}
-											description={newPaymentMethod?.cardNumber || ''}
-										/>
-										<AccordionTitleDescription
-											title={'Expiration Date'}
-											description={
-												!!newPaymentMethod
-													? `${
-															newPaymentMethod.expirationMonth +
-															'/' +
-															newPaymentMethod.expirationYear
-													  }`
-													: ''
-											}
-										/>
-									</div>
-									<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>
-										<LabelButton
-											className={editPaymentCard ? 'showBtn' : 'hideBtn'}
-											look={'containedPrimary'}
-											variant={'button'}
-											label={'Save'}
-											onClick={() => {
-												saveNewPaymentMethod();
-											}}
-										/>
-										<LabelButton
-											className={'editCancelBtn'}
-											look={editPaymentCard ? 'containedSecondary' : 'containedPrimary'}
-											variant={'button'}
-											label={editPaymentCard ? 'Cancel' : 'Change'}
-											onClick={() => {
-												setEditPaymentCard(!editPaymentCard);
-											}}
-										/>
-									</Box>
+												/>
+											</div>
+											<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>
+												<LabelButton
+													className={editPaymentCard ? 'showBtn' : 'hideBtn'}
+													look={'containedPrimary'}
+													variant={'button'}
+													label={'Save'}
+													onClick={() => {
+														saveNewPaymentMethod();
+													}}
+												/>
+
+												<LabelButton
+													className={'editCancelBtn'}
+													look={editPaymentCard ? 'containedSecondary' : 'containedPrimary'}
+													variant={'button'}
+													label={editPaymentCard ? 'Cancel' : 'Change'}
+													onClick={() => {
+														setEditPaymentCard(!editPaymentCard);
+													}}
+												/>
+											</Box>
+										</>
+									)}
 								</Paper>
 							)}
 						</Box>

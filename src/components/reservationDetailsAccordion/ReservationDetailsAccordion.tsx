@@ -35,6 +35,7 @@ interface ReservationDetailsAccordionProps {
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
 	isOpen?: boolean;
+	isPastReservation?: boolean;
 	onRemove?: () => void;
 	onChangeRoom?: () => void;
 	onEditService?: () => void;
@@ -105,7 +106,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 	}
 
 	function renderContactInfo() {
-		if (props.isEdit) {
+		if (props.isEdit && !props.isPastReservation) {
 			return (
 				<>
 					<div className={'accordionReservationGrid'}>
@@ -272,29 +273,31 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 							setIsModified(false);
 						}}
 					/>
-					<Box marginLeft={'auto'} position={'relative'}>
-						<LabelButton
-							className={'editCancelBtn'}
-							look={'containedPrimary'}
-							variant={'button'}
-							label={!props.isEdit ? 'Details' : 'Edit'}
-							onClick={(event) => {
-								if (!props.isEdit) {
-									router
-										.navigate(
-											'/reservations/itinerary/reservation/details?ri=' + props.reservationId
-										)
-										.catch(console.error);
-								} else {
-									event.stopPropagation();
-									setToggleBtn(!toggleBtn);
-								}
-							}}
-						/>
-						<div ref={whiteBox} className={toggleBtn ? 'whiteBox open' : 'whiteBox'}>
-							{renderLinks()}
-						</div>
-					</Box>
+					{!props.isPastReservation && (
+						<Box marginLeft={'auto'} position={'relative'}>
+							<LabelButton
+								className={'editCancelBtn'}
+								look={'containedPrimary'}
+								variant={'button'}
+								label={!props.isEdit ? 'Details' : 'Edit'}
+								onClick={(event) => {
+									if (!props.isEdit) {
+										router
+											.navigate(
+												'/reservations/itinerary/reservation/details?ri=' + props.reservationId
+											)
+											.catch(console.error);
+									} else {
+										event.stopPropagation();
+										setToggleBtn(!toggleBtn);
+									}
+								}}
+							/>
+							<div ref={whiteBox} className={toggleBtn ? 'whiteBox open' : 'whiteBox'}>
+								{renderLinks()}
+							</div>
+						</Box>
+					)}
 				</Box>
 			</Box>
 		</Accordion>

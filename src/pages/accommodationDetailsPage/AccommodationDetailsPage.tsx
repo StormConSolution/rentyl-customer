@@ -57,6 +57,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 		arrivalDate: string;
 		departureDate: string;
 		adults: number;
+		rateCode?: string;
 	}>({
 		arrivalDate: initialStartDate.format('YYYY-MM-DD'),
 		departureDate: initialEndDate.format('YYYY-MM-DD'),
@@ -114,10 +115,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 		);
 	}
 
-	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults', value: any) {
+	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults' | 'rateCode', value: any) {
 		setAvailabilityObj((prev) => {
 			let createAvailabilityObj: any = { ...prev };
-			createAvailabilityObj[key] = value;
+			if (value === '') delete createAvailabilityObj[key];
+			else createAvailabilityObj[key] = value;
 			return createAvailabilityObj;
 		});
 	}
@@ -165,6 +167,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 			departureDate: availabilityObj.departureDate,
 			packages: []
 		};
+		if (availabilityObj.rateCode) data.rateCode = availabilityObj.rateCode;
 		const stringedParams: string = JSON.stringify({
 			destinationId: destinationDetails.id,
 			newRoom: data
@@ -202,11 +205,15 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 							focusedInput={focusedInput}
 							startDate={startDate}
 							endDate={endDate}
+							rateCode={availabilityObj.rateCode}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
 							}}
 							onGuestChange={(value) => {
 								updateAvailabilityObj('adults', +value);
+							}}
+							onRateCodeChange={(value) => {
+								updateAvailabilityObj('rateCode', value);
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
