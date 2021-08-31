@@ -2,7 +2,6 @@ import * as React from 'react';
 import './AccountAddressPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import { useEffect, useState } from 'react';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -13,7 +12,6 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import AccountAddressTile from '../../components/accountAddressTile/AccountAddressTile';
 import LabelInput from '../../components/labelInput/LabelInput';
-import rsToasts from '@bit/redsky.framework.toast';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
@@ -22,6 +20,8 @@ import UserAddressService from '../../services/userAddress/userAddress.service';
 import { useRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../../utils/utils';
 
 let country = 'US';
 let state = '';
@@ -69,7 +69,7 @@ const AccountAddressPage: React.FC = () => {
 				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('Country list is unavailable.', '', 5000);
+				throw rsToastify.error(WebUtils.getRsErrorMessage(e, 'Country list is unavailable'), 'Server Error');
 			}
 		}
 		getCountries().catch(console.error);
@@ -86,7 +86,10 @@ const AccountAddressPage: React.FC = () => {
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error('Unable to get states for given country', '', 5000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get states for given country'),
+					'Server Error'
+				);
 			}
 		}
 		getStates().catch(console.error);
@@ -128,7 +131,7 @@ const AccountAddressPage: React.FC = () => {
 		let data = { id: addressId, isDefault: 1 };
 		try {
 			let response = await userAddressService.update(data);
-			if (response) rsToasts.success('Update Successful', '', 5000);
+			if (response) rsToastify.success('Address successfully updated.', 'Update Successful');
 
 			let addresses = [...addressList];
 			addresses = addresses.map((item) => {
@@ -136,7 +139,7 @@ const AccountAddressPage: React.FC = () => {
 			});
 			setAddressList(addresses);
 		} catch (e) {
-			rsToasts.error('Address update failed, try again', '', 5000);
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Address update failed, try again.'), 'Server Error');
 		}
 	}
 
@@ -192,7 +195,7 @@ const AccountAddressPage: React.FC = () => {
 			newAddressObj.resetToInitialValue();
 			setAddressList(newAddressList);
 		} catch (e) {
-			rsToasts.error('Unable to save address, try again', '', 5000);
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to save address, try again'), 'Server Error');
 		}
 	}
 
@@ -202,7 +205,7 @@ const AccountAddressPage: React.FC = () => {
 			let response = await userAddressService.delete(id);
 			let newAddressList = addressList.filter((item) => item.id !== id);
 			setAddressList(newAddressList);
-			if (response) rsToasts.success('Delete Successful', '', 5000);
+			if (response) rsToastify.success('Address successfully removed.', 'Delete Successful');
 		} catch (e) {}
 	}
 

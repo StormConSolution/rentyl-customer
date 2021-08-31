@@ -5,8 +5,6 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
 import { DateUtils } from '@bit/redsky.framework.rs.utils';
-import UserService from '../../services/user/user.service';
-import serviceFactory from '../../services/serviceFactory';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import { addCommasToNumber } from '../../utils/utils';

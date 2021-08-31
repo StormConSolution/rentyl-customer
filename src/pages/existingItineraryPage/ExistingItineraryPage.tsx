@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './ExistingItineraryPage.scss';
-import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Page } from '@bit/redsky.framework.rs.996';
 import ReservationCard from '../../components/reservationCard/ReservationCard';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';

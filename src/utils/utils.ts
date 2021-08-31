@@ -57,6 +57,20 @@ class WebUtils extends BaseWebUtils {
 	static isLocalHost(): boolean {
 		return window.location.host.includes('localhost');
 	}
+
+	/**
+	 * Checks an thrown error object from an axios request for the standard RedSky Error Message
+	 * @param error - Error object thrown via axios
+	 * @param defaultMessage - A message to use incase there wasn't one given
+	 * @returns The msg from the RsError object or the defaultMessage passed in
+	 */
+	static getRsErrorMessage(error: any, defaultMessage: string): string {
+		let errorResponse = ObjectUtils.smartParse(WebUtils.getAxiosErrorMessage(error));
+		if (typeof errorResponse !== 'object') return errorResponse;
+		if ('msg' in errorResponse) return errorResponse.msg;
+		else if ('err' in errorResponse) return errorResponse.err;
+		return defaultMessage;
+	}
 }
 
 class DateUtils extends BaseDateUtils {

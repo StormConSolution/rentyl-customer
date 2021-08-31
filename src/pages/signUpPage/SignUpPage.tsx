@@ -14,8 +14,7 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { axiosErrorHandler } from '../../utils/errorHandler';
 import { HttpStatusCode } from '../../utils/http';
-import rsToasts from '@bit/redsky.framework.toast';
-import { formatPhoneNumber, StringUtils } from '../../utils/utils';
+import { formatPhoneNumber, StringUtils, WebUtils } from '../../utils/utils';
 import { useSetRecoilState } from 'recoil';
 import globalState from '../../models/globalState';
 import router from '../../utils/router';
@@ -25,6 +24,7 @@ import CountryService from '../../services/country/country.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { FooterLinks } from '../../components/footer/FooterLinks';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 let phoneNumber = '';
 let country = 'US';
@@ -92,7 +92,10 @@ const SignUpPage: React.FC = () => {
 				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('Unable to get a list of countries.', '', 5000);
+				throw rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get a list of countries.'),
+					'Server Error'
+				);
 			}
 		}
 		getCountries().catch(console.error);
@@ -109,7 +112,10 @@ const SignUpPage: React.FC = () => {
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error('Unable to get states for the selected country', '', 5000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get states for the selected country.'),
+					'Server Error'
+				);
 			}
 		}
 		getStates().catch(console.error);
@@ -180,7 +186,7 @@ const SignUpPage: React.FC = () => {
 		popupController.open(SpinningLoaderPopup);
 		if (!phoneNumber.length || phoneNumber.length < 3) {
 			popupController.close(SpinningLoaderPopup);
-			return rsToasts.error('Phone number is required');
+			return rsToastify.error('Phone number is required', 'Missing Phone Number.');
 		}
 
 		if (!(await signUpForm.isValid())) {
@@ -203,7 +209,7 @@ const SignUpPage: React.FC = () => {
 		try {
 			let res = await userService.createNewCustomer({ ...newCustomer, address: addressObj });
 			if (res) {
-				rsToasts.success('Account Created');
+				rsToastify.success('Account was successfully created.', 'Account Created');
 				popupController.close(SpinningLoaderPopup);
 				if (params.data !== 0 && params.data.includes('arrivalDate')) {
 					router.navigate(`/signin?data=${params.data}`).catch(console.error);
@@ -215,11 +221,17 @@ const SignUpPage: React.FC = () => {
 			popupController.close(SpinningLoaderPopup);
 			axiosErrorHandler(e, {
 				[HttpStatusCode.CONFLICT]: () => {
-					throw rsToasts.error('This email is already in use.');
+					throw rsToastify.error(
+						WebUtils.getRsErrorMessage(e, 'This email is already in use.'),
+						'Server Error'
+					);
 				}
 			});
 			console.error('Signup new customer', e);
-			throw rsToasts.error('Unable to create account, try again.');
+			throw rsToastify.error(
+				WebUtils.getRsErrorMessage(e, 'Unable to create account, try again.'),
+				'Server Error'
+			);
 		}
 	}
 

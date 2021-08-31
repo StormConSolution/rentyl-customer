@@ -4,7 +4,6 @@ import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useState } from 'react';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -23,14 +22,13 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import CategoryImageGallery from '../../components/categoryImageGallery/CategoryImageGallery';
 import moment from 'moment';
-import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
-import { animateBackForView } from '@bit/redsky.framework.rs.996/dist/pageAnimation';
+import { DateUtils, formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
-import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccommodationDetailsPageProps {}
 
@@ -73,7 +71,10 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 				let destination = await destinationService.getDestinationDetails(accommodation.destinationId);
 				setDestinationDetails(destination);
 			} catch (e) {
-				rsToasts.error('Cannot find details, please try again', '', 5000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot find details, please try again'),
+					'Server Error'
+				);
 			}
 		}
 		getAccommodationDetails(params.accommodationId);

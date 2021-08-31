@@ -4,7 +4,6 @@ import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -22,7 +21,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -37,6 +36,7 @@ import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface DestinationDetailsPageProps {}
 
@@ -80,7 +80,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				let dest = await destinationService.getDestinationDetails(id);
 				if (dest) setDestinationDetails(dest);
 			} catch (e) {
-				rsToasts.error('Cannot get details for this destination');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
+					'Server Error'
+				);
 			}
 		}
 
@@ -185,11 +188,16 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
-		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
-		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
-		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
-		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		if (key === 'adults' && value === 0)
+			throw rsToastify.error('There must be at least one adult.', 'Missing or Incorrect Information');
+		if (key === 'adults' && isNaN(value))
+			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
+		if (key === 'children' && isNaN(value))
+			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMin' && isNaN(value))
+			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMax' && isNaN(value))
+			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj[key] = value;

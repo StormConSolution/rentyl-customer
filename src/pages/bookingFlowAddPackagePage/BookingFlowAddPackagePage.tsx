@@ -12,7 +12,7 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import PackageService from '../../services/package/package.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import rsToasts from '@bit/redsky.framework.toast';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -29,7 +29,7 @@ const BookingFlowAddPackagePage = () => {
 
 	useEffect(() => {
 		if (!params.data.newRoom) {
-			rsToasts.error('Invalid URL given, returning to home', 'Invalid URL');
+			rsToastify.error('Invalid URL given, returning to home', 'Invalid URL');
 			router.navigate('/reservation/availability').catch(console.error);
 			return;
 		}

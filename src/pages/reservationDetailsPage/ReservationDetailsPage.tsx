@@ -12,7 +12,6 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
-import rsToasts from '@bit/redsky.framework.toast';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
@@ -22,7 +21,8 @@ import EditReservationDetailsPopup, {
 	EditReservationDetailsPopupProps
 } from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
-import { StringUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const ReservationDetailsPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -38,7 +38,10 @@ const ReservationDetailsPage: React.FC = () => {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 			} catch (e) {
-				rsToasts.error('Unable to get reservation information');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get reservation information.'),
+					'Server Error'
+				);
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
@@ -65,9 +68,9 @@ const ReservationDetailsPage: React.FC = () => {
 			popupController.closeAll();
 		} catch (e) {
 			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
-				rsToasts.error('Cannot update a past reservation', 'Failed To update', 5000);
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot update a past reservation.'), 'Server Error');
 			} else {
-				rsToasts.error(e.msg, 'Update Failure', 3000);
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failure to update.'), 'Server Error');
 				console.error(e.message, e.msg);
 			}
 			popupController.closeAll();
@@ -147,10 +150,9 @@ const ReservationDetailsPage: React.FC = () => {
 											let res = await reservationsService.cancel(reservation.id);
 											if (res) {
 												popupController.closeAll();
-												rsToasts.success(
+												rsToastify.success(
 													`Successfully cancelled ${reservation?.externalConfirmationId}`,
-													'',
-													5000
+													'Success!'
 												);
 												router.navigate('/reservations').catch(console.error);
 											}

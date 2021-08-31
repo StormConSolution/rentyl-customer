@@ -2,15 +2,15 @@ import { Box, Page } from '@bit/redsky.framework.rs.996';
 import React, { useEffect, useState } from 'react';
 import './OrderConfirmationPage.scss';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import RewardService from '../../services/reward/reward.service';
 import serviceFactory from '../../services/serviceFactory';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import { addCommasToNumber, DateUtils } from '../../utils/utils';
+import { addCommasToNumber, DateUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Paper from '../../components/paper/Paper';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const OrderConfirmationPage = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -29,7 +29,7 @@ const OrderConfirmationPage = () => {
 				let res = await rewardService.getRewardById(Number(params.reward));
 				setReward(res);
 			} catch (e) {
-				rsToasts.error('Reward no longer exists.');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Reward no longer exists.'), 'Server Error');
 				router.navigate('/').catch(console.error);
 			}
 		}

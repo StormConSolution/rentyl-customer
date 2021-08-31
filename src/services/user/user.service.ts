@@ -1,7 +1,6 @@
 import http from '../../utils/http';
 import SparkMD5 from 'spark-md5';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
-import modelFactory from '../../models/modelFactory';
 import { Service } from '../Service';
 import globalState, {
 	clearPersistentState,

@@ -4,7 +4,6 @@ import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import { useEffect, useState } from 'react';
 import { DateUtils } from '../../utils/utils';
 
 interface ItineraryCostSummaryCardProps {

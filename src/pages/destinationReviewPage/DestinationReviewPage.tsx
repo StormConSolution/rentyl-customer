@@ -6,8 +6,6 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import StarRating from '../../components/starRating/StarRating';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
-import rsToasts from '@bit/redsky.framework.toast';
-import { ObjectUtils, WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import ReviewService from '../../services/review/review.service';
 import ReviewCard from '../../components/reviewCard/ReviewCard';
@@ -16,6 +14,8 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import LoadingPage from '../loadingPage/LoadingPage';
 import LinkButton from '../../components/linkButton/LinkButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { WebUtils } from '../../utils/utils';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const DestinationReviewPage: React.FC = () => {
 	const reviewService = serviceFactory.get<ReviewService>('ReviewService');
@@ -31,7 +31,10 @@ const DestinationReviewPage: React.FC = () => {
 				let response = await reviewService.getForDestination(params.destinationId);
 				setDestinationReviews(response);
 			} catch (e) {
-				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
+					'Server Error'
+				);
 				router.back();
 			}
 		}

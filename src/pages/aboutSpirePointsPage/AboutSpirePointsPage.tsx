@@ -11,7 +11,6 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelLink from '../../components/labelLink/LabelLink';
 import Paper from '../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface AboutSpirePointsPageProps {}

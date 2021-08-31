@@ -3,9 +3,7 @@ import './PointsOrLogin.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
 import { addCommasToNumber } from '../../utils/utils';
-import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import globalState from '../../models/globalState';
 
 interface PointsOrLoginProps {

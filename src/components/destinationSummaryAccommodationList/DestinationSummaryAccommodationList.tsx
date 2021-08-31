@@ -1,4 +1,3 @@
-import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
 import { addCommasToNumber, NumberUtils, StringUtils } from '../../utils/utils';

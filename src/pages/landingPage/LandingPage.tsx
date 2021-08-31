@@ -6,7 +6,6 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import InfoCard from '../../components/infoCard/InfoCard';
 import FeaturedRewardCard from '../../components/featuredRewardCard/FeaturedRewardCard';
 import Paper from '../../components/paper/Paper';
-
 import { useEffect, useState } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import FeaturedDestinationCard from '../../components/featuredDestinationCard/FeaturedDestinationCard';
