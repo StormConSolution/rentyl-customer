@@ -7,7 +7,7 @@ import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import LinkButton from '../linkButton/LinkButton';
 

@@ -2,13 +2,12 @@ import * as React from 'react';
 import './AccommodationSearchResultCardMobile.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import { addCommasToNumber } from '../../../utils/utils';
 import AccommodationSearchDetailCard, {
 	AccommodationStat
 } from '../../accommodationSearchDetailCard/AccommodationSearchDetailCard';
 import Carousel from '../../carousel/Carousel';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../../models/globalState';
+import globalState from '../../../state/globalState';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../../labelButton/LabelButton';
 
@@ -56,7 +55,8 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 			<Label variant="h4" mb={8}>
 				{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}
 				{company.allowCashBooking && company.allowPointBooking && ' or '}
-				{company.allowPointBooking && addCommasToNumber(props.ratePerNightInCents) + ' points'} / night
+				{company.allowPointBooking && StringUtils.addCommasToNumber(props.ratePerNightInCents) + ' points'} /
+				night
 			</Label>
 			<Label variant={'body1'} mb={8}>
 				{props.description}

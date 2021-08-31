@@ -6,7 +6,7 @@ import globalState, {
 	clearPersistentState,
 	getRecoilExternalValue,
 	setRecoilExternalValue
-} from '../../models/globalState';
+} from '../../state/globalState';
 import router from '../../utils/router';
 
 export default class UserService extends Service {
@@ -24,33 +24,33 @@ export default class UserService extends Service {
 		await this.onAfterLogin(axiosResponse.data.data);
 	}
 
-	async requestPasswordByEmail(primaryEmail: string) {
-		return await http.post<RsResponseData<Api.User.Res.ForgotPassword>>('user/password/forgot', {
+	async requestPasswordByEmail(primaryEmail: string): Promise<Api.User.Res.ForgotPassword> {
+		let response = await http.post<RsResponseData<Api.User.Res.ForgotPassword>>('user/password/forgot', {
 			primaryEmail
 		});
+		return response.data.data;
 	}
 
-	async resetPasswordByGuid(passwordResetGuid: string, newPassword: string) {
+	async resetPasswordByGuid(passwordResetGuid: string, newPassword: string): Promise<Api.User.Res.ResetPassword> {
 		newPassword = SparkMD5.hash(newPassword);
-		return await http.put<RsResponseData<Api.User.Res.ResetPassword>>('user/password/reset', {
+		let response = await http.put<RsResponseData<Api.User.Res.ResetPassword>>('user/password/reset', {
 			passwordResetGuid,
 			newPassword
 		});
+		return response.data.data;
 	}
 
-	async guidValidation(guid: string) {
-		return await http.put<RsResponseData<Api.User.Res.ValidateGuid>>('user/password/guid/valid', {
+	async guidValidation(guid: string): Promise<Api.User.Res.ValidateGuid> {
+		let response = await http.put<RsResponseData<Api.User.Res.ValidateGuid>>('user/password/guid/valid', {
 			guid
 		});
+		return response.data.data;
 	}
 
-	async getAllCountries(): Promise<Api.Country.ICountry[]> {
-		let res = await http.get<RsResponseData<Api.Country.Res.AllCountries>>('country/all');
-		return res.data.data.countries;
-	}
-	async createNewCustomer(customer: Api.Customer.Req.Create) {
+	async createNewCustomer(customer: Api.Customer.Req.Create): Promise<Api.Customer.Res.Create> {
 		customer.password = SparkMD5.hash(customer.password);
-		return await http.post<RsResponseData<Api.Customer.Res.Create>>('customer', customer);
+		let response = await http.post<RsResponseData<Api.Customer.Res.Create>>('customer', customer);
+		return response.data.data;
 	}
 
 	async refreshUser(): Promise<void> {
@@ -71,10 +71,11 @@ export default class UserService extends Service {
 		router.navigate('/').catch(console.error);
 	}
 
-	async updatePassword(data: Api.User.Req.UpdatePassword) {
+	async updatePassword(data: Api.User.Req.UpdatePassword): Promise<boolean> {
 		data.old = SparkMD5.hash(data.old);
 		data.new = SparkMD5.hash(data.new);
-		return await http.put<RsResponseData<boolean>>('user/password', data);
+		let response = await http.put<RsResponseData<boolean>>('user/password', data);
+		return response.data.data;
 	}
 
 	private async onAfterLogin(user: Api.User.Res.Detail) {

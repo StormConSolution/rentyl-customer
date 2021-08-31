@@ -101,14 +101,20 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Label variant={'body1'}>{`${props.childCount} Children`}</Label>
 			<hr />
 			<Accordion isOpen titleReact={<Label variant={'h4'}>DATES</Label>}>
-				<Label variant={'body1'}>{DateUtils.daysBetween(props.departureDate, props.arrivalDate)} Nights</Label>
+				<Label variant={'body1'}>
+					{DateUtils.daysBetweenStartAndEndDates(new Date(props.departureDate), new Date(props.arrivalDate))}{' '}
+					Nights
+				</Label>
 				{renderItemizedCostPerNight()}
 				<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 					<Label variant={'h4'}>Total: </Label>
 					<Label variant={'h4'}>${StringUtils.formatMoney(props.accommodationTotalCents)}</Label>
 				</Box>
 			</Accordion>
-
+			<Label variant={'body1'}>
+				{DateUtils.daysBetweenStartAndEndDates(new Date(props.departureDate), new Date(props.arrivalDate))}{' '}
+				Nights
+			</Label>
 			<hr />
 			{props.upsellPackages.length > 0 && (
 				<>

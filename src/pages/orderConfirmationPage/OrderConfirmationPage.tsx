@@ -8,7 +8,7 @@ import serviceFactory from '../../services/serviceFactory';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import { addCommasToNumber, DateUtils } from '../../utils/utils';
+import { DateUtils, StringUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Paper from '../../components/paper/Paper';
 
@@ -78,7 +78,7 @@ const OrderConfirmationPage = () => {
 							</div>
 						</Box>
 						<Label variant={'h3'} className={'pointsLabel'}>
-							{addCommasToNumber(reward.pointCost)} <span>points</span>
+							{StringUtils.addCommasToNumber(reward.pointCost)} <span>points</span>
 						</Label>
 					</Box>
 				</Paper>

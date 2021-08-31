@@ -1,11 +1,11 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
-import { addCommasToNumber, NumberUtils, StringUtils } from '../../utils/utils';
+import { NumberUtils, StringUtils } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface DestinationSummaryAccommodationListProps {
@@ -49,7 +49,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 					)}
 					{company.allowPointBooking === 1 && (
 						<Label variant={company.allowCashBooking !== 1 ? 'h4' : 'body2'} className="points">
-							{addCommasToNumber(
+							{StringUtils.addCommasToNumber(
 								NumberUtils.convertCentsToPoints(accommodation.prices[0].priceCents, 10)
 							)}{' '}
 							pts

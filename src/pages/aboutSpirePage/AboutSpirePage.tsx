@@ -16,7 +16,7 @@ import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import BookNowImage from '../../components/bookNowImage/BookNowImage';
 import Carousel from '../../components/carousel/Carousel';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import promotionWheelData, { IPromotionWheel } from './PromotionWheelData';
 
 const AboutSpirePage: React.FC = () => {

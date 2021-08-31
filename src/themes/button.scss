@@ -1,0 +1,31 @@
+.rsButton {
+	&.contained {
+		&.primary {
+			background-color: theme-var($buttonLinkColor) !important;
+			color: #ffffff;
+			border-radius: 20px 0;
+			padding: 0 24px;
+			height: 40px;
+
+			.rsLabel {
+				color: #ffffff;
+			}
+		}
+
+		&.secondary {
+			background-color: #ffffff !important;
+			color: theme-var($buttonLinkColor);
+			border: 2px solid theme-var($buttonLinkColor);
+			border-radius: 20px 0;
+			padding: 0 24px;
+			height: 40px;
+
+			.rsLabel {
+				color: theme-var($buttonLinkColor);
+			}
+		}
+	}
+	&:disabled {
+		cursor: not-allowed;
+	}
+}

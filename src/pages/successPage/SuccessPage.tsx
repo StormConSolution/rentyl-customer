@@ -10,7 +10,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import LabelLink from '../../components/labelLink/LabelLink';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 
 interface SuccessPageProps {}
 type SuccessData = {

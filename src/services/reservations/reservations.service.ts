@@ -82,11 +82,6 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getPackagesByIds(data: Api.UpsellPackage.Req.Get): Promise<RsResponseData<Api.UpsellPackage.Res.Get[]>> {
-		let response = await http.get<RsResponseData<Api.UpsellPackage.Res.Get[]>>('package', data);
-		return response.data;
-	}
-
 	private refreshUser() {
 		this.userService.refreshUser().catch(console.error);
 	}

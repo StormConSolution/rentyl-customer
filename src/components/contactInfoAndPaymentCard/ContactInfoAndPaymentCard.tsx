@@ -7,7 +7,7 @@ import LabelInput from '../labelInput/LabelInput';
 import Paper from '../paper/Paper';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import PaymentService from '../../services/payment/payment.service';
 import rsToasts from '@bit/redsky.framework.toast';
@@ -109,7 +109,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	}, [props.usePoints]);
 
 	useEffect(() => {
-		let readyId = paymentService.subscribeToSpreedlyReady((frame: any) => {
+		let readyId = paymentService.subscribeToSpreedlyReady(() => {
 			window.Spreedly.setStyle(
 				'number',
 				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
@@ -136,7 +136,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				}
 			) => {
 				if (name === 'number') {
-					let numberParent = numberRef.current;
 					if (type === 'focus') {
 						window.Spreedly.setStyle('number', 'border: 1px solid #004b98;');
 					}
@@ -159,7 +158,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					}
 				}
 				if (name === 'cvv') {
-					let cvvParent = cvvRef.current;
 					if (type === 'focus') {
 						window.Spreedly.setStyle('cvv', 'border: 1px solid #004b98;');
 					}
@@ -215,8 +213,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 			!control.value.toString().includes('/') &&
 			control.value.toString().length === 4
 		) {
-			let newValue = control.value.toString().slice(0, 2) + '/' + control.value.toString().slice(2, 4);
-			control.value = newValue;
+			control.value = control.value.toString().slice(0, 2) + '/' + control.value.toString().slice(2, 4);
 		}
 		creditCardObj.update(control);
 		let isFormValid = await creditCardObj.isValid();
@@ -253,7 +250,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				}
 			];
 
-		return user.paymentMethods.map((item, index) => {
+		return user.paymentMethods.map((item) => {
 			return {
 				selected: item.id === existingCardId,
 				text: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,

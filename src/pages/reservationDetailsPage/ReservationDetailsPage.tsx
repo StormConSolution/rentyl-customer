@@ -11,7 +11,7 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
@@ -87,7 +87,7 @@ const ReservationDetailsPage: React.FC = () => {
 					<ItineraryInfoCard
 						backButton={{
 							link: '/reservations/itinerary/details?ii=' + reservation.itineraryId,
-							label: '< Back to itineraries'
+							label: '< Back to itinerary Details'
 						}}
 						logoImgUrl={reservation.destination.logoUrl}
 						name={reservation.accommodation.name}
@@ -190,6 +190,7 @@ const ReservationDetailsPage: React.FC = () => {
 									.catch(console.error);
 							}}
 							isEdit
+							isPastReservation={new Date(reservation.arrivalDate).getTime() < Date.now()}
 							isOpen
 						/>
 					</div>

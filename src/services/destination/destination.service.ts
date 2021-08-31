@@ -33,14 +33,4 @@ export default class DestinationService extends Service {
 		);
 		return response.data;
 	}
-
-	async searchAvailableAccommodationsByDestination(
-		data: Api.Accommodation.Req.Availability
-	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
-		const response = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
-			'/accommodation/availability',
-			WebUtils.convertDataForUrlParams(data)
-		);
-		return response.data;
-	}
 }

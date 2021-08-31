@@ -2,7 +2,6 @@ import * as React from 'react';
 import './AccountAddressPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import { useEffect, useState } from 'react';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -19,8 +18,8 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import CountryService from '../../services/country/country.service';
 import UserAddressService from '../../services/userAddress/userAddress.service';
-import { useRecoilState } from 'recoil';
-import globalState from '../../models/globalState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 
 let country = 'US';
@@ -30,10 +29,9 @@ let isDefault: 1 | 0 = 0;
 const AccountAddressPage: React.FC = () => {
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
-	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [addressList, setAddressList] = useState<Api.User.Address[]>([]);
 	const [isValidForm, setIsValidForm] = useState<boolean>(false);
-	// const [addressObj, setAddressObj] = useState<Api.User.Address>();
 	const [countryList, setCountryList] = useState<
 		{ value: number | string; text: number | string; selected: boolean }[]
 	>([]);
@@ -66,7 +64,7 @@ const AccountAddressPage: React.FC = () => {
 		async function getCountries() {
 			try {
 				let countries = await countryService.getAllCountries();
-				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
+				setCountryList(formatStateOrCountryListForSelect(countries.countries));
 			} catch (e) {
 				console.error('getCountries', e);
 				throw rsToasts.error('Country list is unavailable.', '', 5000);
@@ -81,8 +79,8 @@ const AccountAddressPage: React.FC = () => {
 			if (!selectedCountry) return;
 			try {
 				let response = await countryService.getStates(`${selectedCountry.value}`);
-				if (response.data.data.states) {
-					let newStates = formatStateOrCountryListForSelect(response.data.data.states);
+				if (response.states) {
+					let newStates = formatStateOrCountryListForSelect(response.states);
 					setStateList(newStates);
 				}
 			} catch (e) {
@@ -185,7 +183,7 @@ const AccountAddressPage: React.FC = () => {
 			let response = await userAddressService.create(addressObj);
 			let newAddressList: Api.User.Address[] = [...addressList, convertObj(response)];
 			if (response.isDefault) {
-				newAddressList = newAddressList.map((item, index) => {
+				newAddressList = newAddressList.map((item) => {
 					return { ...item, isDefault: response.id === item.id ? 1 : 0 };
 				});
 			}
