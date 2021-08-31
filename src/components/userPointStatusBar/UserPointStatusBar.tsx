@@ -5,11 +5,9 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
 import { DateUtils } from '@bit/redsky.framework.rs.utils';
-import UserService from '../../services/user/user.service';
-import serviceFactory from '../../services/serviceFactory';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
-import { addCommasToNumber } from '../../utils/utils';
+import globalState from '../../state/globalState';
+import { StringUtils } from '../../utils/utils';
 
 interface UserPointStatusBarProps {
 	className?: string;
@@ -41,10 +39,10 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 					<b>{user.nextTierTitle}</b> Status, or pay to level up now
 				</Label>
 				<Label className={'yellow'} variant={'h1'}>
-					{addCommasToNumber(user.availablePoints)}
+					{StringUtils.addCommasToNumber(user.availablePoints)}
 				</Label>
 				<Label className={'grey'} variant={'h1'}>
-					{addCommasToNumber(user.pendingPoints)}
+					{StringUtils.addCommasToNumber(user.pendingPoints)}
 				</Label>
 				<Box className={'loadingBarContainer'}>
 					<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />

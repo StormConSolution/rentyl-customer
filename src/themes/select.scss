@@ -1,0 +1,45 @@
+.rsSelect {
+	&.outlined {
+		height: 40px;
+		border-radius: 0;
+		border: 1px solid theme-var($greyLineColor);
+
+		.options {
+			background-color: #fcfbf8;
+			border: 1px solid theme-var($greyLineColor);
+			top: 20px;
+
+			li {
+				&:hover {
+					filter: brightness(1);
+					box-shadow: theme-var($primaryBoxShadowColor);
+				}
+			}
+		}
+
+		.label {
+			top: 0;
+			bottom: 0;
+			left: 11px;
+		}
+
+		.input {
+			font-family: 'MrsEavesXL', sans-serif;
+			color: theme-var($primaryTextColor) !important;
+			padding: 0;
+
+			&:not(:placeholder-shown) + .label {
+				transform: scale(0.7) translateY(-29px) !important;
+			}
+		}
+
+		&:focus-within {
+			border-color: theme-var($buttonLinkColor) !important;
+			color: theme-var($buttonLinkColor) !important;
+
+			.label {
+				transform: scale(0.8) translateY(-25px) !important;
+			}
+		}
+	}
+}

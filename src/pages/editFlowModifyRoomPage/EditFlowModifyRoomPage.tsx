@@ -5,7 +5,6 @@ import Label from '@bit/redsky.framework.rs.label';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import rsToasts from '@bit/redsky.framework.toast';
 import { formatFilterDateForServer } from '../../utils/utils';
@@ -23,6 +22,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import ConfirmChangeRoomPopup, {
 	ConfirmChangeRoomPopupProps
 } from '../../popups/confirmChangeRoomPopup/ConfirmChangeRoomPopup';
+import AccommodationService from '../../services/accommodation/accommodation.service';
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
@@ -31,7 +31,7 @@ const EditFlowModifyRoomPage = () => {
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
@@ -81,7 +81,7 @@ const EditFlowModifyRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);

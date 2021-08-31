@@ -24,7 +24,7 @@ import EditAccommodationPopup, {
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
 

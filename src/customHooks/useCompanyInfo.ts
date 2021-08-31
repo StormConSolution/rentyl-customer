@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import globalState, { setRecoilExternalValue } from '../models/globalState';
+import globalState, { setRecoilExternalValue } from '../state/globalState';
 import serviceFactory from '../services/serviceFactory';
 import CompanyService from '../services/company/company.service';
 

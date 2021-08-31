@@ -14,7 +14,7 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 
 const RewardDetailPage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');

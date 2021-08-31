@@ -2,11 +2,9 @@ import React from 'react';
 import './PointsOrLogin.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
-import { addCommasToNumber } from '../../utils/utils';
-import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
+import { useRecoilValue } from 'recoil';
+import { StringUtils } from '../../utils/utils';
 
 interface PointsOrLoginProps {
 	className?: string;
@@ -21,13 +19,13 @@ const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
 					<div className={'availablePointsContainer'}>
 						<Label variant={'h4'}>Available Points</Label>
 						<Label className={'availablePointsNumber'} variant={'h1'}>
-							{addCommasToNumber(user.availablePoints)}
+							{StringUtils.addCommasToNumber(user.availablePoints)}
 						</Label>
 					</div>
 					<div className={'pendingPointsContainer'}>
 						<Label variant={'h4'}>Points Pending</Label>
 						<Label className={'pendingPointsNumber'} variant={'h1'}>
-							{addCommasToNumber(user.pendingPoints)}
+							{StringUtils.addCommasToNumber(user.pendingPoints)}
 						</Label>
 					</div>
 				</div>

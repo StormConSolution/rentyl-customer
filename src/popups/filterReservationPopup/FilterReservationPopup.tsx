@@ -9,7 +9,7 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import moment from 'moment';
 import { useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
-import { addCommasToNumber } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	onClickApply: (
@@ -80,7 +80,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									setPriceRangeMin(value);
 									(document.querySelector(
 										'.rsFilterReservationPopup .priceMin > input'
-									) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+									) as HTMLInputElement).value = StringUtils.addCommasToNumber(
+										('' + value).replace(/\D/g, '')
+									);
 								}}
 								initialValue={priceRangeMin}
 							/>
@@ -92,7 +94,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									setPriceRangeMax(value);
 									(document.querySelector(
 										'.rsFilterReservationPopup .priceMax > input'
-									) as HTMLInputElement).value = addCommasToNumber(('' + value).replace(/\D/g, ''));
+									) as HTMLInputElement).value = StringUtils.addCommasToNumber(
+										('' + value).replace(/\D/g, '')
+									);
 								}}
 								initialValue={priceRangeMax}
 							/>

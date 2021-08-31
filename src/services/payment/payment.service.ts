@@ -154,9 +154,9 @@ export default class PaymentService extends Service {
 	}
 
 	async delete(id: number): Promise<Api.Payment.Res.Delete> {
-		let result = await http.delete('payment', { id });
+		let result = await http.delete<RsResponseData<Api.Payment.Res.Delete>>('payment', { id });
 		this.refreshUser();
-		return result;
+		return result.data.data;
 	}
 
 	private refreshUser() {

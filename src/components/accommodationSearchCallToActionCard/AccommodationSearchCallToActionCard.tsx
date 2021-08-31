@@ -7,7 +7,7 @@ import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
-import { addCommasToNumber } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 
 interface AccommodationSearchCallToActionCardProps {
 	points: number;
@@ -43,7 +43,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 								Size
 							</Label>
 							<Label className={'sizeContentLabel'} variant={'body2'}>
-								{addCommasToNumber(props.squareFeet)}sq.
+								{StringUtils.addCommasToNumber(props.squareFeet)}sq.
 							</Label>
 						</Box>
 					)}
@@ -60,7 +60,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 							Earn Up To
 						</Label>
 						<Label className={'earnContent'} variant={'h4'}>
-							{addCommasToNumber(props.points)} points
+							{StringUtils.addCommasToNumber(props.points)} points
 						</Label>
 					</Box>
 				</Box>
@@ -109,7 +109,7 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					Earn Up To
 				</Label>
 				<Label className={'pointsLabel'} variant={'h2'}>
-					{addCommasToNumber(props.points)} points
+					{StringUtils.addCommasToNumber(props.points)} points
 				</Label>
 				<LabelButton
 					className={'bookNowBtn'}

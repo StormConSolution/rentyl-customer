@@ -11,7 +11,7 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';

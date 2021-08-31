@@ -19,7 +19,7 @@ import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoC
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
