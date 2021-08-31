@@ -9,6 +9,8 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LabelLink from '../../components/labelLink/LabelLink';
 import { FooterLinks } from '../../components/footer/FooterLinks';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../models/globalState';
 
 interface SuccessPageProps {}
 type SuccessData = {
@@ -18,6 +20,7 @@ type SuccessData = {
 
 const SuccessPage: React.FC<SuccessPageProps> = (props) => {
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
+	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	let successData: SuccessData = JSON.parse(params.data);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 
@@ -43,7 +46,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props) => {
 		<Page className={'rsSuccessPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<Box className={'contentWrapper'}>
-					<img src={require('../../images/FullLogo-StandardBlack.png')} alt={'Spire Logo'} />
+					<img src={company.wideLogoUrl} alt={'Spire Logo'} />
 					<Label variant={'h1'} mt={20}>
 						Thank you for your reservation at
 						<br /> <span>{successData.destinationName}</span>
