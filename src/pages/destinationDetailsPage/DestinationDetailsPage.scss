@@ -1,5 +1,18 @@
 @import '../../themes/themes';
 .rsDestinationDetailsPage {
+	.rsAccordion {
+		width: fit-content;
+		width: -moz-fit-content;
+		.articleItemHeader {
+			padding: 0;
+			.rsLabel {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+
 	.sectionOne {
 		position: relative;
 		margin-bottom: 386px;
