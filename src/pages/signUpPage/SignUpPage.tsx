@@ -18,7 +18,6 @@ import rsToasts from '@bit/redsky.framework.toast';
 import { StringUtils } from '../../utils/utils';
 import router from '../../utils/router';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
-import UserAddressService from '../../services/userAddress/userAddress.service';
 import CountryService from '../../services/country/country.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -30,7 +29,6 @@ let state = '';
 
 const SignUpPage: React.FC = () => {
 	let userService = serviceFactory.get<UserService>('UserService');
-	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const size = useWindowResizeChange();
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
