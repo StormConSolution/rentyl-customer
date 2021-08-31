@@ -27,7 +27,7 @@ const ReviewCard: React.FC<ReviewCardProps> = (props) => {
 		<Box className={'rsReviewCard'} maxWidth={'70%'}>
 			<Label variant={'h4'}>{props.guestName}</Label>
 			<Label variant={'caption'} margin={'6px 0'}>
-				{DateUtils.displayUserDate(new Date())}
+				{DateUtils.displayUserDate(props.createdOn)}
 			</Label>
 			<StarRating size={'small16px'} rating={props.rating} />
 			<Label
