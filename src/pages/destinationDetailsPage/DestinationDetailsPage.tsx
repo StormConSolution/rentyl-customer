@@ -37,6 +37,8 @@ import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import Accordion from '@bit/redsky.framework.rs.accordion';
+import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 
 interface DestinationDetailsPageProps {}
 
@@ -65,6 +67,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
+	const [rateCode, setRateCode] = useState<string>('');
+	const [validCode, setValidCode] = useState<boolean>(true);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		destinationId: params.destinationId,
 		startDate: initialStartDate.format('YYYY-MM-DD'),
@@ -99,9 +103,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			}
 			try {
 				let result = await accommodationService.availability(newSearchQueryObj);
+				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
 			} catch (e) {
+				setValidCode(rateCode === '');
 				console.error(e);
 			}
 		}
@@ -182,7 +188,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	}
 
 	function updateSearchQueryObj(
-		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
+		key:
+			| 'startDate'
+			| 'endDate'
+			| 'adults'
+			| 'children'
+			| 'priceRangeMin'
+			| 'priceRangeMax'
+			| 'pagination'
+			| 'rateCode',
 		value: any
 	) {
 		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
@@ -192,7 +206,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj[key] = value;
+			if (value === '') delete createSearchQueryObj[key];
+			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
 	}
@@ -226,6 +241,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							departureDate: searchQueryObj.endDate as string,
 							packages: []
 						};
+						if (searchQueryObj.rateCode) newRoom.rateCode = searchQueryObj.rateCode;
 						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
@@ -266,7 +282,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						},
 						{
 							label: 'Max Occupancy',
-							datum: item.maxOccupancyCount
+							datum: item.maxOccupantCount
 						},
 						{
 							label: 'ADA Compliant',
@@ -481,40 +497,57 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						Available Stays
 					</Label>
 					{size !== 'small' ? (
-						<FilterBar
-							className={'filterBar'}
-							startDate={startDateControl}
-							endDate={endDateControl}
-							onDatesChange={onDatesChange}
-							focusedInput={focusedInput}
-							onFocusChange={setFocusedInput}
-							monthsToShow={2}
-							onChangeAdults={(value) => {
-								if (value === '') value = 0;
-								updateSearchQueryObj('adults', parseInt(value));
-							}}
-							onChangeChildren={(value) => {
-								if (value !== '') updateSearchQueryObj('children', parseInt(value));
-							}}
-							onChangePriceMin={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMin', value);
+						<>
+							<FilterBar
+								className={'filterBar'}
+								startDate={startDateControl}
+								endDate={endDateControl}
+								onDatesChange={onDatesChange}
+								focusedInput={focusedInput}
+								onFocusChange={setFocusedInput}
+								monthsToShow={2}
+								onChangeAdults={(value) => {
+									if (value === '') value = 0;
+									updateSearchQueryObj('adults', parseInt(value));
+								}}
+								onChangeChildren={(value) => {
+									if (value !== '') updateSearchQueryObj('children', parseInt(value));
+								}}
+								onChangePriceMin={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMin', value);
+									}
+								}}
+								onChangePriceMax={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMax', value);
+									}
+								}}
+								adultsInitialInput={searchQueryObj.adults.toString()}
+								childrenInitialInput={searchQueryObj.children.toString()}
+								initialPriceMax={
+									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 								}
-							}}
-							onChangePriceMax={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMax', value);
+								initialPriceMin={
+									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 								}
-							}}
-							adultsInitialInput={searchQueryObj.adults.toString()}
-							childrenInitialInput={searchQueryObj.children.toString()}
-							initialPriceMax={
-								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
-							}
-							initialPriceMin={
-								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
-							}
-						/>
+							/>
+							<Accordion
+								hideHoverEffect
+								hideChevron
+								children={
+									<RateCodeSelect
+										apply={(value) => {
+											setRateCode(value);
+											updateSearchQueryObj('rateCode', value);
+										}}
+										code={rateCode}
+										valid={!validCode}
+									/>
+								}
+								titleReact={<Label variant={'button'}>toggle rate code</Label>}
+							/>
+						</>
 					) : (
 						<LabelButton
 							look={'none'}
