@@ -9,7 +9,7 @@ import Carousel from '../../components/carousel/Carousel';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardHeaderBar from '../../components/rewardHeaderBar/RewardHeaderBar';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { capitalize, StringUtils } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import rsToasts from '@bit/redsky.framework.toast';

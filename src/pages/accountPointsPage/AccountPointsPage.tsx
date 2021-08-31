@@ -95,8 +95,8 @@ const AccountPointsPage: React.FC = () => {
 	function renderPoints(type: string) {
 		if (!pointHistory) return;
 		return pointHistory.map((point, index) => {
-			if (type === 'pending' && point.status !== 'PENDING') return <></>;
-			if (type === 'completed' && point.status === 'PENDING') return <></>;
+			if (type === 'pending' && point.status !== 'PENDING') return false;
+			if (type === 'completed' && point.status === 'PENDING') return false;
 			return (
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
 					<img className={'pointImage'} src={getMedia(point)} alt={''} />

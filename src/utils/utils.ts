@@ -120,18 +120,6 @@ function formatDate(date: string) {
 	return cleaned.match(/^(\d{2})(\d{2})(\d{4})$/);
 }
 
-export function removeExtraSpacesReturnsTabs(string: string) {
-	let strippedString = string.replace(/\r?\n|\t|\r/g, ' ').match(/[^ ]+/g);
-	if (strippedString) return strippedString.join(' ');
-	else return '';
-}
-
-export function capitalize(s: string) {
-	return s.toLowerCase().replace(/\b./g, function (a) {
-		return a.toUpperCase();
-	});
-}
-
 export function isRouteUnauthorized(route: string): boolean {
 	const company = getRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables | undefined>(
 		globalState.company

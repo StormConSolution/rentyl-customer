@@ -3,7 +3,7 @@ import './RewardItemCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import IconLabel from '../../../components/iconLabel/IconLabel';
 import router from '../../../utils/router';
-import { capitalize, StringUtils } from '../../../utils/utils';
+import { StringUtils } from '../../../utils/utils';
 
 interface RewardItemCardProps {
 	imgPath: string;
