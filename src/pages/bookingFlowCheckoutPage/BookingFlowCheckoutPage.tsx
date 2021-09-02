@@ -27,6 +27,7 @@ import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 let existingCardId = 0;
 
@@ -399,14 +400,7 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Add Room'}
-					onClick={() => {
-						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`).catch(console.error);
-					}}
-				/>
+				<LinkButton label={'Add Room'} path={`/booking/add-room?data=${JSON.stringify(params.data)}`} />
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>

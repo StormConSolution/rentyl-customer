@@ -6,7 +6,7 @@ import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import serviceFactory from '../../services/serviceFactory';
-import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
+import { DateUtils, formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -58,6 +58,10 @@ const EditFlowModifyRoomPage = () => {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 				updateSearchQueryObj('rateCode', res.rateCode);
+				onDatesChange(
+					moment(DateUtils.displayUserDate(res.arrivalDate)),
+					moment(DateUtils.displayUserDate(res.departureDate))
+				);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
 				router.navigate('/reservations').catch(console.error);
