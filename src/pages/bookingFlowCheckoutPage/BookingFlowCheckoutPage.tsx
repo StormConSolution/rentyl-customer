@@ -3,7 +3,6 @@ import './BookingFlowCheckoutPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
@@ -14,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
@@ -27,6 +26,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
 
 let existingCardId = 0;
@@ -85,7 +85,10 @@ const BookingFlowCheckoutPage = () => {
 				let destination = await destinationService.getDestinationDetails(destinationId);
 				setDestinationDetails(destination);
 			} catch (e) {
-				rsToasts.error('Unable to get destination information', 'Server Error');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get destination information.'),
+					'Server Error'
+				);
 				router.navigate('/reservation/availability').catch(console.error);
 			}
 		}

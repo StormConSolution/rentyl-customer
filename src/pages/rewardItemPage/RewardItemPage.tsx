@@ -5,7 +5,6 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import FeaturedCategoryCard from './featuredCategoryCard/FeaturedCategoryCard';
 import { SelectOptions } from '../../components/Select/Select';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
-import rsToasts from '@bit/redsky.framework.toast';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from './rewardCategoryCard/RewardCategoryCard';
@@ -21,6 +20,8 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { useRecoilValue } from 'recoil';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../../utils/utils';
 import globalState from '../../state/globalState';
 
 const RewardItemPage: React.FC = () => {
@@ -51,7 +52,7 @@ const RewardItemPage: React.FC = () => {
 				try {
 					if (params.categories) urlSelectedCategories = JSON.parse(params.categories);
 				} catch (e) {
-					rsToasts.error('Cannot get a list of categories.');
+					rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get a list of categories.'), 'Server Error');
 				}
 				let activeCategoriesResponse = await rewardService.getAllActiveCategories();
 				let allActiveCategories: Api.Reward.Category.Res.Get[] = activeCategoriesResponse.data;
@@ -99,7 +100,7 @@ const RewardItemPage: React.FC = () => {
 					setCategoryPagedList(pagedCategories.data);
 					setCardTotal(pagedCategories.total || 0);
 				} catch (e) {
-					rsToasts.error('Cannot get the list of rewards.');
+					rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get the list of rewards.'), 'Server Error');
 				}
 			} else {
 				let filter = formatFilterQuery();
@@ -194,7 +195,7 @@ const RewardItemPage: React.FC = () => {
 
 	function handleSidebarFilters(selectedFromCategoryTile: boolean) {
 		if (!params.categories && !selectedFromCategoryTile) {
-			rsToasts.error('Must have at least one category selected.');
+			rsToastify.error('Must have at least one category selected.', 'Select A Category!');
 			return;
 		}
 		setShowCategoryOrRewardCards('reward');

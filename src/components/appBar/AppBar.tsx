@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-
 import './AppBar.scss';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';

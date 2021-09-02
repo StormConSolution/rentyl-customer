@@ -4,7 +4,6 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import LabelButton from '../labelButton/LabelButton';
 import router from '../../utils/router';
-import LinkButton from '../linkButton/LinkButton';
 
 interface AccountHeaderProps {
 	selected:

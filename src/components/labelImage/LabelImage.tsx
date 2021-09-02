@@ -1,7 +1,6 @@
-import React, { StyleHTMLAttributes } from 'react';
+import React from 'react';
 import './LabelImage.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box } from '@bit/redsky.framework.rs.996';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface LabelImageProps {
