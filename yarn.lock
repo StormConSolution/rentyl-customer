@@ -1205,6 +1205,17 @@
   dependencies:
     react "^17.0.2"
 
+"@bit/redsky.framework.rs.toastify@0.0.9":
+  version "0.0.9"
+  resolved "https://node.bit.dev/redsky.framework.rs.toastify/-/redsky.framework.rs.toastify-0.0.9.tgz#b0fcee95e113fc27802f327a1184f1a9c60f95ed"
+  integrity sha1-sPzuleET/CeALzJ6EYTxqcYPle0=
+  dependencies:
+    "@bit/redsky.framework.rs.996" "0.0.35"
+    "@bit/redsky.framework.rs.icon" "0.0.39"
+    "@bit/redsky.framework.rs.label" "0.0.17"
+    react "^17.0.2"
+    react-toastify "^7.0.4"
+
 "@bit/redsky.framework.rs.utils@0.0.34":
   version "0.0.34"
   resolved "https://node.bit.dev/redsky.framework.rs.utils/-/redsky.framework.rs.utils-0.0.34.tgz#f4089751961f40fcd9bc0418ce9b34efaabc2bd5"
@@ -2951,6 +2962,11 @@ clone-deep@^4.0.1:
     is-plain-object "^2.0.4"
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
+
+clsx@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+  integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
 coa@^2.0.2:
   version "2.0.2"
@@ -7903,6 +7919,13 @@ react-test-renderer@^16.0.0-0, react-test-renderer@^16.13.1:
     prop-types "^15.6.2"
     react-is "^16.8.6"
     scheduler "^0.19.1"
+
+react-toastify@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-7.0.4.tgz#7d0b743f2b96f65754264ca6eae31911a82378db"
+  integrity sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==
+  dependencies:
+    clsx "^1.1.1"
 
 react-with-direction@^1.3.1:
   version "1.3.1"

@@ -2,8 +2,8 @@ import React from 'react';
 import './PointsOrLogin.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelLink from '../labelLink/LabelLink';
-import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
 import { StringUtils } from '../../utils/utils';
 
 interface PointsOrLoginProps {

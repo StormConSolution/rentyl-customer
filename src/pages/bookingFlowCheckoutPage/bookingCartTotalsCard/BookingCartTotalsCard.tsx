@@ -5,13 +5,13 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { DateUtils, NumberUtils, StringUtils } from '../../../utils/utils';
+import { DateUtils, NumberUtils, StringUtils, WebUtils } from '../../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
 import serviceFactory from '../../../services/serviceFactory';
 import ReservationsService from '../../../services/reservations/reservations.service';
-import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../../state/globalState';
 
 interface BookingCartTotalsCardProps {
@@ -93,7 +93,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
-				rsToasts.error('This accommodation is no longer available for these dates', 'No Longer Available');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'This accommodation is no longer available for these dates'),
+					'No Longer Available'
+				);
 				let updatedVerifiedAccommodation = { ...verifiedAccommodation };
 				delete updatedVerifiedAccommodation[props.uuid];
 				setVerifiedAccommodation(updatedVerifiedAccommodation);

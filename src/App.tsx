@@ -6,7 +6,6 @@ import './icons/cmsIcons/style.css';
 
 // The following components need to be added to the top level dom since they are full screen overlays
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
-import rsToasts from '@bit/redsky.framework.toast';
 import useLoginState, { LoginStatus } from './customHooks/useLoginState';
 import AppBar from './components/appBar/AppBar';
 import AOS from 'aos';
@@ -18,6 +17,7 @@ import ComparisonDrawer from './popups/comparisonDrawer/ComparisonDrawer';
 import useCompanyInfo from './customHooks/useCompanyInfo';
 import { useSetCustomToast } from './customHooks/useSetCustomToast';
 import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
+import { ToastContainer } from '@bit/redsky.framework.rs.toastify';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
@@ -76,7 +76,7 @@ function App() {
 		<div className={`App ${size}`}>
 			{renderViewsBasedOnLoginStatus()}
 			{popupController.instance}
-			{rsToasts.instance}
+			<ToastContainer />
 		</div>
 	);
 }
