@@ -4,14 +4,13 @@ import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import FilterBar from '../../components/filterBar/FilterBar';
 import Label from '@bit/redsky.framework.rs.label';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { formatFilterDateForServer, StringUtils } from '../../utils/utils';
+import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -30,6 +29,7 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import DateRange = Misc.DateRange;
 import StayParams = Misc.StayParams;
 
@@ -97,7 +97,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error('Cannot find available reservations, try again.');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
 				setValidCode(rateCode === '');
 				popupController.close(SpinningLoaderPopup);
 			}
@@ -119,19 +119,19 @@ const ReservationAvailabilityPage: React.FC = () => {
 	) {
 		if (key === 'adults' && value === 0) {
 			//this should never evaluate to true with current implementations.
-			throw rsToasts.error('Must have at least 1 adult');
+			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
 		}
 		if (key === 'adults' && isNaN(value)) {
-			throw rsToasts.error('# of adults must be a number');
+			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'children' && isNaN(value)) {
-			throw rsToasts.error('# of children must be a number');
+			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
-			throw rsToasts.error('Price min must be a number');
+			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
-			throw rsToasts.error('Price max must be a number');
+			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'priceRangeMin' && searchQueryObj['priceRangeMax'] && value > searchQueryObj['priceRangeMax']) {
 			setErrorMessage('Price min must be lower than the max');
@@ -336,7 +336,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 								onFocusChange={setFocusedInput}
 								monthsToShow={2}
 								onChangeAdults={(value) => {
-									if (value === '' || parseInt(value) === NaN) return;
+									if (value === '' || isNaN(parseInt(value))) return;
 									updateSearchQueryObj('adults', parseInt(value));
 								}}
 								onChangeChildren={(value) => {

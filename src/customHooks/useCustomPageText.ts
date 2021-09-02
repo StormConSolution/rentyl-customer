@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import globalState from '../models/globalState';
+import globalState from '../state/globalState';
 
 // Get's the language type from the browser's preference
 // Language tags returned are based on this RFC: https://tools.ietf.org/rfc/bcp/bcp47.txt

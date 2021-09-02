@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './PackageDetailsPopup.scss';
-import { Popup, popupController } from '@bit/redsky.framework.rs.996';
+import { Popup } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Paper from '../../../components/paper/Paper';
 import DestinationPackageTile from '../../../components/destinationPackageTile/DestinationPackageTile';

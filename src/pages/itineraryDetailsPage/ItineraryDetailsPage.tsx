@@ -3,7 +3,6 @@ import './ItineraryDetailsPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import HeroImage from '../../components/heroImage/HeroImage';
@@ -12,17 +11,18 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
-import { ObjectUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -41,7 +41,10 @@ const ItineraryDetailsPage: React.FC = () => {
 				let res = await reservationService.getItinerary({ itineraryId: params.itineraryId });
 				setItinerary(res);
 			} catch (e) {
-				rsToasts.error('Unable to get itinerary details', 'Itinerary unavailable');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get itinerary details'),
+					'Itinerary unavailable!'
+				);
 			}
 		}
 		getItineraryDetails().catch(console.error);
@@ -139,9 +142,9 @@ const ItineraryDetailsPage: React.FC = () => {
 			});
 			setItinerary(response);
 			popupController.close(SpinningLoaderPopup);
-			rsToasts.success('Successfully updated payment method.');
+			rsToastify.success('Successfully updated payment method.', 'Success!');
 		} catch (e) {
-			rsToasts.error(e.message || 'A server error has occurred');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
 			popupController.close(SpinningLoaderPopup);
 		}
 	}

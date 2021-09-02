@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { WebUtils } from '../utils/utils';
-import rsToasts from '@bit/redsky.framework.toast';
 import routes from '../routes';
 import serviceFactory from '../services/serviceFactory';
 import CompanyService from '../services/company/company.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export function useUpdateExistingPages() {
 	const companyService = serviceFactory.get<CompanyService>('CompanyService');
@@ -21,7 +21,10 @@ export function useUpdateExistingPages() {
 			try {
 				await companyService.updateAvailablePages({ availablePages: newPages });
 			} catch (e) {
-				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
+					'Server Error'
+				);
 			}
 		}
 

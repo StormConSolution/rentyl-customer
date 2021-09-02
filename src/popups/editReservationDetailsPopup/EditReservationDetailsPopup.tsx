@@ -10,7 +10,7 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import moment from 'moment';
-import { DateUtils, formatDateForServer, formatFilterDateForServer } from '../../utils/utils';
+import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';

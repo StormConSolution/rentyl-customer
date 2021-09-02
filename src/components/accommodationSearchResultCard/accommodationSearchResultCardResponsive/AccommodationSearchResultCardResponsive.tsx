@@ -1,11 +1,10 @@
 import * as React from 'react';
 import './AccommodationSearchResultCardResponsive.scss';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../../models/globalState';
+import globalState from '../../../state/globalState';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import { addCommasToNumber } from '../../../utils/utils';
 import AccommodationSearchCallToActionCard from '../../accommodationSearchCallToActionCard/AccommodationSearchCallToActionCard';
 import Carousel from '../../carousel/Carousel';
 import AccommodationSearchDetailCard, {
@@ -67,7 +66,8 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 						<Label variant="h4" className="costs">
 							{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}
 							{company.allowCashBooking && company.allowPointBooking && ' or '}
-							{company.allowPointBooking && addCommasToNumber(props.pointsRatePerNight) + ' points'}
+							{company.allowPointBooking &&
+								StringUtils.addCommasToNumber(props.pointsRatePerNight) + ' points'}
 							/night
 						</Label>
 					)}

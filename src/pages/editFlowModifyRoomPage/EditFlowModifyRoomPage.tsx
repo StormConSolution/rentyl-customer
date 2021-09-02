@@ -5,10 +5,8 @@ import Label from '@bit/redsky.framework.rs.label';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
-import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -23,6 +21,8 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import ConfirmChangeRoomPopup, {
 	ConfirmChangeRoomPopupProps
 } from '../../popups/confirmChangeRoomPopup/ConfirmChangeRoomPopup';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import AccommodationService from '../../services/accommodation/accommodation.service';
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
@@ -31,7 +31,7 @@ const EditFlowModifyRoomPage = () => {
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
@@ -59,7 +59,7 @@ const EditFlowModifyRoomPage = () => {
 				setReservation(res);
 				updateSearchQueryObj('rateCode', res.rateCode);
 			} catch (e) {
-				rsToasts.error('Cannot find reservation.');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
 				router.navigate('/reservations').catch(console.error);
 			}
 		}
@@ -81,12 +81,15 @@ const EditFlowModifyRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error('Unable to get available accommodations.');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get available accommodations.'),
+					'Server Error'
+				);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -112,11 +115,16 @@ const EditFlowModifyRoomPage = () => {
 			| 'rateCode',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
-		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
-		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
-		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
-		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		if (key === 'adults' && value === 0)
+			throw rsToastify.error('There must be at least one adult.', 'Missing or Incorrect Information');
+		if (key === 'adults' && isNaN(value))
+			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
+		if (key === 'children' && isNaN(value))
+			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMin' && isNaN(value))
+			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMax' && isNaN(value))
+			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			if (value === '' || value === undefined) delete createSearchQueryObj[key];
@@ -188,7 +196,10 @@ const EditFlowModifyRoomPage = () => {
 			} catch (e) {
 				popupController.closeAll();
 				setErrorMessage(e.message);
-				rsToasts.error(e.msg, 'Update Failure', 3000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
+					'Server Error'
+				);
 			}
 		}
 	}

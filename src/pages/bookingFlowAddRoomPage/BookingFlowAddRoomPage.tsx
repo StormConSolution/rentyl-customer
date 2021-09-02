@@ -5,10 +5,8 @@ import Label from '@bit/redsky.framework.rs.label';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
-import rsToasts from '@bit/redsky.framework.toast';
-import { formatFilterDateForServer, ObjectUtils } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -22,6 +20,7 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import BookingParams = Misc.BookingParams;
 
 const BookingFlowAddRoomPage = () => {
@@ -35,7 +34,6 @@ const BookingFlowAddRoomPage = () => {
 		return item.uuid === params.data.editUuid;
 	});
 
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
@@ -90,13 +88,16 @@ const BookingFlowAddRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
-				rsToasts.error('Unable to get a list of accommodations');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get a list of accommodations.'),
+					'Server Error'
+				);
 				setValidCode(rateCode === '' || rateCode === undefined);
 				popupController.close(SpinningLoaderPopup);
 			}
@@ -123,11 +124,16 @@ const BookingFlowAddRoomPage = () => {
 			| 'rateCode',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
-		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
-		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
-		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
-		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		if (key === 'adults' && value === 0)
+			throw rsToastify.error('There must be at least one adult.', 'Information Required');
+		if (key === 'adults' && isNaN(value))
+			throw rsToastify.error('# of adults must be a number', 'Incorrect or Missing Information');
+		if (key === 'children' && isNaN(value))
+			throw rsToastify.error('# of children must be a number', 'Incorrect or Missing Information');
+		if (key === 'priceRangeMin' && isNaN(value))
+			throw rsToastify.error('Price min must be a number', 'Incorrect or Missing Information');
+		if (key === 'priceRangeMax' && isNaN(value))
+			throw rsToastify.error('Price max must be a number', 'Incorrect or Missing Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			if (value === '' || value === undefined) delete createSearchQueryObj[key];

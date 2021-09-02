@@ -2,7 +2,6 @@ import * as React from 'react';
 import './AccountAddressPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
-import UserService from '../../services/user/user.service';
 import { useEffect, useState } from 'react';
 import AccountHeader from '../../components/accountHeader/AccountHeader';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -13,15 +12,16 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import AccountAddressTile from '../../components/accountAddressTile/AccountAddressTile';
 import LabelInput from '../../components/labelInput/LabelInput';
-import rsToasts from '@bit/redsky.framework.toast';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import LabelButton from '../../components/labelButton/LabelButton';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import CountryService from '../../services/country/country.service';
 import UserAddressService from '../../services/userAddress/userAddress.service';
-import { useRecoilState } from 'recoil';
-import globalState from '../../models/globalState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../../utils/utils';
 
 let country = 'US';
 let state = '';
@@ -30,10 +30,9 @@ let isDefault: 1 | 0 = 0;
 const AccountAddressPage: React.FC = () => {
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
-	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [addressList, setAddressList] = useState<Api.User.Address[]>([]);
 	const [isValidForm, setIsValidForm] = useState<boolean>(false);
-	// const [addressObj, setAddressObj] = useState<Api.User.Address>();
 	const [countryList, setCountryList] = useState<
 		{ value: number | string; text: number | string; selected: boolean }[]
 	>([]);
@@ -66,10 +65,10 @@ const AccountAddressPage: React.FC = () => {
 		async function getCountries() {
 			try {
 				let countries = await countryService.getAllCountries();
-				setCountryList(formatStateOrCountryListForSelect(countries.data.data.countries));
+				setCountryList(formatStateOrCountryListForSelect(countries.countries));
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToasts.error('Country list is unavailable.', '', 5000);
+				throw rsToastify.error(WebUtils.getRsErrorMessage(e, 'Country list is unavailable'), 'Server Error');
 			}
 		}
 		getCountries().catch(console.error);
@@ -81,12 +80,15 @@ const AccountAddressPage: React.FC = () => {
 			if (!selectedCountry) return;
 			try {
 				let response = await countryService.getStates(`${selectedCountry.value}`);
-				if (response.data.data.states) {
-					let newStates = formatStateOrCountryListForSelect(response.data.data.states);
+				if (response.states) {
+					let newStates = formatStateOrCountryListForSelect(response.states);
 					setStateList(newStates);
 				}
 			} catch (e) {
-				rsToasts.error('Unable to get states for given country', '', 5000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get states for given country'),
+					'Server Error'
+				);
 			}
 		}
 		getStates().catch(console.error);
@@ -128,7 +130,7 @@ const AccountAddressPage: React.FC = () => {
 		let data = { id: addressId, isDefault: 1 };
 		try {
 			let response = await userAddressService.update(data);
-			if (response) rsToasts.success('Update Successful', '', 5000);
+			if (response) rsToastify.success('Address successfully updated.', 'Update Successful');
 
 			let addresses = [...addressList];
 			addresses = addresses.map((item) => {
@@ -136,7 +138,7 @@ const AccountAddressPage: React.FC = () => {
 			});
 			setAddressList(addresses);
 		} catch (e) {
-			rsToasts.error('Address update failed, try again', '', 5000);
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Address update failed, try again.'), 'Server Error');
 		}
 	}
 
@@ -185,14 +187,14 @@ const AccountAddressPage: React.FC = () => {
 			let response = await userAddressService.create(addressObj);
 			let newAddressList: Api.User.Address[] = [...addressList, convertObj(response)];
 			if (response.isDefault) {
-				newAddressList = newAddressList.map((item, index) => {
+				newAddressList = newAddressList.map((item) => {
 					return { ...item, isDefault: response.id === item.id ? 1 : 0 };
 				});
 			}
 			newAddressObj.resetToInitialValue();
 			setAddressList(newAddressList);
 		} catch (e) {
-			rsToasts.error('Unable to save address, try again', '', 5000);
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to save address, try again'), 'Server Error');
 		}
 	}
 
@@ -202,7 +204,7 @@ const AccountAddressPage: React.FC = () => {
 			let response = await userAddressService.delete(id);
 			let newAddressList = addressList.filter((item) => item.id !== id);
 			setAddressList(newAddressList);
-			if (response) rsToasts.success('Delete Successful', '', 5000);
+			if (response) rsToastify.success('Address successfully removed.', 'Delete Successful');
 		} catch (e) {}
 	}
 

@@ -28,7 +28,7 @@ import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModif
 import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExistingPackagesPage';
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
-import globalState, { getRecoilExternalValue } from './models/globalState';
+import globalState, { getRecoilExternalValue } from './state/globalState';
 import DestinationReviewPage from './pages/destinationReviewPage/DestinationReviewPage';
 
 export const routes: RouteDetails[] = [

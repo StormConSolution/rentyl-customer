@@ -7,7 +7,6 @@ import Label from '@bit/redsky.framework.rs.label';
 import ReservationInfoCard from '../../reservationInfoCard/ReservationInfoCard';
 import Paper from '../../paper/Paper';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import { addCommasToNumber } from '../../../utils/utils';
 import LabelLink from '../../labelLink/LabelLink';
 
 interface ReservationCardResponsiveProps {
@@ -78,7 +77,7 @@ const ReservationCardResponsive: React.FC<ReservationCardResponsiveProps> = (pro
 						<Label variant={'caption'} mb={5}>
 							Points Paid
 						</Label>
-						<Label variant={'h2'}>{addCommasToNumber(props.totalPoints)}</Label>
+						<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.totalPoints)}</Label>
 					</div>
 				)}
 				<LabelLink path={props.linkPath} label={'view details'} variant={'caption'} />

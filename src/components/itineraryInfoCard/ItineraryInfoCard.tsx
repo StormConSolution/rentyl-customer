@@ -2,7 +2,7 @@ import * as React from 'react';
 import './ItineraryInfoCard.scss';
 import LabelLink from '../labelLink/LabelLink';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../labelButton/LabelButton';
 import router from '../../utils/router';
 import Paper from '../paper/Paper';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import globalState, { clearPersistentState } from '../models/globalState';
+import globalState, { clearPersistentState } from '../state/globalState';
 import serviceFactory from '../services/serviceFactory';
 import UserService from '../services/user/user.service';
 import { useRecoilState, useRecoilValue } from 'recoil';

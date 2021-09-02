@@ -4,7 +4,6 @@ import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -22,7 +21,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -30,18 +29,19 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import ComparisonService from '../../services/comparison/comparison.service';
 import LabelButton from '../../components/labelButton/LabelButton';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 interface DestinationDetailsPageProps {}
 
-const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
+const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const params = router.getPageUrlParams<{ destinationId: number; startDate?: string; endDate?: string }>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
@@ -83,7 +83,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				let dest = await destinationService.getDestinationDetails(id);
 				if (dest) setDestinationDetails(dest);
 			} catch (e) {
-				rsToasts.error('Cannot get details for this destination');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
+					'Server Error'
+				);
 			}
 		}
 
@@ -134,7 +137,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	function renderFeatures() {
 		if (!destinationDetails || !destinationDetails.features) return;
 		let featureArray: any = [];
-		destinationDetails.features.forEach((item, index) => {
+		destinationDetails.features.forEach((item) => {
 			if (!item.isActive || item.isCarousel) return false;
 			let primaryMedia: any = '';
 			for (let value of item.media) {
@@ -198,11 +201,16 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			| 'rateCode',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
-		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
-		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
-		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
-		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		if (key === 'adults' && value === 0)
+			throw rsToastify.error('There must be at least one adult.', 'Missing or Incorrect Information');
+		if (key === 'adults' && isNaN(value))
+			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
+		if (key === 'children' && isNaN(value))
+			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMin' && isNaN(value))
+			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMax' && isNaN(value))
+			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			if (value === '') delete createSearchQueryObj[key];
@@ -213,7 +221,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
-		return availabilityStayList.map((item, index) => {
+		return availabilityStayList.map((item) => {
 			let media = item.media.map((value) => {
 				return value.urls.imageKit;
 			});
@@ -265,7 +273,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							title: destinationDetails.name,
 							roomTypes: destinationDetails.accommodations
 								.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-								.map((value, index) => {
+								.map((value) => {
 									return {
 										value: value.id,
 										text: value.name,
@@ -488,7 +496,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						</Label>
 					</Box>
 					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-						<iframe frameBorder="0" src={renderMapSource()}></iframe>
+						<iframe frameBorder="0" src={renderMapSource()} />
 					</Box>
 				</Box>
 				<div className={'sectionFive'} ref={availableStaysRef}>

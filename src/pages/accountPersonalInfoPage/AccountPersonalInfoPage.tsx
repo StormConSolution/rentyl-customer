@@ -13,19 +13,19 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import LabelButton from '../../components/labelButton/LabelButton';
-import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { StringUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccountPersonalInfoPageProps {}
 
 let phoneNumber = '';
 
-const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) => {
+const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
@@ -48,9 +48,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 			]),
 			new RsFormControl('new', '', [
 				new RsValidator(RsValidatorEnum.CUSTOM, '', (control) => {
-					return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
-						control.value.toString()
-					);
+					return StringUtils.validateEmail(control.value.toString());
 				}),
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide a new password')
 			]),
@@ -83,8 +81,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 
 	async function updateUserObjForm(control: RsFormControl) {
 		if (control.key === 'fullName') {
-			let newValue = StringUtils.removeLineEndings(control.value.toString());
-			control.value = newValue;
+			control.value = StringUtils.removeLineEndings(control.value.toString());
 		}
 		updateUserObj.update(control);
 		let isFormValid = await updateUserObj.isValid();
@@ -122,10 +119,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 
 		try {
 			let response = await userService.update(newUpdatedUserObj);
-			rsToasts.success('Update Successful!!!');
+			rsToastify.success('Account information successfully updated. ', 'Update Successful!');
 			setUser(response);
 		} catch (e) {
-			rsToasts.error('Update failed, try again');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Update failed, try again'), 'Server Error');
 		}
 	}
 
@@ -136,9 +133,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 		setPasswordFormValid(false);
 		try {
 			let response = await userService.updatePassword(newPasswordForm);
-			if (response.data.data) rsToasts.success('Password Updated!');
+			if (response) rsToastify.success('Password successfully updated.', 'Password Updated!');
 		} catch (e) {
-			rsToasts.error('Failed to update password');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failed to update password'), 'Server Error');
 		}
 	}
 
@@ -157,7 +154,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = (props) 
 							<img src={user.tierBadge} alt={'Tier Badge'} />
 						) : (
 							<div className={'fakeImg'}>
-								<img src={require('../../images/white-spire.png')} />
+								<img src={require('../../images/white-spire.png')} alt={'white spire'} />
 							</div>
 						)}
 						<Box>

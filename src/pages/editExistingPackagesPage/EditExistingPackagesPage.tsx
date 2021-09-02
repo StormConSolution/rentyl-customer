@@ -7,18 +7,18 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import { useEffect, useRef, useState } from 'react';
 import PackageService from '../../services/package/package.service';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
-import rsToasts from '@bit/redsky.framework.toast';
 import { WebUtils } from '../../utils/utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const EditExistingPackagesPage: React.FC = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -27,7 +27,7 @@ const EditExistingPackagesPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [page, setPage] = useState<number>(1);
-	const [perPage, setPerPage] = useState<number>(5);
+	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
 	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
@@ -65,7 +65,10 @@ const EditExistingPackagesPage: React.FC = () => {
 					await getPackages();
 				}
 			} catch (e) {
-				rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
+					'Server Error'
+				);
 			}
 		}
 		getServices().catch(console.error);
@@ -171,7 +174,7 @@ const EditExistingPackagesPage: React.FC = () => {
 				.navigate(`/reservations/itinerary/reservation/details?ri=${params.reservationId}`)
 				.catch(console.error);
 		} catch (e) {
-			rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'), 'Server Error');
 			popupController.close(SpinningLoaderPopup);
 		}
 	}

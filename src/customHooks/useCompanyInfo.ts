@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import globalState, { setRecoilExternalValue } from '../models/globalState';
+import globalState, { setRecoilExternalValue } from '../state/globalState';
 import serviceFactory from '../services/serviceFactory';
 import CompanyService from '../services/company/company.service';
 
@@ -12,6 +12,7 @@ export default function useCompanyInfo(): boolean {
 			let res = await companyService.getCompanyDetails();
 			setRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company, res);
 			setIsCompanyLoaded(true);
+			document.title = res.name;
 		}
 		getCompanyInfo().catch(console.error);
 	}, []);

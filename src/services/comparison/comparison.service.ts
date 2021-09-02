@@ -1,5 +1,5 @@
 import { Service } from '../Service';
-import { ComparisonCardInfo } from '../../models/globalState';
+import { ComparisonCardInfo } from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
 
 export default class ComparisonService extends Service {

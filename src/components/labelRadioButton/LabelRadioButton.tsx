@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './LabelRadioButton.scss';
-import { useState } from 'react';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 

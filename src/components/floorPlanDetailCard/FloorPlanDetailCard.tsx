@@ -1,5 +1,5 @@
 import { Box } from '@bit/redsky.framework.rs.996';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './FloorPlanDetailCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
