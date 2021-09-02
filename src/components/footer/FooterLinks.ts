@@ -15,7 +15,7 @@ export const FooterLinks: FooterLink[] = [
 	},
 	{
 		text: 'Privacy Policy',
-		path: '/privacy'
+		path: '/legal/privacy'
 	},
 	{
 		text: 'About Spire Loyalty',

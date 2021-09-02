@@ -30,7 +30,8 @@ import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExist
 import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
 import globalState, { getRecoilExternalValue } from './state/globalState';
 import DestinationReviewPage from './pages/destinationReviewPage/DestinationReviewPage';
-import UnderConstructionPage from './pages/underConstructionPage/UnderConstructionPage';
+import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
+import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -42,40 +43,16 @@ export const routes: RouteDetails[] = [
 		}
 	},
 	{
-		path: '/privacy',
-		page: UnderConstructionPage,
+		path: '/legal/privacy',
+		page: PrivacyPolicyPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
 		}
 	},
 	{
-		path: '/terms',
-		page: UnderConstructionPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/spire-tiers',
-		page: UnderConstructionPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/buy-points',
-		page: UnderConstructionPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/construction',
-		page: UnderConstructionPage,
+		path: '/legal/terms-and-conditions',
+		page: TermsAndConditionsPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
