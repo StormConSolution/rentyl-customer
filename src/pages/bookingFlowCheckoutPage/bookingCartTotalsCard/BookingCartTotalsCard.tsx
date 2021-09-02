@@ -367,30 +367,32 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						</Label>
 					</Box>
 				</Accordion>
-				<Accordion
-					isOpen
-					titleReact={
-						<Label variant={'h4'} width={'170px'}>
-							Taxes and Fees
-						</Label>
-					}
-				>
-					{renderTaxesAndFees()}
-					<Box alignItems={'center'} display={'flex'}>
-						<Label variant={'h4'}>Total</Label>
-						<Label variant={'h4'} marginLeft={'auto'}>
-							{NumberUtils.displayPointsOrCash(
-								props.usePoints
-									? NumberUtils.convertCentsToPoints(
-											localAccommodation.prices.taxAndFeeTotalInCents,
-											10
-									  )
-									: localAccommodation.prices.taxAndFeeTotalInCents,
-								pointsOrCash()
-							)}
-						</Label>
-					</Box>
-				</Accordion>
+				{!props.usePoints && (
+					<Accordion
+						isOpen
+						titleReact={
+							<Label variant={'h4'} width={'170px'}>
+								Taxes and Fees
+							</Label>
+						}
+					>
+						{renderTaxesAndFees()}
+						<Box alignItems={'center'} display={'flex'}>
+							<Label variant={'h4'}>Total</Label>
+							<Label variant={'h4'} marginLeft={'auto'}>
+								{NumberUtils.displayPointsOrCash(
+									props.usePoints
+										? NumberUtils.convertCentsToPoints(
+												localAccommodation.prices.taxAndFeeTotalInCents,
+												10
+										  )
+										: localAccommodation.prices.taxAndFeeTotalInCents,
+									pointsOrCash()
+								)}
+							</Label>
+						</Box>
+					</Accordion>
+				)}
 				<Box display={'flex'} alignItems={'center'} mb={20}>
 					<Label variant={'h3'} width={'170px'}>
 						Total:

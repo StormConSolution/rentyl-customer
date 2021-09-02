@@ -20,6 +20,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import RewardService from '../../services/reward/reward.service';
 import useCustomPageText from '../../customHooks/useCustomPageText';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 interface LandingPageProps {}
 
@@ -54,10 +55,11 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	function renderFeatureRewards() {
 		if (!featuredRewards) return [];
 		return featuredRewards.map((item, index) => {
+			if (index > 2) return false;
 			return (
 				<FeaturedRewardCard
 					key={index}
-					mainImg={item.imagePath}
+					mainImg={'https://www.spaboom.com/wp-content/uploads/2014/07/reward-300x300.jpg'}
 					title={item.name}
 					urlPath={`/reward?cids=[${item.categoryId}]`}
 				/>
@@ -129,7 +131,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						{size === 'small' ? (
 							<Carousel children={renderFeatureRewards()} />
 						) : (
-							<>{renderFeatureRewards()}</>
+							<Carousel children={renderFeatureRewards()} />
 						)}
 					</Box>
 					<LabelButton
@@ -343,13 +345,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						</>
 					)}
 
-					{size !== 'small' && (
-						<LabelButton
-							look={'containedPrimary'}
-							variant={'button'}
-							label={'How spire loyalty benefits you'}
-						/>
-					)}
+					{size !== 'small' && <LinkButton path={'/construction'} label={'How spire loyalty benefits you'} />}
 				</Box>
 
 				<Box

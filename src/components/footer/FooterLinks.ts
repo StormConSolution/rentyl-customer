@@ -11,11 +11,11 @@ export const FooterLinks: FooterLink[] = [
 	},
 	{
 		text: 'Manage Points',
-		path: '#'
+		path: '/account/points'
 	},
 	{
 		text: 'Privacy Policy',
-		path: '#'
+		path: '/privacy'
 	},
 	{
 		text: 'About Spire Loyalty',
@@ -31,6 +31,6 @@ export const FooterLinks: FooterLink[] = [
 	},
 	{
 		text: 'Terms And Conditions',
-		path: '#'
+		path: '/terms'
 	}
 ];

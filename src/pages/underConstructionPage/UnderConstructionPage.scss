@@ -1,0 +1,17 @@
+@import '../../themes/themes';
+
+.rsUnderConstructionPage {
+	.construction {
+		text-align: center;
+		margin-top: 80px;
+
+		.homePage {
+			display: flex;
+			height: 100px;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			margin: 20px;
+		}
+	}
+}

@@ -42,7 +42,7 @@ const ReservationDetailsPage: React.FC = () => {
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
-	}, []);
+	}, [params]);
 
 	function getPoliciesValue(option: 'CheckIn' | 'CheckOut' | 'Cancellation') {
 		if (!reservation) return '';

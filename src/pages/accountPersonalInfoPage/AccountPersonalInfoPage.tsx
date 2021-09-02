@@ -20,6 +20,7 @@ import UserPointStatusBar from '../../components/userPointStatusBar/UserPointSta
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { StringUtils } from '../../utils/utils';
+import router from '../../utils/router';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -63,8 +64,8 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	);
 
 	useEffect(() => {
-		if (!user) return;
-		phoneNumber = user.phone;
+		if (!user) router.navigate('/signup').catch(console.error);
+		else phoneNumber = user.phone;
 	}, [user]);
 
 	function isAccountFormFilledOut(): boolean {
