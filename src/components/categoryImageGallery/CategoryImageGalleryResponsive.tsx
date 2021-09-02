@@ -8,6 +8,7 @@ import { popupController } from '@bit/redsky.framework.rs.996';
 import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { ObjectUtils } from '@bit/redsky.framework.rs.http/dist/Utils';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface CategoryImageGalleryResponsiveProps {
 	accommodationCategories: Api.AccommodationCategory.Details[];
@@ -59,13 +60,20 @@ const CategoryImageGalleryResponsive: React.FC<CategoryImageGalleryResponsivePro
 								return {
 									title: value.title,
 									description: value.description,
-									imagePath: value.urls.large || ''
+									imagePath: value.urls.imageKit || ''
 								};
 							})
 						});
 					}}
 				>
-					<img src={item.urls.large} alt={item.title + ' image'} />
+					<Img
+						src={item.urls.imageKit}
+						alt={item.title + ' image'}
+						width={300}
+						height={250}
+						loading={'lazy'}
+						rootMargin={'0px 0px 500px 0px'}
+					/>
 				</Button>
 			);
 		});

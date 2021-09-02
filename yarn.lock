@@ -1166,6 +1166,13 @@
   dependencies:
     react "^16.12.0"
 
+"@bit/redsky.framework.rs.img@^0.0.5":
+  version "0.0.5"
+  resolved "https://node.bit.dev/redsky.framework.rs.img/-/redsky.framework.rs.img-0.0.5.tgz#66031dc98ddbfe2bfd20170c3537c7098370bf01"
+  integrity sha1-ZgMdyY3b/iv9IBcMNTfHCYNwvwE=
+  dependencies:
+    react "^17.0.2"
+
 "@bit/redsky.framework.rs.input@0.0.47":
   version "0.0.47"
   resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.47.tgz#9277b10c8207ba45e7daa4060809bb8b30fa6ea3"
@@ -9474,7 +9481,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.0.3:
+typescript@4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.3.tgz#153bbd468ef07725c1df9c77e8b453f8d36abba5"
   integrity sha512-tEu6DGxGgRJPb/mVPIZ48e69xCn2yRmCgYmDugAVwmJ6o+0u1RI18eO7E7WBTLYLaEVVOhwQmcdhQHweux/WPg==

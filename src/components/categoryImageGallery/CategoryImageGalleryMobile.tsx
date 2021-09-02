@@ -65,13 +65,13 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 								return {
 									title: value.title,
 									description: value.description,
-									imagePath: value.urls.large || ''
+									imagePath: value.urls.imageKit || ''
 								};
 							})
 						});
 					}}
 				>
-					<img src={item.urls.large} alt={item.title + ' image'} />
+					<img src={item.urls.imageKit} alt={item.title + ' image'} />
 				</Button>
 			);
 		});

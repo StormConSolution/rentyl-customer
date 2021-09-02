@@ -372,6 +372,7 @@ declare namespace Model {
 		thumb: string;
 		small: string;
 		large: string;
+		imageKit: string;
 	}
 
 	export interface StorageDetails {

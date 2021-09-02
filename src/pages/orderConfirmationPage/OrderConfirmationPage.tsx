@@ -41,7 +41,7 @@ const OrderConfirmationPage = () => {
 		let styles: any = {
 			width: '200px',
 			height: '200px',
-			backgroundImage: `url(${reward.media[0].urls.large})`
+			backgroundImage: `url(${reward.media[0].urls.imageKit})`
 		};
 		return styles;
 	}
@@ -75,7 +75,7 @@ const OrderConfirmationPage = () => {
 					<hr />
 					<Box display={'flex'} className={'confirmationBody'}>
 						<Box display={'flex'} alignItems={'center'}>
-							<img src={reward.media[0].urls.large} alt={'Order Image'} />
+							<img src={reward.media[0].urls.imageKit} alt={'Order Image'} />
 							<div>
 								<Label variant={'h3'} mb={10}>
 									{reward.description}

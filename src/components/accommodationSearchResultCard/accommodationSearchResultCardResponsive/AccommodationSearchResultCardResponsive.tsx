@@ -11,6 +11,7 @@ import Carousel from '../../carousel/Carousel';
 import AccommodationSearchDetailCard, {
 	AccommodationStat
 } from '../../accommodationSearchDetailCard/AccommodationSearchDetailCard';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface AccommodationSearchResultCardResponsiveProps {
 	id: number | string;
@@ -39,7 +40,18 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 
 	function renderCarouselImages(imagePaths: string[]): JSX.Element[] {
 		return imagePaths.map((imagePath, index) => {
-			return <img className="accommodationGalleryImage" src={imagePath} key={index} alt="" />;
+			return (
+				<Img
+					className="accommodationGalleryImage"
+					src={imagePath}
+					key={index}
+					alt={'Accommodation Image'}
+					width={278}
+					height={280}
+					loading={'lazy'}
+					rootMargin={'0px 0px 200px 0px'}
+				/>
+			);
 		});
 	}
 

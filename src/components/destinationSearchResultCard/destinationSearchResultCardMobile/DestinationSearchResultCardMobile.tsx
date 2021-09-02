@@ -10,6 +10,7 @@ import LabelButton from '../../labelButton/LabelButton';
 import router from '../../../utils/router';
 import StarRating from '../../starRating/StarRating';
 import LabelLink from '../../labelLink/LabelLink';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -29,7 +30,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 		return picturePaths.map((path: string, index) => {
 			return (
 				<Box key={index} className={'imageWrapper'}>
-					<img src={path} alt="" />
+					<Img src={path} loading={'lazy'} alt={'Resort Image'} width={345} height={290} />
 				</Box>
 			);
 		});

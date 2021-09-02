@@ -39,7 +39,6 @@ import FilterReservationPopup, {
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
@@ -140,7 +139,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			let primaryMedia: any = '';
 			for (let value of item.media) {
 				if (!value.isPrimary) continue;
-				primaryMedia = value.urls.large;
+				primaryMedia = value.urls.imageKit;
 				break;
 			}
 			if (primaryMedia === '') return false;
@@ -158,7 +157,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			carouselItems.push({
 				name: item.title,
 				title: item.title,
-				imagePath: ObjectUtils.isArrayWithData(img) ? img[0].urls.large : '',
+				imagePath: ObjectUtils.isArrayWithData(img) ? img[0].urls.imageKit : '',
 				description: item.description,
 				buttonLabel: 'View Photos',
 				otherMedia: item.media
@@ -216,7 +215,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
 		return availabilityStayList.map((item, index) => {
 			let media = item.media.map((value) => {
-				return value.urls.large;
+				return value.urls.imageKit;
 			});
 			return (
 				<AccommodationSearchResultCard

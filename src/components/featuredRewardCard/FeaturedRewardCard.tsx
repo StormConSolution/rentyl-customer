@@ -17,7 +17,7 @@ const FeaturedRewardCard: React.FC<FeaturedRewardCardProps> = (props) => {
 				router.navigate(props.urlPath).catch(console.error);
 			}}
 		>
-			<img className={'mainImg'} src={props.mainImg} alt={'Main'} />
+			<img loading={'lazy'} className={'mainImg'} src={props.mainImg} alt={'Main'} />
 			<Label variant={'h2'}>{props.title}</Label>
 		</div>
 	);

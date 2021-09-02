@@ -19,7 +19,7 @@ const PackageDetailsPopup: React.FC<PackageDetailsPopupProps> = (props) => {
 					description={props.package.description}
 					priceCents={0}
 					imgPaths={props.package.media.map((item) => {
-						return item.urls.large;
+						return item.urls.imageKit;
 					})}
 					onAddPackage={props.onAdd}
 				/>

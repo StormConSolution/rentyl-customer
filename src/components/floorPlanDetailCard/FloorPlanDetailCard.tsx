@@ -6,6 +6,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../labelButton/LabelButton';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
 import Select from '../Select/Select';
+import Img from '@bit/redsky.framework.rs.img';
 
 export interface FloorPlanDetailCardProps {
 	accommodationName: string;
@@ -120,7 +121,13 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 				{renderRoomDescriptions()}
 			</Box>
 			<Box className={'layoutImg'}>
-				<img src={selectedLayout?.media.urls.large} />
+				<Img
+					src={selectedLayout?.media.urls.imageKit || ''}
+					alt={'Layout Image'}
+					width={335}
+					height={500}
+					srcSetSizes={[400]}
+				/>
 			</Box>
 		</Box>
 	);

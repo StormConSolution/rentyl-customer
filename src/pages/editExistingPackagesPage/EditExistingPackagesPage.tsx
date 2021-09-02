@@ -98,7 +98,7 @@ const EditExistingPackagesPage: React.FC = () => {
 					description={item.description}
 					priceCents={item.priceDetail.amountAfterTax}
 					imgPaths={item.media.map((item) => {
-						return item.urls.large;
+						return item.urls.imageKit;
 					})}
 					onAddPackage={() => {
 						setCurrentReservationPackages((prevState) => {
@@ -125,7 +125,7 @@ const EditExistingPackagesPage: React.FC = () => {
 						description={item.description}
 						priceCents={item.priceCents}
 						imgPaths={item.media.map((item) => {
-							return item.urls.large;
+							return item.urls.imageKit;
 						})}
 						onAddPackage={() => {
 							setCurrentReservationPackages((prevState) => {

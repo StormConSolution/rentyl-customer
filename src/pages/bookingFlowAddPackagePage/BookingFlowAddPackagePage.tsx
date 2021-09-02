@@ -79,7 +79,7 @@ const BookingFlowAddPackagePage = () => {
 					description={item.description}
 					priceCents={item.priceCents}
 					imgPaths={item.media.map((item) => {
-						return item.urls.large;
+						return item.urls.imageKit;
 					})}
 					onAddPackage={() => {
 						setAvailablePackages([...availablePackages, item]);
@@ -103,7 +103,7 @@ const BookingFlowAddPackagePage = () => {
 					description={item.description}
 					priceCents={item.priceCents}
 					imgPaths={item.media.map((item, index) => {
-						return item.urls.large;
+						return item.urls.imageKit;
 					})}
 					onAddPackage={() => {
 						let newPackages = [...addedPackages, item];

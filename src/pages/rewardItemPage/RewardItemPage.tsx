@@ -199,8 +199,8 @@ const RewardItemPage: React.FC = () => {
 	function getPrimaryRewardImg(medias: Api.Media[]): string {
 		if (!ObjectUtils.isArrayWithData(medias)) return '';
 		let primary = medias.find((item) => item.isPrimary);
-		if (primary) return primary.urls.small;
-		else return medias[0].urls.small;
+		if (primary) return primary.urls.imageKit;
+		else return medias[0].urls.imageKit;
 	}
 
 	function getRedeemableVoucherCode(vouchers: Api.Reward.Voucher.Res.Get[]) {
@@ -220,7 +220,7 @@ const RewardItemPage: React.FC = () => {
 						key={index}
 						value={category.id}
 						title={category.name}
-						imgPath={category.media[0] ? category.media[0].urls.small : ''}
+						imgPath={category.media[0] ? category.media[0].urls.imageKit : ''}
 						onClick={(categoryId) => {
 							handleCategoryOnClick(categoryId);
 						}}

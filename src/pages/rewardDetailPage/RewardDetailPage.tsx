@@ -86,7 +86,7 @@ const RewardDetailPage: React.FC = () => {
 		return reward.media.map((newMedia: Api.Media) => {
 			return (
 				<Box className={'imageWrapper'}>
-					<img src={newMedia.urls.small} alt="" />
+					<img src={newMedia.urls.imageKit} alt="" />
 				</Box>
 			);
 		});

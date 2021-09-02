@@ -26,6 +26,7 @@ const MobileLightBoxTwoPopup: React.FC<MobileLightBoxTwoPopupProps> = (props) =>
 						color={'#ffffff'}
 					/>
 					<img src={item.imagePath} alt={item.title} />
+
 					<Accordion title={item.title} backgroundColor={'rgba(30,24,11,.4)'}>
 						<Label variant={'body2'}>{item.description}</Label>
 					</Accordion>

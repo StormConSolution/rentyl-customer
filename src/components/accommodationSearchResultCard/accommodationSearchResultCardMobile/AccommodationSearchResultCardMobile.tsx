@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../models/globalState';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../../labelButton/LabelButton';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface AccommodationSearchResultCardMobileProps {
 	id: number | string;
@@ -41,7 +42,16 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 		return picturePaths.map((path: string, index) => {
 			return (
 				<Box key={index} className={'imageWrapper'}>
-					<img src={path} alt="" />
+					<Img
+						className="accommodationGalleryImage"
+						src={path}
+						key={index}
+						alt={'Accommodation Image'}
+						width={345}
+						height={290}
+						loading={'lazy'}
+						rootMargin={'0px 0px 200px 0px'}
+					/>
 				</Box>
 			);
 		});

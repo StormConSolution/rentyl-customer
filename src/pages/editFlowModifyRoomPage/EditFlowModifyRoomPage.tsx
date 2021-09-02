@@ -160,7 +160,7 @@ const EditFlowModifyRoomPage = () => {
 	): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large?.toString() || '';
+				return urlObj.urls.imageKit?.toString() || '';
 			});
 		}
 		return [];
