@@ -4,7 +4,7 @@ import { Page } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Paper from '../../components/paper/Paper';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
 import { useRecoilState } from 'recoil';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -49,7 +49,7 @@ const ComparisonPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		let id = router.subscribeToBeforeRouterNavigate((newPath, previousPath) => {
+		let id = router.subscribeToBeforeRouterNavigate(() => {
 			if (!ObjectUtils.isArrayWithData(comparisonRef.current))
 				document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 			else document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
@@ -156,7 +156,7 @@ const ComparisonPage: React.FC = () => {
 				<Label variant={'h4'}>Accommodation Type</Label>
 			</th>
 		];
-		comparisonItems.map((item, index) => {
+		comparisonItems.forEach((item, index) => {
 			headerOutput.push(
 				<th key={index}>
 					<Label variant={'h4'}>{accommodationTextList[index]}</Label>
@@ -197,7 +197,7 @@ const ComparisonPage: React.FC = () => {
 		};
 
 		if (!accommodationDetailList) return [];
-		accommodationDetailList.map((accommodation, index) => {
+		accommodationDetailList.forEach((accommodation, index) => {
 			table.description.push(<td key={index}>{accommodation.longDescription}</td>);
 			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
 			table.extraBedding.push(
@@ -226,7 +226,7 @@ const ComparisonPage: React.FC = () => {
 		});
 
 		const tableKeys = Object.keys(table);
-		tableKeys.map((row, index) => {
+		tableKeys.forEach((row, index) => {
 			output.push(<tr key={index}>{table[row as keyof TableData]}</tr>);
 		});
 		return output;

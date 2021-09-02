@@ -23,7 +23,7 @@ import EditAccommodationPopup, {
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -43,7 +43,7 @@ const BookingFlowCheckoutPage = () => {
 	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
 	const destinationId = params.data.destinationId;
 	const stayParams = params.data.stays;
-	const [usePoints, setUsePoints] = useState<boolean>(!!company.allowPointBooking);
+	const [usePoints, setUsePoints] = useState<boolean>(!company.allowCashBooking);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);

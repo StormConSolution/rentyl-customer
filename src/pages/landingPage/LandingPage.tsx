@@ -16,7 +16,7 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import RewardService from '../../services/reward/reward.service';
 import useCustomPageText from '../../customHooks/useCustomPageText';
 
@@ -34,8 +34,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	useEffect(() => {
 		async function getFeatureRewards() {
 			try {
-				let data = await rewardService.getAllForRewardItemPage();
-				if (data) setFeaturedRewards(data.featuredCategories);
+				let pageRequest: RedSky.PageQuery = { pagination: { page: 1, perPage: 50 } };
+				let data = await rewardService.getPagedRewards(pageRequest);
+				if (data) setFeaturedRewards(data.data);
 			} catch (e) {
 				console.log(e.message);
 			}

@@ -41,18 +41,13 @@ export default class AccommodationService extends Service {
 		return accommodations;
 	}
 
-	async getAccommodationTypeByIds(ids: number[]) {
-		let res = await http.get<RsResponseData<Api.Destination.Res.AccommodationType[]>>(
-			'destination/accommodationType',
-			{ ids }
+	async searchAvailableAccommodationsByDestination(
+		data: Api.Accommodation.Req.Availability
+	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
+		const response = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
+			'/accommodation/availability',
+			WebUtils.convertDataForUrlParams(data)
 		);
-		return res.data.data;
-	}
-	async getAccommodationTypeById(id: number): Promise<Api.Destination.Res.AccommodationType[]> {
-		let res = await http.get<RsResponseData<Api.Destination.Res.AccommodationType[]>>(
-			'destination/accommodationType',
-			{ id }
-		);
-		return res.data.data;
+		return response.data;
 	}
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './RoomBookNowCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -10,6 +10,7 @@ import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
+import Accordion from '@bit/redsky.framework.rs.accordion';
 
 interface RoomBookNowCardProps {
 	points: number;
@@ -19,8 +20,10 @@ interface RoomBookNowCardProps {
 	focusedInput: 'startDate' | 'endDate' | null;
 	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	onGuestChange: (value: number) => void;
+	onRateCodeChange: (value: string) => void;
 	className?: string;
 	guestValue?: number;
+	rateCode?: string;
 	bookNowOnClick?: () => void;
 	compareOnClick?: () => void;
 	bookNowDisabled?: boolean;
@@ -98,6 +101,14 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 					onChange={(value) => {
 						props.onGuestChange(value);
 					}}
+				/>
+				<LabelInput
+					className={'rateCode'}
+					title={'Rate Code'}
+					inputType={'text'}
+					placeholder={'Optional'}
+					initialValue={props.rateCode}
+					onChange={(value) => props.onRateCodeChange(value)}
 				/>
 				<Box className={'earnPointsBox'}>
 					<Label className={'earnLabel'} variant={'caption'}>

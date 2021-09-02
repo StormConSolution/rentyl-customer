@@ -3,14 +3,8 @@ import http from '../../utils/http';
 import { Service } from '../Service';
 import serviceFactory from '../serviceFactory';
 import UserService from '../user/user.service';
-import modelFactory from '../../models/modelFactory';
-import RewardModel from '../../models/reward/reward.model';
-import StandardOrderTypes = RedSky.StandardOrderTypes;
-import MatchTypes = RedSky.MatchTypes;
-import FilterQueryValue = RedSky.FilterQueryValue;
 
 export default class RewardService extends Service {
-	rewardModel: RewardModel = modelFactory.get<RewardModel>('RewardModel');
 	private userService!: UserService;
 
 	start() {
@@ -22,33 +16,63 @@ export default class RewardService extends Service {
 		return response.data.data;
 	}
 
-	async getPagedRewards(data: Api.Reward.Req.Paged): Promise<Api.Reward.Res.GetByPage> {
-		return this.rewardModel.getRedeemableRewards(data);
+	async getPagedRewards(data: Api.Reward.Req.Paged): Promise<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>> {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>('/reward/paged', data);
+		return response.data;
 	}
 
-	async getAllActiveCategories(): Promise<Api.Reward.Category.Res.Get[]> {
-		return this.rewardModel.getAllActiveCategories();
+	async getAllActiveCategories(): Promise<RedSky.RsPagedResponseData<Api.Reward.Category.Res.Get[]>> {
+		let query: RedSky.PageQuery = {
+			filter: {
+				matchType: 'exact',
+				searchTerm: [
+					{
+						column: 'isActive',
+						value: 1
+					}
+				]
+			},
+			pagination: { page: 1, perPage: 100 },
+			sort: {
+				field: 'isActive',
+				order: 'ASC'
+			}
+		};
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>(
+			'/reward/category/paged',
+			query
+		);
+		return response.data;
 	}
 
 	async getPagedCategories(
-		page: number,
-		perPage: number,
-		sortField: string,
-		sortOrder: StandardOrderTypes,
-		matchType: MatchTypes,
-		filter: FilterQueryValue[]
-	) {
-		return this.rewardModel.getPagedCategories(page, perPage, sortField, sortOrder, matchType, filter);
+		data: RedSky.PageQuery
+	): Promise<RedSky.RsPagedResponseData<Api.Reward.Category.Res.Get[]>> {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>('/reward/category/paged', data);
+		return response.data;
 	}
 
-	async claimRewardVoucher(data: Api.Reward.Voucher.Req.Claim) {
+	async claimRewardVoucher(data: Api.Reward.Voucher.Req.Claim): Promise<Api.Reward.Voucher.Res.Claim> {
 		const res = await http.put<RsResponseData<Api.Reward.Voucher.Res.Claim>>('reward/voucher/claim', data);
 		this.refreshUser();
 		return res.data.data;
 	}
 
-	async getAllForRewardItemPage() {
-		return this.rewardModel.getAllForRewardItemPage();
+	async getAllVendors(): Promise<Api.Vendor.Res.Get[]> {
+		const response = await http.get<RsResponseData<Api.Vendor.Res.Get[]>>('vendor/paged');
+		return response.data.data;
+	}
+
+	async getVendorsInSelectFormat() {
+		let vendors = await this.getAllVendors();
+		return vendors.map((vendor) => {
+			if (vendor.destinationId) {
+				return { value: 'd' + vendor.destinationId, text: vendor.name, selected: false };
+			} else if (vendor.affiliateId) {
+				return { value: 'a' + vendor.affiliateId, text: vendor.name, selected: false };
+			}
+			return { value: 0, text: '', selected: false };
+		});
 	}
 
 	private refreshUser() {

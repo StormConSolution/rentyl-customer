@@ -13,11 +13,11 @@ import Paper from '../../components/paper/Paper';
 import MultiSelect from '../../components/multiSelect/MultiSelect';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { SelectOptions } from '../../components/Select/Select';
-import { formatDateForUser, StringUtils, WebUtils } from '../../utils/utils';
+import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
@@ -95,8 +95,8 @@ const AccountPointsPage: React.FC = () => {
 	function renderPoints(type: string) {
 		if (!pointHistory) return;
 		return pointHistory.map((point, index) => {
-			if (type === 'pending' && point.status !== 'PENDING') return;
-			if (type === 'completed' && point.status === 'PENDING') return;
+			if (type === 'pending' && point.status !== 'PENDING') return false;
+			if (type === 'completed' && point.status === 'PENDING') return false;
 			return (
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
 					<img className={'pointImage'} src={getMedia(point)} alt={''} />
@@ -107,7 +107,7 @@ const AccountPointsPage: React.FC = () => {
 						</Label>
 					</Box>
 					<Label className={'date'} variant={'h2'}>
-						{formatDateForUser(point.createdOn.toString())}
+						{DateUtils.formatDateForUser(point.createdOn.toString())}
 					</Label>
 					<Label className={'points'} variant={'h2'}>
 						{getPointAmount(point)}

@@ -7,7 +7,7 @@ import serviceFactory from '../../services/serviceFactory';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import { addCommasToNumber, DateUtils, WebUtils } from '../../utils/utils';
+import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Paper from '../../components/paper/Paper';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -35,16 +35,6 @@ const OrderConfirmationPage = () => {
 		}
 		getRewardDetails().catch(console.error);
 	}, []);
-
-	function renderStyle() {
-		if (!reward) return;
-		let styles: any = {
-			width: '200px',
-			height: '200px',
-			backgroundImage: `url(${reward.media[0].urls.large})`
-		};
-		return styles;
-	}
 
 	return !reward ? (
 		<LoadingPage />
@@ -88,7 +78,7 @@ const OrderConfirmationPage = () => {
 							</div>
 						</Box>
 						<Label variant={'h3'} className={'pointsLabel'}>
-							{addCommasToNumber(reward.pointCost)} <span>points</span>
+							{StringUtils.addCommasToNumber(reward.pointCost)} <span>points</span>
 						</Label>
 					</Box>
 				</Paper>

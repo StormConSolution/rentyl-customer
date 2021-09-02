@@ -8,7 +8,7 @@ import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import { NavData } from './NavData';
 

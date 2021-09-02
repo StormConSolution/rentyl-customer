@@ -3,15 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import './AccountOverview.scss';
 import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
-import { addCommasToNumber } from '../../utils/utils';
 import LabelLink from '../../components/labelLink/LabelLink';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { Box } from '@bit/redsky.framework.rs.996';
+import { StringUtils } from '../../utils/utils';
 
 interface AccountOverviewProps {
 	isOpen: boolean;
@@ -61,7 +61,7 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 			<Paper height={'fit-content'} backgroundColor={'#FCFBF8'} padding={'20px 18px 17px'}>
 				<Label variant={'h4'}>Account Overview</Label>
 				<Box display={'flex'} marginBottom={'10px'}>
-					<Label variant={'h2'}>{addCommasToNumber(user?.availablePoints)}</Label>
+					<Label variant={'h2'}>{StringUtils.addCommasToNumber(user?.availablePoints)}</Label>
 					<Label variant={'caption'}>
 						CURRENT
 						<br /> POINTS

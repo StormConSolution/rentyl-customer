@@ -6,7 +6,7 @@ import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 
 interface SuccessPageProps {}
 type SuccessData = {

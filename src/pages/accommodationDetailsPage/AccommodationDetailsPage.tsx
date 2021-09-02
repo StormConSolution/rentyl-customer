@@ -13,7 +13,7 @@ import AccommodationInfoCard from '../../components/accommodationInfoCard/Accomm
 import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import CategoryFeatureIcons from '../../components/categoryFeatureIcons/CategoryFeatureIcons';
@@ -32,7 +32,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccommodationDetailsPageProps {}
 
-const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props) => {
+const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
@@ -57,6 +57,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		arrivalDate: string;
 		departureDate: string;
 		adults: number;
+		rateCode?: string;
 	}>({
 		arrivalDate: initialStartDate.format('YYYY-MM-DD'),
 		departureDate: initialEndDate.format('YYYY-MM-DD'),
@@ -117,10 +118,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		);
 	}
 
-	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults', value: any) {
+	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults' | 'rateCode', value: any) {
 		setAvailabilityObj((prev) => {
 			let createAvailabilityObj: any = { ...prev };
-			createAvailabilityObj[key] = value;
+			if (value === '') delete createAvailabilityObj[key];
+			else createAvailabilityObj[key] = value;
 			return createAvailabilityObj;
 		});
 	}
@@ -145,7 +147,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 
 	function renderCategoryFeatures() {
 		if (!accommodationDetails) return '';
-		return accommodationDetails.categories.map((item, index) => {
+		return accommodationDetails.categories.map((item) => {
 			let features = item.features.map((value) => {
 				return {
 					title: value.title,
@@ -168,6 +170,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 			departureDate: availabilityObj.departureDate,
 			packages: []
 		};
+		if (availabilityObj.rateCode) data.rateCode = availabilityObj.rateCode;
 		const stringedParams: string = JSON.stringify({
 			destinationId: destinationDetails.id,
 			newRoom: data
@@ -205,11 +208,15 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							focusedInput={focusedInput}
 							startDate={startDate}
 							endDate={endDate}
+							rateCode={availabilityObj.rateCode}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
 							}}
 							onGuestChange={(value) => {
 								updateAvailabilityObj('adults', +value);
+							}}
+							onRateCodeChange={(value) => {
+								updateAvailabilityObj('rateCode', value);
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
@@ -219,7 +226,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 									title: destinationDetails.name,
 									roomTypes: destinationDetails.accommodations
 										.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-										.map((item, index) => {
+										.map((item) => {
 											return {
 												value: item.id,
 												text: item.name,

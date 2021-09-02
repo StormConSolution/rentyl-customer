@@ -3,7 +3,7 @@ import './ComparisonDrawer.scss';
 import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';

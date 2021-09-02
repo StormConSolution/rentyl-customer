@@ -5,7 +5,6 @@ import Label from '@bit/redsky.framework.rs.label';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
@@ -35,7 +34,6 @@ const BookingFlowAddRoomPage = () => {
 		return item.uuid === params.data.editUuid;
 	});
 
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
@@ -90,7 +88,7 @@ const BookingFlowAddRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await destinationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
@@ -233,7 +231,7 @@ const BookingFlowAddRoomPage = () => {
 						},
 						{
 							label: 'Max Occupancy',
-							datum: accommodation.maxOccupancyCount
+							datum: accommodation.maxOccupantCount
 						},
 						{
 							label: 'ADA Compliant',
@@ -293,6 +291,7 @@ const BookingFlowAddRoomPage = () => {
 							bookNow(editStayDetails.accommodationId);
 						}}
 						pointsEarnable={0}
+						hideButtons={true}
 					/>
 				)}
 				<div ref={filterRef} />

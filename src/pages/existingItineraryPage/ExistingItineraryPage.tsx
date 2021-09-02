@@ -3,7 +3,7 @@ import './ExistingItineraryPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import ReservationCard from '../../components/reservationCard/ReservationCard';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
@@ -62,7 +62,7 @@ const ExistingItineraryPage: React.FC = () => {
 
 		let currentRes = reservations.filter((item) => {
 			let date = new Date(item.departureDate);
-			return date.getTime() > Date.now() && !item.externalCancellationId;
+			return date.getTime() >= Date.now() && !item.externalCancellationId;
 		});
 
 		setUpComingReservations(currentRes);
@@ -73,8 +73,8 @@ const ExistingItineraryPage: React.FC = () => {
 		reservationArray: Api.Reservation.Res.Get[]
 	): { itineraryId: string; reservations: Api.Reservation.Res.Get[] }[] {
 		let itineraries: { itineraryId: string; reservations: Api.Reservation.Res.Get[] }[] = [];
-		reservationArray.forEach((item, index) => {
-			let itineraryGroup = reservationArray.filter((reservation, reservationIndex) => {
+		reservationArray.forEach((item) => {
+			let itineraryGroup = reservationArray.filter((reservation) => {
 				return item.itineraryId === reservation.itineraryId;
 			});
 			let itineraryExist = itineraries.find((itineraries) => itineraries.itineraryId === item.itineraryId);
@@ -88,7 +88,7 @@ const ExistingItineraryPage: React.FC = () => {
 
 		let itineraries = groupMatchingItineraries(upComingReservations);
 
-		return itineraries.map((item, index) => {
+		return itineraries.map((item) => {
 			let reservation = item.reservations[0];
 			return (
 				<ReservationCard
@@ -119,7 +119,7 @@ const ExistingItineraryPage: React.FC = () => {
 
 		let itineraries = groupMatchingItineraries(previousReservations);
 
-		return itineraries.map((item, index) => {
+		return itineraries.map((item) => {
 			let reservation = item.reservations[0];
 			return (
 				<ReservationCard

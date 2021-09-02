@@ -8,7 +8,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import router from '../../utils/router';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 
 const AppBar: React.FC = () => {

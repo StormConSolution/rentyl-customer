@@ -56,7 +56,11 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 						item.arrivalDate
 					)} - ${DateUtils.displayUserDate(item.departureDate)}`}</Label>
 					<Label variant={'body1'}>
-						{DateUtils.daysBetween(item.departureDate, item.arrivalDate)} Nights
+						{DateUtils.daysBetweenStartAndEndDates(
+							new Date(item.departureDate),
+							new Date(item.arrivalDate)
+						)}{' '}
+						Nights
 					</Label>
 				</div>
 			);

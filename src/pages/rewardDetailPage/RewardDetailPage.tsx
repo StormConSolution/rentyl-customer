@@ -13,8 +13,8 @@ import { StringUtils, WebUtils } from '../../utils/utils';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import globalState from '../../state/globalState';
 
 const RewardDetailPage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');

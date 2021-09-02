@@ -8,7 +8,7 @@ import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
@@ -127,10 +127,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (key === 'children' && isNaN(value)) {
 			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
 		}
-		if (key === 'priceRangeMin' && isNaN(value)) {
+		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
 			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
 		}
-		if (key === 'priceRangeMax' && isNaN(value)) {
+		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
 			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'priceRangeMin' && searchQueryObj['priceRangeMax'] && value > searchQueryObj['priceRangeMax']) {
@@ -336,7 +336,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 								onFocusChange={setFocusedInput}
 								monthsToShow={2}
 								onChangeAdults={(value) => {
-									if (value === '' || parseInt(value) === NaN) return;
+									if (value === '' || isNaN(parseInt(value))) return;
 									updateSearchQueryObj('adults', parseInt(value));
 								}}
 								onChangeChildren={(value) => {

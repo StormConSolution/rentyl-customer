@@ -11,7 +11,7 @@ export default class UserAddressService extends Service {
 		this.userService = serviceFactory.get<UserService>('UserService');
 	}
 
-	async create(data: Api.UserAddress.Req.Create) {
+	async create(data: Api.UserAddress.Req.Create): Promise<Api.UserAddress.Res.Create> {
 		let res = await http.post<RsResponseData<Api.UserAddress.Res.Create>>('userAddress', data);
 		this.refreshUser();
 		return res.data.data;
