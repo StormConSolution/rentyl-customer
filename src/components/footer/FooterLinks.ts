@@ -31,6 +31,6 @@ export const FooterLinks: FooterLink[] = [
 	},
 	{
 		text: 'Terms And Conditions',
-		path: '/terms'
+		path: '/legal/terms-and-conditions'
 	}
 ];

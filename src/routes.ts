@@ -32,6 +32,7 @@ import globalState, { getRecoilExternalValue } from './state/globalState';
 import DestinationReviewPage from './pages/destinationReviewPage/DestinationReviewPage';
 import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
+import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -53,6 +54,14 @@ export const routes: RouteDetails[] = [
 	{
 		path: '/legal/terms-and-conditions',
 		page: TermsAndConditionsPage,
+		routeGuard: verifyRoute,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/legal/terms-of-use',
+		page: TermsOfUsePage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'

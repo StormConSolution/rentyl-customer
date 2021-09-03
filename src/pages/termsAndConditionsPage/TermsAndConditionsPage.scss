@@ -6,6 +6,13 @@
 		margin-top: 80px;
 	}
 
+	a {
+		text-decoration: underline !important;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
 	.roman {
 		list-style: lower-roman;
 	}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Link, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
@@ -333,31 +333,36 @@ const TermsAndConditionsPage: React.FC = () => {
 						</ol>
 					</li>
 					<li>
-						<Label variant={'h3'}>LOYALTY PROGRAM BENEFITS: </Label>So long as you comply with the Spire
-						Documents and maintain your Membership Account, you shall be eligible to earn and redeem Spire
-						Points and other otherwise participate in the offers and benefits made available to Spire
-						Members from time to time by Spire (the “<b>Benefits</b>”), subject to the restrictions and
-						limitations described in the Spire Documents from time to time. Certain Benefits may be made
-						available only to Members within certain Loyalty Tiers and/or made available in different
-						increments, amounts and manners based upon Loyalty Tiers, all as determined by Spire in its sole
-						and absolute discretion from time to time and without prior notice to Members. Benefits may be
-						added, deleted and/or modified from time to time by Spire in its sole and absolute discretion
-						and without prior notice to Members. Benefits may include, for example,
+						<Label variant={'h3'}>
+							<u>LOYALTY PROGRAM BENEFITS:</u>{' '}
+						</Label>
+						So long as you comply with the Spire Documents and maintain your Membership Account, you shall
+						be eligible to earn and redeem Spire Points and other otherwise participate in the offers and
+						benefits made available to Spire Members from time to time by Spire (the “<b>Benefits</b>”),
+						subject to the restrictions and limitations described in the Spire Documents from time to time.
+						Certain Benefits may be made available only to Members within certain Loyalty Tiers and/or made
+						available in different increments, amounts and manners based upon Loyalty Tiers, all as
+						determined by Spire in its sole and absolute discretion from time to time and without prior
+						notice to Members. Benefits may be added, deleted and/or modified from time to time by Spire in
+						its sole and absolute discretion and without prior notice to Members. Benefits may include, for
+						example,
 					</li>
 					<li>
-						<Label variant={'h3'}>SPIRE POINTS: </Label> Spire Loyalty participants accrue Spire Points by
-						(1) completing Eligible Transactions during registration in Spire Loyalty or (2) purchasing
-						Spire Points. Participant accrues Spire Points for the purpose of Redemption. All Spire Points
-						and subsequent Redemptions thereof must be accrued and used according to the Terms and
-						Conditions as of the date the Spire Points or the date of the Redemption transaction,
-						respectively. Spire Points are issued to participant’s online Spire Points account at the time
-						of completing an Eligible Transaction or purchase of Spire Points and are quantified and
-						disclosed to participant via the participant’s [USER PROFILE]. Points are earned at the
-						completion of Eligible Transaction(s) and, as applicable, cannot be redeemed until a stay with
-						[Spire or its Affiliates] is completed and the Spire Points are put into a participant’s
-						account. Points and incentives are not accrued during Redemption Stays. The amount of Spire
-						Points earned for any purchase will be identified prior to purchase and will vary from time to
-						time in the sole discretion of Spire.
+						<Label variant={'h3'}>
+							<u>SPIRE POINTS:</u>{' '}
+						</Label>{' '}
+						Spire Loyalty participants accrue Spire Points by (1) completing Eligible Transactions during
+						registration in Spire Loyalty or (2) purchasing Spire Points. Participant accrues Spire Points
+						for the purpose of Redemption. All Spire Points and subsequent Redemptions thereof must be
+						accrued and used according to the Terms and Conditions as of the date the Spire Points or the
+						date of the Redemption transaction, respectively. Spire Points are issued to participant’s
+						online Spire Points account at the time of completing an Eligible Transaction or purchase of
+						Spire Points and are quantified and disclosed to participant via the participant’s [USER
+						PROFILE]. Points are earned at the completion of Eligible Transaction(s) and, as applicable,
+						cannot be redeemed until a stay with [Spire or its Affiliates] is completed and the Spire Points
+						are put into a participant’s account. Points and incentives are not accrued during Redemption
+						Stays. The amount of Spire Points earned for any purchase will be identified prior to purchase
+						and will vary from time to time in the sole discretion of Spire.
 						<ol className={'letters'}>
 							<li>
 								<u>Earning Spire Points:</u> Spire Points are earned: (1) at the completion of Eligible
@@ -562,12 +567,12 @@ const TermsAndConditionsPage: React.FC = () => {
 							<u>DISPUTE RESOLUTION/ARBITRATION:</u>
 						</Label>
 						<b>
-							PLEASE READ THIS PROVISION OF THESE TERMS OF USE CAREFULLY. IT PROVIDES THAT CERTAIN
-							DISPUTES MUST BE RESOLVED BY BINDING ARBITRATION. IN ARBITRATION YOU GIVE UP THE RIGHT TO GO
-							TO COURT, INCLUDING THE RIGHT TO A JURY AND THE RIGHT TO PARTICIPATE IN A CLASS ACTION OR
-							SIMILAR PROCEEDING. IN ARBITRATION, A DISPUTE IS RESOLVED BY AN ARBITRATOR INSTEAD OF A
-							JUDGE OR JURY. ARBITRATION PROCEDURES ARE SIMPLER AND MORE LIMITED THAN COURT PROCEDURES,
-							AND ARE SUBJECT TO VERY LIMITED REVIEW.
+							PLEASE READ THIS PROVISION OF THESE <Link path={'/legal/terms-of-use'}>TERMS OF USE</Link>{' '}
+							CAREFULLY. IT PROVIDES THAT CERTAIN DISPUTES MUST BE RESOLVED BY BINDING ARBITRATION. IN
+							ARBITRATION YOU GIVE UP THE RIGHT TO GO TO COURT, INCLUDING THE RIGHT TO A JURY AND THE
+							RIGHT TO PARTICIPATE IN A CLASS ACTION OR SIMILAR PROCEEDING. IN ARBITRATION, A DISPUTE IS
+							RESOLVED BY AN ARBITRATOR INSTEAD OF A JUDGE OR JURY. ARBITRATION PROCEDURES ARE SIMPLER AND
+							MORE LIMITED THAN COURT PROCEDURES, AND ARE SUBJECT TO VERY LIMITED REVIEW.
 						</b>
 						<ol className={'letters'}>
 							<li>
@@ -893,8 +898,9 @@ const TermsAndConditionsPage: React.FC = () => {
 						<Label variant={'h3'}>
 							<u>SPIRE WEBSITE USE:</u>
 						</Label>
-						Your use of the Website is governed by the <b>SpireLoyalty.com</b> Terms of Use [this should be
-						a link], which are incorporated herein by this reference.
+						Your use of the Website is governed by the <b>SpireLoyalty.com</b>{' '}
+						<Link path={'/legal/terms-of-use'}>Terms of Use</Link>, which are incorporated herein by this
+						reference.
 					</li>
 					<li>
 						<Label variant={'h3'}>
