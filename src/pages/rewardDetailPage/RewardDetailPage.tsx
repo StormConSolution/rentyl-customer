@@ -9,11 +9,11 @@ import Carousel from '../../components/carousel/Carousel';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardHeaderBar from '../../components/rewardHeaderBar/RewardHeaderBar';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { StringUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
-import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilValue } from 'recoil';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
 
 const RewardDetailPage: React.FC = () => {
@@ -36,7 +36,7 @@ const RewardDetailPage: React.FC = () => {
 				setReward(res);
 				if (res.media) setImageCount(res.media.length);
 			} catch (e) {
-				rsToasts.error('Cannot find reward.');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reward.'), 'Server Error');
 			}
 		}
 		getRewardDetails().catch(console.error);
@@ -75,7 +75,7 @@ const RewardDetailPage: React.FC = () => {
 					look={'containedPrimary'}
 					variant={'button'}
 					label={'buy with points'}
-					onClick={() => rsToasts.error('please sign in to redeem points')}
+					onClick={() => rsToastify.error('please sign in to redeem points', 'Sign In!')}
 				/>
 			);
 		}

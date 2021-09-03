@@ -12,7 +12,6 @@ import { useEffect, useRef, useState } from 'react';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import PaymentService from '../../services/payment/payment.service';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
@@ -20,6 +19,7 @@ import OtherPaymentCard from '../../components/otherPaymentsCard/OtherPaymentCar
 import Footer from '../../components/footer/Footer';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { FooterLinks } from '../../components/footer/FooterLinks';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 let isPrimary: 1 | 0 = 0;
 
@@ -147,7 +147,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 				return item.message;
 			});
 			popupController.closeAll();
-			return rsToasts.error(errorMessages.join(' '), '', 8000);
+			return rsToastify.error(errorMessages.join(' '), 'Error!');
 		});
 
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
@@ -161,7 +161,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 
 				try {
 					const result = await paymentService.addPaymentMethod(data);
-					if (result) rsToasts.success('Card Added!');
+					if (result) rsToastify.success('Card successfully added.', 'Card Added!');
 					let newExistingCardList = [
 						...existingCardList,
 						{

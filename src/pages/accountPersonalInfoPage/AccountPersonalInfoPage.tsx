@@ -13,14 +13,14 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import LabelButton from '../../components/labelButton/LabelButton';
-import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { StringUtils } from '../../utils/utils';
 import router from '../../utils/router';
+import { StringUtils, WebUtils } from '../../utils/utils';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -120,10 +120,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 
 		try {
 			let response = await userService.update(newUpdatedUserObj);
-			rsToasts.success('Update Successful!!!');
+			rsToastify.success('Account information successfully updated. ', 'Update Successful!');
 			setUser(response);
 		} catch (e) {
-			rsToasts.error('Update failed, try again');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Update failed, try again'), 'Server Error');
 		}
 	}
 
@@ -134,9 +134,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 		setPasswordFormValid(false);
 		try {
 			let response = await userService.updatePassword(newPasswordForm);
-			if (response) rsToasts.success('Password Updated!');
+			if (response) rsToastify.success('Password successfully updated.', 'Password Updated!');
 		} catch (e) {
-			rsToasts.error('Failed to update password');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failed to update password'), 'Server Error');
 		}
 	}
 

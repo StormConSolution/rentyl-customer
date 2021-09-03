@@ -10,13 +10,11 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import PaymentService from '../../services/payment/payment.service';
-import rsToasts from '@bit/redsky.framework.toast';
 import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
 import Select, { SelectOptions } from '../Select/Select';
 import debounce from 'lodash.debounce';
-import popupController, { PopupController } from '@bit/redsky.framework.rs.996/dist/popupController';
-import FidelPrivacyPolicy, { FidelPrivacyPolicyProps } from '../../popups/fidelPrivacyPolicy/FidelPrivacyPolicy';
-import router from '../../utils/router';
+import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoForm extends Api.Reservation.Guest {
@@ -190,7 +188,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				return item.message;
 			});
 			popupController.closeAll();
-			return rsToasts.error(errorMessages.join(' '), "Can't Contact Payment Provider", 8000);
+			return rsToastify.error(errorMessages.join(' '), "Can't Contact Payment Provider");
 		});
 
 		return () => {

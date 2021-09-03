@@ -6,7 +6,6 @@ import UserPointService from '../../services/userPoint/userPoint.service';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import LoadingPage from '../loadingPage/LoadingPage';
 import LabelButton from '../../components/labelButton/LabelButton';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
@@ -18,8 +17,9 @@ import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { SelectOptions } from '../../components/Select/Select';
-import { DateUtils, StringUtils } from '../../utils/utils';
+import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -49,7 +49,7 @@ const AccountPointsPage: React.FC = () => {
 					setPointHistory(res);
 				}
 			} catch (e) {
-				rsToasts.error('Unable to get points for user.');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to get paints for user.'), 'Server Error');
 			}
 		}
 		getUserPoints().catch(console.error);

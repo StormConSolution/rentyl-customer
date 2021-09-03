@@ -4,9 +4,6 @@ import TabbedDestinationSummary, {
 	DestinationSummaryTab
 } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { Box } from '@bit/redsky.framework.rs.996';
-import DestinationSummaryOverview, {
-	DestinationSummaryOverviewProps
-} from '../../destinationSummaryOverview/DestinationSummaryOverview';
 import Label from '@bit/redsky.framework.rs.label';
 import LinkButton from '../../linkButton/LinkButton';
 import Carousel from '../../carousel/Carousel';
@@ -35,16 +32,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 				</Box>
 			);
 		});
-	}
-
-	function isSummaryOverviewTab(tab: DestinationSummaryTab) {
-		return tab.content.hasOwnProperty('amenities');
-	}
-
-	function getAmenityIcons() {
-		const overviewTab = props.summaryTabs.filter(isSummaryOverviewTab)[0];
-		if (!overviewTab) return;
-		return (overviewTab.content as DestinationSummaryOverviewProps).amenities;
 	}
 
 	return (

@@ -1,16 +1,14 @@
 import React, { useRef, useState } from 'react';
-
 import './AppBar.scss';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import NavDrawer from '../../popups/navDrawer/NavDrawer';
-import LabelButton from '../labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
-import router from '../../utils/router';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
+import LinkButton from '../linkButton/LinkButton';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
@@ -27,14 +25,7 @@ const AppBar: React.FC = () => {
 
 			<Box display={'flex'} alignItems={'center'}>
 				{!size && !isRouteUnauthorized('/about-spire') && (
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Learn about spire loyalty'}
-						onClick={() => {
-							router.navigate('/about-spire').catch(console.error);
-						}}
-					/>
+					<LinkButton label={'Learn about spire loyalty'} path={'/about-spire'} />
 				)}
 				<Icon
 					iconImg={'icon-hamburger-menu'}

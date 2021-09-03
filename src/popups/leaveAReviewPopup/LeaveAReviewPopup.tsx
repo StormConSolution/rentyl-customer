@@ -12,10 +12,9 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import Icon from '@bit/redsky.framework.rs.icon';
 import StarRatingSelect from '../../components/starRatingSelect/StarRatingSelect';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import ReviewService from '../../services/review/review.service';
-import router from '../../utils/router';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface LeaveAReviewPopupProps extends PopupProps {
 	destinationName: string;
@@ -49,14 +48,17 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 
 	async function saveReview() {
 		let isValid = await reviewDetails.isValid();
-		if (!isValid) return rsToasts.error('Please Select a stay and add a message', 'Missing Info');
+		if (!isValid) return rsToastify.error('Please Select a stay and add a message', 'Missing Info');
 		let data = reviewDetails.toModel<Api.Review.Req.Create>();
 		try {
 			let res = await reviewService.create(data);
-			rsToasts.success('Your review has been submitted', 'Success!!!');
+			rsToastify.success('Your review has been submitted', 'Success!');
 			popupController.close(LeaveAReviewPopup);
 		} catch (e) {
-			rsToasts.error(WebUtils.getAxiosErrorMessage(e), 'Server Error', 8000);
+			rsToastify.error(
+				WebUtils.getRsErrorMessage(e, 'An unknown server error has occurred, try again.'),
+				'Server Error'
+			);
 		}
 	}
 

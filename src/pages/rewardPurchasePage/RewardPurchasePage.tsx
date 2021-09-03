@@ -12,11 +12,11 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import RewardService from '../../services/reward/reward.service';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import LoadingPage from '../loadingPage/LoadingPage';
+import { WebUtils, StringUtils } from '../../utils/utils';
 import { useRecoilValue } from 'recoil';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
-import { StringUtils } from '../../utils/utils';
 
 const RewardPurchasePage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -38,7 +38,7 @@ const RewardPurchasePage: React.FC = () => {
 				let res = await rewardService.getRewardById(Number(params.reward));
 				setReward(res);
 			} catch (e) {
-				rsToasts.error('Reward Item no longer exists.');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Reward item no longer exists.'), 'Server Error');
 			}
 		}
 		getRewardDetails().catch(console.error);
@@ -52,15 +52,15 @@ const RewardPurchasePage: React.FC = () => {
 
 	async function claimRewardVoucher() {
 		if (!termsAndConditionsIsChecked) {
-			rsToasts.error('You must agree to the terms and conditions.');
+			rsToastify.error('You must agree to the terms and conditions.', 'Missing Information!');
 			return;
 		}
 		try {
 			await rewardService.claimRewardVoucher({ rewardId: Number(params.reward), code: params.voucherCode });
-			rsToasts.success('You have claimed your voucher');
+			rsToastify.success('You have claimed your voucher', 'Success!');
 			router.navigate(`/reward/confirm?ri=${params.reward}&vc=${params.voucherCode}`).catch(console.error);
 		} catch (e) {
-			rsToasts.error('Unable to claim reward.');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to claim reward.'), 'Server Error');
 		}
 	}
 

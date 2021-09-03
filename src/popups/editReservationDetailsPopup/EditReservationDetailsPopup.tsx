@@ -10,7 +10,7 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import moment from 'moment';
-import { DateUtils, formatDateForServer, formatFilterDateForServer } from '../../utils/utils';
+import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
@@ -111,10 +111,10 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 			data.destinationId = props.destinationId;
 			data.numberOfAccommodations = 1;
 			try {
-				let res = await reservationsService.verifyAvailability(data);
+				await reservationsService.verifyAvailability(data);
 				popupController.close(SpinningLoaderPopup);
 				setCanUpdateDetails(true);
-			} catch (e) {
+			} catch (e: any) {
 				console.log(e.message);
 				popupController.close(SpinningLoaderPopup);
 				setCanUpdateDetails(false);
