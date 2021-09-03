@@ -9,7 +9,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelInput from '../labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import router from '../../utils/router';
-import { DateUtils, formatPhoneNumber, ObjectUtils, StringUtils } from '../../utils/utils';
+import { DateUtils, ObjectUtils, StringUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ReservationDetailsAccordionProps {
@@ -35,6 +35,7 @@ interface ReservationDetailsAccordionProps {
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
 	isOpen?: boolean;
+	isPastReservation?: boolean;
 	onRemove?: () => void;
 	onChangeRoom?: () => void;
 	onEditService?: () => void;
@@ -105,7 +106,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 	}
 
 	function renderContactInfo() {
-		if (props.isEdit) {
+		if (props.isEdit && !props.isPastReservation) {
 			return (
 				<>
 					<div className={'accordionReservationGrid'}>
@@ -152,7 +153,10 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					<div className={'accordionReservationGrid'}>
 						<AccordionTitleDescription title={'Contact Info'} description={props.contactInfo} />
 						<AccordionTitleDescription title={'Email'} description={props.email} />
-						<AccordionTitleDescription title={'Phone'} description={formatPhoneNumber(props.phone)} />
+						<AccordionTitleDescription
+							title={'Phone'}
+							description={StringUtils.formatPhoneNumber(props.phone)}
+						/>
 					</div>
 					<hr />
 					<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
@@ -269,29 +273,31 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 							setIsModified(false);
 						}}
 					/>
-					<Box marginLeft={'auto'} position={'relative'}>
-						<LabelButton
-							className={'editCancelBtn'}
-							look={'containedPrimary'}
-							variant={'button'}
-							label={!props.isEdit ? 'Details' : 'Edit'}
-							onClick={(event) => {
-								if (!props.isEdit) {
-									router
-										.navigate(
-											'/reservations/itinerary/reservation/details?ri=' + props.reservationId
-										)
-										.catch(console.error);
-								} else {
-									event.stopPropagation();
-									setToggleBtn(!toggleBtn);
-								}
-							}}
-						/>
-						<div ref={whiteBox} className={toggleBtn ? 'whiteBox open' : 'whiteBox'}>
-							{renderLinks()}
-						</div>
-					</Box>
+					{!props.isPastReservation && (
+						<Box marginLeft={'auto'} position={'relative'}>
+							<LabelButton
+								className={'editCancelBtn'}
+								look={'containedPrimary'}
+								variant={'button'}
+								label={!props.isEdit ? 'Details' : 'Edit'}
+								onClick={(event) => {
+									if (!props.isEdit) {
+										router
+											.navigate(
+												'/reservations/itinerary/reservation/details?ri=' + props.reservationId
+											)
+											.catch(console.error);
+									} else {
+										event.stopPropagation();
+										setToggleBtn(!toggleBtn);
+									}
+								}}
+							/>
+							<div ref={whiteBox} className={toggleBtn ? 'whiteBox open' : 'whiteBox'}>
+								{renderLinks()}
+							</div>
+						</Box>
+					)}
 				</Box>
 			</Box>
 		</Accordion>

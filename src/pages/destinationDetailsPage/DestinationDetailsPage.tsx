@@ -4,7 +4,6 @@ import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -22,7 +21,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { formatFilterDateForServer } from '../../utils/utils';
+import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -30,17 +29,20 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import ComparisonService from '../../services/comparison/comparison.service';
 import LabelButton from '../../components/labelButton/LabelButton';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import Accordion from '@bit/redsky.framework.rs.accordion';
+import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 
 interface DestinationDetailsPageProps {}
 
-const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) => {
+const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const params = router.getPageUrlParams<{ destinationId: number; startDate?: string; endDate?: string }>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
@@ -65,6 +67,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
+	const [rateCode, setRateCode] = useState<string>('');
+	const [validCode, setValidCode] = useState<boolean>(true);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		destinationId: params.destinationId,
 		startDate: initialStartDate.format('YYYY-MM-DD'),
@@ -80,7 +84,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 				let dest = await destinationService.getDestinationDetails(id);
 				if (dest) setDestinationDetails(dest);
 			} catch (e) {
-				rsToasts.error('Cannot get details for this destination');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
+					'Server Error'
+				);
 			}
 		}
 
@@ -99,9 +106,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 			}
 			try {
 				let result = await accommodationService.availability(newSearchQueryObj);
+				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
 			} catch (e) {
+				setValidCode(rateCode === '');
 				console.error(e);
 			}
 		}
@@ -129,7 +138,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	function renderFeatures() {
 		if (!destinationDetails || !destinationDetails.features) return;
 		let featureArray: any = [];
-		destinationDetails.features.forEach((item, index) => {
+		destinationDetails.features.forEach((item) => {
 			if (!item.isActive || item.isCarousel) return false;
 			let primaryMedia: any = '';
 			for (let value of item.media) {
@@ -182,24 +191,38 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 	}
 
 	function updateSearchQueryObj(
-		key: 'startDate' | 'endDate' | 'adults' | 'children' | 'priceRangeMin' | 'priceRangeMax' | 'pagination',
+		key:
+			| 'startDate'
+			| 'endDate'
+			| 'adults'
+			| 'children'
+			| 'priceRangeMin'
+			| 'priceRangeMax'
+			| 'pagination'
+			| 'rateCode',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) throw rsToasts.error('There must be at least one adult.');
-		if (key === 'adults' && isNaN(value)) throw rsToasts.error('# of adults must be a number');
-		if (key === 'children' && isNaN(value)) throw rsToasts.error('# of children must be a number');
-		if (key === 'priceRangeMin' && isNaN(value)) throw rsToasts.error('Price min must be a number');
-		if (key === 'priceRangeMax' && isNaN(value)) throw rsToasts.error('Price max must be a number');
+		if (key === 'adults' && value === 0)
+			throw rsToastify.error('There must be at least one adult.', 'Missing or Incorrect Information');
+		if (key === 'adults' && isNaN(value))
+			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
+		if (key === 'children' && isNaN(value))
+			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMin' && isNaN(value))
+			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
+		if (key === 'priceRangeMax' && isNaN(value))
+			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj[key] = value;
+			if (value === '') delete createSearchQueryObj[key];
+			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
 	}
 
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
-		return availabilityStayList.map((item, index) => {
+		return availabilityStayList.map((item) => {
 			let media = item.media.map((value) => {
 				return value.urls.large;
 			});
@@ -226,6 +249,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							departureDate: searchQueryObj.endDate as string,
 							packages: []
 						};
+						if (searchQueryObj.rateCode) newRoom.rateCode = searchQueryObj.rateCode;
 						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
@@ -250,7 +274,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 							title: destinationDetails.name,
 							roomTypes: destinationDetails.accommodations
 								.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-								.map((value, index) => {
+								.map((value) => {
 									return {
 										value: value.id,
 										text: value.name,
@@ -266,7 +290,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						},
 						{
 							label: 'Max Occupancy',
-							datum: item.maxOccupancyCount
+							datum: item.maxOccupantCount
 						},
 						{
 							label: 'ADA Compliant',
@@ -473,7 +497,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						</Label>
 					</Box>
 					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-						<iframe frameBorder="0" src={renderMapSource()}></iframe>
+						<iframe frameBorder="0" src={renderMapSource()} />
 					</Box>
 				</Box>
 				<div className={'sectionFive'} ref={availableStaysRef}>
@@ -481,40 +505,57 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = (props) =>
 						Available Stays
 					</Label>
 					{size !== 'small' ? (
-						<FilterBar
-							className={'filterBar'}
-							startDate={startDateControl}
-							endDate={endDateControl}
-							onDatesChange={onDatesChange}
-							focusedInput={focusedInput}
-							onFocusChange={setFocusedInput}
-							monthsToShow={2}
-							onChangeAdults={(value) => {
-								if (value === '') value = 0;
-								updateSearchQueryObj('adults', parseInt(value));
-							}}
-							onChangeChildren={(value) => {
-								if (value !== '') updateSearchQueryObj('children', parseInt(value));
-							}}
-							onChangePriceMin={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMin', value);
+						<>
+							<FilterBar
+								className={'filterBar'}
+								startDate={startDateControl}
+								endDate={endDateControl}
+								onDatesChange={onDatesChange}
+								focusedInput={focusedInput}
+								onFocusChange={setFocusedInput}
+								monthsToShow={2}
+								onChangeAdults={(value) => {
+									if (value === '') value = 0;
+									updateSearchQueryObj('adults', parseInt(value));
+								}}
+								onChangeChildren={(value) => {
+									if (value !== '') updateSearchQueryObj('children', parseInt(value));
+								}}
+								onChangePriceMin={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMin', value);
+									}
+								}}
+								onChangePriceMax={(value) => {
+									if (value !== '') {
+										updateSearchQueryObj('priceRangeMax', value);
+									}
+								}}
+								adultsInitialInput={searchQueryObj.adults.toString()}
+								childrenInitialInput={searchQueryObj.children.toString()}
+								initialPriceMax={
+									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 								}
-							}}
-							onChangePriceMax={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMax', value);
+								initialPriceMin={
+									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 								}
-							}}
-							adultsInitialInput={searchQueryObj.adults.toString()}
-							childrenInitialInput={searchQueryObj.children.toString()}
-							initialPriceMax={
-								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
-							}
-							initialPriceMin={
-								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
-							}
-						/>
+							/>
+							<Accordion
+								hideHoverEffect
+								hideChevron
+								children={
+									<RateCodeSelect
+										apply={(value) => {
+											setRateCode(value);
+											updateSearchQueryObj('rateCode', value);
+										}}
+										code={rateCode}
+										valid={!validCode}
+									/>
+								}
+								titleReact={<Label variant={'button'}>toggle rate code</Label>}
+							/>
+						</>
 					) : (
 						<LabelButton
 							look={'none'}

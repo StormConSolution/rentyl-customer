@@ -1,11 +1,8 @@
 import * as React from 'react';
 import './CategoryImageGalleryMobile.scss';
 import { useState } from 'react';
-import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import LabelButton from '../labelButton/LabelButton';
 import Button from '@bit/redsky.framework.rs.button';
 import { popupController } from '@bit/redsky.framework.rs.996';
-import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Select from '../Select/Select';
 import Carousel from '../carousel/Carousel';

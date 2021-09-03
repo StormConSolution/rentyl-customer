@@ -3,7 +3,6 @@ import './ItineraryDetailsPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import HeroImage from '../../components/heroImage/HeroImage';
@@ -12,18 +11,18 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
-import { ObjectUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
-import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
+import globalState from '../../state/globalState';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -42,7 +41,10 @@ const ItineraryDetailsPage: React.FC = () => {
 				let res = await reservationService.getItinerary({ itineraryId: params.itineraryId });
 				setItinerary(res);
 			} catch (e) {
-				rsToasts.error('Unable to get itinerary details', 'Itinerary unavailable');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get itinerary details'),
+					'Itinerary unavailable!'
+				);
 			}
 		}
 		getItineraryDetails().catch(console.error);
@@ -94,10 +96,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					return {
 						name: item.accommodation.name,
 						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
-						subtotalCostCents:
-							item.priceDetail.grandTotalCents -
-							item.priceDetail.taxAndFeeTotalInCents -
-							item.priceDetail.upsellPackageTotalInCents,
+						subtotalCostCents: item.priceDetail.accommodationTotalInCents,
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
 						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
@@ -143,9 +142,9 @@ const ItineraryDetailsPage: React.FC = () => {
 			});
 			setItinerary(response);
 			popupController.close(SpinningLoaderPopup);
-			rsToasts.success('Successfully updated payment method.');
+			rsToastify.success('Successfully updated payment method.', 'Success!');
 		} catch (e) {
-			rsToasts.error(e.message || 'A server error has occurred');
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
 			popupController.close(SpinningLoaderPopup);
 		}
 	}
@@ -235,68 +234,79 @@ const ItineraryDetailsPage: React.FC = () => {
 											description={itinerary.paymentMethod.type}
 										/>
 									</div>
-									<hr />
-									<div className={editPaymentCard ? 'newPaymentOptions show' : 'newPaymentOptions'}>
-										<div>
-											<Label variant={'h4'} marginBottom={9}>
-												OTHER PAYMENT OPTIONS
-											</Label>
-											<Select
-												options={renderSelectOptions()}
-												placeHolder={'Please Select A Card'}
-												showSelectedAsPlaceHolder
-												onChange={(value) => {
-													if (!user) return;
-													if (typeof value === 'number') {
-														return setNewPaymentMethod(
-															user.paymentMethods.find((item) => item.id === value)
-														);
+									{new Date(itinerary.stays[0].arrivalDate).getTime() > Date.now() && (
+										<>
+											<hr />
+											<div
+												className={
+													editPaymentCard ? 'newPaymentOptions show' : 'newPaymentOptions'
+												}
+											>
+												<div>
+													<Label variant={'h4'} marginBottom={9}>
+														OTHER PAYMENT OPTIONS
+													</Label>
+													<Select
+														options={renderSelectOptions()}
+														placeHolder={'Please Select A Card'}
+														showSelectedAsPlaceHolder
+														onChange={(value) => {
+															if (!user) return;
+															if (typeof value === 'number') {
+																return setNewPaymentMethod(
+																	user.paymentMethods.find(
+																		(item) => item.id === value
+																	)
+																);
+															}
+															setNewPaymentMethod(undefined);
+														}}
+													/>
+												</div>
+												<AccordionTitleDescription
+													title={'Name on card'}
+													description={newPaymentMethod?.nameOnCard || ''}
+												/>
+												<AccordionTitleDescription
+													title={'Card Number'}
+													description={newPaymentMethod?.cardNumber || ''}
+												/>
+												<AccordionTitleDescription
+													title={'Expiration Date'}
+													description={
+														!!newPaymentMethod
+															? `${
+																	newPaymentMethod.expirationMonth +
+																	'/' +
+																	newPaymentMethod.expirationYear
+															  }`
+															: ''
 													}
-													setNewPaymentMethod(undefined);
-												}}
-											/>
-										</div>
-										<AccordionTitleDescription
-											title={'Name on card'}
-											description={newPaymentMethod?.nameOnCard || ''}
-										/>
-										<AccordionTitleDescription
-											title={'Card Number'}
-											description={newPaymentMethod?.cardNumber || ''}
-										/>
-										<AccordionTitleDescription
-											title={'Expiration Date'}
-											description={
-												!!newPaymentMethod
-													? `${
-															newPaymentMethod.expirationMonth +
-															'/' +
-															newPaymentMethod.expirationYear
-													  }`
-													: ''
-											}
-										/>
-									</div>
-									<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>
-										<LabelButton
-											className={editPaymentCard ? 'showBtn' : 'hideBtn'}
-											look={'containedPrimary'}
-											variant={'button'}
-											label={'Save'}
-											onClick={() => {
-												saveNewPaymentMethod();
-											}}
-										/>
-										<LabelButton
-											className={'editCancelBtn'}
-											look={editPaymentCard ? 'containedSecondary' : 'containedPrimary'}
-											variant={'button'}
-											label={editPaymentCard ? 'Cancel' : 'Change'}
-											onClick={() => {
-												setEditPaymentCard(!editPaymentCard);
-											}}
-										/>
-									</Box>
+												/>
+											</div>
+											<Box position={'relative'} display={'flex'} marginLeft={'auto'} width={210}>
+												<LabelButton
+													className={editPaymentCard ? 'showBtn' : 'hideBtn'}
+													look={'containedPrimary'}
+													variant={'button'}
+													label={'Save'}
+													onClick={() => {
+														saveNewPaymentMethod();
+													}}
+												/>
+
+												<LabelButton
+													className={'editCancelBtn'}
+													look={editPaymentCard ? 'containedSecondary' : 'containedPrimary'}
+													variant={'button'}
+													label={editPaymentCard ? 'Cancel' : 'Change'}
+													onClick={() => {
+														setEditPaymentCard(!editPaymentCard);
+													}}
+												/>
+											</Box>
+										</>
+									)}
 								</Paper>
 							)}
 						</Box>

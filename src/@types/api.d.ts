@@ -76,7 +76,7 @@ declare namespace Api {
 				media: Media[]; //*All media for accommodation and accommodation categories*
 				featureIcons: string[]; //*Limit it to the first five*
 				maxSleeps: number;
-				maxOccupancyCount: number;
+				maxOccupantCount: number;
 				roomCount: number;
 				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;

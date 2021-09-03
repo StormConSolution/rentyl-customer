@@ -4,7 +4,6 @@ import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useState } from 'react';
 import router from '../../utils/router';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -14,7 +13,7 @@ import AccommodationInfoCard from '../../components/accommodationInfoCard/Accomm
 import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../models/globalState';
+import globalState, { ComparisonCardInfo } from '../../state/globalState';
 import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import CategoryFeatureIcons from '../../components/categoryFeatureIcons/CategoryFeatureIcons';
@@ -23,18 +22,17 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import CategoryImageGallery from '../../components/categoryImageGallery/CategoryImageGallery';
 import moment from 'moment';
-import { DateUtils, formatFilterDateForServer } from '../../utils/utils';
-import { animateBackForView } from '@bit/redsky.framework.rs.996/dist/pageAnimation';
+import { DateUtils, formatFilterDateForServer, WebUtils } from '../../utils/utils';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
-import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccommodationDetailsPageProps {}
 
-const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props) => {
+const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
@@ -59,6 +57,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		arrivalDate: string;
 		departureDate: string;
 		adults: number;
+		rateCode?: string;
 	}>({
 		arrivalDate: initialStartDate.format('YYYY-MM-DD'),
 		departureDate: initialEndDate.format('YYYY-MM-DD'),
@@ -73,7 +72,10 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 				let destination = await destinationService.getDestinationDetails(accommodation.destinationId);
 				setDestinationDetails(destination);
 			} catch (e) {
-				rsToasts.error('Cannot find details, please try again', '', 5000);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Cannot find details, please try again'),
+					'Server Error'
+				);
 			}
 		}
 		getAccommodationDetails(params.accommodationId);
@@ -116,10 +118,11 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 		);
 	}
 
-	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults', value: any) {
+	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults' | 'rateCode', value: any) {
 		setAvailabilityObj((prev) => {
 			let createAvailabilityObj: any = { ...prev };
-			createAvailabilityObj[key] = value;
+			if (value === '') delete createAvailabilityObj[key];
+			else createAvailabilityObj[key] = value;
 			return createAvailabilityObj;
 		});
 	}
@@ -144,7 +147,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 
 	function renderCategoryFeatures() {
 		if (!accommodationDetails) return '';
-		return accommodationDetails.categories.map((item, index) => {
+		return accommodationDetails.categories.map((item) => {
 			let features = item.features.map((value) => {
 				return {
 					title: value.title,
@@ -167,6 +170,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 			departureDate: availabilityObj.departureDate,
 			packages: []
 		};
+		if (availabilityObj.rateCode) data.rateCode = availabilityObj.rateCode;
 		const stringedParams: string = JSON.stringify({
 			destinationId: destinationDetails.id,
 			newRoom: data
@@ -204,11 +208,15 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 							focusedInput={focusedInput}
 							startDate={startDate}
 							endDate={endDate}
+							rateCode={availabilityObj.rateCode}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
 							}}
 							onGuestChange={(value) => {
 								updateAvailabilityObj('adults', +value);
+							}}
+							onRateCodeChange={(value) => {
+								updateAvailabilityObj('rateCode', value);
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
@@ -218,7 +226,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = (props
 									title: destinationDetails.name,
 									roomTypes: destinationDetails.accommodations
 										.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-										.map((item, index) => {
+										.map((item) => {
 											return {
 												value: item.id,
 												text: item.name,

@@ -1,18 +1,18 @@
 import * as React from 'react';
 import './BookingCartTotalsCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { DateUtils, NumberUtils, StringUtils } from '../../../utils/utils';
+import { DateUtils, NumberUtils, StringUtils, WebUtils } from '../../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
 import serviceFactory from '../../../services/serviceFactory';
 import ReservationsService from '../../../services/reservations/reservations.service';
-import rsToasts from '@bit/redsky.framework.toast';
 import { useRecoilState } from 'recoil';
-import globalState from '../../../models/globalState';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import globalState from '../../../state/globalState';
 
 interface BookingCartTotalsCardProps {
 	uuid: number;
@@ -93,7 +93,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
-				rsToasts.error('This accommodation is no longer available for these dates', 'No Longer Available');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'This accommodation is no longer available for these dates'),
+					'No Longer Available'
+				);
 				let updatedVerifiedAccommodation = { ...verifiedAccommodation };
 				delete updatedVerifiedAccommodation[props.uuid];
 				setVerifiedAccommodation(updatedVerifiedAccommodation);
@@ -130,7 +133,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					look={'none'}
 					variant={'body1'}
 					label={'CHANGE ROOM'}
-					onClick={(e) => {
+					onClick={() => {
 						props.changeRoom();
 					}}
 				/>
@@ -138,7 +141,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					look={'none'}
 					variant={'body1'}
 					label={'EDIT PACKAGES'}
-					onClick={(e) => {
+					onClick={() => {
 						if (props.editPackages) props.editPackages();
 					}}
 				/>
@@ -161,7 +164,12 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		let difference: number =
 			pointTotal - NumberUtils.convertCentsToPoints(localAccommodation.prices.accommodationTotalInCents, 10);
 		let offset: number =
-			(difference / DateUtils.daysBetween(localAccommodation.arrivalDate, localAccommodation.departureDate)) * 10;
+			(difference /
+				DateUtils.daysBetweenStartAndEndDates(
+					new Date(localAccommodation.arrivalDate),
+					new Date(localAccommodation.departureDate)
+				)) *
+			10;
 		Object.keys(localAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
 			const costPerNight = localAccommodation.prices.accommodationDailyCostsInCents;
 			let point: number = index === Object.keys(costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
@@ -223,7 +231,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	function renderPackages() {
 		if (!localAccommodation?.upsellPackages || !ObjectUtils.isArrayWithData(localAccommodation.upsellPackages))
 			return [];
-		return localAccommodation.upsellPackages.map((item, index) => {
+		return localAccommodation.upsellPackages.map((item) => {
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
@@ -249,7 +257,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'body1'}>{props.adults} Adults</Label>
 					<Label variant={'body1'}>{props.children} Children</Label>
 				</Box>
-				<Label variant={'h4'}>{DateUtils.daysBetween(props.arrivalDate, props.departureDate)} Nights</Label>
+				<Label variant={'h4'}>
+					{DateUtils.daysBetweenStartAndEndDates(new Date(props.arrivalDate), new Date(props.departureDate))}{' '}
+					Nights
+				</Label>
 				<Box display={'flex'} alignItems={'center'} mb={20}>
 					<Label variant={'h3'} width={'170px'}>
 						Total:

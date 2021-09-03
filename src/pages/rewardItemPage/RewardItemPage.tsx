@@ -5,7 +5,6 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import FeaturedCategoryCard from './featuredCategoryCard/FeaturedCategoryCard';
 import { SelectOptions } from '../../components/Select/Select';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
-import rsToasts from '@bit/redsky.framework.toast';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from './rewardCategoryCard/RewardCategoryCard';
@@ -21,7 +20,9 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../../utils/utils';
+import globalState from '../../state/globalState';
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
@@ -51,10 +52,10 @@ const RewardItemPage: React.FC = () => {
 				try {
 					if (params.categories) urlSelectedCategories = JSON.parse(params.categories);
 				} catch (e) {
-					rsToasts.error('Cannot get a list of categories.');
+					rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get a list of categories.'), 'Server Error');
 				}
-				let allActiveCategories = await rewardService.getAllActiveCategories();
-				let data = await rewardService.getAllForRewardItemPage();
+				let activeCategoriesResponse = await rewardService.getAllActiveCategories();
+				let allActiveCategories: Api.Reward.Category.Res.Get[] = activeCategoriesResponse.data;
 				let selectCategories = allActiveCategories.map((category) => {
 					return {
 						value: category.id,
@@ -62,9 +63,14 @@ const RewardItemPage: React.FC = () => {
 						text: category.name
 					};
 				});
+				let featuredCategories = await rewardService.getPagedCategories({
+					pagination: { page: 1, perPage: 100 },
+					filter: { matchType: 'exact', searchTerm: [{ column: 'isFeatured', value: 1 }] }
+				});
 				setCategorySelectList(selectCategories);
-				setFeaturedCategory(data.featuredCategories);
-				setDestinationSelectList(data.destinationSelect);
+				let vendorList = await rewardService.getVendorsInSelectFormat();
+				setFeaturedCategory(featuredCategories.data);
+				setDestinationSelectList(vendorList);
 				setWaitToLoad(false);
 			} catch (e) {
 				console.error(e);
@@ -78,23 +84,23 @@ const RewardItemPage: React.FC = () => {
 			setCardTotal(0);
 			if (ObjectUtils.isArrayWithData(params.categories) || params.categories === '') {
 				try {
-					let pagedCategories = await rewardService.getPagedCategories(
-						page,
-						perPage,
-						'name',
-						'ASC',
-						'exact',
-						[
-							{
-								column: 'isActive',
-								value: 1
-							}
-						]
-					);
-					setCategoryPagedList(pagedCategories.data.data);
-					setCardTotal(pagedCategories.data.total ? pagedCategories.data.total : 0);
+					const pagedCategories = await rewardService.getPagedCategories({
+						pagination: { page, perPage },
+						sort: { field: 'name', order: 'ASC' },
+						filter: {
+							matchType: 'exact',
+							searchTerm: [
+								{
+									column: 'isActive',
+									value: 1
+								}
+							]
+						}
+					});
+					setCategoryPagedList(pagedCategories.data);
+					setCardTotal(pagedCategories.total || 0);
 				} catch (e) {
-					rsToasts.error('Cannot get the list of rewards.');
+					rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get the list of rewards.'), 'Server Error');
 				}
 			} else {
 				let filter = formatFilterQuery();
@@ -189,7 +195,7 @@ const RewardItemPage: React.FC = () => {
 
 	function handleSidebarFilters(selectedFromCategoryTile: boolean) {
 		if (!params.categories && !selectedFromCategoryTile) {
-			rsToasts.error('Must have at least one category selected.');
+			rsToastify.error('Must have at least one category selected.', 'Select A Category!');
 			return;
 		}
 		setShowCategoryOrRewardCards('reward');

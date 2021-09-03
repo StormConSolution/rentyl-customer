@@ -13,10 +13,7 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { DateUtils } from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
-import Icon from '@bit/redsky.framework.rs.icon';
-import PackageDetailsPopup, { PackageDetailsPopupProps } from './packageDetailsPopup/PackageDetailsPopup';
 import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
-import PackageService from '../../services/package/package.service';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	uuid: number;

@@ -3,7 +3,6 @@ import './BookingFlowCheckoutPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
-import rsToasts from '@bit/redsky.framework.toast';
 import serviceFactory from '../../services/serviceFactory';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
@@ -14,7 +13,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
@@ -24,9 +23,11 @@ import EditAccommodationPopup, {
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState from '../../models/globalState';
+import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 let existingCardId = 0;
 
@@ -43,7 +44,7 @@ const BookingFlowCheckoutPage = () => {
 	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
 	const destinationId = params.data.destinationId;
 	const stayParams = params.data.stays;
-	const [usePoints, setUsePoints] = useState<boolean>(!!company.allowPointBooking);
+	const [usePoints, setUsePoints] = useState<boolean>(!company.allowCashBooking);
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
@@ -84,7 +85,10 @@ const BookingFlowCheckoutPage = () => {
 				let destination = await destinationService.getDestinationDetails(destinationId);
 				setDestinationDetails(destination);
 			} catch (e) {
-				rsToasts.error('Unable to get destination information', 'Server Error');
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get destination information.'),
+					'Server Error'
+				);
 				router.navigate('/reservation/availability').catch(console.error);
 			}
 		}
@@ -396,14 +400,7 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Add Room'}
-					onClick={() => {
-						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`).catch(console.error);
-					}}
-				/>
+				<LinkButton label={'Add Room'} path={`/booking/add-room?data=${JSON.stringify(params.data)}`} />
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>

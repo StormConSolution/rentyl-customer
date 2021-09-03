@@ -1,6 +1,9 @@
 @import url('./fonts/MrsEavesXL/font.scss');
 @import 'themes/themes';
 @import 'themes/label';
+@import 'themes/button';
+@import 'themes/input';
+@import 'themes/select';
 
 body {
 	margin: 0;
@@ -32,109 +35,6 @@ body {
 			color: inherit;
 			margin: 0 auto;
 			max-width: 1440px;
-		}
-	}
-}
-
-.rsButton {
-	&.contained {
-		&.primary {
-			background-color: theme-var($buttonLinkColor) !important;
-			color: #ffffff;
-			border-radius: 20px 0;
-			padding: 0 24px;
-			height: 40px;
-
-			.rsLabel {
-				color: #ffffff;
-			}
-		}
-
-		&.secondary {
-			background-color: #ffffff !important;
-			color: theme-var($buttonLinkColor);
-			border: 2px solid theme-var($buttonLinkColor);
-			border-radius: 20px 0;
-			padding: 0 24px;
-			height: 40px;
-
-			.rsLabel {
-				color: theme-var($buttonLinkColor);
-			}
-		}
-	}
-	&:disabled {
-		cursor: not-allowed;
-	}
-}
-
-.rsInput {
-	font-family: 'MrsEavesXL', sans-serif;
-	font-size: 16px;
-	height: 40px;
-	padding: 0 10px;
-	box-sizing: border-box;
-	border-radius: 0;
-	border: 1px solid theme-var($greyLineColor);
-	color: theme-var($primaryTextColor) !important;
-	outline: none !important;
-	transition: border-color 300ms;
-	input {
-		height: 100%;
-	}
-	&:focus-within,
-	&:hover {
-		border-color: theme-var($buttonLinkColor) !important;
-	}
-}
-
-.rsInput::-webkit-outer-spin-button,
-.rsInput::-webkit-inner-spin-button {
-	-webkit-appearance: none;
-}
-
-.rsSelect {
-	&.outlined {
-		height: 40px;
-		border-radius: 0;
-		border: 1px solid theme-var($greyLineColor);
-
-		.options {
-			background-color: #fcfbf8;
-			border: 1px solid theme-var($greyLineColor);
-			top: 20px;
-
-			li {
-				&:hover {
-					filter: brightness(1);
-					box-shadow: theme-var($primaryBoxShadowColor);
-				}
-			}
-		}
-
-		.label {
-			top: 0;
-			bottom: 0;
-			left: 11px;
-		}
-
-		.input {
-			font-family: 'MrsEavesXL', sans-serif;
-			color: theme-var($primaryTextColor) !important;
-			padding: 0;
-
-			&:not(:placeholder-shown) + .label {
-				transform: scale(0.7) translateY(-29px) !important;
-			}
-		}
-
-		&:focus-within {
-			border-color: theme-var($buttonLinkColor) !important;
-			color: theme-var($buttonLinkColor) !important;
-
-			.label {
-				transform: scale(0.8) translateY(-25px) !important;
-			}
 		}
 	}
 }

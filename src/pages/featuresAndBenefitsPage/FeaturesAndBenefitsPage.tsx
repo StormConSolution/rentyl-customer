@@ -3,7 +3,6 @@ import './FeaturesAndBenefitsPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Carousel from '../../components/carousel/Carousel';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
