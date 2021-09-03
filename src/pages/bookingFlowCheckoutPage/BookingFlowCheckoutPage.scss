@@ -20,6 +20,9 @@
 	}
 
 	.colOne {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		.packagesAccordion {
 			background-color: theme-var($primaryBackgroundColor);
 			box-shadow: theme-var($primaryBoxShadowColor);
@@ -35,6 +38,7 @@
 
 		.acknowledgementSection {
 			background-color: theme-var($primaryBackgroundColor);
+			width: 100%;
 			.rsLabelCheckbox {
 				padding: 0;
 			}

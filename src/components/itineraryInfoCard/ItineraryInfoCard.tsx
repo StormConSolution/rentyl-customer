@@ -7,6 +7,7 @@ import LabelButton from '../labelButton/LabelButton';
 import router from '../../utils/router';
 import Paper from '../paper/Paper';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import LinkButton from '../linkButton/LinkButton';
 
 interface NavButtons {
 	link: string;
@@ -41,13 +42,10 @@ const ItineraryInfoCard: React.FC<ItineraryInfoCardProps> = (props) => {
 				</Label>
 			</Box>
 			<Box display={'flex'} justifyContent={'space-evenly'}>
-				<LabelButton
+				<LinkButton
 					look={'containedPrimary'}
-					variant={'button'}
 					label={props.callToActionButton.label}
-					onClick={() => {
-						router.navigate(props.callToActionButton.link).catch(console.error);
-					}}
+					path={props.callToActionButton.link}
 				/>
 				{props.canLeaveReview && (
 					<LabelButton

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './RoomBookNowCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box } from '@bit/redsky.framework.rs.996';
 import moment from 'moment';
@@ -10,7 +9,7 @@ import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
-import Accordion from '@bit/redsky.framework.rs.accordion';
+import LinkButton from '../linkButton/LinkButton';
 
 interface RoomBookNowCardProps {
 	points: number;
@@ -120,13 +119,13 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 				</Box>
 			</Box>
 			<Box className={'roomBookNowBottomContent'}>
-				<LabelButton
+				<LinkButton
 					className={'bookNowBtn'}
 					look={props.bookNowDisabled && !props.isAvailable ? 'containedSecondary' : 'containedPrimary'}
-					variant={'button'}
 					label={'BOOK NOW'}
 					disabled={props.bookNowDisabled && !props.isAvailable}
 					onClick={props.bookNowOnClick}
+					path={'/booking/packages'}
 				/>
 				{renderCompareLabelOrButton()}
 			</Box>

@@ -1,12 +1,12 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
 import { NumberUtils, StringUtils } from '../../utils/utils';
-import LabelButton from '../labelButton/LabelButton';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import LinkButton from '../linkButton/LinkButton';
 
 export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
@@ -58,24 +58,24 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 				</div>
 				{size !== 'small' && (
 					<div>
-						<LabelButton
-							variant="caption"
+						<LinkButton
 							look="containedSecondary"
 							label="Details"
 							onClick={() => {
 								props.onDetailsClick(accommodation.id);
 							}}
+							path={'/accommodation/details'}
 						/>
 					</div>
 				)}
 				<div>
-					<LabelButton
-						variant="caption"
+					<LinkButton
 						look="containedPrimary"
 						label="Book Now"
 						onClick={() => {
 							props.onBookNowClick(accommodation.id);
 						}}
+						path={'/booking/packages'}
 					/>
 				</div>
 				{size !== 'small' && !!props.onAddCompareClick && (

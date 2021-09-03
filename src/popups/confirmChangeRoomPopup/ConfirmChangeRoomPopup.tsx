@@ -6,6 +6,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Paper from '../../components/paper/Paper';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 export interface ConfirmChangeRoomPopupProps extends PopupProps {
 	onUpdateRoomClick: () => void;
@@ -30,11 +31,11 @@ const ConfirmChangeRoomPopup: React.FC<ConfirmChangeRoomPopupProps> = (props) =>
 						You are updating your room and will cancel your previous room reservation.
 					</Label>
 					<Box display={'flex'} marginTop={30} width={250} justifyContent={'space-between'}>
-						<LabelButton
+						<LinkButton
 							look={'containedPrimary'}
-							variant={'button'}
 							label={'Update Room'}
 							onClick={props.onUpdateRoomClick}
+							path={'/reservations'}
 						/>
 						<LabelButton
 							look={'containedSecondary'}

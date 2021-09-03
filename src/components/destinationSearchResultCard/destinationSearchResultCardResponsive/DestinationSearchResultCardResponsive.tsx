@@ -43,7 +43,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant="h2">{props.destinationName}</Label>
 					<Label variant="caption">{props.address}</Label>
 				</div>
-				<LinkButton label="Resort Details" path={props.destinationDetailsPath} />
+				<LinkButton label="Resort Details" path={props.destinationDetailsPath} look={'containedPrimary'} />
 				<StarRating size="small16px" rating={props.starRating} />
 				<LabelLink
 					className="ratings"

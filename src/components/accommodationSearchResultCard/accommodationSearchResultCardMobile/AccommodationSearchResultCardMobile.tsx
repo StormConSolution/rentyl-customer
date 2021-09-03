@@ -8,8 +8,9 @@ import AccommodationSearchDetailCard, {
 import Carousel from '../../carousel/Carousel';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../../labelButton/LabelButton';
+import LinkButton from '../../linkButton/LinkButton';
 
 interface AccommodationSearchResultCardMobileProps {
 	id: number | string;
@@ -63,20 +64,20 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 			</Label>
 			<AccommodationSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
 			<Box display={'flex'} justifyContent={!props.hideButtons ? 'space-between' : 'center'} mt={10}>
-				<LabelButton
+				<LinkButton
 					className={'small'}
 					look={'containedPrimary'}
-					variant={'button'}
 					label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 					onClick={props.onBookNowClick}
+					path={'/booking/packages'}
 				/>
 				{!props.hideButtons && (
-					<LabelButton
+					<LinkButton
 						className={'small'}
 						look={'containedSecondary'}
-						variant={'button'}
 						label={'View Details'}
 						onClick={props.onViewDetailsClick}
+						path={'/accommodation/details'}
 					/>
 				)}
 			</Box>

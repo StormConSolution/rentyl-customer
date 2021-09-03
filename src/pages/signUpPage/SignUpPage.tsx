@@ -6,7 +6,6 @@ import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
-import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
 import UserService from '../../services/user/user.service';
 import serviceFactory from '../../services/serviceFactory';
@@ -22,6 +21,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import Icon from '@bit/redsky.framework.rs.icon';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 let phoneNumber = '';
 let country = 'US';
@@ -388,12 +388,12 @@ const SignUpPage: React.FC = () => {
 								updateControl={updateUserObjForm}
 							/>
 
-							<LabelButton
+							<LinkButton
 								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
-								variant={'button'}
 								label={'Sign Up'}
 								onClick={signUp}
 								disabled={!formIsValid || !isValidForm}
+								path={'/signin'}
 							/>
 
 							<div className={'termsAndPrivacy'}>

@@ -93,6 +93,7 @@ const DestinationReviewPage: React.FC = () => {
 						<LinkButton
 							path={`/destination/details?di=${params.destinationId}`}
 							label={'View Destination'}
+							look={'containedPrimary'}
 						/>
 					</Box>
 

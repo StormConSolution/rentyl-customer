@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './BookingFlowCheckoutPage.scss';
-import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Link, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
@@ -400,7 +400,11 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LinkButton label={'Add Room'} path={`/booking/add-room?data=${JSON.stringify(params.data)}`} />
+				<LinkButton
+					label={'Add Room'}
+					path={`/booking/add-room?data=${JSON.stringify(params.data)}`}
+					look={'containedPrimary'}
+				/>
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>
@@ -498,15 +502,15 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
-						<LabelButton
+						<LinkButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
-							variant={'button'}
 							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'Complete Booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);
 							}}
 							disabled={isDisabled}
+							path={'/success'}
 						/>
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}

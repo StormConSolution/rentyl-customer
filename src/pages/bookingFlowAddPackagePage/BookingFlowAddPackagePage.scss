@@ -15,7 +15,10 @@
 			margin-bottom: 50px;
 		}
 
-		.rsLabelButton {
+		.rsLinkButton {
+			display: block;
+			width: fit-content;
+			width: -moz-fit-content;
 			margin: 20px auto;
 		}
 	}

@@ -2,12 +2,12 @@ import React from 'react';
 import './AccommodationSearchCallToActionCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import { Box } from '@bit/redsky.framework.rs.996';
-import LabelButton from '../labelButton/LabelButton';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import { StringUtils } from '../../utils/utils';
+import LinkButton from '../linkButton/LinkButton';
 
 interface AccommodationSearchCallToActionCardProps {
 	points: number;
@@ -84,13 +84,13 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 							</Label>
 						</Button>
 					)}
-					<LabelButton
+					<LinkButton
 						className={'bookNowBtnMobile'}
-						look={'containedPrimary'}
-						variant={'button'}
 						label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 						disabled={props.bookNowDisabled}
 						onClick={props.bookNowOnClick}
+						path={'/booking/packages'}
+						look={'containedPrimary'}
 					/>
 				</Box>
 			</Paper>
@@ -111,22 +111,22 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 				<Label className={'pointsLabel'} variant={'h2'}>
 					{StringUtils.addCommasToNumber(props.points)} points
 				</Label>
-				<LabelButton
-					className={'bookNowBtn'}
-					look={'containedPrimary'}
-					variant={'button'}
+				<LinkButton
+					className={'bookNowBtnMobile'}
 					label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 					disabled={props.bookNowDisabled}
 					onClick={props.bookNowOnClick}
+					path={'/booking/packages'}
+					look={'containedPrimary'}
 				/>
 				{!props.hideButtons && (
-					<LabelButton
-						className={'viewDetailsBtn'}
-						look={'containedSecondary'}
-						variant={'button'}
+					<LinkButton
 						label={'VIEW DETAILS'}
+						className={'viewDetailsBtn'}
+						path={'/accommodation/details'}
 						disabled={props.viewDetailsDisabled}
 						onClick={props.viewDetailsOnClick}
+						look={'containedSecondary'}
 					/>
 				)}
 

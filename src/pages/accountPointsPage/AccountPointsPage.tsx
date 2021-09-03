@@ -20,6 +20,7 @@ import { SelectOptions } from '../../components/Select/Select';
 import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -140,17 +141,11 @@ const AccountPointsPage: React.FC = () => {
 						justifyContent={'center'}
 						marginTop={'40px'}
 					>
-						<LabelButton
-							look={'containedPrimary'}
-							variant={'button'}
-							label={'Purchase Points'}
-							onClick={() => router.navigate('/').catch(console.error)}
-						/>
-						<LabelButton
+						<LinkButton look={'containedPrimary'} label={'Purchase Points'} path={'/'} />
+						<LinkButton
 							look={'containedSecondary'}
-							variant={'button'}
 							label={'Learn About Points'}
-							onClick={() => router.navigate('/about-spire-points').catch(console.error)}
+							path={'/about-spire-points'}
 						/>
 					</Box>
 					<Box

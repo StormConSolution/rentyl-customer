@@ -9,6 +9,12 @@
 		animation: fadeIn 1s;
 		padding-top: 1px;
 
+		.rsLinkButton {
+			display: block;
+			width: fit-content;
+			width: -moz-fit-content;
+		}
+
 		.container {
 			width: 470px;
 			height: 100%;
