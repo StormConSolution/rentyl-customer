@@ -13,7 +13,6 @@ import ReservationsService from '../../../services/reservations/reservations.ser
 import { useRecoilState } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../../state/globalState';
-import LinkButton from '../../../components/linkButton/LinkButton';
 
 interface BookingCartTotalsCardProps {
 	uuid: number;
@@ -130,21 +129,21 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						props.removeAccommodation(true);
 					}}
 				/>
-				<LinkButton
+				<LabelButton
 					look={'none'}
+					variant={'body1'}
 					label={'CHANGE ROOM'}
 					onClick={() => {
 						props.changeRoom();
 					}}
-					path={'/booking/add-room'}
 				/>
-				<LinkButton
+				<LabelButton
 					look={'none'}
+					variant={'body1'}
 					label={'EDIT PACKAGES'}
 					onClick={() => {
 						if (props.editPackages) props.editPackages();
 					}}
-					path={'/booking/packages'}
 				/>
 				<LabelButton
 					look={'none'}

@@ -15,7 +15,6 @@ import Footer from '../../components/footer/Footer';
 import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
-import LinkButton from '../../components/linkButton/LinkButton';
 
 const RewardDetailPage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -58,12 +57,12 @@ const RewardDetailPage: React.FC = () => {
 		if (user) {
 			const hasEnoughPoints = user.availablePoints - reward.pointCost > 0;
 			return (
-				<LinkButton
+				<LabelButton
 					disabled={!hasEnoughPoints}
 					className={'buyButton'}
 					look={hasEnoughPoints ? 'containedPrimary' : 'containedSecondary'}
+					variant={'caption'}
 					label={'buy with points'}
-					path={`/reward/purchase?ri=${reward ? reward.id : ''}&vc=${params.voucherCode}`}
 				/>
 			);
 		} else {

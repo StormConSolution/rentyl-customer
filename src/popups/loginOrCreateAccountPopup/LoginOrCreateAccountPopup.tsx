@@ -6,7 +6,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import router from '../../utils/router';
 import Icon from '@bit/redsky.framework.rs.icon';
-import LinkButton from '../../components/linkButton/LinkButton';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 export interface LoginOrCreateAccountPopupProps extends PopupProps {
 	query: string;
@@ -36,21 +36,23 @@ const LoginOrCreateAccountPopup: React.FC<LoginOrCreateAccountPopupProps> = (pro
 					Lets change that.
 				</Label>
 				<Box display={'flex'} justifyContent={'space-evenly'} width={'100%'}>
-					<LinkButton
+					<LabelButton
 						look={'containedPrimary'}
+						variant={'button'}
 						label={'Log in'}
 						onClick={() => {
+							router.navigate(`/signin?${encodeURI(props.query)}`);
 							popupController.close(LoginOrCreateAccountPopup);
 						}}
-						path={`/signin?data=${encodeURI(props.query)}`}
 					/>
-					<LinkButton
+					<LabelButton
 						look={'containedPrimary'}
+						variant={'button'}
 						label={'Sign up'}
 						onClick={() => {
+							router.navigate(`/signup?${encodeURI(props.query)}`);
 							popupController.close(LoginOrCreateAccountPopup);
 						}}
-						path={`/signup?data=${encodeURI(props.query)}`}
 					/>
 				</Box>
 			</Paper>

@@ -13,7 +13,6 @@ import Footer from '../../components/footer/Footer';
 import PackageService from '../../services/package/package.service';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import LinkButton from '../../components/linkButton/LinkButton';
 
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -115,7 +114,7 @@ const BookingFlowAddPackagePage = () => {
 					title={item.title}
 					description={item.description}
 					priceCents={item.priceCents}
-					imgPaths={item.media.map((item, index) => {
+					imgPaths={item.media.map((item) => {
 						return item.urls.large;
 					})}
 					onAddPackage={() => {
@@ -148,8 +147,9 @@ const BookingFlowAddPackagePage = () => {
 					<hr />
 					{renderAvailablePackages()}
 				</Box>
-				<LinkButton
+				<LabelButton
 					look={'containedPrimary'}
+					variant={'caption'}
 					label={'Continue To Checkout'}
 					onClick={() => {
 						if (!params.data.newRoom) return;
@@ -164,7 +164,6 @@ const BookingFlowAddPackagePage = () => {
 						};
 						router.navigate(`/booking/checkout?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 					}}
-					path={`/booking/checkout`}
 				/>
 			</div>
 			<PaginationButtons

@@ -6,7 +6,7 @@ import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import LinkButton from '../linkButton/LinkButton';
+import LabelButton from '../labelButton/LabelButton';
 
 export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
@@ -58,24 +58,24 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 				</div>
 				{size !== 'small' && (
 					<div>
-						<LinkButton
+						<LabelButton
 							look="containedSecondary"
+							variant={'caption'}
 							label="Details"
 							onClick={() => {
 								props.onDetailsClick(accommodation.id);
 							}}
-							path={'/accommodation/details'}
 						/>
 					</div>
 				)}
 				<div>
-					<LinkButton
+					<LabelButton
 						look="containedPrimary"
+						variant={'caption'}
 						label="Book Now"
 						onClick={() => {
 							props.onBookNowClick(accommodation.id);
 						}}
-						path={'/booking/packages'}
 					/>
 				</div>
 				{size !== 'small' && !!props.onAddCompareClick && (

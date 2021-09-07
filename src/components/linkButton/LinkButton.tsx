@@ -8,16 +8,13 @@ interface LinkButtonProps {
 	path: string;
 	label: string;
 	className?: string;
-	disabled?: boolean;
-	buttonType?: 'button' | 'submit';
-	onClick?: () => void;
 	look: 'containedPrimary' | 'containedSecondary' | 'none';
 }
 
 const LinkButton: React.FC<LinkButtonProps> = (props) => {
 	return (
-		<Link path={props.path} className={`rsLinkButton ${props.className || ''}`} onClick={props.onClick}>
-			<Button look={props.look} disabled={props.disabled} type={props.buttonType}>
+		<Link path={props.path} className={`rsLinkButton ${props.className || ''}`}>
+			<Button look={props.look}>
 				<Label variant={'caption'}>{props.label}</Label>
 			</Button>
 		</Link>

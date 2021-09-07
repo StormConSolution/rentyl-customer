@@ -13,7 +13,6 @@ import router from '../../utils/router';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import LabelInput from '../../components/labelInput/LabelInput';
-import LinkButton from '../../components/linkButton/LinkButton';
 
 const SignInPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
@@ -101,12 +100,12 @@ const SignInPage: React.FC = () => {
 							control={loginFormGroup.get('password')}
 							updateControl={(updateControl) => loginFormGroup.update(updateControl)}
 						/>
-						<LinkButton
+						<LabelButton
 							className="signInButton"
 							look={'containedPrimary'}
+							variant={'caption'}
 							label="Sign In"
 							buttonType="submit"
-							path={'/'}
 						/>
 						{!!loginErrorMessage.length && (
 							<Label className="rsErrorMessage" variant={'body2'}>

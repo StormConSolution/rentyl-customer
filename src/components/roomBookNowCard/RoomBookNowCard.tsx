@@ -9,7 +9,7 @@ import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
-import LinkButton from '../linkButton/LinkButton';
+import LabelButton from '../labelButton/LabelButton';
 
 interface RoomBookNowCardProps {
 	points: number;
@@ -119,13 +119,13 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 				</Box>
 			</Box>
 			<Box className={'roomBookNowBottomContent'}>
-				<LinkButton
+				<LabelButton
 					className={'bookNowBtn'}
+					variant={'caption'}
 					look={props.bookNowDisabled && !props.isAvailable ? 'containedSecondary' : 'containedPrimary'}
 					label={'BOOK NOW'}
 					disabled={props.bookNowDisabled && !props.isAvailable}
 					onClick={props.bookNowOnClick}
-					path={'/booking/packages'}
 				/>
 				{renderCompareLabelOrButton()}
 			</Box>

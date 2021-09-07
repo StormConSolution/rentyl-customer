@@ -2,12 +2,12 @@ import React from 'react';
 import './AccommodationSearchCallToActionCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import { Box, Link } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import { StringUtils } from '../../utils/utils';
-import LinkButton from '../linkButton/LinkButton';
+import LabelButton from '../labelButton/LabelButton';
 
 interface AccommodationSearchCallToActionCardProps {
 	points: number;
@@ -84,12 +84,12 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 							</Label>
 						</Button>
 					)}
-					<LinkButton
+					<LabelButton
 						className={'bookNowBtnMobile'}
+						variant={'caption'}
 						label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 						disabled={props.bookNowDisabled}
 						onClick={props.bookNowOnClick}
-						path={'/booking/packages'}
 						look={'containedPrimary'}
 					/>
 				</Box>
@@ -111,19 +111,19 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 				<Label className={'pointsLabel'} variant={'h2'}>
 					{StringUtils.addCommasToNumber(props.points)} points
 				</Label>
-				<LinkButton
+				<LabelButton
 					className={'bookNowBtnMobile'}
+					variant={'caption'}
 					label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 					disabled={props.bookNowDisabled}
 					onClick={props.bookNowOnClick}
-					path={'/booking/packages'}
 					look={'containedPrimary'}
 				/>
 				{!props.hideButtons && (
-					<LinkButton
+					<LabelButton
 						label={'VIEW DETAILS'}
+						variant={'caption'}
 						className={'viewDetailsBtn'}
-						path={'/accommodation/details'}
 						disabled={props.viewDetailsDisabled}
 						onClick={props.viewDetailsOnClick}
 						look={'containedSecondary'}

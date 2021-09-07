@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './BookingFlowCheckoutPage.scss';
-import { Box, Link, Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
@@ -502,15 +502,15 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
-						<LinkButton
+						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
+							variant={'caption'}
 							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'Complete Booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);
 							}}
 							disabled={isDisabled}
-							path={'/success'}
 						/>
 					</Box>
 					{size !== 'small' && renderAccommodationDetails()}

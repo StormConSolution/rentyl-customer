@@ -21,13 +21,16 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import Icon from '@bit/redsky.framework.rs.icon';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import LinkButton from '../../components/linkButton/LinkButton';
+import LabelButton from '../../components/labelButton/LabelButton';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
 
 let phoneNumber = '';
 let country = 'US';
 let state = '';
 
 const SignUpPage: React.FC = () => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	let userService = serviceFactory.get<UserService>('UserService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const size = useWindowResizeChange();
@@ -79,6 +82,12 @@ const SignUpPage: React.FC = () => {
 	);
 
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
+
+	useEffect(() => {
+		if (user) {
+			router.navigate('/').catch(console.error);
+		}
+	}, []);
 
 	useEffect(() => {
 		async function getCountries() {
@@ -388,12 +397,12 @@ const SignUpPage: React.FC = () => {
 								updateControl={updateUserObjForm}
 							/>
 
-							<LinkButton
+							<LabelButton
 								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
+								variant={'caption'}
 								label={'Sign Up'}
 								onClick={signUp}
 								disabled={!formIsValid || !isValidForm}
-								path={'/signin'}
 							/>
 
 							<div className={'termsAndPrivacy'}>
