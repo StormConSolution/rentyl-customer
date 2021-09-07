@@ -47,6 +47,30 @@ class WebUtils extends BaseWebUtils {
 	}
 
 	/**
+	 * Takes parameters and creates a pageQuery object
+	 * @param page - must be a number
+	 * @param perPage - must be a number
+	 * @param sortOrder - one of a specific list of strings
+	 * @param sortField - any string to sort on
+	 * @param matchType - a list of specific strings
+	 * @param filter - an array of column and value objects
+	 */
+	static createPageQueryObject(
+		page: number = 1,
+		perPage: number = 100,
+		sortOrder: RedSky.StandardOrderTypes = 'ASC',
+		sortField: string = 'name',
+		matchType: RedSky.MatchTypes = 'like',
+		filter: RedSky.FilterQueryValue[] = [{ column: 'name', value: '' }]
+	): RedSky.PageQuery {
+		return {
+			pagination: { page, perPage },
+			sort: { field: sortField, order: sortOrder },
+			filter: { matchType, searchTerm: filter }
+		};
+	}
+
+	/**
 	 * Checks an thrown error object from an axios request for the standard RedSky Error Message
 	 * @param error - Error object thrown via axios
 	 * @param defaultMessage - A message to use incase there wasn't one given

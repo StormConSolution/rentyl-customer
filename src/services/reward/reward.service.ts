@@ -3,6 +3,7 @@ import http from '../../utils/http';
 import { Service } from '../Service';
 import serviceFactory from '../serviceFactory';
 import UserService from '../user/user.service';
+import { WebUtils } from '../../utils/utils';
 
 export default class RewardService extends Service {
 	private userService!: UserService;
@@ -22,22 +23,9 @@ export default class RewardService extends Service {
 	}
 
 	async getAllActiveCategories(): Promise<RedSky.RsPagedResponseData<Api.Reward.Category.Res.Get[]>> {
-		let query: RedSky.PageQuery = {
-			filter: {
-				matchType: 'exact',
-				searchTerm: [
-					{
-						column: 'isActive',
-						value: 1
-					}
-				]
-			},
-			pagination: { page: 1, perPage: 100 },
-			sort: {
-				field: 'isActive',
-				order: 'ASC'
-			}
-		};
+		const query = WebUtils.createPageQueryObject(1, 100, 'ASC', 'isActive', 'exact', [
+			{ column: 'isActive', value: 1 }
+		]);
 		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>(
 			'/reward/category/paged',
 			query
@@ -46,9 +34,12 @@ export default class RewardService extends Service {
 	}
 
 	async getPagedCategories(
-		data: RedSky.PageQuery
+		query: RedSky.PageQuery
 	): Promise<RedSky.RsPagedResponseData<Api.Reward.Category.Res.Get[]>> {
-		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>('/reward/category/paged', data);
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>(
+			'/reward/category/paged',
+			WebUtils.convertDataForUrlParams(query)
+		);
 		return response.data;
 	}
 
