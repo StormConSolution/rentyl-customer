@@ -9,6 +9,7 @@ import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
+import LabelButton from '../labelButton/LabelButton';
 
 interface RoomBookNowCardProps {
 	points: number;
