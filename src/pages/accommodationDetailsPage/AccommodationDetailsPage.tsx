@@ -97,8 +97,8 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 			let data: Api.Reservation.Req.Verification = {
 				accommodationId: accommodationDetails.id,
 				destinationId: destinationDetails.id,
-				adults: availabilityObj.adults,
-				children: 0,
+				adultCount: availabilityObj.adults,
+				childCount: 0,
 				arrivalDate: DateUtils.clientToServerDate(new Date(availabilityObj.arrivalDate)),
 				departureDate: DateUtils.clientToServerDate(new Date(availabilityObj.departureDate)),
 				numberOfAccommodations: 1
