@@ -382,15 +382,15 @@ const AccountPaymentMethodsPage: React.FC = () => {
 									transaction data with Fidel (our service provider) to earn points for your offline
 									purchases. You also acknowledge and agree that Fidel may share certain details of
 									your qualifying transactions with Spire Loyalty in accordance with the{' '}
-									<Link path={'/'}>
+									<Link path={`/legal/terms-and-conditions`} external target={'blank'}>
 										<span>Terms and Conditions</span>
 									</Link>
 									,{' '}
-									<Link path={'/'}>
+									<Link path={'/legal/privacy'} external target={'blank'}>
 										<span>Privacy Policy</span>
 									</Link>{' '}
 									and{' '}
-									<Link path={'/'}>
+									<Link path={'https://fidel.uk/legal/privacy/'} external target={'blank'}>
 										<span>Fidel Privacy Policy</span>
 									</Link>
 									. You may opt-out of this optional service at any time by removing this card from

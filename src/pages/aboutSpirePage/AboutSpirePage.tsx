@@ -148,7 +148,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-resort'}
 							bodyReactNode={
 								<LabelLink
-									path={'/'}
+									path={'/reservation/availability'}
 									label={'Browse Stays'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -164,7 +164,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-gift'}
 							bodyReactNode={
 								<LabelLink
-									path={'/'}
+									path={'/buy-points'}
 									label={'Buy points'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}

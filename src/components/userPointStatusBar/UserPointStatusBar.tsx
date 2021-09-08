@@ -55,7 +55,7 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 					iconSize={7}
 				/>
 				<LabelLink
-					path={'/'}
+					path={'/account/points'}
 					label={'Manage Points'}
 					variant={'caption'}
 					iconRight={'icon-chevron-right'}

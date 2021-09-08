@@ -41,6 +41,7 @@ const AccountPointsPage: React.FC = () => {
 	];
 
 	useEffect(() => {
+		if (!user) router.navigate('/signup').catch(console.error);
 		async function getUserPoints() {
 			try {
 				if (user) {

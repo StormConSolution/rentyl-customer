@@ -1,0 +1,23 @@
+@import '../../themes/themes';
+
+.rsTermsAndConditionsPage {
+	.centerAlign {
+		text-align: center;
+		margin-top: 80px;
+	}
+
+	a {
+		text-decoration: underline !important;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	.roman {
+		list-style: lower-roman;
+	}
+
+	.letters {
+		list-style: upper-alpha;
+	}
+}
