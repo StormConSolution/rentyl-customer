@@ -265,8 +265,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 						let data: any = { ...searchQueryObj };
 						let newRoom: StayParams = {
 							uuid: Date.now(),
-							adults: data.adults,
-							children: data.children,
+							adults: data.adultCount,
+							children: data.childCount,
 							accommodationId: accommodationId,
 							arrivalDate: data.startDate,
 							departureDate: data.endDate,
