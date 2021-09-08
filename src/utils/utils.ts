@@ -95,17 +95,10 @@ class DateUtils extends BaseDateUtils {
 }
 
 class NumberUtils extends BaseNumberUtils {
-	static convertCentsToPoints(cents: number, ratio: number): number {
-		return Math.floor((cents / 100) * ratio);
-	}
-
-	static roundPointsToThousand(num: number): number {
-		return Math.ceil(num / 1000) * 1000;
-	}
-
-	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string {
+	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string | null {
 		switch (type) {
 			case 'points':
+				if (cents === 0) return '';
 				return StringUtils.addCommasToNumber(cents) + ' points';
 			case 'cash':
 				return '$' + StringUtils.formatMoney(cents);

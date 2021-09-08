@@ -86,9 +86,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					return { ...prev, [props.uuid]: response };
 				});
 				setPointTotal(
-					NumberUtils.roundPointsToThousand(
-						NumberUtils.convertCentsToPoints(response.prices.accommodationTotalInCents, 10)
-					)
+					//TODO: set points to correct value once endpoint finished
+
+					// response.points.accommodationTotalInPoints
+					1000
 				);
 				setVerifyStatus('available');
 			} catch (e) {
@@ -104,11 +105,12 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			}
 		}
 		verifyAvailability().catch(console.error);
+		console.log(localAccommodation);
 	}, [props.adults, props.children, props.arrivalDate, props.departureDate]);
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
 		return packages.reduce((total, item) => {
-			if (props.usePoints) return total + NumberUtils.convertCentsToPoints(item.priceDetail.amountAfterTax, 10);
+			if (props.usePoints) return total + item.priceDetail.amountAfterTax;
 			return total + item.priceDetail.amountAfterTax;
 		}, 0);
 	}
@@ -161,31 +163,16 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	function renderItemizedCostPerNight() {
 		if (!localAccommodation) return;
 		let itemizedCostPerNight: React.ReactNodeArray = [];
-		let difference: number =
-			pointTotal - NumberUtils.convertCentsToPoints(localAccommodation.prices.accommodationTotalInCents, 10);
-		let offset: number =
-			(difference /
-				DateUtils.daysBetweenStartAndEndDates(
-					new Date(localAccommodation.arrivalDate),
-					new Date(localAccommodation.departureDate)
-				)) *
-			10;
 		Object.keys(localAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
 			const costPerNight = localAccommodation.prices.accommodationDailyCostsInCents;
-			let point: number = index === Object.keys(costPerNight).length - 1 ? Math.ceil(offset) : Math.floor(offset);
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={night} justifyContent={'space-between'}>
 					<Label variant={'body2'} width={'170px'}>
-						{DateUtils.displayUserDate(night)}
+						{props.usePoints ? null : DateUtils.displayUserDate(night)}
 					</Label>
 					<div>
 						<Label variant={'body2'} marginLeft={'auto'}>
-							{NumberUtils.displayPointsOrCash(
-								props.usePoints
-									? NumberUtils.convertCentsToPoints(costPerNight[night], 10) + point
-									: costPerNight[night],
-								props.usePoints ? 'points' : 'cash'
-							)}
+							{props.usePoints ? null : '$' + StringUtils.formatMoney(costPerNight[night])}
 						</Label>
 					</div>
 				</Box>
@@ -204,10 +191,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						{item.name}
 					</Label>
 					<Label variant={'body2'} marginLeft={'auto'}>
-						{NumberUtils.displayPointsOrCash(
-							props.usePoints ? NumberUtils.convertCentsToPoints(item.amount, 100) : item.amount,
-							pointsOrCash()
-						)}
+						{NumberUtils.displayPointsOrCash(item.amount, pointsOrCash())}
 					</Label>
 				</Box>
 			);
@@ -232,13 +216,14 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		if (!localAccommodation?.upsellPackages || !ObjectUtils.isArrayWithData(localAccommodation.upsellPackages))
 			return [];
 		return localAccommodation.upsellPackages.map((item) => {
+			//TODO: add points per package
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
 						{item.title}
 					</Label>
 					<Box display={'flex'} marginLeft={'auto'}>
-						{NumberUtils.displayPointsOrCash(item.priceDetail.amountAfterTax, pointsOrCash())}
+						{props.usePoints ? pointTotal : item.priceDetail.amountAfterTax}
 					</Box>
 				</Box>
 			);
@@ -341,10 +326,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						<Label variant={'h4'} marginLeft={'auto'}>
 							{NumberUtils.displayPointsOrCash(
 								props.usePoints
-									? NumberUtils.convertCentsToPoints(
-											localAccommodation.prices.accommodationTotalInCents,
-											10
-									  )
+									? pointTotal //TODO: add localAccommodation.points.accommodationTotalPoints
 									: localAccommodation.prices.accommodationTotalInCents,
 								pointsOrCash()
 							)}
@@ -383,15 +365,12 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						<Box alignItems={'center'} display={'flex'}>
 							<Label variant={'h4'}>Total</Label>
 							<Label variant={'h4'} marginLeft={'auto'}>
-								{NumberUtils.displayPointsOrCash(
-									props.usePoints
-										? NumberUtils.convertCentsToPoints(
-												localAccommodation.prices.taxAndFeeTotalInCents,
-												10
-										  )
-										: localAccommodation.prices.taxAndFeeTotalInCents,
-									pointsOrCash()
-								)}
+								{!props.usePoints
+									? NumberUtils.displayPointsOrCash(
+											localAccommodation.prices.taxAndFeeTotalInCents,
+											'cash'
+									  )
+									: null}
 							</Label>
 						</Box>
 					</Accordion>

@@ -28,20 +28,18 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		for (let i in props.costPerNight) {
-			itemizedCostPerNight.push(
-				<Box display={'flex'} alignItems={'center'} key={i}>
-					<Label variant={'body1'}>{DateUtils.displayUserDate(i)}</Label>
-					{!props.paidWithPoints ? (
+			if (!props.paidWithPoints) {
+				itemizedCostPerNight.push(
+					<Box display={'flex'} alignItems={'center'} key={i}>
+						<Label variant={'body1'}>{DateUtils.displayUserDate(i)}</Label>
 						<Label variant={'body1'} marginLeft={'auto'}>
 							${StringUtils.formatMoney(props.costPerNight[i])}
 						</Label>
-					) : (
-						<Label variant={'body1'} marginLeft={'auto'}>
-							{props.costPerNight[i]} points
-						</Label>
-					)}
-				</Box>
-			);
+					</Box>
+				);
+			} else {
+				return null;
+			}
 		}
 		return itemizedCostPerNight;
 	}
