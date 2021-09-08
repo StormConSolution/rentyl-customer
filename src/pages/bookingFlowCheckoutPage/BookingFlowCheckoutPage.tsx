@@ -27,6 +27,7 @@ import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 let existingCardId = 0;
 
@@ -111,10 +112,10 @@ const BookingFlowCheckoutPage = () => {
 					let accommodation = {
 						accommodationId: verification.accommodationId,
 						numberOfAccommodations: 1,
-						arrivalDate: verification.checkInDate,
-						departureDate: verification.checkoutDate,
-						adultCount: verification.adults,
-						childCount: verification.children,
+						arrivalDate: verification.arrivalDate,
+						departureDate: verification.departureDate,
+						adultCount: verification.adultCount,
+						childCount: verification.childCount,
 						rateCode: verification.rateCode,
 						upsellPackages: verification.upsellPackages,
 						guest: guestInfo,
@@ -251,10 +252,10 @@ const BookingFlowCheckoutPage = () => {
 				let accommodation: Api.Reservation.Req.Itinerary.Stay = {
 					accommodationId: verification.accommodationId,
 					numberOfAccommodations: 1,
-					arrivalDate: verification.checkInDate,
-					departureDate: verification.checkoutDate,
-					adultCount: verification.adults,
-					childCount: verification.children,
+					arrivalDate: verification.arrivalDate,
+					departureDate: verification.departureDate,
+					adultCount: verification.adultCount,
+					childCount: verification.childCount,
 					rateCode: verification.rateCode,
 					upsellPackages: verification.upsellPackages,
 					guest: guestInfo,
@@ -399,14 +400,7 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Add Room'}
-					onClick={() => {
-						router.navigate(`/booking/add-room?data=${JSON.stringify(params.data)}`).catch(console.error);
-					}}
-				/>
+				<LinkButton label={'Add Room'} path={`/booking/add-room?data=${JSON.stringify(params.data)}`} />
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>

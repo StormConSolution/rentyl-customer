@@ -111,10 +111,10 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 			data.destinationId = props.destinationId;
 			data.numberOfAccommodations = 1;
 			try {
-				let res = await reservationsService.verifyAvailability(data);
+				await reservationsService.verifyAvailability(data);
 				popupController.close(SpinningLoaderPopup);
 				setCanUpdateDetails(true);
-			} catch (e) {
+			} catch (e: any) {
 				console.log(e.message);
 				popupController.close(SpinningLoaderPopup);
 				setCanUpdateDetails(false);

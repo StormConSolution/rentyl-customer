@@ -49,8 +49,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
-		adults: 2,
-		children: 0,
+		adultCount: 2,
+		childCount: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
 	const [errorMessage, setErrorMessage] = useState<string>('');
@@ -109,22 +109,22 @@ const ReservationAvailabilityPage: React.FC = () => {
 		key:
 			| 'startDate'
 			| 'endDate'
-			| 'adults'
-			| 'children'
+			| 'adultCount'
+			| 'childCount'
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
 			| 'rateCode',
 		value: any
 	) {
-		if (key === 'adults' && value === 0) {
+		if (key === 'adultCount' && value === 0) {
 			//this should never evaluate to true with current implementations.
 			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
 		}
-		if (key === 'adults' && isNaN(value)) {
+		if (key === 'adultCount' && isNaN(value)) {
 			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
 		}
-		if (key === 'children' && isNaN(value)) {
+		if (key === 'childCount' && isNaN(value)) {
 			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
@@ -155,8 +155,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
-		adults: string,
-		children: string,
+		adultCount: string,
+		childCount: string,
 		priceRangeMin: string,
 		priceRangeMax: string
 	) {
@@ -164,9 +164,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = parseInt(adults);
-			if (children !== '') {
-				createSearchQueryObj['children'] = parseInt(children);
+			createSearchQueryObj['adultCount'] = parseInt(adultCount);
+			if (childCount !== '') {
+				createSearchQueryObj['childCount'] = parseInt(childCount);
 			}
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
@@ -337,10 +337,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 								monthsToShow={2}
 								onChangeAdults={(value) => {
 									if (value === '' || isNaN(parseInt(value))) return;
-									updateSearchQueryObj('adults', parseInt(value));
+									updateSearchQueryObj('adultCount', parseInt(value));
 								}}
 								onChangeChildren={(value) => {
-									if (value !== '') updateSearchQueryObj('children', parseInt(value));
+									if (value !== '') updateSearchQueryObj('childCount', parseInt(value));
 								}}
 								onChangePriceMin={(value) => {
 									if (value !== '') {
@@ -352,8 +352,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 										updateSearchQueryObj('priceRangeMax', value);
 									}
 								}}
-								adultsInitialInput={searchQueryObj.adults.toString()}
-								childrenInitialInput={searchQueryObj.children.toString()}
+								adultsInitialInput={searchQueryObj.adultCount.toString()}
+								childrenInitialInput={searchQueryObj.childCount.toString()}
 								initialPriceMax={
 									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 								}

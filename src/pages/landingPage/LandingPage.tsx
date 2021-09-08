@@ -20,6 +20,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import RewardService from '../../services/reward/reward.service';
 import useCustomPageText from '../../customHooks/useCustomPageText';
+import { WebUtils } from '../../utils/utils';
 
 interface LandingPageProps {}
 
@@ -28,16 +29,18 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const [activeRewards, setActiveRewards] = useState<number>(0);
-	const [featuredRewards, setFeaturedRewards] = useState<Misc.FeaturedCategory[]>();
+	const [featuredRewards, setFeaturedRewards] = useState<Api.Reward.Category.Res.Get[]>();
 
 	const text = useCustomPageText('LandingPage');
 
 	useEffect(() => {
 		async function getFeatureRewards() {
 			try {
-				let pageRequest: RedSky.PageQuery = { pagination: { page: 1, perPage: 50 } };
-				let data = await rewardService.getPagedRewards(pageRequest);
-				if (data) setFeaturedRewards(data.data);
+				const query = WebUtils.createPageQueryObject(1, 50, 'DESC', 'createdOn', 'exact', [
+					{ column: 'isFeatured', value: 1 }
+				]);
+				let rewardCategories = await rewardService.getPagedCategories(query);
+				setFeaturedRewards(rewardCategories.data);
 			} catch (e) {
 				console.log(e.message);
 			}
@@ -57,9 +60,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 			return (
 				<FeaturedRewardCard
 					key={index}
-					mainImg={item.imagePath}
+					mainImg={item.media[0].urls.large}
 					title={item.name}
-					urlPath={`/reward?cids=[${item.categoryId}]`}
+					urlPath={`/reward?cids=[${item.id}]`}
 				/>
 			);
 		});
@@ -126,11 +129,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						<span>Feature</span> Rewards
 					</Label>
 					<Box className={'featureRewardCardsContainer'}>
-						{size === 'small' ? (
-							<Carousel children={renderFeatureRewards()} />
-						) : (
-							<>{renderFeatureRewards()}</>
-						)}
+						<Carousel children={renderFeatureRewards()} />
 					</Box>
 					<LabelButton
 						look={'containedPrimary'}

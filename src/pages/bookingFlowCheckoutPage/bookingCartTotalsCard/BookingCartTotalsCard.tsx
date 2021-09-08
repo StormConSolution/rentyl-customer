@@ -68,8 +68,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				let verifyData: Api.Reservation.Req.Verification = {
 					accommodationId: props.accommodationId,
 					destinationId: props.destinationId,
-					adults: props.adults,
-					children: props.children,
+					adultCount: props.adults,
+					childCount: props.children,
 					arrivalDate: props.arrivalDate,
 					departureDate: props.departureDate,
 					numberOfAccommodations: 1
@@ -166,8 +166,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		let offset: number =
 			(difference /
 				DateUtils.daysBetweenStartAndEndDates(
-					new Date(localAccommodation.checkInDate),
-					new Date(localAccommodation.checkoutDate)
+					new Date(localAccommodation.arrivalDate),
+					new Date(localAccommodation.departureDate)
 				)) *
 			10;
 		Object.keys(localAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
@@ -310,19 +310,19 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Box>
 						<Label variant={'h4'}>Check-out</Label>
 						<Label variant={'body1'}>
-							Before {StringUtils.convertTwentyFourHourTime(localAccommodation.checkoutTime)}
+							Before {StringUtils.convertTwentyFourHourTime(localAccommodation.checkOutTime)}
 						</Label>
 					</Box>
 				</Box>
 				<hr />
 				<Box marginBottom={'10px'}>
 					<Label variant={'body1'}>
-						{DateUtils.displayUserDate(localAccommodation.checkInDate)}
+						{DateUtils.displayUserDate(localAccommodation.arrivalDate)}
 						{' - '}
-						{DateUtils.displayUserDate(localAccommodation.checkoutDate)}
+						{DateUtils.displayUserDate(localAccommodation.departureDate)}
 					</Label>
-					<Label variant={'body1'}>{localAccommodation.adults} Adults</Label>
-					<Label variant={'body1'}>{localAccommodation.children} Children</Label>
+					<Label variant={'body1'}>{localAccommodation.adultCount} Adults</Label>
+					<Label variant={'body1'}>{localAccommodation.childCount} Children</Label>
 				</Box>
 
 				<Accordion
@@ -370,30 +370,32 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						</Label>
 					</Box>
 				</Accordion>
-				<Accordion
-					isOpen
-					titleReact={
-						<Label variant={'h4'} width={'170px'}>
-							Taxes and Fees
-						</Label>
-					}
-				>
-					{renderTaxesAndFees()}
-					<Box alignItems={'center'} display={'flex'}>
-						<Label variant={'h4'}>Total</Label>
-						<Label variant={'h4'} marginLeft={'auto'}>
-							{NumberUtils.displayPointsOrCash(
-								props.usePoints
-									? NumberUtils.convertCentsToPoints(
-											localAccommodation.prices.taxAndFeeTotalInCents,
-											10
-									  )
-									: localAccommodation.prices.taxAndFeeTotalInCents,
-								pointsOrCash()
-							)}
-						</Label>
-					</Box>
-				</Accordion>
+				{!props.usePoints && (
+					<Accordion
+						isOpen
+						titleReact={
+							<Label variant={'h4'} width={'170px'}>
+								Taxes and Fees
+							</Label>
+						}
+					>
+						{renderTaxesAndFees()}
+						<Box alignItems={'center'} display={'flex'}>
+							<Label variant={'h4'}>Total</Label>
+							<Label variant={'h4'} marginLeft={'auto'}>
+								{NumberUtils.displayPointsOrCash(
+									props.usePoints
+										? NumberUtils.convertCentsToPoints(
+												localAccommodation.prices.taxAndFeeTotalInCents,
+												10
+										  )
+										: localAccommodation.prices.taxAndFeeTotalInCents,
+									pointsOrCash()
+								)}
+							</Label>
+						</Box>
+					</Accordion>
+				)}
 				<Box display={'flex'} alignItems={'center'} mb={20}>
 					<Label variant={'h3'} width={'170px'}>
 						Total:

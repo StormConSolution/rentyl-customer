@@ -168,7 +168,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-resort'}
 							bodyReactNode={
 								<LabelLink
-									path={'/'}
+									path={'/reservation/availability'}
 									label={'Browse Stays'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -184,7 +184,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-gift'}
 							bodyReactNode={
 								<LabelLink
-									path={'/'}
+									path={'/buy-points'}
 									label={'Buy points'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -200,7 +200,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-for-sale'}
 							bodyReactNode={
 								<LabelLink
-									path={'/'}
+									path={'/construction'}
 									label={'Learn More'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -216,7 +216,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-for-rental'}
 							bodyReactNode={
 								<LabelLink
-									path={'/'}
+									path={'/construction'}
 									label={'Browse rentals'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -324,7 +324,7 @@ const AboutSpirePage: React.FC = () => {
 							variant={'button'}
 							label={'view the spire tiers'}
 							onClick={() => {
-								router.navigate('/signup').catch(console.error);
+								router.navigate('/spire-tiers').catch(console.error);
 							}}
 						/>
 					</Box>

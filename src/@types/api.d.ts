@@ -561,8 +561,8 @@ declare namespace Api {
 			export interface Availability {
 				startDate: Date | string;
 				endDate: Date | string;
-				adults: number;
-				children: number;
+				adultCount: number;
+				childCount: number;
 				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
@@ -1019,14 +1019,14 @@ declare namespace Api {
 			}
 
 			export interface Verification {
-				accommodationId: number;
 				destinationId: number;
-				adults: number;
-				children: number;
+				accommodationId: number;
+				numberOfAccommodations: number;
 				rateCode?: string;
 				arrivalDate: string | Date;
 				departureDate: string | Date;
-				numberOfAccommodations: number;
+				adultCount: number;
+				childCount: number;
 				upsellPackages?: UpsellPackage[];
 			}
 
@@ -1042,7 +1042,7 @@ declare namespace Api {
 			}
 
 			export interface UpdatePayment {
-				itineraryNumber: string; // this will be changing to reservation VARY soon
+				itineraryId: string;
 				paymentMethodId: number;
 			}
 
@@ -1067,11 +1067,11 @@ declare namespace Api {
 				interface Stay {
 					accommodationId: number;
 					numberOfAccommodations: number;
+					rateCode: string;
 					arrivalDate: Date | string;
 					departureDate: Date | string;
 					adultCount: number;
 					childCount: number;
-					rateCode: string;
 					upsellPackages?: UpsellPackage[];
 					guest: Guest;
 					additionalDetails?: string;
@@ -1123,19 +1123,19 @@ declare namespace Api {
 			}
 
 			export interface Verification {
-				checkInTime: string;
-				checkInDate: string | Date;
-				checkoutTime: string;
-				checkoutDate: string | Date;
-				adults: number;
-				children: number;
 				accommodationId: number;
 				accommodationName: string;
 				destinationName: string;
+				arrivalDate: string | Date;
+				departureDate: string | Date;
 				rateCode: string;
+				adultCount: number;
+				childCount: number;
 				upsellPackages: UpsellPackage.Res.Booked[];
-				policies: { type: Model.DestinationPolicyType; value: string }[];
 				prices: PriceDetail;
+				policies: { type: Model.DestinationPolicyType; value: string }[];
+				checkInTime: string;
+				checkOutTime: string;
 			}
 
 			export interface Create {
@@ -1172,14 +1172,14 @@ declare namespace Api {
 					rateCode: string;
 					externalReservationId: string;
 					externalCancellationId: string;
+					guest: Guest;
 					adultCount: number;
 					childCount: number;
 					externalConfirmationId: string;
 					confirmationDate: Date | string;
+					upsellPackages: UpsellPackage.Res.Booked[];
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
-					guest: Guest;
-					upsellPackages: UpsellPackage.Res.Booked[];
 					additionalDetails: string;
 				}
 
