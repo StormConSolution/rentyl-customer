@@ -1,6 +1,6 @@
 {
 	"name": "spire-customer",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"main": "src/App.tsx",
 	"license": "UNLICENSED",
 	"private": true,
@@ -17,6 +17,7 @@
 		"@bit/redsky.framework.rs.form": "0.0.9",
 		"@bit/redsky.framework.rs.http": "0.0.41",
 		"@bit/redsky.framework.rs.icon": "0.0.39",
+		"@bit/redsky.framework.rs.img": "^0.0.5",
 		"@bit/redsky.framework.rs.input": "0.0.48",
 		"@bit/redsky.framework.rs.label": "0.0.17",
 		"@bit/redsky.framework.rs.progressbar": "0.0.8",

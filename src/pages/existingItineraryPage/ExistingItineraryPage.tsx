@@ -94,7 +94,7 @@ const ExistingItineraryPage: React.FC = () => {
 				<ReservationCard
 					key={reservation.id}
 					itineraryId={item.itineraryId}
-					imgPaths={reservation.destination.media.map((item) => item.urls.large)}
+					imgPaths={reservation.destination.media.map((item) => item.urls.imageKit)}
 					logo={reservation.destination.logoUrl}
 					title={'Itinerary-' + reservation.destination.name}
 					address={`${reservation.destination.address1}, ${reservation.destination.city}, ${reservation.destination.state} ${reservation.destination.zip}`}
@@ -125,7 +125,7 @@ const ExistingItineraryPage: React.FC = () => {
 				<ReservationCard
 					key={reservation.id}
 					itineraryId={item.itineraryId}
-					imgPaths={reservation.destination.media.map((item) => item.urls.large)}
+					imgPaths={reservation.destination.media.map((item) => item.urls.imageKit)}
 					logo={reservation.destination.logoUrl}
 					title={reservation.destination.name}
 					address={`${reservation.destination.address1}, ${reservation.destination.city}, ${reservation.destination.state} ${reservation.destination.zip}`}

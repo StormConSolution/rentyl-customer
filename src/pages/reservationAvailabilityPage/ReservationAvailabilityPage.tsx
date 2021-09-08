@@ -299,7 +299,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large?.toString() || '';
+				return urlObj.urls.imageKit?.toString() || '';
 			});
 		}
 		return [];

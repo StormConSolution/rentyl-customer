@@ -17,7 +17,12 @@ const FeaturedDestinationCard: React.FC<FeaturedResortCardProps> = (props) => {
 
 	return (
 		<div className={'rsFeaturedDestinationCard'}>
-			<img src={props.image} alt={props.name} onClick={() => router.navigate(`?ri=${props.resortId}`)} />
+			<img
+				loading={'lazy'}
+				src={props.image}
+				alt={props.name}
+				onClick={() => router.navigate(`?ri=${props.resortId}`)}
+			/>
 			<Label variant={size === 'small' ? 'h3' : 'h2'}>{props.name}</Label>
 			<Link path={`?ri=${props.resortId}`}>
 				<Box display={'flex'} alignItems={'center'}>

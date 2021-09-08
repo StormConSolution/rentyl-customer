@@ -1176,6 +1176,14 @@
     lodash.clone "4.5.0"
     react "^17.0.2"
 
+"@bit/redsky.framework.rs.img@^0.0.5":
+  version "0.0.5"
+  resolved "https://node.bit.dev/redsky.framework.rs.img/-/redsky.framework.rs.img-0.0.5.tgz#66031dc98ddbfe2bfd20170c3537c7098370bf01"
+  integrity sha1-ZgMdyY3b/iv9IBcMNTfHCYNwvwE=
+  dependencies:
+    react "^17.0.2"
+
+
 "@bit/redsky.framework.rs.label@0.0.17":
   version "0.0.17"
   resolved "https://node.bit.dev/redsky.framework.rs.label/-/redsky.framework.rs.label-0.0.17.tgz#9d0b95a00f742dd2964da8a46bc1111fe32dab30"

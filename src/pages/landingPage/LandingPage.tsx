@@ -2,6 +2,7 @@ import * as React from 'react';
 import './LandingPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
+import Img from '@bit/redsky.framework.rs.img';
 import LabelButton from '../../components/labelButton/LabelButton';
 import InfoCard from '../../components/infoCard/InfoCard';
 import FeaturedRewardCard from '../../components/featuredRewardCard/FeaturedRewardCard';
@@ -183,26 +184,47 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 					{size === 'small' ? (
 						<Box className={'mobileImageStepperWrapper'}>
 							<Carousel imageIndex={activeRewards}>
-								<img
-									src={require(`../../images/landingPage/travel2x.png`)}
+								<Img
+									src={
+										'https://ik.imagekit.io/redsky/LandingPage/travel2x_f_-s5WJsu.png?updatedAt=1630532450621'
+									}
+									loading={'lazy'}
+									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
-									alt={''}
+									width={236}
+									height={206}
+									alt={'Travel'}
+									srcSetSizes={[472]}
 									onClick={() => {
 										setActiveRewards(0);
 									}}
 								/>
-								<img
-									src={require(`../../images/landingPage/real-estate2x.png`)}
+								<Img
+									src={
+										'https://ik.imagekit.io/redsky/LandingPage/real-estate2x_YIKhbr6jy.png?updatedAt=1630532443109'
+									}
+									loading={'lazy'}
+									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 1 ? 'selected' : ''}`}
-									alt={''}
+									width={577}
+									height={450}
+									alt={'Real Estate'}
+									srcSetSizes={[1154]}
 									onClick={() => {
 										setActiveRewards(1);
 									}}
 								/>
-								<img
-									src={require(`../../images/landingPage/hospitality2x.png`)}
+								<Img
+									src={
+										'https://ik.imagekit.io/redsky/LandingPage/hospitality2x_V7OBn0yLg.png?updatedAt=1630532440996'
+									}
+									loading={'lazy'}
+									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
-									alt={''}
+									width={236}
+									height={206}
+									alt={'Hospitality'}
+									srcSetSizes={[472]}
 									onClick={() => {
 										setActiveRewards(2);
 									}}
@@ -262,32 +284,47 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 								alignItems={'flex-end'}
 								className={`imageContainer ${getActiveRewardsStage()}`}
 							>
-								<img
-									src={require(`../../images/landingPage/${
-										activeRewards === 0 ? 'travel2x' : 'travel'
-									}.png`)}
+								<Img
+									src={
+										'https://ik.imagekit.io/redsky/LandingPage/travel2x_f_-s5WJsu.png?updatedAt=1630532450621'
+									}
+									loading={'lazy'}
+									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
-									alt={''}
+									width={236}
+									height={206}
+									alt={'Travel'}
+									srcSetSizes={[472]}
 									onClick={() => {
 										setActiveRewards(0);
 									}}
 								/>
-								<img
-									src={require(`../../images/landingPage/${
-										activeRewards === 1 ? 'real-estate2x' : 'real-estate'
-									}.png`)}
+								<Img
+									src={
+										'https://ik.imagekit.io/redsky/LandingPage/real-estate2x_YIKhbr6jy.png?updatedAt=1630532443109'
+									}
+									loading={'lazy'}
+									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 1 ? 'selected' : ''}`}
-									alt={''}
+									width={577}
+									height={450}
+									alt={'Real Estate'}
+									srcSetSizes={[1154]}
 									onClick={() => {
 										setActiveRewards(1);
 									}}
 								/>
-								<img
-									src={require(`../../images/landingPage/${
-										activeRewards === 2 ? 'hospitality2x' : 'hospitality'
-									}.png`)}
+								<Img
+									src={
+										'https://ik.imagekit.io/redsky/LandingPage/hospitality2x_V7OBn0yLg.png?updatedAt=1630532440996'
+									}
+									loading={'lazy'}
+									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
-									alt={''}
+									width={236}
+									height={206}
+									alt={'Hospitality'}
+									srcSetSizes={[472]}
 									onClick={() => {
 										setActiveRewards(2);
 									}}
@@ -358,7 +395,15 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 					flexWrap={'wrap'}
 					justifyContent={'center'}
 				>
-					<img src={require('../../images/landingPage/coffee.png')} alt={'coffee guy'} />
+					<Img
+						loading={'lazy'}
+						rootMargin={'0px 0px 500px 0px'}
+						width={577}
+						height={450}
+						srcSetSizes={[600]}
+						src={'https://ik.imagekit.io/redsky/LandingPage/coffee2x_ATsh3wrg6.png?updatedAt=1630532447509'}
+						alt={'Coffee Guy'}
+					/>
 					<Box display={'flex'} flexDirection={'column'} justifyContent={'center'}>
 						<Label variant={size === 'small' ? 'h2' : 'h1'}>
 							Earning points <span>every day</span>

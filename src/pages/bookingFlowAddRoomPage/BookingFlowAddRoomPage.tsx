@@ -175,7 +175,7 @@ const BookingFlowAddRoomPage = () => {
 	function getImageUrls(destination: Api.Accommodation.Res.Availability): string[] {
 		if (destination.media) {
 			return destination.media.map((urlObj) => {
-				return urlObj.urls.large?.toString() || '';
+				return urlObj.urls.imageKit?.toString() || '';
 			});
 		}
 		return [];
@@ -285,7 +285,7 @@ const BookingFlowAddRoomPage = () => {
 								datum: editingAccommodation.extraBeds ? 'Yes' : 'No'
 							}
 						]}
-						carouselImagePaths={editingAccommodation.media.map((media) => media.urls.large || '')}
+						carouselImagePaths={editingAccommodation.media.map((media) => media.urls.imageKit || '')}
 						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
 						onBookNowClick={() => {
 							bookNow(editStayDetails.accommodationId);

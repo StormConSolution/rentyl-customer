@@ -9,6 +9,7 @@ import LinkButton from '../../linkButton/LinkButton';
 import Carousel from '../../carousel/Carousel';
 import LabelLink from '../../labelLink/LabelLink';
 import StarRating from '../../starRating/StarRating';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -28,7 +29,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		return picturePaths.map((path: string) => {
 			return (
 				<Box className={'imageWrapper'}>
-					<img src={path} alt="" />
+					<Img src={path} loading={'lazy'} alt={'Resort Image'} width={278} height={318} />
 				</Box>
 			);
 		});

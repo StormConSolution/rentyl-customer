@@ -9,6 +9,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import MobileLightBoxTwoPopup, {
 	MobileLightBoxTwoPopupProps
 } from '../../popups/mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
+import Img from '@bit/redsky.framework.rs.img';
 
 export interface ImageTabProp {
 	name: string;
@@ -49,7 +50,15 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 		return (
 			<Box className={'galleryItem' + (activeTabName === tab.name ? ' shown' : '')} key={tab.name}>
 				<div className="imageHolder">
-					<img alt="" src={tab.imagePath} />
+					<Img
+						loading={'lazy'}
+						alt={tab.name}
+						src={tab.imagePath}
+						width={375}
+						height={570}
+						rootMargin={'0px 0px 500px 0px'}
+						srcSetSizes={[1440]}
+					/>
 				</div>
 				<Paper boxShadow>
 					<Label variant="h1">{tab.title}</Label>
@@ -68,7 +77,7 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 											return {
 												title: value.title,
 												description: value.description,
-												imagePath: value.urls.large || ''
+												imagePath: value.urls.imageKit || ''
 											};
 										})
 									});
@@ -79,7 +88,7 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 											return {
 												title: value.title,
 												description: value.description,
-												imagePath: value.urls.large || ''
+												imagePath: value.urls.imageKit || ''
 											};
 										})
 									});

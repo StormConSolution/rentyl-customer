@@ -73,11 +73,11 @@ const AccountPointsPage: React.FC = () => {
 
 	function getMedia(point: Api.UserPoint.Res.Verbose) {
 		if (!point.media) return '';
-		if (point.media.length === 1) return point.media[0].urls.small;
+		if (point.media.length === 1) return point.media[0].urls.imageKit;
 		for (let i in point.media) {
-			if (point.media[i].isPrimary === 1) return point.media[i].urls.small;
+			if (point.media[i].isPrimary === 1) return point.media[i].urls.imageKit;
 		}
-		return point.media[0].urls.small;
+		return point.media[0].urls.imageKit;
 	}
 	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
 		if (point.status === 'PENDING' || point.status === 'RECEIVED') {
