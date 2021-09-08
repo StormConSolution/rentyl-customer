@@ -55,12 +55,15 @@ const BookingFlowAddPackagePage = () => {
 		async function getPackages() {
 			try {
 				if (!params.data.newRoom) return;
-				const response = await packageService.getAvailable({
+				const request: Api.UpsellPackage.Req.Availability = {
 					destinationId: params.data.destinationId,
+					excludePackageIds: addedPackages.map((item) => item.id),
 					startDate: params.data.newRoom.arrivalDate,
 					endDate: params.data.newRoom.departureDate,
 					pagination: { page, perPage }
-				});
+				};
+				if (request.excludePackageIds && request.excludePackageIds.length < 1) delete request.excludePackageIds;
+				const response = await packageService.getAvailable(request);
 				setAvailablePackages(response.data);
 				setTotal(response.total || 0);
 			} catch {
@@ -80,7 +83,7 @@ const BookingFlowAddPackagePage = () => {
 			}
 		}
 		getPackages().catch(console.error);
-	}, [page, perPage]);
+	}, [page, perPage, addedPackages]);
 
 	function renderPackages() {
 		return addedPackages.map((item) => {

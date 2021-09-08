@@ -1116,6 +1116,7 @@ declare namespace Api {
 				cancellationPermitted: 0 | 1;
 				upsellPackages: UpsellPackage.Res.Booked[];
 				additionalDetails: string;
+				numberOfAccommodations: number;
 			}
 
 			export interface Availability {
@@ -1541,14 +1542,10 @@ declare namespace Api {
 				ids?: number[];
 			}
 
-			// Deprecated
-			export interface ForDestination {
-				destinationId: number;
-			}
-
 			export interface Availability {
 				destinationId: number;
 				packageIds?: number[];
+				excludePackageIds?: number[];
 				startDate: Date | string;
 				endDate: Date | string;
 				pagination?: RedSky.PagePagination;

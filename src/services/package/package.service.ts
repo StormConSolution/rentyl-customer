@@ -8,7 +8,7 @@ export default class PackageService extends Service {
 	): Promise<RedSky.RsPagedResponseData<Api.UpsellPackage.Res.Available[]>> {
 		let response = await http.get<RedSky.RsPagedResponseData<Api.UpsellPackage.Res.Available[]>>(
 			'/package/availability',
-			WebUtils.convertDataForUrlParams(data)
+			data
 		);
 		return response.data;
 	}
