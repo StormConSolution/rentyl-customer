@@ -18,6 +18,7 @@ import globalState from '../../state/globalState';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
+import router from '../../utils/router';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
@@ -63,8 +64,8 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	);
 
 	useEffect(() => {
-		if (!user) return;
-		phoneNumber = user.phone;
+		if (!user) router.navigate('/signup').catch(console.error);
+		else phoneNumber = user.phone;
 	}, [user]);
 
 	function isAccountFormFilledOut(): boolean {

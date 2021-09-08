@@ -1,0 +1,15 @@
+@import '../../themes/themes';
+
+.rsTermsOfUsePage {
+	.centerAlign {
+		margin-top: 80px;
+		text-align: center;
+	}
+	ol {
+		list-style: lower-alpha;
+	}
+	a {
+		font-weight: bold;
+		text-decoration: underline !important;
+	}
+}

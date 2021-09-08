@@ -1,0 +1,14 @@
+@import '../../themes/themes';
+
+.rsPrivacyPolicyPage {
+	th {
+		border: 1px solid black;
+	}
+
+	.centerAlign:first-child {
+		margin-top: 80px;
+	}
+	.centerAlign {
+		text-align: center;
+	}
+}

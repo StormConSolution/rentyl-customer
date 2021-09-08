@@ -107,7 +107,7 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 							<Label variant={'body1'}>{upComingReservation.externalConfirmationId}</Label>
 						</Box>
 						<LabelLink
-							path={`/reservation/details?ri=${upComingReservation.id}`}
+							path={`/reservations/itinerary/reservation/details?ri=${upComingReservation.id}`}
 							externalLink={false}
 							label={'View Booking Details'}
 							variant={'button'}
@@ -115,7 +115,9 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 							iconSize={7}
 							onClick={() => {
 								router
-									.navigate(`/reservation/details?ri=${upComingReservation.id}`)
+									.navigate(
+										`/reservations/itinerary/reservation/details?ri=${upComingReservation.id}`
+									)
 									.catch(console.error);
 								props.onClose();
 							}}
