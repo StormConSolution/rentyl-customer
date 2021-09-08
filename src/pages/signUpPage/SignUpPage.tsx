@@ -6,7 +6,6 @@ import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
-import LabelButton from '../../components/labelButton/LabelButton';
 import LabelLink from '../../components/labelLink/LabelLink';
 import UserService from '../../services/user/user.service';
 import serviceFactory from '../../services/serviceFactory';
@@ -22,12 +21,16 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import Icon from '@bit/redsky.framework.rs.icon';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LabelButton from '../../components/labelButton/LabelButton';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
 
 let phoneNumber = '';
 let country = 'US';
 let state = '';
 
 const SignUpPage: React.FC = () => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	let userService = serviceFactory.get<UserService>('UserService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const size = useWindowResizeChange();
@@ -79,6 +82,12 @@ const SignUpPage: React.FC = () => {
 	);
 
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
+
+	useEffect(() => {
+		if (user) {
+			router.navigate('/').catch(console.error);
+		}
+	}, []);
 
 	useEffect(() => {
 		async function getCountries() {
@@ -390,7 +399,7 @@ const SignUpPage: React.FC = () => {
 
 							<LabelButton
 								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
-								variant={'button'}
+								variant={'caption'}
 								label={'Sign Up'}
 								onClick={signUp}
 								disabled={!formIsValid || !isValidForm}

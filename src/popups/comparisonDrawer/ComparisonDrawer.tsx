@@ -9,6 +9,7 @@ import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { ObjectUtils } from '../../utils/utils';
 import { Box } from '@bit/redsky.framework.rs.996';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 const ComparisonDrawer: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
@@ -45,14 +46,7 @@ const ComparisonDrawer: React.FC = () => {
 		>
 			{!!comparisonItems && <Box display={'flex'}>{renderComparisonCard()}</Box>}
 			<Box marginLeft={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Compare Properties'}
-					onClick={() => {
-						router.navigate('/compare');
-					}}
-				/>
+				<LinkButton look={'containedPrimary'} label={'Compare Properties'} path={'/compare'} />
 				<LabelButton
 					look={'none'}
 					variant={'button'}

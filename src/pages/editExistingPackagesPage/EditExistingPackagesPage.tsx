@@ -12,7 +12,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
-import { WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -37,16 +37,6 @@ const EditExistingPackagesPage: React.FC = () => {
 	]);
 
 	const isModified = checkForModified();
-
-	function checkForModified() {
-		let newCurrentReservationPackages = [...currentReservationPackages];
-		let currentReservationPackagesIds = newCurrentReservationPackages
-			.map((item) => {
-				return item.id;
-			})
-			.sort((a, b) => a - b);
-		return currentReservationPackagesIds.toString() !== defaultReservationUpsellPackages.toString();
-	}
 
 	useEffect(() => {
 		async function getServices() {
@@ -76,16 +66,29 @@ const EditExistingPackagesPage: React.FC = () => {
 
 	useEffect(() => {
 		getPackages().catch(console.error);
-	}, [page, perPage, reservation]);
+	}, [page, perPage, reservation, currentReservationPackages]);
+
+	function checkForModified() {
+		let newCurrentReservationPackages = [...currentReservationPackages];
+		let currentReservationPackagesIds = newCurrentReservationPackages
+			.map((item) => {
+				return item.id;
+			})
+			.sort((a, b) => a - b);
+		return currentReservationPackagesIds.toString() !== defaultReservationUpsellPackages.toString();
+	}
 
 	async function getPackages() {
 		if (!reservation) return;
-		let otherDestinationPackages = await packageService.getAvailable({
+		const request: Api.UpsellPackage.Req.Availability = {
 			destinationId: reservation.destination.id,
+			excludePackageIds: currentReservationPackages.map((item) => item.id),
 			startDate: reservation.arrivalDate,
 			endDate: reservation.departureDate,
 			pagination: { page, perPage }
-		});
+		};
+		if (request.excludePackageIds && request.excludePackageIds.length < 1) delete request.excludePackageIds;
+		let otherDestinationPackages = await packageService.getAvailable(request);
 		setDestinationPackages(otherDestinationPackages.data);
 		setTotal(otherDestinationPackages.total || 0);
 	}

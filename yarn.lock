@@ -1151,12 +1151,12 @@
   dependencies:
     lodash.clone "4.5.0"
 
-"@bit/redsky.framework.rs.http@0.0.40":
-  version "0.0.40"
-  resolved "https://node.bit.dev/redsky.framework.rs.http/-/redsky.framework.rs.http-0.0.40.tgz#b4b620ccc9575b24b70f14d1d91b042aa6d41165"
-  integrity sha1-tLYgzMlXWyS3DxTR2RsEKqbUEWU=
+"@bit/redsky.framework.rs.http@0.0.41":
+  version "0.0.41"
+  resolved "https://node.bit.dev/redsky.framework.rs.http/-/redsky.framework.rs.http-0.0.41.tgz#7b56c897a51b12c4432e77005394fef9a52e2d23"
+  integrity sha1-e1bIl6UbEsRDLncAU5T++aUuLSM=
   dependencies:
-    "@bit/redsky.framework.rs.utils" "0.0.34"
+    "@bit/redsky.framework.rs.utils" "0.0.35"
     axios "^0.19.2"
 
 "@bit/redsky.framework.rs.icon@0.0.39":
@@ -1224,10 +1224,10 @@
     react "^17.0.2"
     react-toastify "^7.0.4"
 
-"@bit/redsky.framework.rs.utils@0.0.34":
-  version "0.0.34"
-  resolved "https://node.bit.dev/redsky.framework.rs.utils/-/redsky.framework.rs.utils-0.0.34.tgz#f4089751961f40fcd9bc0418ce9b34efaabc2bd5"
-  integrity sha1-9AiXUZYfQPzZvAQYzps076q8K9U=
+"@bit/redsky.framework.rs.utils@0.0.35":
+  version "0.0.35"
+  resolved "https://node.bit.dev/redsky.framework.rs.utils/-/redsky.framework.rs.utils-0.0.35.tgz#f73b0fdeda9cd3569220b0c127ac4167f0bb194e"
+  integrity sha1-9zsP3tqc01aSILDBJ6xBZ/C7GU4=
   dependencies:
     lodash.clonedeep "^4.5.0"
 

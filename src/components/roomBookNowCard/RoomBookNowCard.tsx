@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './RoomBookNowCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box } from '@bit/redsky.framework.rs.996';
 import moment from 'moment';
@@ -121,8 +120,8 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 			<Box className={'roomBookNowBottomContent'}>
 				<LabelButton
 					className={'bookNowBtn'}
+					variant={'caption'}
 					look={props.bookNowDisabled && !props.isAvailable ? 'containedSecondary' : 'containedPrimary'}
-					variant={'button'}
 					label={'BOOK NOW'}
 					disabled={props.bookNowDisabled && !props.isAvailable}
 					onClick={props.bookNowOnClick}

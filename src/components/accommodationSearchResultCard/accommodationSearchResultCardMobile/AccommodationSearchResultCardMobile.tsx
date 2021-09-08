@@ -83,8 +83,8 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 				{!props.hideButtons && (
 					<LabelButton
 						className={'small'}
-						look={'containedSecondary'}
 						variant={'button'}
+						look={'containedSecondary'}
 						label={'View Details'}
 						onClick={props.onViewDetailsClick}
 					/>

@@ -18,6 +18,7 @@ import Carousel from '../../components/carousel/Carousel';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import promotionWheelData, { IPromotionWheel } from './PromotionWheelData';
+import LinkButton from '../../components/linkButton/LinkButton';
 
 const AboutSpirePage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
@@ -40,14 +41,7 @@ const AboutSpirePage: React.FC = () => {
 				<Label variant={'body1'} mb={30}>
 					{promotionWheelData[imageIndex].description}
 				</Label>
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Book Now'}
-					onClick={() => {
-						router.navigate('/reservation/availability').catch(console.error);
-					}}
-				/>
+				<LinkButton look={'containedPrimary'} label={'Book Now'} path={'/reservation/availability'} />
 			</Box>
 		);
 	}, [imageIndex]);
@@ -117,22 +111,15 @@ const AboutSpirePage: React.FC = () => {
 							Welcome to Spire - we look forward to welcoming you with rewards.
 						</Label>
 						<Box display={'flex'} justifyContent={'space-between'} flexWrap={'wrap'}>
-							<LabelButton
+							<LinkButton
 								look={'containedPrimary'}
-								variant={'button'}
 								label={user ? 'Browse Destinations' : 'Sign up for spire'}
-								onClick={() => {
-									if (user) router.navigate('/reservation/availability').catch(console.error);
-									else router.navigate('/signup').catch(console.error);
-								}}
+								path={user ? '/reservation/availability' : '/signup'}
 							/>
-							<LabelButton
+							<LinkButton
 								look={'containedSecondary'}
-								variant={'button'}
 								label={'Features and benefits'}
-								onClick={() => {
-									router.navigate('/features-and-benefits').catch(console.error);
-								}}
+								path={'/features-and-benefits'}
 							/>
 						</Box>
 					</Paper>
@@ -149,14 +136,7 @@ const AboutSpirePage: React.FC = () => {
 							a technology company, we are committed to creating unique and seamless ways for our partners
 							and members to achieve their goals.
 						</Label>
-						<LabelButton
-							look={'containedPrimary'}
-							variant={'button'}
-							label={'Be part of our history'}
-							onClick={() => {
-								router.navigate('/signup').catch(console.error);
-							}}
-						/>
+						<LinkButton look={'containedPrimary'} label={'Be part of our history'} path={'/signup'} />
 					</Box>
 				</Box>
 				<Box className={'sectionTwo'} mb={120}>
@@ -200,7 +180,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-for-sale'}
 							bodyReactNode={
 								<LabelLink
-									path={'/construction'}
+									path={'/'}
 									label={'Learn More'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -216,7 +196,7 @@ const AboutSpirePage: React.FC = () => {
 							icon={'icon-for-rental'}
 							bodyReactNode={
 								<LabelLink
-									path={'/construction'}
+									path={'/'}
 									label={'Browse rentals'}
 									variant={'button'}
 									iconRight={'icon-chevron-right'}
@@ -319,14 +299,7 @@ const AboutSpirePage: React.FC = () => {
 							way to greater things. Becoming a Platinum Spire Member is the ultimate and we look forward
 							to having you join these unique ranks.
 						</Label>
-						<LabelButton
-							look={'containedPrimary'}
-							variant={'button'}
-							label={'view the spire tiers'}
-							onClick={() => {
-								router.navigate('/spire-tiers').catch(console.error);
-							}}
-						/>
+						<LinkButton look={'containedPrimary'} label={'view the spire tiers'} path={'/signup'} />
 					</Box>
 					<img src={require('../../images/aboutSpirePage/couple-beach.png')} alt={'Key Chain'} />
 				</Box>

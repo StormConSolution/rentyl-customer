@@ -7,6 +7,19 @@
 	min-height: 100px;
 	overflow: visible;
 
+	.rsLinkButton {
+		display: block;
+		margin-left: 30px;
+		.rsLabel {
+			font-family: MrsEavesXL;
+			font-size: 16px;
+			line-height: 20px;
+			font-weight: 400;
+			color: theme-var($buttonLinkColor) !important;
+			margin-bottom: 8px;
+		}
+	}
+
 	&.unavailable {
 		box-sizing: border-box;
 		padding: 20px;
