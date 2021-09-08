@@ -400,7 +400,11 @@ const BookingFlowCheckoutPage = () => {
 				<Label variant={'h2'}>Your Stay</Label>
 				<hr />
 				{renderAccommodationCards()}
-				<LinkButton label={'Add Room'} path={`/booking/add-room?data=${JSON.stringify(params.data)}`} />
+				<LinkButton
+					label={'Add Room'}
+					path={`/booking/add-room?data=${JSON.stringify(params.data)}`}
+					look={'containedPrimary'}
+				/>
 				<Box display={'flex'} className={'grandTotal'}>
 					<Label variant={'h2'}>Grand Total:</Label>
 					<Label variant={'h2'}>
@@ -501,7 +505,7 @@ const BookingFlowCheckoutPage = () => {
 						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
-							variant={'button'}
+							variant={'caption'}
 							label={usePoints && !hasEnoughPoints ? 'Not Enough Points' : 'Complete Booking'}
 							onClick={() => {
 								completeBooking().catch(console.error);

@@ -103,7 +103,7 @@ const SignInPage: React.FC = () => {
 						<LabelButton
 							className="signInButton"
 							look={'containedPrimary'}
-							variant="caption"
+							variant={'caption'}
 							label="Sign In"
 							buttonType="submit"
 						/>

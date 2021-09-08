@@ -32,7 +32,7 @@ const ConfirmChangeRoomPopup: React.FC<ConfirmChangeRoomPopupProps> = (props) =>
 					<Box display={'flex'} marginTop={30} width={250} justifyContent={'space-between'}>
 						<LabelButton
 							look={'containedPrimary'}
-							variant={'button'}
+							variant={'caption'}
 							label={'Update Room'}
 							onClick={props.onUpdateRoomClick}
 						/>

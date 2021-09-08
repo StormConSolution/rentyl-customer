@@ -3,10 +3,10 @@ import * as React from 'react';
 import './LoginOrCreateAccountPopup.scss';
 import { Box, Popup, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelButton from '../../components/labelButton/LabelButton';
 import Paper from '../../components/paper/Paper';
 import router from '../../utils/router';
 import Icon from '@bit/redsky.framework.rs.icon';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 export interface LoginOrCreateAccountPopupProps extends PopupProps {
 	query: string;
@@ -41,7 +41,7 @@ const LoginOrCreateAccountPopup: React.FC<LoginOrCreateAccountPopupProps> = (pro
 						variant={'button'}
 						label={'Log in'}
 						onClick={() => {
-							router.navigate(`/signin?data=${encodeURI(props.query)}`);
+							router.navigate(`/signin?${encodeURI(props.query)}`);
 							popupController.close(LoginOrCreateAccountPopup);
 						}}
 					/>
@@ -50,7 +50,7 @@ const LoginOrCreateAccountPopup: React.FC<LoginOrCreateAccountPopupProps> = (pro
 						variant={'button'}
 						label={'Sign up'}
 						onClick={() => {
-							router.navigate(`/signup?data=${encodeURI(props.query)}`);
+							router.navigate(`/signup?${encodeURI(props.query)}`);
 							popupController.close(LoginOrCreateAccountPopup);
 						}}
 					/>

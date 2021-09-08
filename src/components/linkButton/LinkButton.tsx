@@ -7,14 +7,14 @@ import Label from '@bit/redsky.framework.rs.label';
 interface LinkButtonProps {
 	path: string;
 	label: string;
-	buttonSecondary?: boolean;
 	className?: string;
+	look: 'containedPrimary' | 'containedSecondary' | 'none';
 }
 
 const LinkButton: React.FC<LinkButtonProps> = (props) => {
 	return (
 		<Link path={props.path} className={`rsLinkButton ${props.className || ''}`}>
-			<Button look={!props.buttonSecondary ? 'containedPrimary' : 'containedSecondary'}>
+			<Button look={props.look}>
 				<Label variant={'caption'}>{props.label}</Label>
 			</Button>
 		</Link>

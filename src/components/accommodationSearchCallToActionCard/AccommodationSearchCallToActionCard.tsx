@@ -3,11 +3,11 @@ import './AccommodationSearchCallToActionCard.scss';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
-import LabelButton from '../labelButton/LabelButton';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Paper from '../paper/Paper';
 import { StringUtils } from '../../utils/utils';
+import LabelButton from '../labelButton/LabelButton';
 
 interface AccommodationSearchCallToActionCardProps {
 	points: number;
@@ -86,11 +86,11 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					)}
 					<LabelButton
 						className={'bookNowBtnMobile'}
-						look={'containedPrimary'}
-						variant={'button'}
+						variant={'caption'}
 						label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 						disabled={props.bookNowDisabled}
 						onClick={props.bookNowOnClick}
+						look={'containedPrimary'}
 					/>
 				</Box>
 			</Paper>
@@ -112,21 +112,21 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 					{StringUtils.addCommasToNumber(props.points)} points
 				</Label>
 				<LabelButton
-					className={'bookNowBtn'}
-					look={'containedPrimary'}
-					variant={'button'}
+					className={'bookNowBtnMobile'}
+					variant={'caption'}
 					label={props.currentRoom ? 'Keep Room' : 'BOOK NOW'}
 					disabled={props.bookNowDisabled}
 					onClick={props.bookNowOnClick}
+					look={'containedPrimary'}
 				/>
 				{!props.hideButtons && (
 					<LabelButton
-						className={'viewDetailsBtn'}
-						look={'containedSecondary'}
-						variant={'button'}
 						label={'VIEW DETAILS'}
+						variant={'caption'}
+						className={'viewDetailsBtn'}
 						disabled={props.viewDetailsDisabled}
 						onClick={props.viewDetailsOnClick}
+						look={'containedSecondary'}
 					/>
 				)}
 

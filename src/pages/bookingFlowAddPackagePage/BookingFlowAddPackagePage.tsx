@@ -117,7 +117,7 @@ const BookingFlowAddPackagePage = () => {
 					title={item.title}
 					description={item.description}
 					priceCents={item.priceCents}
-					imgPaths={item.media.map((item, index) => {
+					imgPaths={item.media.map((item) => {
 						return item.urls.large;
 					})}
 					onAddPackage={() => {
@@ -152,7 +152,7 @@ const BookingFlowAddPackagePage = () => {
 				</Box>
 				<LabelButton
 					look={'containedPrimary'}
-					variant={'button'}
+					variant={'caption'}
 					label={'Continue To Checkout'}
 					onClick={() => {
 						if (!params.data.newRoom) return;

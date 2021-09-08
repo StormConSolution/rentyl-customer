@@ -2,10 +2,9 @@ import * as React from 'react';
 import './BookNowImage.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelLink from '../labelLink/LabelLink';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, Link } from '@bit/redsky.framework.rs.996';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import LabelButton from '../labelButton/LabelButton';
-import router from '../../utils/router';
+import LinkButton from '../linkButton/LinkButton';
 
 interface BookNowImageProps {
 	width: string;
@@ -49,14 +48,7 @@ const BookNowImage: React.FC<BookNowImageProps> = (props) => {
 						iconColor={'#ffffff'}
 					/>
 				) : (
-					<LabelButton
-						variant={'button'}
-						label={'Book Now'}
-						look={'containedPrimary'}
-						onClick={() => {
-							router.navigate(props.linkPath).catch(console.error);
-						}}
-					/>
+					<LinkButton label={'Book Now'} look={'containedPrimary'} path={props.linkPath} />
 				)}
 			</Box>
 		</div>
