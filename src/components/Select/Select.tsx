@@ -6,6 +6,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import SelectOption from './selectOption/SelectOption';
 
 export type SelectOptions = { value: number | string; text: number | string; selected: boolean };
+// export type SelectOptions = { value: number | string; text: number | string};
 
 interface SpireSelectProps {
 	className?: string;

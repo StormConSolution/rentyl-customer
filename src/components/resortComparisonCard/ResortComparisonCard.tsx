@@ -3,10 +3,10 @@ import './ResortComparisonCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
-// import Select from '../Select/Select';
+import Select from '../Select/Select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
-import Select from '@bit/redsky.framework.rs.select';
+// import Select from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 
 interface ResortComparisonCardProps {
@@ -23,27 +23,47 @@ interface ResortComparisonCardProps {
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
+	const [value, setValue] = useState<string | number>(1);
+	const [label, setLabel] = useState<string | number>('Deluxe King');
 
-	const [roomTypeForm, setRoomTypeForm] = useState<RsFormGroup>(
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl(props.roomTypes || [], [
-				new RsValidator(RsValidatorEnum.REQ, 'Room Type Required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Invalid Room Type', 3),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid characters', (control) => {
-					return /^[A-Za-z0-9-.,\s]*$/gm.test(control.value.toString());
-				})
-			])
+			new RsFormControl('value', value, [new RsValidator(RsValidatorEnum.REQ, 'Room Type is Required')]),
+			new RsFormControl('label', label, [new RsValidator(RsValidatorEnum.REQ, 'Room Type is Required')])
 		])
 	);
 
-	useEffect(() => {
-		console.log(props.roomTypes);
-		let optionsArray: { value: string | number; label: string | number }[];
-		props.roomTypes.map((roomType) => {
-			optionsArray.push({ value: roomType.value, label: roomType.text });
-			setOptions(optionsArray);
-		});
-	}, []);
+	function updateRoomTypeControl(control: RsFormControl) {
+		roomTypeFormGroup.update(control);
+	}
+
+	// function isFormFilledOut(): boolean {
+	// 	let filledOut =
+	// 		!!creditCardFormGroup.get('creditCard')?.value.toString().length &&
+	// 		!!creditCardFormGroup.get('expirationMonth')?.value.toString().length &&
+	// 		!!creditCardFormGroup.get('expirationYear')?.value.toString().length &&
+	// 		!!creditCardFormGroup.get('cvv')?.value.toString().length;
+	//
+	// 	if (!isBillingAddressSame) {
+	// 		filledOut =
+	// 			filledOut ||
+	// 			(!!billingAddressFormGroup.get('address1')?.value.toString().length &&
+	// 				!!billingAddressFormGroup.get('city')?.value.toString().length &&
+	// 				!!billingAddressFormGroup.get('zip')?.value.toString().length &&
+	// 				billingState.length > 0);
+	// 	}
+	//
+	// 	return filledOut;
+	// }
+
+	// useEffect(() => {
+	// 	console.log(props.roomTypes);
+	// 	let optionsArray: { value: string | number; label: string | number }[];
+	// 	props.roomTypes.map((roomType) => {
+	// 		optionsArray.push({ value: roomType.value, label: roomType.text });
+	// 		setOptions(optionsArray);
+	// 	});
+	// }, []);
 
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
@@ -93,17 +113,17 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 				/>
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
-				{/*<Select*/}
-				{/*	className={'selectRoomType'}*/}
-				{/*	onChange={props.onChange}*/}
-				{/*	placeHolder={props.placeHolder || 'select room type'}*/}
-				{/*	options={props.roomTypes}*/}
-				{/*/>*/}
 				<Select
-					control={roomTypeForm.get()}
-					options={options}
-					defaultValue={{ value: 1, label: 'Deluxe Queen' }}
+					className={'selectRoomType'}
+					onChange={props.onChange}
+					placeHolder={props.placeHolder || 'select room type'}
+					options={props.roomTypes}
 				/>
+				{/*<Select*/}
+				{/*	control={roomTypeFormGroup}*/}
+				{/*	options={options}*/}
+				{/*	defaultValue={{ value: 1, label: 'Deluxe Queen' }}*/}
+				{/*/>*/}
 			</Box>
 		</div>
 	);

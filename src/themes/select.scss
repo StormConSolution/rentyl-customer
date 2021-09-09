@@ -42,4 +42,21 @@
 			}
 		}
 	}
+
+	[class*='container'] {
+		width: 100%;
+	}
+	[class*='control'] {
+		cursor: pointer;
+		border-style: none;
+		border-radius: 0;
+		box-shadow: none;
+		&.error {
+			border-color: #f44336;
+		}
+	}
+	.rsInputErrorMessage {
+		text-align: left;
+		color: #f44336;
+	}
 }
