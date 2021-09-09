@@ -21,7 +21,7 @@
 		"@bit/redsky.framework.rs.input": "0.0.48",
 		"@bit/redsky.framework.rs.label": "0.0.17",
 		"@bit/redsky.framework.rs.progressbar": "0.0.8",
-		"@bit/redsky.framework.rs.select": "0.0.11",
+		"@bit/redsky.framework.rs.select": "^0.0.12",
 		"@bit/redsky.framework.rs.switch": "0.0.12",
 		"@bit/redsky.framework.rs.toastify": "0.0.9",
 		"@bit/redsky.framework.rs.utils": "0.0.35",

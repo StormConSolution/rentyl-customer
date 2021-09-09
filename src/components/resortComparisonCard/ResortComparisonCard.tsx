@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './ResortComparisonCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
-import Select from '../Select/Select';
+// import Select from '../Select/Select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
+import Select from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 
 interface ResortComparisonCardProps {
 	logo: string;
@@ -20,6 +22,29 @@ interface ResortComparisonCardProps {
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
+	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
+
+	const [roomTypeForm, setRoomTypeForm] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl(props.roomTypes || [], [
+				new RsValidator(RsValidatorEnum.REQ, 'Room Type Required'),
+				new RsValidator(RsValidatorEnum.MIN, 'Invalid Room Type', 3),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid characters', (control) => {
+					return /^[A-Za-z0-9-.,\s]*$/gm.test(control.value.toString());
+				})
+			])
+		])
+	);
+
+	useEffect(() => {
+		console.log(props.roomTypes);
+		let optionsArray: { value: string | number; label: string | number }[];
+		props.roomTypes.map((roomType) => {
+			optionsArray.push({ value: roomType.value, label: roomType.text });
+			setOptions(optionsArray);
+		});
+	}, []);
+
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
 			<Box className={'topContent'}>
@@ -68,11 +93,16 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 				/>
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
+				{/*<Select*/}
+				{/*	className={'selectRoomType'}*/}
+				{/*	onChange={props.onChange}*/}
+				{/*	placeHolder={props.placeHolder || 'select room type'}*/}
+				{/*	options={props.roomTypes}*/}
+				{/*/>*/}
 				<Select
-					className={'selectRoomType'}
-					onChange={props.onChange}
-					placeHolder={props.placeHolder || 'select room type'}
-					options={props.roomTypes}
+					control={roomTypeForm.get()}
+					options={options}
+					defaultValue={{ value: 1, label: 'Deluxe Queen' }}
 				/>
 			</Box>
 		</div>
