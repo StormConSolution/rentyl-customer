@@ -50,7 +50,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 					{company.allowPointBooking === 1 && (
 						<Label variant={company.allowCashBooking !== 1 ? 'h4' : 'body2'} className="points">
 							{StringUtils.addCommasToNumber(
-								// NumberUtils.convertCentsToPoints(accommodation.prices[0].priceCents, 10)
+								//TODO: add correct value for points
 								accommodation.prices[0].priceCents
 							)}{' '}
 							pts

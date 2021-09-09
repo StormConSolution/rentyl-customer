@@ -105,7 +105,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			}
 		}
 		verifyAvailability().catch(console.error);
-		console.log(localAccommodation);
 	}, [props.adults, props.children, props.arrivalDate, props.departureDate]);
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
@@ -168,11 +167,11 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={night} justifyContent={'space-between'}>
 					<Label variant={'body2'} width={'170px'}>
-						{props.usePoints ? null : DateUtils.displayUserDate(night)}
+						{!props.usePoints && DateUtils.displayUserDate(night)}
 					</Label>
 					<div>
 						<Label variant={'body2'} marginLeft={'auto'}>
-							{props.usePoints ? null : '$' + StringUtils.formatMoney(costPerNight[night])}
+							{!props.usePoints && '$' + StringUtils.formatMoney(costPerNight[night])}
 						</Label>
 					</div>
 				</Box>
@@ -365,12 +364,11 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						<Box alignItems={'center'} display={'flex'}>
 							<Label variant={'h4'}>Total</Label>
 							<Label variant={'h4'} marginLeft={'auto'}>
-								{!props.usePoints
-									? NumberUtils.displayPointsOrCash(
-											localAccommodation.prices.taxAndFeeTotalInCents,
-											'cash'
-									  )
-									: null}
+								{!props.usePoints &&
+									NumberUtils.displayPointsOrCash(
+										localAccommodation.prices.taxAndFeeTotalInCents,
+										'cash'
+									)}
 							</Label>
 						</Box>
 					</Accordion>
