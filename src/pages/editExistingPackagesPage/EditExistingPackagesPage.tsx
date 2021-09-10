@@ -31,7 +31,7 @@ const EditExistingPackagesPage: React.FC = () => {
 	const [total, setTotal] = useState<number>(0);
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
 	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
-	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
+	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
@@ -43,6 +43,7 @@ const EditExistingPackagesPage: React.FC = () => {
 			try {
 				let reservation = await reservationsService.get(params.reservationId);
 				if (reservation) {
+					console.log('hit', reservation.upsellPackages);
 					setReservation(reservation);
 					setCurrentReservationPackages(reservation.upsellPackages);
 					setDefaultReservationUpsellPackages(
@@ -129,30 +130,13 @@ const EditExistingPackagesPage: React.FC = () => {
 						key={index}
 						title={item.title}
 						description={item.description}
-						priceCents={item.priceCents}
+						priceCents={item.priceDetail.amountAfterTax}
 						imgPaths={item.media.map((item) => {
 							return item.urls.imageKit;
 						})}
 						onAddPackage={() => {
 							setCurrentReservationPackages((prevState) => {
-								let convertedPackage: Api.UpsellPackage.Res.Booked = {
-									code: item.code,
-									companyId: item.companyId,
-									description: item.description,
-									destinationId: item.destinationId,
-									endDate: item.endDate,
-									id: item.id,
-									isActive: item.isActive,
-									media: item.media,
-									priceDetail: {
-										amountAfterTax: item.priceCents,
-										amountBeforeTax: item.priceCents,
-										amountPoints: 1000
-									},
-									startDate: item.startDate,
-									title: item.title
-								};
-								return [...prevState, convertedPackage];
+								return [...prevState, item];
 							});
 						}}
 					/>

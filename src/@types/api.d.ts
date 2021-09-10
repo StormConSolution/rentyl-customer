@@ -1560,10 +1560,6 @@ declare namespace Api {
 
 			export interface Get extends Details {}
 
-			export interface Available extends Details {
-				priceCents: number;
-			}
-
 			export interface Booked extends Details {
 				priceDetail: PriceDetail;
 			}
