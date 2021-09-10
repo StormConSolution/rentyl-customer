@@ -4,7 +4,7 @@ import { Page } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Paper from '../../components/paper/Paper';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import globalState, { ComparisonCardInfo } from '../../state/globalState';
+import globalState from '../../state/globalState';
 import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
 import { useRecoilState } from 'recoil';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -33,7 +33,7 @@ const ComparisonPage: React.FC = () => {
 	let accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const size = useWindowResizeChange();
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
-	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
 	const comparisonRef = useRef(comparisonItems);
 	const [accommodationTextList, setAccommodationTextList] = useState<(string | number)[]>([]);
@@ -42,7 +42,9 @@ const ComparisonPage: React.FC = () => {
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
 	useEffect(() => {
-		let modifiedComparisonItems: ComparisonCardInfo[] = comparisonService.setDefaultAccommodations(comparisonItems);
+		let modifiedComparisonItems: Misc.ComparisonCardInfo[] = comparisonService.setDefaultAccommodations(
+			comparisonItems
+		);
 		setComparisonItems(modifiedComparisonItems);
 		setWaitToLoad(false);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './LabelSelect.scss';
 import Label from '@bit/redsky.framework.rs.label';
-// import Select, { SelectOptions } from '../Select/Select';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
@@ -11,11 +10,8 @@ interface LabelSelectProps {
 	selectOptions: OptionType[];
 	className?: string;
 	placeHolder?: string;
-	showSelectedAsPlaceHolder?: boolean;
-	autoCalculateWidth?: boolean;
 	control: RsFormControl;
 	defaultValue?: readonly OptionType[] | OptionType | null;
-	value?: readonly OptionType[] | OptionType | null;
 }
 
 const LabelSelect: React.FC<LabelSelectProps> = (props) => {
@@ -28,7 +24,6 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 				options={props.selectOptions}
 				isClearable={true}
 				defaultValue={props.defaultValue}
-				value={props.value}
 			/>
 		</div>
 	);

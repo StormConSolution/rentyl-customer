@@ -1,18 +1,21 @@
 import { Service } from '../Service';
-import { ComparisonCardInfo } from '../../state/globalState';
+import globalState from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
+import { useRecoilState } from 'recoil';
 
 export default class ComparisonService extends Service {
-	addToComparison(recoilState: any, compareItem: ComparisonCardInfo) {
-		const [comparisonItems, setComparisonItems] = recoilState;
+	addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
+		const [comparisonItems, setComparisonItems] = useRecoilState<Misc.ComparisonCardInfo[]>(
+			globalState.destinationComparison
+		);
 
 		if (comparisonItems.length === 3) throw rsToasts.info('You can only compare three at a time!');
 
-		let newArray: ComparisonCardInfo[] = [...comparisonItems, compareItem];
+		let newArray: Misc.ComparisonCardInfo[] = [...comparisonItems, compareItem];
 		setComparisonItems(newArray);
 	}
 
-	setSelectedAccommodation(indexToChange: number, item: string, comparisonItems: ComparisonCardInfo[]) {
+	setSelectedAccommodation(indexToChange: number, item: number, comparisonItems: Misc.ComparisonCardInfo[]) {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element, index) => {
 			if (index !== indexToChange) return element;
@@ -27,11 +30,12 @@ export default class ComparisonService extends Service {
 					};
 				}),
 				title: element.title
+				// selectedRoom: item
 			};
 		});
 	}
 
-	setDefaultAccommodations(comparisonItems: ComparisonCardInfo[]): ComparisonCardInfo[] {
+	setDefaultAccommodations(comparisonItems: Misc.ComparisonCardInfo[]): Misc.ComparisonCardInfo[] {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element) => {
 			let selected = false;
@@ -53,7 +57,7 @@ export default class ComparisonService extends Service {
 		});
 	}
 
-	resortComparisonCardOnClose(item: ComparisonCardInfo, comparisonItems: ComparisonCardInfo[]) {
+	resortComparisonCardOnClose(item: Misc.ComparisonCardInfo, comparisonItems: Misc.ComparisonCardInfo[]) {
 		let newRecoilState = [...comparisonItems];
 		return newRecoilState.filter((remove) => remove !== item);
 	}

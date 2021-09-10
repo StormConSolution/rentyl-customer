@@ -8,7 +8,7 @@ import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import globalState, { ComparisonCardInfo } from '../../state/globalState';
+import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
@@ -38,7 +38,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
-	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);

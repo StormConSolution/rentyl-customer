@@ -205,7 +205,7 @@ const SignUpPage: React.FC = () => {
 
 		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
 		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state || '';
+		addressObj['state'] = state;
 		addressObj['isDefault'] = 1;
 		addressObj['country'] = country;
 		console.log(addressObj);

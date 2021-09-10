@@ -48,9 +48,9 @@
 	}
 	[class*='control'] {
 		cursor: pointer;
-		//border-style: none;
-		//border-radius: 0;
-		//box-shadow: none;
+		border-style: none;
+		border-radius: 0;
+		box-shadow: none;
 		&.error {
 			border-color: #f44336;
 		}
