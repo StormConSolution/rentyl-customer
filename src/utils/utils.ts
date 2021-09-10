@@ -98,7 +98,6 @@ class NumberUtils extends BaseNumberUtils {
 	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string | null {
 		switch (type) {
 			case 'points':
-				if (cents === 0) return '';
 				return StringUtils.addCommasToNumber(cents) + ' points';
 			case 'cash':
 				return '$' + StringUtils.formatMoney(cents);

@@ -968,7 +968,10 @@ declare namespace Api {
 			feeTotalsInCents: { name: string; amount: number }[];
 			taxTotalsInCents: { name: string; amount: number }[];
 			taxAndFeeTotalInCents: number;
+			subtotalInCents: number;
+			subtotalPoints: number;
 			upsellPackageTotalInCents: number;
+			upsellPackageTotalPoints: number;
 			grandTotalCents: number;
 			grandTotalPoints: number;
 		}
@@ -1028,9 +1031,10 @@ declare namespace Api {
 				adultCount: number;
 				childCount: number;
 				upsellPackages?: UpsellPackage[];
+				existingReservationId?: number;
 			}
 
-			export interface Create extends Verification {
+			export interface Create extends Omit<Verification, 'existingReservationId'> {
 				rateCode: string;
 				paymentMethodId?: number;
 				guest: Guest;
@@ -1567,6 +1571,7 @@ declare namespace Api {
 			export interface PriceDetail {
 				amountBeforeTax: number;
 				amountAfterTax: number;
+				amountPoints: number;
 			}
 
 			// Deprecated

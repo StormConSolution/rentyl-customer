@@ -40,7 +40,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<{
 		[uuid: number]: Api.Reservation.Res.Verification;
 	}>(globalState.verifiedAccommodations);
-	const [pointTotal, setPointTotal] = useState<number>(0);
 	const localAccommodation = verifiedAccommodation[props.uuid];
 
 	useEffect(() => {
@@ -85,12 +84,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				setVerifiedAccommodation((prev) => {
 					return { ...prev, [props.uuid]: response };
 				});
-				setPointTotal(
-					//TODO: set points to correct value once endpoint finished
-
-					// response.points.accommodationTotalInPoints
-					1000
-				);
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
@@ -109,7 +102,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
 		return packages.reduce((total, item) => {
-			if (props.usePoints) return total + item.priceDetail.amountAfterTax;
+			if (props.usePoints) return total + item.priceDetail.amountPoints;
 			return total + item.priceDetail.amountAfterTax;
 		}, 0);
 	}
@@ -215,14 +208,13 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		if (!localAccommodation?.upsellPackages || !ObjectUtils.isArrayWithData(localAccommodation.upsellPackages))
 			return [];
 		return localAccommodation.upsellPackages.map((item) => {
-			//TODO: add points per package
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
 						{item.title}
 					</Label>
 					<Box display={'flex'} marginLeft={'auto'}>
-						{props.usePoints ? pointTotal : item.priceDetail.amountAfterTax}
+						{NumberUtils.displayPointsOrCash(item.priceDetail.amountAfterTax, pointsOrCash())}
 					</Box>
 				</Box>
 			);
@@ -325,7 +317,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						<Label variant={'h4'} marginLeft={'auto'}>
 							{NumberUtils.displayPointsOrCash(
 								props.usePoints
-									? pointTotal //TODO: add localAccommodation.points.accommodationTotalPoints
+									? localAccommodation.prices.subtotalPoints || 0
 									: localAccommodation.prices.accommodationTotalInCents,
 								pointsOrCash()
 							)}

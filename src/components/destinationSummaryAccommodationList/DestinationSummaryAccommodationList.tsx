@@ -47,15 +47,6 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 							${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
 						</Label>
 					)}
-					{company.allowPointBooking === 1 && (
-						<Label variant={company.allowCashBooking !== 1 ? 'h4' : 'body2'} className="points">
-							{StringUtils.addCommasToNumber(
-								//TODO: add correct value for points
-								accommodation.prices[0].priceCents
-							)}{' '}
-							pts
-						</Label>
-					)}
 				</div>
 				{size !== 'small' && (
 					<div>

@@ -12,7 +12,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -144,7 +144,11 @@ const EditExistingPackagesPage: React.FC = () => {
 									id: item.id,
 									isActive: item.isActive,
 									media: item.media,
-									priceDetail: { amountAfterTax: item.priceCents, amountBeforeTax: item.priceCents },
+									priceDetail: {
+										amountAfterTax: item.priceCents,
+										amountBeforeTax: item.priceCents,
+										amountPoints: 1000
+									},
 									startDate: item.startDate,
 									title: item.title
 								};
