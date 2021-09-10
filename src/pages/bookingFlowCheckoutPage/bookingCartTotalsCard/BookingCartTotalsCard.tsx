@@ -208,6 +208,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		if (!localAccommodation?.upsellPackages || !ObjectUtils.isArrayWithData(localAccommodation.upsellPackages))
 			return [];
 		return localAccommodation.upsellPackages.map((item) => {
+			console.log(item);
 			return (
 				<Box key={item.id} display={'flex'} alignItems={'center'} mb={10}>
 					<Label variant={'body2'} width={'170px'}>
