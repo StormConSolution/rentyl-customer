@@ -15,6 +15,7 @@ interface LabelSelectProps {
 	autoCalculateWidth?: boolean;
 	control: RsFormControl;
 	defaultValue?: readonly OptionType[] | OptionType | null;
+	value?: readonly OptionType[] | OptionType | null;
 }
 
 const LabelSelect: React.FC<LabelSelectProps> = (props) => {
@@ -27,6 +28,7 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 				options={props.selectOptions}
 				isClearable={true}
 				defaultValue={props.defaultValue}
+				value={props.value}
 			/>
 		</div>
 	);

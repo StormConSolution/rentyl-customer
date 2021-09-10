@@ -48,7 +48,7 @@ const SignUpPage: React.FC = () => {
 			new RsFormControl('address1', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
 			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')]),
-			new RsFormControl('state', '', [new RsValidator(RsValidatorEnum.REQ, 'State is required')]),
+			new RsFormControl('state', '', []),
 			new RsFormControl('country', '', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
 		])
 	);
@@ -205,10 +205,10 @@ const SignUpPage: React.FC = () => {
 
 		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
 		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
+		addressObj['state'] = state || '';
 		addressObj['isDefault'] = 1;
 		addressObj['country'] = country;
-		console.log(country, state);
+		console.log(addressObj);
 		try {
 			let res = await userService.createNewCustomer({ ...newCustomer, address: addressObj });
 			if (res) {
@@ -311,7 +311,7 @@ const SignUpPage: React.FC = () => {
 								<LabelSelect
 									title={'State'}
 									onChange={(value) => {
-										setState(value || '');
+										setState(value.value || '');
 										setIsValidForm(isFormFilledOut());
 									}}
 									selectOptions={stateList}
@@ -321,6 +321,7 @@ const SignUpPage: React.FC = () => {
 									title={'Country'}
 									onChange={(value) => {
 										setCountry(value.value || '');
+										setState('');
 										setIsValidForm(isFormFilledOut());
 									}}
 									selectOptions={countryList}
