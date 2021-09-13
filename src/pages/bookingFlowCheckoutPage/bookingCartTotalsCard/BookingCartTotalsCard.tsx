@@ -106,7 +106,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		verifyAvailability().catch(console.error);
 	}, [props.adults, props.children, props.arrivalDate, props.departureDate]);
 
-	function totalPackages(packages: Api.UpsellPackage.Res.Booked[]): number {
+	function totalPackages(packages: Api.UpsellPackage.Res.Complete[]): number {
 		return packages.reduce((total, item) => {
 			if (props.usePoints) return total + NumberUtils.convertCentsToPoints(item.priceDetail.amountAfterTax, 10);
 			return total + item.priceDetail.amountAfterTax;

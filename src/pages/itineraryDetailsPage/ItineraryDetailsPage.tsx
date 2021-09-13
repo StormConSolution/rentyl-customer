@@ -100,9 +100,14 @@ const ItineraryDetailsPage: React.FC = () => {
 						arrivalDate: item.arrivalDate,
 						departureDate: item.departureDate,
 						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
-						points: item.priceDetail.grandTotalPoints,
-						packagesTotalCostCents: item.upsellPackages.reduce((accumulate, booked) => {
-							return accumulate + booked.priceDetail.amountBeforeTax;
+						subtotalPoints: item.priceDetail.subtotalPoints,
+						packagesTotalCost: item.upsellPackages.reduce((accumulate, booked) => {
+							return (
+								accumulate +
+								(itinerary.paymentMethod
+									? booked.priceDetail.amountBeforeTax
+									: booked.priceDetail.amountPoints)
+							);
 						}, 0)
 					};
 				})}

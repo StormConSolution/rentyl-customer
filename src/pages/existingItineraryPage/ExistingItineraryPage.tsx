@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './ExistingItineraryPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
-import ReservationCard from '../../components/reservationCard/ReservationCard';
+import ItineraryCard from '../../components/itineraryCard/ItineraryCard';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -91,7 +91,7 @@ const ExistingItineraryPage: React.FC = () => {
 		return itineraries.map((item) => {
 			let reservation = item.reservations[0];
 			return (
-				<ReservationCard
+				<ItineraryCard
 					key={reservation.id}
 					itineraryId={item.itineraryId}
 					imgPaths={reservation.destination.media.map((item) => item.urls.imageKit)}
@@ -120,9 +120,15 @@ const ExistingItineraryPage: React.FC = () => {
 		let itineraries = groupMatchingItineraries(previousReservations);
 
 		return itineraries.map((item) => {
+			let pointTotal = item.reservations.reduce((total, reservation) => {
+				return total + reservation.priceDetail.grandTotalPoints;
+			}, 0);
+			let cashTotal = item.reservations.reduce((total, reservation) => {
+				return total + reservation.priceDetail.grandTotalCents;
+			}, 0);
 			let reservation = item.reservations[0];
 			return (
-				<ReservationCard
+				<ItineraryCard
 					key={reservation.id}
 					itineraryId={item.itineraryId}
 					imgPaths={reservation.destination.media.map((item) => item.urls.imageKit)}
@@ -133,12 +139,10 @@ const ExistingItineraryPage: React.FC = () => {
 					propertyType={'VIP Suite'}
 					maxOccupancy={reservation.accommodation.maxOccupantCount}
 					amenities={reservation.accommodation.featureIcons}
-					totalPoints={reservation.priceDetail.grandTotalCents} //This needs to be added to the endpoint.
+					totalPoints={pointTotal}
 					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
 					cancelPermitted={0}
-					itineraryTotal={item.reservations.reduce((total, reservation) => {
-						return total + reservation.priceDetail.grandTotalCents;
-					}, 0)}
+					itineraryTotal={cashTotal}
 					paidWithPoints={!reservation.paymentMethod}
 				/>
 			);

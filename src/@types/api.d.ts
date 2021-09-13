@@ -968,7 +968,10 @@ declare namespace Api {
 			feeTotalsInCents: { name: string; amount: number }[];
 			taxTotalsInCents: { name: string; amount: number }[];
 			taxAndFeeTotalInCents: number;
+			subtotalInCents: number;
+			subtotalPoints: number;
 			upsellPackageTotalInCents: number;
+			upsellPackageTotalPoints: number;
 			grandTotalCents: number;
 			grandTotalPoints: number;
 		}
@@ -1028,9 +1031,10 @@ declare namespace Api {
 				adultCount: number;
 				childCount: number;
 				upsellPackages?: UpsellPackage[];
+				existingReservationId?: number;
 			}
 
-			export interface Create extends Verification {
+			export interface Create extends Omit<Verification, 'existingReservationId'> {
 				rateCode: string;
 				paymentMethodId?: number;
 				guest: Guest;
@@ -1114,7 +1118,7 @@ declare namespace Api {
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
-				upsellPackages: UpsellPackage.Res.Booked[];
+				upsellPackages: UpsellPackage.Res.Complete[];
 				additionalDetails: string;
 				numberOfAccommodations: number;
 			}
@@ -1132,7 +1136,7 @@ declare namespace Api {
 				rateCode: string;
 				adultCount: number;
 				childCount: number;
-				upsellPackages: UpsellPackage.Res.Booked[];
+				upsellPackages: UpsellPackage.Res.Complete[];
 				prices: PriceDetail;
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 				checkInTime: string;
@@ -1178,7 +1182,7 @@ declare namespace Api {
 					childCount: number;
 					externalConfirmationId: string;
 					confirmationDate: Date | string;
-					upsellPackages: UpsellPackage.Res.Booked[];
+					upsellPackages: UpsellPackage.Res.Complete[];
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
 					additionalDetails: string;
@@ -1556,21 +1560,15 @@ declare namespace Api {
 
 			export interface Get extends Details {}
 
-			export interface Available extends Details {
-				priceCents: number;
-			}
-
-			export interface Booked extends Details {
+			export interface Complete extends Details {
 				priceDetail: PriceDetail;
 			}
 
 			export interface PriceDetail {
 				amountBeforeTax: number;
 				amountAfterTax: number;
+				amountPoints: number;
 			}
-
-			// Deprecated
-			export interface ForDestination extends Api.UpsellPackage.Res.Available {}
 		}
 	}
 

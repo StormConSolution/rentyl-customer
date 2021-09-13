@@ -69,7 +69,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}, [user]);
 
 	function isAccountFormFilledOut(): boolean {
-		return !!updateUserObj.get('fullName').value.toString().length && !!phoneNumber.length;
+		return !!updateUserObj.get('fullName').value.toString().length && phoneNumber.length > 4;
 	}
 
 	function isPasswordFormFilledOut(): boolean {

@@ -30,8 +30,8 @@ const EditExistingPackagesPage: React.FC = () => {
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
-	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
-	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
+	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Complete[]>([]);
+	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Complete[]>([]);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
@@ -102,7 +102,7 @@ const EditExistingPackagesPage: React.FC = () => {
 					text={'Remove'}
 					title={item.title}
 					description={item.description}
-					priceCents={item.priceDetail.amountAfterTax}
+					prices={item.priceDetail}
 					imgPaths={item.media.map((item) => {
 						return item.urls.imageKit;
 					})}
@@ -129,26 +129,13 @@ const EditExistingPackagesPage: React.FC = () => {
 						key={index}
 						title={item.title}
 						description={item.description}
-						priceCents={item.priceCents}
+						prices={item.priceDetail}
 						imgPaths={item.media.map((item) => {
 							return item.urls.imageKit;
 						})}
 						onAddPackage={() => {
 							setCurrentReservationPackages((prevState) => {
-								let convertedPackage: Api.UpsellPackage.Res.Booked = {
-									code: item.code,
-									companyId: item.companyId,
-									description: item.description,
-									destinationId: item.destinationId,
-									endDate: item.endDate,
-									id: item.id,
-									isActive: item.isActive,
-									media: item.media,
-									priceDetail: { amountAfterTax: item.priceCents, amountBeforeTax: item.priceCents },
-									startDate: item.startDate,
-									title: item.title
-								};
-								return [...prevState, convertedPackage];
+								return [...prevState, item];
 							});
 						}}
 					/>
