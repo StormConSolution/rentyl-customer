@@ -123,6 +123,7 @@ const ComparisonPage: React.FC = () => {
 						key={index}
 						logo={item.logo}
 						title={item.title}
+						selectedRoom={item.selectedRoom || 0}
 						placeHolder={accommodationTextList[index].toString()}
 						roomTypes={item.roomTypes}
 						onChange={(item) => {

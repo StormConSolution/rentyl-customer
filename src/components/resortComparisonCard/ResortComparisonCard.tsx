@@ -3,10 +3,9 @@ import './ResortComparisonCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
-// import Select from '../Select/Select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
-import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import Select from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 interface ResortComparisonCardProps {
@@ -18,6 +17,7 @@ interface ResortComparisonCardProps {
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
 	placeHolder?: string;
+	selectedRoom: string | number;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
@@ -32,6 +32,13 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			setOptions(optionsArray);
 		});
 	}, []);
+
+	function renderDefaultValue() {
+		if (options.length > 0) {
+			let newValue = options.filter((value) => props.selectedRoom === value.value);
+			return { value: newValue[0].value || 0, label: newValue[0].label || 'Select ...' };
+		}
+	}
 
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
@@ -90,7 +97,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 					options={options}
 					isClearable={true}
 					menuPlacement={'top'}
-					// value={}
+					defaultValue={renderDefaultValue()}
 				/>
 			</Box>
 		</div>

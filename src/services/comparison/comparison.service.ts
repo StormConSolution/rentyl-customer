@@ -1,13 +1,9 @@
 import { Service } from '../Service';
-import globalState from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
-import { useRecoilState } from 'recoil';
 
 export default class ComparisonService extends Service {
 	addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
-		const [comparisonItems, setComparisonItems] = useRecoilState<Misc.ComparisonCardInfo[]>(
-			globalState.destinationComparison
-		);
+		const [comparisonItems, setComparisonItems] = recoilState;
 
 		if (comparisonItems.length === 3) throw rsToasts.info('You can only compare three at a time!');
 
@@ -15,22 +11,26 @@ export default class ComparisonService extends Service {
 		setComparisonItems(newArray);
 	}
 
-	setSelectedAccommodation(indexToChange: number, item: number, comparisonItems: Misc.ComparisonCardInfo[]) {
+	setSelectedAccommodation(indexToChange: number, item: string, comparisonItems: Misc.ComparisonCardInfo[]) {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element, index) => {
 			if (index !== indexToChange) return element;
+			let compareSelected: string | number = 0;
 			return {
 				destinationId: element.destinationId,
 				logo: element.logo,
 				roomTypes: element.roomTypes.map((value) => {
+					if (value.value === item) {
+						compareSelected = value.value;
+					}
 					return {
 						text: value.text,
 						value: value.value,
 						selected: value.value === item
 					};
 				}),
-				title: element.title
-				// selectedRoom: item
+				title: element.title,
+				selectedRoom: compareSelected
 			};
 		});
 	}
@@ -39,8 +39,12 @@ export default class ComparisonService extends Service {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element) => {
 			let selected = false;
+			let compareSelected: string | number = 0;
 			let modifiedRoomTypes = element.roomTypes.map((value) => {
-				if (value.selected) selected = true;
+				if (value.selected) {
+					selected = true;
+					compareSelected = value.value;
+				}
 				return {
 					text: value.text,
 					value: value.value,
@@ -52,7 +56,8 @@ export default class ComparisonService extends Service {
 				destinationId: element.destinationId,
 				logo: element.logo,
 				roomTypes: modifiedRoomTypes,
-				title: element.title
+				title: element.title,
+				selectedRoom: compareSelected
 			};
 		});
 	}
