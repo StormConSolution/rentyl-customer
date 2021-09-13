@@ -23,7 +23,6 @@ interface ResortComparisonCardProps {
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
-	const [defaultValue, setDefaultValue] = useState<OptionType>();
 	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
 
 	useEffect(() => {

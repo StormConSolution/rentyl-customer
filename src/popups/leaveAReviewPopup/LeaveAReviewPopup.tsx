@@ -97,7 +97,7 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 						title={'Select Your Stay'}
 						control={reviewDetails.get('reservationId')}
 						onChange={(value) => {
-							setReviewDetails(reviewDetails.clone().update(value.value));
+							updateReviewDetails(value);
 						}}
 						selectOptions={renderSelectOptions()}
 					/>
