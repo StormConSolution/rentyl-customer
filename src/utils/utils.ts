@@ -94,18 +94,7 @@ class DateUtils extends BaseDateUtils {
 	}
 }
 
-class NumberUtils extends BaseNumberUtils {
-	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string | null {
-		switch (type) {
-			case 'points':
-				return StringUtils.addCommasToNumber(cents) + ' points';
-			case 'cash':
-				return '$' + StringUtils.formatMoney(cents);
-			default:
-				return '';
-		}
-	}
-}
+class NumberUtils extends BaseNumberUtils {}
 
 export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils, NumberUtils };
 
