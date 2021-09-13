@@ -24,7 +24,7 @@ const ComparisonDrawer: React.FC = () => {
 					key={index}
 					logo={item.logo}
 					title={item.title}
-					selectedRoom={item.selectedRoom || 0}
+					selectedRoom={item.selectedRoom}
 					roomTypes={item.roomTypes}
 					onChange={(item) => {
 						let newRecoilState = comparisonService.setSelectedAccommodation(

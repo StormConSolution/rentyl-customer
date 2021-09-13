@@ -65,6 +65,6 @@ declare namespace Misc {
 		logo: string;
 		title: string;
 		roomTypes: { value: number | string; text: number | string; selected: boolean }[];
-		selectedRoom?: string | number | undefined;
+		selectedRoom: number;
 	}
 }

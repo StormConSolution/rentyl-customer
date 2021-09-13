@@ -267,6 +267,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					}}
 					onCompareClick={() => {
 						if (!destinationDetails) return;
+						let selectedRoom = destinationDetails.accommodations.filter((value) => value.id === item.id);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: Date.now(),
 							logo: destinationDetails.logoUrl,
@@ -279,7 +280,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 										text: value.name,
 										selected: value.id === item.id
 									};
-								})
+								}),
+							selectedRoom: selectedRoom[0].id
 						});
 					}}
 					roomStats={[

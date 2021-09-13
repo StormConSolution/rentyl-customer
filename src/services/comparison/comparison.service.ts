@@ -1,5 +1,6 @@
 import { Service } from '../Service';
 import rsToasts from '@bit/redsky.framework.toast';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 export default class ComparisonService extends Service {
 	addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
@@ -11,39 +12,35 @@ export default class ComparisonService extends Service {
 		setComparisonItems(newArray);
 	}
 
-	setSelectedAccommodation(indexToChange: number, item: string, comparisonItems: Misc.ComparisonCardInfo[]) {
+	setSelectedAccommodation(indexToChange: number, item: RsFormControl, comparisonItems: Misc.ComparisonCardInfo[]) {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element, index) => {
 			if (index !== indexToChange) return element;
-			let compareSelected: string | number = 0;
+			console.log('setSelectAccommodation', 'title', element.title, 'selectedRoom', item.value);
 			return {
 				destinationId: element.destinationId,
 				logo: element.logo,
 				roomTypes: element.roomTypes.map((value) => {
-					if (value.value === item) {
-						compareSelected = value.value;
-					}
 					return {
 						text: value.text,
 						value: value.value,
-						selected: value.value === item
+						selected: value.value === item.value
 					};
 				}),
 				title: element.title,
-				selectedRoom: compareSelected
+				selectedRoom: +item.value || 0
 			};
 		});
 	}
 
 	setDefaultAccommodations(comparisonItems: Misc.ComparisonCardInfo[]): Misc.ComparisonCardInfo[] {
+		console.log('comparisonItems', comparisonItems);
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element) => {
 			let selected = false;
-			let compareSelected: string | number = 0;
 			let modifiedRoomTypes = element.roomTypes.map((value) => {
 				if (value.selected) {
 					selected = true;
-					compareSelected = value.value;
 				}
 				return {
 					text: value.text,
@@ -57,7 +54,7 @@ export default class ComparisonService extends Service {
 				logo: element.logo,
 				roomTypes: modifiedRoomTypes,
 				title: element.title,
-				selectedRoom: compareSelected
+				selectedRoom: element.selectedRoom
 			};
 		});
 	}

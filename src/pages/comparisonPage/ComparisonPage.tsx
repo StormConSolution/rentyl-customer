@@ -65,19 +65,21 @@ const ComparisonPage: React.FC = () => {
 		comparisonRef.current = comparisonItems;
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];
+		console.log(comparisonItems);
 		for (let item of comparisonItems) {
 			let text: string | number = '';
 			let id: number = -1;
 			for (let roomType of item.roomTypes) {
 				if (roomType.selected) {
 					text = roomType.text;
-					id = parseInt(String(roomType.value as number));
+					id = +roomType.value;
 				}
 			}
 			accommodationTextArray.push(text);
 			if (id !== -1) accommodationIdArray.push(id);
 		}
 		setAccommodationTextList(accommodationTextArray);
+		console.log(accommodationTextArray, accommodationIdArray);
 		setAccommodationIdList(accommodationIdArray);
 	}, [comparisonItems]);
 
@@ -117,16 +119,17 @@ const ComparisonPage: React.FC = () => {
 	function renderComparisonCard() {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
+			console.log('comparisonItems', item);
 			return (
 				<td key={index}>
 					<ResortComparisonCard
 						key={index}
 						logo={item.logo}
 						title={item.title}
-						selectedRoom={item.selectedRoom || 0}
-						placeHolder={accommodationTextList[index].toString()}
+						selectedRoom={item.selectedRoom}
 						roomTypes={item.roomTypes}
 						onChange={(item) => {
+							console.log('item', item);
 							let newRecoilState = comparisonService.setSelectedAccommodation(
 								index,
 								item,
@@ -143,8 +146,6 @@ const ComparisonPage: React.FC = () => {
 						}}
 						popupOnClick={(pinToFirst) => {
 							if (pinToFirst) pinAccommodationToFirstOfList(index);
-							console.log('pinToFirst', pinToFirst);
-							console.log('index', index);
 						}}
 					/>
 				</td>

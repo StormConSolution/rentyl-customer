@@ -16,7 +16,6 @@ interface ResortComparisonCardProps {
 	onClose: () => void;
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
-	placeHolder?: string;
 	selectedRoom: string | number;
 }
 
@@ -34,10 +33,11 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	}, []);
 
 	function renderDefaultValue() {
-		if (options.length > 0) {
-			let newValue = options.filter((value) => props.selectedRoom === value.value);
-			return { value: newValue[0].value || 0, label: newValue[0].label || 'Select ...' };
+		if (props.selectedRoom !== 0 && options.length > 0) {
+			let newValue = options.filter((value) => value.value === props.selectedRoom);
+			return { value: newValue[0].value, label: newValue[0].label };
 		}
+		return { value: 0, label: 'Select ...' };
 	}
 
 	return size === 'small' ? (

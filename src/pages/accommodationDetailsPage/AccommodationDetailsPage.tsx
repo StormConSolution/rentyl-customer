@@ -220,6 +220,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
+								let selectedRoom = destinationDetails.accommodations.filter(
+									(value) => value.id === accommodationDetails?.id
+								);
 								comparisonService.addToComparison(recoilComparisonState, {
 									destinationId: destinationDetails.id,
 									logo: destinationDetails.logoUrl,
@@ -232,7 +235,8 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 												text: item.name,
 												selected: item.id === accommodationDetails.id
 											};
-										})
+										}),
+									selectedRoom: selectedRoom[0].id
 								});
 							}}
 							bookNowOnClick={() => {

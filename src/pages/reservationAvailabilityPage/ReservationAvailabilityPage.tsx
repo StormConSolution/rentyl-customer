@@ -202,6 +202,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, -1);
+			let selectedRoom = roomTypes.filter((value) => value.selected);
 			return (
 				<DestinationSearchResultCard
 					key={index}
@@ -222,7 +223,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 							destinationId: destination.id,
 							logo: destination.logoUrl,
 							title: destination.name,
-							roomTypes: roomTypes
+							roomTypes: roomTypes,
+							selectedRoom: +selectedRoom[0].value || 0
 						});
 					}}
 				/>
@@ -284,11 +286,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 					},
 					onAddCompareClick: (accommodationId) => {
 						let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
+						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: destination.id,
 							logo: destination.logoUrl,
 							title: destination.name,
-							roomTypes: roomTypes
+							roomTypes: roomTypes,
+							selectedRoom: +selectedRoom[0].value
 						});
 					}
 				}
