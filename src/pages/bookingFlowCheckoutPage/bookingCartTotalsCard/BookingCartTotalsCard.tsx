@@ -212,7 +212,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					</Label>
 					<Box display={'flex'} marginLeft={'auto'}>
 						{props.usePoints
-							? StringUtils.addCommasToNumber(item.priceDetail.amountPoints)
+							? StringUtils.addCommasToNumber(item.priceDetail.amountPoints) + ' Points'
 							: '$' + StringUtils.formatMoney(item.priceDetail.amountAfterTax)}
 					</Box>
 				</Box>
@@ -341,7 +341,9 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Box display={'flex'} justifyContent={'space-between'}>
 						<Label variant={'h4'}>Total: </Label>
 						<Label variant={'h4'} marginLeft={'auto'}>
-							{totalPackages(localAccommodation.upsellPackages || [])}
+							{props.usePoints
+								? totalPackages(localAccommodation.upsellPackages || []) + ` Points`
+								: totalPackages(localAccommodation.upsellPackages || [])}
 						</Label>
 					</Box>
 				</Accordion>
@@ -371,7 +373,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					<Label variant={'h3'} marginLeft={'auto'}>
 						{!props.usePoints
 							? '$' + StringUtils.formatMoney(localAccommodation.prices.grandTotalCents)
-							: StringUtils.addCommasToNumber(localAccommodation.prices.grandTotalPoints)}
+							: StringUtils.addCommasToNumber(localAccommodation.prices.grandTotalPoints) + ` Points`}
 					</Label>
 				</Box>
 			</Accordion>
