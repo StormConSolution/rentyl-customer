@@ -640,6 +640,7 @@ declare namespace Api {
 				maxOccupantCount: number;
 				prices: {
 					priceCents: number;
+					pricePoints: number;
 					quantityAvailable: number;
 					rateCode: string;
 				}[];
