@@ -150,5 +150,3 @@ const Select: React.FC<SpireSelectProps> = (props) => {
 		</div>
 	);
 };
-
-export default Select;

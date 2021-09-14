@@ -11,10 +11,11 @@ import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import PaymentService from '../../services/payment/payment.service';
 import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
-import Select, { SelectOptions } from '../Select/Select';
+// import Select, { SelectOptions } from '../Select/Select';
 import debounce from 'lodash.debounce';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { OptionType } from '@bit/redsky.framework.rs.select';
 
 type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoForm extends Api.Reservation.Guest {
@@ -240,20 +241,19 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		);
 	}
 
-	function renderSelectOptions(): SelectOptions[] {
+	function renderSelectOptions(): OptionType[] {
 		if (!user)
 			return [
 				{
-					selected: false,
-					text: 'No Saved Card',
+					label: 'No Saved Card',
 					value: 0
 				}
 			];
 
 		return user.paymentMethods.map((item) => {
 			return {
-				selected: item.id === existingCardId,
-				text: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,
+				// selected: item.id === existingCardId,
+				label: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,
 				value: item.id
 			};
 		});
@@ -342,22 +342,22 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				</Box>
 				{company.allowCashBooking && !props.usePoints && (
 					<>
-						<Select
-							className={!useExistingCreditCard ? 'hide' : ''}
-							autoCalculateWidth
-							options={renderSelectOptions()}
-							placeHolder={'Please Select A Card'}
-							showSelectedAsPlaceHolder
-							onChange={(value) => {
-								if (typeof value === 'number') {
-									setExistingCardId(value);
-									if (props.onExistingCardSelect) props.onExistingCardSelect(value);
-								} else if (value === null) {
-									setExistingCardId(0);
-									if (props.onExistingCardSelect) props.onExistingCardSelect(0);
-								}
-							}}
-						/>
+						{/*<Select*/}
+						{/*	className={!useExistingCreditCard ? 'hide' : ''}*/}
+						{/*	autoCalculateWidth*/}
+						{/*	options={renderSelectOptions()}*/}
+						{/*	placeHolder={'Please Select A Card'}*/}
+						{/*	showSelectedAsPlaceHolder*/}
+						{/*	onChange={(value) => {*/}
+						{/*		if (typeof value === 'number') {*/}
+						{/*			setExistingCardId(value);*/}
+						{/*			if (props.onExistingCardSelect) props.onExistingCardSelect(value);*/}
+						{/*		} else if (value === null) {*/}
+						{/*			setExistingCardId(0);*/}
+						{/*			if (props.onExistingCardSelect) props.onExistingCardSelect(0);*/}
+						{/*		}*/}
+						{/*	}}*/}
+						{/*/>*/}
 						<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
 							<LabelInput
 								title={'Name on Card'}
