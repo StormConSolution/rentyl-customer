@@ -43,7 +43,6 @@ const EditExistingPackagesPage: React.FC = () => {
 			try {
 				let reservation = await reservationsService.get(params.reservationId);
 				if (reservation) {
-					console.log('hit', reservation.upsellPackages);
 					setReservation(reservation);
 					setCurrentReservationPackages(reservation.upsellPackages);
 					setDefaultReservationUpsellPackages(
