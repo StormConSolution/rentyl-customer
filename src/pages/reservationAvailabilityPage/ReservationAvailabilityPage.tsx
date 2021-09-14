@@ -202,7 +202,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, -1);
-			let selectedRoom = roomTypes.filter((value) => value.selected);
 			return (
 				<DestinationSearchResultCard
 					key={index}
@@ -224,7 +223,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 							logo: destination.logoUrl,
 							title: destination.name,
 							roomTypes: roomTypes,
-							// selectedRoom: +selectedRoom[0].value || 0
 							selectedRoom: 0
 						});
 					}}

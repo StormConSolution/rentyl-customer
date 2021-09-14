@@ -5,17 +5,20 @@ import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Select from '../../components/Select/Select';
 import LabelButton from '../../components/labelButton/LabelButton';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 export interface ComparisonCardPopupProps extends PopupProps {
 	logo: string;
 	title: string;
-	roomTypes: { value: string | number; text: string | number; selected: boolean }[];
+	roomTypes: OptionType[];
 	onChange: (value: any) => void;
 	onClose: () => void;
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
+	control: RsFormControl;
+	defaultValue: OptionType;
 }
 
 const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
@@ -41,7 +44,12 @@ const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 						Edit
 					</Label>
 					<Box className={'accommodationSelect'} display={'flex'}>
-						<Select onChange={props.onChange} placeHolder={'select room type'} options={props.roomTypes} />
+						<Select
+							control={props.control}
+							options={props.roomTypes}
+							updateControl={props.onChange}
+							defaultValue={props.defaultValue}
+						/>
 					</Box>
 					<div className={'radioDiv'}>
 						<Label variant={'body1'}>Pin to first column?</Label>

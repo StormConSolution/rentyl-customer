@@ -38,7 +38,6 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			if (selected.length > 0) {
 				return { value: selected[0].value, label: selected[0].text };
 			}
-			return { value: 0, label: 'Select...' };
 		}
 		return { value: 0, label: 'Select...' };
 	}
@@ -63,10 +62,12 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 						popupController.open<ComparisonCardPopupProps>(ComparisonCardPopup, {
 							logo: props.logo,
 							title: props.title,
-							roomTypes: props.roomTypes,
+							roomTypes: options,
 							onChange: props.onChange,
 							onClose: props.onClose,
-							popupOnClick: props.popupOnClick
+							popupOnClick: props.popupOnClick,
+							control: roomTypeFormGroup.get('roomValue'),
+							defaultValue: renderDefaultValue()
 						});
 					}}
 				>

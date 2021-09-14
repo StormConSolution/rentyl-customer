@@ -5,8 +5,9 @@ import Label from '@bit/redsky.framework.rs.label';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../labelButton/LabelButton';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
-import Select from '../Select/Select';
 import Img from '@bit/redsky.framework.rs.img';
+import Select from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 export interface FloorPlanDetailCardProps {
 	accommodationName: string;
@@ -14,9 +15,10 @@ export interface FloorPlanDetailCardProps {
 }
 
 const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	const [selectedLayout, setSelectedLayout] = useState<Api.AccommodationLayout.Details>();
 	const [selectedRoom, setSelectedRoom] = useState<Model.AccommodationLayoutRoom | undefined>();
-	const size = useWindowResizeChange();
+	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
 
 	function renderTabs() {
 		let firstRun = true;
@@ -49,11 +51,10 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 				setSelectedLayout(item);
 				firstRun = false;
 			}
-			if (!selectedLayout) return { value: 0, text: '', selected: false };
+			if (!selectedLayout) return { value: 0, label: '' };
 			return {
 				value: item.id,
-				text: item.title,
-				selected: selectedLayout.id === item.id
+				label: item.title
 			};
 		});
 	}
@@ -93,6 +94,14 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 		);
 	}
 
+	function handleSelected(value: RsFormControl) {
+		let newSelected = props.layout.find((item) => {
+			return value.value === item.id;
+		});
+		setSelectedLayout(newSelected);
+		setSelectedRoom(undefined);
+	}
+
 	return (
 		<Box
 			className={'rsFloorPlanDetailCard '}
@@ -105,14 +114,15 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 				<Label variant="h1">{props.accommodationName} Layout</Label>
 				{size === 'small' ? (
 					<Select
-						onChange={(value) => {
-							let newSelected = props.layout.find((item) => {
-								return value === item.id;
-							});
-							setSelectedLayout(newSelected);
-							setSelectedRoom(undefined);
+						control={roomTypeFormGroup.get('roomValue')}
+						updateControl={(value) => {
+							handleSelected(value);
 						}}
 						options={renderMobileOptions()}
+						defaultValue={{
+							value: props.layout[0].id,
+							label: props.layout[0].title
+						}}
 					/>
 				) : (
 					<Box display={'flex'}>{renderTabs()}</Box>
