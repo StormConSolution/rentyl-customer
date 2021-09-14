@@ -224,7 +224,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 							logo: destination.logoUrl,
 							title: destination.name,
 							roomTypes: roomTypes,
-							selectedRoom: +selectedRoom[0].value || 0
+							// selectedRoom: +selectedRoom[0].value || 0
+							selectedRoom: 0
 						});
 					}}
 				/>

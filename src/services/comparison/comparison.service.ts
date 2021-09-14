@@ -16,7 +16,6 @@ export default class ComparisonService extends Service {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element, index) => {
 			if (index !== indexToChange) return element;
-			console.log('setSelectAccommodation', 'title', element.title, 'selectedRoom', item.value);
 			return {
 				destinationId: element.destinationId,
 				logo: element.logo,
@@ -34,7 +33,6 @@ export default class ComparisonService extends Service {
 	}
 
 	setDefaultAccommodations(comparisonItems: Misc.ComparisonCardInfo[]): Misc.ComparisonCardInfo[] {
-		console.log('comparisonItems', comparisonItems);
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element) => {
 			let selected = false;

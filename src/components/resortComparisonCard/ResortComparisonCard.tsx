@@ -95,7 +95,6 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 					control={roomTypeFormGroup.get('roomValue')}
 					updateControl={(value) => {
 						props.onChange(value);
-						console.log('value', value.value);
 					}}
 					options={options}
 					isClearable={true}

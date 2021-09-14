@@ -65,7 +65,6 @@ const ComparisonPage: React.FC = () => {
 		comparisonRef.current = comparisonItems;
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];
-		console.log('useEffect comparisonItems', comparisonItems);
 		for (let item of comparisonItems) {
 			let text: string | number = '';
 			let id: number = -1;
@@ -77,7 +76,6 @@ const ComparisonPage: React.FC = () => {
 			}
 			accommodationTextArray.push(text);
 			if (id !== -1) accommodationIdArray.push(id);
-			console.log('text', text, 'id', id);
 		}
 		setAccommodationTextList(accommodationTextArray);
 		setAccommodationIdList(accommodationIdArray);
@@ -119,7 +117,6 @@ const ComparisonPage: React.FC = () => {
 	function renderComparisonCard() {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
-			console.log('comparisonItems', item);
 			return (
 				<td key={index}>
 					<ResortComparisonCard
