@@ -29,10 +29,9 @@ const ComparisonDrawer: React.FC = () => {
 					onChange={(item) => {
 						let newRecoilState = comparisonService.setSelectedAccommodation(
 							index,
-							item.value,
+							item,
 							recoilComparisonState
 						);
-						console.log(newRecoilState);
 						setRecoilComparisonState(newRecoilState);
 					}}
 					onClose={() => {

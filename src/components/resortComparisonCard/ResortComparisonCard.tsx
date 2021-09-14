@@ -33,11 +33,14 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	}, []);
 
 	function renderDefaultValue() {
-		if (props.selectedRoom !== 0 && options.length > 0) {
-			let newValue = options.filter((value) => value.value === props.selectedRoom);
-			return { value: newValue[0].value, label: newValue[0].label };
+		if (props.roomTypes.length > 0) {
+			let selected = props.roomTypes.filter((value) => value.selected);
+			if (selected.length > 0) {
+				return { value: selected[0].value, label: selected[0].text };
+			}
+			return { value: 0, label: 'Select...' };
 		}
-		return { value: 0, label: 'Select ...' };
+		return { value: 0, label: 'Select...' };
 	}
 
 	return size === 'small' ? (

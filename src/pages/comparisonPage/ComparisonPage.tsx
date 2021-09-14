@@ -65,7 +65,7 @@ const ComparisonPage: React.FC = () => {
 		comparisonRef.current = comparisonItems;
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];
-		console.log(comparisonItems);
+		console.log('useEffect comparisonItems', comparisonItems);
 		for (let item of comparisonItems) {
 			let text: string | number = '';
 			let id: number = -1;
@@ -77,9 +77,9 @@ const ComparisonPage: React.FC = () => {
 			}
 			accommodationTextArray.push(text);
 			if (id !== -1) accommodationIdArray.push(id);
+			console.log('text', text, 'id', id);
 		}
 		setAccommodationTextList(accommodationTextArray);
-		console.log(accommodationTextArray, accommodationIdArray);
 		setAccommodationIdList(accommodationIdArray);
 	}, [comparisonItems]);
 
@@ -129,7 +129,6 @@ const ComparisonPage: React.FC = () => {
 						selectedRoom={item.selectedRoom}
 						roomTypes={item.roomTypes}
 						onChange={(item) => {
-							console.log('item', item);
 							let newRecoilState = comparisonService.setSelectedAccommodation(
 								index,
 								item,
