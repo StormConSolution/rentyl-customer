@@ -17,13 +17,13 @@ import AccordionTitleDescription from '../../components/accordionTitleDescriptio
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../state/globalState';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import globalState from '../../state/globalState';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);

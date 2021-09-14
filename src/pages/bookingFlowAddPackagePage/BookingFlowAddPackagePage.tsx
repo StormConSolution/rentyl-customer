@@ -24,8 +24,8 @@ const BookingFlowAddPackagePage = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
-	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
-	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Available[]>([]);
+	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
+	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
 
 	useEffect(() => {
 		if (!params.data.newRoom) {
@@ -92,7 +92,7 @@ const BookingFlowAddPackagePage = () => {
 					key={item.id}
 					title={item.title}
 					description={item.description}
-					priceCents={item.priceCents}
+					priceCents={item.priceDetail.amountAfterTax}
 					imgPaths={item.media.map((item) => {
 						return item.urls.imageKit;
 					})}
@@ -116,7 +116,7 @@ const BookingFlowAddPackagePage = () => {
 					key={item.id}
 					title={item.title}
 					description={item.description}
-					priceCents={item.priceCents}
+					priceCents={item.priceDetail.amountAfterTax}
 					imgPaths={item.media.map((item, index) => {
 						return item.urls.imageKit;
 					})}
