@@ -5,7 +5,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { DateUtils, NumberUtils, StringUtils, WebUtils } from '../../../utils/utils';
+import { DateUtils, StringUtils, WebUtils } from '../../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import LabelButton from '../../../components/labelButton/LabelButton';
 import serviceFactory from '../../../services/serviceFactory';
@@ -107,11 +107,6 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 		return props.usePoints
 			? `${StringUtils.addCommasToNumber(total)} Points`
 			: `$${StringUtils.formatMoney(total)}`;
-
-		// return packages.reduce((total, item) => {
-		// 	if (props.usePoints) return StringUtils.addCommasToNumber(total + item.priceDetail.amountPoints) + ` Points`;
-		// 	return '$' + StringUtils.formatMoney(total + item.priceDetail.amountAfterTax);
-		// }, 0);
 	}
 
 	function renderEditOptions() {
