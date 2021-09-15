@@ -529,6 +529,7 @@ declare namespace Model {
 		externalCancellationId: string;
 		itineraryId: string;
 		additionalDetails: string;
+		numberOfAccommodations: number;
 	}
 
 	export interface ReservationUpsellPackage {
@@ -541,6 +542,7 @@ declare namespace Model {
 		id: number;
 		companyId: number;
 		userId: number;
+		reservationId: number;
 		destinationId: number;
 		accommodationId: number;
 		verifyUserId: number;

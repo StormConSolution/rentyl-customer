@@ -34,18 +34,13 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={i}>
 					<Label variant={'body1'}>{DateUtils.displayUserDate(i)}</Label>
-					{!props.paidWithPoints ? (
-						<Label variant={'body1'} marginLeft={'auto'}>
-							${StringUtils.formatMoney(props.costPerNight[i])}
-						</Label>
-					) : (
-						<Label variant={'body1'} marginLeft={'auto'}>
-							{props.costPerNight[i]} points
-						</Label>
-					)}
+					<Label variant={'body1'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(props.costPerNight[i])}
+					</Label>
 				</Box>
 			);
 		}
+
 		return itemizedCostPerNight;
 	}
 

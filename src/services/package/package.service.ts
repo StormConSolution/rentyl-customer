@@ -1,6 +1,5 @@
 import { Service } from '../Service';
 import http from '../../utils/http';
-import { WebUtils } from '../../utils/utils';
 
 export default class PackageService extends Service {
 	async getAvailable(

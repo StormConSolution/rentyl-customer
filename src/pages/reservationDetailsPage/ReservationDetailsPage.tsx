@@ -11,7 +11,6 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../state/globalState';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
@@ -23,6 +22,7 @@ import EditReservationDetailsPopup, {
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import globalState from '../../state/globalState';
 
 const ReservationDetailsPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');

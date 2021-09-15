@@ -18,11 +18,11 @@ import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoC
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../state/globalState';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import globalState from '../../state/globalState';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
