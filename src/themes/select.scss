@@ -4,6 +4,9 @@
 	[class*='container'] {
 		width: 100%;
 		border: 1px solid theme-var($greyLineColor);
+		&:focus-within {
+			border-color: theme-var($buttonLinkColor) !important;
+		}
 	}
 	[class*='control'] {
 		cursor: pointer;
@@ -24,10 +27,6 @@
 		position: absolute;
 		background-color: #fcfbf8;
 		width: inherit;
-	}
-	[class*='option'] {
-		scrollbar-track-color: theme-var($secondaryBackgroundColor);
-		scrollbar-arrow-color: theme-var($buttonLinkColor);
 	}
 	.rsInputErrorMessage {
 		text-align: left;
