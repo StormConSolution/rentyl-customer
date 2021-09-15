@@ -24,20 +24,26 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccountPersonalInfoPageProps {}
 
-let phoneNumber = '';
-
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
-	const [passwordFormValid, setPasswordFormValid] = useState<boolean>(false);
+	const [isPasswordFormValid, setIsPasswordFormValid] = useState<boolean>(false);
+	const [isUserFormValid, setIsUserFormValid] = useState<boolean>(false);
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
 	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
 	const [hasSpecialCharacter, setHasSpecialCharacter] = useState<boolean>(false);
-	const [updateUserObj, setUpdateUserObj] = useState<RsFormGroup>(
+	const [updateUserForm, setUpdateUserForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('fullName', user?.firstName + ' ' + user?.lastName || '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Full name is required')
+			new RsFormControl('firstName', user?.firstName || '', [
+				new RsValidator(RsValidatorEnum.MIN, 'Enter a First Name', 1)
+			]),
+			new RsFormControl('lastName', user?.lastName || '', [
+				new RsValidator(RsValidatorEnum.MIN, 'Enter a Last Name', 1)
+			]),
+			new RsFormControl('phone', user?.phone || '', [
+				new RsValidator(RsValidatorEnum.REQ, 'Enter a valid phone number'),
+				new RsValidator(RsValidatorEnum.MIN, 'Enter a valid phone number', 4)
 			])
 		])
 	);
@@ -64,13 +70,17 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	);
 
 	useEffect(() => {
-		if (!user) router.navigate('/signup').catch(console.error);
-		else phoneNumber = user.phone;
-	}, [user]);
+		async function validateForm() {
+			setAccountInfoChanged(updateUserForm.isModified());
+			let isValid = await updateUserForm.isValid();
+			setIsUserFormValid(isValid);
+		}
+		validateForm().catch(console.error);
+	}, [updateUserForm]);
 
-	function isAccountFormFilledOut(): boolean {
-		return !!updateUserObj.get('fullName').value.toString().length && phoneNumber.length > 4;
-	}
+	useEffect(() => {
+		if (!user) router.navigate('/signup').catch(console.error);
+	}, [user]);
 
 	function isPasswordFormFilledOut(): boolean {
 		return (
@@ -81,13 +91,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}
 
 	async function updateUserObjForm(control: RsFormControl) {
-		if (control.key === 'fullName') {
-			control.value = StringUtils.removeLineEndings(control.value.toString());
-		}
-		updateUserObj.update(control);
-		let isFormValid = await updateUserObj.isValid();
-		setAccountInfoChanged(isAccountFormFilledOut() && isFormValid);
-		setUpdateUserObj(updateUserObj.clone());
+		setUpdateUserForm(updateUserForm.clone().update(control));
 	}
 
 	async function updateUserPasswordForm(control: RsFormControl) {
@@ -104,20 +108,18 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 		}
 		updateUserPassword.update(control);
 		let isFormValid = await updateUserPassword.isValid();
-		setPasswordFormValid(isPasswordFormFilledOut() && isFormValid);
+		setIsPasswordFormValid(isPasswordFormFilledOut() && isFormValid);
 		setUpdateUserPassword(updateUserPassword.clone());
 	}
 
 	async function saveAccountInfo() {
+		if (!isUserFormValid) {
+			rsToastify.error('Missing some information. Make sure everything is filled out', 'Missing Information');
+			return;
+		}
 		if (!user) return;
-		let newUpdatedUserObj: any = updateUserObj.toModel();
-		let splitName = newUpdatedUserObj.fullName.split(' ');
-		newUpdatedUserObj.firstName = splitName[0];
-		newUpdatedUserObj.lastName = splitName[1];
-		newUpdatedUserObj.phone = phoneNumber;
+		let newUpdatedUserObj: any = updateUserForm.toModel();
 		newUpdatedUserObj.id = user.id;
-		delete newUpdatedUserObj.fullName;
-
 		try {
 			let response = await userService.update(newUpdatedUserObj);
 			rsToastify.success('Account information successfully updated. ', 'Update Successful!');
@@ -131,7 +133,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 		if (!user) return;
 		let newPasswordForm: any = updateUserPassword.toModel();
 		delete newPasswordForm.retypeNewPassword;
-		setPasswordFormValid(false);
+		setIsPasswordFormValid(false);
 		try {
 			let response = await userService.updatePassword(newPasswordForm);
 			if (response) rsToastify.success('Password successfully updated.', 'Password Updated!');
@@ -170,31 +172,35 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 					<Box>
 						<Label variant={'h2'}>Account Info</Label>
 						<LabelInput
-							title={'Name'}
+							title={'First Name'}
 							inputType={'text'}
-							control={updateUserObj.get('fullName')}
+							control={updateUserForm.get('firstName')}
+							updateControl={updateUserObjForm}
+						/>
+						<LabelInput
+							title={'Last Name'}
+							inputType={'text'}
+							control={updateUserForm.get('lastName')}
 							updateControl={updateUserObjForm}
 						/>
 						<LabelInput
 							inputType={'tel'}
 							title={'Phone'}
 							isPhoneInput
-							onChange={async (value) => {
-								phoneNumber = value;
-								let isFormValid = await updateUserObj.isValid();
-								setAccountInfoChanged(isAccountFormFilledOut() && isFormValid);
+							onChange={(value) => {
+								let updatedPhone = updateUserForm.get('phone');
+								updatedPhone.value = value;
+								setUpdateUserForm(updateUserForm.clone().update(updatedPhone));
 							}}
-							initialValue={user?.phone}
+							initialValue={updateUserForm.get('phone').value.toString()}
 						/>
 						<LabelButton
 							className={'saveBtn'}
-							look={accountInfoChanged ? 'containedPrimary' : 'containedSecondary'}
+							look={accountInfoChanged && isUserFormValid ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={!accountInfoChanged}
-							onClick={() => {
-								saveAccountInfo();
-							}}
+							disabled={!isUserFormValid}
+							onClick={saveAccountInfo}
 						/>
 					</Box>
 					<Box>
@@ -206,57 +212,59 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							control={updateUserPassword.get('old')}
 							updateControl={updateUserPasswordForm}
 						/>
-						<Box display={'grid'} className={'passwordCheck'}>
-							<LabelInput
-								title={'New Password'}
-								inputType={'password'}
-								control={updateUserPassword.get('new')}
-								updateControl={updateUserPasswordForm}
-								labelVariant={'caption'}
-							/>
+						<LabelInput
+							title={'New Password'}
+							inputType={'password'}
+							control={updateUserPassword.get('new')}
+							updateControl={updateUserPasswordForm}
+							labelVariant={'caption'}
+						/>
 
-							<LabelInput
-								title={'Retype new password'}
-								inputType={'password'}
-								control={updateUserPassword.get('retypeNewPassword')}
-								updateControl={updateUserPasswordForm}
-								labelVariant={'caption'}
-							/>
-						</Box>
-						<Box display={'flex'} className={'passwordCheck'}>
-							<Icon
-								iconImg={!hasEnoughCharacters ? 'icon-solid-plus' : 'icon-solid-check'}
-								color={!hasEnoughCharacters ? 'red' : 'green'}
-							/>
-							<Label variant={'caption'} color={!hasEnoughCharacters ? 'red' : 'green'}>
-								At least 8 characters{' '}
-							</Label>
-						</Box>
-						<Box display={'flex'} className={'passwordCheck'}>
-							<Icon
-								iconImg={!hasUpperCase ? 'icon-solid-plus' : 'icon-solid-check'}
-								color={!hasUpperCase ? 'red' : 'green'}
-							/>
-							<Label variant={'caption'} color={!hasUpperCase ? 'red' : 'green'}>
-								1 uppercase
-							</Label>
-						</Box>
-						<Box display={'flex'} className={'passwordCheck'}>
-							<Icon
-								iconImg={!hasSpecialCharacter ? 'icon-solid-plus' : 'icon-solid-check'}
-								color={!hasSpecialCharacter ? 'red' : 'green'}
-							/>
-							<Label variant={'caption'} color={!hasSpecialCharacter ? 'red' : 'green'}>
-								1 number or special character
-							</Label>
-						</Box>
+						<LabelInput
+							title={'Retype new password'}
+							inputType={'password'}
+							control={updateUserPassword.get('retypeNewPassword')}
+							updateControl={updateUserPasswordForm}
+							labelVariant={'caption'}
+						/>
+						{updateUserPassword.isModified() && (
+							<>
+								<Box display={'flex'} className={'passwordCheck'}>
+									<Icon
+										iconImg={!hasEnoughCharacters ? 'icon-solid-plus' : 'icon-solid-check'}
+										color={!hasEnoughCharacters ? 'red' : 'green'}
+									/>
+									<Label variant={'caption'} color={!hasEnoughCharacters ? 'red' : 'green'}>
+										At least 8 characters{' '}
+									</Label>
+								</Box>
+								<Box display={'flex'} className={'passwordCheck'}>
+									<Icon
+										iconImg={!hasUpperCase ? 'icon-solid-plus' : 'icon-solid-check'}
+										color={!hasUpperCase ? 'red' : 'green'}
+									/>
+									<Label variant={'caption'} color={!hasUpperCase ? 'red' : 'green'}>
+										1 uppercase
+									</Label>
+								</Box>
+								<Box display={'flex'} className={'passwordCheck'}>
+									<Icon
+										iconImg={!hasSpecialCharacter ? 'icon-solid-plus' : 'icon-solid-check'}
+										color={!hasSpecialCharacter ? 'red' : 'green'}
+									/>
+									<Label variant={'caption'} color={!hasSpecialCharacter ? 'red' : 'green'}>
+										1 number or special character
+									</Label>
+								</Box>
+							</>
+						)}
 						<LabelButton
 							key={2}
 							className={'saveBtn'}
-							look={passwordFormValid ? 'containedPrimary' : 'containedSecondary'}
+							look={isPasswordFormValid ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={!passwordFormValid}
+							disabled={!isPasswordFormValid}
 							onClick={() => {
 								updatePassword();
 							}}
