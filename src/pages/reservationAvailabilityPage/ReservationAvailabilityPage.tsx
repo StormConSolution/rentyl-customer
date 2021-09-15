@@ -20,7 +20,6 @@ import DestinationService from '../../services/destination/destination.service';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
-import { SelectOptions } from '../../components/Select/Select';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
@@ -32,6 +31,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import DateRange = Misc.DateRange;
 import StayParams = Misc.StayParams;
+import SelectOptions = Misc.SelectOptions;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();

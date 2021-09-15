@@ -3,7 +3,6 @@ import './RewardItemPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import FeaturedCategoryCard from './featuredCategoryCard/FeaturedCategoryCard';
-import { SelectOptions } from '../../components/Select/Select';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -23,6 +22,7 @@ import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
 import globalState from '../../state/globalState';
+import SelectOptions = Misc.SelectOptions;
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
