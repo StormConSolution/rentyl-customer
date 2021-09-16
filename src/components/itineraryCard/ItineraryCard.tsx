@@ -1,8 +1,8 @@
 import * as React from 'react';
-import './ReservationCard.scss';
-import ReservationCardResponsive from './reservationCardResponsive/ReservationCardResponsive';
+import './ItineraryCard.scss';
+import ItineraryCardResponsive from './itineraryCardResponsive/ItineraryCardResponsive';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import ReservationCardMobile from './reservationCardMobile/ReservationCardMobile';
+import ItineraryCardMobile from './itineraryCardMobile/ItineraryCardMobile';
 
 interface ReservationCardProps {
 	imgPaths: string[];
@@ -21,10 +21,10 @@ interface ReservationCardProps {
 	paidWithPoints: boolean;
 }
 
-const ReservationCard: React.FC<ReservationCardProps> = (props) => {
+const ItineraryCard: React.FC<ReservationCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	return size === 'small' ? (
-		<ReservationCardMobile
+		<ItineraryCardMobile
 			imgPaths={props.imgPaths}
 			logo={props.logo}
 			title={props.title}
@@ -41,7 +41,7 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 			paidWithPoints={props.paidWithPoints}
 		/>
 	) : (
-		<ReservationCardResponsive
+		<ItineraryCardResponsive
 			imgPaths={props.imgPaths}
 			logo={props.logo}
 			title={props.title}
@@ -60,4 +60,4 @@ const ReservationCard: React.FC<ReservationCardProps> = (props) => {
 	);
 };
 
-export default ReservationCard;
+export default ItineraryCard;

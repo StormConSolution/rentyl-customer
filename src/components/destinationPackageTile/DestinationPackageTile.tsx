@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 interface DestinationPackageTileProps {
 	title: string;
 	description: string;
-	priceCents: number;
+	prices: Api.UpsellPackage.Res.PriceDetail;
 	imgPaths: string[];
 	onAddPackage?: () => void;
 	text?: string;
@@ -62,12 +62,12 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			<Box marginLeft={'auto'} textAlign={'right'}>
 				{company.allowCashBooking && (
 					<Label variant={'h2'}>
-						${StringUtils.formatMoney(props.priceCents)} {company.allowPointBooking && ' or '}
+						${StringUtils.formatMoney(props.prices.amountAfterTax)} {company.allowPointBooking && ' or '}
 					</Label>
 				)}
 				{company.allowPointBooking && (
 					<Label variant={company.allowCashBooking ? 'h4' : 'h2'}>
-						{StringUtils.addCommasToNumber(props.priceCents)} points
+						{StringUtils.addCommasToNumber(props.prices.amountPoints)} points
 					</Label>
 				)}
 				<Label variant={'body2'}>Per Stay</Label>

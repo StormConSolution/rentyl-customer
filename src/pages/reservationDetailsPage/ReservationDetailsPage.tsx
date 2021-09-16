@@ -45,7 +45,7 @@ const ReservationDetailsPage: React.FC = () => {
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
-	}, [params]);
+	}, []);
 
 	function getPoliciesValue(option: 'CheckIn' | 'CheckOut' | 'Cancellation') {
 		if (!reservation) return '';
@@ -217,7 +217,7 @@ const ReservationDetailsPage: React.FC = () => {
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
 								accommodationTotalCents={reservation.priceDetail.accommodationTotalInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
-								points={reservation.priceDetail.grandTotalPoints}
+								subtotalPoints={reservation.priceDetail.subtotalPoints}
 								paidWithPoints={!reservation.paymentMethod}
 							/>
 							<Label variant={'h1'} mb={40}>

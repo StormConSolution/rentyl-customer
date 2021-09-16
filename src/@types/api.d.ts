@@ -1119,7 +1119,7 @@ declare namespace Api {
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
-				upsellPackages: UpsellPackage.Res.Booked[];
+				upsellPackages: UpsellPackage.Res.Complete[];
 				additionalDetails: string;
 				numberOfAccommodations: number;
 			}
@@ -1137,7 +1137,7 @@ declare namespace Api {
 				rateCode: string;
 				adultCount: number;
 				childCount: number;
-				upsellPackages: UpsellPackage.Res.Booked[];
+				upsellPackages: UpsellPackage.Res.Complete[];
 				prices: PriceDetail;
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 				checkInTime: string;
@@ -1183,7 +1183,7 @@ declare namespace Api {
 					childCount: number;
 					externalConfirmationId: string;
 					confirmationDate: Date | string;
-					upsellPackages: UpsellPackage.Res.Booked[];
+					upsellPackages: UpsellPackage.Res.Complete[];
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
 					additionalDetails: string;
@@ -1561,7 +1561,7 @@ declare namespace Api {
 
 			export interface Get extends Details {}
 
-			export interface Booked extends Details {
+			export interface Complete extends Details {
 				priceDetail: PriceDetail;
 			}
 
@@ -1570,9 +1570,6 @@ declare namespace Api {
 				amountAfterTax: number;
 				amountPoints: number;
 			}
-
-			// Deprecated
-			export interface ForDestination extends Api.UpsellPackage.Res.Available {}
 		}
 	}
 
