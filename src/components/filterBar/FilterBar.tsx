@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
@@ -6,6 +6,7 @@ import './FilterBar.scss';
 import debounce from 'lodash.debounce';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '../../utils/utils';
+import LabelSelect from '../labelSelect/LabelSelect';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
@@ -26,6 +27,10 @@ export interface FilterBarProps {
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
+	// useEffect(() => {
+	//
+	// },[])
+
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
 			<DateRangeSelector
@@ -81,6 +86,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 					);
 				}, 500)}
 			/>
+			{/*<LabelSelect */}
+			{/*	title="Property Type" */}
+			{/*	onChange={} */}
+			{/*	selectOptions={} */}
+			{/*	control={}*/}
+			{/*/>*/}
 		</Box>
 	);
 };
