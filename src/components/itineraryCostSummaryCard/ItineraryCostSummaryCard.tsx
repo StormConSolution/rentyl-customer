@@ -22,8 +22,8 @@ interface ItineraryCostSummaryCardProps {
 		nights: number;
 		subtotalCostCents: number;
 		taxesAndFees: number;
-		points: number;
-		packagesTotalCostCents: number;
+		subtotalPoints: number;
+		packagesTotalCost: number;
 	}[];
 	paidWithPoints: boolean;
 }
@@ -32,12 +32,12 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 	let grandTotalCents = 0;
 	let grandTotalTaxFeeCents = 0;
 	let grandTotalPoints = 0;
-	let grandTotalPackageCostCents = 0;
+	let grandTotalPackageCost = 0;
 	props.reservation.forEach((reservation) => {
 		grandTotalCents += reservation.subtotalCostCents;
 		grandTotalTaxFeeCents += reservation.taxesAndFees;
-		grandTotalPoints += reservation.points;
-		grandTotalPackageCostCents += reservation.packagesTotalCostCents;
+		grandTotalPoints += reservation.subtotalPoints;
+		grandTotalPackageCost += reservation.packagesTotalCost;
 	});
 
 	function renderReservations() {
@@ -49,7 +49,7 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 						{!props.paidWithPoints ? (
 							<Label variant={'h4'}>${StringUtils.formatMoney(item.subtotalCostCents)}</Label>
 						) : (
-							<Label variant={'h4'}>{StringUtils.addCommasToNumber(item.points)} points</Label>
+							<Label variant={'h4'}>{StringUtils.addCommasToNumber(item.subtotalPoints)} points</Label>
 						)}
 					</Box>
 					<Label variant={'body1'}>{`${DateUtils.displayUserDate(
@@ -75,11 +75,15 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 			} ${props.address.zip}`}</Label>
 			<hr />
 			{renderReservations()}
-			{!!grandTotalPackageCostCents && (
+			{!!grandTotalPackageCost && (
 				<>
 					<Box display={'flex'} justifyContent={'space-between'}>
 						<Label variant={'h4'}>PACKAGE TOTAL</Label>
-						<Label variant={'h4'}>${StringUtils.formatMoney(grandTotalPackageCostCents)}</Label>
+						<Label variant={'h4'}>
+							{props.paidWithPoints
+								? `${StringUtils.addCommasToNumber(grandTotalPackageCost)} points`
+								: `$${StringUtils.formatMoney(grandTotalPackageCost)}`}
+						</Label>
 					</Box>
 					<hr />
 				</>
@@ -95,10 +99,12 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 				<Label variant={'h2'}>Total:</Label>
 				{!props.paidWithPoints ? (
 					<Label variant={'h2'}>
-						${StringUtils.formatMoney(grandTotalCents + grandTotalTaxFeeCents + grandTotalPackageCostCents)}
+						${StringUtils.formatMoney(grandTotalCents + grandTotalTaxFeeCents + grandTotalPackageCost)}
 					</Label>
 				) : (
-					<Label variant={'h2'}>{StringUtils.addCommasToNumber(grandTotalPoints)} Points</Label>
+					<Label variant={'h2'}>
+						{StringUtils.addCommasToNumber(grandTotalPoints + grandTotalPackageCost)} Points
+					</Label>
 				)}
 			</Box>
 		</Paper>
