@@ -25,11 +25,11 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
 
 	useEffect(() => {
-		let optionsArray: { value: string | number; label: string | number }[] = [];
-		props.roomTypes.map((roomType) => {
-			optionsArray.push({ value: roomType.value, label: roomType.text });
-			setOptions(optionsArray);
-		});
+		setOptions(
+			props.roomTypes.map((roomType) => {
+				return { value: roomType.value, label: roomType.text };
+			})
+		);
 	}, []);
 
 	function renderDefaultValue() {

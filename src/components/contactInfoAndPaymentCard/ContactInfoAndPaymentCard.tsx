@@ -252,7 +252,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 
 		return user.paymentMethods.map((item) => {
 			return {
-				// selected: item.id === existingCardId,
 				label: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,
 				value: item.id
 			};

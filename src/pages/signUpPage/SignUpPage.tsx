@@ -40,8 +40,6 @@ const SignUpPage: React.FC = () => {
 	const [formIsValid, setFormIsValid] = useState<boolean>(false);
 	const [stateList, setStateList] = useState<OptionType[]>([]);
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
-	const [country, setCountry] = useState<string>('US');
-	const [state, setState] = useState<string>('');
 
 	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
 		new RsFormGroup([
@@ -49,7 +47,7 @@ const SignUpPage: React.FC = () => {
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
 			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')]),
 			new RsFormControl('state', '', []),
-			new RsFormControl('country', '', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
+			new RsFormControl('country', 'US', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
 		])
 	);
 
@@ -103,12 +101,15 @@ const SignUpPage: React.FC = () => {
 				);
 			}
 		}
+
 		getCountries().catch(console.error);
 	}, []);
 
 	useEffect(() => {
 		async function getStates() {
-			let selectedCountry = countryList.find((item) => item.value === country);
+			let selectedCountry = countryList.find(
+				(item) => item.value === (newAddressObj.get('country').value || 'US')
+			);
 			if (!selectedCountry) return;
 			try {
 				let response = await countryService.getStates(`${selectedCountry.value}`);
@@ -123,11 +124,12 @@ const SignUpPage: React.FC = () => {
 				);
 			}
 		}
-		getStates().catch(console.error);
-	}, [countryList, country]);
 
-	function formatStateOrCountryListForSelect(statesOrCountries: any) {
-		return statesOrCountries.map((item: any) => {
+		getStates().catch(console.error);
+	}, [countryList, newAddressObj.get('country').value]);
+
+	function formatStateOrCountryListForSelect(statesOrCountries: Api.Country.IBaseCountry[]): OptionType[] {
+		return statesOrCountries.map((item: Api.Country.IBaseCountry) => {
 			return { value: item.isoCode, label: item.name };
 		});
 	}
@@ -180,7 +182,7 @@ const SignUpPage: React.FC = () => {
 			!!newAddressObj.get('address1').value.toString().length &&
 			!!newAddressObj.get('city').value.toString().length &&
 			!!newAddressObj.get('zip').value.toString().length &&
-			!!state.length
+			!!newAddressObj.get('country').value.toString().length
 		);
 	}
 
@@ -205,10 +207,8 @@ const SignUpPage: React.FC = () => {
 
 		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
 		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
 		addressObj['isDefault'] = 1;
-		addressObj['country'] = country;
-		console.log(addressObj);
+
 		try {
 			let res = await userService.createNewCustomer({ ...newCustomer, address: addressObj });
 			if (res) {
@@ -310,19 +310,16 @@ const SignUpPage: React.FC = () => {
 							<Box display={'flex'} className={'countryState'}>
 								<LabelSelect
 									title={'State'}
-									onChange={(value) => {
-										setState(value.value || '');
-										setIsValidForm(isFormFilledOut());
+									onChange={(control) => {
+										updateNewAddressObj(control);
 									}}
 									selectOptions={stateList}
 									control={newAddressObj.get('state')}
 								/>
 								<LabelSelect
 									title={'Country'}
-									onChange={(value) => {
-										setCountry(value.value || '');
-										setState('');
-										setIsValidForm(isFormFilledOut());
+									onChange={(control) => {
+										updateNewAddressObj(control);
 									}}
 									selectOptions={countryList}
 									control={newAddressObj.get('country')}
