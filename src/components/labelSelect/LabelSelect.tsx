@@ -20,7 +20,7 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 			<Label variant={'caption'}>{props.title}</Label>
 			<Select
 				control={props.control}
-				updateControl={props.onChange}
+				updateControl={(control) => props.onChange(control)}
 				options={props.selectOptions}
 				isClearable={true}
 				defaultValue={props.defaultValue}

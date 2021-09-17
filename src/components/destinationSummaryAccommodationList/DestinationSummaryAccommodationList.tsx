@@ -104,6 +104,12 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 			.map(renderAccommodationListRow, index);
 	}
 
+	function handleAccommodationRendering() {
+		{
+			renderAccommodationList(props.accommodations, 0);
+		}
+	}
+
 	return (
 		<div className="rsDestinationSummaryAccommodationList">
 			<div className="accommodationRow header">

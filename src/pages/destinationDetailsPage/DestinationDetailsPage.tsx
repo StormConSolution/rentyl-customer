@@ -81,6 +81,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		async function getDestinationDetails(id: number) {
 			try {
 				let dest = await destinationService.getDestinationDetails(id);
+				console.log(dest);
 				if (dest) setDestinationDetails(dest);
 			} catch (e) {
 				rsToastify.error(
@@ -89,7 +90,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				);
 			}
 		}
-
 		getDestinationDetails(params.destinationId).catch(console.error);
 	}, []);
 
@@ -108,6 +108,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
+				let accommodationIds: number[] = [];
+				result.data.map((accommodation: Api.Accommodation.Res.Availability) => {
+					return accommodationIds.push(accommodation.id);
+				});
+				let accommodationDetails = await accommodationService.getManyAccommodationDetails(accommodationIds);
+				console.log(accommodationDetails);
 			} catch (e) {
 				setValidCode(rateCode === '');
 				console.error(e);
@@ -198,7 +204,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rateCode',
+			| 'rateCode'
+			| 'propertyType',
 		value: any
 	) {
 		if (key === 'adults' && value === 0)
@@ -531,6 +538,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									if (value !== '') {
 										updateSearchQueryObj('priceRangeMax', value);
 									}
+								}}
+								onChangePropertyType={(control) => {
+									updateSearchQueryObj('propertyType', control.value);
 								}}
 								adultsInitialInput={searchQueryObj.adults.toString()}
 								childrenInitialInput={searchQueryObj.children.toString()}

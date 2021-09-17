@@ -121,7 +121,8 @@ const BookingFlowAddRoomPage = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rateCode',
+			| 'rateCode'
+			| 'propertyType',
 		value: any
 	) {
 		if (key === 'adults' && value === 0)
@@ -358,6 +359,9 @@ const BookingFlowAddRoomPage = () => {
 								if (value !== '') {
 									updateSearchQueryObj('priceRangeMax', value);
 								}
+							}}
+							onChangePropertyType={(control) => {
+								updateSearchQueryObj('propertyType', control.value);
 							}}
 							adultsInitialInput={searchQueryObj.adults.toString()}
 							childrenInitialInput={searchQueryObj.children.toString()}

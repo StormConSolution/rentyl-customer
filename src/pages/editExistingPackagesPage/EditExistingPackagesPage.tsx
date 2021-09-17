@@ -30,8 +30,8 @@ const EditExistingPackagesPage: React.FC = () => {
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
 	const [defaultReservationUpsellPackages, setDefaultReservationUpsellPackages] = useState<number[]>([]);
-	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
-	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
+	const [currentReservationPackages, setCurrentReservationPackages] = useState<Api.UpsellPackage.Res.Complete[]>([]);
+	const [destinationPackages, setDestinationPackages] = useState<Api.UpsellPackage.Res.Complete[]>([]);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
@@ -114,7 +114,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rateCode',
+			| 'rateCode'
+			| 'propertyType',
 		value: any
 	) {
 		if (key === 'adultCount' && value === 0) {
@@ -247,22 +248,23 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function getSummaryTabs(destination: Api.Destination.Res.Availability): DestinationSummaryTab[] {
-		let accommodationsList = destination.accommodations;
-		return [
-			{ label: 'Overview', content: { text: destination.description } },
-			{
-				label: 'Available Suites',
+		let propertyTypes = [{ name: 'All Available', id: 0 }, ...destination.propertyTypes];
+		let summaryTabs: DestinationSummaryTab[] = [{ label: 'Overview', content: { text: destination.description } }];
+		propertyTypes.map((propertyType) => {
+			let accommodationList = handleAccommodationList(destination.accommodations, propertyType);
+			summaryTabs.push({
+				label: propertyType.name,
 				content: {
-					accommodationType: 'Suites',
-					accommodations: accommodationsList,
-					onDetailsClick: (accommodationId) => {
+					accommodationType: 'Available',
+					accommodations: accommodationList,
+					onDetailsClick: (accommodationId: ReactText) => {
 						let dates =
 							!!searchQueryObj.startDate && !!searchQueryObj.endDate
 								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
 								: '';
 						router.navigate(`/accommodation/details?ai=${accommodationId}${dates}`).catch(console.error);
 					},
-					onBookNowClick: (accommodationId) => {
+					onBookNowClick: (accommodationId: number) => {
 						let data: any = { ...searchQueryObj };
 						let newRoom: StayParams = {
 							uuid: Date.now(),
@@ -283,7 +285,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
 					},
-					onAddCompareClick: (accommodationId) => {
+					onAddCompareClick: (accommodationId: ReactText) => {
 						let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
 						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
@@ -295,8 +297,26 @@ const ReservationAvailabilityPage: React.FC = () => {
 						});
 					}
 				}
+			});
+			return summaryTabs;
+		});
+		return summaryTabs;
+	}
+
+	function handleAccommodationList(
+		accommodationsList: Api.Destination.Res.Accommodation[],
+		propertyType: Api.Destination.Res.PropertyType
+	) {
+		let accommodationsByPropertyType: Api.Destination.Res.Accommodation[] = [];
+		accommodationsList.map((accommodation) => {
+			if (propertyType.id === 0) {
+				accommodationsByPropertyType = accommodationsList;
+			} else if (propertyType.id === accommodation.propertyTypeId) {
+				accommodationsByPropertyType.push(accommodation);
 			}
-		];
+			return accommodationsByPropertyType;
+		});
+		return accommodationsByPropertyType;
 	}
 
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
@@ -320,7 +340,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
-					width={size === 'small' ? '100%' : '1165px'}
 					padding={size === 'small' ? '20px 30px' : '60px 140px'}
 					boxSizing={'border-box'}
 				>
@@ -354,6 +373,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 									if (value !== '') {
 										updateSearchQueryObj('priceRangeMax', value);
 									}
+								}}
+								onChangePropertyType={(control) => {
+									updateSearchQueryObj('propertyType', control.value);
 								}}
 								adultsInitialInput={searchQueryObj.adultCount.toString()}
 								childrenInitialInput={searchQueryObj.childCount.toString()}

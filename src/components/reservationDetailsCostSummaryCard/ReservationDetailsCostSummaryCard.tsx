@@ -16,7 +16,7 @@ interface ReservationDetailsCostSummaryCartProps {
 	adultCount: number;
 	childCount: number;
 	taxAndFeeTotalsInCents: { name: string; amount: number }[];
-	upsellPackages: Api.UpsellPackage.Res.Booked[];
+	upsellPackages: Api.UpsellPackage.Res.Complete[];
 	costPerNight: { [date: string]: number };
 	accommodationTotalCents: number;
 	grandTotalCents: number;

@@ -17,6 +17,7 @@ declare namespace Api {
 				name?: string;
 				shortDescription?: string;
 				longDescription?: string;
+				propertyTypeId?: number;
 				roomCount?: number;
 				address1?: string;
 				address2?: string;
@@ -50,6 +51,8 @@ declare namespace Api {
 		export namespace Res {
 			export interface Update extends Details {}
 
+			export interface PropertyTypeDetails extends Omit<Model.PropertyType, 'companyId'> {}
+
 			export interface Details extends Model.Accommodation {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
@@ -72,6 +75,7 @@ declare namespace Api {
 			export interface Availability {
 				id: number;
 				name: string;
+				propertyTypeId: number;
 				longDescription: string;
 				media: Media[]; //*All media for accommodation and accommodation categories*
 				featureIcons: string[]; //*Limit it to the first five*
@@ -222,6 +226,18 @@ declare namespace Api {
 			export interface Get extends Model.AccommodationLayoutRoom {}
 
 			export interface GetForLayout extends Model.AccommodationLayoutRoom {}
+		}
+	}
+
+	export namespace AccommodationPropertyType {
+		export namespace req {
+			export interface Get {
+				id: number;
+			}
+		}
+
+		export namespace res {
+			export namespace Get {}
 		}
 	}
 
@@ -438,8 +454,10 @@ declare namespace Api {
 			isoCode: string;
 		}
 
-		interface ICountry extends IBaseCountry {
+		interface ICountry {
+			name: string;
 			phonecode: string;
+			isoCode: string;
 			flag: string;
 			currency: string;
 			latitude: string;
@@ -447,7 +465,9 @@ declare namespace Api {
 			timezones?: Timezones[];
 		}
 
-		interface IState extends IBaseCountry {
+		interface IState {
+			name: string;
+			isoCode: string;
 			countryCode: string;
 			latitude?: string | null;
 			longitude?: string | null;
@@ -524,6 +544,7 @@ declare namespace Api {
 				id: number;
 				description?: string;
 				locationDescription?: string;
+				propertyTypes?: number[];
 				status?: string;
 				address1?: string;
 				address2?: string;
@@ -539,6 +560,10 @@ declare namespace Api {
 			export interface AccommodationType {
 				destinationId?: number;
 				destinationIds?: number[];
+			}
+
+			export interface PropertyType {
+				destinationId: number;
 			}
 
 			export interface Features {
@@ -567,6 +592,7 @@ declare namespace Api {
 				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
+				propertyTypes?: number[];
 				pagination: RedSky.PagePagination;
 			}
 		}
@@ -609,6 +635,7 @@ declare namespace Api {
 				heroUrl: string;
 				reviewRating: number;
 				reviewCount: number;
+				propertyTypes: PropertyType[];
 				media: Media[];
 				features: Omit<
 					Feature.Details,
@@ -632,9 +659,12 @@ declare namespace Api {
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
 
+			export interface PropertyType extends Omit<Model.PropertyType, 'companyId'> {}
+
 			export interface Accommodation {
 				id: number;
 				name: string;
+				propertyTypeId: number;
 				roomCount: number;
 				bedDetails: any;
 				priceCents: number;
@@ -664,6 +694,7 @@ declare namespace Api {
 				state: string;
 				zip: string;
 				country: string;
+				propertyTypes: PropertyType[];
 				logoUrl: string;
 				reviewRating: number;
 				reviewCount: number;
@@ -1120,7 +1151,7 @@ declare namespace Api {
 				priceDetail: PriceDetail;
 				itineraryId: string;
 				cancellationPermitted: 0 | 1;
-				upsellPackages: UpsellPackage.Res.Booked[];
+				upsellPackages: UpsellPackage.Res.Complete[];
 				additionalDetails: string;
 				numberOfAccommodations: number;
 			}
@@ -1138,7 +1169,7 @@ declare namespace Api {
 				rateCode: string;
 				adultCount: number;
 				childCount: number;
-				upsellPackages: UpsellPackage.Res.Booked[];
+				upsellPackages: UpsellPackage.Res.Complete[];
 				prices: PriceDetail;
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 				checkInTime: string;
@@ -1184,7 +1215,7 @@ declare namespace Api {
 					childCount: number;
 					externalConfirmationId: string;
 					confirmationDate: Date | string;
-					upsellPackages: UpsellPackage.Res.Booked[];
+					upsellPackages: UpsellPackage.Res.Complete[];
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
 					additionalDetails: string;
@@ -1562,7 +1593,7 @@ declare namespace Api {
 
 			export interface Get extends Details {}
 
-			export interface Booked extends Details {
+			export interface Complete extends Details {
 				priceDetail: PriceDetail;
 			}
 
@@ -1571,9 +1602,6 @@ declare namespace Api {
 				amountAfterTax: number;
 				amountPoints: number;
 			}
-
-			// Deprecated
-			export interface ForDestination extends Api.UpsellPackage.Res.Available {}
 		}
 	}
 

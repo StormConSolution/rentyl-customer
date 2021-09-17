@@ -54,6 +54,7 @@ declare namespace Model {
 		companyId: number;
 		destinationId: number;
 		accommodationTypeId: number;
+		propertyTypeId: number;
 		name: string;
 		code: string;
 		shortDescription: string;
@@ -316,6 +317,10 @@ declare namespace Model {
 		modifiedOn: Date | string;
 	};
 
+	export interface DestinationPropertyType {
+		destinationId: number;
+		propertyTypeId: number;
+	}
 	export interface DestinationTax {
 		destinationId: number;
 		companyId: number;
@@ -483,6 +488,12 @@ declare namespace Model {
 		pointPrice: number;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+	}
+
+	export interface PropertyType {
+		id: number;
+		name: string;
+		companyId: number;
 	}
 
 	export interface ReportTemplate {

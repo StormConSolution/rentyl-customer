@@ -24,8 +24,8 @@ const BookingFlowAddPackagePage = () => {
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
-	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
-	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Booked[]>([]);
+	const [addedPackages, setAddedPackages] = useState<Api.UpsellPackage.Res.Complete[]>([]);
+	const [availablePackages, setAvailablePackages] = useState<Api.UpsellPackage.Res.Complete[]>([]);
 
 	useEffect(() => {
 		if (!params.data.newRoom) {

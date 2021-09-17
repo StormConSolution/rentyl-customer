@@ -1,12 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { StringUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import LabelSelect from '../labelSelect/LabelSelect';
+import { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import serviceFactory from '../../services/serviceFactory';
+import DestinationService from '../../services/destination/destination.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
@@ -19,17 +24,49 @@ export interface FilterBarProps {
 	onChangeChildren: (value: any) => void;
 	onChangePriceMin: (value: any) => void;
 	onChangePriceMax: (value: any) => void;
+	onChangePropertyType: (value: any) => void;
 	adultsInitialInput?: string;
 	childrenInitialInput?: string;
 	initialPriceMin?: string;
 	initialPriceMax?: string;
 	className?: string;
+	display?: string;
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
-	// useEffect(() => {
-	//
-	// },[])
+	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const [options, setOptions] = useState<OptionType[]>([]);
+	const [propertyType, setPropertyType] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('propertyType', '', [])])
+	);
+
+	useEffect(() => {
+		async function getAllPropertyTypes() {
+			try {
+				let response = await destinationService.getAllPropertyTypes();
+				let newOptions = formatOptions(response.data);
+				setOptions(newOptions);
+			} catch (e) {
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
+					'Server Error'
+				);
+			}
+		}
+		getAllPropertyTypes().catch(console.error);
+	}, []);
+
+	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
+		let tempArray: OptionType[] = [];
+		options.forEach((value) => {
+			tempArray.push({ value: value.id, label: value.name });
+		});
+		return tempArray;
+	}
+
+	function handleUpdateControl(control: RsFormControl) {
+		setPropertyType(propertyType.clone().update(control));
+	}
 
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
@@ -86,12 +123,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 					);
 				}, 500)}
 			/>
-			{/*<LabelSelect */}
-			{/*	title="Property Type" */}
-			{/*	onChange={} */}
-			{/*	selectOptions={} */}
-			{/*	control={}*/}
-			{/*/>*/}
+			<LabelSelect
+				className={props.display}
+				title="Property Type"
+				control={propertyType.get('propertyType')}
+				onChange={(control) => {
+					setPropertyType(propertyType.clone().update(control));
+					props.onChangePropertyType(control);
+				}}
+				selectOptions={options}
+			/>
 		</Box>
 	);
 };
