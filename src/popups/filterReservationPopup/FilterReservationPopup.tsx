@@ -68,11 +68,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	}, []);
 
 	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		let tempArray: OptionType[] = [];
-		options.forEach((value) => {
-			tempArray.push({ value: value.id, label: value.name });
+		return options.map((value) => {
+			return { value: value.id, label: value.name };
 		});
-		return tempArray;
 	}
 
 	return (
