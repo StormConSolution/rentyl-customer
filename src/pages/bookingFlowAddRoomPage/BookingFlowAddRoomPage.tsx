@@ -22,6 +22,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import BookingParams = Misc.BookingParams;
+import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const BookingFlowAddRoomPage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -53,6 +54,7 @@ const BookingFlowAddRoomPage = () => {
 		children: editStayDetails?.children || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.data.destinationId,
+		propertyType: 0,
 		rateCode: editStayDetails?.rateCode || params.data.stays[0].rateCode || ''
 	});
 
@@ -89,9 +91,14 @@ const BookingFlowAddRoomPage = () => {
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
 				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
-				setAvailabilityTotal(res.total || 0);
-				setAccommodations(res.data);
-				setValidCode(rateCode === '' || res.data.length > 0);
+				if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
+					handlePropertyTypeFilter(res, newSearchQueryObj);
+				} else {
+					setAvailabilityTotal(res.total || 0);
+					setAccommodations(res.data);
+					setValidCode(rateCode === '' || res.data.length > 0);
+				}
+
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
@@ -110,6 +117,23 @@ const BookingFlowAddRoomPage = () => {
 		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
+	}
+
+	function handlePropertyTypeFilter(
+		res: RsPagedResponseData<Api.Accommodation.Req.Availability>,
+		newSearchQueryObj: Api.Accommodation.Req.Availability
+	) {
+		if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
+			let filteredAccommodations: Api.Accommodation.Res.Availability[] = [];
+			res.data.map((accommodation: Api.Accommodation.Res.Availability) => {
+				if (newSearchQueryObj.propertyType === accommodation.propertyTypeId) {
+					filteredAccommodations.push(accommodation);
+				}
+			});
+			setAvailabilityTotal(filteredAccommodations.length);
+			setAccommodations(filteredAccommodations);
+			setValidCode(rateCode === '' || res.data.length > 0);
+		}
 	}
 
 	function updateSearchQueryObj(
@@ -150,6 +174,7 @@ const BookingFlowAddRoomPage = () => {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
+		propertyType: number,
 		rateCode: string
 	) {
 		setSearchQueryObj((prev) => {
@@ -165,6 +190,9 @@ const BookingFlowAddRoomPage = () => {
 			}
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			}
+			if (propertyType !== 0) {
+				createSearchQueryObj['propertyType'] = propertyType;
 			}
 			if (rateCode !== '') {
 				createSearchQueryObj['rateCode'] = rateCode;
@@ -317,6 +345,7 @@ const BookingFlowAddRoomPage = () => {
 									children: string,
 									priceRangeMin: string,
 									priceRangeMax: string,
+									propertyType: number,
 									rateCode: string
 								) => {
 									popupSearch(
@@ -326,6 +355,7 @@ const BookingFlowAddRoomPage = () => {
 										children,
 										priceRangeMin,
 										priceRangeMax,
+										propertyType,
 										rateCode
 									);
 								},

@@ -1,6 +1,11 @@
 @import '../../themes/themes.scss';
 
 .rsFilterBar {
+	.rsSelect {
+		[class*='control'] {
+			background-color: white;
+		}
+	}
 	div {
 		margin: 0;
 	}

@@ -39,6 +39,7 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
+import RsPagedResponseData = RedSky.RsPagedResponseData;
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -74,14 +75,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		endDate: initialEndDate.format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
-		pagination: { page: 1, perPage: 5 }
+		pagination: { page: 1, perPage: 5 },
+		propertyType: 0
 	});
 
 	useEffect(() => {
 		async function getDestinationDetails(id: number) {
 			try {
 				let dest = await destinationService.getDestinationDetails(id);
-				console.log(dest);
 				if (dest) setDestinationDetails(dest);
 			} catch (e) {
 				rsToastify.error(
@@ -105,15 +106,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			}
 			try {
 				let result = await accommodationService.availability(newSearchQueryObj);
-				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
-				setTotalResults(result.total || 0);
-				setAvailabilityStayList(result.data);
-				let accommodationIds: number[] = [];
-				result.data.map((accommodation: Api.Accommodation.Res.Availability) => {
-					return accommodationIds.push(accommodation.id);
-				});
-				let accommodationDetails = await accommodationService.getManyAccommodationDetails(accommodationIds);
-				console.log(accommodationDetails);
+				if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
+					handlePropertyTypeFilter(result, newSearchQueryObj);
+				} else {
+					setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
+					setTotalResults(result.total || 0);
+					setAvailabilityStayList(result.data);
+				}
 			} catch (e) {
 				setValidCode(rateCode === '');
 				console.error(e);
@@ -121,6 +120,24 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		getAvailableStays().catch(console.error);
 	}, [searchQueryObj]);
+
+	function handlePropertyTypeFilter(
+		res: RsPagedResponseData<Api.Accommodation.Req.Availability>,
+		newSearchQueryObj: Api.Accommodation.Req.Availability
+	) {
+		if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
+			let filteredAccommodations: Api.Accommodation.Res.Availability[] = [];
+			res.data.map((accommodation: Api.Accommodation.Res.Availability) => {
+				if (newSearchQueryObj.propertyType === accommodation.propertyTypeId) {
+					filteredAccommodations.push(accommodation);
+				}
+			});
+
+			setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
+			setTotalResults(filteredAccommodations.length);
+			setAvailabilityStayList(filteredAccommodations);
+		}
+	}
 
 	let imageIndex = 0;
 
@@ -581,6 +598,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 										children: string,
 										priceRangeMin: string,
 										priceRangeMax: string,
+										propertyType: number,
 										rateCode: string
 									): void {
 										setSearchQueryObj((prev) => {
@@ -597,6 +615,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 												);
 											if (adults !== '') createSearchQueryObj['adults'] = adults;
 											if (children !== '') createSearchQueryObj['children'] = children;
+											if (propertyType !== 0) createSearchQueryObj['propertyType'] = propertyType;
 											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
 												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
 											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))

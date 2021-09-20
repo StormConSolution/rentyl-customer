@@ -64,10 +64,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		return tempArray;
 	}
 
-	function handleUpdateControl(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
 			<DateRangeSelector

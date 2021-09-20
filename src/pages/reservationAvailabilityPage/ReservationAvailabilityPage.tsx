@@ -32,6 +32,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import DateRange = Misc.DateRange;
 import StayParams = Misc.StayParams;
 import SelectOptions = Misc.SelectOptions;
+import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -51,7 +52,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
 		adultCount: 2,
 		childCount: 0,
-		pagination: { page: 1, perPage: 5 }
+		pagination: { page: 1, perPage: 5 },
+		propertyTypes: []
 	});
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useState<string>('');
@@ -92,9 +94,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
-				setDestinations(res.data);
-				setAvailabilityTotal(res.total || 0);
-				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
+				if (newSearchQueryObj.propertyTypes && newSearchQueryObj.propertyTypes.length >= 1) {
+					handlePropertyTypeFilter(res, newSearchQueryObj);
+				} else {
+					setDestinations(res.data);
+					setAvailabilityTotal(res.total || 0);
+					setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
+				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
@@ -104,6 +110,25 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
+
+	function handlePropertyTypeFilter(
+		res: RsPagedResponseData<Api.Destination.Res.Availability[]>,
+		newSearchQueryObj: Api.Destination.Req.Availability
+	) {
+		if (newSearchQueryObj.propertyTypes && newSearchQueryObj.propertyTypes.length >= 1) {
+			let filteredDestinations: Api.Destination.Res.Availability[] = [];
+			res.data.map((destination: Api.Destination.Res.Availability) => {
+				destination.propertyTypes.map((id) => {
+					if (newSearchQueryObj.propertyTypes?.includes(id.id)) {
+						filteredDestinations.push(destination);
+					}
+				});
+			});
+			setDestinations(filteredDestinations);
+			setAvailabilityTotal(filteredDestinations.length);
+			setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
+		}
+	}
 
 	function updateSearchQueryObj(
 		key:
@@ -115,7 +140,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			| 'priceRangeMax'
 			| 'pagination'
 			| 'rateCode'
-			| 'propertyType',
+			| 'propertyTypes',
 		value: any
 	) {
 		if (key === 'adultCount' && value === 0) {
@@ -159,13 +184,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 		adultCount: string,
 		childCount: string,
 		priceRangeMin: string,
-		priceRangeMax: string
+		priceRangeMax: string,
+		propertyType: number
 	) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adultCount'] = parseInt(adultCount);
+			if (propertyType !== 0) {
+				createSearchQueryObj['propertyTypes'] = [propertyType];
+			}
 			if (childCount !== '') {
 				createSearchQueryObj['childCount'] = parseInt(childCount);
 			}
@@ -375,7 +404,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
-									updateSearchQueryObj('propertyType', control.value);
+									updateSearchQueryObj('propertyTypes', [control.value]);
 								}}
 								adultsInitialInput={searchQueryObj.adultCount.toString()}
 								childrenInitialInput={searchQueryObj.childCount.toString()}
@@ -421,9 +450,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 										adults,
 										children,
 										priceRangeMin,
-										priceRangeMax
+										priceRangeMax,
+										propertyType: number
 									) => {
-										popupSearch(startDate, endDate, adults, children, priceRangeMin, priceRangeMax);
+										popupSearch(
+											startDate,
+											endDate,
+											adults,
+											children,
+											priceRangeMin,
+											priceRangeMax,
+											propertyType
+										);
 									},
 									className: 'filterPopup'
 								});
