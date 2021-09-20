@@ -12,8 +12,10 @@ export default class PackageService extends Service {
 		return response.data;
 	}
 
-	async getPackagesByIds(data: Api.UpsellPackage.Req.Availability): Promise<Api.UpsellPackage.Res.Complete[]> {
-		let response = await http.get<RedSky.RsPagedResponseData<Api.UpsellPackage.Details[]>>(
+	async getPackagesByIds(
+		data: Api.UpsellPackage.Req.Availability
+	): Promise<RedSky.RsPagedResponseData<Api.UpsellPackage.Res.Complete[]>> {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.UpsellPackage.Res.Complete[]>>(
 			'/package/availability',
 			data
 		);

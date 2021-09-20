@@ -39,7 +39,6 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-import RsPagedResponseData = RedSky.RsPagedResponseData;
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {

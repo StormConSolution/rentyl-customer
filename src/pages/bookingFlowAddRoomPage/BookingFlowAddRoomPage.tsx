@@ -21,12 +21,12 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import BookingParams = Misc.BookingParams;
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 const BookingFlowAddRoomPage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ data: BookingParams }>([
+	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
 	]);
 	params.data = ObjectUtils.smartParse(params.data);
@@ -367,7 +367,7 @@ const BookingFlowAddRoomPage = () => {
 									updateSearchQueryObj('priceRangeMax', value);
 								}
 							}}
-							onChangePropertyType={(control) => {
+							onChangePropertyType={(control: RsFormControl) => {
 								updateSearchQueryObj('propertyTypeIds', [control.value]);
 							}}
 							adultsInitialInput={searchQueryObj.adults.toString()}

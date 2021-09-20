@@ -29,10 +29,6 @@ import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import DateRange = Misc.DateRange;
-import StayParams = Misc.StayParams;
-import SelectOptions = Misc.SelectOptions;
-import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -183,7 +179,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			}
 			return createSearchQueryObj;
 		});
-		const dates: DateRange = {
+		const dates: Misc.DateRange = {
 			startDate: formatFilterDateForServer(checkinDate, 'start'),
 			endDate: formatFilterDateForServer(checkoutDate, 'end')
 		};
@@ -208,7 +204,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		return destinations.map((destination, index) => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
-			let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, -1);
+			let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, -1);
 			return (
 				<DestinationSearchResultCard
 					key={index}
@@ -241,7 +237,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function formatCompareRoomTypes(
 		destination: Api.Destination.Res.Availability,
 		accommodationIdSelected: number | string
-	): SelectOptions[] {
+	): Misc.SelectOptions[] {
 		if (!destination.accommodationTypes) return [];
 		return destination.accommodations
 			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
@@ -272,7 +268,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					},
 					onBookNowClick: (accommodationId: number) => {
 						let data: any = { ...searchQueryObj };
-						let newRoom: StayParams = {
+						let newRoom: Misc.StayParams = {
 							uuid: Date.now(),
 							adults: data.adultCount,
 							children: data.childCount,
@@ -292,7 +288,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						}
 					},
 					onAddCompareClick: (accommodationId: ReactText) => {
-						let roomTypes: SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
+						let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
 						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: destination.id,

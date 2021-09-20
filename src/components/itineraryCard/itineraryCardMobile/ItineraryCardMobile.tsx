@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './ReservationCardMobile.scss';
+import './ItineraryCardMobile.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Carousel from '../../carousel/Carousel';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,7 @@ interface ReservationCardMobileProps {
 	paidWithPoints: boolean;
 }
 
-const ReservationCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
+const ItineraryCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 	const [showControls, setShowControls] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -43,7 +43,7 @@ const ReservationCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 		});
 	}
 	return (
-		<Box className={'rsReservationCardMobile'}>
+		<Box className={'rsItineraryCardMobile'}>
 			<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
 			<img className={'logoImg'} src={props.logo} alt={`${props.title} Logo`} />
 			<Label variant={'h1'} mb={8}>
@@ -71,4 +71,4 @@ const ReservationCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 	);
 };
 
-export default ReservationCardMobile;
+export default ItineraryCardMobile;

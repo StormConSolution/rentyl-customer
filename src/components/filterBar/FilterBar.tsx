@@ -24,7 +24,7 @@ export interface FilterBarProps {
 	onChangeChildren: (value: any) => void;
 	onChangePriceMin: (value: any) => void;
 	onChangePriceMax: (value: any) => void;
-	onChangePropertyType: (value: any) => void;
+	onChangePropertyType: (control: RsFormControl) => void;
 	adultsInitialInput?: string;
 	childrenInitialInput?: string;
 	initialPriceMin?: string;

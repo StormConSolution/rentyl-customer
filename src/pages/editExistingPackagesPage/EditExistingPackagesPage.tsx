@@ -102,7 +102,7 @@ const EditExistingPackagesPage: React.FC = () => {
 					text={'Remove'}
 					title={item.title}
 					description={item.description}
-					priceCents={item.priceDetail.amountAfterTax}
+					prices={item.priceDetail}
 					imgPaths={item.media.map((item) => {
 						return item.urls.imageKit;
 					})}
@@ -129,7 +129,7 @@ const EditExistingPackagesPage: React.FC = () => {
 						key={index}
 						title={item.title}
 						description={item.description}
-						priceCents={item.priceDetail.amountAfterTax}
+						prices={item.priceDetail}
 						imgPaths={item.media.map((item) => {
 							return item.urls.imageKit;
 						})}
