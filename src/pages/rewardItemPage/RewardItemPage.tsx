@@ -22,7 +22,6 @@ import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
 import globalState from '../../state/globalState';
-import SelectOptions = Misc.SelectOptions;
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
@@ -33,8 +32,8 @@ const RewardItemPage: React.FC = () => {
 	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
 	const [featuredCategory, setFeaturedCategory] = useState<Misc.FeaturedCategory[]>();
 	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
-	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
-	const [destinationSelectList, setDestinationSelectList] = useState<SelectOptions[]>([]);
+	const [categorySelectList, setCategorySelectList] = useState<Misc.SelectOptions[]>([]);
+	const [destinationSelectList, setDestinationSelectList] = useState<Misc.SelectOptions[]>([]);
 	const [rewardList, setRewardList] = useState<Api.Reward.Res.Get[]>([]);
 	const [pointCostMin, setPointCostMin] = useState<number>();
 	const [pointCostMax, setPointCostMax] = useState<number>();
@@ -183,7 +182,7 @@ const RewardItemPage: React.FC = () => {
 		return filter;
 	}
 
-	function getSelectedIds(options: SelectOptions[]): (string | number)[] {
+	function getSelectedIds(options: Misc.SelectOptions[]): (string | number)[] {
 		return options
 			.filter((option) => {
 				return option.selected;

@@ -19,7 +19,6 @@ import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
-import SelectOptions = Misc.SelectOptions;
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -28,7 +27,7 @@ const AccountPointsPage: React.FC = () => {
 	const [allPointHistory, setAllPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [filterBy, setFilterBy] = useState<React.ReactText[]>([]);
-	const pointTypeFilters: SelectOptions[] = [
+	const pointTypeFilters: Misc.SelectOptions[] = [
 		{ value: 'ACTION', text: 'Action', selected: false },
 		{ value: 'CAMPAIGN', text: 'Campaign', selected: false },
 		{ value: 'ADMIN', text: 'Admin', selected: false },

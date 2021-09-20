@@ -8,50 +8,62 @@ import Carousel from '../carousel/Carousel';
 import MobileLightBoxTwoPopup, {
 	MobileLightBoxTwoPopupProps
 } from '../../popups/mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
-import { ObjectUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface CategoryImageGalleryMobileProps {
 	accommodationCategories: Api.AccommodationCategory.Details[];
 }
 
 const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (props) => {
-	const [selected, setSelected] = useState<number>(0);
-	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
+	const [options, setOptions] = useState<OptionType[]>([]);
+	const [defaultValue, setDefaultValue] = useState<OptionType>();
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', 0, [])])
+	);
 
-	function renderOptions() {
-		let firstRun = true;
-		return props.accommodationCategories
-			.map((item, index) => {
-				if (!selected && firstRun) {
-					setSelected(item.id);
-					firstRun = false;
-				}
-				if (!ObjectUtils.isArrayWithData(item.media)) {
-					return {
-						value: 'DELETE',
-						label: item.title
-					};
-				} else {
-					return {
-						value: item.id,
-						label: item.title
-					};
-				}
-			})
-			.filter((item) => item.value !== 'DELETE');
-	}
-
-	function renderDefault() {
-		let options = renderOptions();
-		if (options.length > 0) return { value: options[0].value, label: options[0].label };
-		return { value: 0, label: 'Select...' };
-	}
+	useEffect(() => {
+		async function renderOptions() {
+			try {
+				let firstRun = true;
+				let newOptions = props.accommodationCategories
+					.map((item, index) => {
+						if (roomTypeFormGroup.get('roomValue').value !== 0 && firstRun) {
+							firstRun = false;
+						}
+						if (!ObjectUtils.isArrayWithData(item.media)) {
+							return {
+								value: 'DELETE',
+								label: item.title
+							};
+						} else {
+							return {
+								value: item.id,
+								label: item.title
+							};
+						}
+					})
+					.filter((item) => item.value !== 'DELETE');
+				setOptions(newOptions);
+				setDefaultValue({ value: newOptions[0].value, label: newOptions[0].label });
+			} catch (e) {
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
+			}
+		}
+		renderOptions().catch(console.error);
+	}, [roomTypeFormGroup]);
 
 	function renderImages(): React.ReactNodeArray {
 		let selectedCategory: Api.AccommodationCategory.Details | undefined = props.accommodationCategories.find(
-			(item) => item.id === selected
+			(item) => {
+				if (roomTypeFormGroup.get('roomValue').value !== 0) {
+					return item.id === roomTypeFormGroup.get('roomValue').value;
+				} else if (options.length >= 1) {
+					return item.id === options[0].value;
+				}
+			}
 		);
 		if (!selectedCategory) return [<div />];
 		return selectedCategory.media.map((item, index) => {
@@ -80,23 +92,16 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 		});
 	}
 
-	function handleSelected(value: RsFormControl) {
-		if (value.value === null) return;
-		let newValue: any = value.value;
-		newValue = parseInt(newValue);
-		setSelected(newValue);
-	}
-
 	return (
 		<Box className={'rsCategoryImageGalleryMobile'} width={'100%'}>
 			<Box display={'flex'} justifyContent={'center'} marginBottom={'30px'}>
 				<Select
 					control={roomTypeFormGroup.get('roomValue')}
-					updateControl={(value) => {
-						handleSelected(value);
+					updateControl={(control) => {
+						setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
 					}}
-					options={renderOptions()}
-					defaultValue={renderDefault()}
+					options={options}
+					defaultValue={defaultValue}
 				/>
 			</Box>
 			<Carousel className={'imageContainer'} children={renderImages()} />

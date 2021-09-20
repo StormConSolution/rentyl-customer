@@ -22,7 +22,9 @@ interface ResortComparisonCardProps {
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
-	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', 0, [])])
+	);
 
 	useEffect(() => {
 		setOptions(
@@ -94,8 +96,9 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			<Box className={'bottomContent'} display={'flex'}>
 				<Select
 					control={roomTypeFormGroup.get('roomValue')}
-					updateControl={(value) => {
-						props.onChange(value);
+					updateControl={(control) => {
+						setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
+						props.onChange(roomTypeFormGroup.get('roomValue'));
 					}}
 					options={options}
 					isClearable={true}

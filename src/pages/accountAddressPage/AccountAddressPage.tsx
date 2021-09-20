@@ -34,8 +34,6 @@ const AccountAddressPage: React.FC = () => {
 	const [isValidForm, setIsValidForm] = useState<boolean>(false);
 	const [stateList, setStateList] = useState<OptionType[]>([]);
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
-	const [country, setCountry] = useState<string>('US');
-	const [state, setState] = useState<string>('');
 	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
@@ -44,7 +42,7 @@ const AccountAddressPage: React.FC = () => {
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
 			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')]),
 			new RsFormControl('state', '', []),
-			new RsFormControl('country', '', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
+			new RsFormControl('country', 'US', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
 		])
 	);
 
@@ -73,10 +71,8 @@ const AccountAddressPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getStates() {
-			let selectedCountry = countryList.find((item) => item.value === country);
-			if (!selectedCountry) return;
 			try {
-				let response = await countryService.getStates(`${selectedCountry.value}`);
+				let response = await countryService.getStates(`${newAddressObj.get('country').value}` || 'US');
 				if (response.states) {
 					let newStates = formatStateOrCountryListForSelect(response.states);
 					setStateList(newStates);
@@ -89,7 +85,7 @@ const AccountAddressPage: React.FC = () => {
 			}
 		}
 		getStates().catch(console.error);
-	}, [countryList, country]);
+	}, [countryList, newAddressObj.get('country').value]);
 
 	function renderAddresses() {
 		if (!addressList || !ObjectUtils.isArrayWithData(addressList)) return;
@@ -117,7 +113,7 @@ const AccountAddressPage: React.FC = () => {
 		});
 	}
 
-	function formatStateOrCountryListForSelect(statesOrCountries: any) {
+	function formatStateOrCountryListForSelect(statesOrCountries: Api.Country.IBaseCountry[]) {
 		return statesOrCountries.map((item: any) => {
 			return { value: item.isoCode, label: item.name };
 		});
@@ -145,7 +141,7 @@ const AccountAddressPage: React.FC = () => {
 			!!newAddressObj.get('address1').value.toString().length &&
 			!!newAddressObj.get('city').value.toString().length &&
 			!!newAddressObj.get('zip').value.toString().length &&
-			!!state.length
+			!!newAddressObj.get('country').value.toString().length
 		);
 	}
 
@@ -176,9 +172,7 @@ const AccountAddressPage: React.FC = () => {
 		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
 		addressObj['userId'] = user.id;
 		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
 		addressObj['isDefault'] = isDefault;
-		addressObj['country'] = country;
 
 		try {
 			let response = await userAddressService.create(addressObj);
@@ -253,22 +247,19 @@ const AccountAddressPage: React.FC = () => {
 								updateControl={updateNewAddressObj}
 							/>
 						</Box>
-						<Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
+						<Box display={'flex'} justifyContent={'space-between'}>
 							<LabelSelect
 								title={'State'}
-								onChange={(value) => {
-									setState(value.value || '');
-									setIsValidForm(isFormFilledOut());
+								onChange={(control) => {
+									updateNewAddressObj(control);
 								}}
 								selectOptions={stateList}
 								control={newAddressObj.get('state')}
 							/>
 							<LabelSelect
 								title={'Country'}
-								onChange={(value) => {
-									setCountry(value.value || '');
-									setState('');
-									setIsValidForm(isFormFilledOut());
+								onChange={(control) => {
+									updateNewAddressObj(control);
 								}}
 								selectOptions={countryList}
 								control={newAddressObj.get('country')}

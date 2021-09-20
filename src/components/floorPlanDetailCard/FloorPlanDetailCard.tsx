@@ -18,7 +18,9 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [selectedLayout, setSelectedLayout] = useState<Api.AccommodationLayout.Details>();
 	const [selectedRoom, setSelectedRoom] = useState<Model.AccommodationLayoutRoom | undefined>();
-	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', 0, [])])
+	);
 
 	function renderTabs() {
 		let firstRun = true;
@@ -115,8 +117,8 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 				{size === 'small' ? (
 					<Select
 						control={roomTypeFormGroup.get('roomValue')}
-						updateControl={(value) => {
-							handleSelected(value);
+						updateControl={(control) => {
+							setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
 						}}
 						options={renderMobileOptions()}
 						defaultValue={{
