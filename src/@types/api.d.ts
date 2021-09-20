@@ -45,7 +45,7 @@ declare namespace Api {
 				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
-				propertyType?: number;
+				propertyTypeIds?: number[];
 				pagination: RedSky.PagePagination;
 			}
 		}
@@ -593,7 +593,7 @@ declare namespace Api {
 				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
-				propertyTypes?: number[];
+				propertyTypeIds?: number[];
 				pagination: RedSky.PagePagination;
 			}
 		}

@@ -53,7 +53,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		adultCount: 2,
 		childCount: 0,
 		pagination: { page: 1, perPage: 5 },
-		propertyTypes: []
+		propertyTypeIds: []
 	});
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useState<string>('');
@@ -94,13 +94,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
-				if (newSearchQueryObj.propertyTypes && newSearchQueryObj.propertyTypes.length >= 1) {
-					handlePropertyTypeFilter(res, newSearchQueryObj);
-				} else {
-					setDestinations(res.data);
-					setAvailabilityTotal(res.total || 0);
-					setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
-				}
+				setDestinations(res.data);
+				setAvailabilityTotal(res.total || 0);
+				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
@@ -110,25 +106,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
-
-	function handlePropertyTypeFilter(
-		res: RsPagedResponseData<Api.Destination.Res.Availability[]>,
-		newSearchQueryObj: Api.Destination.Req.Availability
-	) {
-		if (newSearchQueryObj.propertyTypes && newSearchQueryObj.propertyTypes.length >= 1) {
-			let filteredDestinations: Api.Destination.Res.Availability[] = [];
-			res.data.map((destination: Api.Destination.Res.Availability) => {
-				destination.propertyTypes.map((id) => {
-					if (newSearchQueryObj.propertyTypes?.includes(id.id)) {
-						filteredDestinations.push(destination);
-					}
-				});
-			});
-			setDestinations(filteredDestinations);
-			setAvailabilityTotal(filteredDestinations.length);
-			setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
-		}
-	}
 
 	function updateSearchQueryObj(
 		key:
@@ -140,7 +117,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			| 'priceRangeMax'
 			| 'pagination'
 			| 'rateCode'
-			| 'propertyTypes',
+			| 'propertyTypeIds',
 		value: any
 	) {
 		if (key === 'adultCount' && value === 0) {
@@ -185,15 +162,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 		childCount: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyType: number
+		propertyTypeIds: number[]
 	) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adultCount'] = parseInt(adultCount);
-			if (propertyType !== 0) {
-				createSearchQueryObj['propertyTypes'] = [propertyType];
+			if (propertyTypeIds.length >= 1) {
+				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
 			}
 			if (childCount !== '') {
 				createSearchQueryObj['childCount'] = parseInt(childCount);
@@ -404,7 +381,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
-									updateSearchQueryObj('propertyTypes', [control.value]);
+									updateSearchQueryObj('propertyTypeIds', [control.value]);
 								}}
 								adultsInitialInput={searchQueryObj.adultCount.toString()}
 								childrenInitialInput={searchQueryObj.childCount.toString()}
@@ -451,7 +428,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										propertyType: number
+										propertyTypeIds: number[]
 									) => {
 										popupSearch(
 											startDate,
@@ -460,7 +437,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 											children,
 											priceRangeMin,
 											priceRangeMax,
-											propertyType
+											propertyTypeIds
 										);
 									},
 									className: 'filterPopup'

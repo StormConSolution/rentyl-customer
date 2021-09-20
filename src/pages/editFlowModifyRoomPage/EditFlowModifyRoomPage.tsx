@@ -51,7 +51,7 @@ const EditFlowModifyRoomPage = () => {
 		children: reservation?.childCount || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.destinationId,
-		propertyType: 0
+		propertyTypeIds: []
 	});
 
 	useEffect(() => {
@@ -88,12 +88,8 @@ const EditFlowModifyRoomPage = () => {
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
 				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
-				if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
-					handlePropertyTypeFilter(res, newSearchQueryObj);
-				} else {
-					setAvailabilityTotal(res.total || 0);
-					setDestinations(res.data);
-				}
+				setAvailabilityTotal(res.total || 0);
+				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
@@ -113,22 +109,6 @@ const EditFlowModifyRoomPage = () => {
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
-	function handlePropertyTypeFilter(
-		res: RsPagedResponseData<Api.Accommodation.Req.Availability>,
-		newSearchQueryObj: Api.Accommodation.Req.Availability
-	) {
-		if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
-			let filteredAccommodations: Api.Accommodation.Res.Availability[] = [];
-			res.data.map((accommodation: Api.Accommodation.Res.Availability) => {
-				if (newSearchQueryObj.propertyType === accommodation.propertyTypeId) {
-					filteredAccommodations.push(accommodation);
-				}
-			});
-			setAvailabilityTotal(filteredAccommodations.length);
-			setDestinations(filteredAccommodations);
-		}
-	}
-
 	function updateSearchQueryObj(
 		key:
 			| 'startDate'
@@ -139,7 +119,7 @@ const EditFlowModifyRoomPage = () => {
 			| 'priceRangeMax'
 			| 'pagination'
 			| 'rateCode'
-			| 'propertyType',
+			| 'propertyTypeIds',
 		value: any
 	) {
 		if (key === 'adults' && value === 0)
@@ -167,7 +147,7 @@ const EditFlowModifyRoomPage = () => {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyType: number,
+		propertyTypeIds: number[],
 		rateCode: string
 	) {
 		setSearchQueryObj((prev) => {
@@ -184,8 +164,8 @@ const EditFlowModifyRoomPage = () => {
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (propertyType !== 0) {
-				createSearchQueryObj['propertyType'] = propertyType;
+			if (propertyTypeIds.length >= 1) {
+				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
 			}
 			if (rateCode !== '' || rateCode !== undefined) {
 				createSearchQueryObj['rateCode'] = reservation?.rateCode;
@@ -366,7 +346,7 @@ const EditFlowModifyRoomPage = () => {
 									children,
 									priceRangeMin,
 									priceRangeMax,
-									propertyType,
+									propertyTypeIds,
 									rateCode
 								) => {
 									popupSearch(
@@ -376,7 +356,7 @@ const EditFlowModifyRoomPage = () => {
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										propertyType,
+										propertyTypeIds,
 										rateCode
 									);
 								},
@@ -412,7 +392,7 @@ const EditFlowModifyRoomPage = () => {
 								}
 							}}
 							onChangePropertyType={(control) => {
-								updateSearchQueryObj('propertyType', control.value);
+								updateSearchQueryObj('propertyTypeIds', [control.value]);
 							}}
 							adultsInitialInput={searchQueryObj.adults.toString()}
 							childrenInitialInput={searchQueryObj.children.toString()}

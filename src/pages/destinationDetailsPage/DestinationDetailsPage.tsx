@@ -76,7 +76,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		adults: 2,
 		children: 0,
 		pagination: { page: 1, perPage: 5 },
-		propertyType: 0
+		propertyTypeIds: []
 	});
 
 	useEffect(() => {
@@ -106,13 +106,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			}
 			try {
 				let result = await accommodationService.availability(newSearchQueryObj);
-				if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
-					handlePropertyTypeFilter(result, newSearchQueryObj);
-				} else {
-					setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
-					setTotalResults(result.total || 0);
-					setAvailabilityStayList(result.data);
-				}
+				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
+				setTotalResults(result.total || 0);
+				setAvailabilityStayList(result.data);
 			} catch (e) {
 				setValidCode(rateCode === '');
 				console.error(e);
@@ -120,24 +116,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		getAvailableStays().catch(console.error);
 	}, [searchQueryObj]);
-
-	function handlePropertyTypeFilter(
-		res: RsPagedResponseData<Api.Accommodation.Req.Availability>,
-		newSearchQueryObj: Api.Accommodation.Req.Availability
-	) {
-		if (newSearchQueryObj.propertyType && newSearchQueryObj.propertyType !== 0) {
-			let filteredAccommodations: Api.Accommodation.Res.Availability[] = [];
-			res.data.map((accommodation: Api.Accommodation.Res.Availability) => {
-				if (newSearchQueryObj.propertyType === accommodation.propertyTypeId) {
-					filteredAccommodations.push(accommodation);
-				}
-			});
-
-			setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
-			setTotalResults(filteredAccommodations.length);
-			setAvailabilityStayList(filteredAccommodations);
-		}
-	}
 
 	let imageIndex = 0;
 
@@ -222,7 +200,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			| 'priceRangeMax'
 			| 'pagination'
 			| 'rateCode'
-			| 'propertyType',
+			| 'propertyTypeIds',
 		value: any
 	) {
 		if (key === 'adults' && value === 0)
@@ -557,7 +535,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
-									updateSearchQueryObj('propertyType', control.value);
+									updateSearchQueryObj('propertyTypeIds', [control.value]);
 								}}
 								adultsInitialInput={searchQueryObj.adults.toString()}
 								childrenInitialInput={searchQueryObj.children.toString()}
@@ -598,7 +576,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 										children: string,
 										priceRangeMin: string,
 										priceRangeMax: string,
-										propertyType: number,
+										propertyTypeIds: number[],
 										rateCode: string
 									): void {
 										setSearchQueryObj((prev) => {
@@ -615,7 +593,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 												);
 											if (adults !== '') createSearchQueryObj['adults'] = adults;
 											if (children !== '') createSearchQueryObj['children'] = children;
-											if (propertyType !== 0) createSearchQueryObj['propertyType'] = propertyType;
+											if (propertyTypeIds.length >= 1)
+												createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
 											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
 												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
 											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))

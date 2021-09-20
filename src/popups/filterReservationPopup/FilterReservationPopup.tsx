@@ -25,7 +25,7 @@ export interface FilterReservationPopupProps extends PopupProps {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyType: number,
+		propertyTypeIds: number[],
 		rateCode: string
 	) => void;
 	className?: string;
@@ -49,7 +49,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypeFormGroup, setPropertyTypeFormGroup] = useState<RsFormGroup>(
 		new RsFormGroup([new RsFormControl('propertyType', '', [])])
 	);
-	const [propertyType, setPropertyType] = useState<number>(0);
+	const [propertyTypeIds, setPropertyTypeIds] = useState<number[]>([]);
 
 	useEffect(() => {
 		async function getAllPropertyTypes() {
@@ -143,7 +143,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							title={'Property Type'}
 							control={propertyTypeFormGroup.get('propertyType')}
 							onChange={(control) => {
-								setPropertyType(control.value);
+								setPropertyTypeIds(control.value);
 								setPropertyTypeFormGroup(propertyTypeFormGroup.clone().update(control));
 							}}
 							selectOptions={options}
@@ -181,7 +181,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										propertyType,
+										propertyTypeIds,
 										rateCode
 									);
 									popupController.close(FilterReservationPopup);
