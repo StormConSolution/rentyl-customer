@@ -71,7 +71,7 @@ module.exports = {
 		stage: {
 			key: '~/.ssh/id_rsa.pub',
 			user: 'dev',
-			host: ['staging.spireloyalty.com'],
+			host: ['3.19.231.115'],
 			ref: 'origin/dev',
 			repo: 'git@gitlab.com:plvr/ndm/spire-customer.git',
 			path: '/home/dev/stage/customer',
