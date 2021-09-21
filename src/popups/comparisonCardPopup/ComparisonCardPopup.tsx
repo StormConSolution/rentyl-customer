@@ -8,6 +8,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl } from '@bit/redsky.framework.rs.form';
+import { useEffect } from 'react';
 
 export interface ComparisonCardPopupProps extends PopupProps {
 	logo: string;

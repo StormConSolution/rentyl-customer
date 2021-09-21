@@ -16,14 +16,14 @@ interface ResortComparisonCardProps {
 	onClose: () => void;
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
-	selectedRoom: string | number;
+	selectedRoom: number;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
 	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('roomValue', 0, [])])
+		new RsFormGroup([new RsFormControl('roomValue', props.selectedRoom, [])])
 	);
 
 	useEffect(() => {
@@ -33,16 +33,6 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			})
 		);
 	}, []);
-
-	function renderDefaultValue() {
-		if (props.roomTypes.length > 0) {
-			let selected = props.roomTypes.filter((value) => value.selected);
-			if (selected.length > 0) {
-				return { value: selected[0].value, label: selected[0].text };
-			}
-		}
-		return { value: 0, label: 'Select...' };
-	}
 
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
@@ -97,7 +87,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 					control={roomTypeFormGroup.get('roomValue')}
 					updateControl={(control) => {
 						setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
-						props.onChange(roomTypeFormGroup.get('roomValue'));
+						props.onChange(control);
 					}}
 					options={options}
 					isClearable={true}
