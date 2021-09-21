@@ -18,7 +18,6 @@ export interface ComparisonCardPopupProps extends PopupProps {
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
 	control: RsFormControl;
-	defaultValue: OptionType;
 }
 
 const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
@@ -44,12 +43,7 @@ const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 						Edit
 					</Label>
 					<Box className={'accommodationSelect'} display={'flex'}>
-						<Select
-							control={props.control}
-							options={props.roomTypes}
-							updateControl={props.onChange}
-							defaultValue={props.defaultValue}
-						/>
+						<Select control={props.control} options={props.roomTypes} updateControl={props.onChange} />
 					</Box>
 					<div className={'radioDiv'}>
 						<Label variant={'body1'}>Pin to first column?</Label>

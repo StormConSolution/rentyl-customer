@@ -23,7 +23,7 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 				updateControl={props.onChange}
 				options={props.selectOptions}
 				isClearable={true}
-				defaultValue={props.defaultValue}
+				// defaultValue={props.defaultValue}
 			/>
 		</div>
 	);
