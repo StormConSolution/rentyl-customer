@@ -52,8 +52,6 @@ declare namespace Api {
 		export namespace Res {
 			export interface Update extends Details {}
 
-			export interface PropertyTypeDetails extends Omit<Model.PropertyType, 'companyId'> {}
-
 			export interface Details extends Model.Accommodation {
 				logoUrl: string;
 				accommodationType: Model.AccommodationTypes;
@@ -440,8 +438,8 @@ declare namespace Api {
 
 		interface ICountry {
 			name: string;
-			isoCode: string;
 			phonecode: string;
+			isoCode: string;
 			flag: string;
 			currency: string;
 			latitude: string;
@@ -601,6 +599,8 @@ declare namespace Api {
 
 			export interface Update extends Details {}
 
+			export interface PropertyType extends Model.PropertyType {}
+
 			export interface Details {
 				id: number;
 				externalId: string;
@@ -642,8 +642,6 @@ declare namespace Api {
 				}[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
-
-			export interface PropertyType extends Omit<Model.PropertyType, 'companyId'> {}
 
 			export interface Accommodation {
 				id: number;

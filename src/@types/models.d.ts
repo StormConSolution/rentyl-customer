@@ -1,6 +1,6 @@
 declare namespace Model {
 	export type InternalResourceTypes = 'ANDROID' | 'IOS' | 'WEB';
-	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION' | 'PAYMENT' | 'OFFSITE_LOYALTY';
+	export type ServiceKeyType = 'DESTINATION' | 'RESERVATION' | 'PAYMENT' | 'OFFSITE_LOYALTY' | 'VAULT';
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 	export type AccommodationRoomClassType = 'Deluxe';
@@ -37,8 +37,9 @@ declare namespace Model {
 		| 'CAMPAIGN_ACTION'
 		| 'TRANSACTION_REFUND';
 	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
-	export type PaymentSystemProviders = 'adyen' | 'spreedly' | 'mock';
+	export type PaymentSystemProviders = 'adyen' | 'mock';
 	export type OffsiteLoyaltySystemProviders = 'fidel';
+	export type VaultSystemProviders = 'spreedly';
 	export type UpsellPackagePricingType = 'PerGuest' | 'PerStay' | 'PerNight' | 'PerGuestPerNight';
 	export type CurrencyCode = 'USD'; // Add more if/when we add multicurrency support
 	export type ReviewStatus = 'PUBLISHED' | 'UNPUBLISHED' | 'FLAGGED' | 'UNVERIFIED';
@@ -493,7 +494,6 @@ declare namespace Model {
 	export interface PropertyType {
 		id: number;
 		name: string;
-		companyId: number;
 	}
 
 	export interface ReportTemplate {
