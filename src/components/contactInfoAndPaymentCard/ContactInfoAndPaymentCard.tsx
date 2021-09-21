@@ -265,6 +265,8 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		} else if (value === null) {
 			setExistingCardId(0);
 			if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+		} else {
+			return null;
 		}
 	}
 

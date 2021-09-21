@@ -100,6 +100,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
+
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
@@ -221,6 +222,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
+						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: destination.id,
 							logo: destination.logoUrl,

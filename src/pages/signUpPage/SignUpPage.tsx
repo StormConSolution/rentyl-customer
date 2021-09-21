@@ -128,8 +128,8 @@ const SignUpPage: React.FC = () => {
 		getStates().catch(console.error);
 	}, [countryList, newAddressObj.get('country').value]);
 
-	function formatStateOrCountryListForSelect(statesOrCountries: Api.Country.IBaseCountry[]): OptionType[] {
-		return statesOrCountries.map((item: Api.Country.IBaseCountry) => {
+	function formatStateOrCountryListForSelect(statesOrCountries: Misc.IBaseCountry[]): OptionType[] {
+		return statesOrCountries.map((item: Misc.IBaseCountry) => {
 			return { value: item.isoCode, label: item.name };
 		});
 	}
@@ -323,7 +323,6 @@ const SignUpPage: React.FC = () => {
 									}}
 									selectOptions={countryList}
 									control={newAddressObj.get('country')}
-									defaultValue={{ value: 'US', label: 'United States' }}
 								/>
 							</Box>
 
@@ -381,7 +380,6 @@ const SignUpPage: React.FC = () => {
 								control={signUpForm.get('confirmPassword')}
 								updateControl={updateUserObjForm}
 							/>
-
 							<LabelButton
 								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
 								variant={'caption'}

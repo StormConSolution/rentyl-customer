@@ -67,4 +67,9 @@ declare namespace Misc {
 		roomTypes: { value: number | string; text: number | string; selected: boolean }[];
 		selectedRoom: number;
 	}
+
+	interface IBaseCountry {
+		name: string;
+		isoCode: string;
+	}
 }

@@ -11,7 +11,6 @@ interface LabelSelectProps {
 	className?: string;
 	placeHolder?: string;
 	control: RsFormControl;
-	defaultValue?: readonly OptionType[] | OptionType | null;
 }
 
 const LabelSelect: React.FC<LabelSelectProps> = (props) => {
@@ -25,7 +24,6 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 				}}
 				options={props.selectOptions}
 				isClearable={true}
-				// defaultValue={props.defaultValue}
 			/>
 		</div>
 	);

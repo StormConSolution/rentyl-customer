@@ -16,13 +16,15 @@ interface ResortComparisonCardProps {
 	onClose: () => void;
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
-	selectedRoom: string | number;
+	selectedRoom: number;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
-	const [roomTypeFormGroup] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('roomValue', 0, [])]));
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', props.selectedRoom, [])])
+	);
 
 	useEffect(() => {
 		setOptions(
@@ -31,16 +33,6 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			})
 		);
 	}, []);
-
-	function renderDefaultValue() {
-		if (props.roomTypes.length > 0) {
-			let selected = props.roomTypes.filter((value) => value.selected);
-			if (selected.length > 0) {
-				return { value: selected[0].value, label: selected[0].text };
-			}
-		}
-		return { value: 0, label: 'Select...' };
-	}
 
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
@@ -66,8 +58,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 							onChange: props.onChange,
 							onClose: props.onClose,
 							popupOnClick: props.popupOnClick,
-							control: roomTypeFormGroup.get('roomValue'),
-							defaultValue: renderDefaultValue()
+							control: roomTypeFormGroup.get('roomValue')
 						});
 					}}
 				>
@@ -94,13 +85,13 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			<Box className={'bottomContent'} display={'flex'}>
 				<Select
 					control={roomTypeFormGroup.get('roomValue')}
-					updateControl={(value) => {
-						props.onChange(value);
+					updateControl={(control) => {
+						setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
+						props.onChange(control);
 					}}
 					options={options}
 					isClearable={true}
 					menuPlacement={'top'}
-					// defaultValue={renderDefaultValue()}
 				/>
 			</Box>
 		</div>

@@ -34,7 +34,7 @@ const ItineraryDetailsPage: React.FC = () => {
 	const [itinerary, setItinerary] = useState<Api.Reservation.Res.Itinerary.Get>();
 	const [editPaymentCard, setEditPaymentCard] = useState<boolean>(false);
 	const [newPaymentMethod, setNewPaymentMethod] = useState<Api.Reservation.PaymentMethod | undefined>();
-	const [paymentFormGroup] = useState<RsFormGroup>(
+	const [paymentFormGroup, setPaymentFormGroup] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('card', 0, [new RsValidator(RsValidatorEnum.REQ, 'Card Selection Required')])
 		])
@@ -266,8 +266,11 @@ const ItineraryDetailsPage: React.FC = () => {
 													<Select
 														placeholder={'Please Select A Card'}
 														control={paymentFormGroup.get('card')}
-														updateControl={(value) => {
-															handleSelect(value.value);
+														updateControl={(control) => {
+															setPaymentFormGroup(
+																paymentFormGroup.clone().update(control)
+															);
+															handleSelect(control.value);
 														}}
 														options={renderSelectOptions()}
 													/>
