@@ -283,7 +283,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						}
 					},
 					onAddCompareClick: (accommodationId) => {
-						console.log('recoilComparisonState', recoilComparisonState);
 						let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
 						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
