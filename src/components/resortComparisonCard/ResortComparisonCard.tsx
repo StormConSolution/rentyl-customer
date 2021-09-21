@@ -100,7 +100,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 					options={options}
 					isClearable={true}
 					menuPlacement={'top'}
-					defaultValue={renderDefaultValue()}
+					// defaultValue={renderDefaultValue()}
 				/>
 			</Box>
 		</div>

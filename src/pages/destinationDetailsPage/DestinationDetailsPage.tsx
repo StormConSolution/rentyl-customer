@@ -74,8 +74,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		endDate: initialEndDate.format('YYYY-MM-DD'),
 		adults: 2,
 		children: 0,
-		pagination: { page: 1, perPage: 5 },
-		propertyTypeIds: []
+		pagination: { page: 1, perPage: 5 }
 	});
 
 	useEffect(() => {
@@ -214,7 +213,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '') delete createSearchQueryObj[key];
+			if (value === '' || value[0] === '') delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});

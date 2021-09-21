@@ -230,18 +230,6 @@ declare namespace Api {
 		}
 	}
 
-	export namespace AccommodationPropertyType {
-		export namespace req {
-			export interface Get {
-				id: number;
-			}
-		}
-
-		export namespace res {
-			export namespace Get {}
-		}
-	}
-
 	export namespace Action {
 		export namespace Req {
 			export interface Create {

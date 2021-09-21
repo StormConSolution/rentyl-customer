@@ -96,7 +96,7 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 						handleSelected(value);
 					}}
 					options={renderOptions()}
-					defaultValue={renderDefault()}
+					// defaultValue={renderDefault()}
 				/>
 			</Box>
 			<Carousel className={'imageContainer'} children={renderImages()} />

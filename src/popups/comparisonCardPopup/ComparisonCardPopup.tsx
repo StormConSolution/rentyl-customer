@@ -48,7 +48,7 @@ const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 							control={props.control}
 							options={props.roomTypes}
 							updateControl={props.onChange}
-							defaultValue={props.defaultValue}
+							// defaultValue={props.defaultValue}
 						/>
 					</Box>
 					<div className={'radioDiv'}>

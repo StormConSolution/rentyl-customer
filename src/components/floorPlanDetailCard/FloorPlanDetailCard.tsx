@@ -119,10 +119,10 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 							handleSelected(value);
 						}}
 						options={renderMobileOptions()}
-						defaultValue={{
-							value: props.layout[0].id,
-							label: props.layout[0].title
-						}}
+						// defaultValue={{
+						// 	value: props.layout[0].id,
+						// 	label: props.layout[0].title
+						// }}
 					/>
 				) : (
 					<Box display={'flex'}>{renderTabs()}</Box>
