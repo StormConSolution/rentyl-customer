@@ -128,8 +128,8 @@ const SignUpPage: React.FC = () => {
 		getStates().catch(console.error);
 	}, [countryList, newAddressObj.get('country').value]);
 
-	function formatStateOrCountryListForSelect(statesOrCountries: Api.Country.IBaseCountry[]): OptionType[] {
-		return statesOrCountries.map((item: Api.Country.IBaseCountry) => {
+	function formatStateOrCountryListForSelect(statesOrCountries: Misc.IBaseCountry[]): OptionType[] {
+		return statesOrCountries.map((item: Misc.IBaseCountry) => {
 			return { value: item.isoCode, label: item.name };
 		});
 	}

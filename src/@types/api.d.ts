@@ -433,12 +433,9 @@ declare namespace Api {
 			tzName: string;
 		}
 
-		interface IBaseCountry {
+		interface ICountry {
 			name: string;
 			isoCode: string;
-		}
-
-		interface ICountry extends IBaseCountry {
 			phonecode: string;
 			flag: string;
 			currency: string;
@@ -447,7 +444,9 @@ declare namespace Api {
 			timezones?: Timezones[];
 		}
 
-		interface IState extends IBaseCountry {
+		interface IState {
+			name: string;
+			isoCode: string;
 			countryCode: string;
 			latitude?: string | null;
 			longitude?: string | null;

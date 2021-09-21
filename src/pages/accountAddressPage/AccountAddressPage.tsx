@@ -113,8 +113,8 @@ const AccountAddressPage: React.FC = () => {
 		});
 	}
 
-	function formatStateOrCountryListForSelect(statesOrCountries: Api.Country.IBaseCountry[]) {
-		return statesOrCountries.map((item: any) => {
+	function formatStateOrCountryListForSelect(statesOrCountries: Misc.IBaseCountry[]) {
+		return statesOrCountries.map((item: Misc.IBaseCountry) => {
 			return { value: item.isoCode, label: item.name };
 		});
 	}
