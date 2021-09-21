@@ -42,7 +42,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>();
+	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
@@ -377,7 +377,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
-									updateSearchQueryObj('propertyTypeIds', [control.value]);
+									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
 								adultsInitialInput={searchQueryObj.adultCount.toString()}
 								childrenInitialInput={searchQueryObj.childCount.toString()}
