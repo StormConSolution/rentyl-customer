@@ -263,7 +263,6 @@ const AccountAddressPage: React.FC = () => {
 								}}
 								selectOptions={countryList}
 								control={newAddressObj.get('country')}
-								defaultValue={{ value: 'US', label: 'United States' }}
 							/>
 						</Box>
 						<LabelCheckbox

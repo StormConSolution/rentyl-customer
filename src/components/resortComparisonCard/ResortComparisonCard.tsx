@@ -32,30 +32,17 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 				return { value: roomType.value, label: roomType.text };
 			})
 		);
-		console.log('props.roomTypes', props.roomTypes);
-		let defaultValue = props.roomTypes.map((roomType) => {
+	}, []);
+
+	function renderDefaultValue() {
+		if (props.roomTypes.length > 0) {
 			let selected = props.roomTypes.filter((value) => value.selected);
 			if (selected.length > 0) {
-				return selected[0].value;
+				return { value: selected[0].value, label: selected[0].text };
 			}
-			// console.log(roomType.selected)
-			// if(!roomType.selected){
-			// 	return 0;
-			// }
-			// return roomType.value
-		});
-		let updatedRoom = roomTypeFormGroup.getClone('roomValue');
-		// updatedRoom.value = defaultValue;
-		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(updatedRoom));
-
-		// if (props.roomTypes.length > 0) {
-		// 	let selected = props.roomTypes.filter((value) => value.selected);
-		// 	if (selected.length > 0) {
-		// 		return { value: selected[0].value, label: selected[0].text };
-		// 	}
-		// }
-		// return { value: 0, label: 'Select...' };
-	}, []);
+		}
+		return { value: 0, label: 'Select...' };
+	}
 
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>

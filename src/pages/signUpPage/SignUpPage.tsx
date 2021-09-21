@@ -323,7 +323,6 @@ const SignUpPage: React.FC = () => {
 									}}
 									selectOptions={countryList}
 									control={newAddressObj.get('country')}
-									defaultValue={{ value: 'US', label: 'United States' }}
 								/>
 							</Box>
 
@@ -381,7 +380,6 @@ const SignUpPage: React.FC = () => {
 								control={signUpForm.get('confirmPassword')}
 								updateControl={updateUserObjForm}
 							/>
-
 							<LabelButton
 								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
 								variant={'caption'}

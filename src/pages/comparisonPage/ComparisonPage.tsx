@@ -62,6 +62,7 @@ const ComparisonPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log(comparisonItems);
 		comparisonRef.current = comparisonItems;
 		let accommodationTextArray: (string | number)[] = [];
 		let accommodationIdArray: number[] = [];

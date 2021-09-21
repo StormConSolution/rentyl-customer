@@ -99,6 +99,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
+
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
