@@ -89,6 +89,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				);
 			}
 		}
+
 		getDestinationDetails(params.destinationId).catch(console.error);
 	}, []);
 
@@ -112,6 +113,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				console.error(e);
 			}
 		}
+
 		getAvailableStays().catch(console.error);
 	}, [searchQueryObj]);
 
@@ -533,7 +535,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
-									updateSearchQueryObj('propertyTypeIds', [control.value]);
+									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
 								adultsInitialInput={searchQueryObj.adults.toString()}
 								childrenInitialInput={searchQueryObj.children.toString()}
@@ -574,7 +576,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 										children: string,
 										priceRangeMin: string,
 										priceRangeMax: string,
-										propertyTypeIds: number[],
+										propertyTypeIds: string[] | number[],
 										rateCode: string
 									): void {
 										setSearchQueryObj((prev) => {
@@ -591,8 +593,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 												);
 											if (adults !== '') createSearchQueryObj['adults'] = adults;
 											if (children !== '') createSearchQueryObj['children'] = children;
-											if (propertyTypeIds.length >= 1)
-												createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+											if (propertyTypeIds[0] !== '')
+												createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
 											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
 												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
 											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))

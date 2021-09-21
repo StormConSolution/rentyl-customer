@@ -50,8 +50,7 @@ const EditFlowModifyRoomPage = () => {
 		adults: reservation?.adultCount || 1,
 		children: reservation?.childCount || 0,
 		pagination: { page: 1, perPage: 5 },
-		destinationId: params.destinationId,
-		propertyTypeIds: []
+		destinationId: params.destinationId
 	});
 
 	useEffect(() => {
@@ -87,7 +86,7 @@ const EditFlowModifyRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.availability(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
@@ -134,7 +133,7 @@ const EditFlowModifyRoomPage = () => {
 			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined) delete createSearchQueryObj[key];
+			if (value === '' || value === undefined || value[0] === '') delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
@@ -147,7 +146,7 @@ const EditFlowModifyRoomPage = () => {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[],
+		propertyTypeIds: string[] | number[],
 		rateCode: string
 	) {
 		setSearchQueryObj((prev) => {
@@ -164,8 +163,8 @@ const EditFlowModifyRoomPage = () => {
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			if (propertyTypeIds[0] !== '') {
+				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
 			}
 			if (rateCode !== '' || rateCode !== undefined) {
 				createSearchQueryObj['rateCode'] = reservation?.rateCode;
@@ -392,7 +391,7 @@ const EditFlowModifyRoomPage = () => {
 								}
 							}}
 							onChangePropertyType={(control) => {
-								updateSearchQueryObj('propertyTypeIds', [control.value]);
+								updateSearchQueryObj('propertyTypeIds', control.value);
 							}}
 							adultsInitialInput={searchQueryObj.adults.toString()}
 							childrenInitialInput={searchQueryObj.children.toString()}

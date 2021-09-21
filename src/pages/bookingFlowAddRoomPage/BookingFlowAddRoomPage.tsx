@@ -53,7 +53,6 @@ const BookingFlowAddRoomPage = () => {
 		children: editStayDetails?.children || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.data.destinationId,
-		propertyTypeIds: [],
 		rateCode: editStayDetails?.rateCode || params.data.stays[0].rateCode || ''
 	});
 
@@ -89,7 +88,7 @@ const BookingFlowAddRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.availability(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
@@ -138,7 +137,7 @@ const BookingFlowAddRoomPage = () => {
 			throw rsToastify.error('Price max must be a number', 'Incorrect or Missing Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined) delete createSearchQueryObj[key];
+			if (value === '' || value === undefined || value[0] === '') delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
@@ -151,7 +150,7 @@ const BookingFlowAddRoomPage = () => {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[],
+		propertyTypeIds: string[] | number[],
 		rateCode: string
 	) {
 		setSearchQueryObj((prev) => {
@@ -168,8 +167,8 @@ const BookingFlowAddRoomPage = () => {
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			if (propertyTypeIds[0] !== '') {
+				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
 			}
 			if (rateCode !== '') {
 				createSearchQueryObj['rateCode'] = rateCode;
@@ -322,7 +321,7 @@ const BookingFlowAddRoomPage = () => {
 									children: string,
 									priceRangeMin: string,
 									priceRangeMax: string,
-									propertyTypeIds: number[],
+									propertyTypeIds: number[] | string[],
 									rateCode: string
 								) => {
 									popupSearch(
@@ -368,7 +367,7 @@ const BookingFlowAddRoomPage = () => {
 								}
 							}}
 							onChangePropertyType={(control: RsFormControl) => {
-								updateSearchQueryObj('propertyTypeIds', [control.value]);
+								updateSearchQueryObj('propertyTypeIds', control.value);
 							}}
 							adultsInitialInput={searchQueryObj.adults.toString()}
 							childrenInitialInput={searchQueryObj.children.toString()}

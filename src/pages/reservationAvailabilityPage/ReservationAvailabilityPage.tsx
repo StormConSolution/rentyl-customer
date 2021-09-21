@@ -48,8 +48,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
 		adultCount: 2,
 		childCount: 0,
-		pagination: { page: 1, perPage: 5 },
-		propertyTypeIds: []
+		pagination: { page: 1, perPage: 5 }
 	});
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useState<string>('');
@@ -146,7 +145,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '') delete createSearchQueryObj[key];
+			if (value === '' || value === undefined || value[0] === '') delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
@@ -159,15 +158,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 		childCount: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[]
+		propertyTypeIds: string[] | number[]
 	) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adultCount'] = parseInt(adultCount);
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			if (propertyTypeIds[0] !== '') {
+				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
 			}
 			if (childCount !== '') {
 				createSearchQueryObj['childCount'] = parseInt(childCount);
@@ -426,7 +425,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										propertyTypeIds: number[]
+										propertyTypeIds: string[] | number[]
 									) => {
 										popupSearch(
 											startDate,

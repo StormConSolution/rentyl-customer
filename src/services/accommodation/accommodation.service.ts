@@ -23,7 +23,6 @@ export default class AccommodationService extends Service {
 	async availability(
 		data: Api.Accommodation.Req.Availability
 	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
-		console.log(data);
 		let res = await http.get<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>>(
 			'accommodation/availability',
 			data
@@ -40,15 +39,5 @@ export default class AccommodationService extends Service {
 			accommodations.push(res.data.data);
 		}
 		return accommodations;
-	}
-
-	async searchAvailableAccommodationsByDestination(
-		data: Api.Accommodation.Req.Availability
-	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
-		const response = await http.get<RsResponseData<Api.Accommodation.Res.Availability[]>>(
-			'/accommodation/availability',
-			WebUtils.convertDataForUrlParams(data)
-		);
-		return response.data;
 	}
 }

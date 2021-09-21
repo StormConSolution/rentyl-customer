@@ -25,7 +25,7 @@ export interface FilterReservationPopupProps extends PopupProps {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[],
+		propertyTypeIds: number[] | string[],
 		rateCode: string
 	) => void;
 	className?: string;
@@ -49,7 +49,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypeFormGroup, setPropertyTypeFormGroup] = useState<RsFormGroup>(
 		new RsFormGroup([new RsFormControl('propertyType', '', [])])
 	);
-	const [propertyTypeIds, setPropertyTypeIds] = useState<number[]>([]);
+	const [propertyTypeIds, setPropertyTypeIds] = useState<number[] | string[]>([]);
 
 	useEffect(() => {
 		async function getAllPropertyTypes() {
