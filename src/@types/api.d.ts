@@ -435,8 +435,8 @@ declare namespace Api {
 
 		interface ICountry {
 			name: string;
-			isoCode: string;
 			phonecode: string;
+			isoCode: string;
 			flag: string;
 			currency: string;
 			latitude: string;
@@ -1211,7 +1211,7 @@ declare namespace Api {
 			phone: string;
 		}
 
-		export interface DetailsMetaData {
+		export interface StayDetails {
 			id: number;
 			name: string;
 		}
@@ -1220,9 +1220,9 @@ declare namespace Api {
 			id: number;
 			companyId: number;
 			guest: Guest;
-			destination: DetailsMetaData;
-			accommodation: DetailsMetaData;
-			packages: DetailsMetaData[] | null;
+			destination: StayDetails;
+			accommodation: StayDetails;
+			packages: StayDetails[] | null;
 			message: string;
 			rating: number;
 			createdOn: Date | string;
