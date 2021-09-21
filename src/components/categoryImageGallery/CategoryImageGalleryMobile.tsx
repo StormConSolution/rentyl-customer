@@ -1,51 +1,51 @@
 import * as React from 'react';
 import './CategoryImageGalleryMobile.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@bit/redsky.framework.rs.button';
 import { popupController } from '@bit/redsky.framework.rs.996';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import Select from '../Select/Select';
 import Carousel from '../carousel/Carousel';
 import MobileLightBoxTwoPopup, {
 	MobileLightBoxTwoPopupProps
 } from '../../popups/mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
 import { ObjectUtils } from '../../utils/utils';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 interface CategoryImageGalleryMobileProps {
 	accommodationCategories: Api.AccommodationCategory.Details[];
 }
 
 const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (props) => {
-	const [selected, setSelected] = useState<number>(0);
+	const [options, setOptions] = useState<OptionType[]>([]);
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', props.accommodationCategories[0].id, [])])
+	);
 
-	function renderOptions() {
-		let firstRun = true;
-		return props.accommodationCategories
-			.map((item, index) => {
-				if (!selected && firstRun) {
-					setSelected(item.id);
-					firstRun = false;
-				}
-				if (!ObjectUtils.isArrayWithData(item.media)) {
-					return {
-						value: 'DELETE',
-						text: item.title,
-						selected: selected === item.id
-					};
-				} else {
-					return {
-						value: item.id,
-						text: item.title,
-						selected: selected === item.id
-					};
-				}
-			})
-			.filter((item) => item.value !== 'DELETE');
-	}
+	useEffect(() => {
+		let newOptions = props.accommodationCategories.reduce((acc: OptionType[], item) => {
+			if (ObjectUtils.isArrayWithData(item.media)) {
+				acc.push({ value: item.id, label: item.title });
+			}
+			return acc;
+		}, []);
+		setOptions(newOptions);
+		let updateRoomType = roomTypeFormGroup.getClone('roomValue');
+		updateRoomType.value = newOptions[0].value;
+		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(updateRoomType));
+	}, [props.accommodationCategories]);
 
 	function renderImages(): React.ReactNodeArray {
 		let selectedCategory: Api.AccommodationCategory.Details | undefined = props.accommodationCategories.find(
-			(item) => item.id === selected
+			(item) => {
+				if (roomTypeFormGroup.get('roomValue').value !== 0) {
+					return item.id === roomTypeFormGroup.get('roomValue').value;
+				} else if (options.length >= 1) {
+					return item.id === options[0].value;
+				} else {
+					return null;
+				}
+			}
 		);
 		if (!selectedCategory) return [<div />];
 		return selectedCategory.media.map((item, index) => {
@@ -78,13 +78,11 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 		<Box className={'rsCategoryImageGalleryMobile'} width={'100%'}>
 			<Box display={'flex'} justifyContent={'center'} marginBottom={'30px'}>
 				<Select
-					onChange={(value) => {
-						if (value === null) return;
-						let newValue: any = value;
-						newValue = parseInt(newValue);
-						setSelected(newValue);
+					control={roomTypeFormGroup.get('roomValue')}
+					updateControl={(control) => {
+						setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
 					}}
-					options={renderOptions()}
+					options={options}
 				/>
 			</Box>
 			<Carousel className={'imageContainer'} children={renderImages()} />

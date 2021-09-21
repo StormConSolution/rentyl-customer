@@ -24,10 +24,9 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import { OptionType } from '@bit/redsky.framework.rs.select';
 
 let phoneNumber = '';
-let country = 'US';
-let state = '';
 
 const SignUpPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -39,19 +38,19 @@ const SignUpPage: React.FC = () => {
 	const [hasSpecialCharacter, setHasSpecialCharacter] = useState<boolean>(false);
 	const [isValidForm, setIsValidForm] = useState<boolean>(false);
 	const [formIsValid, setFormIsValid] = useState<boolean>(false);
-	const [stateList, setStateList] = useState<{ value: number | string; text: number | string; selected: boolean }[]>(
-		[]
-	);
-	const [countryList, setCountryList] = useState<
-		{ value: number | string; text: number | string; selected: boolean }[]
-	>([]);
+	const [stateList, setStateList] = useState<OptionType[]>([]);
+	const [countryList, setCountryList] = useState<OptionType[]>([]);
+
 	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('address1', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
-			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')])
+			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')]),
+			new RsFormControl('state', '', []),
+			new RsFormControl('country', 'US', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
 		])
 	);
+
 	const [signUpForm, setSignUpForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('firstName', '', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
@@ -102,12 +101,15 @@ const SignUpPage: React.FC = () => {
 				);
 			}
 		}
+
 		getCountries().catch(console.error);
 	}, []);
 
 	useEffect(() => {
 		async function getStates() {
-			let selectedCountry = countryList.find((item) => item.selected);
+			let selectedCountry = countryList.find(
+				(item) => item.value === (newAddressObj.get('country').value || 'US')
+			);
 			if (!selectedCountry) return;
 			try {
 				let response = await countryService.getStates(`${selectedCountry.value}`);
@@ -122,12 +124,13 @@ const SignUpPage: React.FC = () => {
 				);
 			}
 		}
-		getStates().catch(console.error);
-	}, [countryList]);
 
-	function formatStateOrCountryListForSelect(statesOrCountries: any[]) {
-		return statesOrCountries.map((item) => {
-			return { value: item.isoCode, text: item.name, selected: item.isoCode === 'US' };
+		getStates().catch(console.error);
+	}, [countryList, newAddressObj.get('country').value]);
+
+	function formatStateOrCountryListForSelect(statesOrCountries: Misc.IBaseCountry[]): OptionType[] {
+		return statesOrCountries.map((item: Misc.IBaseCountry) => {
+			return { value: item.isoCode, label: item.name };
 		});
 	}
 
@@ -179,7 +182,7 @@ const SignUpPage: React.FC = () => {
 			!!newAddressObj.get('address1').value.toString().length &&
 			!!newAddressObj.get('city').value.toString().length &&
 			!!newAddressObj.get('zip').value.toString().length &&
-			!!state.length
+			!!newAddressObj.get('country').value.toString().length
 		);
 	}
 
@@ -204,9 +207,8 @@ const SignUpPage: React.FC = () => {
 
 		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
 		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
 		addressObj['isDefault'] = 1;
-		addressObj['country'] = country;
+
 		try {
 			let res = await userService.createNewCustomer({ ...newCustomer, address: addressObj });
 			if (res) {
@@ -308,37 +310,19 @@ const SignUpPage: React.FC = () => {
 							<Box display={'flex'} className={'countryState'}>
 								<LabelSelect
 									title={'State'}
-									onChange={(value) => {
-										let newStateList = [...stateList];
-										newStateList = newStateList.map((item) => {
-											return {
-												value: item.value,
-												text: item.text,
-												selected: item.value === value
-											};
-										});
-										setStateList(newStateList);
-										state = value || '';
-										setIsValidForm(isFormFilledOut());
+									updateControl={(control) => {
+										updateNewAddressObj(control);
 									}}
 									selectOptions={stateList}
+									control={newAddressObj.get('state')}
 								/>
 								<LabelSelect
 									title={'Country'}
-									onChange={(value) => {
-										let newCountryList = [...countryList];
-										newCountryList = newCountryList.map((item) => {
-											return {
-												value: item.value,
-												text: item.text,
-												selected: item.value === value
-											};
-										});
-										setCountryList(newCountryList);
-										country = value || '';
-										setIsValidForm(isFormFilledOut());
+									updateControl={(control) => {
+										updateNewAddressObj(control);
 									}}
 									selectOptions={countryList}
+									control={newAddressObj.get('country')}
 								/>
 							</Box>
 
@@ -396,7 +380,6 @@ const SignUpPage: React.FC = () => {
 								control={signUpForm.get('confirmPassword')}
 								updateControl={updateUserObjForm}
 							/>
-
 							<LabelButton
 								look={!formIsValid && !isValidForm ? 'containedSecondary' : 'containedPrimary'}
 								variant={'caption'}

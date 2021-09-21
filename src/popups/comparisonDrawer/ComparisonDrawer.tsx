@@ -3,8 +3,7 @@ import './ComparisonDrawer.scss';
 import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../state/globalState';
-import router from '../../utils/router';
+import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { ObjectUtils } from '../../utils/utils';
@@ -13,25 +12,34 @@ import LinkButton from '../../components/linkButton/LinkButton';
 
 const ComparisonDrawer: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
-	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
-	const [comparisonItems, setComparisonItems] = recoilComparisonState;
+	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonCardInfo[]>(
+		globalState.destinationComparison
+	);
 
 	function renderComparisonCard() {
-		if (!ObjectUtils.isArrayWithData(comparisonItems) || comparisonItems.length > 3) return;
-		return comparisonItems.map((item, index) => {
+		if (!ObjectUtils.isArrayWithData(recoilComparisonState) || recoilComparisonState.length > 3) return;
+		return recoilComparisonState.map((item, index) => {
 			return (
 				<ResortComparisonCard
 					key={index}
 					logo={item.logo}
 					title={item.title}
+					selectedRoom={item.selectedRoom}
 					roomTypes={item.roomTypes}
 					onChange={(item) => {
-						let newRecoilState = comparisonService.setSelectedAccommodation(index, item, comparisonItems);
-						setComparisonItems(newRecoilState);
+						let newRecoilState = comparisonService.setSelectedAccommodation(
+							index,
+							item,
+							recoilComparisonState
+						);
+						setRecoilComparisonState(newRecoilState);
 					}}
 					onClose={() => {
-						let newComparisonItems = comparisonService.resortComparisonCardOnClose(item, comparisonItems);
-						setComparisonItems(newComparisonItems);
+						let newComparisonItems = comparisonService.resortComparisonCardOnClose(
+							item,
+							recoilComparisonState
+						);
+						setRecoilComparisonState(newComparisonItems);
 					}}
 				/>
 			);
@@ -40,18 +48,18 @@ const ComparisonDrawer: React.FC = () => {
 
 	return (
 		<Box
-			className={`rsComparisonDrawer ${comparisonItems.length !== 0 ? 'show' : ''}`}
+			className={`rsComparisonDrawer ${recoilComparisonState.length !== 0 ? 'show' : ''}`}
 			display={'flex'}
 			alignItems={'center'}
 		>
-			{!!comparisonItems && <Box display={'flex'}>{renderComparisonCard()}</Box>}
+			{!!recoilComparisonState && <Box display={'flex'}>{renderComparisonCard()}</Box>}
 			<Box marginLeft={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
 				<LinkButton look={'containedPrimary'} label={'Compare Properties'} path={'/compare'} />
 				<LabelButton
 					look={'none'}
 					variant={'button'}
 					label={'Clear All'}
-					onClick={() => setComparisonItems([])}
+					onClick={() => setRecoilComparisonState([])}
 				/>
 			</Box>
 		</Box>

@@ -29,7 +29,7 @@ import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../state/globalState';
+import globalState from '../../state/globalState';
 import ComparisonService from '../../services/comparison/comparison.service';
 import LabelButton from '../../components/labelButton/LabelButton';
 import FilterReservationPopup, {
@@ -60,7 +60,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
-	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const initialStartDate = params.startDate ? moment(params.startDate) : moment();
 	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
@@ -267,6 +267,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					}}
 					onCompareClick={() => {
 						if (!destinationDetails) return;
+						let selectedRoom = destinationDetails.accommodations.filter((value) => value.id === item.id);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: Date.now(),
 							logo: destinationDetails.logoUrl,
@@ -279,7 +280,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 										text: value.name,
 										selected: value.id === item.id
 									};
-								})
+								}),
+							selectedRoom: selectedRoom[0].id
 						});
 					}}
 					roomStats={[

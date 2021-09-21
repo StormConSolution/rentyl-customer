@@ -16,12 +16,13 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
-import Select, { SelectOptions } from '../../components/Select/Select';
 import { useRecoilValue } from 'recoil';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import LeaveAReviewPopup, { LeaveAReviewPopupProps } from '../../popups/leaveAReviewPopup/LeaveAReviewPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import globalState from '../../state/globalState';
 
 const ItineraryDetailsPage: React.FC = () => {
@@ -33,6 +34,11 @@ const ItineraryDetailsPage: React.FC = () => {
 	const [itinerary, setItinerary] = useState<Api.Reservation.Res.Itinerary.Get>();
 	const [editPaymentCard, setEditPaymentCard] = useState<boolean>(false);
 	const [newPaymentMethod, setNewPaymentMethod] = useState<Api.Reservation.PaymentMethod | undefined>();
+	const [paymentFormGroup, setPaymentFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('card', 0, [new RsValidator(RsValidatorEnum.REQ, 'Card Selection Required')])
+		])
+	);
 
 	useEffect(() => {
 		async function getItineraryDetails() {
@@ -116,20 +122,18 @@ const ItineraryDetailsPage: React.FC = () => {
 		);
 	}
 
-	function renderSelectOptions(): SelectOptions[] {
+	function renderSelectOptions(): OptionType[] {
 		if (!user)
 			return [
 				{
-					selected: false,
-					text: 'No Saved Card',
+					label: 'No Saved Card',
 					value: 0
 				}
 			];
 
 		return user.paymentMethods.map((item) => {
 			return {
-				selected: !!newPaymentMethod ? newPaymentMethod.id === item.id : false,
-				text: item.cardNumber,
+				label: item.cardNumber,
 				value: item.id
 			};
 		});
@@ -164,6 +168,14 @@ const ItineraryDetailsPage: React.FC = () => {
 			}
 		});
 		return canReview;
+	}
+
+	function handleSelect(value: string | number | string[] | number[]) {
+		if (!user) return;
+		if (typeof value === 'number') {
+			return setNewPaymentMethod(user.paymentMethods.find((item) => item.id === value));
+		}
+		setNewPaymentMethod(undefined);
 	}
 
 	return !itinerary || !user ? (
@@ -252,20 +264,15 @@ const ItineraryDetailsPage: React.FC = () => {
 														OTHER PAYMENT OPTIONS
 													</Label>
 													<Select
-														options={renderSelectOptions()}
-														placeHolder={'Please Select A Card'}
-														showSelectedAsPlaceHolder
-														onChange={(value) => {
-															if (!user) return;
-															if (typeof value === 'number') {
-																return setNewPaymentMethod(
-																	user.paymentMethods.find(
-																		(item) => item.id === value
-																	)
-																);
-															}
-															setNewPaymentMethod(undefined);
+														placeholder={'Please Select A Card'}
+														control={paymentFormGroup.get('card')}
+														updateControl={(control) => {
+															setPaymentFormGroup(
+																paymentFormGroup.clone().update(control)
+															);
+															handleSelect(control.value);
 														}}
+														options={renderSelectOptions()}
 													/>
 												</div>
 												<AccordionTitleDescription

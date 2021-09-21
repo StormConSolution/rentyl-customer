@@ -7,7 +7,6 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import router from '../../utils/router';
 import LoadingPage from '../loadingPage/LoadingPage';
-import LabelButton from '../../components/labelButton/LabelButton';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import Paper from '../../components/paper/Paper';
 import MultiSelect from '../../components/multiSelect/MultiSelect';
@@ -16,7 +15,6 @@ import Footer from '../../components/footer/Footer';
 import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { SelectOptions } from '../../components/Select/Select';
 import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -29,7 +27,7 @@ const AccountPointsPage: React.FC = () => {
 	const [allPointHistory, setAllPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [filterBy, setFilterBy] = useState<React.ReactText[]>([]);
-	const pointTypeFilters: SelectOptions[] = [
+	const pointTypeFilters: Misc.SelectOptions[] = [
 		{ value: 'ACTION', text: 'Action', selected: false },
 		{ value: 'CAMPAIGN', text: 'Campaign', selected: false },
 		{ value: 'ADMIN', text: 'Admin', selected: false },

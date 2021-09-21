@@ -1,12 +1,13 @@
 import { Box } from '@bit/redsky.framework.rs.996';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './FloorPlanDetailCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../labelButton/LabelButton';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
-import Select from '../Select/Select';
 import Img from '@bit/redsky.framework.rs.img';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 export interface FloorPlanDetailCardProps {
 	accommodationName: string;
@@ -14,9 +15,32 @@ export interface FloorPlanDetailCardProps {
 }
 
 const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	const [selectedLayout, setSelectedLayout] = useState<Api.AccommodationLayout.Details>();
 	const [selectedRoom, setSelectedRoom] = useState<Model.AccommodationLayoutRoom | undefined>();
-	const size = useWindowResizeChange();
+	const [options, setOptions] = useState<OptionType[]>([]);
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', '', [])])
+	);
+
+	useEffect(() => {
+		let firstRun = true;
+		let newOptions = props.layout.map((item, index) => {
+			if (!selectedLayout && firstRun) {
+				setSelectedLayout(item);
+				firstRun = false;
+			}
+			if (!selectedLayout) return { value: 0, label: '' };
+			return {
+				value: item.id,
+				label: item.title
+			};
+		});
+		setOptions(newOptions);
+		let updateRoomType = roomTypeFormGroup.getClone('roomValue');
+		updateRoomType.value = newOptions[0].value;
+		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(updateRoomType));
+	}, []);
 
 	function renderTabs() {
 		let firstRun = true;
@@ -39,22 +63,6 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 					}}
 				/>
 			);
-		});
-	}
-
-	function renderMobileOptions() {
-		let firstRun = true;
-		return props.layout.map((item, index) => {
-			if (!selectedLayout && firstRun) {
-				setSelectedLayout(item);
-				firstRun = false;
-			}
-			if (!selectedLayout) return { value: 0, text: '', selected: false };
-			return {
-				value: item.id,
-				text: item.title,
-				selected: selectedLayout.id === item.id
-			};
 		});
 	}
 
@@ -105,14 +113,16 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 				<Label variant="h1">{props.accommodationName} Layout</Label>
 				{size === 'small' ? (
 					<Select
-						onChange={(value) => {
-							let newSelected = props.layout.find((item) => {
-								return value === item.id;
+						control={roomTypeFormGroup.get('roomValue')}
+						updateControl={(control) => {
+							setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
+							let newLayout = props.layout.find((item) => {
+								return control.value === item.id;
 							});
-							setSelectedLayout(newSelected);
+							setSelectedLayout(newLayout);
 							setSelectedRoom(undefined);
 						}}
-						options={renderMobileOptions()}
+						options={options}
 					/>
 				) : (
 					<Box display={'flex'}>{renderTabs()}</Box>

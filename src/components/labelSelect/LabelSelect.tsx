@@ -1,16 +1,16 @@
 import * as React from 'react';
 import './LabelSelect.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import Select, { SelectOptions } from '../Select/Select';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 interface LabelSelectProps {
 	title: string;
-	onChange: (value: any) => void;
-	selectOptions: SelectOptions[];
+	updateControl: (value: any) => void;
+	selectOptions: OptionType[];
 	className?: string;
 	placeHolder?: string;
-	showSelectedAsPlaceHolder?: boolean;
-	autoCalculateWidth?: boolean;
+	control: RsFormControl;
 }
 
 const LabelSelect: React.FC<LabelSelectProps> = (props) => {
@@ -18,11 +18,10 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 		<div className={`rsLabelSelect ${props.className || ''}`}>
 			<Label variant={'caption'}>{props.title}</Label>
 			<Select
-				onChange={props.onChange}
+				control={props.control}
+				updateControl={props.updateControl}
 				options={props.selectOptions}
-				placeHolder={props.placeHolder}
-				showSelectedAsPlaceHolder={props.showSelectedAsPlaceHolder}
-				autoCalculateWidth={props.autoCalculateWidth}
+				isClearable={true}
 			/>
 		</div>
 	);

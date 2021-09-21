@@ -11,10 +11,10 @@ import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import PaymentService from '../../services/payment/payment.service';
 import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
-import Select, { SelectOptions } from '../Select/Select';
 import debounce from 'lodash.debounce';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 
 type CreditCardForm = { full_name: string; expDate: string };
 interface ContactInfoForm extends Api.Reservation.Guest {
@@ -53,6 +53,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 	);
 	const [creditCardObj, setCreditCardObj] = useState<RsFormGroup>(
 		new RsFormGroup([
+			new RsFormControl('card', '', [new RsValidator(RsValidatorEnum.REQ, 'Card Selection Required')]),
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
 			new RsFormControl('expDate', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
@@ -240,23 +241,33 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 		);
 	}
 
-	function renderSelectOptions(): SelectOptions[] {
+	function renderSelectOptions(): OptionType[] {
 		if (!user)
 			return [
 				{
-					selected: false,
-					text: 'No Saved Card',
+					label: 'No Saved Card',
 					value: 0
 				}
 			];
 
 		return user.paymentMethods.map((item) => {
 			return {
-				selected: item.id === existingCardId,
-				text: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,
+				label: `Exp: ${item.expirationMonth}/${item.expirationYear} | ${item.cardNumber}`,
 				value: item.id
 			};
 		});
+	}
+
+	function handleSelect(value: string | number | string[] | number[]) {
+		if (typeof value === 'number') {
+			setExistingCardId(value);
+			if (props.onExistingCardSelect) props.onExistingCardSelect(value);
+		} else if (value === null) {
+			setExistingCardId(0);
+			if (props.onExistingCardSelect) props.onExistingCardSelect(0);
+		} else {
+			return null;
+		}
 	}
 
 	return (
@@ -344,19 +355,12 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 					<>
 						<Select
 							className={!useExistingCreditCard ? 'hide' : ''}
-							autoCalculateWidth
-							options={renderSelectOptions()}
-							placeHolder={'Please Select A Card'}
-							showSelectedAsPlaceHolder
-							onChange={(value) => {
-								if (typeof value === 'number') {
-									setExistingCardId(value);
-									if (props.onExistingCardSelect) props.onExistingCardSelect(value);
-								} else if (value === null) {
-									setExistingCardId(0);
-									if (props.onExistingCardSelect) props.onExistingCardSelect(0);
-								}
+							placeholder={'Please Select A Card'}
+							control={creditCardObj.get('card')}
+							updateControl={(value) => {
+								handleSelect(value.value);
 							}}
+							options={renderSelectOptions()}
 						/>
 						<Box className={'creditCardInfo'} display={useExistingCreditCard ? 'none' : 'grid'}>
 							<LabelInput
