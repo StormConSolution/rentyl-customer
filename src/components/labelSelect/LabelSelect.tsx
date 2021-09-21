@@ -6,7 +6,7 @@ import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 interface LabelSelectProps {
 	title: string;
-	onChange: (value: any) => void;
+	updateControl: (value: any) => void;
 	selectOptions: OptionType[];
 	className?: string;
 	placeHolder?: string;
@@ -19,7 +19,7 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 			<Label variant={'caption'}>{props.title}</Label>
 			<Select
 				control={props.control}
-				updateControl={props.onChange}
+				updateControl={props.updateControl}
 				options={props.selectOptions}
 				isClearable={true}
 			/>
