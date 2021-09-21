@@ -121,7 +121,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className={props.display}
 				title="Property Type"
 				control={propertyType.get('propertyType')}
-				onChange={(control) => {
+				updateControl={(control) => {
 					setPropertyType(propertyType.clone().update(control));
 					props.onChangePropertyType(control);
 				}}

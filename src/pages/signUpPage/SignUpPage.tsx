@@ -310,7 +310,7 @@ const SignUpPage: React.FC = () => {
 							<Box display={'flex'} className={'countryState'}>
 								<LabelSelect
 									title={'State'}
-									onChange={(control) => {
+									updateControl={(control) => {
 										updateNewAddressObj(control);
 									}}
 									selectOptions={stateList}
@@ -318,7 +318,7 @@ const SignUpPage: React.FC = () => {
 								/>
 								<LabelSelect
 									title={'Country'}
-									onChange={(control) => {
+									updateControl={(control) => {
 										updateNewAddressObj(control);
 									}}
 									selectOptions={countryList}

@@ -250,7 +250,7 @@ const AccountAddressPage: React.FC = () => {
 						<Box display={'flex'} justifyContent={'space-between'}>
 							<LabelSelect
 								title={'State'}
-								onChange={(control) => {
+								updateControl={(control) => {
 									updateNewAddressObj(control);
 								}}
 								selectOptions={stateList}
@@ -258,7 +258,7 @@ const AccountAddressPage: React.FC = () => {
 							/>
 							<LabelSelect
 								title={'Country'}
-								onChange={(control) => {
+								updateControl={(control) => {
 									updateNewAddressObj(control);
 								}}
 								selectOptions={countryList}

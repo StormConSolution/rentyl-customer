@@ -140,7 +140,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						<LabelSelect
 							title={'Property Type'}
 							control={propertyTypeFormGroup.get('propertyType')}
-							onChange={(control) => {
+							updateControl={(control) => {
 								setPropertyTypeIds(control.value);
 								setPropertyTypeFormGroup(propertyTypeFormGroup.clone().update(control));
 							}}
