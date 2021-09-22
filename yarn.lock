@@ -1151,11 +1151,12 @@
   dependencies:
     react "^16.12.0"
 
-"@bit/redsky.framework.rs.form@0.0.13":
-  version "0.0.13"
-  resolved "https://node.bit.dev/redsky.framework.rs.form/-/redsky.framework.rs.form-0.0.13.tgz#68825ea8a187cc243995687403841e654886515d"
-  integrity sha1-aIJeqKGHzCQ5lWh0A4QeZUiGUV0=
+"@bit/redsky.framework.rs.form@0.0.15":
+  version "0.0.15"
+  resolved "https://node.bit.dev/redsky.framework.rs.form/-/redsky.framework.rs.form-0.0.15.tgz#674294301091959789ef4f3c330046542e94c890"
+  integrity sha1-Z0KUMBCRlZeJ7088MwBGVC6UyJA=
   dependencies:
+    lodash.clone "4.5.0"
     lodash.clonedeep "^4.5.0"
 
 "@bit/redsky.framework.rs.http@0.0.41":
@@ -1180,12 +1181,12 @@
   dependencies:
     react "^17.0.2"
 
-"@bit/redsky.framework.rs.input@0.0.53":
-  version "0.0.53"
-  resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.53.tgz#24747d5f8d5468167b8e0a02654f7b2b596cd6d6"
-  integrity sha1-JHR9X41UaBZ7jgoCZU97K1ls1tY=
+"@bit/redsky.framework.rs.input@0.0.55":
+  version "0.0.55"
+  resolved "https://node.bit.dev/redsky.framework.rs.input/-/redsky.framework.rs.input-0.0.55.tgz#3ad1ce91074e1170c2302c3bd7b6ca74541e8d5e"
+  integrity sha1-OtHOkQdOEXDCMCw717bKdFQejV4=
   dependencies:
-    "@bit/redsky.framework.rs.form" "0.0.13"
+    "@bit/redsky.framework.rs.form" "0.0.15"
     "@bit/redsky.framework.rs.icon" "0.0.39"
     lodash.clone "4.5.0"
     react "^17.0.2"
@@ -1204,13 +1205,13 @@
   dependencies:
     react "^17.0.2"
 
-"@bit/redsky.framework.rs.select@0.0.17":
-  version "0.0.17"
-  resolved "https://node.bit.dev/redsky.framework.rs.select/-/redsky.framework.rs.select-0.0.17.tgz#b6c4065aed4a662edb7fa77ab34259a7fff2c799"
-  integrity sha1-tsQGWu1KZi7bf6d6s0JZp//yx5k=
+"@bit/redsky.framework.rs.select@0.0.19":
+  version "0.0.19"
+  resolved "https://node.bit.dev/redsky.framework.rs.select/-/redsky.framework.rs.select-0.0.19.tgz#4555b68eccef1fb463890efa3f1d0341e2a80acc"
+  integrity sha1-RVW2jszvH7RjiQ76Px0DQeKoCsw=
   dependencies:
     "@bit/redsky.framework.rs.996" "0.0.36"
-    "@bit/redsky.framework.rs.form" "0.0.13"
+    "@bit/redsky.framework.rs.form" "0.0.15"
     "@emotion/serialize" "0.11.16"
     "@types/react-select" "^4.0.17"
     lodash.clone "4.5.0"
