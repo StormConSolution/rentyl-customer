@@ -17,6 +17,7 @@ declare namespace Api {
 				name?: string;
 				shortDescription?: string;
 				longDescription?: string;
+				propertyTypeId?: number;
 				roomCount?: number;
 				address1?: string;
 				address2?: string;
@@ -44,6 +45,7 @@ declare namespace Api {
 				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
+				propertyTypeIds?: number[];
 				pagination: RedSky.PagePagination;
 			}
 		}
@@ -72,6 +74,7 @@ declare namespace Api {
 			export interface Availability {
 				id: number;
 				name: string;
+				propertyTypeId: number;
 				longDescription: string;
 				media: Media[]; //*All media for accommodation and accommodation categories*
 				featureIcons: string[]; //*Limit it to the first five*
@@ -523,6 +526,7 @@ declare namespace Api {
 				id: number;
 				description?: string;
 				locationDescription?: string;
+				propertyTypes?: number[];
 				status?: string;
 				address1?: string;
 				address2?: string;
@@ -538,6 +542,10 @@ declare namespace Api {
 			export interface AccommodationType {
 				destinationId?: number;
 				destinationIds?: number[];
+			}
+
+			export interface PropertyType {
+				destinationId: number;
 			}
 
 			export interface Features {
@@ -566,6 +574,7 @@ declare namespace Api {
 				rateCode?: string;
 				priceRangeMin?: number;
 				priceRangeMax?: number;
+				propertyTypeIds?: number[];
 				pagination: RedSky.PagePagination;
 			}
 		}
@@ -590,6 +599,8 @@ declare namespace Api {
 
 			export interface Update extends Details {}
 
+			export interface PropertyType extends Model.PropertyType {}
+
 			export interface Details {
 				id: number;
 				externalId: string;
@@ -608,6 +619,7 @@ declare namespace Api {
 				heroUrl: string;
 				reviewRating: number;
 				reviewCount: number;
+				propertyTypes: PropertyType[];
 				media: Media[];
 				features: Omit<
 					Feature.Details,
@@ -634,6 +646,7 @@ declare namespace Api {
 			export interface Accommodation {
 				id: number;
 				name: string;
+				propertyTypeId: number;
 				roomCount: number;
 				bedDetails: any;
 				priceCents: number;
@@ -663,6 +676,7 @@ declare namespace Api {
 				state: string;
 				zip: string;
 				country: string;
+				propertyTypes: PropertyType[];
 				logoUrl: string;
 				reviewRating: number;
 				reviewCount: number;

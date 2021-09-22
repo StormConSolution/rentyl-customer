@@ -30,7 +30,7 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 			return acc;
 		}, []);
 		setOptions(newOptions);
-		let updateRoomType = roomTypeFormGroup.getClone('roomValue');
+		let updateRoomType = roomTypeFormGroup.getCloneDeep('roomValue');
 		updateRoomType.value = newOptions[0].value;
 		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(updateRoomType));
 	}, [props.accommodationCategories]);

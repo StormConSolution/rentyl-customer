@@ -37,7 +37,7 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 			};
 		});
 		setOptions(newOptions);
-		let updateRoomType = roomTypeFormGroup.getClone('roomValue');
+		let updateRoomType = roomTypeFormGroup.getCloneDeep('roomValue');
 		updateRoomType.value = newOptions[0].value;
 		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(updateRoomType));
 	}, []);

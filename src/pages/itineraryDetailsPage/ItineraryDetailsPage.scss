@@ -45,11 +45,13 @@
 				grid-template-rows: 70px 50px;
 				row-gap: 24px;
 				height: 0;
+				overflow-x: hidden;
 				.rsSelect {
 					max-width: 90%;
 				}
 				&.show {
 					height: 175px;
+					overflow-x: visible;
 				}
 			}
 
