@@ -16,27 +16,31 @@ import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import RegionService from '../../services/region/region.service';
 
 export interface FilterReservationPopupProps extends PopupProps {
+	searchRegion?: boolean;
 	onClickApply: (
 		startDate: moment.Moment | null,
 		endDate: moment.Moment | null,
-		adults: string,
-		children: string,
+		adults: number,
+		children: number,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[] | string[],
-		rateCode: string
+		propertyTypeIds: number[],
+		rateCode: string,
+		regionIds?: number[]
 	) => void;
 	className?: string;
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const regionService = serviceFactory.get<RegionService>('RegionService');
 	const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
 	const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
-	const [adults, setAdults] = useState<string>('2');
-	const [children, setChildren] = useState<string>('');
+	const [adults, setAdults] = useState<number>(2);
+	const [children, setChildren] = useState<number>(0);
 	const [priceRangeMin, setPriceRangeMin] = useState<string>('');
 	const [priceRangeMax, setPriceRangeMax] = useState<string>('');
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
@@ -45,18 +49,19 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		setEndDate(endDate);
 	}
 	const [rateCode, setRateCode] = useState<string>('');
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertyTypeFormGroup, setPropertyTypeFormGroup] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', '', [])])
+	const [filterForm, setFilterForm] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('regions', [], []), new RsFormControl('propertyType', [], [])])
 	);
-	const [propertyTypeIds, setPropertyTypeIds] = useState<number[] | string[]>([]);
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
+	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 
 	useEffect(() => {
-		async function getAllPropertyTypes() {
+		async function getFilterOptions() {
 			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response.data);
-				setOptions(newOptions);
+				const propertyTypes = await destinationService.getAllPropertyTypes();
+				setPropertyTypeOptions(formatOptions(propertyTypes));
+				const regions = await regionService.getAllRegions();
+				setRegionOptions(formatOptions(regions));
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
@@ -64,10 +69,10 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 				);
 			}
 		}
-		getAllPropertyTypes().catch(console.error);
+		getFilterOptions().catch(console.error);
 	}, []);
 
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
+	function formatOptions(options: Api.Destination.Res.PropertyType[] | Api.Region.Res.Get[]) {
 		return options.map((value) => {
 			return { value: value.id, label: value.name };
 		});
@@ -80,6 +85,18 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 					<Label className={'filtersLabel'} variant={'h2'}>
 						Filters
 					</Label>
+					{props.searchRegion && (
+						<LabelSelect
+							title={'Region'}
+							control={filterForm.get('regions')}
+							updateControl={(control) => {
+								setFilterForm(filterForm.clone().update(control));
+							}}
+							selectOptions={regionOptions}
+							isMulti
+							isSearchable
+						/>
+					)}
 					<div className={'formWrapper'}>
 						<DateRangeSelector
 							startDate={startDate}
@@ -96,15 +113,15 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								className="numberOfAdults"
 								inputType="text"
 								title="# of Adults"
-								onChange={(value) => setAdults(value)}
-								initialValue={adults}
+								onChange={(value) => setAdults(parseInt(value))}
+								initialValue={'' + adults}
 							/>
 							<LabelInput
 								className="numberOfChildren"
 								inputType="text"
 								title="# of Children"
-								onChange={(value) => setChildren(value)}
-								initialValue={children}
+								onChange={(value) => setChildren(parseInt(value))}
+								initialValue={'' + children}
 							/>
 						</div>
 						<div className={'minMaxDiv'}>
@@ -139,12 +156,12 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						</div>
 						<LabelSelect
 							title={'Property Type'}
-							control={propertyTypeFormGroup.get('propertyType')}
+							control={filterForm.get('propertyType')}
 							updateControl={(control) => {
-								setPropertyTypeIds(control.value);
-								setPropertyTypeFormGroup(propertyTypeFormGroup.clone().update(control));
+								setFilterForm(filterForm.clone().update(control));
 							}}
-							selectOptions={options}
+							selectOptions={propertyTypeOptions}
+							isMulti
 						/>
 						<LabelInput
 							className={'rateCode'}
@@ -179,8 +196,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										propertyTypeIds,
-										rateCode
+										filterForm.get('propertyType').value as number[],
+										rateCode,
+										filterForm.get('regions').value as number[]
 									);
 									popupController.close(FilterReservationPopup);
 								}}

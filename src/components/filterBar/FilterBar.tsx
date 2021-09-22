@@ -13,6 +13,11 @@ import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
+export interface SelectOptionControls {
+	options: OptionType[];
+	control: RsFormControl;
+	updateControl: (control: RsFormControl) => void;
+}
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
@@ -25,8 +30,9 @@ export interface FilterBarProps {
 	onChangePriceMin: (value: any) => void;
 	onChangePriceMax: (value: any) => void;
 	onChangePropertyType: (control: RsFormControl) => void;
-	adultsInitialInput?: string;
-	childrenInitialInput?: string;
+	regionSelect?: SelectOptionControls;
+	adultsInitialInput: number;
+	childrenInitialInput: number;
 	initialPriceMin?: string;
 	initialPriceMax?: string;
 	className?: string;
@@ -41,10 +47,10 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	);
 
 	useEffect(() => {
-		async function getAllPropertyTypes() {
+		async function getAllFilterOptions() {
 			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response.data);
+				let propertyTypes = await destinationService.getAllPropertyTypes();
+				let newOptions = formatOptions(propertyTypes);
 				setOptions(newOptions);
 			} catch (e) {
 				rsToastify.error(
@@ -53,10 +59,10 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				);
 			}
 		}
-		getAllPropertyTypes().catch(console.error);
+		getAllFilterOptions().catch(console.error);
 	}, []);
 
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
+	function formatOptions(options: Api.Destination.Res.PropertyType[] | Api.Region.Res.Get[]) {
 		return options.map((value) => {
 			return { value: value.id, label: value.name };
 		});
@@ -64,6 +70,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
+			{props.regionSelect && (
+				<LabelSelect
+					title={'Regions'}
+					updateControl={props.regionSelect.updateControl}
+					selectOptions={props.regionSelect.options}
+					control={props.regionSelect.control}
+					isMulti
+					isSearchable
+				/>
+			)}
 			<DateRangeSelector
 				startDate={props.startDate}
 				endDate={props.endDate}
@@ -78,7 +94,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className="numberOfAdults"
 				inputType="text"
 				title="# of Adults"
-				initialValue={props.adultsInitialInput || '2'}
+				initialValue={'' + props.adultsInitialInput}
 				onChange={debounce(async (value) => {
 					if (!isNaN(parseInt(value)) && parseInt(value) < 1) {
 						value = 1;
@@ -90,7 +106,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className="numberOfChildren"
 				inputType="text"
 				title="# of Children"
-				initialValue={props.childrenInitialInput || '0'}
+				initialValue={'' + props.childrenInitialInput}
 				onChange={debounce(async (value) => {
 					props.onChangeChildren(value);
 				}, 300)}

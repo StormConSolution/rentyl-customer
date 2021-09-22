@@ -537,8 +537,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								onChangePropertyType={(control) => {
 									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
-								adultsInitialInput={searchQueryObj.adults.toString()}
-								childrenInitialInput={searchQueryObj.children.toString()}
+								adultsInitialInput={searchQueryObj.adults}
+								childrenInitialInput={searchQueryObj.children}
 								initialPriceMax={
 									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 								}
@@ -572,8 +572,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									onClickApply(
 										startDate: moment.Moment | null,
 										endDate: moment.Moment | null,
-										adults: string,
-										children: string,
+										adults: number,
+										children: number,
 										priceRangeMin: string,
 										priceRangeMax: string,
 										propertyTypeIds: string[] | number[],
@@ -591,10 +591,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 													endDate,
 													'end'
 												);
-											if (adults !== '') createSearchQueryObj['adults'] = adults;
-											if (children !== '') createSearchQueryObj['children'] = children;
-											if (propertyTypeIds[0] !== '')
-												createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
+											createSearchQueryObj['adults'] = adults;
+											createSearchQueryObj['children'] = children;
+											if (ObjectUtils.isArrayWithData(propertyTypeIds))
+												createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
 											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
 												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
 											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))

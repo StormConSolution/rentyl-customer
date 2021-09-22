@@ -146,28 +146,26 @@ const BookingFlowAddRoomPage = () => {
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
-		adults: string,
-		children: string,
+		adults: number,
+		children: number,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: string[] | number[],
+		propertyTypeIds: number[],
 		rateCode: string
 	) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = parseInt(adults);
-			if (children !== '') {
-				createSearchQueryObj['children'] = parseInt(children);
-			}
+			createSearchQueryObj['adults'] = adults;
+			createSearchQueryObj['children'] = children;
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
 			}
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (propertyTypeIds[0] !== '') {
+			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
 				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
 			}
 			if (rateCode !== '') {
@@ -317,12 +315,13 @@ const BookingFlowAddRoomPage = () => {
 								onClickApply: (
 									startDate: moment.Moment | null,
 									endDate: moment.Moment | null,
-									adults: string,
-									children: string,
+									adults: number,
+									children: number,
 									priceRangeMin: string,
 									priceRangeMax: string,
-									propertyTypeIds: number[] | string[],
-									rateCode: string
+									propertyTypeIds: number[],
+									rateCode: string,
+									regionIds
 								) => {
 									popupSearch(
 										startDate,
@@ -369,8 +368,8 @@ const BookingFlowAddRoomPage = () => {
 							onChangePropertyType={(control: RsFormControl) => {
 								updateSearchQueryObj('propertyTypeIds', control.value);
 							}}
-							adultsInitialInput={searchQueryObj.adults.toString()}
-							childrenInitialInput={searchQueryObj.children.toString()}
+							adultsInitialInput={searchQueryObj.adults}
+							childrenInitialInput={searchQueryObj.children}
 							initialPriceMax={
 								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 							}

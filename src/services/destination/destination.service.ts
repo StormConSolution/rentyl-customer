@@ -33,8 +33,8 @@ export default class DestinationService extends Service {
 		return response.data;
 	}
 
-	async getAllPropertyTypes() {
+	async getAllPropertyTypes(): Promise<Api.Destination.Res.PropertyType[]> {
 		let res = await http.get<RsResponseData<Api.Destination.Res.PropertyType[]>>('destination/allPropertyTypes');
-		return res.data;
+		return res.data.data;
 	}
 }

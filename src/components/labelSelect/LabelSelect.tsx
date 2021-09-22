@@ -12,6 +12,7 @@ interface LabelSelectProps {
 	placeHolder?: string;
 	control: RsFormControl;
 	isMulti?: boolean;
+	isSearchable?: boolean;
 }
 
 const LabelSelect: React.FC<LabelSelectProps> = (props) => {
@@ -24,6 +25,7 @@ const LabelSelect: React.FC<LabelSelectProps> = (props) => {
 				options={props.selectOptions}
 				isClearable={true}
 				isMulti={props.isMulti}
+				isSearchable={props.isSearchable}
 			/>
 		</div>
 	);

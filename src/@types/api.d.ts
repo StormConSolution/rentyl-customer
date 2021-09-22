@@ -526,7 +526,8 @@ declare namespace Api {
 				id: number;
 				description?: string;
 				locationDescription?: string;
-				propertyTypes?: number[];
+				propertyTypeIds?: number[];
+				regionIds?: number[];
 				status?: string;
 				address1?: string;
 				address2?: string;
@@ -545,6 +546,10 @@ declare namespace Api {
 			}
 
 			export interface PropertyType {
+				destinationId: number;
+			}
+
+			export interface DestinationRegion {
 				destinationId: number;
 			}
 
@@ -575,6 +580,7 @@ declare namespace Api {
 				priceRangeMin?: number;
 				priceRangeMax?: number;
 				propertyTypeIds?: number[];
+				regionIds?: number[];
 				pagination: RedSky.PagePagination;
 			}
 		}
@@ -600,6 +606,7 @@ declare namespace Api {
 			export interface Update extends Details {}
 
 			export interface PropertyType extends Model.PropertyType {}
+			export interface DestinationRegion extends Model.Region {}
 
 			export interface Details {
 				id: number;
@@ -615,6 +622,7 @@ declare namespace Api {
 				state: string;
 				zip: string;
 				country: string;
+				regions: DestinationRegion[];
 				logoUrl: string;
 				heroUrl: string;
 				reviewRating: number;
@@ -933,6 +941,21 @@ declare namespace Api {
 			export interface Delete {}
 
 			export interface Update extends Model.UserPaymentMethod {}
+		}
+	}
+
+	export namespace Region {
+		export namespace Req {
+			export interface Get {}
+
+			export interface Create {
+				name: string;
+			}
+		}
+
+		export namespace Res {
+			export interface Get extends Model.Region {}
+			export interface Update extends Get {}
 		}
 	}
 

@@ -322,6 +322,12 @@ declare namespace Model {
 		destinationId: number;
 		propertyTypeId: number;
 	}
+
+	export interface DestinationRegion {
+		destinationId: number;
+		regionId: number;
+	}
+
 	export interface DestinationTax {
 		destinationId: number;
 		companyId: number;
@@ -496,6 +502,11 @@ declare namespace Model {
 		name: string;
 	}
 
+	export interface Region {
+		id: number;
+		name: string;
+	}
+
 	export interface ReportTemplate {
 		id: number;
 		companyId: number;
@@ -563,7 +574,6 @@ declare namespace Model {
 		modifiedOn: Date | string;
 		verifiedOn: Date | string;
 		status: ReviewStatus;
-		packageIds: number[];
 		stayStartDate: Date | string;
 		stayEndDate: Date | string;
 	}
@@ -780,7 +790,6 @@ declare namespace Model {
 
 	export interface UserRole {
 		id: number;
-		companyId: number;
 		name: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
