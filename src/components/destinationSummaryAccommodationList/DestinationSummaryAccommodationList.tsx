@@ -1,6 +1,6 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
-import { NumberUtils, StringUtils } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';
@@ -102,12 +102,6 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 		return accommodations
 			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
 			.map(renderAccommodationListRow, index);
-	}
-
-	function handleAccommodationRendering() {
-		{
-			renderAccommodationList(props.accommodations, 0);
-		}
 	}
 
 	return (

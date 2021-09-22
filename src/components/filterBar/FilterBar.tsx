@@ -31,37 +31,11 @@ export interface FilterBarProps {
 	initialPriceMax?: string;
 	className?: string;
 	display?: string;
+	control: RsFormControl;
+	options: OptionType[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertyType, setPropertyType] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', '', [])])
-	);
-
-	useEffect(() => {
-		async function getAllPropertyTypes() {
-			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response.data);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
-		}
-		getAllPropertyTypes().catch(console.error);
-	}, []);
-
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
-
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
 			<DateRangeSelector
@@ -120,12 +94,11 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			<LabelSelect
 				className={props.display}
 				title="Property Type"
-				control={propertyType.get('propertyType')}
+				control={props.control}
 				updateControl={(control) => {
-					setPropertyType(propertyType.clone().update(control));
 					props.onChangePropertyType(control);
 				}}
-				selectOptions={options}
+				selectOptions={props.options}
 				isMulti={true}
 			/>
 		</Box>

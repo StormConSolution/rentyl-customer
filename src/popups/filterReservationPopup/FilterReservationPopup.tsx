@@ -7,15 +7,12 @@ import Paper from '../../components/paper/Paper';
 import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import LabelInput from '../../components/labelInput/LabelInput';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
-import serviceFactory from '../../services/serviceFactory';
-import DestinationService from '../../services/destination/destination.service';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
-import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	onClickApply: (
@@ -25,14 +22,16 @@ export interface FilterReservationPopupProps extends PopupProps {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[] | string[],
+		propertyTypeIds: number[],
 		rateCode: string
 	) => void;
+	control: RsFormControl;
+	options: OptionType[];
+	onChangePropertyType: (control: RsFormControl) => void;
 	className?: string;
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
 	const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
 	const [adults, setAdults] = useState<string>('2');
@@ -45,33 +44,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		setEndDate(endDate);
 	}
 	const [rateCode, setRateCode] = useState<string>('');
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertyTypeFormGroup, setPropertyTypeFormGroup] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', '', [])])
-	);
-	const [propertyTypeIds, setPropertyTypeIds] = useState<number[] | string[]>([]);
-
-	useEffect(() => {
-		async function getAllPropertyTypes() {
-			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response.data);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
-		}
-		getAllPropertyTypes().catch(console.error);
-	}, []);
-
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
+	const [propertyTypeIds, setPropertyTypeIds] = useState<number[]>([]);
 
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
@@ -139,12 +112,13 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						</div>
 						<LabelSelect
 							title={'Property Type'}
-							control={propertyTypeFormGroup.get('propertyType')}
+							control={props.control}
 							updateControl={(control) => {
 								setPropertyTypeIds(control.value);
-								setPropertyTypeFormGroup(propertyTypeFormGroup.clone().update(control));
+								props.onChangePropertyType(control);
 							}}
-							selectOptions={options}
+							selectOptions={props.options}
+							isMulti={true}
 						/>
 						<LabelInput
 							className={'rateCode'}
