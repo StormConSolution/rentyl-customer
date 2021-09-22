@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './CheckboxList.scss';
-import { SelectOptions } from '../Select/Select';
 import IconLabel from '../iconLabel/IconLabel';
 import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
 import { StringUtils } from '../../utils/utils';
+import SelectOptions = Misc.SelectOptions;
 
 interface CheckboxListProps {
 	onChange: (selectedValues: (string | number)[], options: SelectOptions[]) => void;

@@ -10,6 +10,9 @@ import moment from 'moment';
 import { useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { StringUtils } from '../../utils/utils';
+import LabelSelect from '../../components/labelSelect/LabelSelect';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
+import { OptionType } from '@bit/redsky.framework.rs.select';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	onClickApply: (
@@ -19,8 +22,12 @@ export interface FilterReservationPopupProps extends PopupProps {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
+		propertyTypeIds: number[],
 		rateCode: string
 	) => void;
+	control: RsFormControl;
+	options: OptionType[];
+	onChangePropertyType: (control: RsFormControl) => void;
 	className?: string;
 }
 
@@ -37,6 +44,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		setEndDate(endDate);
 	}
 	const [rateCode, setRateCode] = useState<string>('');
+	const [propertyTypeIds, setPropertyTypeIds] = useState<number[]>([]);
+
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
@@ -101,6 +110,16 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								initialValue={priceRangeMax}
 							/>
 						</div>
+						<LabelSelect
+							title={'Property Type'}
+							control={props.control}
+							updateControl={(control) => {
+								setPropertyTypeIds(control.value);
+								props.onChangePropertyType(control);
+							}}
+							selectOptions={props.options}
+							isMulti={true}
+						/>
 						<LabelInput
 							className={'rateCode'}
 							inputType={'text'}
@@ -134,6 +153,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										children,
 										priceRangeMin,
 										priceRangeMax,
+										propertyTypeIds,
 										rateCode
 									);
 									popupController.close(FilterReservationPopup);

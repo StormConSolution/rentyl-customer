@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { StringUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
+import LabelSelect from '../labelSelect/LabelSelect';
+import { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import serviceFactory from '../../services/serviceFactory';
+import DestinationService from '../../services/destination/destination.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
@@ -18,11 +24,15 @@ export interface FilterBarProps {
 	onChangeChildren: (value: any) => void;
 	onChangePriceMin: (value: any) => void;
 	onChangePriceMax: (value: any) => void;
+	onChangePropertyType: (control: RsFormControl) => void;
 	adultsInitialInput?: string;
 	childrenInitialInput?: string;
 	initialPriceMin?: string;
 	initialPriceMax?: string;
 	className?: string;
+	display?: string;
+	control: RsFormControl;
+	options: OptionType[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
@@ -80,6 +90,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 						value === '' ? 0 : StringUtils.removeLineEndings(value.replace(/[,$]/g, ''))
 					);
 				}, 500)}
+			/>
+			<LabelSelect
+				className={props.display}
+				title="Property Type"
+				control={props.control}
+				updateControl={(control) => {
+					props.onChangePropertyType(control);
+				}}
+				selectOptions={props.options}
+				isMulti={true}
 			/>
 		</Box>
 	);

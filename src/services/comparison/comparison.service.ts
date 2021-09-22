@@ -1,18 +1,18 @@
 import { Service } from '../Service';
-import { ComparisonCardInfo } from '../../state/globalState';
 import rsToasts from '@bit/redsky.framework.toast';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 export default class ComparisonService extends Service {
-	addToComparison(recoilState: any, compareItem: ComparisonCardInfo) {
+	addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
 		const [comparisonItems, setComparisonItems] = recoilState;
 
 		if (comparisonItems.length === 3) throw rsToasts.info('You can only compare three at a time!');
 
-		let newArray: ComparisonCardInfo[] = [...comparisonItems, compareItem];
+		let newArray: Misc.ComparisonCardInfo[] = [...comparisonItems, compareItem];
 		setComparisonItems(newArray);
 	}
 
-	setSelectedAccommodation(indexToChange: number, item: string, comparisonItems: ComparisonCardInfo[]) {
+	setSelectedAccommodation(indexToChange: number, item: RsFormControl, comparisonItems: Misc.ComparisonCardInfo[]) {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element, index) => {
 			if (index !== indexToChange) return element;
@@ -23,20 +23,23 @@ export default class ComparisonService extends Service {
 					return {
 						text: value.text,
 						value: value.value,
-						selected: value.value === item
+						selected: value.value === item.value
 					};
 				}),
-				title: element.title
+				title: element.title,
+				selectedRoom: +item.value
 			};
 		});
 	}
 
-	setDefaultAccommodations(comparisonItems: ComparisonCardInfo[]): ComparisonCardInfo[] {
+	setDefaultAccommodations(comparisonItems: Misc.ComparisonCardInfo[]): Misc.ComparisonCardInfo[] {
 		let modifiedComparisonItems = [...comparisonItems];
 		return modifiedComparisonItems.map((element) => {
 			let selected = false;
 			let modifiedRoomTypes = element.roomTypes.map((value) => {
-				if (value.selected) selected = true;
+				if (value.selected) {
+					selected = true;
+				}
 				return {
 					text: value.text,
 					value: value.value,
@@ -48,12 +51,13 @@ export default class ComparisonService extends Service {
 				destinationId: element.destinationId,
 				logo: element.logo,
 				roomTypes: modifiedRoomTypes,
-				title: element.title
+				title: element.title,
+				selectedRoom: element.selectedRoom
 			};
 		});
 	}
 
-	resortComparisonCardOnClose(item: ComparisonCardInfo, comparisonItems: ComparisonCardInfo[]) {
+	resortComparisonCardOnClose(item: Misc.ComparisonCardInfo, comparisonItems: Misc.ComparisonCardInfo[]) {
 		let newRecoilState = [...comparisonItems];
 		return newRecoilState.filter((remove) => remove !== item);
 	}

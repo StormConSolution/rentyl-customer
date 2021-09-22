@@ -21,12 +21,14 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import BookingParams = Misc.BookingParams;
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import DestinationService from '../../services/destination/destination.service';
+import { OptionType } from '@bit/redsky.framework.rs.select';
 
 const BookingFlowAddRoomPage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ data: BookingParams }>([
+	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
 	]);
 	params.data = ObjectUtils.smartParse(params.data);
@@ -35,17 +37,16 @@ const BookingFlowAddRoomPage = () => {
 	});
 
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
-
 	const initialStartDate = editStayDetails?.arrivalDate ? moment(editStayDetails?.arrivalDate) : moment(new Date());
 	const initialEndDate = editStayDetails?.departureDate
 		? moment(editStayDetails?.departureDate)
 		: moment(editStayDetails?.departureDate).add(2, 'days');
-
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		startDate: initialStartDate.format('YYYY-MM-DD'),
 		endDate: initialEndDate.format('YYYY-MM-DD'),
@@ -55,6 +56,10 @@ const BookingFlowAddRoomPage = () => {
 		destinationId: params.data.destinationId,
 		rateCode: editStayDetails?.rateCode || params.data.stays[0].rateCode || ''
 	});
+	const [options, setOptions] = useState<OptionType[]>([]);
+	const [propertyType, setPropertyType] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('propertyType', [], [])])
+	);
 
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
@@ -88,7 +93,7 @@ const BookingFlowAddRoomPage = () => {
 				popupController.open(SpinningLoaderPopup);
 				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
 					delete newSearchQueryObj.rateCode;
-				let res = await accommodationService.searchAvailableAccommodationsByDestination(newSearchQueryObj);
+				let res = await accommodationService.availability(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
@@ -104,6 +109,28 @@ const BookingFlowAddRoomPage = () => {
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
+
+	useEffect(() => {
+		async function getAllPropertyTypes() {
+			try {
+				let response = await destinationService.getAllPropertyTypes();
+				let newOptions = formatOptions(response);
+				setOptions(newOptions);
+			} catch (e) {
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
+					'Server Error'
+				);
+			}
+		}
+		getAllPropertyTypes().catch(console.error);
+	}, []);
+
+	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
+		return options.map((value) => {
+			return { value: value.id, label: value.name };
+		});
+	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setStartDateControl(startDate);
@@ -121,7 +148,8 @@ const BookingFlowAddRoomPage = () => {
 			| 'priceRangeMin'
 			| 'priceRangeMax'
 			| 'pagination'
-			| 'rateCode',
+			| 'rateCode'
+			| 'propertyTypeIds',
 		value: any
 	) {
 		if (key === 'adults' && value === 0)
@@ -136,7 +164,7 @@ const BookingFlowAddRoomPage = () => {
 			throw rsToastify.error('Price max must be a number', 'Incorrect or Missing Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined) delete createSearchQueryObj[key];
+			if (value === '' || value === undefined || value.length <= 0) delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
@@ -149,6 +177,7 @@ const BookingFlowAddRoomPage = () => {
 		children: string,
 		priceRangeMin: string,
 		priceRangeMax: string,
+		propertyTypeIds: number[],
 		rateCode: string
 	) {
 		setSearchQueryObj((prev) => {
@@ -164,6 +193,11 @@ const BookingFlowAddRoomPage = () => {
 			}
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			}
+			if (propertyTypeIds.length >= 1) {
+				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			} else {
+				delete createSearchQueryObj['propertyTypeIds'];
 			}
 			if (rateCode !== '') {
 				createSearchQueryObj['rateCode'] = rateCode;
@@ -251,6 +285,10 @@ const BookingFlowAddRoomPage = () => {
 		});
 	}
 
+	function onChangePropertyType(control: RsFormControl) {
+		setPropertyType(propertyType.clone().update(control));
+	}
+
 	return (
 		<Page className={'rsBookingFlowAddRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -316,6 +354,7 @@ const BookingFlowAddRoomPage = () => {
 									children: string,
 									priceRangeMin: string,
 									priceRangeMax: string,
+									propertyTypeIds: number[],
 									rateCode: string
 								) => {
 									popupSearch(
@@ -325,10 +364,14 @@ const BookingFlowAddRoomPage = () => {
 										children,
 										priceRangeMin,
 										priceRangeMax,
+										propertyTypeIds,
 										rateCode
 									);
 								},
-								className: 'filterPopup'
+								className: 'filterPopup',
+								options: options,
+								control: propertyType.get('propertyType'),
+								onChangePropertyType: onChangePropertyType
 							});
 						}}
 					/>
@@ -359,6 +402,10 @@ const BookingFlowAddRoomPage = () => {
 									updateSearchQueryObj('priceRangeMax', value);
 								}
 							}}
+							onChangePropertyType={(control: RsFormControl) => {
+								setPropertyType(propertyType.clone().update(control));
+								updateSearchQueryObj('propertyTypeIds', control.value);
+							}}
 							adultsInitialInput={searchQueryObj.adults.toString()}
 							childrenInitialInput={searchQueryObj.children.toString()}
 							initialPriceMax={
@@ -367,6 +414,8 @@ const BookingFlowAddRoomPage = () => {
 							initialPriceMin={
 								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 							}
+							options={options}
+							control={propertyType.get('propertyType')}
 						/>
 						<Accordion
 							hideHoverEffect

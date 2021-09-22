@@ -40,7 +40,7 @@ function App() {
 	}, [loginStatus, isCompanyLoaded]);
 
 	function renderViewsBasedOnLoginStatus() {
-		if (!isCompanyLoaded) return <>Loading...</>;
+		if (!isCompanyLoaded) return <>Loading...</>; //TODO: need to adjust for spire vs rental
 		switch (loginStatus) {
 			case LoginStatus.UNKNOWN:
 				return null;

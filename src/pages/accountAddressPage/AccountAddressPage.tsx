@@ -17,14 +17,13 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import CountryService from '../../services/country/country.service';
 import UserAddressService from '../../services/userAddress/userAddress.service';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
+import { OptionType } from '@bit/redsky.framework.rs.select';
 
-let country = 'US';
-let state = '';
 let isDefault: 1 | 0 = 0;
 
 const AccountAddressPage: React.FC = () => {
@@ -33,19 +32,17 @@ const AccountAddressPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [addressList, setAddressList] = useState<Api.User.Address[]>([]);
 	const [isValidForm, setIsValidForm] = useState<boolean>(false);
-	const [countryList, setCountryList] = useState<
-		{ value: number | string; text: number | string; selected: boolean }[]
-	>([]);
-	const [stateList, setStateList] = useState<{ value: number | string; text: number | string; selected: boolean }[]>(
-		[]
-	);
+	const [stateList, setStateList] = useState<OptionType[]>([]);
+	const [countryList, setCountryList] = useState<OptionType[]>([]);
 	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
 			new RsFormControl('address1', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
 			new RsFormControl('address2', '', []),
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
-			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')])
+			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')]),
+			new RsFormControl('state', '', []),
+			new RsFormControl('country', 'US', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
 		])
 	);
 
@@ -57,18 +54,16 @@ const AccountAddressPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(newAddressObj.toModel());
-		console.log('isValidForm', isValidForm);
-	}, [newAddressObj]);
-
-	useEffect(() => {
 		async function getCountries() {
 			try {
 				let countries = await countryService.getAllCountries();
 				setCountryList(formatStateOrCountryListForSelect(countries.countries));
 			} catch (e) {
 				console.error('getCountries', e);
-				throw rsToastify.error(WebUtils.getRsErrorMessage(e, 'Country list is unavailable'), 'Server Error');
+				throw rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get a list of countries.'),
+					'Server Error'
+				);
 			}
 		}
 		getCountries().catch(console.error);
@@ -76,23 +71,21 @@ const AccountAddressPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getStates() {
-			let selectedCountry = countryList.find((item) => item.selected);
-			if (!selectedCountry) return;
 			try {
-				let response = await countryService.getStates(`${selectedCountry.value}`);
+				let response = await countryService.getStates(`${newAddressObj.get('country').value}` || 'US');
 				if (response.states) {
 					let newStates = formatStateOrCountryListForSelect(response.states);
 					setStateList(newStates);
 				}
 			} catch (e) {
 				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'Unable to get states for given country'),
+					WebUtils.getRsErrorMessage(e, 'Unable to get states for the selected country.'),
 					'Server Error'
 				);
 			}
 		}
 		getStates().catch(console.error);
-	}, [countryList]);
+	}, [countryList, newAddressObj.get('country').value]);
 
 	function renderAddresses() {
 		if (!addressList || !ObjectUtils.isArrayWithData(addressList)) return;
@@ -120,9 +113,9 @@ const AccountAddressPage: React.FC = () => {
 		});
 	}
 
-	function formatStateOrCountryListForSelect(statesOrCountries: any[]) {
-		return statesOrCountries.map((item) => {
-			return { value: item.isoCode, text: item.name, selected: item.isoCode === 'US' };
+	function formatStateOrCountryListForSelect(statesOrCountries: Misc.IBaseCountry[]) {
+		return statesOrCountries.map((item: Misc.IBaseCountry) => {
+			return { value: item.isoCode, label: item.name };
 		});
 	}
 
@@ -148,7 +141,7 @@ const AccountAddressPage: React.FC = () => {
 			!!newAddressObj.get('address1').value.toString().length &&
 			!!newAddressObj.get('city').value.toString().length &&
 			!!newAddressObj.get('zip').value.toString().length &&
-			!!state.length
+			!!newAddressObj.get('country').value.toString().length
 		);
 	}
 
@@ -179,9 +172,7 @@ const AccountAddressPage: React.FC = () => {
 		let addressObj: Api.UserAddress.Req.Create = newAddressObj.toModel();
 		addressObj['userId'] = user.id;
 		addressObj['type'] = 'BOTH';
-		addressObj['state'] = state;
 		addressObj['isDefault'] = isDefault;
-		addressObj['country'] = country;
 
 		try {
 			let response = await userAddressService.create(addressObj);
@@ -256,33 +247,19 @@ const AccountAddressPage: React.FC = () => {
 								updateControl={updateNewAddressObj}
 							/>
 						</Box>
-						<Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
-							{/*<LabelSelect*/}
-							{/*	title={'State'}*/}
-							{/*	onChange={(value) => {*/}
-							{/*		let newStateList = [...stateList];*/}
-							{/*		newStateList = newStateList.map((item) => {*/}
-							{/*			return { value: item.value, text: item.text, selected: item.value === value };*/}
-							{/*		});*/}
-							{/*		setStateList(newStateList);*/}
-							{/*		state = value || '';*/}
-							{/*		setIsValidForm(isFormFilledOut());*/}
-							{/*	}}*/}
-							{/*	selectOptions={stateList}*/}
-							{/*/>*/}
-							{/*<LabelSelect*/}
-							{/*	title={'Country'}*/}
-							{/*	onChange={(value) => {*/}
-							{/*		let newCountryList = [...countryList];*/}
-							{/*		newCountryList = newCountryList.map((item) => {*/}
-							{/*			return { value: item.value, text: item.text, selected: item.value === value };*/}
-							{/*		});*/}
-							{/*		setCountryList(newCountryList);*/}
-							{/*		country = value || '';*/}
-							{/*		setIsValidForm(isFormFilledOut());*/}
-							{/*	}}*/}
-							{/*	selectOptions={countryList}*/}
-							{/*/>*/}
+						<Box display={'flex'} justifyContent={'space-between'}>
+							<LabelSelect
+								title={'State'}
+								updateControl={updateNewAddressObj}
+								selectOptions={stateList}
+								control={newAddressObj.get('state')}
+							/>
+							<LabelSelect
+								title={'Country'}
+								updateControl={updateNewAddressObj}
+								selectOptions={countryList}
+								control={newAddressObj.get('country')}
+							/>
 						</Box>
 						<LabelCheckbox
 							value={'isDefault'}

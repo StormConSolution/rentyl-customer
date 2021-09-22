@@ -1,6 +1,6 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
-import { NumberUtils, StringUtils } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';

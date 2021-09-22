@@ -5,6 +5,10 @@
 		width: 550px;
 		height: 360px;
 
+		.rsSelect {
+			justify-content: center;
+			max-width: 315px;
+		}
 		.rsLabel {
 			&.h1 {
 				margin-bottom: 22px;
