@@ -120,7 +120,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				console.error(e);
 			}
 		}
-
 		getAvailableStays().catch(console.error);
 	}, [searchQueryObj]);
 
