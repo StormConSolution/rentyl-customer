@@ -618,56 +618,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							/>
 						</>
 					) : (
-						// <LabelButton
-						// 	look={'none'}
-						// 	variant={'button'}
-						// 	label={'Filter >'}
-						// 	onClick={() => {
-						// 		popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-						// 			onClickApply(
-						// 				startDate: moment.Moment | null,
-						// 				endDate: moment.Moment | null,
-						// 				adults: string,
-						// 				children: string,
-						// 				priceRangeMin: string,
-						// 				priceRangeMax: string,
-						// 				propertyTypeIds: number[],
-						// 				rateCode: string
-						// 			), : void {
-						// 				setSearchQueryObj((prev) => {
-						// 					let createSearchQueryObj: any = { ...prev };
-						// 					if (startDate !== null)
-						// 						createSearchQueryObj['startDate'] = formatFilterDateForServer(
-						// 							startDate,
-						// 							'start'
-						// 						);
-						// 					if (endDate !== null)
-						// 						createSearchQueryObj['endDate'] = formatFilterDateForServer(
-						// 							endDate,
-						// 							'end'
-						// 						);
-						// 					if (adults !== '') createSearchQueryObj['adults'] = adults;
-						// 					if (children !== '') createSearchQueryObj['children'] = children;
-						// 					if (propertyTypeIds[0] !== '')
-						// 						createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
-						// 					if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
-						// 						createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
-						// 					if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))
-						// 						createSearchQueryObj['priceRangeMax'] = +priceRangeMax;
-						// 					if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
-						// 					return createSearchQueryObj;
-						// 				});
-						// 				if (!destinationDetails) return;
-						// 				router.updateUrlParams({
-						// 					di: destinationDetails.id,
-						// 					startDate: formatFilterDateForServer(startDate, 'start'),
-						// 					endDate: formatFilterDateForServer(endDate, 'end')
-						// 				});
-						// 			},
-						// 			preventCloseByBackgroundClick: false
-						// 		});
-						// 	}}
-						// />
 						<IconLabel
 							className={'moreFiltersLink'}
 							labelName={'More Filters'}
