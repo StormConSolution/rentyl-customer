@@ -23,6 +23,15 @@ declare namespace Misc {
 		selected: boolean;
 	}
 
+	export interface OptionType {
+		value: string | number;
+		label: string | number;
+	}
+	export interface GroupType {
+		label: string;
+		options: OptionType[];
+	}
+
 	export interface ReservationContactInfoDetails {
 		contactInfo: string;
 		email: string;

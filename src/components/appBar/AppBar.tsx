@@ -25,7 +25,12 @@ const AppBar: React.FC = () => {
 
 			<Box display={'flex'} alignItems={'center'}>
 				{!size && !isRouteUnauthorized('/about-spire') && (
-					<LinkButton label={'Learn about spire loyalty'} path={'/about-spire'} look={'containedPrimary'} />
+					<LinkButton
+						yellow
+						label={'Learn about spire loyalty'}
+						path={'/about-spire'}
+						look={'containedPrimary'}
+					/>
 				)}
 				<Icon
 					iconImg={'icon-hamburger-menu'}

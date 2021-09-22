@@ -91,16 +91,16 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 							updateReviewDetails(newRating);
 						}}
 					/>
-					<LabelSelect
-						autoCalculateWidth
-						title={'Select Your Stay'}
-						onChange={(value) => {
-							let newStay = reviewDetails.get('reservationId');
-							newStay.value = value;
-							updateReviewDetails(newStay);
-						}}
-						selectOptions={renderSelectOptions()}
-					/>
+					{/*<LabelSelect*/}
+					{/*	autoCalculateWidth*/}
+					{/*	title={'Select Your Stay'}*/}
+					{/*	onChange={(value) => {*/}
+					{/*		let newStay = reviewDetails.get('reservationId');*/}
+					{/*		newStay.value = value;*/}
+					{/*		updateReviewDetails(newStay);*/}
+					{/*	}}*/}
+					{/*	selectOptions={renderSelectOptions()}*/}
+					{/*/>*/}
 					<LabelInput
 						title={''}
 						inputType={'textarea'}

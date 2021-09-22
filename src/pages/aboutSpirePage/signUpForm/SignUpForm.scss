@@ -1,0 +1,61 @@
+@import '../../../themes/themes';
+
+.rsSignUpForm {
+	background-color: theme-var($primaryBackgroundColor);
+	z-index: 3;
+	.signUpForm {
+		display: grid;
+		grid-template-columns: fit-content(200px) fit-content(200px);
+		gap: 30px;
+		padding: 50px 90px 30px;
+		.rsLabelInput {
+			&.stretchedInput {
+				grid-column: span 2;
+				.rsInput {
+					max-width: 100%;
+				}
+			}
+		}
+		.rsIconLabel {
+			margin: 5px 0;
+		}
+	}
+	.rsLabelButton {
+		margin: 0 auto;
+	}
+	.rsLabel {
+		&.caption {
+			&.small {
+				font-size: 16px;
+				margin: 15px auto 0;
+				width: fit-content;
+				span {
+					a {
+						color: theme-var($buttonLinkColor) !important;
+						text-decoration: underline !important;
+					}
+				}
+			}
+		}
+	}
+
+	.signInBox {
+		display: grid;
+		place-items: center;
+	}
+}
+.small {
+	.rsSignUpForm {
+		.signUpForm {
+			padding: 50px 20px 30px;
+		}
+	}
+
+	.rsLabel {
+		&.caption {
+			&.small {
+				margin: 15px 20px 0;
+			}
+		}
+	}
+}

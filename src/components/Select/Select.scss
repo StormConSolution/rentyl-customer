@@ -1,123 +1,123 @@
-@import '../../themes/themes';
-.rsSelect {
-	display: flex;
-	align-items: center;
-	padding: 0 10px;
-	position: relative;
-	width: 200px;
-	height: 40px;
-	border: 1px solid theme-var($greyLineColor);
-	color: theme-var($greyLineColor);
-	box-sizing: border-box;
-	font-size: 16px;
-	transition: border-color 300ms, color 300ms;
-	.placeHolder {
-		width: 100%;
-		height: 100%;
-		.primaryTextColor {
-			color: theme-var($primaryTextColor);
-		}
-		&:hover {
-			cursor: pointer;
-		}
-	}
-
-	&:hover {
-		border-color: theme-var($buttonLinkColor);
-		color: theme-var($buttonLinkColor);
-		cursor: pointer;
-		.rsIcon {
-			transition: color 300ms;
-			color: theme-var($buttonLinkColor) !important;
-		}
-	}
-
-	.rsLabel {
-		color: theme-var($primaryTextColor);
-	}
-
-	.optionList {
-		position: absolute;
-		background-color: #fcfbf8;
-		width: inherit;
-		height: 0;
-		max-height: 150px;
-		transition: height 300ms;
-		animation-duration: 200ms;
-		animation-name: fadeOut;
-		transform: translateX(-11px);
-		opacity: 0;
-		top: 100%;
-		overflow: hidden;
-		&.show {
-			padding: 10px 0;
-			box-sizing: border-box;
-			z-index: 99;
-			border: 1px solid theme-var($greyLineColor);
-			animation-name: fadeIn;
-			opacity: 1;
-			overflow: auto;
-		}
-		&::-webkit-scrollbar {
-			width: 8px;
-		}
-		&::-webkit-scrollbar-thumb {
-			background-color: theme-var($buttonLinkColor);
-			border-radius: 20px;
-			border: 3px solid #c3c3c3;
-		}
-		&::-webkit-scrollbar-track {
-			background-color: #c3c3c3;
-		}
-	}
-
-	.iconSpinUp {
-		animation-name: spinUp;
-		animation-duration: 0.4s;
-		transform: rotate(0deg);
-		margin-left: auto;
-	}
-
-	.iconSpinDown {
-		animation-name: spinDown;
-		animation-duration: 0.4s;
-		transform: rotate(-180deg);
-		margin-left: auto;
-	}
-
-	@keyframes fadeIn {
-		0% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-
-	@keyframes fadeOut {
-		0% {
-			opacity: 1;
-		}
-		100% {
-			opacity: 0;
-		}
-	}
-
-	@keyframes spinDown {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(-180deg);
-		}
-	}
-
-	@keyframes spinUp {
-		0% {
-			transform: rotate(-180deg);
-		}
-		100% {
-			transform: rotate(0deg);
-		}
-	}
-}
+//@import '../../themes/themes';
+//.rsSelect {
+//	display: flex;
+//	align-items: center;
+//	padding: 0 10px;
+//	position: relative;
+//	width: 200px;
+//	height: 40px;
+//	border: 1px solid theme-var($greyLineColor);
+//	color: theme-var($greyLineColor);
+//	box-sizing: border-box;
+//	font-size: 16px;
+//	transition: border-color 300ms, color 300ms;
+//	.placeHolder {
+//		width: 100%;
+//		height: 100%;
+//		.primaryTextColor {
+//			color: theme-var($primaryTextColor);
+//		}
+//		&:hover {
+//			cursor: pointer;
+//		}
+//	}
+//
+//	&:hover {
+//		border-color: theme-var($buttonLinkColor);
+//		color: theme-var($buttonLinkColor);
+//		cursor: pointer;
+//		.rsIcon {
+//			transition: color 300ms;
+//			color: theme-var($buttonLinkColor) !important;
+//		}
+//	}
+//
+//	.rsLabel {
+//		color: theme-var($primaryTextColor);
+//	}
+//
+//	.optionList {
+//		position: absolute;
+//		background-color: #fcfbf8;
+//		width: inherit;
+//		height: 0;
+//		max-height: 150px;
+//		transition: height 300ms;
+//		animation-duration: 200ms;
+//		animation-name: fadeOut;
+//		transform: translateX(-11px);
+//		opacity: 0;
+//		top: 100%;
+//		overflow: hidden;
+//		&.show {
+//			padding: 10px 0;
+//			box-sizing: border-box;
+//			z-index: 99;
+//			border: 1px solid theme-var($greyLineColor);
+//			animation-name: fadeIn;
+//			opacity: 1;
+//			overflow: auto;
+//		}
+//		&::-webkit-scrollbar {
+//			width: 8px;
+//		}
+//		&::-webkit-scrollbar-thumb {
+//			background-color: theme-var($buttonLinkColor);
+//			border-radius: 20px;
+//			border: 3px solid #c3c3c3;
+//		}
+//		&::-webkit-scrollbar-track {
+//			background-color: #c3c3c3;
+//		}
+//	}
+//
+//	.iconSpinUp {
+//		animation-name: spinUp;
+//		animation-duration: 0.4s;
+//		transform: rotate(0deg);
+//		margin-left: auto;
+//	}
+//
+//	.iconSpinDown {
+//		animation-name: spinDown;
+//		animation-duration: 0.4s;
+//		transform: rotate(-180deg);
+//		margin-left: auto;
+//	}
+//
+//	@keyframes fadeIn {
+//		0% {
+//			opacity: 0;
+//		}
+//		100% {
+//			opacity: 1;
+//		}
+//	}
+//
+//	@keyframes fadeOut {
+//		0% {
+//			opacity: 1;
+//		}
+//		100% {
+//			opacity: 0;
+//		}
+//	}
+//
+//	@keyframes spinDown {
+//		0% {
+//			transform: rotate(0deg);
+//		}
+//		100% {
+//			transform: rotate(-180deg);
+//		}
+//	}
+//
+//	@keyframes spinUp {
+//		0% {
+//			transform: rotate(-180deg);
+//		}
+//		100% {
+//			transform: rotate(0deg);
+//		}
+//	}
+//}

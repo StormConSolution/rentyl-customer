@@ -1,0 +1,19 @@
+@import '../../../themes/themes';
+.rsSignUpSteps {
+	display: flex;
+	.stepCircle {
+		width: 55px;
+		height: 55px;
+		border-radius: 50%;
+		border: 2px solid #fdfdfd;
+		display: grid;
+		place-items: center;
+		margin-right: 20px;
+	}
+	.rsLabel {
+		color: #fcfbf8;
+		&.h1 {
+			text-transform: uppercase;
+		}
+	}
+}

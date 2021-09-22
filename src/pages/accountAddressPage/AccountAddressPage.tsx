@@ -257,32 +257,32 @@ const AccountAddressPage: React.FC = () => {
 							/>
 						</Box>
 						<Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-end'}>
-							<LabelSelect
-								title={'State'}
-								onChange={(value) => {
-									let newStateList = [...stateList];
-									newStateList = newStateList.map((item) => {
-										return { value: item.value, text: item.text, selected: item.value === value };
-									});
-									setStateList(newStateList);
-									state = value || '';
-									setIsValidForm(isFormFilledOut());
-								}}
-								selectOptions={stateList}
-							/>
-							<LabelSelect
-								title={'Country'}
-								onChange={(value) => {
-									let newCountryList = [...countryList];
-									newCountryList = newCountryList.map((item) => {
-										return { value: item.value, text: item.text, selected: item.value === value };
-									});
-									setCountryList(newCountryList);
-									country = value || '';
-									setIsValidForm(isFormFilledOut());
-								}}
-								selectOptions={countryList}
-							/>
+							{/*<LabelSelect*/}
+							{/*	title={'State'}*/}
+							{/*	onChange={(value) => {*/}
+							{/*		let newStateList = [...stateList];*/}
+							{/*		newStateList = newStateList.map((item) => {*/}
+							{/*			return { value: item.value, text: item.text, selected: item.value === value };*/}
+							{/*		});*/}
+							{/*		setStateList(newStateList);*/}
+							{/*		state = value || '';*/}
+							{/*		setIsValidForm(isFormFilledOut());*/}
+							{/*	}}*/}
+							{/*	selectOptions={stateList}*/}
+							{/*/>*/}
+							{/*<LabelSelect*/}
+							{/*	title={'Country'}*/}
+							{/*	onChange={(value) => {*/}
+							{/*		let newCountryList = [...countryList];*/}
+							{/*		newCountryList = newCountryList.map((item) => {*/}
+							{/*			return { value: item.value, text: item.text, selected: item.value === value };*/}
+							{/*		});*/}
+							{/*		setCountryList(newCountryList);*/}
+							{/*		country = value || '';*/}
+							{/*		setIsValidForm(isFormFilledOut());*/}
+							{/*	}}*/}
+							{/*	selectOptions={countryList}*/}
+							{/*/>*/}
 						</Box>
 						<LabelCheckbox
 							value={'isDefault'}
