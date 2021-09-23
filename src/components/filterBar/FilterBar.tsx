@@ -13,6 +13,11 @@ import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
+export interface SelectOptionControls {
+	options: OptionType[];
+	control: RsFormControl;
+	updateControl: (control: RsFormControl) => void;
+}
 export interface FilterBarProps {
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
@@ -25,8 +30,9 @@ export interface FilterBarProps {
 	onChangePriceMin: (value: any) => void;
 	onChangePriceMax: (value: any) => void;
 	onChangePropertyType: (control: RsFormControl) => void;
-	adultsInitialInput?: string;
-	childrenInitialInput?: string;
+	regionSelect?: SelectOptionControls;
+	adultsInitialInput: number;
+	childrenInitialInput: number;
 	initialPriceMin?: string;
 	initialPriceMax?: string;
 	className?: string;
@@ -38,6 +44,16 @@ export interface FilterBarProps {
 const FilterBar: React.FC<FilterBarProps> = (props) => {
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
+			{props.regionSelect && (
+				<LabelSelect
+					title={'Regions'}
+					updateControl={props.regionSelect.updateControl}
+					options={props.regionSelect.options}
+					control={props.regionSelect.control}
+					isMulti
+					isSearchable
+				/>
+			)}
 			<DateRangeSelector
 				startDate={props.startDate}
 				endDate={props.endDate}
@@ -52,7 +68,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className="numberOfAdults"
 				inputType="text"
 				title="# of Adults"
-				initialValue={props.adultsInitialInput || '2'}
+				initialValue={'' + props.adultsInitialInput}
 				onChange={debounce(async (value) => {
 					if (!isNaN(parseInt(value)) && parseInt(value) < 1) {
 						value = 1;
@@ -64,7 +80,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				className="numberOfChildren"
 				inputType="text"
 				title="# of Children"
-				initialValue={props.childrenInitialInput || '0'}
+				initialValue={'' + props.childrenInitialInput}
 				onChange={debounce(async (value) => {
 					props.onChangeChildren(value);
 				}, 300)}

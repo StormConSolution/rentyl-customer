@@ -173,8 +173,8 @@ const BookingFlowAddRoomPage = () => {
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
-		adults: string,
-		children: string,
+		adults: number,
+		children: number,
 		priceRangeMin: string,
 		priceRangeMax: string,
 		propertyTypeIds: number[],
@@ -184,20 +184,16 @@ const BookingFlowAddRoomPage = () => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = parseInt(adults);
-			if (children !== '') {
-				createSearchQueryObj['children'] = parseInt(children);
-			}
+			createSearchQueryObj['adults'] = adults;
+			createSearchQueryObj['children'] = children;
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
 			}
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
 			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else {
-				delete createSearchQueryObj['propertyTypeIds'];
+			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
+				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
 			}
 			if (rateCode !== '') {
 				createSearchQueryObj['rateCode'] = rateCode;
@@ -350,12 +346,13 @@ const BookingFlowAddRoomPage = () => {
 								onClickApply: (
 									startDate: moment.Moment | null,
 									endDate: moment.Moment | null,
-									adults: string,
-									children: string,
+									adults: number,
+									children: number,
 									priceRangeMin: string,
 									priceRangeMax: string,
 									propertyTypeIds: number[],
-									rateCode: string
+									rateCode: string,
+									regionIds
 								) => {
 									popupSearch(
 										startDate,
@@ -368,10 +365,7 @@ const BookingFlowAddRoomPage = () => {
 										rateCode
 									);
 								},
-								className: 'filterPopup',
-								options: options,
-								control: propertyType.get('propertyType'),
-								onChangePropertyType: onChangePropertyType
+								className: 'filterPopup'
 							});
 						}}
 					/>
@@ -406,8 +400,8 @@ const BookingFlowAddRoomPage = () => {
 								setPropertyType(propertyType.clone().update(control));
 								updateSearchQueryObj('propertyTypeIds', control.value);
 							}}
-							adultsInitialInput={searchQueryObj.adults.toString()}
-							childrenInitialInput={searchQueryObj.children.toString()}
+							adultsInitialInput={searchQueryObj.adults}
+							childrenInitialInput={searchQueryObj.children}
 							initialPriceMax={
 								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 							}
