@@ -44,10 +44,18 @@ import IconLabel from '../../components/iconLabel/IconLabel';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
-	const params = router.getPageUrlParams<{ destinationId: number; startDate?: string; endDate?: string }>([
-		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
+	const params = router.getPageUrlParams<{
+		destinationId: number;
+		startDate?: string;
+		endDate?: string;
+		adults: number;
+		children: number;
+	}>([
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }, //need to coordinate with NDM on getting the correct destination from them to us
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
+		{ key: 'adults', default: 2, type: 'integer', alias: 'adults' },
+		{ key: 'children', default: 2, type: 'integer', alias: 'children' }
 	]);
 	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLElement>(null);
@@ -74,8 +82,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		destinationId: params.destinationId,
 		startDate: initialStartDate.format('YYYY-MM-DD'),
 		endDate: initialEndDate.format('YYYY-MM-DD'),
-		adults: 2,
-		children: 0,
+		adults: params.adults || 2,
+		children: params.adults || 0,
 		pagination: { page: 1, perPage: 5 }
 	});
 	const [options, setOptions] = useState<OptionType[]>([]);
