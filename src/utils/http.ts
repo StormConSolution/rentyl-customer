@@ -1,5 +1,4 @@
 import HttpClient from '@bit/redsky.framework.rs.http';
-import packageJson from '../../package.json';
 import { WebUtils } from './utils';
 
 export enum HttpStatusCode {
@@ -17,7 +16,7 @@ export enum HttpStatusCode {
 }
 
 function getCompanyId() {
-	let companyId: number;
+	let companyId: number | undefined | null;
 	let urlParams = new URLSearchParams(window.location.search);
 	let queryCompanyId = urlParams.get('company_id');
 	if (queryCompanyId) {
@@ -25,9 +24,6 @@ function getCompanyId() {
 		sessionStorage['company_id'] = companyId;
 	} else if (sessionStorage['company_id']) {
 		companyId = parseInt(sessionStorage['company_id']);
-	} else {
-		console.error('Missing company ID when in localhost');
-		throw new Error('Missing company ID when in localhost');
 	}
 	return companyId;
 }
@@ -40,6 +36,7 @@ let headers: any = {
 };
 
 if (WebUtils.isLocalHost()) headers['company-id'] = getCompanyId();
+if (headers['company-id'] === null || headers['company-id'] === undefined) delete headers['company-id'];
 
 const http = new HttpClient({
 	baseURL: '/api/v1',
