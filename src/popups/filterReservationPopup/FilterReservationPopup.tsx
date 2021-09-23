@@ -114,10 +114,10 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							title={'Property Type'}
 							control={props.control}
 							updateControl={(control) => {
-								setPropertyTypeIds(control.value);
+								setPropertyTypeIds(control.value as number[]);
 								props.onChangePropertyType(control);
 							}}
-							selectOptions={props.options}
+							options={props.options}
 							isMulti={true}
 						/>
 						<LabelInput

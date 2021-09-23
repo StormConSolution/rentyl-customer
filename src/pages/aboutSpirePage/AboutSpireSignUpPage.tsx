@@ -1,11 +1,8 @@
 import * as React from 'react';
-import './AboutSpirePage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import './AboutSpireSignUpPage.scss';
+import { Box, Link, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
-import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelButton from '../../components/labelButton/LabelButton';
-import router from '../../utils/router';
 import InfoCard from '../../components/infoCard/InfoCard';
 import LabelLink from '../../components/labelLink/LabelLink';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
@@ -19,8 +16,10 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import promotionWheelData, { IPromotionWheel } from './PromotionWheelData';
 import LinkButton from '../../components/linkButton/LinkButton';
+import SignUpSteps from './signUpSteps/SignUpSteps';
+import SignUpForm from './signUpForm/SignUpForm';
 
-const AboutSpirePage: React.FC = () => {
+const AboutSpireSignUpPage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -89,43 +88,51 @@ const AboutSpirePage: React.FC = () => {
 	}
 
 	return (
-		<Page className={'rsAboutSpirePage'}>
+		<Page className={'rsAboutSpireSignUpPage'}>
+			<HeroImage
+				image={
+					'https://image.redskytech.io/AboutSpireSignUp/Mask_Group_8_abAPMoIhd.jpg?updatedAt=1632324815926&tr=w-1920'
+				}
+				height={'100%'}
+				mobileHeight={'100%'}
+			>
+				<Box className={'columnOne'}>
+					<Label variant={'h1'} mb={25}>
+						Sign up with Spire today
+						<br />
+						<span>It's as easy as 1,2,3</span>
+					</Label>
+					<SignUpSteps
+						stepNumber={1}
+						title={'Earn'}
+						description={
+							'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temporinvidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et'
+						}
+					/>
+					<SignUpSteps
+						stepNumber={2}
+						title={'Explore'}
+						description={
+							'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temporinvidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et'
+						}
+					/>
+					<SignUpSteps
+						stepNumber={3}
+						title={'Redeem'}
+						description={
+							'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temporinvidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et'
+						}
+					/>
+					<LinkButton
+						yellow
+						look={'containedPrimary'}
+						label={'Features and benefits'}
+						path={'/features-and-benefits'}
+					/>
+				</Box>
+				{!user && <SignUpForm />}
+			</HeroImage>
 			<div className={'rs-page-content-wrapper'}>
-				<HeroImage
-					image={require('../../images/aboutSpirePage/family-hugging.png')}
-					height={'630px'}
-					mobileHeight={'430px'}
-				>
-					<Paper boxShadow width={'536px'} padding={'50px'}>
-						<h1>Spire Loyalty</h1>
-						<Label variant={'body2'} mb={'5px'}>
-							Spire Loyalty is the premier loyalty platform for real estate, hospitality and every day
-							purchases. We reward the way you live, work and play.
-						</Label>
-						<Label variant={'body2'} mb={'5px'}>
-							With Spire Loyalty you’re rewarded for a broad base of transactions. You have the ability to
-							earn points for life, purchases like buying a home or renting an apartment, and for
-							purchasing meals at your favorite restaurants.
-						</Label>
-						<Label variant={'body2'} mb={'20px'}>
-							Welcome to Spire - we look forward to welcoming you with rewards.
-						</Label>
-						<Box display={'flex'} justifyContent={'space-between'} flexWrap={'wrap'}>
-							<LinkButton
-								look={'containedPrimary'}
-								label={user ? 'Browse Destinations' : 'Sign up for spire'}
-								path={user ? '/reservation/availability' : '/signup'}
-							/>
-							<LinkButton
-								look={'containedSecondary'}
-								label={'Features and benefits'}
-								path={'/features-and-benefits'}
-							/>
-						</Box>
-					</Paper>
-					<div className={'tanBox'} />
-				</HeroImage>
-
 				<Box className={'sectionOne'} mb={120}>
 					<img src={require('../../images/aboutSpirePage/key-chain.png')} alt={'Key Chain'} />
 					<Box className={'textBox'}>
@@ -309,4 +316,4 @@ const AboutSpirePage: React.FC = () => {
 	);
 };
 
-export default AboutSpirePage;
+export default AboutSpireSignUpPage;

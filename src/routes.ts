@@ -2,7 +2,6 @@ import { RouteDetails } from '@bit/redsky.framework.rs.996';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
-import SignUpPage from './pages/signUpPage/SignUpPage';
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage';
 import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
@@ -16,7 +15,7 @@ import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
 import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
 import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
 import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
-import AboutSpirePage from './pages/aboutSpirePage/AboutSpirePage';
+import AboutSpireSignUpPage from './pages/aboutSpirePage/AboutSpireSignUpPage';
 import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
 import SuccessPage from './pages/successPage/SuccessPage';
 import ExistingItineraryPage from './pages/existingItineraryPage/ExistingItineraryPage';
@@ -85,7 +84,7 @@ export const routes: RouteDetails[] = [
 	},
 	{
 		path: '/signup',
-		page: SignUpPage,
+		page: AboutSpireSignUpPage,
 		routeGuard: verifyRoute
 	},
 	{
@@ -234,7 +233,7 @@ export const routes: RouteDetails[] = [
 	},
 	{
 		path: '/about-spire',
-		page: AboutSpirePage,
+		page: AboutSpireSignUpPage,
 		routeGuard: verifyRoute
 	},
 	{

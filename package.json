@@ -6,7 +6,7 @@
 	"private": true,
 	"dependencies": {
 		"@babel/plugin-syntax-jsx": "^7.12.1",
-		"@babel/preset-typescript": "7.12.7",
+		"@babel/preset-typescript": "^7.12.7",
 		"@bit/redsky.framework.rs.996": "0.0.36",
 		"@bit/redsky.framework.rs.accordion": "0.0.30",
 		"@bit/redsky.framework.rs.avatar": "0.0.6",

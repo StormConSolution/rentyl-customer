@@ -97,7 +97,7 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 						title={'Select Your Stay'}
 						control={reviewDetails.get('reservationId')}
 						updateControl={updateReviewDetails}
-						selectOptions={renderSelectOptions()}
+						options={renderSelectOptions()}
 					/>
 					<LabelInput
 						title={''}

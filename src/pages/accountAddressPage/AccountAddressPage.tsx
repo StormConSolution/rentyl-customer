@@ -250,18 +250,14 @@ const AccountAddressPage: React.FC = () => {
 						<Box display={'flex'} justifyContent={'space-between'}>
 							<LabelSelect
 								title={'State'}
-								updateControl={(control) => {
-									updateNewAddressObj(control);
-								}}
-								selectOptions={stateList}
+								updateControl={updateNewAddressObj}
+								options={stateList}
 								control={newAddressObj.get('state')}
 							/>
 							<LabelSelect
 								title={'Country'}
-								updateControl={(control) => {
-									updateNewAddressObj(control);
-								}}
-								selectOptions={countryList}
+								updateControl={updateNewAddressObj}
+								options={countryList}
 								control={newAddressObj.get('country')}
 							/>
 						</Box>
