@@ -42,41 +42,13 @@ export interface FilterBarProps {
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertyType, setPropertyType] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', '', [])])
-	);
-
-	useEffect(() => {
-		async function getAllFilterOptions() {
-			try {
-				let propertyTypes = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(propertyTypes);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
-		}
-		getAllFilterOptions().catch(console.error);
-	}, []);
-
-	function formatOptions(options: Api.Destination.Res.PropertyType[] | Api.Region.Res.Get[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
-
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
 			{props.regionSelect && (
 				<LabelSelect
 					title={'Regions'}
 					updateControl={props.regionSelect.updateControl}
-					selectOptions={props.regionSelect.options}
+					options={props.regionSelect.options}
 					control={props.regionSelect.control}
 					isMulti
 					isSearchable

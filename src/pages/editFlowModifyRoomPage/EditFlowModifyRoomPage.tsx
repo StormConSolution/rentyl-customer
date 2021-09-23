@@ -301,10 +301,6 @@ const EditFlowModifyRoomPage = () => {
 		return costPerNightAvg / Object.keys(reservation.priceDetail.accommodationDailyCostsInCents).length;
 	}
 
-	function onChangePropertyType(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return (
 		<Page className={'rsEditFlowModifyRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -392,10 +388,7 @@ const EditFlowModifyRoomPage = () => {
 										rateCode
 									);
 								},
-								className: 'filterPopup',
-								options: options,
-								control: propertyType.get('propertyType'),
-								onChangePropertyType: onChangePropertyType
+								className: 'filterPopup'
 							});
 						}}
 					/>

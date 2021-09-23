@@ -365,10 +365,7 @@ const BookingFlowAddRoomPage = () => {
 										rateCode
 									);
 								},
-								className: 'filterPopup',
-								options: options,
-								control: propertyType.get('propertyType'),
-								onChangePropertyType: onChangePropertyType
+								className: 'filterPopup'
 							});
 						}}
 					/>

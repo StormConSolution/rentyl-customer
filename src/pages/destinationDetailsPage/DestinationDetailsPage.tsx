@@ -359,10 +359,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		});
 	}
 
-	function onChangePropertyType(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -667,10 +663,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 											endDate: formatFilterDateForServer(endDate, 'end')
 										});
 									},
-									className: 'filterPopup',
-									options: options,
-									control: propertyType.get('propertyType'),
-									onChangePropertyType: onChangePropertyType
+									className: 'filterPopup'
 								});
 							}}
 						/>

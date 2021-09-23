@@ -365,10 +365,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		return [];
 	}
 
-	function onChangeControl(control: RsFormControl) {
-		setFilterForm(filterForm.clone().update(control));
-	}
-
 	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -490,10 +486,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 											regionIds
 										);
 									},
-									className: 'filterPopup',
-									options: propertyTypeOptions,
-									control: filterForm.get('propertyType'),
-									onChangePropertyType: onChangeControl
+									className: 'filterPopup'
 								});
 							}}
 						/>

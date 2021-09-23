@@ -31,9 +31,6 @@ export interface FilterReservationPopupProps extends PopupProps {
 		rateCode: string,
 		regionIds?: number[]
 	) => void;
-	control: RsFormControl;
-	options: OptionType[];
-	onChangePropertyType: (control: RsFormControl) => void;
 	className?: string;
 }
 
@@ -53,7 +50,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	}
 	const [rateCode, setRateCode] = useState<string>('');
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('regions', [], []), new RsFormControl('propertyType', [], [])])
+		new RsFormGroup([new RsFormControl('regionIds', [], []), new RsFormControl('propertyTypeIds', [], [])])
 	);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
@@ -91,11 +88,11 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 					{props.searchRegion && (
 						<LabelSelect
 							title={'Region'}
-							control={filterForm.get('regions')}
+							control={filterForm.get('regionIds')}
 							updateControl={(control) => {
 								setFilterForm(filterForm.clone().update(control));
 							}}
-							selectOptions={regionOptions}
+							options={regionOptions}
 							isMulti
 							isSearchable
 						/>
@@ -159,11 +156,11 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						</div>
 						<LabelSelect
 							title={'Property Type'}
-							control={filterForm.get('propertyType')}
+							control={filterForm.get('propertyTypeIds')}
 							updateControl={(control) => {
 								setFilterForm(filterForm.clone().update(control));
 							}}
-							options={props.options}
+							options={propertyTypeOptions}
 							isMulti={true}
 						/>
 						<LabelInput
@@ -199,9 +196,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										filterForm.get('propertyType').value as number[],
+										filterForm.get('propertyTypeIds').value as number[],
 										rateCode,
-										filterForm.get('regions').value as number[]
+										filterForm.get('regionIds').value as number[]
 									);
 									popupController.close(FilterReservationPopup);
 								}}
