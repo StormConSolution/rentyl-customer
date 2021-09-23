@@ -31,7 +31,6 @@ import LoginOrCreateAccountPopup, {
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import ComparisonService from '../../services/comparison/comparison.service';
-import LabelButton from '../../components/labelButton/LabelButton';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -39,6 +38,9 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
+import { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import IconLabel from '../../components/iconLabel/IconLabel';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -76,12 +78,18 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		children: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
+	const [options, setOptions] = useState<OptionType[]>([]);
+	const [propertyType, setPropertyType] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('propertyType', [], [])])
+	);
 
 	useEffect(() => {
 		async function getDestinationDetails(id: number) {
 			try {
 				let dest = await destinationService.getDestinationDetails(id);
-				if (dest) setDestinationDetails(dest);
+				setDestinationDetails(dest);
+				let newOptions = formatOptions(dest.propertyTypes);
+				setOptions(newOptions);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
@@ -89,7 +97,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				);
 			}
 		}
-
 		getDestinationDetails(params.destinationId).catch(console.error);
 	}, []);
 
@@ -113,9 +120,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				console.error(e);
 			}
 		}
-
 		getAvailableStays().catch(console.error);
 	}, [searchQueryObj]);
+
+	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
+		return options.map((value) => {
+			return { value: value.id, label: value.name };
+		});
+	}
 
 	let imageIndex = 0;
 
@@ -215,7 +227,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value[0] === '') delete createSearchQueryObj[key];
+			if (value === '' || value === undefined || value.length <= 0) delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
@@ -309,6 +321,46 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				/>
 			);
 		});
+	}
+
+	function popupSearch(
+		checkinDate: moment.Moment | null,
+		checkoutDate: moment.Moment | null,
+		adults: string,
+		children: string,
+		priceRangeMin: string,
+		priceRangeMax: string,
+		propertyTypeIds: number[],
+		rateCode: string
+	) {
+		setSearchQueryObj((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
+			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
+			createSearchQueryObj['adults'] = parseInt(adults);
+			if (children !== '') {
+				createSearchQueryObj['children'] = parseInt(children);
+			}
+			if (priceRangeMax !== '') {
+				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
+			}
+			if (priceRangeMax !== '') {
+				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			}
+			if (propertyTypeIds.length >= 1) {
+				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			} else {
+				delete createSearchQueryObj['propertyTypeIds'];
+			}
+			if (rateCode !== '') {
+				createSearchQueryObj['rateCode'] = rateCode;
+			}
+			return createSearchQueryObj;
+		});
+	}
+
+	function onChangePropertyType(control: RsFormControl) {
+		setPropertyType(propertyType.clone().update(control));
 	}
 
 	return !destinationDetails ? (
@@ -535,6 +587,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
+									setPropertyType(propertyType.clone().update(control));
 									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
 								adultsInitialInput={searchQueryObj.adults}
@@ -545,6 +598,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								initialPriceMin={
 									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 								}
+								options={options}
+								control={propertyType.get('propertyType')}
 							/>
 							<Accordion
 								hideHoverEffect
@@ -563,22 +618,25 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							/>
 						</>
 					) : (
-						<LabelButton
-							look={'none'}
-							variant={'button'}
-							label={'Filter >'}
+						<IconLabel
+							className={'moreFiltersLink'}
+							labelName={'More Filters'}
+							iconImg={'icon-chevron-right'}
+							iconPosition={'right'}
+							iconSize={8}
+							labelVariant={'caption'}
 							onClick={() => {
 								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									onClickApply(
+									onClickApply: (
 										startDate: moment.Moment | null,
 										endDate: moment.Moment | null,
 										adults: number,
 										children: number,
 										priceRangeMin: string,
 										priceRangeMax: string,
-										propertyTypeIds: string[] | number[],
+										propertyTypeIds: number[],
 										rateCode: string
-									): void {
+									): void => {
 										setSearchQueryObj((prev) => {
 											let createSearchQueryObj: any = { ...prev };
 											if (startDate !== null)
@@ -609,7 +667,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 											endDate: formatFilterDateForServer(endDate, 'end')
 										});
 									},
-									preventCloseByBackgroundClick: false
+									className: 'filterPopup',
+									options: options,
+									control: propertyType.get('propertyType'),
+									onChangePropertyType: onChangePropertyType
 								});
 							}}
 						/>

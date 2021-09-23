@@ -22,7 +22,6 @@ interface AccommodationSearchResultCardResponsiveProps {
 	ratePerNightInCents: number;
 	pointsRatePerNight: number;
 	pointsEarnable: number;
-	// starRating: Rating;
 	roomStats: AccommodationStat[];
 	carouselImagePaths: string[];
 	amenityIconNames: string[];

@@ -35,20 +35,30 @@ import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
+	const params = router.getPageUrlParams<{ startDate: string; endDate: string }>([
+		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
+	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const regionService = serviceFactory.get<RegionService>('RegionService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
-	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
+	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string>('');
+	const [rateCode, setRateCode] = useState<string>('');
+	const [validCode, setValidCode] = useState<boolean>(true);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
-	const [filterForm, setFilterForm] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('regions', [], [])]));
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
+	const [filterForm, setFilterForm] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('regions', [], []), new RsFormControl('propertyType', [], [])])
+	);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
@@ -56,14 +66,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		childCount: 0,
 		pagination: { page: 1, perPage: 5 }
 	});
-	const [errorMessage, setErrorMessage] = useState<string>('');
-	const [rateCode, setRateCode] = useState<string>('');
-	const [validCode, setValidCode] = useState<boolean>(true);
-
-	const params = router.getPageUrlParams<{ startDate: string; endDate: string }>([
-		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
-	]);
 
 	useEffect(() => {
 		if (!params.startDate && !params.endDate) return;
@@ -76,6 +78,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 			setRegionOptions(
 				regions.map((region) => {
 					return { value: region.id, label: region.name };
+				})
+			);
+			let propertyTypes = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(
+				propertyTypes.map((propertyType) => {
+					return { value: propertyType.id, label: propertyType.name };
 				})
 			);
 		}
@@ -280,57 +288,61 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 	function getSummaryTabs(destination: Api.Destination.Res.Availability): DestinationSummaryTab[] {
 		let propertyTypes = [{ name: 'All Available', id: 0 }, ...destination.propertyTypes];
-		let summaryTabs: DestinationSummaryTab[] = [{ label: 'Overview', content: { text: destination.description } }];
-		propertyTypes.map((propertyType) => {
-			let accommodationList = handleAccommodationList(destination.accommodations, propertyType);
-			summaryTabs.push({
-				label: propertyType.name,
-				content: {
-					accommodationType: 'Available',
-					accommodations: accommodationList,
-					onDetailsClick: (accommodationId: ReactText) => {
-						let dates =
-							!!searchQueryObj.startDate && !!searchQueryObj.endDate
-								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
-								: '';
-						router.navigate(`/accommodation/details?ai=${accommodationId}${dates}`).catch(console.error);
-					},
-					onBookNowClick: (accommodationId: number) => {
-						let data: any = { ...searchQueryObj };
-						let newRoom: Misc.StayParams = {
-							uuid: Date.now(),
-							adults: data.adultCount,
-							children: data.childCount,
-							accommodationId: accommodationId,
-							arrivalDate: data.startDate,
-							departureDate: data.endDate,
-							packages: []
-						};
-						if (data.rateCode) newRoom.rateCode = data.rateCode;
-						data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
-						if (!user) {
-							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
-								query: data
+		const summaryTabs = propertyTypes.reduce(
+			(acc: DestinationSummaryTab[], propertyType) => {
+				let accommodationList = handleAccommodationList(destination.accommodations, propertyType);
+				let destinationSummaryTab: DestinationSummaryTab = {
+					label: propertyType.name,
+					content: {
+						accommodationType: 'Available',
+						accommodations: accommodationList,
+						onDetailsClick: (accommodationId: ReactText) => {
+							let dates =
+								!!searchQueryObj.startDate && !!searchQueryObj.endDate
+									? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+									: '';
+							router
+								.navigate(`/accommodation/details?ai=${accommodationId}${dates}`)
+								.catch(console.error);
+						},
+						onBookNowClick: (accommodationId: number) => {
+							let data: any = { ...searchQueryObj };
+							let newRoom: Misc.StayParams = {
+								uuid: Date.now(),
+								adults: data.adultCount,
+								children: data.childCount,
+								accommodationId: accommodationId,
+								arrivalDate: data.startDate,
+								departureDate: data.endDate,
+								packages: []
+							};
+							if (data.rateCode) newRoom.rateCode = data.rateCode;
+							data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
+							if (!user) {
+								popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+									query: data
+								});
+							} else {
+								router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+							}
+						},
+						onAddCompareClick: (accommodationId: ReactText) => {
+							let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
+							let selectedRoom = roomTypes.filter((value) => value.selected);
+							comparisonService.addToComparison(recoilComparisonState, {
+								destinationId: destination.id,
+								logo: destination.logoUrl,
+								title: destination.name,
+								roomTypes: roomTypes,
+								selectedRoom: +selectedRoom[0].value
 							});
-						} else {
-							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
-					},
-					onAddCompareClick: (accommodationId: ReactText) => {
-						let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
-						let selectedRoom = roomTypes.filter((value) => value.selected);
-						comparisonService.addToComparison(recoilComparisonState, {
-							destinationId: destination.id,
-							logo: destination.logoUrl,
-							title: destination.name,
-							roomTypes: roomTypes,
-							selectedRoom: +selectedRoom[0].value
-						});
 					}
-				}
-			});
-			return summaryTabs;
-		});
+				};
+				return [...acc, destinationSummaryTab];
+			},
+			[{ label: 'Overview', content: { text: destination.description } }]
+		);
 		return summaryTabs;
 	}
 
@@ -338,15 +350,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 		accommodationsList: Api.Destination.Res.Accommodation[],
 		propertyType: Api.Destination.Res.PropertyType
 	) {
-		let accommodationsByPropertyType: Api.Destination.Res.Accommodation[] = [];
-		accommodationsList.map((accommodation) => {
-			if (propertyType.id === 0) {
-				accommodationsByPropertyType = accommodationsList;
-			} else if (propertyType.id === accommodation.propertyTypeId) {
-				accommodationsByPropertyType.push(accommodation);
-			}
-			return accommodationsByPropertyType;
-		});
+		const accommodationsByPropertyType = accommodationsList.filter(
+			(accommodation) => propertyType.id === 0 || accommodation.propertyTypeId === propertyType.id
+		);
 		return accommodationsByPropertyType;
 	}
 
@@ -357,6 +363,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 			});
 		}
 		return [];
+	}
+
+	function onChangeControl(control: RsFormControl) {
+		setFilterForm(filterForm.clone().update(control));
 	}
 
 	return (
@@ -414,6 +424,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
+									setFilterForm(filterForm.clone().update(control));
 									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
 								adultsInitialInput={searchQueryObj.adultCount}
@@ -424,6 +435,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 								initialPriceMin={
 									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 								}
+								options={propertyTypeOptions}
+								control={filterForm.get('propertyType')}
 							/>
 							<Label variant={'body1'} color={'red'}>
 								{errorMessage}
@@ -477,7 +490,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 											regionIds
 										);
 									},
-									className: 'filterPopup'
+									className: 'filterPopup',
+									options: propertyTypeOptions,
+									control: filterForm.get('propertyType'),
+									onChangePropertyType: onChangeControl
 								});
 							}}
 						/>

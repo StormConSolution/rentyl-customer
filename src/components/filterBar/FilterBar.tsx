@@ -37,6 +37,8 @@ export interface FilterBarProps {
 	initialPriceMax?: string;
 	className?: string;
 	display?: string;
+	control: RsFormControl;
+	options: OptionType[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
@@ -136,12 +138,11 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			<LabelSelect
 				className={props.display}
 				title="Property Type"
-				control={propertyType.get('propertyType')}
+				control={props.control}
 				updateControl={(control) => {
-					setPropertyType(propertyType.clone().update(control));
 					props.onChangePropertyType(control);
 				}}
-				selectOptions={options}
+				selectOptions={props.options}
 				isMulti={true}
 			/>
 		</Box>

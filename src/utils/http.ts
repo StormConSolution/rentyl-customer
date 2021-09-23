@@ -1,5 +1,4 @@
 import HttpClient from '@bit/redsky.framework.rs.http';
-import packageJson from '../../package.json';
 import { WebUtils } from './utils';
 
 export enum HttpStatusCode {

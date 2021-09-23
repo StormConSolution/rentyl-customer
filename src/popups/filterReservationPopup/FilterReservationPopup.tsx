@@ -11,12 +11,12 @@ import { useEffect, useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
-import serviceFactory from '../../services/serviceFactory';
-import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import RegionService from '../../services/region/region.service';
+import DestinationService from '../../services/destination/destination.service';
+import serviceFactory from '../../services/serviceFactory';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -31,6 +31,9 @@ export interface FilterReservationPopupProps extends PopupProps {
 		rateCode: string,
 		regionIds?: number[]
 	) => void;
+	control: RsFormControl;
+	options: OptionType[];
+	onChangePropertyType: (control: RsFormControl) => void;
 	className?: string;
 }
 
