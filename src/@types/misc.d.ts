@@ -23,6 +23,15 @@ declare namespace Misc {
 		selected: boolean;
 	}
 
+	export interface OptionType {
+		value: string | number;
+		label: string | number;
+	}
+	export interface GroupType {
+		label: string;
+		options: OptionType[];
+	}
+
 	export interface ReservationContactInfoDetails {
 		contactInfo: string;
 		email: string;
@@ -58,5 +67,18 @@ declare namespace Misc {
 		route: string;
 		isSectionHeader: boolean;
 		isSignedIn: boolean;
+	}
+
+	export interface ComparisonCardInfo {
+		destinationId: number;
+		logo: string;
+		title: string;
+		roomTypes: { value: number | string; text: number | string; selected: boolean }[];
+		selectedRoom: number;
+	}
+
+	interface IBaseCountry {
+		name: string;
+		isoCode: string;
 	}
 }

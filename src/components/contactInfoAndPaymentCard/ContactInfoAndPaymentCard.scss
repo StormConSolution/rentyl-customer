@@ -3,7 +3,8 @@
 .rsContactInfoAndPaymentCard {
 	background-color: theme-var($primaryBackgroundColor);
 	.contactInfo {
-		grid-template-columns: 50% 50%;
+		grid-template-columns: fit-content(200px) fit-content(200px);
+		column-gap: 150px;
 		row-gap: 20px;
 		width: 100%;
 	}
@@ -23,6 +24,29 @@
 				max-width: 200px;
 			}
 		}
+		&.stretchedInput {
+			grid-column: span 2;
+			.rsInput {
+				max-width: 100%;
+			}
+		}
+	}
+
+	.rsLabelSelect {
+		min-width: 200px;
+		&.stretchedInput {
+			.rsSelect {
+				max-width: 540px;
+			}
+		}
+	}
+
+	.useDifferentAddressText {
+		span {
+			color: theme-var($buttonLinkColor);
+			text-decoration: underline;
+			cursor: pointer;
+		}
 	}
 
 	#payment-form {
@@ -31,7 +55,8 @@
 		}
 		.creditCardInfo {
 			display: grid;
-			grid-template-columns: auto auto;
+			grid-template-columns: fit-content(200px) fit-content(200px);
+			column-gap: 150px;
 			row-gap: 10px;
 			.creditCardExpInput {
 				input {
@@ -44,7 +69,9 @@
 		}
 
 		.rsSelect {
+			max-width: 540px;
 			margin-bottom: 15px;
+			max-width: 325px;
 		}
 		.rsLabelCheckbox {
 			height: 100%;
@@ -71,8 +98,24 @@
 			grid-template-columns: auto;
 			gap: 5px;
 			.rsLabelInput {
-				max-width: 100%;
-				width: 100%;
+				.rsInput {
+					max-width: 100%;
+					width: 100%;
+				}
+
+				&.stretchedInput {
+					grid-column: span 1;
+
+					.rsInput {
+						max-width: 100%;
+					}
+				}
+			}
+
+			.rsLabelSelect {
+				&.stretchedInput {
+					grid-column: span 1;
+				}
 			}
 		}
 		#payment-form {
@@ -88,7 +131,8 @@
 				}
 			}
 		}
-		.rsLabelInput {
+		.rsLabelInput,
+		.rsLabelSelect {
 			margin-bottom: 15px;
 		}
 	}

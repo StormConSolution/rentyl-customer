@@ -23,11 +23,11 @@ import EditAccommodationPopup, {
 } from '../../popups/editAccommodationPopup/EditAccommodationPopup';
 import ConfirmOptionPopup, { ConfirmOptionPopupProps } from '../../popups/confirmOptionPopup/ConfirmOptionPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState from '../../state/globalState';
 import ContactInfoAndPaymentCard from '../../components/contactInfoAndPaymentCard/ContactInfoAndPaymentCard';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
+import globalState from '../../state/globalState';
 
 let existingCardId = 0;
 
@@ -50,6 +50,9 @@ const BookingFlowCheckoutPage = () => {
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
+	const [addressObj, setAddressObj] = useState<
+		Omit<Api.UserAddress.Req.Create, 'name' | 'userId'> | { addressId: number }
+	>();
 	const [grandTotal, setGrandTotal] = useState<number>(0);
 
 	const [verifiedAccommodations, setVerifiedAccommodations] = useRecoilState<{
@@ -123,11 +126,17 @@ const BookingFlowCheckoutPage = () => {
 					};
 					stays.push(accommodation);
 				});
-				let data = {
+				let data: Api.Reservation.Req.Itinerary.Create = {
 					paymentMethodId: 0,
 					destinationId: destinationId,
 					stays
 				};
+				if (addressObj && isExistingAddress(addressObj)) {
+					data.existingAddressId = addressObj.addressId;
+				} else if (addressObj) {
+					data.newAddress = addressObj;
+					data.newAddress.zip = +data.newAddress.zip;
+				}
 				try {
 					const result = await paymentService.addPaymentMethod({
 						cardToken: token,
@@ -163,9 +172,9 @@ const BookingFlowCheckoutPage = () => {
 				updateHasEnoughPoints = 0 < user.availablePoints;
 				setHasEnoughPoints(updateHasEnoughPoints);
 			}
-			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints);
+			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj);
 		} else {
-			setIsDisabled(!hasAgreedToTerms || !isFormValid);
+			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj);
 		}
 	}, [hasAgreedToTerms, isFormValid, usePoints]);
 
@@ -268,6 +277,12 @@ const BookingFlowCheckoutPage = () => {
 				destinationId: destinationId,
 				stays
 			};
+			if (addressObj && isExistingAddress(addressObj)) {
+				data.existingAddressId = addressObj.addressId;
+			} else if (addressObj) {
+				data.newAddress = addressObj;
+				data.newAddress.zip = +data.newAddress.zip;
+			}
 			try {
 				let res = await reservationService.createItinerary(data);
 				if (res) popupController.close(SpinningLoaderPopup);
@@ -417,6 +432,14 @@ const BookingFlowCheckoutPage = () => {
 		);
 	}
 
+	function isExistingAddress(
+		value:
+			| Omit<Api.UserAddress.Req.Create, 'id' | 'address2' | 'isDefault' | 'name' | 'type'>
+			| { addressId: number }
+	): value is { addressId: number } {
+		return value.hasOwnProperty('addressId');
+	}
+
 	return !ObjectUtils.isArrayWithData(stayParams) ? (
 		<LoadingPage />
 	) : (
@@ -442,6 +465,13 @@ const BookingFlowCheckoutPage = () => {
 								setAdditionalDetails(value.details || '');
 								delete value['details'];
 								setGuestInfo(value);
+							}}
+							onAddressChange={(value) => {
+								if (isExistingAddress(value)) {
+									setAddressObj(value);
+								} else {
+									setAddressObj({ ...value, isDefault: 1, type: 'BOTH' });
+								}
 							}}
 							onCreditCardChange={(value) => {
 								let newValue: any = {

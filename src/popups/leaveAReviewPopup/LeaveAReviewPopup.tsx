@@ -19,7 +19,10 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 export interface LeaveAReviewPopupProps extends PopupProps {
 	destinationName: string;
 	destinationLogo: string;
-	stays: { id: number; name: string }[];
+	stays: {
+		id: string | number;
+		name: string | number;
+	}[];
 }
 
 const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
@@ -41,8 +44,7 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 
 	function renderSelectOptions() {
 		return props.stays.map((item) => {
-			let selectedStay = reviewDetails.get('reservationId').value === item.id;
-			return { value: item.id, text: item.name, selected: selectedStay } as Misc.SelectOptions;
+			return { value: item.id, label: item.name };
 		});
 	}
 
@@ -92,14 +94,10 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 						}}
 					/>
 					<LabelSelect
-						autoCalculateWidth
 						title={'Select Your Stay'}
-						onChange={(value) => {
-							let newStay = reviewDetails.get('reservationId');
-							newStay.value = value;
-							updateReviewDetails(newStay);
-						}}
-						selectOptions={renderSelectOptions()}
+						control={reviewDetails.get('reservationId')}
+						updateControl={updateReviewDetails}
+						options={renderSelectOptions()}
 					/>
 					<LabelInput
 						title={''}

@@ -3,7 +3,6 @@ import './RewardItemPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import FeaturedCategoryCard from './featuredCategoryCard/FeaturedCategoryCard';
-import { SelectOptions } from '../../components/Select/Select';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
 import LabelInput from '../../components/labelInput/LabelInput';
 import LabelButton from '../../components/labelButton/LabelButton';
@@ -33,8 +32,8 @@ const RewardItemPage: React.FC = () => {
 	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
 	const [featuredCategory, setFeaturedCategory] = useState<Misc.FeaturedCategory[]>();
 	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
-	const [categorySelectList, setCategorySelectList] = useState<SelectOptions[]>([]);
-	const [destinationSelectList, setDestinationSelectList] = useState<SelectOptions[]>([]);
+	const [categorySelectList, setCategorySelectList] = useState<Misc.SelectOptions[]>([]);
+	const [destinationSelectList, setDestinationSelectList] = useState<Misc.SelectOptions[]>([]);
 	const [rewardList, setRewardList] = useState<Api.Reward.Res.Get[]>([]);
 	const [pointCostMin, setPointCostMin] = useState<number>();
 	const [pointCostMax, setPointCostMax] = useState<number>();
@@ -183,7 +182,7 @@ const RewardItemPage: React.FC = () => {
 		return filter;
 	}
 
-	function getSelectedIds(options: SelectOptions[]): (string | number)[] {
+	function getSelectedIds(options: Misc.SelectOptions[]): (string | number)[] {
 		return options
 			.filter((option) => {
 				return option.selected;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './ReservationCardResponsive.scss';
+import './ItineraryCardResponsive.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { useEffect, useState } from 'react';
 import Carousel from '../../carousel/Carousel';
@@ -9,7 +9,7 @@ import Paper from '../../paper/Paper';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import LabelLink from '../../labelLink/LabelLink';
 
-interface ReservationCardResponsiveProps {
+interface ItineraryCardResponsiveProps {
 	imgPaths: string[];
 	logo: string;
 	title: string;
@@ -26,7 +26,7 @@ interface ReservationCardResponsiveProps {
 	paidWithPoints: boolean;
 }
 
-const ReservationCardResponsive: React.FC<ReservationCardResponsiveProps> = (props) => {
+const ItineraryCardResponsive: React.FC<ItineraryCardResponsiveProps> = (props) => {
 	const [showControls, setShowControls] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -43,7 +43,7 @@ const ReservationCardResponsive: React.FC<ReservationCardResponsiveProps> = (pro
 		});
 	}
 	return (
-		<Box className={'rsReservationCardResponsive'}>
+		<Box className={'rsItineraryCardResponsive'}>
 			<div className={'columnOne'}>
 				<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
 			</div>
@@ -86,4 +86,4 @@ const ReservationCardResponsive: React.FC<ReservationCardResponsiveProps> = (pro
 	);
 };
 
-export default ReservationCardResponsive;
+export default ItineraryCardResponsive;

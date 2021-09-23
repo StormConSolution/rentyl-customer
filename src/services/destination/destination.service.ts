@@ -1,7 +1,6 @@
 import { Service } from '../Service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
-import { WebUtils } from '../../utils/utils';
 
 export default class DestinationService extends Service {
 	async getDestinations(): Promise<Api.Destination.Res.Details[]> {
@@ -27,10 +26,15 @@ export default class DestinationService extends Service {
 	async searchAvailableReservations(
 		data: Api.Destination.Req.Availability
 	): Promise<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>> {
-		let response = await http.get<RsResponseData<Api.Destination.Res.GetByPageAvailability>>(
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>>(
 			'destination/availability',
-			WebUtils.convertDataForUrlParams(data)
+			data
 		);
 		return response.data;
+	}
+
+	async getAllPropertyTypes(): Promise<Api.Destination.Res.PropertyType[]> {
+		let res = await http.get<RsResponseData<Api.Destination.Res.PropertyType[]>>('destination/allPropertyTypes');
+		return res.data.data;
 	}
 }

@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './ResortComparisonCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
-import Select from '../Select/Select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
+import Select from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 interface ResortComparisonCardProps {
 	logo: string;
@@ -15,11 +16,24 @@ interface ResortComparisonCardProps {
 	onClose: () => void;
 	popupOnClick?: (pinToFirst: boolean) => void;
 	className?: string;
-	placeHolder?: string;
+	selectedRoom: number;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
+	const [options, setOptions] = useState<{ value: string | number; label: string | number }[]>([]);
+	const [roomTypeFormGroup, setRoomTypeFormGroup] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('roomValue', props.selectedRoom, [])])
+	);
+
+	useEffect(() => {
+		setOptions(
+			props.roomTypes.map((roomType) => {
+				return { value: roomType.value, label: roomType.text };
+			})
+		);
+	}, []);
+
 	return size === 'small' ? (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
 			<Box className={'topContent'}>
@@ -40,10 +54,11 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 						popupController.open<ComparisonCardPopupProps>(ComparisonCardPopup, {
 							logo: props.logo,
 							title: props.title,
-							roomTypes: props.roomTypes,
+							roomTypes: options,
 							onChange: props.onChange,
 							onClose: props.onClose,
-							popupOnClick: props.popupOnClick
+							popupOnClick: props.popupOnClick,
+							control: roomTypeFormGroup.get('roomValue')
 						});
 					}}
 				>
@@ -69,10 +84,14 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			</Box>
 			<Box className={'bottomContent'} display={'flex'}>
 				<Select
-					className={'selectRoomType'}
-					onChange={props.onChange}
-					placeHolder={props.placeHolder || 'select room type'}
-					options={props.roomTypes}
+					control={roomTypeFormGroup.get('roomValue')}
+					updateControl={(control) => {
+						setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
+						props.onChange(control);
+					}}
+					options={options}
+					isClearable={true}
+					menuPlacement={'top'}
 				/>
 			</Box>
 		</div>

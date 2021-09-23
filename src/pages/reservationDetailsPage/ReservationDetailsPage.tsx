@@ -11,7 +11,6 @@ import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import globalState from '../../state/globalState';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
 import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
@@ -23,6 +22,7 @@ import EditReservationDetailsPopup, {
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import globalState from '../../state/globalState';
 
 const ReservationDetailsPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -45,7 +45,7 @@ const ReservationDetailsPage: React.FC = () => {
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
-	}, [params]);
+	}, []);
 
 	function getPoliciesValue(option: 'CheckIn' | 'CheckOut' | 'Cancellation') {
 		if (!reservation) return '';
@@ -217,7 +217,7 @@ const ReservationDetailsPage: React.FC = () => {
 								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
 								accommodationTotalCents={reservation.priceDetail.accommodationTotalInCents}
 								grandTotalCents={reservation.priceDetail.grandTotalCents}
-								points={reservation.priceDetail.grandTotalPoints}
+								subtotalPoints={reservation.priceDetail.subtotalPoints}
 								paidWithPoints={!reservation.paymentMethod}
 							/>
 							<Label variant={'h1'} mb={40}>

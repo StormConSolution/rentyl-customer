@@ -23,8 +23,10 @@
 	}
 
 	.rsLabelSelect {
+		width: 100%;
+		max-width: 190px;
 		.rsSelect {
-			max-width: 191px;
+			max-width: 190px;
 		}
 	}
 }

@@ -13,7 +13,7 @@ import AccommodationInfoCard from '../../components/accommodationInfoCard/Accomm
 import RoomBookNowCard from '../../components/roomBookNowCard/RoomBookNowCard';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import globalState, { ComparisonCardInfo } from '../../state/globalState';
+import globalState from '../../state/globalState';
 import IconFeatureTile from '../../components/iconFeatureTile/IconFeatureTile';
 import FloorPlanDetailCard from '../../components/floorPlanDetailCard/FloorPlanDetailCard';
 import CategoryFeatureIcons from '../../components/categoryFeatureIcons/CategoryFeatureIcons';
@@ -38,7 +38,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const recoilComparisonState = useRecoilState<ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ accommodationId: number; startDate?: string; endDate?: string }>([
 		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' },
@@ -220,6 +220,9 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
+								let selectedRoom = destinationDetails.accommodations.filter(
+									(value) => value.id === accommodationDetails?.id
+								);
 								comparisonService.addToComparison(recoilComparisonState, {
 									destinationId: destinationDetails.id,
 									logo: destinationDetails.logoUrl,
@@ -232,7 +235,8 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 												text: item.name,
 												selected: item.id === accommodationDetails.id
 											};
-										})
+										}),
+									selectedRoom: selectedRoom[0].id
 								});
 							}}
 							bookNowOnClick={() => {

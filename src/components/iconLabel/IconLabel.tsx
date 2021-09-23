@@ -29,14 +29,15 @@ interface IconLabelProps {
 		| 'inherit'
 		| 'error';
 	className?: string;
+	color?: string;
 	onClick?: () => void;
 }
 
 const IconLabel: React.FC<IconLabelProps> = (props) => {
 	return (
 		<Box className={`rsIconLabel ${props.className || ''} ${props.iconPosition}`} onClick={props.onClick}>
-			<Icon className={'icon'} iconImg={props.iconImg} size={props.iconSize} />
-			<Label variant={props.labelVariant} className={'label'}>
+			<Icon className={'icon'} iconImg={props.iconImg} size={props.iconSize} color={props.color} />
+			<Label variant={props.labelVariant} className={'label'} color={props.color}>
 				{props.labelName}
 			</Label>
 		</Box>

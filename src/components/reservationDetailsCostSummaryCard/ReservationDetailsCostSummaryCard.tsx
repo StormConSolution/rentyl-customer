@@ -16,33 +16,31 @@ interface ReservationDetailsCostSummaryCartProps {
 	adultCount: number;
 	childCount: number;
 	taxAndFeeTotalsInCents: { name: string; amount: number }[];
-	upsellPackages: Api.UpsellPackage.Res.Booked[];
+	upsellPackages: Api.UpsellPackage.Res.Complete[];
 	costPerNight: { [date: string]: number };
 	accommodationTotalCents: number;
 	grandTotalCents: number;
-	points: number;
+	subtotalPoints: number;
 	paidWithPoints: boolean;
 }
 
 const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryCartProps> = (props) => {
+	const packageTotalPoints = props.upsellPackages.reduce((total, item) => {
+		return total + item.priceDetail.amountPoints;
+	}, 0);
 	function renderItemizedCostPerNight() {
 		let itemizedCostPerNight: React.ReactNodeArray = [];
 		for (let i in props.costPerNight) {
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={i}>
 					<Label variant={'body1'}>{DateUtils.displayUserDate(i)}</Label>
-					{!props.paidWithPoints ? (
-						<Label variant={'body1'} marginLeft={'auto'}>
-							${StringUtils.formatMoney(props.costPerNight[i])}
-						</Label>
-					) : (
-						<Label variant={'body1'} marginLeft={'auto'}>
-							{props.costPerNight[i]} points
-						</Label>
-					)}
+					<Label variant={'body1'} marginLeft={'auto'}>
+						${StringUtils.formatMoney(props.costPerNight[i])}
+					</Label>
 				</Box>
 			);
 		}
+
 		return itemizedCostPerNight;
 	}
 
@@ -52,7 +50,9 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 				<Box display={'flex'} alignItems={'center'} key={item.id}>
 					<Label variant={'body1'}>{item.title}</Label>
 					<Label variant={'body1'} marginLeft={'auto'}>
-						${StringUtils.formatMoney(item.priceDetail.amountAfterTax)}
+						{props.paidWithPoints
+							? `${StringUtils.addCommasToNumber(item.priceDetail.amountPoints)} points`
+							: `$${StringUtils.formatMoney(item.priceDetail.amountAfterTax)}`}
 					</Label>
 				</Box>
 			);
@@ -100,21 +100,33 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 			<Label variant={'body1'}>{`${props.adultCount} Adults`}</Label>
 			<Label variant={'body1'}>{`${props.childCount} Children`}</Label>
 			<hr />
-			<Accordion isOpen titleReact={<Label variant={'h4'}>DATES</Label>}>
-				<Label variant={'body1'}>
-					{DateUtils.daysBetweenStartAndEndDates(new Date(props.departureDate), new Date(props.arrivalDate))}{' '}
-					Nights
-				</Label>
-				{renderItemizedCostPerNight()}
-				<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-					<Label variant={'h4'}>Total: </Label>
-					<Label variant={'h4'}>${StringUtils.formatMoney(props.accommodationTotalCents)}</Label>
+			{!props.paidWithPoints ? (
+				<Accordion isOpen titleReact={<Label variant={'h4'}>DATES</Label>}>
+					<Label variant={'body1'}>
+						{DateUtils.daysBetweenStartAndEndDates(
+							new Date(props.departureDate),
+							new Date(props.arrivalDate)
+						)}{' '}
+						Nights
+					</Label>
+					{renderItemizedCostPerNight()}
+					<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+						<Label variant={'h4'}>Total: </Label>
+						<Label variant={'h4'}>${StringUtils.formatMoney(props.accommodationTotalCents)}</Label>
+					</Box>
+				</Accordion>
+			) : (
+				<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+					<Label variant={'h4'}>
+						{DateUtils.daysBetweenStartAndEndDates(
+							new Date(props.departureDate),
+							new Date(props.arrivalDate)
+						)}{' '}
+						Nights
+					</Label>
+					<Label variant={'h4'}>{StringUtils.addCommasToNumber(props.subtotalPoints)} Points</Label>
 				</Box>
-			</Accordion>
-			<Label variant={'body1'}>
-				{DateUtils.daysBetweenStartAndEndDates(new Date(props.departureDate), new Date(props.arrivalDate))}{' '}
-				Nights
-			</Label>
+			)}
 			<hr />
 			{props.upsellPackages.length > 0 && (
 				<>
@@ -122,13 +134,18 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 						{renderUpsellPackages()}
 						<Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 							<Label variant={'h4'}>Total: </Label>
-							<Label variant={'h4'}>
-								{StringUtils.formatMoney(
-									props.upsellPackages.reduce((total, item) => {
-										return total + item.priceDetail.amountAfterTax;
-									}, 0)
-								)}
-							</Label>
+							{props.paidWithPoints ? (
+								<Label variant={'h4'}>{StringUtils.addCommasToNumber(packageTotalPoints)} Points</Label>
+							) : (
+								<Label variant={'h4'}>
+									$
+									{StringUtils.formatMoney(
+										props.upsellPackages.reduce((total, item) => {
+											return total + item.priceDetail.amountAfterTax;
+										}, 0)
+									)}
+								</Label>
+							)}
 						</Box>
 					</Accordion>
 					<hr />
@@ -153,7 +170,9 @@ const ReservationDetailsCostSummaryCard: React.FC<ReservationDetailsCostSummaryC
 				{!props.paidWithPoints ? (
 					<Label variant={'h2'}>${StringUtils.formatMoney(props.grandTotalCents)}</Label>
 				) : (
-					<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.points)} Points</Label>
+					<Label variant={'h2'}>
+						{StringUtils.addCommasToNumber(props.subtotalPoints + packageTotalPoints)} Points
+					</Label>
 				)}
 			</Box>
 		</Paper>

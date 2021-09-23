@@ -1,8 +1,18 @@
 @import '../../themes/themes.scss';
 
 .rsFilterBar {
+	.rsSelect {
+		max-width: 100%;
+		[class*='control'] {
+			background-color: white;
+		}
+	}
 	div {
 		margin: 0;
+	}
+
+	.none {
+		display: none;
 	}
 
 	.rsLabelInput input {

@@ -16,18 +16,11 @@ enum GlobalStateKeys {
 	VERIFIED_ACCOMMODATIONS = 'VerifiedAccommodations'
 }
 
-export interface ComparisonCardInfo {
-	destinationId: number;
-	logo: string;
-	title: string;
-	roomTypes: { value: number | string; text: number | string; selected: boolean }[];
-}
-
 // Change based on project so we don't have classing when developing on localhost (va = Volcanic Admin)
 const KEY_PREFIX = 'spireCust-';
 
 class GlobalState {
-	destinationComparison: RecoilState<ComparisonCardInfo[]>;
+	destinationComparison: RecoilState<Misc.ComparisonCardInfo[]>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
@@ -36,9 +29,9 @@ class GlobalState {
 	saveToStorageList: string[] = [];
 
 	constructor() {
-		this.destinationComparison = atom<ComparisonCardInfo[]>({
+		this.destinationComparison = atom<Misc.ComparisonCardInfo[]>({
 			key: GlobalStateKeys.COMPARISON_CARD,
-			default: this.loadFromLocalStorage<ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
+			default: this.loadFromLocalStorage<Misc.ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
 		});
 
 		this.user = atom<Api.User.Res.Detail | undefined>({

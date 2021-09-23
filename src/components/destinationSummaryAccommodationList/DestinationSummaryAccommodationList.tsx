@@ -1,6 +1,6 @@
 import Label from '@bit/redsky.framework.rs.label';
 import React from 'react';
-import { NumberUtils, StringUtils } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import './DestinationSummaryAccommodationList.scss';
 import IconToolTip from '../iconToolTip/IconToolTip';
 import { useRecoilValue } from 'recoil';
@@ -48,11 +48,8 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						</Label>
 					)}
 					{company.allowPointBooking === 1 && (
-						<Label variant={company.allowCashBooking !== 1 ? 'h4' : 'body2'} className="points">
-							{StringUtils.addCommasToNumber(
-								NumberUtils.convertCentsToPoints(accommodation.prices[0].priceCents, 10)
-							)}{' '}
-							pts
+						<Label variant={'body2'}>
+							{StringUtils.addCommasToNumber(accommodation.prices[0].pricePoints) || 0} pts
 						</Label>
 					)}
 				</div>

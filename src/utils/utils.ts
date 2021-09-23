@@ -94,26 +94,7 @@ class DateUtils extends BaseDateUtils {
 	}
 }
 
-class NumberUtils extends BaseNumberUtils {
-	static convertCentsToPoints(cents: number, ratio: number): number {
-		return Math.floor((cents / 100) * ratio);
-	}
-
-	static roundPointsToThousand(num: number): number {
-		return Math.ceil(num / 1000) * 1000;
-	}
-
-	static displayPointsOrCash(cents: number, type: 'points' | 'cash'): string {
-		switch (type) {
-			case 'points':
-				return StringUtils.addCommasToNumber(cents) + ' points';
-			case 'cash':
-				return '$' + StringUtils.formatMoney(cents);
-			default:
-				return '';
-		}
-	}
-}
+class NumberUtils extends BaseNumberUtils {}
 
 export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils, NumberUtils };
 
