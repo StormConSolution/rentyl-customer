@@ -1122,6 +1122,8 @@ declare namespace Api {
 				export interface Create {
 					destinationId: number;
 					paymentMethodId?: number;
+					existingAddressId?: number;
+					newAddress?: Omit<UserAddress.Req.Create, 'name' | 'userId'>;
 					stays: Stay[];
 				}
 			}

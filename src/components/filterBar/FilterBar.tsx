@@ -142,7 +142,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				updateControl={(control) => {
 					props.onChangePropertyType(control);
 				}}
-				selectOptions={props.options}
+				options={props.options}
 				isMulti={true}
 			/>
 		</Box>

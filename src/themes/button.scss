@@ -10,6 +10,9 @@
 			.rsLabel {
 				color: #ffffff;
 			}
+			&.yellow {
+				background-color: theme-var($iconAndHighlightTextColor) !important;
+			}
 		}
 
 		&.secondary {

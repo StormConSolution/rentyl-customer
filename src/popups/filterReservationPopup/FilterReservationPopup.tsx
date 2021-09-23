@@ -163,8 +163,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							updateControl={(control) => {
 								setFilterForm(filterForm.clone().update(control));
 							}}
-							selectOptions={propertyTypeOptions}
-							isMulti
+							options={props.options}
+							isMulti={true}
 						/>
 						<LabelInput
 							className={'rateCode'}
