@@ -251,13 +251,13 @@ const AccountAddressPage: React.FC = () => {
 							<LabelSelect
 								title={'State'}
 								updateControl={updateNewAddressObj}
-								selectOptions={stateList}
+								options={stateList}
 								control={newAddressObj.get('state')}
 							/>
 							<LabelSelect
 								title={'Country'}
 								updateControl={updateNewAddressObj}
-								selectOptions={countryList}
+								options={countryList}
 								control={newAddressObj.get('country')}
 							/>
 						</Box>
