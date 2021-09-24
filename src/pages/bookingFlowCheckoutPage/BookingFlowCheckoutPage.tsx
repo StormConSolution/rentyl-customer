@@ -539,12 +539,10 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
-						{isDisabled ? (
+						{isDisabled && (
 							<Label variant={'subtitle2'} className={'missingText'}>
 								Missing or Incorrect Information.
 							</Label>
-						) : (
-							<div></div>
 						)}
 						<LabelButton
 							className={'completeBookingBtn'}
