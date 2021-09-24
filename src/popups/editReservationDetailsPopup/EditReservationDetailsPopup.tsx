@@ -48,10 +48,10 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 	);
 	const [editDetailsForm, setEditDetailsForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('adults', props.adultCount, [
+			new RsFormControl('adultCount', props.adultCount, [
 				new RsValidator(RsValidatorEnum.REQ, 'Number of Adults is required')
 			]),
-			new RsFormControl('children', props.childCount, []),
+			new RsFormControl('childCount', props.childCount, []),
 			new RsFormControl('arrivalDate', formatPropsDate(props.arrivalDate.toString()), []),
 			new RsFormControl('departureDate', formatPropsDate(props.departureDate.toString()), [])
 		])
@@ -125,7 +125,7 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 	}, [endDateControl]);
 
 	function updateEditDetailsForm(control: RsFormControl) {
-		if (control.key === 'adults' || control.key === 'children') {
+		if (control.key === 'adultCount' || control.key === 'childCount') {
 			if (!!Number(control.value)) {
 				control.value = Number(control.value);
 			}
@@ -184,14 +184,14 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 								title={'ADULTS'}
 								inputType={'number'}
 								labelVariant={'body1'}
-								control={editDetailsForm.get('adults')}
+								control={editDetailsForm.get('adultCount')}
 								updateControl={updateEditDetailsForm}
 							/>
 							<LabelInput
 								title={'CHILDREN'}
 								inputType={'number'}
 								labelVariant={'body1'}
-								control={editDetailsForm.get('children')}
+								control={editDetailsForm.get('childCount')}
 								updateControl={updateEditDetailsForm}
 							/>
 						</Box>
