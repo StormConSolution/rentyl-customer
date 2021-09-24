@@ -41,6 +41,7 @@ import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import IconLabel from '../../components/iconLabel/IconLabel';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -111,13 +112,19 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				newSearchQueryObj.priceRangeMin *= 100;
 			}
 			try {
+				popupController.open(SpinningLoaderPopup);
 				let result = await accommodationService.availability(newSearchQueryObj);
 				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
+				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
+				popupController.close(SpinningLoaderPopup);
 				setValidCode(rateCode === '');
-				console.error(e);
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get available accommodations.'),
+					'Server Error'
+				);
 			}
 		}
 		getAvailableStays().catch(console.error);
@@ -657,7 +664,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 					<hr />
-					<div className={'accommodationCardWrapper'}>{renderAccommodations()}</div>
+					<div className={'accommodationCardWrapper'}>
+						{availabilityStayList.length <= 0 ? (
+							<Label variant={'h2'}>No available options.</Label>
+						) : (
+							renderAccommodations()
+						)}
+					</div>
 					<PaginationButtons
 						selectedRowsPerPage={5}
 						total={totalResults}

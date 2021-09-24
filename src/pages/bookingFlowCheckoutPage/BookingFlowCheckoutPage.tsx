@@ -290,11 +290,14 @@ const BookingFlowCheckoutPage = () => {
 					itineraryNumber: res.itineraryId,
 					destinationName: res.destination.name
 				};
-
 				router
 					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
 					.catch(console.error);
 			} catch (e) {
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'An error occurred, unable to book your reservation.'),
+					'Error!'
+				);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -532,6 +535,13 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
+						{isDisabled ? (
+							<Label variant={'subtitle2'} className={'missingText'}>
+								Missing or Incorrect Information.
+							</Label>
+						) : (
+							<div></div>
+						)}
 						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}

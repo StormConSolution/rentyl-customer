@@ -489,7 +489,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					padding={size === 'small' ? '0 10px 20px' : '0 140px 60px'}
 					boxSizing={'border-box'}
 				>
-					{renderDestinationSearchResultCards()}
+					{destinations.length <= 0 ? (
+						<Label variant={'h2'}>No available options.</Label>
+					) : (
+						renderDestinationSearchResultCards()
+					)}
 				</Box>
 				<div className={'paginationDiv'}>
 					<PaginationButtons

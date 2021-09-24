@@ -1,6 +1,7 @@
 @import '../../themes/themes';
 
 .rsContactInfoAndPaymentCard {
+	width: 100%;
 	background-color: theme-var($primaryBackgroundColor);
 	.contactInfo {
 		grid-template-columns: fit-content(200px) fit-content(200px);

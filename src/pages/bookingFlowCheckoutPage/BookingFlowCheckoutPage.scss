@@ -7,6 +7,7 @@
 		background-color: theme-var($primaryBackgroundColor);
 
 		.grandTotal {
+			padding-top: 16px;
 			justify-content: space-between;
 		}
 	}
@@ -56,6 +57,10 @@
 		.notEnoughPoints {
 			text-align: center;
 		}
+	}
+	.missingText {
+		color: theme-var($errorColor);
+		padding-top: 10px;
 	}
 }
 

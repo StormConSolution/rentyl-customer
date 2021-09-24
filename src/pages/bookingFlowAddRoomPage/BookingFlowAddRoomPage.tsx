@@ -440,7 +440,11 @@ const BookingFlowAddRoomPage = () => {
 					margin={'85px auto'}
 					boxSizing={'border-box'}
 				>
-					{renderDestinationSearchResultCards()}
+					{accommodations.length <= 0 ? (
+						<Label variant={'h2'}>No available options.</Label>
+					) : (
+						renderDestinationSearchResultCards()
+					)}
 				</Box>
 				<PaginationButtons
 					selectedRowsPerPage={perPage}

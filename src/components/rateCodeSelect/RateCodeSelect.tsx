@@ -6,6 +6,7 @@ import { useState } from 'react';
 import LabelInput from '../labelInput/LabelInput';
 import LabelButton from '../labelButton/LabelButton';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface RateCodeSelectProps {
 	apply: (value: string) => void;
@@ -42,7 +43,12 @@ const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 				variant={'body1'}
 				label={'Apply'}
 				className={'applyButton'}
-				onClick={() => props.apply(rateCodeForm.get('code').value.toString())}
+				onClick={() => {
+					props.apply(rateCodeForm.get('code').value.toString());
+					if (props.valid && rateCodeForm.get('code').value.toString() !== '') {
+						rsToastify.success('Rate code successfully applied', 'Success!');
+					}
+				}}
 			/>
 		</Box>
 	);
