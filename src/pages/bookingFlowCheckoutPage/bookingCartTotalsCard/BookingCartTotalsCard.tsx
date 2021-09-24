@@ -98,7 +98,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			}
 		}
 		verifyAvailability().catch(console.error);
-	}, [props.adults, props.children, props.arrivalDate, props.departureDate, props.usePoints]);
+	}, [props.adults, props.children, props.arrivalDate, props.departureDate]);
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Complete[]): string {
 		const total = packages.reduce((total, item) => {
