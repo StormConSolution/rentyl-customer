@@ -97,6 +97,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				setDestinations(res.data);
 				setAvailabilityTotal(res.total || 0);
 				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
+				if (rateCode !== '' && !!res.data && res.data.length > 0) {
+					rsToastify.success('Rate code successfully applied.', 'Success!');
+				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
@@ -332,7 +335,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 						}
 					}
 				};
-				return [...acc, destinationSummaryTab];
+				if (accommodationList.length <= 0) {
+					return [...acc];
+				} else {
+					return [...acc, destinationSummaryTab];
+				}
 			},
 			[{ label: 'Overview', content: { text: destination.description } }]
 		);

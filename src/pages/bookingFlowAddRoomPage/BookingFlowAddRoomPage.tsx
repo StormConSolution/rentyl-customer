@@ -97,6 +97,9 @@ const BookingFlowAddRoomPage = () => {
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
+				if (rateCode !== '' && !!res.data && res.data.length > 0) {
+					rsToastify.success('Rate code successfully applied.', 'Success!');
+				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(

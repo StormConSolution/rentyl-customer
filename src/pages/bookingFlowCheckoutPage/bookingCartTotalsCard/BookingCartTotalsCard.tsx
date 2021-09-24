@@ -35,7 +35,6 @@ interface BookingCartTotalsCardProps {
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const whiteBox = useRef<HTMLElement>(null);
-	const [refreshPage, setRefreshPage] = useState<number>(0);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [verifyStatus, setVerifyStatus] = useState<'verifying' | 'available' | 'notAvailable'>('verifying');
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<{
@@ -99,7 +98,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			}
 		}
 		verifyAvailability().catch(console.error);
-	}, [props.adults, props.children, props.arrivalDate, props.departureDate, refreshPage]);
+	}, [props.adults, props.children, props.arrivalDate, props.departureDate, props.usePoints]);
 
 	function totalPackages(packages: Api.UpsellPackage.Res.Complete[]): string {
 		const total = packages.reduce((total, item) => {

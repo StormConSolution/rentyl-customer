@@ -117,6 +117,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
+				if (rateCode !== '' && !!result.data && result.data.length > 0) {
+					rsToastify.success('Rate code successfully applied.', 'Success!');
+				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				popupController.close(SpinningLoaderPopup);

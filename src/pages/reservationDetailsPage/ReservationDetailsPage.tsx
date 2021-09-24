@@ -157,6 +157,10 @@ const ReservationDetailsPage: React.FC = () => {
 												router.navigate('/reservations').catch(console.error);
 											}
 										} catch (e) {
+											rsToastify.error(
+												WebUtils.getRsErrorMessage(e, 'An unexpected error has occurred'),
+												'Error!'
+											);
 											console.error(e.message);
 											popupController.close(SpinningLoaderPopup);
 										}
