@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import globalState, { setRecoilExternalValue } from '../state/globalState';
 import serviceFactory from '../services/serviceFactory';
 import CompanyService from '../services/company/company.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../utils/utils';
 
 export default function useCompanyInfo(): boolean {
 	const [isCompanyLoaded, setIsCompanyLoaded] = useState<boolean>(false);
@@ -9,10 +11,15 @@ export default function useCompanyInfo(): boolean {
 
 	useEffect(() => {
 		async function getCompanyInfo() {
-			let res = await companyService.getCompanyDetails();
-			setRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company, res);
-			setIsCompanyLoaded(true);
-			document.title = res.name;
+			try {
+				let res = await companyService.getCompanyDetails();
+				setRecoilExternalValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company, res);
+				setIsCompanyLoaded(true);
+				document.title = res.name;
+			} catch (e) {
+				setIsCompanyLoaded(false);
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Server error has occurred.'), 'Server Error!');
+			}
 		}
 		getCompanyInfo().catch(console.error);
 	}, []);

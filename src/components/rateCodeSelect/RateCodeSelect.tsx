@@ -42,7 +42,9 @@ const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 				variant={'body1'}
 				label={'Apply'}
 				className={'applyButton'}
-				onClick={() => props.apply(rateCodeForm.get('code').value.toString())}
+				onClick={() => {
+					props.apply(rateCodeForm.get('code').value.toString());
+				}}
 			/>
 		</Box>
 	);

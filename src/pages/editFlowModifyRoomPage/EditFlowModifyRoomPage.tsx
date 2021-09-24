@@ -443,7 +443,11 @@ const EditFlowModifyRoomPage = () => {
 					margin={'85px auto'}
 					boxSizing={'border-box'}
 				>
-					{renderDestinationSearchResultCards()}
+					{destinations.length <= 0 ? (
+						<Label variant={'h2'}>No available options.</Label>
+					) : (
+						renderDestinationSearchResultCards()
+					)}
 				</Box>
 				<PaginationButtons
 					selectedRowsPerPage={perPage}

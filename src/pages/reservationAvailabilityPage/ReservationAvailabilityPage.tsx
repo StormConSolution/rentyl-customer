@@ -118,6 +118,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 				setDestinations(res.data);
 				setAvailabilityTotal(res.total || 0);
 				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
+				if (rateCode !== '' && !!res.data && res.data.length > 0) {
+					rsToastify.success('Rate code successfully applied.', 'Success!');
+				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
@@ -339,7 +342,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 						}
 					}
 				};
-				return [...acc, destinationSummaryTab];
+				if (accommodationList.length <= 0) {
+					return [...acc];
+				} else {
+					return [...acc, destinationSummaryTab];
+				}
 			},
 			[{ label: 'Overview', content: { text: destination.description } }]
 		);
@@ -501,7 +508,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					padding={size === 'small' ? '0 10px 20px' : '0 140px 60px'}
 					boxSizing={'border-box'}
 				>
-					{renderDestinationSearchResultCards()}
+					{destinations.length <= 0 ? (
+						<Label variant={'h2'}>No available options.</Label>
+					) : (
+						renderDestinationSearchResultCards()
+					)}
 				</Box>
 				<div className={'paginationDiv'}>
 					<PaginationButtons

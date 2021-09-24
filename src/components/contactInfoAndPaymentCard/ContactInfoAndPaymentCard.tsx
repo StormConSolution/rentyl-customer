@@ -367,7 +367,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 				if (props.onExistingCardSelect) props.onExistingCardSelect(control.value);
 			}
 		}
-
 		setExistingCreditCardForm(existingCreditCardForm.clone().update(control));
 	}
 
@@ -383,7 +382,6 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 
 	function isCreditCardFormFilledOut(): boolean {
 		if (!!existingCardId) return true;
-
 		return (
 			!!creditCardObj.get('full_name').value.toString().length &&
 			!!creditCardObj.get('expDate').value.toString().length

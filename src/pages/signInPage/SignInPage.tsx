@@ -13,6 +13,8 @@ import router from '../../utils/router';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import LabelInput from '../../components/labelInput/LabelInput';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../../utils/utils';
 
 const SignInPage: React.FC = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
@@ -55,8 +57,9 @@ const SignInPage: React.FC = () => {
 			if (e.message === 'INVALID_ROLE') {
 				setLoginErrorMessage('User not allowed to log in.');
 				return;
+			} else {
+				setLoginErrorMessage(`Login Error! ${e.message}`);
 			}
-
 			axiosErrorHandler(e, {
 				[HttpStatusCode.UNAUTHORIZED]: () => {
 					setLoginErrorMessage('Invalid Username / Password');

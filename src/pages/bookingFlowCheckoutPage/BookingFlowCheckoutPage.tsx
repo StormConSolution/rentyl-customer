@@ -155,6 +155,7 @@ const BookingFlowCheckoutPage = () => {
 						.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
 						.catch(console.error);
 				} catch (e) {
+					rsToastify.error('Missing proper data or existing card is invalid', 'Error!');
 					popupController.close(SpinningLoaderPopup);
 				}
 			}
@@ -254,7 +255,10 @@ const BookingFlowCheckoutPage = () => {
 			window.Spreedly.tokenizeCreditCard(paymentObj);
 		} else {
 			if (!usePoints) {
-				if (!stayParams || !existingCardId) throw new Error('Missing proper data or existing card is invalid');
+				if (!stayParams || !existingCardId) {
+					rsToastify.error('Missing proper data or existing card is invalid', 'Error!');
+					throw new Error('Missing proper data or existing card is invalid');
+				}
 			}
 			let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
 			Object.values(verifiedAccommodations).forEach((verification) => {
@@ -290,11 +294,14 @@ const BookingFlowCheckoutPage = () => {
 					itineraryNumber: res.itineraryId,
 					destinationName: res.destination.name
 				};
-
 				router
 					.navigate(`/success?data=${JSON.stringify(newData)}`, { clearPreviousHistory: true })
 					.catch(console.error);
 			} catch (e) {
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'An error occurred, unable to book your reservation.'),
+					'Error!'
+				);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
@@ -532,6 +539,11 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
+						{isDisabled && (
+							<Label variant={'subtitle2'} className={'missingText'}>
+								Missing or Incorrect Information.
+							</Label>
+						)}
 						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}
