@@ -35,9 +35,18 @@ import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const params = router.getPageUrlParams<{ startDate: string; endDate: string }>([
+	const params = router.getPageUrlParams<{
+		startDate: string;
+		endDate: string;
+		adults: number;
+		children: number;
+		region: string;
+	}>([
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
+		{ key: 'adults', default: 2, type: 'integer', alias: 'adults' },
+		{ key: 'children', default: 2, type: 'integer', alias: 'children' },
+		{ key: 'region', default: '', type: 'string', alias: 'region' }
 	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
@@ -62,8 +71,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
-		adultCount: 2,
-		childCount: 0,
+		adultCount: params.adults || 2,
+		childCount: params.children || 0,
 		pagination: { page: 1, perPage: 5 }
 	});
 
@@ -80,6 +89,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 					return { value: region.id, label: region.name };
 				})
 			);
+			if (params.region) {
+				const region = regions.find((region) => region.name.toLowerCase() === params.region.toLowerCase());
+				if (region) {
+					const regionControl = filterForm.getClone('regions');
+					regionControl.value = [region.id];
+					setFilterForm(filterForm.clone().update(regionControl));
+				}
+			}
 			let propertyTypes = await destinationService.getAllPropertyTypes();
 			setPropertyTypeOptions(
 				propertyTypes.map((propertyType) => {
