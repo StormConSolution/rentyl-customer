@@ -15,8 +15,12 @@
 		display: none;
 	}
 
+	.rsLabelInput {
+		width: fit-content;
+		width: -moz-fit-content;
+	}
 	.rsLabelInput input {
-		width: calc(100% - 20px);
+		width: 100px;
 		height: 40px;
 		padding: 0 10px;
 	}
@@ -29,21 +33,12 @@
 			color: theme-var($buttonLinkColor);
 		}
 	}
-
 	display: grid;
-	grid-template-columns: 206px 93px 115px 130px 130px auto repeat(3, min-content);
-	column-gap: 20px;
-	> div {
-		align-self: end;
-		&.moreFiltersLink {
-			margin: 30px 10px auto 10px;
-		}
-	}
-	.rsDateRangeSelector {
-		grid-column: 1 / 2;
-	}
-	.numberOfAdults .numberOfChildren {
-		grid-column: 2 / 3;
+	grid-template-columns: repeat(7, auto);
+	gap: 20px;
+	justify-content: start;
+	.rsLabelSelect {
+		width: 200px;
 	}
 }
 

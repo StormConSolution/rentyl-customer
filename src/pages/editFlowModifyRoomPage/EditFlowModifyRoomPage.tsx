@@ -171,8 +171,8 @@ const EditFlowModifyRoomPage = () => {
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
-		adults: string,
-		children: string,
+		adults: number,
+		children: number,
 		priceRangeMin: string,
 		priceRangeMax: string,
 		propertyTypeIds: number[],
@@ -182,10 +182,8 @@ const EditFlowModifyRoomPage = () => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = parseInt(adults);
-			if (children !== '') {
-				createSearchQueryObj['children'] = parseInt(children);
-			}
+			createSearchQueryObj['adults'] = adults;
+			createSearchQueryObj['children'] = children;
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
 			}
@@ -303,10 +301,6 @@ const EditFlowModifyRoomPage = () => {
 		return costPerNightAvg / Object.keys(reservation.priceDetail.accommodationDailyCostsInCents).length;
 	}
 
-	function onChangePropertyType(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return (
 		<Page className={'rsEditFlowModifyRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -394,10 +388,7 @@ const EditFlowModifyRoomPage = () => {
 										rateCode
 									);
 								},
-								className: 'filterPopup',
-								options: options,
-								control: propertyType.get('propertyType'),
-								onChangePropertyType: onChangePropertyType
+								className: 'filterPopup'
 							});
 						}}
 					/>
@@ -432,8 +423,8 @@ const EditFlowModifyRoomPage = () => {
 								setPropertyType(propertyType.clone().update(control));
 								updateSearchQueryObj('propertyTypeIds', control.value);
 							}}
-							adultsInitialInput={searchQueryObj.adults.toString()}
-							childrenInitialInput={searchQueryObj.children.toString()}
+							adultsInitialInput={searchQueryObj.adults}
+							childrenInitialInput={searchQueryObj.children}
 							initialPriceMax={
 								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 							}

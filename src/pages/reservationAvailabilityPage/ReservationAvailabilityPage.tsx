@@ -10,7 +10,8 @@ import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
+import { OptionType } from '@bit/redsky.framework.rs.select';
+import { formatFilterDateForServer, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -29,7 +30,7 @@ import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { OptionType } from '@bit/redsky.framework.rs.select';
+import RegionService from '../../services/region/region.service';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 const ReservationAvailabilityPage: React.FC = () => {
@@ -38,8 +39,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
 		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' }
 	]);
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	let comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
+	const regionService = serviceFactory.get<RegionService>('RegionService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const perPage = 5;
@@ -48,13 +50,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useState<string>('');
 	const [validCode, setValidCode] = useState<boolean>(true);
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertyType, setPropertyType] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', [], [])])
+	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
+	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
+	const [filterForm, setFilterForm] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('regions', [], []), new RsFormControl('propertyType', [], [])])
 	);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
@@ -67,6 +70,24 @@ const ReservationAvailabilityPage: React.FC = () => {
 	useEffect(() => {
 		if (!params.startDate && !params.endDate) return;
 		onDatesChange(moment(params.startDate), moment(params.endDate));
+	}, []);
+
+	useEffect(() => {
+		async function getFilterOptions() {
+			let regions: Api.Region.Res.Get[] = await regionService.getAllRegions();
+			setRegionOptions(
+				regions.map((region) => {
+					return { value: region.id, label: region.name };
+				})
+			);
+			let propertyTypes = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(
+				propertyTypes.map((propertyType) => {
+					return { value: propertyType.id, label: propertyType.name };
+				})
+			);
+		}
+		getFilterOptions().catch(console.error);
 	}, []);
 
 	useEffect(() => {
@@ -111,28 +132,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
-	useEffect(() => {
-		async function getAllPropertyTypes() {
-			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
-		}
-		getAllPropertyTypes().catch(console.error);
-	}, []);
-
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
-
 	function updateSearchQueryObj(
 		key:
 			| 'startDate'
@@ -143,6 +142,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			| 'priceRangeMax'
 			| 'pagination'
 			| 'rateCode'
+			| 'regionIds'
 			| 'propertyTypeIds',
 		value: any
 	) {
@@ -175,8 +175,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined || value.length <= 0) delete createSearchQueryObj[key];
-			else createSearchQueryObj[key] = value;
+			if (value === '' || value === undefined) delete createSearchQueryObj[key];
+			createSearchQueryObj[key] = value;
+			if (key === 'regionIds' || key === 'propertyTypeIds') {
+				if (!ObjectUtils.isArrayWithData(value)) delete createSearchQueryObj[key];
+			}
 			return createSearchQueryObj;
 		});
 	}
@@ -184,24 +187,28 @@ const ReservationAvailabilityPage: React.FC = () => {
 	function popupSearch(
 		checkinDate: moment.Moment | null,
 		checkoutDate: moment.Moment | null,
-		adultCount: string,
-		childCount: string,
+		adultCount: number,
+		childCount: number,
 		priceRangeMin: string,
 		priceRangeMax: string,
-		propertyTypeIds: number[]
+		propertyTypeIds: number[],
+		rateCode: string,
+		regionIds?: number[]
 	) {
 		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: any = { ...prev };
+			let createSearchQueryObj: Api.Destination.Req.Availability = { ...prev };
 			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
 			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adultCount'] = parseInt(adultCount);
-			if (propertyTypeIds.length >= 1) {
+			createSearchQueryObj['adultCount'] = adultCount;
+			createSearchQueryObj['adultCount'] = adultCount;
+			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
 				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else {
-				delete createSearchQueryObj['propertyTypeIds'];
 			}
-			if (childCount !== '') {
-				createSearchQueryObj['childCount'] = parseInt(childCount);
+			if (ObjectUtils.isArrayWithData(regionIds)) {
+				createSearchQueryObj['regionIds'] = regionIds;
+			}
+			if (rateCode !== '') {
+				createSearchQueryObj['rateCode'] = rateCode;
 			}
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
@@ -365,10 +372,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		return [];
 	}
 
-	function onChangePropertyType(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
@@ -398,6 +401,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 								focusedInput={focusedInput}
 								onFocusChange={setFocusedInput}
 								monthsToShow={2}
+								regionSelect={{
+									options: regionOptions,
+									control: filterForm.get('regions'),
+									updateControl: (control) => {
+										setFilterForm(filterForm.clone().update(control));
+										updateSearchQueryObj('regionIds', control.value as number[]);
+									}
+								}}
 								onChangeAdults={(value) => {
 									if (value === '' || isNaN(parseInt(value))) return;
 									updateSearchQueryObj('adultCount', parseInt(value));
@@ -416,19 +427,19 @@ const ReservationAvailabilityPage: React.FC = () => {
 									}
 								}}
 								onChangePropertyType={(control) => {
-									setPropertyType(propertyType.clone().update(control));
+									setFilterForm(filterForm.clone().update(control));
 									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
-								adultsInitialInput={searchQueryObj.adultCount.toString()}
-								childrenInitialInput={searchQueryObj.childCount.toString()}
+								adultsInitialInput={searchQueryObj.adultCount}
+								childrenInitialInput={searchQueryObj.childCount}
 								initialPriceMax={
 									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 								}
 								initialPriceMin={
 									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
 								}
-								options={options}
-								control={propertyType.get('propertyType')}
+								options={propertyTypeOptions}
+								control={filterForm.get('propertyType')}
 							/>
 							<Label variant={'body1'} color={'red'}>
 								{errorMessage}
@@ -466,7 +477,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 										children,
 										priceRangeMin,
 										priceRangeMax,
-										propertyTypeIds: number[]
+										propertyTypeIds,
+										rateCode,
+										regionIds
 									) => {
 										popupSearch(
 											startDate,
@@ -475,13 +488,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 											children,
 											priceRangeMin,
 											priceRangeMax,
-											propertyTypeIds
+											propertyTypeIds,
+											rateCode,
+											regionIds
 										);
 									},
-									className: 'filterPopup',
-									options: options,
-									control: propertyType.get('propertyType'),
-									onChangePropertyType: onChangePropertyType
+									className: 'filterPopup'
 								});
 							}}
 						/>

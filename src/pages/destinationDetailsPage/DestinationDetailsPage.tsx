@@ -369,10 +369,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		});
 	}
 
-	function onChangePropertyType(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -600,8 +596,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									setPropertyType(propertyType.clone().update(control));
 									updateSearchQueryObj('propertyTypeIds', control.value);
 								}}
-								adultsInitialInput={searchQueryObj.adults.toString()}
-								childrenInitialInput={searchQueryObj.children.toString()}
+								adultsInitialInput={searchQueryObj.adults}
+								childrenInitialInput={searchQueryObj.children}
 								initialPriceMax={
 									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
 								}
@@ -640,28 +636,44 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									onClickApply: (
 										startDate: moment.Moment | null,
 										endDate: moment.Moment | null,
-										adults: string,
-										children: string,
+										adults: number,
+										children: number,
 										priceRangeMin: string,
 										priceRangeMax: string,
 										propertyTypeIds: number[],
 										rateCode: string
-									) => {
-										popupSearch(
-											startDate,
-											endDate,
-											adults,
-											children,
-											priceRangeMin,
-											priceRangeMax,
-											propertyTypeIds,
-											rateCode
-										);
+									): void => {
+										setSearchQueryObj((prev) => {
+											let createSearchQueryObj: any = { ...prev };
+											if (startDate !== null)
+												createSearchQueryObj['startDate'] = formatFilterDateForServer(
+													startDate,
+													'start'
+												);
+											if (endDate !== null)
+												createSearchQueryObj['endDate'] = formatFilterDateForServer(
+													endDate,
+													'end'
+												);
+											createSearchQueryObj['adults'] = adults;
+											createSearchQueryObj['children'] = children;
+											if (ObjectUtils.isArrayWithData(propertyTypeIds))
+												createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
+												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
+											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))
+												createSearchQueryObj['priceRangeMax'] = +priceRangeMax;
+											if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
+											return createSearchQueryObj;
+										});
+										if (!destinationDetails) return;
+										router.updateUrlParams({
+											di: destinationDetails.id,
+											startDate: formatFilterDateForServer(startDate, 'start'),
+											endDate: formatFilterDateForServer(endDate, 'end')
+										});
 									},
-									className: 'filterPopup',
-									options: options,
-									control: propertyType.get('propertyType'),
-									onChangePropertyType: onChangePropertyType
+									className: 'filterPopup'
 								});
 							}}
 						/>

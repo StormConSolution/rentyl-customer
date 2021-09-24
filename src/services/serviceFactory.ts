@@ -12,6 +12,7 @@ import PaymentService from './payment/payment.service';
 import CompanyService from './company/company.service';
 import PackageService from './package/package.service';
 import ReviewService from './review/review.service';
+import RegionService from './region/region.service';
 
 type ServiceKey =
 	| 'UserService'
@@ -26,6 +27,7 @@ type ServiceKey =
 	| 'UserPointService'
 	| 'PaymentService'
 	| 'PackageService'
+	| 'RegionService'
 	| 'ReviewService';
 
 class ServiceFactory {
@@ -46,6 +48,7 @@ class ServiceFactory {
 		this.services['PaymentService'] = new PaymentService();
 		this.services['PackageService'] = new PackageService();
 		this.services['ReviewService'] = new ReviewService();
+		this.services['RegionService'] = new RegionService();
 
 		for (let key in this.services) {
 			this.services[key].start();
