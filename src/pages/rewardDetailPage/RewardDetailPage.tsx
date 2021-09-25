@@ -62,6 +62,11 @@ const RewardDetailPage: React.FC = () => {
 					className={'buyButton'}
 					look={hasEnoughPoints ? 'containedPrimary' : 'containedSecondary'}
 					variant={'caption'}
+					onClick={() => {
+						router
+							.navigate(`/reward/purchase?ri=${params.reward}&vc=${params.voucherCode}`)
+							.catch(console.error);
+					}}
 					label={'buy with points'}
 				/>
 			);
