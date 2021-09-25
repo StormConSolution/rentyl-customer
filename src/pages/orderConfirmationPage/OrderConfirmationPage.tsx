@@ -65,7 +65,7 @@ const OrderConfirmationPage = () => {
 					<hr />
 					<Box display={'flex'} className={'confirmationBody'}>
 						<Box display={'flex'} alignItems={'center'}>
-							<img src={reward.media[0].urls.imageKit} alt={'Order Image'} />
+							<img src={reward.media[0]?.urls.imageKit || ''} alt={'Order Image'} />
 							<div>
 								<Label variant={'h3'} mb={10}>
 									{reward.description}
