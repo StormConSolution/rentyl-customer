@@ -157,7 +157,7 @@ const ExistingItineraryPage: React.FC = () => {
 				<Box m={'140px auto'} maxWidth={1160}>
 					<h1>Your Upcoming Reservations</h1>
 					{renderUpcomingReservations()?.reverse()}
-					<h1>Past Stays</h1>
+					<h1 className={'pastStays'}>Past Stays</h1>
 					{renderPrevReservations()}
 				</Box>
 				<Footer links={FooterLinks} />
