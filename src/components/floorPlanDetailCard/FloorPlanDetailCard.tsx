@@ -24,13 +24,7 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 	);
 
 	useEffect(() => {
-		let firstRun = true;
 		let newOptions = props.layout.map((item, index) => {
-			if (!selectedLayout && firstRun) {
-				setSelectedLayout(item);
-				firstRun = false;
-			}
-			if (!selectedLayout) return { value: 0, label: '' };
 			return {
 				value: item.id,
 				label: item.title
@@ -38,7 +32,7 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 		});
 		setOptions(newOptions);
 		let updateRoomType = roomTypeFormGroup.getCloneDeep('roomValue');
-		updateRoomType.value = newOptions[0].value;
+		updateRoomType.value = newOptions[0]?.value || 0;
 		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(updateRoomType));
 	}, []);
 
