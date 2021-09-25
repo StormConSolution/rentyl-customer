@@ -46,7 +46,7 @@ const SignInPage: React.FC = () => {
 		try {
 			setLoginErrorMessage('');
 			await userService.loginUserByPassword(data.email, data.password);
-			if (params.data !== 0 && params.data.includes('arrivalDate')) {
+			if (params.data !== 0 && params.data.includes('newRoom')) {
 				await router.navigate(`/booking/packages?data=${params.data}`);
 			} else {
 				await router.navigate('/');

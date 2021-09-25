@@ -6,7 +6,7 @@ import router from '../../utils/router';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
-import { ObjectUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
@@ -62,12 +62,15 @@ const BookingFlowAddPackagePage = () => {
 					endDate: params.data.newRoom.departureDate,
 					pagination: { page, perPage }
 				};
+				if (addedPackages) {
+					request.excludePackageIds = addedPackages.map((item) => item.id);
+				}
 				if (request.excludePackageIds && request.excludePackageIds.length < 1) delete request.excludePackageIds;
 				const response = await packageService.getAvailable(request);
 				setAvailablePackages(response.data);
 				setTotal(response.total || 0);
-			} catch {
-				rsToastify.error('No packages available, redirecting', 'No Packages');
+			} catch (e) {
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'No packages available, redirecting'), 'No Packages');
 				if (!params.data.newRoom) return;
 				let stays: Misc.StayParams[] = params.data.stays || [];
 				stays.push(params.data.newRoom);
