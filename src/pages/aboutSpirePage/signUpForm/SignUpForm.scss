@@ -29,6 +29,7 @@
 				font-size: 16px;
 				margin: 15px auto 0;
 				width: fit-content;
+				width: -moz-fit-content;
 				span {
 					a {
 						color: theme-var($buttonLinkColor) !important;

@@ -41,7 +41,7 @@ const LoginOrCreateAccountPopup: React.FC<LoginOrCreateAccountPopupProps> = (pro
 						variant={'button'}
 						label={'Log in'}
 						onClick={() => {
-							router.navigate(`/signin?${encodeURI(props.query)}`);
+							router.navigate(`/signin?data=${encodeURI(props.query)}`);
 							popupController.close(LoginOrCreateAccountPopup);
 						}}
 					/>
@@ -50,7 +50,7 @@ const LoginOrCreateAccountPopup: React.FC<LoginOrCreateAccountPopupProps> = (pro
 						variant={'button'}
 						label={'Sign up'}
 						onClick={() => {
-							router.navigate(`/signup?${encodeURI(props.query)}`);
+							router.navigate(`/signup?data=${encodeURI(props.query)}`);
 							popupController.close(LoginOrCreateAccountPopup);
 						}}
 					/>

@@ -19,6 +19,6 @@ export default class PackageService extends Service {
 			'/package/availability',
 			data
 		);
-		return response.data.data;
+		return response.data;
 	}
 }
