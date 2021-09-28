@@ -71,8 +71,7 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		if (content.accommodations.length < 1)
 			return (
 				<Label variant="body2">
-					No available accommodations during your selected dates. Please check back later or try a different
-					date.
+					No available accommodations during your selected dates. Please try a different date.
 				</Label>
 			);
 		if (isAccommodationListProp(content)) return renderAccommodationList(content);
