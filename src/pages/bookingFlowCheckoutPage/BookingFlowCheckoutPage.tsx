@@ -48,8 +48,9 @@ const BookingFlowCheckoutPage = () => {
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-	const [isDisabled, setIsDisabled] = useState<boolean>(true);
+	const [isDisabled, setIsDisabled] = useState<boolean>(false);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
+	const [accommodationIsLoaded, setAccommodationIsLoaded] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<
 		Omit<Api.UserAddress.Req.Create, 'name' | 'userId'> | { addressId: number }
 	>();
@@ -173,11 +174,11 @@ const BookingFlowCheckoutPage = () => {
 				updateHasEnoughPoints = 0 < user.availablePoints;
 				setHasEnoughPoints(updateHasEnoughPoints);
 			}
-			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj);
+			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj || !accommodationIsLoaded);
 		} else {
-			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj);
+			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj || !accommodationIsLoaded);
 		}
-	}, [hasAgreedToTerms, isFormValid, usePoints]);
+	}, [hasAgreedToTerms, isFormValid, usePoints, accommodationIsLoaded]);
 
 	async function removeAccommodation(uuid: number): Promise<void> {
 		const newStayList = stayParams.filter((stay) => stay.uuid !== uuid);
@@ -322,6 +323,10 @@ const BookingFlowCheckoutPage = () => {
 		});
 	}
 
+	function onAccommodationLoaded() {
+		setAccommodationIsLoaded(true);
+	}
+
 	function renderAccommodationCards() {
 		return (
 			stayParams &&
@@ -338,6 +343,7 @@ const BookingFlowCheckoutPage = () => {
 						upsellPackages={accommodation.packages}
 						destinationId={destinationId}
 						rateCode={accommodation.rateCode}
+						onAccommodationLoaded={onAccommodationLoaded}
 						removeAccommodation={(needsConfirmation: boolean) => {
 							if (!needsConfirmation) {
 								removeAccommodation(accommodation.uuid).catch(console.error);
@@ -539,11 +545,6 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
-						{isDisabled && (
-							<Label variant={'subtitle2'} className={'missingText'}>
-								Missing or Incorrect Information.
-							</Label>
-						)}
 						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}

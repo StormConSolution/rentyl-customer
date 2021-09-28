@@ -69,7 +69,12 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		if (typeof content === 'string') return <Label variant="body2">{content}</Label>;
 		if (isOverviewProp(content)) return renderOverview(content);
 		if (content.accommodations.length < 1)
-			return <Label variant="body2">No available options at this time. Please check back later.</Label>;
+			return (
+				<Label variant="body2">
+					No available accommodations during your selected dates. Please check back later or try a different
+					date.
+				</Label>
+			);
 		if (isAccommodationListProp(content)) return renderAccommodationList(content);
 		return '';
 	}

@@ -2,10 +2,12 @@
 
 .rsDateRangeSelector {
 	.startEndLabels {
-		display: flex;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+		grid-column-gap: 10px;
 		padding-bottom: 10px;
 		.endDateLabel {
-			margin-left: 46px;
+			//margin-left: 46px;
 		}
 	}
 	.DateRangePicker {
@@ -30,6 +32,9 @@
 			&:hover {
 				cursor: pointer;
 			}
+		}
+		.DateRangePickerInput {
+			align-items: center;
 		}
 		.DateRangePickerInput_arrow {
 			display: none;

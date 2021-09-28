@@ -30,6 +30,7 @@ interface BookingCartTotalsCardProps {
 	editPackages?: () => void;
 	cancellable: boolean;
 	usePoints: boolean;
+	onAccommodationLoaded: () => void;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -251,6 +252,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 
 	function renderCard() {
 		if (!localAccommodation) return null;
+		props.onAccommodationLoaded();
 		return (
 			<Accordion
 				isOpen
