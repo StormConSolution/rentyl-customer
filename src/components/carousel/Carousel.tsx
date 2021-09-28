@@ -14,7 +14,6 @@ interface CarouselProps {
 
 const Carousel: React.FC<CarouselProps> = (props) => {
 	const parentRef = useRef<HTMLElement>(null);
-	const childRef = useRef<HTMLElement>(null);
 	const totalChildren = props.children.length;
 	let imageViewIndex: number = 1;
 	function renderChildren() {

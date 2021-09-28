@@ -263,7 +263,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, -1);
 			return (
 				<DestinationSearchResultCard
-					key={index}
+					key={destination.id}
 					destinationName={destination.name}
 					address={`${destination.city}, ${destination.state}`}
 					logoImagePath={destination.logoUrl}

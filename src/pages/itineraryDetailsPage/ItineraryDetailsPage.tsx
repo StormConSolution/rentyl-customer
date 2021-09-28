@@ -207,8 +207,18 @@ const ItineraryDetailsPage: React.FC = () => {
 									destinationLogo: itinerary.destination.logoUrl,
 									destinationName: itinerary.destination.name,
 									stays: itinerary.stays.map((item) => {
-										return { id: item.reservationId, name: item.accommodation.name };
-									})
+										return {
+											id: item.reservationId,
+											name: item.accommodation.name,
+											review: item.review
+										};
+									}),
+									updateReview: (reservationId, rating, message) => {
+										let stay = itinerary.stays.find((stay) => stay.reservationId === reservationId);
+										if (stay) {
+											stay.review = { id: reservationId, rating, message };
+										}
+									}
 								});
 							}}
 							canLeaveReview={checkIfCanLeaveReview()}

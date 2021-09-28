@@ -3,7 +3,7 @@ import './LeaveAReviewPopup.scss';
 import { Box, Popup, popupController } from '@bit/redsky.framework.rs.996';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import Paper from '../../components/paper/Paper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { WebUtils } from '../../utils/utils';
 import LabelInput from '../../components/labelInput/LabelInput';
@@ -22,23 +22,42 @@ export interface LeaveAReviewPopupProps extends PopupProps {
 	stays: {
 		id: string | number;
 		name: string | number;
+		review: { id: number; rating: number; message: string } | null;
 	}[];
+	updateReview: (reservationId: number, rating: number, message: string) => void;
 }
 
 const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 	const reviewService = serviceFactory.get<ReviewService>('ReviewService');
-
+	const [hasAReview, setHasAReview] = useState<boolean>(false);
+	const [reservationId, setReservationId] = useState<number>(-1);
 	const [reviewDetails, setReviewDetails] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('message', '', [new RsValidator(RsValidatorEnum.REQ, 'Please provide a message')]),
 			new RsFormControl('reservationId', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please select which Reservation')
 			]),
-			new RsFormControl('rating', '', [])
+			new RsFormControl('message', '', [new RsValidator(RsValidatorEnum.REQ, 'Please provide a message')]),
+
+			new RsFormControl('rating', 5, [])
 		])
 	);
 
+	useEffect(() => {
+		let reviewForm = reviewDetails.cloneDeep();
+		const message = reviewForm.get('message');
+		setHasAReview(!!props.stays.find((stay) => stay.id === reservationId)?.review);
+		message.value = props.stays.find((stay) => stay.id === reservationId)?.review?.message || '';
+		reviewForm.update(message);
+		const rating = reviewForm.get('rating');
+		rating.value = props.stays.find((stay) => stay.id === reservationId)?.review?.rating || 5;
+		reviewForm.update(rating);
+		setReviewDetails(reviewForm);
+	}, [reservationId]);
+
 	function updateReviewDetails(control: RsFormControl) {
+		if (control.key === 'reservationId') {
+			setReservationId(control.value as number);
+		}
 		setReviewDetails(reviewDetails.clone().update(control));
 	}
 
@@ -55,6 +74,8 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 		try {
 			let res = await reviewService.create(data);
 			rsToastify.success('Your review has been submitted', 'Success!');
+			const { reservationId, message, rating } = reviewDetails.toModel();
+			props.updateReview(reservationId, rating, message);
 			popupController.close(LeaveAReviewPopup);
 		} catch (e) {
 			rsToastify.error(
@@ -101,19 +122,22 @@ const LeaveAReviewPopup: React.FC<LeaveAReviewPopupProps> = (props) => {
 					/>
 					<LabelInput
 						title={''}
+						disabled={hasAReview}
 						inputType={'textarea'}
 						control={reviewDetails.get('message')}
 						updateControl={updateReviewDetails}
 						placeholder={'Please give some details about your experience'}
 					/>
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Submit Rating'}
-						onClick={() => {
-							saveReview().catch(console.error);
-						}}
-					/>
+					{!hasAReview && (
+						<LabelButton
+							look={'containedPrimary'}
+							variant={'button'}
+							label={'Submit Rating'}
+							onClick={() => {
+								saveReview().catch(console.error);
+							}}
+						/>
+					)}
 				</Box>
 			</Paper>
 		</Popup>
