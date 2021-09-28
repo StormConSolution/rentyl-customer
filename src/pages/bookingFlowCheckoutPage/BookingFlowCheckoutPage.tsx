@@ -48,7 +48,7 @@ const BookingFlowCheckoutPage = () => {
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [isFormValid, setIsFormValid] = useState<boolean>(false);
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
-	const [isDisabled, setIsDisabled] = useState<boolean>(false);
+	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
 	const [accommodationIsLoaded, setAccommodationIsLoaded] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<
