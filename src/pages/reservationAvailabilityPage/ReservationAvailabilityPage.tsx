@@ -122,12 +122,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 			)
 				return;
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (
-				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
-				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
-			) {
-				newSearchQueryObj.priceRangeMax *= 100;
+			if (!!newSearchQueryObj.priceRangeMin) {
 				newSearchQueryObj.priceRangeMin *= 100;
+			}
+			if (!!newSearchQueryObj.priceRangeMax) {
+				newSearchQueryObj.priceRangeMax *= 100;
 			}
 			try {
 				popupController.open(SpinningLoaderPopup);
