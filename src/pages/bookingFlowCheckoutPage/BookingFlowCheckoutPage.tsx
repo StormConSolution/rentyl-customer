@@ -28,6 +28,8 @@ import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
 import globalState from '../../state/globalState';
+import { Simulate } from 'react-dom/test-utils';
+import load = Simulate.load;
 
 let existingCardId = 0;
 
@@ -51,6 +53,7 @@ const BookingFlowCheckoutPage = () => {
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
 	const [accommodationIsLoaded, setAccommodationIsLoaded] = useState<boolean>(false);
+	const [accommodationsVerified, setAccommodationsVerified] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<
 		Omit<Api.UserAddress.Req.Create, 'name' | 'userId'> | { addressId: number }
 	>();
@@ -105,6 +108,11 @@ const BookingFlowCheckoutPage = () => {
 			return total + accommodation.prices.grandTotalCents;
 		}, 0);
 		setGrandTotal(value);
+		if (Object.keys(verifiedAccommodations).length === stayParams.length) {
+			setAccommodationsVerified(true);
+		} else {
+			setAccommodationsVerified(false);
+		}
 	}, [verifiedAccommodations, usePoints]);
 
 	useEffect(() => {
@@ -174,11 +182,11 @@ const BookingFlowCheckoutPage = () => {
 				updateHasEnoughPoints = 0 < user.availablePoints;
 				setHasEnoughPoints(updateHasEnoughPoints);
 			}
-			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj || !accommodationIsLoaded);
+			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj || !accommodationsVerified);
 		} else {
-			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj || !accommodationIsLoaded);
+			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj || !accommodationsVerified);
 		}
-	}, [hasAgreedToTerms, isFormValid, usePoints, accommodationIsLoaded]);
+	}, [hasAgreedToTerms, isFormValid, usePoints, accommodationsVerified]);
 
 	async function removeAccommodation(uuid: number): Promise<void> {
 		const newStayList = stayParams.filter((stay) => stay.uuid !== uuid);
@@ -323,10 +331,6 @@ const BookingFlowCheckoutPage = () => {
 		});
 	}
 
-	function onAccommodationLoaded() {
-		setAccommodationIsLoaded(true);
-	}
-
 	function renderAccommodationCards() {
 		return (
 			stayParams &&
@@ -343,7 +347,6 @@ const BookingFlowCheckoutPage = () => {
 						upsellPackages={accommodation.packages}
 						destinationId={destinationId}
 						rateCode={accommodation.rateCode}
-						onAccommodationLoaded={onAccommodationLoaded}
 						removeAccommodation={(needsConfirmation: boolean) => {
 							if (!needsConfirmation) {
 								removeAccommodation(accommodation.uuid).catch(console.error);
