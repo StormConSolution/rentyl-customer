@@ -52,7 +52,6 @@ const BookingFlowCheckoutPage = () => {
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
-	const [accommodationIsLoaded, setAccommodationIsLoaded] = useState<boolean>(false);
 	const [accommodationsVerified, setAccommodationsVerified] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<
 		Omit<Api.UserAddress.Req.Create, 'name' | 'userId'> | { addressId: number }
