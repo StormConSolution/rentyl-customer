@@ -1264,6 +1264,7 @@ declare namespace Api {
 			destination: StayDetails;
 			accommodation: StayDetails;
 			packages: StayDetails[] | null;
+			reservationId: number;
 			message: string;
 			rating: number;
 			createdOn: Date | string;
