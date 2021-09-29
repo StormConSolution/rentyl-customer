@@ -28,6 +28,8 @@ import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
 import globalState from '../../state/globalState';
+import { Simulate } from 'react-dom/test-utils';
+import load = Simulate.load;
 
 let existingCardId = 0;
 
@@ -50,6 +52,7 @@ const BookingFlowCheckoutPage = () => {
 	const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(true);
 	const [hasEnoughPoints, setHasEnoughPoints] = useState<boolean>(true);
+	const [accommodationsVerified, setAccommodationsVerified] = useState<boolean>(false);
 	const [addressObj, setAddressObj] = useState<
 		Omit<Api.UserAddress.Req.Create, 'name' | 'userId'> | { addressId: number }
 	>();
@@ -104,6 +107,11 @@ const BookingFlowCheckoutPage = () => {
 			return total + accommodation.prices.grandTotalCents;
 		}, 0);
 		setGrandTotal(value);
+		if (Object.keys(verifiedAccommodations).length === stayParams.length) {
+			setAccommodationsVerified(true);
+		} else {
+			setAccommodationsVerified(false);
+		}
 	}, [verifiedAccommodations, usePoints]);
 
 	useEffect(() => {
@@ -173,11 +181,11 @@ const BookingFlowCheckoutPage = () => {
 				updateHasEnoughPoints = 0 < user.availablePoints;
 				setHasEnoughPoints(updateHasEnoughPoints);
 			}
-			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj);
+			setIsDisabled(!hasAgreedToTerms || !updateHasEnoughPoints || !addressObj || !accommodationsVerified);
 		} else {
-			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj);
+			setIsDisabled(!hasAgreedToTerms || !isFormValid || !addressObj || !accommodationsVerified);
 		}
-	}, [hasAgreedToTerms, isFormValid, usePoints]);
+	}, [hasAgreedToTerms, isFormValid, usePoints, accommodationsVerified]);
 
 	async function removeAccommodation(uuid: number): Promise<void> {
 		const newStayList = stayParams.filter((stay) => stay.uuid !== uuid);
@@ -539,11 +547,6 @@ const BookingFlowCheckoutPage = () => {
 								By completing this booking, I agree with the booking conditions
 							</Label>
 						</Paper>
-						{isDisabled && (
-							<Label variant={'subtitle2'} className={'missingText'}>
-								Missing or Incorrect Information.
-							</Label>
-						)}
 						<LabelButton
 							className={'completeBookingBtn'}
 							look={isDisabled ? 'containedSecondary' : 'containedPrimary'}

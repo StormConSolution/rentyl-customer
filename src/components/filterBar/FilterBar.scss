@@ -1,6 +1,10 @@
 @import '../../themes/themes.scss';
 
 .rsFilterBar {
+	display: grid;
+	grid-template-columns: repeat(7, auto);
+	gap: 20px;
+	justify-content: start;
 	.rsSelect {
 		max-width: 100%;
 		[class*='control'] {
@@ -33,10 +37,6 @@
 			color: theme-var($buttonLinkColor);
 		}
 	}
-	display: grid;
-	grid-template-columns: repeat(7, auto);
-	gap: 20px;
-	justify-content: start;
 	.rsLabelSelect {
 		width: 200px;
 	}
