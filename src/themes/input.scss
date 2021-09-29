@@ -12,6 +12,9 @@
 	input {
 		height: 100%;
 	}
+	&.textarea {
+		resize: none;
+	}
 	&:focus-within,
 	&:hover {
 		border-color: theme-var($buttonLinkColor) !important;

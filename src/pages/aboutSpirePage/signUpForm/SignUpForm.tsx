@@ -17,11 +17,13 @@ import { HttpStatusCode } from '../../../utils/http';
 import { WebUtils } from '../../../utils/utils';
 import serviceFactory from '../../../services/serviceFactory';
 import UserService from '../../../services/user/user.service';
+import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 
 interface SignUpFormProps {}
 
 const SignUpForm: React.FC<SignUpFormProps> = (props) => {
 	let userService = serviceFactory.get<UserService>('UserService');
+	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ data: any }>([{ key: 'data', default: 0, type: 'string', alias: 'data' }]);
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
 	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
@@ -197,7 +199,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
 				}}
 			/>
 			<Label variant={'caption'} className={'small'}>
-				By signing up you are agreeing to the{' '}
+				By signing up you are agreeing to the {size === 'small' && <br />}
 				<span>
 					<Link path={'/legal/terms-and-conditions'}>Terms & Conditions</Link>
 				</span>{' '}
