@@ -1661,6 +1661,7 @@ declare namespace Api {
 			address: Address[] | [];
 			lifeTimePoints: number;
 			availablePoints: number;
+			pendingPoints: number;
 			city: string;
 			state: string;
 			loginExpiresOn: Date | string;
