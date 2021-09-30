@@ -11,13 +11,16 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { WebUtils } from '../../utils/utils';
 
 const ExistingItineraryPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const [reservations, setReservations] = useState<Api.Reservation.Res.Get[]>([]);
-	const [upComingReservations, setUpComingReservations] = useState<Api.Reservation.Res.Get[]>([]);
-	const [previousReservations, setPreviousReservations] = useState<Api.Reservation.Res.Get[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [itineraries, setItineraries] = useState<Api.Reservation.Res.Itinerary.Get[]>([]);
+	const [upcomingItineraries, setUpcomingItineraries] = useState<Api.Reservation.Res.Itinerary.Get[]>([]);
+	const [previousItineraries, setPreviousItineraries] = useState<Api.Reservation.Res.Itinerary.Get[]>([]);
 
 	useEffect(() => {
 		if (!user) return;
@@ -44,7 +47,7 @@ const ExistingItineraryPage: React.FC = () => {
 			};
 			try {
 				let res = await reservationService.getByPage(pageQuery);
-				setReservations(res.data);
+				setItineraries(res.data);
 			} catch (e) {
 				console.error(e);
 			}
@@ -53,103 +56,104 @@ const ExistingItineraryPage: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		if (!ObjectUtils.isArrayWithData(reservations)) return;
-
-		let prevReservations = reservations.filter((item) => {
-			let date = new Date(item.departureDate);
-			return date.getTime() < Date.now() && !item.externalCancellationId;
-		});
-
-		let currentRes = reservations.filter((item) => {
-			let date = new Date(item.departureDate);
-			return date.getTime() >= Date.now() && !item.externalCancellationId;
-		});
-
-		setUpComingReservations(currentRes);
-		setPreviousReservations(prevReservations);
-	}, [reservations]);
-
-	function groupMatchingItineraries(
-		reservationArray: Api.Reservation.Res.Get[]
-	): { itineraryId: string; reservations: Api.Reservation.Res.Get[] }[] {
-		let itineraries: { itineraryId: string; reservations: Api.Reservation.Res.Get[] }[] = [];
-		reservationArray.forEach((item) => {
-			let itineraryGroup = reservationArray.filter((reservation) => {
-				return item.itineraryId === reservation.itineraryId;
+		try {
+			if (!ObjectUtils.isArrayWithData(itineraries)) return;
+			let prevItineraries = itineraries.filter((itinerary) => {
+				let sortedStays = itinerary.stays;
+				sortedStays.sort(
+					(stay1, stay2) => new Date(stay2.departureDate).getTime() - new Date(stay1.departureDate).getTime()
+				);
+				let date = new Date(sortedStays[0].departureDate);
+				return date.getTime() < Date.now();
 			});
-			let itineraryExist = itineraries.find((itineraries) => itineraries.itineraryId === item.itineraryId);
-			if (!itineraryExist) itineraries.push({ itineraryId: item.itineraryId, reservations: itineraryGroup });
-		});
-		return itineraries;
-	}
+
+			let currentItineraries = itineraries.filter((itinerary) => {
+				let sortedStays = itinerary.stays;
+				sortedStays.sort(
+					(stay1, stay2) => new Date(stay2.departureDate).getTime() - new Date(stay1.departureDate).getTime()
+				);
+				let date = new Date(sortedStays[0].departureDate);
+				return date.getTime() >= Date.now();
+			});
+
+			setUpcomingItineraries(currentItineraries);
+			setPreviousItineraries(prevItineraries);
+			setLoading(false);
+		} catch (e) {
+			rsToastify.error(
+				WebUtils.getRsErrorMessage(e, 'There was a problem getting your reservations'),
+				"Can't Get Reservations"
+			);
+		}
+	}, [itineraries]);
 
 	function renderUpcomingReservations() {
-		if (!ObjectUtils.isArrayWithData(upComingReservations)) return;
+		if (!ObjectUtils.isArrayWithData(upcomingItineraries)) return;
 
-		let itineraries = groupMatchingItineraries(upComingReservations);
-
-		return itineraries.map((item) => {
-			let reservation = item.reservations[0];
+		return itineraries.map((itinerary) => {
 			return (
 				<ItineraryCard
-					key={reservation.id}
-					itineraryId={item.itineraryId}
-					imgPaths={reservation.destination.media.map((item) => item.urls.imageKit)}
-					logo={reservation.destination.logoUrl}
-					title={'Itinerary-' + reservation.destination.name}
-					address={`${reservation.destination.address1}, ${reservation.destination.city}, ${reservation.destination.state} ${reservation.destination.zip}`}
-					reservationDates={{ startDate: reservation.arrivalDate, endDate: reservation.departureDate }}
+					key={itinerary.stays[0].reservationId}
+					itineraryId={itinerary.itineraryId}
+					imgPaths={itinerary.destination.media.map((item) => item.urls.imageKit)}
+					logo={itinerary.destination.logoUrl}
+					title={'Itinerary-' + itinerary.destination.name}
+					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					reservationDates={{
+						startDate: itinerary.stays[0].arrivalDate,
+						endDate: itinerary.stays[0].departureDate
+					}}
 					propertyType={'VIP Suite'}
-					maxOccupancy={reservation.accommodation.maxOccupantCount}
-					amenities={reservation.accommodation.featureIcons}
-					totalPoints={reservation.priceDetail.grandTotalPoints}
-					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
-					cancelPermitted={reservation.cancellationPermitted}
-					itineraryTotal={item.reservations.reduce((total, reservation) => {
+					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
+					amenities={itinerary.stays[0].accommodation.featureIcons}
+					totalPoints={itinerary.stays[0].priceDetail.grandTotalPoints}
+					linkPath={'/itineraries/itinerary/details?ii=' + itinerary.itineraryId}
+					cancelPermitted={itinerary.stays[0].cancellationPermitted}
+					itineraryTotal={itinerary.stays.reduce((total, reservation) => {
 						return total + reservation.priceDetail.grandTotalCents;
 					}, 0)}
-					paidWithPoints={!reservation.paymentMethod}
+					paidWithPoints={!itinerary.paymentMethod}
 				/>
 			);
 		});
 	}
 
 	function renderPrevReservations() {
-		if (!ObjectUtils.isArrayWithData(previousReservations)) return;
+		if (!ObjectUtils.isArrayWithData(previousItineraries)) return;
 
-		let itineraries = groupMatchingItineraries(previousReservations);
-
-		return itineraries.map((item) => {
-			let pointTotal = item.reservations.reduce((total, reservation) => {
+		return itineraries.map((itinerary) => {
+			let pointTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalPoints;
 			}, 0);
-			let cashTotal = item.reservations.reduce((total, reservation) => {
+			let cashTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
-			let reservation = item.reservations[0];
 			return (
 				<ItineraryCard
-					key={reservation.id}
-					itineraryId={item.itineraryId}
-					imgPaths={reservation.destination.media.map((item) => item.urls.imageKit)}
-					logo={reservation.destination.logoUrl}
-					title={reservation.destination.name}
-					address={`${reservation.destination.address1}, ${reservation.destination.city}, ${reservation.destination.state} ${reservation.destination.zip}`}
-					reservationDates={{ startDate: reservation.arrivalDate, endDate: reservation.departureDate }}
+					key={itinerary.stays[0].reservationId}
+					itineraryId={itinerary.itineraryId}
+					imgPaths={itinerary.destination.media.map((item) => item.urls.imageKit)}
+					logo={itinerary.destination.logoUrl}
+					title={itinerary.destination.name}
+					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					reservationDates={{
+						startDate: itinerary.stays[0].arrivalDate,
+						endDate: itinerary.stays[0].departureDate
+					}}
 					propertyType={'VIP Suite'}
-					maxOccupancy={reservation.accommodation.maxOccupantCount}
-					amenities={reservation.accommodation.featureIcons}
+					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
+					amenities={itinerary.stays[0].accommodation.featureIcons}
 					totalPoints={pointTotal}
-					linkPath={'/reservations/itinerary/details?ii=' + reservation.itineraryId}
+					linkPath={'/itineraries/itinerary/details?ii=' + itinerary.itineraryId}
 					cancelPermitted={0}
 					itineraryTotal={cashTotal}
-					paidWithPoints={!reservation.paymentMethod}
+					paidWithPoints={!itinerary.paymentMethod}
 				/>
 			);
 		});
 	}
 
-	return !user || !reservations ? (
+	return loading ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsExistingItineraryPage'}>
