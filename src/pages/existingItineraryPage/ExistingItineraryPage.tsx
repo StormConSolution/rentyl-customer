@@ -60,6 +60,7 @@ const ExistingItineraryPage: React.FC = () => {
 			if (!ObjectUtils.isArrayWithData(itineraries)) return;
 			let prevItineraries = itineraries.filter((itinerary) => {
 				let sortedStays = itinerary.stays;
+				if (sortedStays === null) return;
 				sortedStays.sort(
 					(stay1, stay2) => new Date(stay2.departureDate).getTime() - new Date(stay1.departureDate).getTime()
 				);
@@ -69,6 +70,7 @@ const ExistingItineraryPage: React.FC = () => {
 
 			let currentItineraries = itineraries.filter((itinerary) => {
 				let sortedStays = itinerary.stays;
+				if (sortedStays === null) return;
 				sortedStays.sort(
 					(stay1, stay2) => new Date(stay2.departureDate).getTime() - new Date(stay1.departureDate).getTime()
 				);
@@ -90,7 +92,7 @@ const ExistingItineraryPage: React.FC = () => {
 	function renderUpcomingReservations() {
 		if (!ObjectUtils.isArrayWithData(upcomingItineraries)) return;
 
-		return itineraries.map((itinerary) => {
+		return upcomingItineraries.map((itinerary) => {
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
@@ -121,7 +123,7 @@ const ExistingItineraryPage: React.FC = () => {
 	function renderPrevReservations() {
 		if (!ObjectUtils.isArrayWithData(previousItineraries)) return;
 
-		return itineraries.map((itinerary) => {
+		return previousItineraries.map((itinerary) => {
 			let pointTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalPoints;
 			}, 0);
