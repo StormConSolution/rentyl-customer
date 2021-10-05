@@ -32,6 +32,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import RegionService from '../../services/region/region.service';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -122,12 +123,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 			)
 				return;
 			let newSearchQueryObj = { ...searchQueryObj };
-			if (
-				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
-				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
-			) {
-				newSearchQueryObj.priceRangeMax *= 100;
+			if (!!newSearchQueryObj.priceRangeMin) {
 				newSearchQueryObj.priceRangeMin *= 100;
+			}
+			if (!!newSearchQueryObj.priceRangeMax) {
+				newSearchQueryObj.priceRangeMax *= 100;
 			}
 			try {
 				popupController.open(SpinningLoaderPopup);
@@ -263,7 +263,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, -1);
 			return (
 				<DestinationSearchResultCard
-					key={index}
+					key={destination.id}
 					destinationName={destination.name}
 					address={`${destination.city}, ${destination.state}`}
 					logoImagePath={destination.logoUrl}
@@ -359,11 +359,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						}
 					}
 				};
-				if (accommodationList.length <= 0) {
-					return [...acc];
-				} else {
-					return [...acc, destinationSummaryTab];
-				}
+				return [...acc, destinationSummaryTab];
 			},
 			[{ label: 'Overview', content: { text: destination.description } }]
 		);
@@ -398,10 +394,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 					height={'200px'}
 					mobileHeight={'100px'}
 				/>
+				<Box className={'pointsDisplay'}>
+					<PointsOrLogin />
+				</Box>
 				<Box
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
-					padding={size === 'small' ? '20px 30px' : '60px 140px'}
+					padding={size === 'small' ? '0px 30px 20px 30px' : '20px 140px 60px 140px'}
 					boxSizing={'border-box'}
 				>
 					<Label className={'filterLabel'} variant={'h1'}>

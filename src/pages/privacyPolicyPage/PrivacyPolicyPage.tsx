@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Link, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import './PrivacyPolicyPage.scss';
 import Footer from '../../components/footer/Footer';
@@ -39,14 +39,16 @@ const PrivacyPolicyPage: React.FC = () => {
 				</Label>
 				{renderSectionHeader('Introduction')}
 				<p>
-					<Label variant={'h1'}>SPIRE TECHNOLOGY INC.</Label> a Delaware corporation (together with its
-					affiliates, collectively, the <b>“Company,” “we,” “our,”</b> or <b>“us”</b>) respect your privacy
-					and are committed to protecting it through our compliance with this policy. This privacy policy
-					describes the types of information we may collect from you or that you may provide to us, including
-					when you visit the internet site with the domain name of <b>SpireLoyalty.com</b>, including any
-					pages, content, functionality, and services offered on or through such internet site (collectively,
-					the <b>“Website”</b>), and our practices for collecting, using, maintaining, protecting, and
-					disclosing that information.
+					<Link path={'/'}>
+						<Label variant={'h1'}>SPIRE TECHNOLOGY INC.</Label>
+					</Link>{' '}
+					a Delaware corporation (together with its affiliates, collectively, the{' '}
+					<b>“Company,” “we,” “our,”</b> or <b>“us”</b>) respect your privacy and are committed to protecting
+					it through our compliance with this policy. This privacy policy describes the types of information
+					we may collect from you or that you may provide to us, including when you visit the internet site
+					with the domain name of <b>SpireLoyalty.com</b>, including any pages, content, functionality, and
+					services offered on or through such internet site (collectively, the <b>“Website”</b>), and our
+					practices for collecting, using, maintaining, protecting, and disclosing that information.
 				</p>
 				<p>
 					This policy applies to information we collect:
@@ -160,12 +162,12 @@ const PrivacyPolicyPage: React.FC = () => {
 				{renderSectionHeader('Disclosure of Your Personal Information and Technology Usage Information')}
 				<p>
 					We may disclose personal information that we collect or you provide as described in this privacy
-					policy:{' '}
+					policy:
 					{renderBullets([
 						'To our subsidiaries and affiliates.',
 						'To contractors, service providers, and other third parties we use to support our business.',
 						'To a buyer or other successor in the event of a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of the Company’s assets.',
-						'To third parties to market their products or services to you if you have consented to these disclosures. For more information, see <u>Choices About How We Use and Disclose Your Information</u>].',
+						'To third parties to market their products or services to you if you have consented to these disclosures. For more information, see <Link path="/legal/terms-of-use"><u>Choices About How We Use and Disclose Your Information</u></Link>].',
 						'To fulfill the purpose for which you provide it.',
 						'For any other purpose disclosed by us when you provide the information.',
 						'With your consent.'
@@ -176,7 +178,7 @@ const PrivacyPolicyPage: React.FC = () => {
 					We may also disclose your personal information and/or technology usage information:{' '}
 					{renderBullets([
 						'To comply with any court order, law, or legal process, including to respond to any government or regulatory request.',
-						'To enforce or apply our Website Terms of Use [INSERT LINK TO WEBSITE’S TERMS OF USE], the <b>[Spire™ Loyalty Rewards Program Terms and Conditions]</b> [INSERT LINK TO SPIRE REWARDS TERMS and CONDITIONS] <b>(“Spire Loyalty Terms and Conditions”)</b> and other agreements and/or documents governing the relationship between you and the Company.',
+						'To enforce or apply our Website <Link path="/legal/terms-of-use">Terms of Use</Link>, the <b><Link path="/legal/terms-and-conditions">Spire™ Loyalty Rewards Program Terms and Conditions</Link></b> <b>(“Spire Loyalty Terms and Conditions”)</b> and other agreements and/or documents governing the relationship between you and the Company.',
 						'If we believe disclosure is necessary or appropriate to protect the rights, property, or safety of the Company, our customers, or others. This includes exchanging information with other companies and organizations for the purposes of fraud protection and credit risk reduction.'
 					])}
 				</p>
@@ -186,19 +188,20 @@ const PrivacyPolicyPage: React.FC = () => {
 					information (and the other information elsewhere described herein, if you enroll in the{' '}
 					<b>Spire Loyalty Program (“Spire Loyalty”)</b>, the Company and its third party Service Providers
 					will collect and monitor information regarding the transactions that you make on Linked Cards, as
-					described in the Spire Loyalty Terms and Conditions. This information is referred to as
-					“transactional information” and is treated differently than your personal information and other
-					information described herein. For example, if you register a payment card as a “Linked Card” in
-					connection with transaction monitoring, you authorize us to share your payment card information with
-					the “Payment Networks” so the applicable Payment Network(s) is or are informed of the registration
-					of the Linked Card as a part of Spire Loyalty. You authorize the applicable Payment Network(s) to
-					monitor transactions on your Linked Card(s) to identify “Eligible Transactions” in order to
-					determine whether you have qualified for or earned an offer linked to your Linked Card(s), and for
-					the Payment Network(s) to share such transaction details with us to enable your Linked Card(s)
-					offer(s) and target offers that may be of interest to you. You may opt-out of transaction monitoring
-					on the Linked Card(s) at any time by either (a) deleting the Linked Card(s) as Linked Cards or (b)
-					terminating your participation in the Spire Loyalty, in either case in accordance with the Spire
-					Loyalty Terms and Conditions.
+					described in the{' '}
+					<Link path={'/legal/terms-and-conditions'}>Spire Loyalty Terms and Conditions</Link>. This
+					information is referred to as “transactional information” and is treated differently than your
+					personal information and other information described herein. For example, if you register a payment
+					card as a “Linked Card” in connection with transaction monitoring, you authorize us to share your
+					payment card information with the “Payment Networks” so the applicable Payment Network(s) is or are
+					informed of the registration of the Linked Card as a part of Spire Loyalty. You authorize the
+					applicable Payment Network(s) to monitor transactions on your Linked Card(s) to identify “Eligible
+					Transactions” in order to determine whether you have qualified for or earned an offer linked to your
+					Linked Card(s), and for the Payment Network(s) to share such transaction details with us to enable
+					your Linked Card(s) offer(s) and target offers that may be of interest to you. You may opt-out of
+					transaction monitoring on the Linked Card(s) at any time by either (a) deleting the Linked Card(s)
+					as Linked Cards or (b) terminating your participation in the Spire Loyalty, in either case in
+					accordance with the Spire Loyalty Terms and Conditions.
 				</p>
 				<p>
 					Notwithstanding anything to the herein or in the Spire Loyalty Terms and Conditions, the Company and
@@ -221,7 +224,10 @@ const PrivacyPolicyPage: React.FC = () => {
 				<p>
 					Capitalized terms used but not otherwise defined in this “Collection and Use of Transactional
 					Information” section shall have the meanings ascribed thereto in the{' '}
-					<u>Spire™ Loyalty Rewards Program Terms and Conditions</u>.
+					<Link path={'/legal/terms-and-conditions'}>
+						<u>Spire™ Loyalty Rewards Program Terms and Conditions</u>
+					</Link>
+					.
 				</p>
 				{renderSectionHeader('Transaction Monitoring')}
 				<p>

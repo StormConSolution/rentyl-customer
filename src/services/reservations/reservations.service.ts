@@ -55,9 +55,11 @@ export default class ReservationsService extends Service {
 		return response.data.data;
 	}
 
-	async getByPage(pageQuery: RedSky.PageQuery): Promise<RedSky.RsPagedResponseData<Api.Reservation.Res.Get[]>> {
-		let response = await http.get<RedSky.RsPagedResponseData<Api.Reservation.Res.Get[]>>(
-			'reservation/paged',
+	async getByPage(
+		pageQuery: RedSky.PageQuery
+	): Promise<RedSky.RsPagedResponseData<Api.Reservation.Res.Itinerary.Get[]>> {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reservation.Res.Itinerary.Get[]>>(
+			'reservation/itinerary/paged',
 			WebUtils.convertDataForUrlParams(pageQuery)
 		);
 		return response.data;

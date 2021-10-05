@@ -48,21 +48,23 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 		])
 	);
 
-	const [updateUserPassword, setUpdateUserPassword] = useState<RsFormGroup>(
+	const [newPasswordForm, setNewPasswordForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('old', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide your current password here')
 			]),
 			new RsFormControl('new', '', [
 				new RsValidator(RsValidatorEnum.CUSTOM, '', (control) => {
-					return StringUtils.validateEmail(control.value.toString());
+					return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
+						control.value.toString()
+					);
 				}),
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide a new password')
 			]),
 			new RsFormControl('retypeNewPassword', '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please retype your new password'),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Password does not match', (control) => {
-					let newPassword: any = updateUserPassword.get('new').value.toString();
+					let newPassword: any = newPasswordForm.get('new').value.toString();
 					return control.value === newPassword;
 				})
 			])
@@ -79,16 +81,16 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}, [updateUserForm]);
 
 	useEffect(() => {
+		async function validatePasswordForm() {
+			let isValid = await newPasswordForm.isValid();
+			setIsPasswordFormValid(isValid);
+		}
+		validatePasswordForm().catch(console.error);
+	}, [newPasswordForm]);
+
+	useEffect(() => {
 		if (!user) router.navigate('/signup').catch(console.error);
 	}, [user]);
-
-	function isPasswordFormFilledOut(): boolean {
-		return (
-			!!updateUserPassword.get('old').value.toString().length &&
-			!!updateUserPassword.get('new').value.toString().length &&
-			!!updateUserPassword.get('retypeNewPassword').value.toString().length
-		);
-	}
 
 	async function updateUserObjForm(control: RsFormControl) {
 		setUpdateUserForm(updateUserForm.clone().update(control));
@@ -106,10 +108,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 			const specialCharacter = new RegExp(/[0-9!\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]/g);
 			setHasSpecialCharacter(specialCharacter.test(password));
 		}
-		updateUserPassword.update(control);
-		let isFormValid = await updateUserPassword.isValid();
-		setIsPasswordFormValid(isPasswordFormFilledOut() && isFormValid);
-		setUpdateUserPassword(updateUserPassword.clone());
+		setNewPasswordForm(newPasswordForm.clone().update(control));
 	}
 
 	async function saveAccountInfo() {
@@ -131,12 +130,12 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 
 	async function updatePassword() {
 		if (!user) return;
-		let newPasswordForm: any = updateUserPassword.toModel();
-		delete newPasswordForm.retypeNewPassword;
-		setIsPasswordFormValid(false);
+		let newPassword: any = newPasswordForm.toModel();
+		delete newPassword.retypeNewPassword;
 		try {
-			let response = await userService.updatePassword(newPasswordForm);
+			let response = await userService.updatePassword(newPassword);
 			if (response) rsToastify.success('Password successfully updated.', 'Password Updated!');
+			newPasswordForm.resetToInitialValue();
 		} catch (e) {
 			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failed to update password'), 'Server Error');
 		}
@@ -209,13 +208,13 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							className={'accountNameInput'}
 							title={'Current Password'}
 							inputType={'password'}
-							control={updateUserPassword.get('old')}
+							control={newPasswordForm.get('old')}
 							updateControl={updateUserPasswordForm}
 						/>
 						<LabelInput
 							title={'New Password'}
 							inputType={'password'}
-							control={updateUserPassword.get('new')}
+							control={newPasswordForm.get('new')}
 							updateControl={updateUserPasswordForm}
 							labelVariant={'caption'}
 						/>
@@ -223,11 +222,11 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						<LabelInput
 							title={'Retype new password'}
 							inputType={'password'}
-							control={updateUserPassword.get('retypeNewPassword')}
+							control={newPasswordForm.get('retypeNewPassword')}
 							updateControl={updateUserPasswordForm}
 							labelVariant={'caption'}
 						/>
-						{updateUserPassword.isModified() && (
+						{newPasswordForm.isModified() && (
 							<>
 								<Box display={'flex'} className={'passwordCheck'}>
 									<Icon

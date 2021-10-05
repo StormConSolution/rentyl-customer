@@ -267,7 +267,7 @@ declare namespace Api {
 
 		export namespace Res {
 			export interface Get extends Omit<Model.Action, 'companyId' | 'affiliateId' | 'affiliateLocationId'> {
-				affiliate: Omit<Model.Affiliate, 'companyId'>;
+				affiliate: Model.Affiliate;
 				affiliateLocation: Model.AffiliateLocation;
 			}
 
@@ -287,7 +287,7 @@ declare namespace Api {
 		export namespace Res {
 			export interface Location extends Model.AffiliateLocation {}
 
-			export interface Get extends Omit<Model.Affiliate, 'companyId'> {}
+			export interface Get extends Model.Affiliate {}
 		}
 	}
 
@@ -500,10 +500,8 @@ declare namespace Api {
 		export namespace Req {
 			export interface Create {
 				name: string;
-				phone: string;
 				primaryEmail: string;
 				password: string;
-				address?: Api.UserAddress.Req.Create;
 			}
 
 			export interface Get {}
@@ -611,6 +609,7 @@ declare namespace Api {
 			export interface Details {
 				id: number;
 				externalId: string;
+				companyId: number;
 				name: string;
 				description: string;
 				locationDescription: string;
@@ -985,6 +984,7 @@ declare namespace Api {
 		export interface DestinationDetails {
 			id: number;
 			externalId: string;
+			companyId: number;
 			name: string;
 			description: string;
 			status: string;
@@ -1101,6 +1101,8 @@ declare namespace Api {
 			}
 
 			export namespace Itinerary {
+				export interface UserAddressCreate extends Omit<UserAddress.Req.Create, 'name' | 'userId'> {}
+
 				export interface Get {
 					reservationId?: number;
 					itineraryId?: string;
@@ -1123,7 +1125,7 @@ declare namespace Api {
 					destinationId: number;
 					paymentMethodId?: number;
 					existingAddressId?: number;
-					newAddress?: Omit<UserAddress.Req.Create, 'name' | 'userId'>;
+					newAddress?: UserAddressCreate;
 					stays: Stay[];
 				}
 			}
@@ -1225,6 +1227,7 @@ declare namespace Api {
 					upsellPackages: UpsellPackage.Res.Complete[];
 					priceDetail: PriceDetail;
 					cancellationPermitted: 0 | 1;
+					review: { id: number; rating: number; message: string } | null;
 					additionalDetails: string;
 				}
 
@@ -1257,11 +1260,11 @@ declare namespace Api {
 
 		export interface Details {
 			id: number;
-			companyId: number;
 			guest: Guest;
 			destination: StayDetails;
 			accommodation: StayDetails;
 			packages: StayDetails[] | null;
+			reservationId: number;
 			message: string;
 			rating: number;
 			createdOn: Date | string;
@@ -1295,6 +1298,10 @@ declare namespace Api {
 
 			export interface ForUser {
 				userId: number;
+			}
+
+			export interface Reservation {
+				reservationId: number;
 			}
 
 			export interface Get {
@@ -1353,8 +1360,9 @@ declare namespace Api {
 				categoryIds: number[];
 			}
 
-			export interface Update extends Partial<Omit<Model.Reward, 'id' | 'companyId'>> {
+			export interface Update extends Partial<Omit<Model.Reward, 'id' | 'companyId' | 'destinationId'>> {
 				id: number;
+				destinationId?: number;
 				mediaDetails?: MediaDetails[];
 				categoryIds?: number[];
 			}
@@ -1418,7 +1426,7 @@ declare namespace Api {
 				}
 			}
 			export namespace Res {
-				export interface Get extends Omit<Model.RewardVoucher, 'companyId'> {}
+				export interface Get extends Model.RewardVoucher {}
 
 				export interface Create extends Get {}
 
@@ -1471,7 +1479,6 @@ declare namespace Api {
 	export namespace SystemActionLog {
 		export namespace Req {
 			export interface Create {
-				companyId: number;
 				userId: number;
 				action: Model.SystemActionLogActions;
 				source: string; // should be a DbTableName or service
@@ -1515,7 +1522,7 @@ declare namespace Api {
 				id: number;
 			}
 
-			export interface Update extends Partial<Omit<Model.Tier, 'companyId' | 'createdOn' | 'modifiedOn'>> {
+			export interface Update extends Partial<Omit<Model.Tier, 'createdOn' | 'modifiedOn'>> {
 				id: number;
 				featureIds?: number[];
 				mediaDetails?: MediaDetails[];
@@ -1543,7 +1550,7 @@ declare namespace Api {
 			}
 		}
 		export namespace Res {
-			export interface Get extends Omit<Model.Tier, 'companyId'> {
+			export interface Get extends Model.Tier {
 				features: Model.TierFeature[];
 				mediaDetails: MediaDetails[];
 			}
@@ -1634,7 +1641,7 @@ declare namespace Api {
 
 		export interface Filtered {
 			id: number;
-			companyId: number;
+			companyId?: number;
 			tierId: number;
 			userRoleId: number;
 			firstName: string;
@@ -1654,6 +1661,7 @@ declare namespace Api {
 			address: Address[] | [];
 			lifeTimePoints: number;
 			availablePoints: number;
+			pendingPoints: number;
 			city: string;
 			state: string;
 			loginExpiresOn: Date | string;

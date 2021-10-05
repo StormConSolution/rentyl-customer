@@ -2,7 +2,7 @@ import INavData = Misc.INavData;
 
 export const NavData: INavData[] = [
 	{
-		title: 'RedeemPoints',
+		title: 'Redeem Points',
 		route: '/reward',
 		isSectionHeader: true,
 		isSignedIn: false
