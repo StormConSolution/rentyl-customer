@@ -221,17 +221,22 @@ const RewardItemPage: React.FC = () => {
 		if (showCategoryOrRewardCards === 'category') {
 			return categoryPagedList.map((category: Api.Reward.Category.Res.Get, index) => {
 				let media;
-				if (category.media.length >= 2) {
-					media = category.media.find((image) => image.isPrimary);
+				if (category.media.length >= 1) {
+					let img = category.media.find((image) => image.isPrimary);
+					if (img) {
+						media = img.urls.imageKit.toString() || img.urls.thumb;
+					} else {
+						media = category.media[0].urls.imageKit || category.media[0].urls.thumb;
+					}
 				} else {
-					media = category.media[0];
+					media = '';
 				}
 				return (
 					<RewardCategoryCard
 						key={index}
 						value={category.id}
 						title={category.name}
-						imgPath={media ? media.urls.imageKit : ''}
+						imgPath={media}
 						onClick={(categoryId) => {
 							handleCategoryOnClick(categoryId);
 						}}
