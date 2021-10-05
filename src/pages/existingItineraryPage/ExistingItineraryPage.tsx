@@ -109,7 +109,7 @@ const ExistingItineraryPage: React.FC = () => {
 					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
 					amenities={itinerary.stays[0].accommodation.featureIcons}
 					totalPoints={itinerary.stays[0].priceDetail.grandTotalPoints}
-					linkPath={'/itineraries/itinerary/details?ii=' + itinerary.itineraryId}
+					linkPath={'/reservations/itinerary/details?ii=' + itinerary.itineraryId}
 					cancelPermitted={itinerary.stays[0].cancellationPermitted}
 					itineraryTotal={itinerary.stays.reduce((total, reservation) => {
 						return total + reservation.priceDetail.grandTotalCents;
@@ -146,7 +146,7 @@ const ExistingItineraryPage: React.FC = () => {
 					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
 					amenities={itinerary.stays[0].accommodation.featureIcons}
 					totalPoints={pointTotal}
-					linkPath={'/itineraries/itinerary/details?ii=' + itinerary.itineraryId}
+					linkPath={'/reservations/itinerary/details?ii=' + itinerary.itineraryId}
 					cancelPermitted={0}
 					itineraryTotal={cashTotal}
 					paidWithPoints={!itinerary.paymentMethod}
