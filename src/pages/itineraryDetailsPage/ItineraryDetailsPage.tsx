@@ -51,6 +51,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					WebUtils.getRsErrorMessage(e, 'Unable to get itinerary details'),
 					'Itinerary unavailable!'
 				);
+				router.navigate('/reservations').catch(console.error);
 			}
 		}
 		getItineraryDetails().catch(console.error);
