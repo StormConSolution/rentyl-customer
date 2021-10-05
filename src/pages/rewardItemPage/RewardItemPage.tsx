@@ -224,9 +224,9 @@ const RewardItemPage: React.FC = () => {
 				if (category.media.length >= 1) {
 					let img = category.media.find((image) => image.isPrimary);
 					if (img) {
-						media = img.urls.imageKit.toString() || img.urls.thumb;
+						media = img.urls.imageKit?.toString() || img.urls.thumb;
 					} else {
-						media = category.media[0].urls.imageKit || category.media[0].urls.thumb;
+						media = category.media[0].urls.imageKit?.toString() || category.media[0].urls.thumb;
 					}
 				} else {
 					media = '';
