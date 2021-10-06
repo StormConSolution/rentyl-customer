@@ -378,7 +378,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
 		if (destination.media) {
-			return destination.media.map((urlObj) => {
+			let images = destination.media;
+			images.sort((a, b) => {
+				return b.isPrimary - a.isPrimary;
+			});
+			return images.map((urlObj) => {
 				return urlObj.urls.imageKit?.toString() || '';
 			});
 		}
