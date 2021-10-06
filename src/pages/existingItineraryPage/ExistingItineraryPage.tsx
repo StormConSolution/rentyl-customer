@@ -89,15 +89,30 @@ const ExistingItineraryPage: React.FC = () => {
 		}
 	}, [itineraries]);
 
+	function handleDestinationImages(itinerary: Api.Reservation.Res.Itinerary.Get) {
+		if (itinerary.destination.media) {
+			let images = itinerary.destination.media;
+			images.sort((a, b) => {
+				return b.isPrimary - a.isPrimary;
+			});
+			return images.map((urlObj) => {
+				return urlObj.urls.imageKit?.toString() || urlObj.urls.large;
+			});
+		} else {
+			return [];
+		}
+	}
+
 	function renderUpcomingReservations() {
 		if (!ObjectUtils.isArrayWithData(upcomingItineraries)) return;
 
 		return upcomingItineraries.map((itinerary) => {
+			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
 					itineraryId={itinerary.itineraryId}
-					imgPaths={itinerary.destination.media.map((item) => item.urls.imageKit)}
+					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={'Itinerary-' + itinerary.destination.name}
 					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
@@ -130,11 +145,12 @@ const ExistingItineraryPage: React.FC = () => {
 			let cashTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
+			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
 					itineraryId={itinerary.itineraryId}
-					imgPaths={itinerary.destination.media.map((item) => item.urls.imageKit)}
+					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={itinerary.destination.name}
 					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
