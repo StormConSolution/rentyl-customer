@@ -1,0 +1,29 @@
+@import 'src/themes/themes';
+
+.rsTierDescriptionCard {
+	max-width: 500px;
+	max-height: 260px;
+	height: 100%;
+	width: 100%;
+	.tierHeader {
+		display: flex;
+		border-bottom: 1px solid theme-var($greyLineColor);
+		padding-bottom: 20px;
+		.imageWrapper {
+			max-width: 46px;
+			max-height: 46px;
+			padding-right: 20px;
+		}
+		.titleContainer {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			.capitalize {
+				text-transform: uppercase;
+			}
+		}
+	}
+	.paragraph {
+		padding-top: 20px;
+	}
+}
