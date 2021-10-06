@@ -8,6 +8,9 @@ import { DateUtils } from '@bit/redsky.framework.rs.utils';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { StringUtils } from '../../utils/utils';
+import { popupController } from '@bit/redsky.framework.rs.996';
+import LoyaltyTierPopup, { LoyaltyTierPopupProps } from '../../popups/loyaltyTierPopup/LoyaltyTierPopup';
+import LabelButton from '../labelButton/LabelButton';
 
 interface UserPointStatusBarProps {
 	className?: string;
@@ -61,12 +64,13 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 					iconRight={'icon-chevron-right'}
 					iconSize={7}
 				/>
-				<LabelLink
-					path={'/'}
+				<LabelButton
+					look={'none'}
 					label={'See Loyalty Tiers'}
 					variant={'caption'}
-					iconRight={'icon-chevron-right'}
-					iconSize={7}
+					onClick={() => {
+						popupController.open<LoyaltyTierPopupProps>(LoyaltyTierPopup, {});
+					}}
 				/>
 			</Box>
 			{!!user.pointsExpiring && (

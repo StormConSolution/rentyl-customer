@@ -1,0 +1,43 @@
+@import 'src/themes/themes';
+
+.rsLoyaltyTierPopup {
+	position: relative;
+	.tierPopupContainer {
+		max-width: 1000px;
+		max-height: 600px;
+		width: 100%;
+		height: 100%;
+		background: theme-var($primaryBackgroundColor);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		position: relative;
+		.closeIcon {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			cursor: pointer;
+		}
+		.popupHeader {
+			width: 100%;
+			border-bottom: 1px solid theme-var($greyLineColor);
+			display: flex;
+			.headerText {
+				padding: 35px 0 30px 80px;
+			}
+			.coloredText {
+				color: theme-var($iconAndHighlightTextColor);
+				padding-left: 6px;
+			}
+		}
+		.tierCardContainer {
+			display: grid;
+			padding: 30px 80px;
+			column-gap: 80px;
+			row-gap: 30px;
+			width: 80%;
+			grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
+			overflow: auto;
+		}
+	}
+}
