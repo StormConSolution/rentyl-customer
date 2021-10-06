@@ -84,7 +84,7 @@ const RewardPurchasePage: React.FC = () => {
 						</div>
 						<div className={'reward'}>
 							<div className={'imageContainer'}>
-								<img src={reward.media[0]?.urls.imageKit || ''} alt={''} />
+								<img className={'productImage'} src={reward.media[0]?.urls.imageKit || ''} alt={''} />
 							</div>
 							<div className={'rewardText'}>
 								<div className={'rewardName'}>

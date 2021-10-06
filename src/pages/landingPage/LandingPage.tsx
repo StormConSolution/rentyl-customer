@@ -449,7 +449,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						)}
 					</Box>
 				</Box>
-				//TODO: temporarily deactivated pending information from Spire.
+				{/*//TODO: temporarily deactivated pending information from Spire.*/}
 				{/*<Box className={'sectionFive'}>*/}
 				{/*	<Label variant={size === 'small' ? 'h2' : 'h1'}>*/}
 				{/*		Create an <span>unforgettable experience</span>*/}
