@@ -383,7 +383,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				return b.isPrimary - a.isPrimary;
 			});
 			return images.map((urlObj) => {
-				return urlObj.urls.imageKit?.toString() || '';
+				return urlObj.urls.imageKit?.toString() || urlObj.urls.thumb;
 			});
 		}
 		return [];
