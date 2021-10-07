@@ -107,7 +107,7 @@ const AccountPointsPage: React.FC = () => {
 						</Label>
 					</Box>
 					<Label className={'date'} variant={'h2'}>
-						{DateUtils.formatDateForUser(point.createdOn.toString())}
+						{DateUtils.displayUserDate(point.createdOn)}
 					</Label>
 					<Label className={'points'} variant={'h2'}>
 						{getPointAmount(point)}
