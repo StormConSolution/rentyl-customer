@@ -18,6 +18,8 @@ import promotionWheelData, { IPromotionWheel } from './PromotionWheelData';
 import LinkButton from '../../components/linkButton/LinkButton';
 import SignUpSteps from './signUpSteps/SignUpSteps';
 import SignUpForm from './signUpForm/SignUpForm';
+import LoyaltyTierPopup, { LoyaltyTierPopupProps } from '../../popups/loyaltyTierPopup/LoyaltyTierPopup';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 const AboutSpireSignUpPage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
@@ -106,21 +108,21 @@ const AboutSpireSignUpPage: React.FC = () => {
 						stepNumber={1}
 						title={'Earn'}
 						description={
-							'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temporinvidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et'
+							'Earn points while you live, work, and play! Staying at a Rentyl Resort, dining at a fabulous restaurant on Sunset Walk, shopping for a new wardrobe, and more are all ways to earn Spire points.'
 						}
 					/>
 					<SignUpSteps
 						stepNumber={2}
 						title={'Explore'}
 						description={
-							'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temporinvidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et'
+							'Explore all the Spire Loyalty opportunities! From local restaurants to upscale resort experiences, renting an apartment, purchasing a vacation home, and more, there are so many ways to take advantage of Spire Loyalty.'
 						}
 					/>
 					<SignUpSteps
 						stepNumber={3}
 						title={'Redeem'}
 						description={
-							'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temporinvidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et'
+							'Redeem your points for rich rewards, including vacations, discounts on purchases, and earning more towards property purchases!'
 						}
 					/>
 					<LinkButton
@@ -306,7 +308,14 @@ const AboutSpireSignUpPage: React.FC = () => {
 							way to greater things. Becoming a Platinum Spire Member is the ultimate and we look forward
 							to having you join these unique ranks.
 						</Label>
-						<LinkButton look={'containedPrimary'} label={'view the spire tiers'} path={'/signup'} />
+						<LabelButton
+							variant={'button'}
+							look={'containedPrimary'}
+							label={'See Loyalty Tiers'}
+							onClick={() => {
+								popupController.open<LoyaltyTierPopupProps>(LoyaltyTierPopup, {});
+							}}
+						/>
 					</Box>
 					<img src={require('../../images/aboutSpirePage/couple-beach.png')} alt={'Key Chain'} />
 				</Box>

@@ -123,7 +123,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						/>
 					</Box>
 				</Box>
-
 				<Box className={'sectionOne'} marginBottom={size === 'small' ? 80 : 220}>
 					<Label variant={size === 'small' ? 'h2' : 'h1'}>
 						<span>Feature</span> Rewards
@@ -140,7 +139,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						}}
 					/>
 				</Box>
-
 				<Box className={'sectionTwo'} marginBottom={146}>
 					<div className={'coupleImg'} />
 					<div className={'tanBox2'} />
@@ -168,7 +166,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						/>
 					</Paper>
 				</Box>
-
 				<Box className={'sectionThree'} marginBottom={110}>
 					<Box maxWidth={'610px'} margin={'0 auto 25px'} textAlign={'center'}>
 						<Label variant={'caption'}>Traveling with spire loyalty</Label>
@@ -386,7 +383,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						/>
 					)}
 				</Box>
-
 				<Box
 					className={'sectionFour'}
 					margin={'0 auto 170px'}
@@ -453,45 +449,46 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 						)}
 					</Box>
 				</Box>
-				<Box className={'sectionFive'}>
-					<Label variant={size === 'small' ? 'h2' : 'h1'}>
-						Create an <span>unforgettable experience</span>
-					</Label>
-					<Box
-						bgcolor={'#f7f1db'}
-						height={size === 'small' ? '347px' : '440px'}
-						display={'flex'}
-						justifyContent={'center'}
-					>
-						{size === 'small' ? (
-							<Carousel>
-								<FeaturedDestinationCard
-									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									name={'Orlando Disney Experience'}
-									resortId={1}
-								/>
-								<FeaturedDestinationCard
-									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									name={'Island H20 Live! Water Park'}
-									resortId={2}
-								/>
-							</Carousel>
-						) : (
-							<>
-								<FeaturedDestinationCard
-									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									name={'Orlando Disney Experience'}
-									resortId={1}
-								/>
-								<FeaturedDestinationCard
-									image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-									name={'Island H20 Live! Water Park'}
-									resortId={2}
-								/>{' '}
-							</>
-						)}
-					</Box>
-				</Box>
+				{/*//TODO: temporarily deactivated pending information from Spire.*/}
+				{/*<Box className={'sectionFive'}>*/}
+				{/*	<Label variant={size === 'small' ? 'h2' : 'h1'}>*/}
+				{/*		Create an <span>unforgettable experience</span>*/}
+				{/*	</Label>*/}
+				{/*	<Box*/}
+				{/*		bgcolor={'#f7f1db'}*/}
+				{/*		height={size === 'small' ? '347px' : '440px'}*/}
+				{/*		display={'flex'}*/}
+				{/*		justifyContent={'center'}*/}
+				{/*	>*/}
+				{/*		{size === 'small' ? (*/}
+				{/*			<Carousel>*/}
+				{/*				<FeaturedDestinationCard*/}
+				{/*					image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}*/}
+				{/*					name={'Orlando Disney Experience'}*/}
+				{/*					resortId={1}*/}
+				{/*				/>*/}
+				{/*				<FeaturedDestinationCard*/}
+				{/*					image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}*/}
+				{/*					name={'Island H20 Live! Water Park'}*/}
+				{/*					resortId={2}*/}
+				{/*				/>*/}
+				{/*			</Carousel>*/}
+				{/*		) : (*/}
+				{/*			<>*/}
+				{/*				<FeaturedDestinationCard*/}
+				{/*					image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}*/}
+				{/*					name={'Orlando Disney Experience'}*/}
+				{/*					resortId={1}*/}
+				{/*				/>*/}
+				{/*				<FeaturedDestinationCard*/}
+				{/*					image={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}*/}
+				{/*					name={'Island H20 Live! Water Park'}*/}
+				{/*					resortId={2}*/}
+				{/*				/>{' '}*/}
+				{/*			</>*/}
+				{/*		)}*/}
+				{/*	</Box>*/}
+				{/*</Box>*/}
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>
