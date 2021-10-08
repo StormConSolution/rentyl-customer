@@ -124,12 +124,12 @@ const RewardItemPage: React.FC = () => {
 		let filter: RedSky.FilterQueryValue[] = [];
 		if (ObjectUtils.isArrayWithData(selectedDestinationIds)) {
 			let destinationIds: number[] = [];
-			let affiliateIds: number[] = [];
+			let brandIds: number[] = [];
 			for (let destination of selectedDestinationIds) {
 				const aOrD = destination.toString().slice(0, 1);
 				const vendorId: number = parseInt(destination.toString().slice(1));
 				if (aOrD === 'd') destinationIds.push(vendorId);
-				if (aOrD === 'a') affiliateIds.push(vendorId);
+				if (aOrD === 'a') brandIds.push(vendorId);
 			}
 			if (ObjectUtils.isArrayWithData(destinationIds)) {
 				filter.push({
@@ -139,10 +139,10 @@ const RewardItemPage: React.FC = () => {
 					conjunction: 'OR'
 				});
 			}
-			if (ObjectUtils.isArrayWithData(affiliateIds)) {
+			if (ObjectUtils.isArrayWithData(brandIds)) {
 				filter.push({
 					column: 'affiliateId',
-					value: affiliateIds,
+					value: brandIds,
 					conjunction: 'OR',
 					matchType: 'exact'
 				});
