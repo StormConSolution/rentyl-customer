@@ -283,7 +283,11 @@ declare namespace Api {
 	}
 
 	export namespace Affiliate {
-		export namespace Req {}
+		export namespace Req {
+			export interface Location {
+				affiliateId: number;
+			}
+		}
 		export namespace Res {
 			export interface Location extends Model.AffiliateLocation {}
 
@@ -396,8 +400,6 @@ declare namespace Api {
 				ids?: number[];
 			}
 
-			export interface Role {}
-
 			export interface UpdateUnauthorizedPages {
 				unauthorizedPages: Model.PageGuard[];
 			}
@@ -410,8 +412,6 @@ declare namespace Api {
 			export interface Create extends Model.Company {}
 
 			export interface Update extends Model.Company {}
-
-			export interface Role extends Model.UserRole {}
 
 			export interface Get extends Model.Company {}
 
@@ -810,6 +810,33 @@ declare namespace Api {
 
 	export namespace Order {
 		export namespace Req {
+			interface Get {
+				id: number;
+			}
+
+			interface User {
+				userId: number;
+			}
+
+			interface Create {
+				rewardId: number;
+				voucherId?: number;
+				paymentMethodId?: number;
+				status: Model.OrderRedemptionStatus;
+				type: string;
+			}
+
+			interface Update {
+				id: number;
+				paymentMethodId?: number;
+				status: Model.OrderRedemptionStatus;
+				priceDetail?: string;
+			}
+
+			interface Delete {
+				id: number;
+			}
+
 			interface PaymentAmount {
 				currency: string;
 				value: number;
@@ -838,6 +865,13 @@ declare namespace Api {
 			}
 		}
 		export namespace Res {
+			interface Get extends Model.Orders {
+				name: string;
+				pointCost: number;
+			}
+			interface Create extends Get {}
+			interface Update extends Get {}
+
 			interface PaymentMethodDetail {
 				key: string;
 				type: 'cardToken' | 'text' | 'tel' | 'select' | 'radio' | 'emailAddress';
@@ -964,6 +998,7 @@ declare namespace Api {
 			name: string;
 			shortDescription: string;
 			longDescription: string;
+			propertyType: string;
 			featureIcons: string[];
 			address1: string;
 			address2: string;
@@ -1417,7 +1452,7 @@ declare namespace Api {
 
 				export interface Delete {
 					rewardId: number;
-					code: string;
+					code: string | number;
 				}
 
 				export interface Claim {
@@ -1716,6 +1751,8 @@ declare namespace Api {
 				allowEmailNotification?: 0 | 1;
 			}
 
+			export interface Role {}
+
 			export interface Login {
 				username: string;
 				password: string;
@@ -1783,12 +1820,14 @@ declare namespace Api {
 				tierTitle: string;
 				tierBadge: Media;
 				pendingPoints: number;
-				nextTierThreshold: number;
+				nextTierThreshold: number | null;
 				nextTierTitle: string;
 				pointsExpiring: number;
 				pointsExpiringOn: Date | string;
 				paymentMethods: PaymentMethod[];
 			}
+
+			export interface Role extends Model.UserRole {}
 
 			export interface Login extends Detail {}
 

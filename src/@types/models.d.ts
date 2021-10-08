@@ -43,6 +43,7 @@ declare namespace Model {
 	export type UpsellPackagePricingType = 'PerGuest' | 'PerStay' | 'PerNight' | 'PerGuestPerNight';
 	export type CurrencyCode = 'USD'; // Add more if/when we add multicurrency support
 	export type ReviewStatus = 'APPROVED' | 'REJECTED' | 'FLAGGED' | 'PENDING';
+	export type OrderRedemptionStatus = 'PENDING' | 'COMPLETED' | 'ERROR';
 	export type PageGuard = {
 		page: string;
 		route: string;
@@ -161,7 +162,6 @@ declare namespace Model {
 
 	export interface Affiliate {
 		id: number;
-		companyId: number;
 		name: string;
 		squareLogoUrl: string;
 		wideLogoUrl: string;
@@ -216,19 +216,11 @@ declare namespace Model {
 
 	export interface CampaignAction {
 		id: number;
-		companyId: number;
 		campaignId: number;
 		actionId: number;
 		createdOn: Date | string;
 		actionCount: number;
 		isActive: 0 | 1;
-	}
-
-	export interface Cms {
-		id: number;
-		companyId: number;
-		page: string;
-		metaData: string;
 	}
 
 	export interface Company {
@@ -250,18 +242,11 @@ declare namespace Model {
 		country: string;
 	}
 
-	export interface CompanyAffiliate {
-		companyId: number;
-		affiliateId: number;
-		createdOn: Date | string;
-	}
-
 	export interface CompanyGateway {
 		id: number;
 		companyId: number;
 		name: string;
 		token: string;
-		apiToken: string;
 		metaData: any;
 		publicData: any;
 		isActive: 0 | 1;
@@ -337,7 +322,7 @@ declare namespace Model {
 
 	export interface EmailLog {
 		id: number;
-		companyId: number;
+		companyId: number | null;
 		initiatorId: number;
 		recipientId: number;
 		sentToEmail: string;
@@ -349,7 +334,7 @@ declare namespace Model {
 
 	export interface EmailTemplate {
 		id: number;
-		companyId: number;
+		companyId: number | null;
 		type: string;
 		createdOn: Date | string;
 		subject: string;
@@ -359,7 +344,7 @@ declare namespace Model {
 
 	export interface Feature {
 		id: number;
-		companyId: number;
+		companyId: number | null;
 		affiliateId: number;
 		destinationId: number;
 		accommodationId: number;
@@ -402,7 +387,7 @@ declare namespace Model {
 
 	export interface Media {
 		id: number;
-		companyId: number;
+		companyId: number | null;
 		uploaderId: number;
 		type: 'image' | 'video' | 'imagePyramid';
 		urls: MediaUrls;
@@ -429,7 +414,6 @@ declare namespace Model {
 		id: number;
 		productId: number;
 		orderId: number;
-		companyId: number;
 		userId: number;
 		quantity: number;
 		status: string;
@@ -440,31 +424,15 @@ declare namespace Model {
 
 	export interface Orders {
 		id: number;
-		companyId: number;
 		userId: number;
-		paymentMethodId: number;
-		number: number;
-		status: string;
+		rewardId: number;
+		voucherId?: number;
+		paymentMethodId?: number;
+		status: OrderRedemptionStatus;
 		type: string;
-		totalPriceCents: number;
-		subTotalPriceCents: number;
-		taxPriceCents: number;
-		shippingPriceCents: number;
-		discountPriceCents: number;
+		priceDetail: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-	}
-
-	export interface UpsellPackage {
-		id: number;
-		companyId: number;
-		destinationId: number;
-		title: string;
-		description: string;
-		code: string;
-		isActive: 0 | 1;
-		startDate: Date | string;
-		endDate: Date | string;
 	}
 
 	export interface PaymentMethod {
@@ -486,7 +454,6 @@ declare namespace Model {
 
 	export interface PointRedemption {
 		id: number;
-		companyId: number;
 		userId: number;
 		productId: number;
 		userAddressId: number;
@@ -518,7 +485,6 @@ declare namespace Model {
 
 	export interface Reservation {
 		id: number;
-		companyId: number;
 		userId: number;
 		destinationId: number;
 		accommodationId: number;
@@ -562,7 +528,6 @@ declare namespace Model {
 
 	export interface Review {
 		id: number;
-		companyId: number;
 		userId: number;
 		reservationId: number;
 		destinationId: number;
@@ -580,7 +545,7 @@ declare namespace Model {
 
 	export interface Reward {
 		id: number;
-		companyId: number;
+		companyId: number | null;
 		destinationId: number | null;
 		affiliateId: number | null;
 		name: string;
@@ -596,7 +561,6 @@ declare namespace Model {
 
 	export interface RewardCategory {
 		id: number;
-		companyId: number;
 		name: string;
 		isActive: 0 | 1;
 		isFeatured: 0 | 1;
@@ -607,13 +571,11 @@ declare namespace Model {
 	export interface RewardCategoryMap {
 		rewardId: number;
 		categoryId: number;
-		companyId: number;
 	}
 
 	export interface RewardVoucher {
 		id: number;
 		rewardId: number;
-		companyId: number;
 		customerUserId: number;
 		code: string;
 		isActive: 0 | 1;
@@ -625,7 +587,6 @@ declare namespace Model {
 
 	export interface Segment {
 		id: number;
-		companyId: number;
 		tierId: number;
 		name: string;
 		createdOn: Date | string;
@@ -640,7 +601,6 @@ declare namespace Model {
 
 	export interface SystemActionLog {
 		id: number;
-		companyId: number;
 		userId: number;
 		action: SystemActionLogActions;
 		source: string; // should be a DbTableName
@@ -651,7 +611,6 @@ declare namespace Model {
 
 	export interface Tier {
 		id: number;
-		companyId: number;
 		name: string;
 		description: string;
 		createdOn: Date | string;
@@ -664,7 +623,6 @@ declare namespace Model {
 
 	export interface TierFeature {
 		id: number;
-		companyId: number;
 		name: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
@@ -673,6 +631,20 @@ declare namespace Model {
 	export interface TierFeatureMap {
 		tierId: number;
 		TierFeatureId: number;
+	}
+
+	export interface UpsellPackage {
+		id: number;
+		companyId: number;
+		destinationId: number;
+		title: string;
+		externalTitle: string;
+		description: string;
+		code: string;
+		isActive: 0 | 1;
+		startDate: Date | string;
+		endDate: Date | string;
+		pricingType: string;
 	}
 
 	export interface User {
@@ -735,7 +707,7 @@ declare namespace Model {
 
 	export interface UserCoupon {
 		id: number;
-		companyId: number;
+		companyId: number | null;
 		userId: number;
 		name: string;
 		isActive: 0 | 1;
@@ -745,7 +717,6 @@ declare namespace Model {
 
 	export interface UserPaymentMethod {
 		id: number;
-		companyId: number;
 		userId: number;
 		userAddressId: number;
 		token: string;
@@ -831,6 +802,5 @@ declare namespace Model {
 		destinationId: number;
 		affiliateId: number;
 		name: string;
-		companyId: number;
 	}
 }
