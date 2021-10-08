@@ -67,6 +67,9 @@ const BookingFlowAddPackagePage = () => {
 				}
 				if (request.excludePackageIds && request.excludePackageIds.length < 1) delete request.excludePackageIds;
 				const response = await packageService.getAvailable(request);
+				if (response.data.length < 1 && addedPackages.length < 1) {
+					throw new Error('No Packages to edit');
+				}
 				setAvailablePackages(response.data);
 				setTotal(response.total || 0);
 			} catch (e) {
