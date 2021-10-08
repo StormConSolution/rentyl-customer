@@ -149,8 +149,8 @@ declare namespace Model {
 	export interface Action {
 		id: number;
 		companyId: number;
-		affiliateId: number;
-		affiliateLocationId: number;
+		brandId: number;
+		brandLocationId: number;
 		name: string;
 		description: string;
 		createdOn: Date | string;
@@ -160,8 +160,9 @@ declare namespace Model {
 		pointValue: number;
 	}
 
-	export interface Affiliate {
+	export interface Brand {
 		id: number;
+		companyId: number;
 		name: string;
 		squareLogoUrl: string;
 		wideLogoUrl: string;
@@ -173,9 +174,9 @@ declare namespace Model {
 		metaData: any;
 	}
 
-	export interface AffiliateLocation {
+	export interface BrandLocation {
 		id: number;
-		affiliateId: number;
+		brandId: number;
 		name: string;
 		address1: string;
 		address2: string;
@@ -345,7 +346,7 @@ declare namespace Model {
 	export interface Feature {
 		id: number;
 		companyId: number | null;
-		affiliateId: number;
+		brandId: number;
 		destinationId: number;
 		accommodationId: number;
 		accommodationCategoryId: number;
@@ -547,7 +548,7 @@ declare namespace Model {
 		id: number;
 		companyId: number | null;
 		destinationId: number | null;
-		affiliateId: number | null;
+		brandId: number | null;
 		name: string;
 		pointCost: number;
 		monetaryValueInCents: number;
@@ -800,7 +801,7 @@ declare namespace Model {
 
 	export interface Vendor {
 		destinationId: number;
-		affiliateId: number;
+		brandId: number;
 		name: string;
 	}
 }

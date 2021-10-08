@@ -59,8 +59,8 @@ export default class RewardService extends Service {
 		return vendors.map((vendor) => {
 			if (vendor.destinationId) {
 				return { value: 'd' + vendor.destinationId, text: vendor.name, selected: false };
-			} else if (vendor.affiliateId) {
-				return { value: 'a' + vendor.affiliateId, text: vendor.name, selected: false };
+			} else if (vendor.brandId) {
+				return { value: 'a' + vendor.brandId, text: vendor.name, selected: false };
 			}
 			return { value: 0, text: '', selected: false };
 		});

@@ -62,7 +62,7 @@ declare namespace Api {
 				categories: AccommodationCategory.Details[];
 				features: Omit<
 					Feature.Details,
-					'affiliateId' | 'destinationId' | 'accommodationCategoryId' | 'accommodationId'
+					'brandId' | 'destinationId' | 'accommodationCategoryId' | 'accommodationId'
 				>[];
 			}
 
@@ -234,8 +234,8 @@ declare namespace Api {
 				name: string;
 				description?: string;
 				isActive?: 0 | 1;
-				affiliateId?: number;
-				affiliateLocationId?: number;
+				brandId?: number;
+				brandLocationId?: number;
 				type: string;
 				pointValue: number;
 			}
@@ -250,8 +250,8 @@ declare namespace Api {
 				name?: string;
 				description?: string;
 				isActive?: 0 | 1;
-				affiliateId?: number;
-				affiliateLocationId?: number;
+				brandId?: number;
+				brandLocationId?: number;
 				type?: string;
 				pointValue?: number;
 			}
@@ -266,9 +266,9 @@ declare namespace Api {
 		}
 
 		export namespace Res {
-			export interface Get extends Omit<Model.Action, 'companyId' | 'affiliateId' | 'affiliateLocationId'> {
-				affiliate: Model.Affiliate;
-				affiliateLocation: Model.AffiliateLocation;
+			export interface Get extends Omit<Model.Action, 'companyId' | 'brandId' | 'brandLocationId'> {
+				brand: Model.Brand;
+				brandLocation: Model.BrandLocation;
 			}
 
 			export interface Details extends Get {
@@ -282,16 +282,16 @@ declare namespace Api {
 		}
 	}
 
-	export namespace Affiliate {
+	export namespace Brand {
 		export namespace Req {
 			export interface Location {
-				affiliateId: number;
+				brandId: number;
 			}
 		}
 		export namespace Res {
-			export interface Location extends Model.AffiliateLocation {}
+			export interface Location extends Model.BrandLocation {}
 
-			export interface Get extends Model.Affiliate {}
+			export interface Get extends Model.Brand {}
 		}
 	}
 
@@ -630,7 +630,7 @@ declare namespace Api {
 				media: Media[];
 				features: Omit<
 					Feature.Details,
-					'affiliateId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
+					'brandId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
 				>[];
 				packages: UpsellPackage.Details[];
 				accommodations: {
@@ -721,7 +721,7 @@ declare namespace Api {
 
 		export namespace Req {
 			export interface Create {
-				affiliateId?: number;
+				brandId?: number;
 				destinationId?: number;
 				accommodationId?: number;
 				accommodationCategoryId?: number;
@@ -940,6 +940,7 @@ declare namespace Api {
 
 		export namespace Req {
 			export interface Create {
+				userId?: number;
 				cardToken: string;
 				pmData: PmData;
 				userAddressId?: number;
@@ -1387,7 +1388,7 @@ declare namespace Api {
 				pointCost: number;
 				monetaryValueInCents: number;
 				destinationId?: number;
-				affiliateId?: number;
+				brandId?: number;
 				description: string;
 				redemptionInstructions?: string;
 				upc: string;
@@ -1421,7 +1422,7 @@ declare namespace Api {
 				pointCost: number;
 				monetaryValueInCents: number;
 				destinationId?: number;
-				affiliateId?: number;
+				brandId?: number;
 				description: string;
 				redemptionInstructions: string;
 				upc: string;
@@ -1933,7 +1934,7 @@ declare namespace Api {
 			export interface Get {
 				name: string;
 				destinationId: number | null;
-				affiliateId: number | null;
+				brandId: number | null;
 			}
 
 			export interface GetByPage {
