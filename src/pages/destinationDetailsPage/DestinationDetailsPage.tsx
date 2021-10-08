@@ -401,141 +401,52 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
 								}}
 							/>
-							{size !== 'small' && (
-								<CarouselButtons
-									onClickLeft={() => {
-										moveImagesLeft();
-									}}
-									onClickRight={() => {
-										moveImagesRight();
-									}}
-									position={'absolute'}
-									bottom={'0'}
-									right={'-40px'}
-								/>
-							)}
+							{/*TODO: section disabled, pending further information from NDM*/}
+							{/*{size !== 'small' && (*/}
+							{/*	<CarouselButtons*/}
+							{/*		onClickLeft={() => {*/}
+							{/*			moveImagesLeft();*/}
+							{/*		}}*/}
+							{/*		onClickRight={() => {*/}
+							{/*			moveImagesRight();*/}
+							{/*		}}*/}
+							{/*		position={'absolute'}*/}
+							{/*		bottom={'0'}*/}
+							{/*		right={'-40px'}*/}
+							{/*	/>*/}
+							{/*)}*/}
 						</Box>
-						{size !== 'small' ? (
-							<Box overflow={'hidden'}>
-								<div ref={parentRef} className={'featureSlider'}>
-									<div ref={childRef}>
-										<FeatureRoomCard
-											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-											title={'8 bedroom villa'}
-											discountAmount={150}
-											limitedOffer
-											bookNowPath={() => {
-												console.log('book now');
-											}}
-										/>
-									</div>
-
-									<div>
-										<FeatureRoomCard
-											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-											title={'8 bedroom villa'}
-											discountAmount={150}
-											limitedOffer
-											bookNowPath={() => {
-												console.log('book now');
-											}}
-										/>
-									</div>
-									<div>
-										<FeatureRoomCard
-											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-											title={'8 bedroom villa'}
-											discountAmount={150}
-											limitedOffer
-											bookNowPath={() => {
-												console.log('book now');
-											}}
-										/>
-									</div>
-									<div>
-										<FeatureRoomCard
-											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-											title={'8 bedroom villa'}
-											discountAmount={150}
-											limitedOffer
-											bookNowPath={() => {
-												console.log('book now');
-											}}
-										/>
-									</div>
-									<div>
-										<FeatureRoomCard
-											mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-											title={'8 bedroom villa'}
-											discountAmount={150}
-											limitedOffer
-											bookNowPath={() => {
-												console.log('book now');
-											}}
-										/>
-									</div>
-								</div>
-							</Box>
-						) : (
-							<Carousel
-								children={[
-									<FeatureRoomCard
-										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-										title={'8 bedroom villa'}
-										discountAmount={150}
-										limitedOffer
-										bookNowPath={() => {
-											console.log('book now');
-										}}
-									/>,
-									<FeatureRoomCard
-										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-										title={'8 bedroom villa'}
-										discountAmount={150}
-										limitedOffer
-										bookNowPath={() => {
-											console.log('book now');
-										}}
-									/>,
-									<FeatureRoomCard
-										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-										title={'8 bedroom villa'}
-										discountAmount={150}
-										limitedOffer
-										bookNowPath={() => {
-											console.log('book now');
-										}}
-									/>,
-									<FeatureRoomCard
-										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-										title={'8 bedroom villa'}
-										discountAmount={150}
-										limitedOffer
-										bookNowPath={() => {
-											console.log('book now');
-										}}
-									/>,
-									<FeatureRoomCard
-										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-										title={'8 bedroom villa'}
-										discountAmount={150}
-										limitedOffer
-										bookNowPath={() => {
-											console.log('book now');
-										}}
-									/>,
-									<FeatureRoomCard
-										mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}
-										title={'8 bedroom villa'}
-										discountAmount={150}
-										limitedOffer
-										bookNowPath={() => {
-											console.log('book now');
-										}}
-									/>
-								]}
-							/>
-						)}
+						{/*{size !== 'small' ? (*/}
+						{/*	<Box overflow={'hidden'}>*/}
+						{/*		<div ref={parentRef} className={'featureSlider'}>*/}
+						{/*			<div ref={childRef}>*/}
+						{/*				<FeatureRoomCard*/}
+						{/*					mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}*/}
+						{/*					title={'8 bedroom villa'}*/}
+						{/*					discountAmount={150}*/}
+						{/*					limitedOffer*/}
+						{/*					bookNowPath={() => {*/}
+						{/*						console.log('book now');*/}
+						{/*					}}*/}
+						{/*				/>*/}
+						{/*			</div>*/}
+						{/*		</div>*/}
+						{/*	</Box>*/}
+						{/*) : (*/}
+						{/*	<Carousel*/}
+						{/*		children={[*/}
+						{/*			<FeatureRoomCard*/}
+						{/*				mainImg={require('../../images/landingPage/Margaritaville-Villa-Stay2x.png')}*/}
+						{/*				title={'8 bedroom villa'}*/}
+						{/*				discountAmount={150}*/}
+						{/*				limitedOffer*/}
+						{/*				bookNowPath={() => {*/}
+						{/*					console.log('book now');*/}
+						{/*				}}*/}
+						{/*			/>*/}
+						{/*		]}*/}
+						{/*	/>*/}
+						{/*)}*/}
 					</Box>
 				</Box>
 				<Box className={'sectionTwo'} marginBottom={'160px'}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './Carousel.scss';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 
@@ -15,7 +15,14 @@ interface CarouselProps {
 const Carousel: React.FC<CarouselProps> = (props) => {
 	const parentRef = useRef<HTMLElement>(null);
 	const totalChildren = props.children.length;
-	let imageViewIndex: number = 1;
+	const [imageViewIndex, setImageViewIndex] = useState<number>(1);
+
+	useEffect(() => {
+		if (props.imageIndex === undefined) return;
+		let val = parentRef.current!.offsetWidth * props.imageIndex;
+		parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+	}, [props.imageIndex]);
+
 	function renderChildren() {
 		return props.children.map((item, index) => {
 			return (
@@ -25,12 +32,6 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 			);
 		});
 	}
-
-	useEffect(() => {
-		if (props.imageIndex === undefined) return;
-		let val = parentRef.current!.offsetWidth * props.imageIndex;
-		parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-	}, [props.imageIndex]);
 
 	return (
 		<div className={`rsCarousel ${props.className || ''}`}>
@@ -44,12 +45,11 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 						look={'none'}
 						onClick={() => {
 							let val = parentRef.current!.scrollLeft - parentRef.current!.offsetWidth;
-							if (val < 0) val = parentRef.current!.scrollLeft;
 
-							imageViewIndex--;
-							if (imageViewIndex < 1) {
+							setImageViewIndex(imageViewIndex - 1);
+							if (imageViewIndex <= 0) {
 								val = parentRef.current!.offsetWidth * totalChildren;
-								imageViewIndex = totalChildren;
+								setImageViewIndex(totalChildren);
 							}
 							parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 						}}
@@ -61,10 +61,10 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 						look={'none'}
 						onClick={() => {
 							let val = parentRef.current!.offsetWidth + parentRef.current!.scrollLeft;
-							imageViewIndex++;
+							setImageViewIndex(imageViewIndex + 1);
 							if (imageViewIndex > totalChildren) {
 								val = 0;
-								imageViewIndex = 1;
+								setImageViewIndex(1);
 							}
 							parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 						}}
