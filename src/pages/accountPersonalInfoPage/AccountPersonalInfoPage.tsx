@@ -81,19 +81,18 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}, [updateUserForm]);
 
 	useEffect(() => {
-		async function validatePasswordForm() {
-			let isValid = await newPasswordForm.isValid();
-			setIsPasswordFormValid(isValid);
-		}
-		validatePasswordForm().catch(console.error);
-	}, [newPasswordForm]);
-
-	useEffect(() => {
 		if (!user) router.navigate('/signup').catch(console.error);
 	}, [user]);
 
 	async function updateUserObjForm(control: RsFormControl) {
 		setUpdateUserForm(updateUserForm.clone().update(control));
+	}
+
+	async function checkIsFormValid(): Promise<boolean> {
+		let formIsValid = await newPasswordForm.isValid();
+		setNewPasswordForm(newPasswordForm.clone());
+		setIsPasswordFormValid(formIsValid);
+		return formIsValid;
 	}
 
 	async function updateUserPasswordForm(control: RsFormControl) {
@@ -109,6 +108,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 			setHasSpecialCharacter(specialCharacter.test(password));
 		}
 		setNewPasswordForm(newPasswordForm.clone().update(control));
+		checkIsFormValid().catch(console.error);
 	}
 
 	async function saveAccountInfo() {
@@ -129,6 +129,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}
 
 	async function updatePassword() {
+		if (!(await checkIsFormValid())) {
+			rsToastify.error('Missing or incorrect information submitted for password change.', 'Missing Information!');
+			return;
+		}
 		if (!user) return;
 		let newPassword: any = newPasswordForm.toModel();
 		delete newPassword.retypeNewPassword;
@@ -263,7 +267,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							look={isPasswordFormValid ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={!isPasswordFormValid}
 							onClick={() => {
 								updatePassword();
 							}}

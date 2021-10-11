@@ -107,6 +107,12 @@ const ExistingItineraryPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(upcomingItineraries)) return;
 
 		return upcomingItineraries.map((itinerary) => {
+			let pointTotal = itinerary.stays.reduce((total, reservation) => {
+				return total + reservation.priceDetail.grandTotalPoints;
+			}, 0);
+			let cashTotal = itinerary.stays.reduce((total, reservation) => {
+				return total + reservation.priceDetail.grandTotalCents;
+			}, 0);
 			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
@@ -123,12 +129,10 @@ const ExistingItineraryPage: React.FC = () => {
 					propertyType={'VIP Suite'}
 					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
 					amenities={itinerary.stays[0].accommodation.featureIcons}
-					totalPoints={itinerary.stays[0].priceDetail.grandTotalPoints}
+					totalPoints={pointTotal}
 					linkPath={'/reservations/itinerary/details?ii=' + itinerary.itineraryId}
 					cancelPermitted={itinerary.stays[0].cancellationPermitted}
-					itineraryTotal={itinerary.stays.reduce((total, reservation) => {
-						return total + reservation.priceDetail.grandTotalCents;
-					}, 0)}
+					itineraryTotal={cashTotal}
 					paidWithPoints={!itinerary.paymentMethod}
 				/>
 			);
