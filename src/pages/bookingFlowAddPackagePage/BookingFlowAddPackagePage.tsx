@@ -73,7 +73,6 @@ const BookingFlowAddPackagePage = () => {
 				setAvailablePackages(response.data);
 				setTotal(response.total || 0);
 			} catch (e) {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'No packages available, redirecting'), 'No Packages');
 				if (!params.data.newRoom) return;
 				let stays: Misc.StayParams[] = params.data.stays || [];
 				stays.push(params.data.newRoom);
