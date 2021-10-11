@@ -412,7 +412,7 @@ const BookingFlowCheckoutPage = () => {
 						}}
 						cancellable={true}
 						usePoints={usePoints}
-						hasPackages={ObjectUtils.isArrayWithData(destinationDetails?.packages || [])}
+						destinationHasPackages={ObjectUtils.isArrayWithData(destinationDetails?.packages || [])}
 					/>
 				);
 			})

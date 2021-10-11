@@ -82,7 +82,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					phone={item.guest?.phone}
 					additionalDetails={item.additionalDetails}
 					upsellPackages={item.upsellPackages}
-					hasPackages
+					destinationHasPackages
 				/>
 			);
 		});

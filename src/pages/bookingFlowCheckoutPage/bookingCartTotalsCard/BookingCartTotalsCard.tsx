@@ -30,7 +30,7 @@ interface BookingCartTotalsCardProps {
 	editPackages?: () => void;
 	cancellable: boolean;
 	usePoints: boolean;
-	hasPackages: boolean;
+	destinationHasPackages: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -130,7 +130,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						props.changeRoom();
 					}}
 				/>
-				{props.hasPackages && (
+				{props.destinationHasPackages && (
 					<LabelButton
 						look={'none'}
 						variant={'body1'}
