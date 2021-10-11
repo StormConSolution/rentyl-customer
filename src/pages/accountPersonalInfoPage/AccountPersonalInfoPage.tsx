@@ -19,7 +19,7 @@ import UserPointStatusBar from '../../components/userPointStatusBar/UserPointSta
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccountPersonalInfoPageProps {}
@@ -28,7 +28,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
-	const [isPasswordFormValid, setIsPasswordFormValid] = useState<boolean>(false);
 	const [isUserFormValid, setIsUserFormValid] = useState<boolean>(false);
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
 	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
@@ -91,7 +90,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	async function checkIsFormValid(): Promise<boolean> {
 		let formIsValid = await newPasswordForm.isValid();
 		setNewPasswordForm(newPasswordForm.clone());
-		setIsPasswordFormValid(formIsValid);
 		return formIsValid;
 	}
 
@@ -108,7 +106,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 			setHasSpecialCharacter(specialCharacter.test(password));
 		}
 		setNewPasswordForm(newPasswordForm.clone().update(control));
-		checkIsFormValid().catch(console.error);
 	}
 
 	async function saveAccountInfo() {
@@ -264,9 +261,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						<LabelButton
 							key={2}
 							className={'saveBtn'}
-							look={isPasswordFormValid ? 'containedPrimary' : 'containedSecondary'}
+							look={newPasswordForm.isModified() ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
+							disabled={!newPasswordForm.isModified()}
 							onClick={() => {
 								updatePassword();
 							}}
