@@ -19,7 +19,7 @@ import UserPointStatusBar from '../../components/userPointStatusBar/UserPointSta
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccountPersonalInfoPageProps {}
@@ -28,7 +28,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
-	const [isPasswordFormValid, setIsPasswordFormValid] = useState<boolean>(false);
 	const [isUserFormValid, setIsUserFormValid] = useState<boolean>(false);
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
 	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
@@ -81,19 +80,17 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}, [updateUserForm]);
 
 	useEffect(() => {
-		async function validatePasswordForm() {
-			let isValid = await newPasswordForm.isValid();
-			setIsPasswordFormValid(isValid);
-		}
-		validatePasswordForm().catch(console.error);
-	}, [newPasswordForm]);
-
-	useEffect(() => {
 		if (!user) router.navigate('/signup').catch(console.error);
 	}, [user]);
 
 	async function updateUserObjForm(control: RsFormControl) {
 		setUpdateUserForm(updateUserForm.clone().update(control));
+	}
+
+	async function checkIsFormValid(): Promise<boolean> {
+		let formIsValid = await newPasswordForm.isValid();
+		setNewPasswordForm(newPasswordForm.clone());
+		return formIsValid;
 	}
 
 	async function updateUserPasswordForm(control: RsFormControl) {
@@ -129,6 +126,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}
 
 	async function updatePassword() {
+		if (!(await checkIsFormValid())) {
+			rsToastify.error('Missing or incorrect information submitted for password change.', 'Missing Information!');
+			return;
+		}
 		if (!user) return;
 		let newPassword: any = newPasswordForm.toModel();
 		delete newPassword.retypeNewPassword;
@@ -260,10 +261,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						<LabelButton
 							key={2}
 							className={'saveBtn'}
-							look={isPasswordFormValid ? 'containedPrimary' : 'containedSecondary'}
+							look={newPasswordForm.isModified() ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={!isPasswordFormValid}
+							disabled={!newPasswordForm.isModified()}
 							onClick={() => {
 								updatePassword();
 							}}
