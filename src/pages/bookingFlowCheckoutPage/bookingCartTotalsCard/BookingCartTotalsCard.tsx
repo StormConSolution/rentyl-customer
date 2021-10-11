@@ -30,6 +30,7 @@ interface BookingCartTotalsCardProps {
 	editPackages?: () => void;
 	cancellable: boolean;
 	usePoints: boolean;
+	destinationHasPackages: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -129,14 +130,16 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						props.changeRoom();
 					}}
 				/>
-				<LabelButton
-					look={'none'}
-					variant={'body1'}
-					label={'EDIT PACKAGES'}
-					onClick={() => {
-						if (props.editPackages) props.editPackages();
-					}}
-				/>
+				{props.destinationHasPackages && (
+					<LabelButton
+						look={'none'}
+						variant={'body1'}
+						label={'EDIT PACKAGES'}
+						onClick={() => {
+							if (props.editPackages) props.editPackages();
+						}}
+					/>
+				)}
 				<LabelButton
 					look={'none'}
 					variant={'body1'}

@@ -35,6 +35,7 @@ interface ReservationDetailsAccordionProps {
 	onSave?: (data: Misc.ReservationContactInfoDetails) => void;
 	isEdit?: boolean;
 	isOpen?: boolean;
+	destinationHasPackages: boolean;
 	isPastReservation?: boolean;
 	onRemove?: () => void;
 	onChangeRoom?: () => void;
@@ -186,14 +187,16 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						if (props.onChangeRoom) props.onChangeRoom();
 					}}
 				/>
-				<LabelButton
-					look={'none'}
-					variant={'body1'}
-					label={'EDIT PACKAGES'}
-					onClick={() => {
-						if (props.onEditService) props.onEditService();
-					}}
-				/>
+				{props.destinationHasPackages && (
+					<LabelButton
+						look={'none'}
+						variant={'body1'}
+						label={'EDIT PACKAGES'}
+						onClick={() => {
+							if (props.onEditService) props.onEditService();
+						}}
+					/>
+				)}
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
