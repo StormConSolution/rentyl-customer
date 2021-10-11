@@ -100,7 +100,7 @@ const EditExistingPackagesPage: React.FC = () => {
 				<DestinationPackageTile
 					key={index}
 					text={'Remove'}
-					title={item.externalTitle || item.title}
+					title={item.title || item.externalTitle}
 					description={item.description}
 					prices={item.priceDetail}
 					imgPaths={item.media.map((item) => {
@@ -127,7 +127,7 @@ const EditExistingPackagesPage: React.FC = () => {
 				return (
 					<DestinationPackageTile
 						key={index}
-						title={item.externalTitle || item.title}
+						title={item.title || item.externalTitle}
 						description={item.description}
 						prices={item.priceDetail}
 						imgPaths={item.media.map((item) => {
