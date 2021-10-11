@@ -30,7 +30,7 @@ const DestinationReviewPage: React.FC = () => {
 				let response = await reviewService.getForDestination(params.destinationId);
 				setDestinationReviews(response);
 			} catch (e) {
-				rsToastify.error('No reviews for this destination.', 'No Reviews Available!');
+				rsToastify.info('No reviews for this destination.', 'No Reviews Available!');
 				router.back();
 			}
 		}
