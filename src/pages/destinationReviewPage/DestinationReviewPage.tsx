@@ -14,7 +14,6 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import LoadingPage from '../loadingPage/LoadingPage';
 import LinkButton from '../../components/linkButton/LinkButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const DestinationReviewPage: React.FC = () => {
@@ -31,10 +30,7 @@ const DestinationReviewPage: React.FC = () => {
 				let response = await reviewService.getForDestination(params.destinationId);
 				setDestinationReviews(response);
 			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
-					'Server Error'
-				);
+				rsToastify.error('No reviews for this destination.', 'No Reviews Available!');
 				router.back();
 			}
 		}
