@@ -96,7 +96,7 @@ const BookingFlowAddPackagePage = () => {
 			return (
 				<DestinationPackageTile
 					key={item.id}
-					title={item.title}
+					title={item.title || item.externalTitle}
 					description={item.description}
 					prices={item.priceDetail}
 					imgPaths={item.media.map((item) => {
@@ -120,7 +120,7 @@ const BookingFlowAddPackagePage = () => {
 			return (
 				<DestinationPackageTile
 					key={item.id}
-					title={item.title}
+					title={item.title || item.externalTitle}
 					description={item.description}
 					prices={item.priceDetail}
 					imgPaths={item.media.map((item, index) => {
