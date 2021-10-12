@@ -98,11 +98,6 @@ const RewardPurchasePage: React.FC = () => {
 										Item # {reward.upc}
 									</Label>
 								</div>
-								<div className={'rewardPoints'}>
-									<Label className={'points'} variant={'h3'}>
-										{StringUtils.addCommasToNumber(reward.pointCost)}
-									</Label>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -175,7 +170,7 @@ const RewardPurchasePage: React.FC = () => {
 							/>
 							<LabelLink
 								className={'privacyPolicyLink'}
-								path={'/'}
+								path={'/legal/privacy'}
 								label={'Privacy Policy'}
 								variant={'body2'}
 							/>

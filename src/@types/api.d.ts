@@ -1033,6 +1033,7 @@ declare namespace Api {
 			logoUrl: string;
 			heroUrl: string;
 			policies: { type: Model.DestinationPolicyType; value: string }[];
+			packages: UpsellPackage.Details[];
 			media: Media[];
 		}
 

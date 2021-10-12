@@ -198,6 +198,7 @@ const ReservationDetailsPage: React.FC = () => {
 							isEdit
 							isPastReservation={new Date(reservation.arrivalDate).getTime() < Date.now()}
 							isOpen
+							destinationHasPackages={reservation.destination.packages.length > 0}
 						/>
 					</div>
 					<div>
