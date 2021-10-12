@@ -265,7 +265,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<DestinationSearchResultCard
 					key={destination.id}
 					destinationName={destination.name}
-					address={`${destination.city}, ${destination.state}`}
+					address={
+						(destination.city || '') +
+						(destination.city && destination.state ? ', ' : '') +
+						(destination.state || '')
+					}
 					logoImagePath={destination.logoUrl}
 					picturePaths={urls}
 					starRating={destination.reviewRating}

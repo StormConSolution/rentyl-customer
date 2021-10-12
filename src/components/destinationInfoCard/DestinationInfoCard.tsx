@@ -28,12 +28,14 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 	 */
 
 	function renderDestinationAddress() {
-		if (!props.address || !props.zip || props.state || props.city) {
-			return (
-				<Label variant={'caption'}>
-					{props.state}, {props.city}
-				</Label>
-			);
+		if (!props.address || !props.zip) {
+			if (props.state && props.city) {
+				return (
+					<Label variant={'caption'}>
+						{props.state}, {props.city}
+					</Label>
+				);
+			}
 		} else if (props.address && props.zip && props.state && props.city) {
 			return (
 				<Label variant={'caption'}>
