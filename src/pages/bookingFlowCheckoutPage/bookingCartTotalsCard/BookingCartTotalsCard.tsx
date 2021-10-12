@@ -88,7 +88,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			} catch (e) {
 				setVerifyStatus('notAvailable');
 				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'This accommodation is no longer available for these dates'),
+					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'
 				);
 				let updatedVerifiedAccommodation = { ...verifiedAccommodation };

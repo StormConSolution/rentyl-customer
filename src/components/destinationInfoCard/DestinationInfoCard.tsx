@@ -27,6 +27,24 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 	 * This was done on 5/7/2021 - Ticket #192
 	 */
 
+	function renderDestinationAddress() {
+		if (!props.address || !props.zip || props.state || props.city) {
+			return (
+				<Label variant={'caption'}>
+					{props.state}, {props.city}
+				</Label>
+			);
+		} else if (props.address && props.zip && props.state && props.city) {
+			return (
+				<Label variant={'caption'}>
+					{props.address}, {props.state}, {props.city} {props.zip}
+				</Label>
+			);
+		} else {
+			return null;
+		}
+	}
+
 	const size = useWindowResizeChange();
 	return (
 		<Paper
@@ -37,9 +55,7 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 			width={size === 'small' ? '335px' : '536px'}
 		>
 			<img src={props.destinationImage} alt={'Destination Logo'} />
-			<Label variant={'caption'}>
-				{props.address}, {props.state}, {props.city} {props.zip}
-			</Label>
+			{renderDestinationAddress()}
 			<Label variant={size === 'small' ? 'h2' : 'h1'}>{props.destinationName}</Label>
 			<Box display={'flex'} marginBottom={'15px'}>
 				<StarRating size={'small16px'} rating={props.rating} />

@@ -39,7 +39,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	return (
 		<div className={'rsDestinationSearchResultCardMobile'}>
 			<Carousel showControls children={renderPictures(props.picturePaths)} />
-			<img className={'logoImg'} src={props.logoImagePath} alt={`${props.destinationName} Logo`} />
+			<img className={'logoImg'} src={props.logoImagePath} alt={''} />
 			<Label variant={'h1'} mb={8}>
 				{props.destinationName}
 			</Label>
