@@ -113,6 +113,21 @@ const ExistingItineraryPage: React.FC = () => {
 			let cashTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
+			let destinationAddress;
+			if (!itinerary.destination.address1 || !itinerary.destination.zip) {
+				if (itinerary.destination.state && itinerary.destination.city) {
+					destinationAddress = `${itinerary.destination.state}, ${itinerary.destination.city}`;
+				}
+			} else if (
+				itinerary.destination.address1 &&
+				itinerary.destination.zip &&
+				itinerary.destination.state &&
+				itinerary.destination.city
+			) {
+				destinationAddress = `${itinerary.destination.address1}, ${itinerary.destination.state}, ${itinerary.destination.city} ${itinerary.destination.zip}`;
+			} else {
+				destinationAddress = '';
+			}
 			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
@@ -121,7 +136,7 @@ const ExistingItineraryPage: React.FC = () => {
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={'Itinerary-' + itinerary.destination.name}
-					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					address={destinationAddress || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate
@@ -149,6 +164,21 @@ const ExistingItineraryPage: React.FC = () => {
 			let cashTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
+			let destinationAddress;
+			if (!itinerary.destination.address1 || !itinerary.destination.zip) {
+				if (itinerary.destination.state && itinerary.destination.city) {
+					destinationAddress = `${itinerary.destination.state}, ${itinerary.destination.city}`;
+				}
+			} else if (
+				itinerary.destination.address1 &&
+				itinerary.destination.zip &&
+				itinerary.destination.state &&
+				itinerary.destination.city
+			) {
+				destinationAddress = `${itinerary.destination.address1}, ${itinerary.destination.state}, ${itinerary.destination.city} ${itinerary.destination.zip}`;
+			} else {
+				destinationAddress = '';
+			}
 			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
@@ -157,7 +187,7 @@ const ExistingItineraryPage: React.FC = () => {
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={itinerary.destination.name}
-					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					address={destinationAddress || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate
