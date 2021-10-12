@@ -430,13 +430,13 @@ const AccountPaymentMethodsPage: React.FC = () => {
 					</Box>
 				</Box>
 				<hr />
-				{!ObjectUtils.isArrayWithData(nonPrimaryCardList) ? (
-					''
-				) : (
+				{ObjectUtils.isArrayWithData(nonPrimaryCardList) ? (
 					<Box className={'otherCardContainer'} m={'60px 0'}>
 						<Label variant={'h4'}>Other payment methods</Label>
 						<Box className={'otherPaymentCardWrapper'}>{renderOtherPaymentCards()}</Box>
 					</Box>
+				) : (
+					''
 				)}
 				<Footer links={FooterLinks} />
 			</div>
