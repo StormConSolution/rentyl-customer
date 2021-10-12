@@ -19,7 +19,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
+import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -209,35 +209,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		let address = `${destinationDetails.address1} ${destinationDetails.city} ${destinationDetails.state} ${destinationDetails.zip}`;
 		address = address.replace(/ /g, '+');
 		return `https://www.google.com/maps/embed/v1/place?q=${address}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`;
-	}
-
-	function renderDestinationAddress() {
-		if (!destinationDetails) return null;
-		if (!destinationDetails.address1 || !destinationDetails.zip) {
-			if (destinationDetails.state && destinationDetails.city) {
-				return (
-					<Label variant={'body2'}>
-						<Icon iconImg={'icon-map-solid'} size={12} />
-						{destinationDetails.city}, {destinationDetails.state}
-					</Label>
-				);
-			}
-		} else if (
-			destinationDetails.address1 &&
-			destinationDetails.zip &&
-			destinationDetails.state &&
-			destinationDetails.city
-		) {
-			return (
-				<Label variant={'body2'}>
-					<Icon iconImg={'icon-map-solid'} size={12} />
-					{destinationDetails.address1} {destinationDetails.city}, {destinationDetails.state}{' '}
-					{destinationDetails.zip}
-				</Label>
-			);
-		} else {
-			return null;
-		}
 	}
 
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
@@ -452,38 +423,36 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	function renderSectionFour() {
 		if (!destinationDetails) return null;
-		if (destinationDetails) {
-			if (
-				!destinationDetails.city &&
-				!destinationDetails.address1 &&
-				!destinationDetails.zip &&
-				!destinationDetails.state
-			)
-				return null;
-			return (
-				<Box
-					className={'sectionFour'}
-					marginBottom={'124px'}
-					display={'flex'}
-					justifyContent={'center'}
-					alignItems={'center'}
-					flexWrap={'wrap'}
-				>
-					<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-						<Label variant={'h1'}>Location</Label>
-						{destinationDetails.locationDescription ? (
-							<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
-						) : (
-							<div></div>
-						)}
-						{renderDestinationAddress()}
-					</Box>
-					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-						<iframe frameBorder="0" src={renderMapSource()} />
-					</Box>
+		const addressData = {
+			address1: destinationDetails.address1,
+			address2: destinationDetails.address2,
+			city: destinationDetails.city,
+			state: destinationDetails.state,
+			zip: destinationDetails.zip
+		};
+		return (
+			<Box
+				className={'sectionFour'}
+				marginBottom={'124px'}
+				display={'flex'}
+				justifyContent={'center'}
+				alignItems={'center'}
+				flexWrap={'wrap'}
+			>
+				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
+					<Label variant={'h1'}>Location</Label>
+					{destinationDetails.locationDescription ? (
+						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
+					) : (
+						<div></div>
+					)}
+					<Label variant={'caption'}>{StringUtils.buildAddressString(addressData)}</Label>
 				</Box>
-			);
-		}
+				<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
+					<iframe frameBorder="0" src={renderMapSource()} />
+				</Box>
+			</Box>
+		);
 	}
 
 	return !destinationDetails ? (

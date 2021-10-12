@@ -7,6 +7,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../labelLink/LabelLink';
 import StarRating from '../starRating/StarRating';
+import { StringUtils } from '../../utils/utils';
 
 interface DestinationInfoCardProps {
 	destinationId: number;
@@ -27,26 +28,6 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 	 * This was done on 5/7/2021 - Ticket #192
 	 */
 
-	function renderDestinationAddress() {
-		if (!props.address || !props.zip) {
-			if (props.state && props.city) {
-				return (
-					<Label variant={'caption'}>
-						{props.state}, {props.city}
-					</Label>
-				);
-			}
-		} else if (props.address && props.zip && props.state && props.city) {
-			return (
-				<Label variant={'caption'}>
-					{props.address}, {props.state}, {props.city} {props.zip}
-				</Label>
-			);
-		} else {
-			return null;
-		}
-	}
-
 	const size = useWindowResizeChange();
 	return (
 		<Paper
@@ -56,8 +37,17 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 			backgroundColor={'#FCFBF8'}
 			width={size === 'small' ? '335px' : '536px'}
 		>
-			<img src={props.destinationImage} alt={'Destination Logo'} />
-			{renderDestinationAddress()}
+			{props.destinationImage && props.destinationImage !== '' && (
+				<img src={props.destinationImage} alt={'Destination Logo'} />
+			)}
+			<Label variant={'caption'}>
+				{StringUtils.buildAddressString({
+					address1: props.address || '',
+					city: props.city || '',
+					state: props.state || '',
+					zip: props.zip.toString() || ''
+				})}
+			</Label>
 			<Label variant={size === 'small' ? 'h2' : 'h1'}>{props.destinationName}</Label>
 			<Box display={'flex'} marginBottom={'15px'}>
 				<StarRating size={'small16px'} rating={props.rating} />

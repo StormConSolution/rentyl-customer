@@ -12,7 +12,7 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 
 const ExistingItineraryPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -113,21 +113,6 @@ const ExistingItineraryPage: React.FC = () => {
 			let cashTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
-			let destinationAddress;
-			if (!itinerary.destination.address1 || !itinerary.destination.zip) {
-				if (itinerary.destination.state && itinerary.destination.city) {
-					destinationAddress = `${itinerary.destination.state}, ${itinerary.destination.city}`;
-				}
-			} else if (
-				itinerary.destination.address1 &&
-				itinerary.destination.zip &&
-				itinerary.destination.state &&
-				itinerary.destination.city
-			) {
-				destinationAddress = `${itinerary.destination.address1}, ${itinerary.destination.state}, ${itinerary.destination.city} ${itinerary.destination.zip}`;
-			} else {
-				destinationAddress = '';
-			}
 			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
@@ -136,7 +121,7 @@ const ExistingItineraryPage: React.FC = () => {
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={'Itinerary-' + itinerary.destination.name}
-					address={destinationAddress || ''}
+					address={StringUtils.buildAddressString(itinerary.destination) || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate
@@ -164,21 +149,6 @@ const ExistingItineraryPage: React.FC = () => {
 			let cashTotal = itinerary.stays.reduce((total, reservation) => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
-			let destinationAddress;
-			if (!itinerary.destination.address1 || !itinerary.destination.zip) {
-				if (itinerary.destination.state && itinerary.destination.city) {
-					destinationAddress = `${itinerary.destination.state}, ${itinerary.destination.city}`;
-				}
-			} else if (
-				itinerary.destination.address1 &&
-				itinerary.destination.zip &&
-				itinerary.destination.state &&
-				itinerary.destination.city
-			) {
-				destinationAddress = `${itinerary.destination.address1}, ${itinerary.destination.state}, ${itinerary.destination.city} ${itinerary.destination.zip}`;
-			} else {
-				destinationAddress = '';
-			}
 			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
@@ -187,7 +157,7 @@ const ExistingItineraryPage: React.FC = () => {
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={itinerary.destination.name}
-					address={destinationAddress || ''}
+					address={StringUtils.buildAddressString(itinerary.destination) || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate
