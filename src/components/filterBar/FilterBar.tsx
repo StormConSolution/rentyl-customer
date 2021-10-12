@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import moment from 'moment';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import debounce from 'lodash.debounce';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { StringUtils } from '../../utils/utils';
 import LabelSelect from '../labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
-import serviceFactory from '../../services/serviceFactory';
-import DestinationService from '../../services/destination/destination.service';
-import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface SelectOptionControls {
 	options: OptionType[];
