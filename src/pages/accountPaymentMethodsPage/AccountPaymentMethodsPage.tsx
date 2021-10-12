@@ -20,6 +20,7 @@ import Footer from '../../components/footer/Footer';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { ObjectUtils } from '../../utils/utils';
 
 let isPrimary: 1 | 0 = 0;
 
@@ -267,7 +268,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 	}
 
 	function renderOtherPaymentCards() {
-		if (!nonPrimaryCardList) return;
+		if (!ObjectUtils.isArrayWithData(nonPrimaryCardList)) return;
 		return nonPrimaryCardList.map((item, index) => {
 			return (
 				<OtherPaymentCard
@@ -429,10 +430,14 @@ const AccountPaymentMethodsPage: React.FC = () => {
 					</Box>
 				</Box>
 				<hr />
-				<Box className={'otherCardContainer'} m={'60px 0'}>
-					<Label variant={'h4'}>Other payment methods</Label>
-					<Box className={'otherPaymentCardWrapper'}>{renderOtherPaymentCards()}</Box>
-				</Box>
+				{!ObjectUtils.isArrayWithData(nonPrimaryCardList) ? (
+					''
+				) : (
+					<Box className={'otherCardContainer'} m={'60px 0'}>
+						<Label variant={'h4'}>Other payment methods</Label>
+						<Box className={'otherPaymentCardWrapper'}>{renderOtherPaymentCards()}</Box>
+					</Box>
+				)}
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>
