@@ -114,14 +114,19 @@ const ExistingItineraryPage: React.FC = () => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
 			const destinationImages = handleDestinationImages(itinerary);
+			const builtAddress = `${itinerary.destination.address1 ? itinerary.destination.address1 + ', ' : ''}${
+				itinerary.destination.address2 ? itinerary.destination.address2 + ', ' : ''
+			}${itinerary.destination.city ? itinerary.destination.city + ', ' : ''}${
+				itinerary.destination.state ? itinerary.destination.state : ''
+			} ${itinerary.destination.zip ? itinerary.destination.zip : ''}`;
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
 					itineraryId={itinerary.itineraryId}
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
-					title={'Itinerary-' + itinerary.destination.name}
-					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					title={itinerary.destination.name}
+					address={builtAddress}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate
@@ -150,6 +155,11 @@ const ExistingItineraryPage: React.FC = () => {
 				return total + reservation.priceDetail.grandTotalCents;
 			}, 0);
 			const destinationImages = handleDestinationImages(itinerary);
+			const destinationAddress = `${itinerary.destination.address1 ? itinerary.destination.address1 + ', ' : ''}${
+				itinerary.destination.address2 ? itinerary.destination.address2 + ', ' : ''
+			}${itinerary.destination.city ? itinerary.destination.city + ', ' : ''}${
+				itinerary.destination.state ? itinerary.destination.state : ''
+			} ${itinerary.destination.zip ? itinerary.destination.zip : ''}`;
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
@@ -157,7 +167,7 @@ const ExistingItineraryPage: React.FC = () => {
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={itinerary.destination.name}
-					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					address={destinationAddress}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate

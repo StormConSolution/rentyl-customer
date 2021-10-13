@@ -78,15 +78,15 @@ const AccountPointsPage: React.FC = () => {
 		return point.media[0].urls.imageKit;
 	}
 	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
-		if (point.status === 'PENDING' || point.status === 'RECEIVED') {
-			return point.pointAmount;
+		if (point.status === 'PENDING' || point.status === 'RECEIVED' || point.status === 'REFUNDED') {
+			return StringUtils.addCommasToNumber(point.pointAmount);
 		} else if (
 			point.status === 'REVOKED' ||
 			point.status === 'EXPIRED' ||
 			point.status === 'CANCELED' ||
 			point.status === 'REDEEMED'
 		) {
-			return `-${point.pointAmount}`;
+			return `-${StringUtils.addCommasToNumber(point.pointAmount)}`;
 		} else {
 			return '';
 		}

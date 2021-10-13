@@ -3,7 +3,7 @@ import './ReservationInfoCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import Paper from '../paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { DateUtils } from '../../utils/utils';
+import { DateUtils, ObjectUtils } from '../../utils/utils';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
@@ -54,7 +54,7 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 				</Label>
 			</div>
 			<div className={'amenities'}>
-				<Label variant={'caption'}>Amenities</Label>
+				{ObjectUtils.isArrayWithData(props.amenities) && <Label variant={'caption'}>Amenities</Label>}
 				<Label variant={'body1'}>{renderAmenityIcons()}</Label>
 			</div>
 			<div>
