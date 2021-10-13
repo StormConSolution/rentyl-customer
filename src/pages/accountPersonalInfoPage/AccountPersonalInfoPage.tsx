@@ -80,15 +80,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}, [updateUserForm]);
 
 	useEffect(() => {
-		async function validatePasswordForm() {
-			await newPasswordForm.isValid();
-		}
-		if (newPasswordForm.isModified()) {
-			validatePasswordForm().catch(console.error);
-		}
-	}, [newPasswordForm]);
-
-	useEffect(() => {
 		if (!user) router.navigate('/signup').catch(console.error);
 	}, [user]);
 
