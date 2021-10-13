@@ -261,11 +261,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, -1);
+			const addressData = {
+				city: destination.city,
+				state: destination.state
+			};
 			return (
 				<DestinationSearchResultCard
 					key={destination.id}
 					destinationName={destination.name}
-					address={`${destination.city}, ${destination.state}`}
+					address={StringUtils.buildAddressString(addressData)}
 					logoImagePath={destination.logoUrl}
 					picturePaths={urls}
 					starRating={destination.reviewRating}

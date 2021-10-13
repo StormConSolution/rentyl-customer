@@ -45,7 +45,7 @@ const ItineraryCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 	return (
 		<Box className={'rsItineraryCardMobile'}>
 			<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
-			<img className={'logoImg'} src={props.logo} alt={`${props.title} Logo`} />
+			{props.logo && props.logo !== '' && <img className={'logoImg'} src={props.logo} alt={''} />}
 			<Label variant={'h1'} mb={8}>
 				{props.title}
 			</Label>
