@@ -120,7 +120,7 @@ const ExistingItineraryPage: React.FC = () => {
 					itineraryId={itinerary.itineraryId}
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
-					title={'Itinerary-' + itinerary.destination.name}
+					title={itinerary.destination.name}
 					address={StringUtils.buildAddressString(itinerary.destination) || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,

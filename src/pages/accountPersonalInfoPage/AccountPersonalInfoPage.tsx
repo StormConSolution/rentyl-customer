@@ -153,13 +153,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						Welcome, {user.firstName} {user.lastName}
 					</Label>
 					<Box display={'flex'} alignItems={'center'}>
-						{user.tierBadge ? (
-							<img src={user.tierBadge} alt={'Tier Badge'} />
-						) : (
-							<div className={'fakeImg'}>
-								<img src={require('../../images/white-spire.png')} alt={'white spire'} />
-							</div>
-						)}
+						<img src={'../../images/tierIcons/' + user.tierTitle + '.png'} alt={'Tier Badge'} />
 						<Box>
 							<Label variant={'caption'}>{user.tierTitle}</Label>
 							<Label variant={'body1'}>Account #{user.id}</Label>
