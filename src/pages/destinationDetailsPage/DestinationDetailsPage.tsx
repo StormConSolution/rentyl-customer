@@ -19,7 +19,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
+import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -399,6 +399,62 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		});
 	}
 
+	function renderSectionTwo() {
+		if (!destinationDetails?.features) return null;
+		return (
+			<Box className={'sectionTwo'} marginBottom={'160px'}>
+				<Label variant={'h1'}>Features</Label>
+				<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
+					{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
+				</Box>
+			</Box>
+		);
+	}
+
+	function renderSectionThree() {
+		if (!destinationDetails?.features) return null;
+		return (
+			<Box className={'sectionThree'} marginBottom={'190px'}>
+				{renderFeatureCarousel()}
+				<div className={'yellowSquare'} />
+			</Box>
+		);
+	}
+
+	function renderSectionFour() {
+		if (!destinationDetails) return null;
+		const addressData = {
+			address1: destinationDetails.address1,
+			address2: destinationDetails.address2,
+			city: destinationDetails.city,
+			state: destinationDetails.state,
+			zip: destinationDetails.zip
+		};
+		return (
+			<Box
+				className={'sectionFour'}
+				marginBottom={'124px'}
+				display={'flex'}
+				justifyContent={'center'}
+				alignItems={'center'}
+				flexWrap={'wrap'}
+			>
+				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
+					<Label variant={'h1'}>Location</Label>
+					{destinationDetails.locationDescription ? (
+						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
+					) : (
+						<div></div>
+					)}
+					<Label variant={'caption'}>{StringUtils.buildAddressString(addressData)}</Label>
+				</Box>
+				<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
+					<iframe frameBorder="0" src={renderMapSource()} />
+				</Box>
+			</Box>
+		);
+	}
+
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -471,37 +527,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						{/*)}*/}
 					</Box>
 				</Box>
-				<Box className={'sectionTwo'} marginBottom={'160px'}>
-					<Label variant={'h1'}>Features</Label>
-					<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
-						{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
-					</Box>
-				</Box>
-				<Box className={'sectionThree'} marginBottom={'190px'}>
-					{renderFeatureCarousel()}
-					<div className={'yellowSquare'} />
-				</Box>
-				<Box
-					className={'sectionFour'}
-					marginBottom={'124px'}
-					display={'flex'}
-					justifyContent={'center'}
-					alignItems={'center'}
-					flexWrap={'wrap'}
-				>
-					<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-						<Label variant={'h1'}>Location</Label>
-						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
-						<Label variant={'body2'}>
-							<Icon iconImg={'icon-map-solid'} size={12} />
-							{destinationDetails.address1} {destinationDetails.city}, {destinationDetails.state}{' '}
-							{destinationDetails.zip}
-						</Label>
-					</Box>
-					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-						<iframe frameBorder="0" src={renderMapSource()} />
-					</Box>
-				</Box>
+				{renderSectionTwo()}
+				{renderSectionThree()}
+				{renderSectionFour()}
 				<div className={'sectionFive'} ref={availableStaysRef}>
 					<Label variant={'h1'} mb={20}>
 						Available Stays

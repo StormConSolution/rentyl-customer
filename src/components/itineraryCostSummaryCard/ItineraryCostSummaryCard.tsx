@@ -3,8 +3,7 @@ import './ItineraryCostSummaryCard.scss';
 import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import { DateUtils } from '../../utils/utils';
+import { DateUtils, StringUtils } from '../../utils/utils';
 
 interface ItineraryCostSummaryCardProps {
 	destinationName: string;
@@ -70,9 +69,15 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 	return (
 		<Paper className={'rsItineraryCostSummaryCard'} boxShadow>
 			<Label variant={'h4'}>{props.destinationName}</Label>
-			<Label variant={'h4'}>{`${props.address.address1} ${props.address.address2 || ''} ${props.address.city}, ${
-				props.address.state
-			} ${props.address.zip}`}</Label>
+			<Label variant={'h4'}>
+				{StringUtils.buildAddressString({
+					address1: props.address.address1,
+					address2: props.address.address2,
+					city: props.address.city,
+					state: props.address.state,
+					zip: props.address.zip.toString() || ''
+				})}
+			</Label>
 			<hr />
 			{renderReservations()}
 			{!!grandTotalPackageCost && (

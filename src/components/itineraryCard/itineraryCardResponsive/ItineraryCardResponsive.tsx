@@ -49,7 +49,7 @@ const ItineraryCardResponsive: React.FC<ItineraryCardResponsiveProps> = (props) 
 			</div>
 			<Box className={'columnTwo'} position={'relative'}>
 				<Box className={'rowOne'} display={'flex'} alignItems={'center'}>
-					<img src={props.logo} alt={`${props.title} Logo`} />
+					{props.logo && props.logo !== '' && <img src={props.logo} alt={''} />}
 					<div>
 						<Label variant={'h1'}>{props.title}</Label>
 						<Label variant={'caption'}>{props.address}</Label>

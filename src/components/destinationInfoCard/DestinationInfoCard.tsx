@@ -7,6 +7,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../labelLink/LabelLink';
 import StarRating from '../starRating/StarRating';
+import { StringUtils } from '../../utils/utils';
 
 interface DestinationInfoCardProps {
 	destinationId: number;
@@ -36,9 +37,16 @@ const DestinationInfoCard: React.FC<DestinationInfoCardProps> = (props) => {
 			backgroundColor={'#FCFBF8'}
 			width={size === 'small' ? '335px' : '536px'}
 		>
-			<img src={props.destinationImage} alt={'Destination Logo'} />
+			{props.destinationImage && props.destinationImage !== '' && (
+				<img src={props.destinationImage} alt={'Destination Logo'} />
+			)}
 			<Label variant={'caption'}>
-				{props.address}, {props.state}, {props.city} {props.zip}
+				{StringUtils.buildAddressString({
+					address1: props.address || '',
+					city: props.city || '',
+					state: props.state || '',
+					zip: props.zip.toString() || ''
+				})}
 			</Label>
 			<Label variant={size === 'small' ? 'h2' : 'h1'}>{props.destinationName}</Label>
 			<Box display={'flex'} marginBottom={'15px'}>
