@@ -400,7 +400,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderSectionTwo() {
-		if (!destinationDetails?.features) return null;
+		if (!ObjectUtils.isArrayWithData(destinationDetails?.features)) return null;
 		return (
 			<Box className={'sectionTwo'} marginBottom={'160px'}>
 				<Label variant={'h1'}>Features</Label>
@@ -416,7 +416,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		return (
 			<Box className={'sectionThree'} marginBottom={'190px'}>
 				{renderFeatureCarousel()}
-				<div className={'yellowSquare'} />
+				{ObjectUtils.isArrayWithData(destinationDetails.features) && <div className={'yellowSquare'} />}
 			</Box>
 		);
 	}
