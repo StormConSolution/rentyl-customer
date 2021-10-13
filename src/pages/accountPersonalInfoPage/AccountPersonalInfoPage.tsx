@@ -19,7 +19,7 @@ import UserPointStatusBar from '../../components/userPointStatusBar/UserPointSta
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface AccountPersonalInfoPageProps {}
@@ -85,7 +85,9 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 			let isValid = await newPasswordForm.isValid();
 			setIsPasswordFormValid(isValid);
 		}
-		validatePasswordForm().catch(console.error);
+		if (newPasswordForm.isModified()) {
+			validatePasswordForm().catch(console.error);
+		}
 	}, [newPasswordForm]);
 
 	useEffect(() => {
@@ -160,7 +162,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							</div>
 						)}
 						<Box>
-							<Label variant={'caption'}>{user.tierTitle}</Label>
+							<Label variant={'caption'}>{user.tierTitle || ''}</Label>
 							<Label variant={'body1'}>Account #{user.id}</Label>
 						</Box>
 					</Box>

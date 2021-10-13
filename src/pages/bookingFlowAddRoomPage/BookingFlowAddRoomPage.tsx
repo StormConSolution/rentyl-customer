@@ -286,10 +286,6 @@ const BookingFlowAddRoomPage = () => {
 		});
 	}
 
-	function onChangePropertyType(control: RsFormControl) {
-		setPropertyType(propertyType.clone().update(control));
-	}
-
 	return (
 		<Page className={'rsBookingFlowAddRoomPage'}>
 			<div className={'rs-page-content-wrapper'}>

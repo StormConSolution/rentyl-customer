@@ -39,7 +39,7 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 				<Label variant={'h4'}>Points Pending</Label>
 				<Label variant={'body1'}>
 					You're {user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0} Points until you
-					reach <b>{user.nextTierTitle}</b> Status, or pay to level up now
+					reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b> Spire tier.
 				</Label>
 				<Label className={'yellow'} variant={'h1'}>
 					{StringUtils.addCommasToNumber(user.availablePoints)}

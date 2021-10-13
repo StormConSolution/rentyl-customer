@@ -9,7 +9,6 @@ import FeaturedRewardCard from '../../components/featuredRewardCard/FeaturedRewa
 import Paper from '../../components/paper/Paper';
 import { useEffect, useState } from 'react';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
-import FeaturedDestinationCard from '../../components/featuredDestinationCard/FeaturedDestinationCard';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import Footer from '../../components/footer/Footer';
