@@ -46,7 +46,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
 		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
 		{ key: 'adults', default: 2, type: 'integer', alias: 'adults' },
-		{ key: 'children', default: 2, type: 'integer', alias: 'children' },
+		{ key: 'children', default: 0, type: 'integer', alias: 'children' },
 		{ key: 'region', default: '', type: 'string', alias: 'region' }
 	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');

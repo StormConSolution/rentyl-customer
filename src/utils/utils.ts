@@ -35,8 +35,8 @@ class StringUtils extends BaseStringUtils {
 	static buildAddressString(address: {
 		address1?: string;
 		address2?: string;
-		city: string;
-		state: string;
+		city?: string;
+		state?: string;
 		zip?: string;
 	}): string {
 		let addressToBuild = '';

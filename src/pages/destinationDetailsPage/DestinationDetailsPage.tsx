@@ -54,7 +54,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
 		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
 		{ key: 'adults', default: 2, type: 'integer', alias: 'adults' },
-		{ key: 'children', default: 2, type: 'integer', alias: 'children' }
+		{ key: 'children', default: 0, type: 'integer', alias: 'children' }
 	]);
 	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLElement>(null);
@@ -83,7 +83,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		startDate: initialStartDate.format('YYYY-MM-DD'),
 		endDate: initialEndDate.format('YYYY-MM-DD'),
 		adults: params.adults || 2,
-		children: params.adults || 0,
+		children: params.children || 0,
 		pagination: { page: 1, perPage: 5 }
 	});
 	const [options, setOptions] = useState<OptionType[]>([]);
@@ -266,9 +266,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined || value.length <= 0 || value === 0)
+			if (value === '' || value === undefined) {
 				delete createSearchQueryObj[key];
-			else createSearchQueryObj[key] = value;
+			} else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
 	}
@@ -400,7 +400,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderSectionTwo() {
-		if (!destinationDetails?.features) return null;
+		if (!ObjectUtils.isArrayWithData(destinationDetails?.features)) return null;
 		return (
 			<Box className={'sectionTwo'} marginBottom={'160px'}>
 				<Label variant={'h1'}>Features</Label>
@@ -416,7 +416,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		return (
 			<Box className={'sectionThree'} marginBottom={'190px'}>
 				{renderFeatureCarousel()}
-				<div className={'yellowSquare'} />
+				{ObjectUtils.isArrayWithData(destinationDetails.features) && <div className={'yellowSquare'} />}
 			</Box>
 		);
 	}
