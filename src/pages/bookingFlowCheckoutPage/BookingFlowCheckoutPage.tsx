@@ -429,6 +429,16 @@ const BookingFlowCheckoutPage = () => {
 				width={size === 'small' ? '100%' : '410px'}
 			>
 				<Label variant={'h2'}>Your Stay</Label>
+				<Label variant={'h4'}>{destinationDetails?.name}</Label>
+				<Label variant={'caption'}>
+					{StringUtils.buildAddressString({
+						address1: destinationDetails?.address1,
+						address2: destinationDetails?.address2,
+						city: destinationDetails?.city,
+						state: destinationDetails?.state,
+						zip: destinationDetails?.zip
+					})}
+				</Label>
 				<hr />
 				{renderAccommodationCards()}
 				<LinkButton
