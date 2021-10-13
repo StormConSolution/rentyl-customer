@@ -47,7 +47,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 							${StringUtils.formatMoney(accommodation.prices[0].priceCents)}
 						</Label>
 					)}
-					{company.allowPointBooking === 1 && (
+					{company.allowPointBooking === 1 && accommodation.prices[0].pricePoints && (
 						<Label variant={'body2'}>
 							{StringUtils.addCommasToNumber(accommodation.prices[0].pricePoints) || 0} pts
 						</Label>
