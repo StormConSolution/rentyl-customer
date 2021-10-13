@@ -307,7 +307,7 @@ const BookingFlowCheckoutPage = () => {
 					.catch(console.error);
 			} catch (e) {
 				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An error occurred, unable to book your reservation.'),
+					'An error occurred with your preferred method of payment, unable to book your reservation.',
 					'Error!'
 				);
 				popupController.close(SpinningLoaderPopup);
@@ -412,6 +412,7 @@ const BookingFlowCheckoutPage = () => {
 						}}
 						cancellable={true}
 						usePoints={usePoints}
+						destinationHasPackages={ObjectUtils.isArrayWithData(destinationDetails?.packages || [])}
 					/>
 				);
 			})

@@ -31,6 +31,47 @@ class StringUtils extends BaseStringUtils {
 		]);
 		params.stays = ObjectUtils.smartParse(params.stays);
 	}
+
+	static buildAddressString(address: {
+		address1?: string;
+		address2?: string;
+		city: string;
+		state: string;
+		zip?: string;
+	}): string {
+		let addressToBuild = '';
+		if (address.address1) {
+			addressToBuild += `${address.address1}`;
+			if (!address.address2 && (address.city || address.state || address.zip)) {
+				addressToBuild += `, `;
+			}
+		}
+
+		if (address.address2) {
+			if (address.address1) addressToBuild += ` `;
+			addressToBuild += `${address.address2}`;
+			if (address.city || address.state || address.zip) {
+				addressToBuild += `, `;
+			}
+		}
+
+		if (address.city) {
+			addressToBuild += `${address.city}`;
+			if (address.state || address.zip) {
+				addressToBuild += `, `;
+			}
+		}
+
+		if (address.state) {
+			addressToBuild += `${address.state} `;
+		}
+
+		if (address.zip) {
+			addressToBuild += ` ${address.zip}`;
+		}
+
+		return addressToBuild;
+	}
 }
 
 class ObjectUtils extends BaseObjectUtils {}

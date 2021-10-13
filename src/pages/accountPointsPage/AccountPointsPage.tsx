@@ -19,6 +19,8 @@ import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import HeroImage from '../../components/heroImage/HeroImage';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
+import Select, { OptionType } from '@bit/redsky.framework.rs.select';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -26,16 +28,16 @@ const AccountPointsPage: React.FC = () => {
 	const userPointService = serviceFactory.get<UserPointService>('UserPointService');
 	const [allPointHistory, setAllPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
-	const [filterBy, setFilterBy] = useState<React.ReactText[]>([]);
-	const pointTypeFilters: Misc.SelectOptions[] = [
-		{ value: 'ACTION', text: 'Action', selected: false },
-		{ value: 'CAMPAIGN', text: 'Campaign', selected: false },
-		{ value: 'ADMIN', text: 'Admin', selected: false },
-		{ value: 'ORDER', text: 'Order', selected: false },
-		{ value: 'BOOKING', text: 'Booking', selected: false },
-		{ value: 'RENTAL', text: 'Rental', selected: false },
-		{ value: 'VACATION', text: 'Vacation', selected: false },
-		{ value: 'VOUCHER', text: 'Voucher', selected: false }
+	const [filterBy, setFilterBy] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('filter', '', [])]));
+	const pointTypeFilters: OptionType[] = [
+		{ value: 'ACTION', label: 'Action' },
+		{ value: 'CAMPAIGN', label: 'Campaign' },
+		{ value: 'ADMIN', label: 'Admin' },
+		{ value: 'ORDER', label: 'Order' },
+		{ value: 'BOOKING', label: 'Booking' },
+		{ value: 'RENTAL', label: 'Rental' },
+		{ value: 'VACATION', label: 'Vacation' },
+		{ value: 'VOUCHER', label: 'Voucher' }
 	];
 
 	useEffect(() => {
@@ -57,14 +59,12 @@ const AccountPointsPage: React.FC = () => {
 	useEffect(() => {
 		function renderPointsWithFilter() {
 			if (!allPointHistory) return;
-			let newAllPointHistory = [...allPointHistory];
-			let filteredPointHistory: Api.UserPoint.Res.Verbose[] = [];
-
-			for (let i in filterBy) {
-				let newPointHistory = newAllPointHistory.filter((point) => point.pointType === filterBy[i]);
-				filteredPointHistory = newPointHistory.concat(filteredPointHistory);
+			let filter = filterBy.get('filter').value as string[];
+			if (filter.length > 0) {
+				setPointHistory(allPointHistory.filter((point) => filter.includes(point.pointType)));
+			} else {
+				setPointHistory(allPointHistory);
 			}
-			setPointHistory(filteredPointHistory);
 		}
 		renderPointsWithFilter();
 	}, [filterBy]);
@@ -78,15 +78,15 @@ const AccountPointsPage: React.FC = () => {
 		return point.media[0].urls.imageKit;
 	}
 	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
-		if (point.status === 'PENDING' || point.status === 'RECEIVED') {
-			return point.pointAmount;
+		if (point.status === 'PENDING' || point.status === 'RECEIVED' || point.status === 'REFUNDED') {
+			return StringUtils.addCommasToNumber(point.pointAmount);
 		} else if (
 			point.status === 'REVOKED' ||
 			point.status === 'EXPIRED' ||
 			point.status === 'CANCELED' ||
 			point.status === 'REDEEMED'
 		) {
-			return `-${point.pointAmount}`;
+			return `-${StringUtils.addCommasToNumber(point.pointAmount)}`;
 		} else {
 			return '';
 		}
@@ -154,13 +154,12 @@ const AccountPointsPage: React.FC = () => {
 						padding={size === 'small' ? '0 20px' : '0 140px'}
 					>
 						<Label variant={'h1'}>Your Point History</Label>
-						<MultiSelect
-							placeHolder={'filter by'}
-							onChange={(value) => {
-								setFilterBy(value);
-							}}
+						<Select
+							isMulti
+							control={filterBy.get('filter')}
+							updateControl={(control) => setFilterBy(filterBy.clone().update(control))}
 							options={pointTypeFilters}
-							showSelectedAsPlaceHolder
+							placeholder={'Search by'}
 						/>
 					</Box>
 					<Paper

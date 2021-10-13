@@ -30,6 +30,7 @@ interface BookingCartTotalsCardProps {
 	editPackages?: () => void;
 	cancellable: boolean;
 	usePoints: boolean;
+	destinationHasPackages: boolean;
 }
 
 const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
@@ -88,7 +89,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 			} catch (e) {
 				setVerifyStatus('notAvailable');
 				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'This accommodation is no longer available for these dates'),
+					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'
 				);
 				let updatedVerifiedAccommodation = { ...verifiedAccommodation };
@@ -129,14 +130,16 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 						props.changeRoom();
 					}}
 				/>
-				<LabelButton
-					look={'none'}
-					variant={'body1'}
-					label={'EDIT PACKAGES'}
-					onClick={() => {
-						if (props.editPackages) props.editPackages();
-					}}
-				/>
+				{props.destinationHasPackages && (
+					<LabelButton
+						look={'none'}
+						variant={'body1'}
+						label={'EDIT PACKAGES'}
+						onClick={() => {
+							if (props.editPackages) props.editPackages();
+						}}
+					/>
+				)}
 				<LabelButton
 					look={'none'}
 					variant={'body1'}

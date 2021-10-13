@@ -82,6 +82,7 @@ const ItineraryDetailsPage: React.FC = () => {
 					phone={item.guest?.phone}
 					additionalDetails={item.additionalDetails}
 					upsellPackages={item.upsellPackages}
+					destinationHasPackages
 				/>
 			);
 		});
@@ -239,9 +240,11 @@ const ItineraryDetailsPage: React.FC = () => {
 						</Label>
 						<Box position={'sticky'} top={20}>
 							{renderItineraryCostSummary()}
-							<Label variant={'h1'} mb={40}>
-								Payment Information
-							</Label>
+							{!!itinerary.paymentMethod && (
+								<Label variant={'h1'} mb={40}>
+									Payment Information
+								</Label>
+							)}
 							{!!itinerary.paymentMethod && (
 								<Paper className={'paymentInfoCard'} boxShadow padding={'24px 28px'}>
 									<div className={'currentCardWrapper'}>

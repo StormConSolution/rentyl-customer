@@ -193,7 +193,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			if (value === '' || value === undefined) delete createSearchQueryObj[key];
-			createSearchQueryObj[key] = value;
+			else createSearchQueryObj[key] = value;
 			if (key === 'regionIds' || key === 'propertyTypeIds') {
 				if (!ObjectUtils.isArrayWithData(value)) delete createSearchQueryObj[key];
 			}
@@ -261,11 +261,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
 			let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, -1);
+			const addressData = {
+				city: destination.city,
+				state: destination.state
+			};
 			return (
 				<DestinationSearchResultCard
 					key={destination.id}
 					destinationName={destination.name}
-					address={`${destination.city}, ${destination.state}`}
+					address={StringUtils.buildAddressString(addressData)}
 					logoImagePath={destination.logoUrl}
 					picturePaths={urls}
 					starRating={destination.reviewRating}
@@ -438,12 +442,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 								}}
 								onChangePriceMin={(value) => {
 									if (value !== '') {
-										updateSearchQueryObj('priceRangeMin', value);
+										updateSearchQueryObj('priceRangeMin', parseInt(value));
 									}
 								}}
 								onChangePriceMax={(value) => {
 									if (value !== '') {
-										updateSearchQueryObj('priceRangeMax', value);
+										updateSearchQueryObj('priceRangeMax', parseInt(value));
 									}
 								}}
 								onChangePropertyType={(control) => {

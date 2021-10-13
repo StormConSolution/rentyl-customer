@@ -12,7 +12,7 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 
 const ExistingItineraryPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -107,6 +107,12 @@ const ExistingItineraryPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(upcomingItineraries)) return;
 
 		return upcomingItineraries.map((itinerary) => {
+			let pointTotal = itinerary.stays.reduce((total, reservation) => {
+				return total + reservation.priceDetail.grandTotalPoints;
+			}, 0);
+			let cashTotal = itinerary.stays.reduce((total, reservation) => {
+				return total + reservation.priceDetail.grandTotalCents;
+			}, 0);
 			const destinationImages = handleDestinationImages(itinerary);
 			return (
 				<ItineraryCard
@@ -114,8 +120,8 @@ const ExistingItineraryPage: React.FC = () => {
 					itineraryId={itinerary.itineraryId}
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
-					title={'Itinerary-' + itinerary.destination.name}
-					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					title={itinerary.destination.name}
+					address={StringUtils.buildAddressString(itinerary.destination) || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate
@@ -123,12 +129,10 @@ const ExistingItineraryPage: React.FC = () => {
 					propertyType={'VIP Suite'}
 					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
 					amenities={itinerary.stays[0].accommodation.featureIcons}
-					totalPoints={itinerary.stays[0].priceDetail.grandTotalPoints}
+					totalPoints={pointTotal}
 					linkPath={'/reservations/itinerary/details?ii=' + itinerary.itineraryId}
 					cancelPermitted={itinerary.stays[0].cancellationPermitted}
-					itineraryTotal={itinerary.stays.reduce((total, reservation) => {
-						return total + reservation.priceDetail.grandTotalCents;
-					}, 0)}
+					itineraryTotal={cashTotal}
 					paidWithPoints={!itinerary.paymentMethod}
 				/>
 			);
@@ -153,7 +157,7 @@ const ExistingItineraryPage: React.FC = () => {
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
 					title={itinerary.destination.name}
-					address={`${itinerary.destination.address1}, ${itinerary.destination.city}, ${itinerary.destination.state} ${itinerary.destination.zip}`}
+					address={StringUtils.buildAddressString(itinerary.destination) || ''}
 					reservationDates={{
 						startDate: itinerary.stays[0].arrivalDate,
 						endDate: itinerary.stays[0].departureDate

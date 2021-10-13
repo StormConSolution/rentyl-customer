@@ -28,7 +28,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
-	const [isPasswordFormValid, setIsPasswordFormValid] = useState<boolean>(false);
 	const [isUserFormValid, setIsUserFormValid] = useState<boolean>(false);
 	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
 	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
@@ -82,8 +81,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 
 	useEffect(() => {
 		async function validatePasswordForm() {
-			let isValid = await newPasswordForm.isValid();
-			setIsPasswordFormValid(isValid);
+			await newPasswordForm.isValid();
 		}
 		if (newPasswordForm.isModified()) {
 			validatePasswordForm().catch(console.error);
@@ -96,6 +94,12 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 
 	async function updateUserObjForm(control: RsFormControl) {
 		setUpdateUserForm(updateUserForm.clone().update(control));
+	}
+
+	async function checkIsFormValid(): Promise<boolean> {
+		let formIsValid = await newPasswordForm.isValid();
+		setNewPasswordForm(newPasswordForm.clone());
+		return formIsValid;
 	}
 
 	async function updateUserPasswordForm(control: RsFormControl) {
@@ -131,6 +135,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	}
 
 	async function updatePassword() {
+		if (!(await checkIsFormValid())) {
+			rsToastify.error('Missing or incorrect information submitted for password change.', 'Missing Information!');
+			return;
+		}
 		if (!user) return;
 		let newPassword: any = newPasswordForm.toModel();
 		delete newPassword.retypeNewPassword;
@@ -154,13 +162,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						Welcome, {user.firstName} {user.lastName}
 					</Label>
 					<Box display={'flex'} alignItems={'center'}>
-						{user.tierBadge ? (
-							<img src={user.tierBadge} alt={'Tier Badge'} />
-						) : (
-							<div className={'fakeImg'}>
-								<img src={require('../../images/white-spire.png')} alt={'white spire'} />
-							</div>
-						)}
+						<img src={'../../images/tierIcons/' + user.tierTitle + '.png'} alt={'Tier Badge'} />
 						<Box>
 							<Label variant={'caption'}>{user.tierTitle || ''}</Label>
 							<Label variant={'body1'}>Account #{user.id}</Label>
@@ -262,10 +264,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						<LabelButton
 							key={2}
 							className={'saveBtn'}
-							look={isPasswordFormValid ? 'containedPrimary' : 'containedSecondary'}
+							look={newPasswordForm.isModified() ? 'containedPrimary' : 'containedSecondary'}
 							variant={'button'}
 							label={'Save Changes'}
-							disabled={!isPasswordFormValid}
+							disabled={!newPasswordForm.isModified()}
 							onClick={() => {
 								updatePassword();
 							}}

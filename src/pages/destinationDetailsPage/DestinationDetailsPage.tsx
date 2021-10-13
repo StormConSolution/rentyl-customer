@@ -11,8 +11,6 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import DestinationInfoCard from '../../components/destinationInfoCard/DestinationInfoCard';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
-import FeatureRoomCard from '../../components/featureRoomCard/FeatureRoomCard';
-import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelImage from '../../components/labelImage/LabelImage';
 import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImageCarousel';
@@ -21,7 +19,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
-import { formatFilterDateForServer, WebUtils } from '../../utils/utils';
+import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -79,6 +77,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
 	const [rateCode, setRateCode] = useState<string>('');
 	const [validCode, setValidCode] = useState<boolean>(true);
+	const [errorMessage, setErrorMessage] = useState<string>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
 		destinationId: params.destinationId,
 		startDate: initialStartDate.format('YYYY-MM-DD'),
@@ -111,13 +110,18 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	useEffect(() => {
 		async function getAvailableStays() {
-			let newSearchQueryObj = { ...searchQueryObj };
 			if (
-				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
-				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
-			) {
-				newSearchQueryObj.priceRangeMax *= 100;
+				searchQueryObj['priceRangeMin'] &&
+				searchQueryObj['priceRangeMax'] &&
+				searchQueryObj['priceRangeMin'] > searchQueryObj['priceRangeMax']
+			)
+				return;
+			let newSearchQueryObj = { ...searchQueryObj };
+			if (!!newSearchQueryObj.priceRangeMin) {
 				newSearchQueryObj.priceRangeMin *= 100;
+			}
+			if (!!newSearchQueryObj.priceRangeMax) {
+				newSearchQueryObj.priceRangeMax *= 100;
 			}
 			try {
 				popupController.open(SpinningLoaderPopup);
@@ -233,19 +237,37 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			| 'propertyTypeIds',
 		value: any
 	) {
-		if (key === 'adults' && value === 0)
-			throw rsToastify.error('There must be at least one adult.', 'Missing or Incorrect Information');
-		if (key === 'adults' && isNaN(value))
+		if (key === 'adults' && value === 0) {
+			//this should never evaluate to true with current implementations.
+			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
+		}
+		if (key === 'adults' && isNaN(value)) {
 			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
-		if (key === 'children' && isNaN(value))
+		}
+		if (key === 'children' && isNaN(value)) {
 			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
-		if (key === 'priceRangeMin' && isNaN(value))
+		}
+		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
 			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
-		if (key === 'priceRangeMax' && isNaN(value))
+		}
+		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
 			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
+		}
+		if (key === 'priceRangeMin' && searchQueryObj['priceRangeMax'] && value > searchQueryObj['priceRangeMax']) {
+			setErrorMessage('Price min must be lower than the max');
+		} else if (
+			key === 'priceRangeMax' &&
+			searchQueryObj['priceRangeMin'] &&
+			value < searchQueryObj['priceRangeMin']
+		) {
+			setErrorMessage('Price max must be greater than the min');
+		} else {
+			setErrorMessage('');
+		}
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined || value.length <= 0) delete createSearchQueryObj[key];
+			if (value === '' || value === undefined || value.length <= 0 || value === 0)
+				delete createSearchQueryObj[key];
 			else createSearchQueryObj[key] = value;
 			return createSearchQueryObj;
 		});
@@ -377,6 +399,62 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		});
 	}
 
+	function renderSectionTwo() {
+		if (!destinationDetails?.features) return null;
+		return (
+			<Box className={'sectionTwo'} marginBottom={'160px'}>
+				<Label variant={'h1'}>Features</Label>
+				<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
+					{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
+				</Box>
+			</Box>
+		);
+	}
+
+	function renderSectionThree() {
+		if (!destinationDetails?.features) return null;
+		return (
+			<Box className={'sectionThree'} marginBottom={'190px'}>
+				{renderFeatureCarousel()}
+				<div className={'yellowSquare'} />
+			</Box>
+		);
+	}
+
+	function renderSectionFour() {
+		if (!destinationDetails) return null;
+		const addressData = {
+			address1: destinationDetails.address1,
+			address2: destinationDetails.address2,
+			city: destinationDetails.city,
+			state: destinationDetails.state,
+			zip: destinationDetails.zip
+		};
+		return (
+			<Box
+				className={'sectionFour'}
+				marginBottom={'124px'}
+				display={'flex'}
+				justifyContent={'center'}
+				alignItems={'center'}
+				flexWrap={'wrap'}
+			>
+				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
+					<Label variant={'h1'}>Location</Label>
+					{destinationDetails.locationDescription ? (
+						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
+					) : (
+						<div></div>
+					)}
+					<Label variant={'caption'}>{StringUtils.buildAddressString(addressData)}</Label>
+				</Box>
+				<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
+					<iframe frameBorder="0" src={renderMapSource()} />
+				</Box>
+			</Box>
+		);
+	}
+
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -449,37 +527,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						{/*)}*/}
 					</Box>
 				</Box>
-				<Box className={'sectionTwo'} marginBottom={'160px'}>
-					<Label variant={'h1'}>Features</Label>
-					<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
-						{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
-					</Box>
-				</Box>
-				<Box className={'sectionThree'} marginBottom={'190px'}>
-					{renderFeatureCarousel()}
-					<div className={'yellowSquare'} />
-				</Box>
-				<Box
-					className={'sectionFour'}
-					marginBottom={'124px'}
-					display={'flex'}
-					justifyContent={'center'}
-					alignItems={'center'}
-					flexWrap={'wrap'}
-				>
-					<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-						<Label variant={'h1'}>Location</Label>
-						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
-						<Label variant={'body2'}>
-							<Icon iconImg={'icon-map-solid'} size={12} />
-							{destinationDetails.address1} {destinationDetails.city}, {destinationDetails.state}{' '}
-							{destinationDetails.zip}
-						</Label>
-					</Box>
-					<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-						<iframe frameBorder="0" src={renderMapSource()} />
-					</Box>
-				</Box>
+				{renderSectionTwo()}
+				{renderSectionThree()}
+				{renderSectionFour()}
 				<div className={'sectionFive'} ref={availableStaysRef}>
 					<Label variant={'h1'} mb={20}>
 						Available Stays
@@ -503,12 +553,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								}}
 								onChangePriceMin={(value) => {
 									if (value !== '') {
-										updateSearchQueryObj('priceRangeMin', value);
+										updateSearchQueryObj('priceRangeMin', parseInt(value));
 									}
 								}}
 								onChangePriceMax={(value) => {
 									if (value !== '') {
-										updateSearchQueryObj('priceRangeMax', value);
+										updateSearchQueryObj('priceRangeMax', parseInt(value));
 									}
 								}}
 								onChangePropertyType={(control) => {
@@ -526,6 +576,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								options={options}
 								control={propertyType.get('propertyType')}
 							/>
+							<Label variant={'body1'} color={'red'}>
+								{errorMessage}
+							</Label>
 							<Accordion
 								hideHoverEffect
 								hideChevron

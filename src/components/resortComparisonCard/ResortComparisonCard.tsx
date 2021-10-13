@@ -69,7 +69,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	) : (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
 			<Box className={'topContent'} display={'flex'}>
-				<img src={props.logo} alt={'resort logo'} width={'82px'} />
+				{props.logo && props.logo !== '' && <img src={props.logo} alt={'resort logo'} width={'82px'} />}
 				<Label className={'title'} variant={'h2'}>
 					{props.title}
 				</Label>

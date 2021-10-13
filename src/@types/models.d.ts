@@ -26,7 +26,14 @@ declare namespace Model {
 		| 'TRIGGER'
 		| 'CAMPAIGN_CONSOLIDATION';
 	export type PointTypes = 'ACTION' | 'CAMPAIGN' | 'ADMIN' | 'ORDER' | 'BOOKING' | 'RENTAL' | 'VACATION' | 'VOUCHER';
-	export type UserPointStatusTypes = 'PENDING' | 'RECEIVED' | 'REVOKED' | 'EXPIRED' | 'REDEEMED' | 'CANCELED';
+	export type UserPointStatusTypes =
+		| 'PENDING'
+		| 'RECEIVED'
+		| 'REVOKED'
+		| 'EXPIRED'
+		| 'REDEEMED'
+		| 'CANCELED'
+		| 'REFUNDED';
 	export type PointReason =
 		| 'TECHNICAL_ERROR'
 		| 'HOTEL_STAY'

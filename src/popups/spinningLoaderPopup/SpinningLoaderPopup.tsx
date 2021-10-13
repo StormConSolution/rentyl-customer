@@ -7,7 +7,7 @@ export interface SpinningLoaderPopupProps extends PopupProps {}
 
 const SpinningLoaderPopup: React.FC<SpinningLoaderPopupProps> = (props) => {
 	return (
-		<Popup opened={props.opened}>
+		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsSpinningLoaderPopup'}>
 				<div className="loader" />
 			</div>
