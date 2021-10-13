@@ -40,8 +40,10 @@ const ExistingItineraryPage: React.FC = () => {
 					page: 1,
 					perPage: 500
 				},
+				//TODO when in a stable environment probably want to switch to arrivalDate to show what is coming up most recently.
+				//Or give a way to filter themselves.
 				sort: {
-					field: 'userId',
+					field: 'reservation.createdOn',
 					order: 'ASC'
 				}
 			};
