@@ -54,7 +54,7 @@ export default class RewardService extends Service {
 		return response.data.data;
 	}
 
-	async getVendorsInSelectFormat() {
+	async getVendorsInSelectFormat(): Promise<Misc.SelectOptions[]> {
 		let vendors = await this.getAllVendors();
 		return vendors.map((vendor) => {
 			if (vendor.destinationId) {
