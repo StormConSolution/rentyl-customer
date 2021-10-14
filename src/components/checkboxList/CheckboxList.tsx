@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CheckboxList.scss';
 import IconLabel from '../iconLabel/IconLabel';
 import LabelCheckbox from '../labelCheckbox/LabelCheckbox';
+import LabelButton from '../labelButton/LabelButton';
 import { StringUtils } from '../../utils/utils';
 import SelectOptions = Misc.SelectOptions;
 
@@ -15,6 +16,12 @@ interface CheckboxListProps {
 
 const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 	const [showAll, setShowAll] = useState<boolean>(false);
+	const [allSelected, setAllSelected] = useState<boolean>(false);
+
+	useEffect(() => {
+		const selectedOptions = props.options.filter((option) => option.selected);
+		setAllSelected(props.options.length === selectedOptions.length);
+	}, []);
 
 	function getSelectedValues(options: SelectOptions[]): (string | number)[] {
 		return options
@@ -31,7 +38,7 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 		newOptions = newOptions.map((item) => {
 			if (value === item.value) {
 				return {
-					selected: item.value === value,
+					selected: true,
 					value: item.value,
 					text: item.text
 				};
@@ -39,6 +46,8 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 				return item;
 			}
 		});
+		if (newOptions.length === props.options.length) setAllSelected(true);
+		else setAllSelected(false);
 		props.onChange(getSelectedValues(newOptions), newOptions);
 	}
 
@@ -100,6 +109,23 @@ const CheckboxList: React.FC<CheckboxListProps> = (props) => {
 
 	return (
 		<div className={`rsCheckboxList ${props.className || ''}`}>
+			<LabelButton
+				look={'none'}
+				variant={'button'}
+				label={`${allSelected ? 'Des' : 'S'}elect All`}
+				onClick={() => {
+					let newOptions = [...props.options];
+					newOptions = newOptions.map((item) => {
+						return {
+							selected: !allSelected,
+							value: item.value,
+							text: item.text
+						};
+					});
+					props.onChange(getSelectedValues(newOptions), newOptions);
+					setAllSelected((prev) => !prev);
+				}}
+			/>
 			{renderSelectOptions()}
 			{renderSeeAllIcon()}
 		</div>

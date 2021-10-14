@@ -6,7 +6,7 @@ import FeaturedCategory = Misc.FeaturedCategory;
 
 interface FeaturedCategoryCardProps {
 	category: FeaturedCategory;
-	onClick: (categoryId: number | string) => void;
+	onClick: (categoryId: number) => void;
 	className?: string;
 }
 

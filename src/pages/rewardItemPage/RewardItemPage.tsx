@@ -20,163 +20,133 @@ import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { WebUtils } from '../../utils/utils';
 import globalState from '../../state/globalState';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const size = useWindowResizeChange();
+	const params = router.getPageUrlParams<{ categories: string; vendors: string }>([
+		{ key: 'cids', default: '', type: 'string', alias: 'categories' },
+		{ key: 'vids', default: '', type: 'string', alias: 'vendors' }
+	]);
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
-	const [showCategoryOrRewardCards, setShowCategoryOrRewardCards] = useState<'category' | 'reward'>('category');
-	const [applyFilterToggle, setApplyFilterToggle] = useState<boolean>(true);
-	const [featuredCategory, setFeaturedCategory] = useState<Misc.FeaturedCategory[]>();
-	const [categoryPagedList, setCategoryPagedList] = useState<Api.Reward.Category.Res.Get[]>([]);
-	const [categorySelectList, setCategorySelectList] = useState<Misc.SelectOptions[]>([]);
-	const [destinationSelectList, setDestinationSelectList] = useState<Misc.SelectOptions[]>([]);
-	const [rewardList, setRewardList] = useState<Api.Reward.Res.Get[]>([]);
-	const [pointCostMin, setPointCostMin] = useState<number>();
-	const [pointCostMax, setPointCostMax] = useState<number>();
+	const [vendors, setVendors] = useState<Misc.SelectOptions[]>([]);
+	const [featuredCategories, setFeaturedCategories] = useState<Api.Reward.Category.Res.Get[]>([]);
+	const [categories, setCategories] = useState<Api.Reward.Category.Res.Get[]>([]);
+	const [rewards, setRewards] = useState<Api.Reward.Res.Get[]>([]);
+	const [rewardTotal, setRewardTotal] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 9;
-	const [cardTotal, setCardTotal] = useState<number>(0);
-	const params = router.getPageUrlParams<{ categories: string }>([
-		{ key: 'cids', default: '', type: 'string', alias: 'categories' }
-	]);
+	const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+	const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
+	const [pointCostRange, setPointCostRange] = useState<RsFormGroup>(
+		new RsFormGroup([new RsFormControl('min', 0, []), new RsFormControl('max', 0, [])])
+	);
 
 	useEffect(() => {
-		async function getAllCategories() {
-			try {
-				let urlSelectedCategories: number[] = [];
-				try {
-					if (params.categories) urlSelectedCategories = JSON.parse(params.categories);
-				} catch (e) {
-					rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get a list of categories.'), 'Server Error');
-				}
-				let activeCategoriesResponse = await rewardService.getAllActiveCategories();
-				let allActiveCategories: Api.Reward.Category.Res.Get[] = activeCategoriesResponse.data;
-				let selectCategories = allActiveCategories.map((category) => {
-					return {
-						value: category.id,
-						selected: urlSelectedCategories.includes(Number(category.id)),
-						text: category.name
-					};
-				});
-				let featuredCategories = await rewardService.getPagedCategories({
-					pagination: { page: 1, perPage: 100 },
-					filter: { matchType: 'exact', searchTerm: [{ column: 'isFeatured', value: 1 }] }
-				});
-				setCategorySelectList(selectCategories);
-				let vendorList = await rewardService.getVendorsInSelectFormat();
-				const newDestinationSelectList = vendorList.filter((vendor) => {
-					if (vendor.value) {
-						return vendor;
-					}
-				});
-				setFeaturedCategory(featuredCategories.data);
-				setDestinationSelectList(newDestinationSelectList || []);
-				setWaitToLoad(false);
-			} catch (e) {
-				console.error(e);
+		async function getAllRewardInfo() {
+			const categoryIds = ObjectUtils.smartParse(params.categories);
+			const vendorIds = ObjectUtils.smartParse(params.vendors);
+			if (ObjectUtils.isArrayWithData(categoryIds)) {
+				setSelectedCategories(categoryIds);
 			}
+			if (ObjectUtils.isArrayWithData(vendorIds)) {
+				setSelectedVendors(vendorIds);
+			}
+			const vendorResponse = await rewardService.getAllVendors();
+			setVendors(
+				vendorResponse
+					.filter((vendor) => !!vendor.brandId || !!vendor.destinationId)
+					.map((vendor) => {
+						return {
+							value: vendor.brandId ? 'b' + vendor.brandId : 'd' + vendor.destinationId,
+							text: vendor.name,
+							selected:
+								ObjectUtils.isArrayWithData(vendorIds) &&
+								(vendorIds.includes('b' + vendor.brandId) ||
+									vendorIds.includes('d' + vendor.destinationId))
+						};
+					})
+			);
+			const categoryResponse = await rewardService.getAllActiveCategories();
+			setCategories(categoryResponse.data);
+			setFeaturedCategories(
+				categoryResponse.data.filter((category: Api.Reward.Category.Res.Get) => !!category.isFeatured)
+			);
+			setWaitToLoad(false);
 		}
-		getAllCategories().catch(console.error);
+		getAllRewardInfo().catch(console.error);
 	}, []);
 
 	useEffect(() => {
-		async function getCategoriesOrRewardItems() {
-			setCardTotal(0);
-			if (ObjectUtils.isArrayWithData(params.categories) || params.categories === '') {
-				try {
-					const pagedCategories = await rewardService.getPagedCategories({
-						pagination: { page, perPage },
-						sort: { field: 'name', order: 'ASC' },
-						filter: {
-							matchType: 'exact',
-							searchTerm: [
-								{
-									column: 'isActive',
-									value: 1
-								}
-							]
-						}
-					});
-					setCategoryPagedList(pagedCategories.data);
-					setCardTotal(pagedCategories.total || 0);
-				} catch (e) {
-					rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot get the list of rewards.'), 'Server Error');
+		async function getRewardItems() {
+			const searchTerm = formatFilterQuery();
+			const pageQuery: RedSky.PageQuery = {
+				pagination: { page, perPage: 9 },
+				filter: {
+					matchType: 'exact',
+					searchTerm
 				}
-			} else {
-				let filter = formatFilterQuery();
-				try {
-					let res = await rewardService.getPagedRewards({
-						pagination: { page: page, perPage: perPage },
-						filter: { matchType: 'exact', searchTerm: filter }
-					});
-					setShowCategoryOrRewardCards('reward');
-					setCardTotal(res.total ? res.total : 0);
-					setRewardList(res.data);
-				} catch (e) {
-					console.error(e.message);
-				}
-			}
+			};
+			const response = await rewardService.getPagedRewards(pageQuery);
+			setRewardTotal(response.total || 0);
+			setRewards(response.data);
 		}
-		getCategoriesOrRewardItems().catch(console.error);
-	}, [page, applyFilterToggle]);
+		getRewardItems().catch(console.error);
+	}, [page, selectedCategories, selectedVendors, pointCostRange]);
 
 	function formatFilterQuery(): RedSky.FilterQueryValue[] {
-		let selectedDestinationIds = getSelectedIds([...destinationSelectList]);
 		let filter: RedSky.FilterQueryValue[] = [];
-		if (ObjectUtils.isArrayWithData(selectedDestinationIds)) {
-			let destinationIds: number[] = [];
-			let brandIds: number[] = [];
-			for (let destination of selectedDestinationIds) {
-				const aOrD = destination.toString().slice(0, 1);
-				const vendorId: number = parseInt(destination.toString().slice(1));
-				if (aOrD === 'd') destinationIds.push(vendorId);
-				if (aOrD === 'a') brandIds.push(vendorId);
-			}
-			if (ObjectUtils.isArrayWithData(destinationIds)) {
+		if (ObjectUtils.isArrayWithData(selectedVendors)) {
+			let brands = selectedVendors.filter((vendor) => vendor.startsWith('b'));
+			let destinations = selectedVendors.filter((vendor) => vendor.startsWith('d'));
+			if (ObjectUtils.isArrayWithData(destinations)) {
 				filter.push({
-					column: 'destinationId',
-					value: destinationIds,
+					column: 'vendor.destinationId',
+					value: destinations.map((destination) => parseInt(destination.slice(1))),
 					matchType: 'exact',
 					conjunction: 'OR'
 				});
 			}
-			if (ObjectUtils.isArrayWithData(brandIds)) {
+			if (ObjectUtils.isArrayWithData(brands)) {
 				filter.push({
-					column: 'affiliateId',
-					value: brandIds,
+					column: 'vendor.brandId',
+					value: brands.map((brand) => parseInt(brand.slice(1))),
 					conjunction: 'OR',
 					matchType: 'exact'
 				});
 			}
 		}
-		let selectedCategoryIds = JSON.parse(params.categories);
-		if (ObjectUtils.isArrayWithData(selectedCategoryIds)) {
+		if (ObjectUtils.isArrayWithData(selectedCategories)) {
 			filter.push({
-				column: 'map.CategoryId',
-				value: selectedCategoryIds,
+				column: 'map.categoryId',
+				value: selectedCategories,
 				matchType: 'exact',
 				conjunction: 'AND'
 			});
 		}
-		if (pointCostMin) {
-			filter.push({
-				column: 'pointCost',
-				value: pointCostMin,
-				matchType: 'greaterThanEqual',
-				conjunction: 'AND'
-			});
-		}
-		if (pointCostMax) {
-			filter.push({
-				column: 'pointCost',
-				value: pointCostMax,
-				matchType: 'lessThanEqual',
-				conjunction: 'AND'
-			});
+		const minMax: { min: number; max: number } = pointCostRange.toModel<{ min: number; max: number }>();
+		if (minMax.max > 0 && minMax.max < minMax.min) {
+			rsToastify.error('Make sure the max is greater than the minimum', 'Price Range Error');
+		} else {
+			if (minMax.min > 0) {
+				filter.push({
+					column: 'pointCost',
+					value: minMax.min,
+					matchType: 'greaterThanEqual',
+					conjunction: 'AND'
+				});
+			}
+			if (minMax.max > 0 && minMax.max > minMax.min) {
+				filter.push({
+					column: 'pointCost',
+					value: minMax.max,
+					matchType: 'lessThanEqual',
+					conjunction: 'AND'
+				});
+			}
 		}
 		filter.push({
 			column: 'isActive',
@@ -185,25 +155,6 @@ const RewardItemPage: React.FC = () => {
 			conjunction: 'AND'
 		});
 		return filter;
-	}
-
-	function getSelectedIds(options: Misc.SelectOptions[]): (string | number)[] {
-		return options
-			.filter((option) => {
-				return option.selected;
-			})
-			.map((option) => {
-				return option.value;
-			});
-	}
-
-	function handleSidebarFilters(selectedFromCategoryTile: boolean) {
-		if (!params.categories && !selectedFromCategoryTile) {
-			rsToastify.error('Must have at least one category selected.', 'Select A Category!');
-			return;
-		}
-		setShowCategoryOrRewardCards('reward');
-		setApplyFilterToggle(!applyFilterToggle);
 	}
 
 	function getPrimaryRewardImg(medias: Api.Media[]): string {
@@ -223,8 +174,8 @@ const RewardItemPage: React.FC = () => {
 	}
 
 	function renderCards() {
-		if (showCategoryOrRewardCards === 'category') {
-			return categoryPagedList.map((category: Api.Reward.Category.Res.Get, index) => {
+		if (!ObjectUtils.isArrayWithData(selectedCategories)) {
+			return categories.map((category: Api.Reward.Category.Res.Get, index) => {
 				let media;
 				if (category.media.length >= 1) {
 					let img = category.media.find((image) => image.isPrimary);
@@ -249,8 +200,8 @@ const RewardItemPage: React.FC = () => {
 				);
 			});
 		}
-		if (!ObjectUtils.isArrayWithData(rewardList)) return;
-		return rewardList.map((reward, index) => {
+		if (!ObjectUtils.isArrayWithData(rewards)) return;
+		return rewards.map((reward, index) => {
 			let primaryImg = getPrimaryRewardImg(reward.media);
 			let voucherCode = getRedeemableVoucherCode(reward.vouchers);
 			return (
@@ -267,29 +218,30 @@ const RewardItemPage: React.FC = () => {
 		});
 	}
 
-	function handleCategoryOnClick(categoryId: number | string) {
+	function handleCategoryOnClick(categoryId: number) {
 		router.updateUrlParams({ cids: JSON.stringify([categoryId]) });
-		let selectedCategories = [...categorySelectList];
-		selectedCategories = selectedCategories.map((category) => {
-			if (category.value === categoryId) {
-				return { value: category.value, text: category.text, selected: true };
-			} else {
-				return { value: category.value, text: category.text, selected: false };
-			}
-		});
-		setCategorySelectList(selectedCategories);
-		handleSidebarFilters(true);
+		setSelectedCategories([categoryId]);
 	}
 
 	function renderFeaturedCategory() {
-		if (!featuredCategory || showCategoryOrRewardCards === 'reward') return;
-		return featuredCategory.map((category, index) => {
+		if (!ObjectUtils.isArrayWithData(featuredCategories) || ObjectUtils.isArrayWithData(selectedCategories)) return;
+		return featuredCategories.map((category, index) => {
+			const media = category.media;
+			let imagePath = '';
+			if (ObjectUtils.isArrayWithData(media)) {
+				const primary = media.find((image) => image.isPrimary);
+				if (!primary || media.length === 1) {
+					imagePath = media[0].urls.imageKit;
+				} else {
+					imagePath = primary.urls.imageKit;
+				}
+			}
 			return (
 				<FeaturedCategoryCard
 					key={index}
 					category={{
-						categoryId: category.categoryId,
-						imagePath: category.imagePath,
+						categoryId: category.id,
+						imagePath,
 						name: category.name
 					}}
 					onClick={(categoryId) => {
@@ -301,7 +253,7 @@ const RewardItemPage: React.FC = () => {
 	}
 
 	function renderPaginationOrNoRewardsMsg() {
-		if (cardTotal === 0) {
+		if (rewardTotal < 1 || !ObjectUtils.isArrayWithData(categories)) {
 			return <Label variant={'body1'}>There are no rewards available matching your filters.</Label>;
 		} else {
 			return (
@@ -309,7 +261,7 @@ const RewardItemPage: React.FC = () => {
 					selectedRowsPerPage={perPage}
 					currentPageNumber={page}
 					setSelectedPage={(page) => setPage(page)}
-					total={cardTotal}
+					total={rewardTotal}
 				/>
 			);
 		}
@@ -326,34 +278,54 @@ const RewardItemPage: React.FC = () => {
 						onChange={(value, options) => {
 							if (value.length === 0) {
 								router.updateUrlParams({});
-								setShowCategoryOrRewardCards('category');
+								setSelectedCategories([]);
 							} else {
 								router.updateUrlParams({
-									cids: JSON.stringify(value)
+									cids: JSON.stringify(value),
+									vids: JSON.stringify(selectedVendors)
 								});
-								setShowCategoryOrRewardCards('reward');
-								setApplyFilterToggle(!applyFilterToggle);
+								setSelectedCategories(value as number[]);
 							}
-							setCategorySelectList(options);
 						}}
-						options={categorySelectList}
+						options={categories.map((category) => {
+							return {
+								value: category.id,
+								text: category.name,
+								selected: selectedCategories.includes(category.id)
+							};
+						})}
 						name={'categories'}
 						className={'categoryCheckboxList'}
 					/>
 				</div>
 				<Box
 					className={'resortAndPointFilters'}
-					display={showCategoryOrRewardCards === 'category' ? 'none' : 'block'}
+					display={!ObjectUtils.isArrayWithData(selectedCategories) ? 'none' : 'block'}
 				>
 					<div className={'resortSelectFilter'}>
 						<Label className={'resortTitle queryTitle'} variant={'h4'}>
-							Resort
+							Vendors
 						</Label>
 						<CheckboxList
 							onChange={(value, options) => {
-								setDestinationSelectList(options);
+								router.updateUrlParams({
+									cids: JSON.stringify(selectedCategories),
+									vids: JSON.stringify(value)
+								});
+								setSelectedVendors(value as string[]);
+								setVendors(
+									vendors.map((vendor) => {
+										return {
+											value: vendor.value,
+											text: vendor.text,
+											selected:
+												ObjectUtils.isArrayWithData(value) &&
+												value.includes(vendor.value as string)
+										};
+									})
+								);
 							}}
-							options={destinationSelectList}
+							options={vendors}
 							name={'resorts'}
 						/>
 					</div>
@@ -365,22 +337,18 @@ const RewardItemPage: React.FC = () => {
 							<LabelInput
 								title={'MIN'}
 								inputType={'text'}
-								onChange={(value) => {
-									setPointCostMin(value);
-								}}
+								control={pointCostRange.get('min')}
+								updateControl={(control) => setPointCostRange(pointCostRange.clone().update(control))}
 							/>
-							<LabelInput title={'MAX'} inputType={'text'} onChange={(value) => setPointCostMax(value)} />
+							<LabelInput
+								title={'MAX'}
+								inputType={'text'}
+								control={pointCostRange.get('max')}
+								updateControl={(control) => setPointCostRange(pointCostRange.clone().update(control))}
+							/>
 						</div>
 					</div>
 				</Box>
-				<div className={'filterButtonContainer'}>
-					<LabelButton
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Apply Filters'}
-						onClick={() => handleSidebarFilters(false)}
-					/>
-				</div>
 			</div>
 		);
 	}
@@ -401,7 +369,7 @@ const RewardItemPage: React.FC = () => {
 					</div>
 					{renderQuerySidebar()}
 					<Label className={'categoriesTitle'} variant={'h4'}>
-						{showCategoryOrRewardCards === 'category' ? 'Categories' : 'Available Rewards'}
+						{!ObjectUtils.isArrayWithData(selectedCategories) ? 'Categories' : 'Available Rewards'}
 					</Label>
 					<div className={'cardContainer'}>{renderCards()}</div>
 					<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
@@ -420,7 +388,8 @@ const RewardItemPage: React.FC = () => {
 					<Box
 						className={'pageWrapper'}
 						padding={
-							!ObjectUtils.isArrayWithData(featuredCategory) || showCategoryOrRewardCards === 'reward'
+							!ObjectUtils.isArrayWithData(featuredCategories) ||
+							ObjectUtils.isArrayWithData(selectedCategories)
 								? '120px 140px 50px'
 								: '50px 140px'
 						}
@@ -429,7 +398,9 @@ const RewardItemPage: React.FC = () => {
 						<Box className={'pagedCategoryCards'} marginTop={user ? 0 : 35}>
 							<div className={'rightSideHeaderContainer'}>
 								<Label className={'categoriesTitle'} variant={'h4'}>
-									{showCategoryOrRewardCards === 'category' ? 'Categories' : 'Available Rewards'}
+									{!ObjectUtils.isArrayWithData(selectedCategories)
+										? 'Categories'
+										: 'Available Rewards'}
 								</Label>
 								<div className={'pointOrLoginContainer'}>
 									<PointsOrLogin />
