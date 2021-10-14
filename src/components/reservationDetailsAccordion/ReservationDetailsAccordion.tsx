@@ -156,11 +156,13 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						<AccordionTitleDescription title={'Email'} description={props.email} />
 						<AccordionTitleDescription
 							title={'Phone'}
-							description={StringUtils.formatPhoneNumber(props.phone)}
+							description={StringUtils.formatCountryCodePhoneNumber(props.phone) || ''}
 						/>
 					</div>
 					<hr />
-					<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
+					{props.additionalDetails && (
+						<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
+					)}
 				</>
 			);
 		}
@@ -261,7 +263,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 				{renderUpsellPackages()}
 				<hr />
 				{renderContactInfo()}
-				<Box position={'relative'} display={'flex'} margin={'40px 0 24px auto'} width={210}>
+				<Box position={'relative'} display={'flex'} margin={'40px 0 0 auto'} width={210}>
 					<LabelButton
 						className={isModified ? 'showBtn' : 'hideBtn'}
 						look={'containedPrimary'}
@@ -277,7 +279,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						}}
 					/>
 					{!props.isPastReservation && (
-						<Box marginLeft={'auto'} position={'relative'}>
+						<Box marginLeft={'auto'} position={'relative'} paddingBottom={'24px'}>
 							<LabelButton
 								className={'editCancelBtn'}
 								look={'containedPrimary'}

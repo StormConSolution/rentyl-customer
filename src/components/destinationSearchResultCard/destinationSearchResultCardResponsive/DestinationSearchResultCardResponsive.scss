@@ -31,12 +31,18 @@
 		grid-template-columns: 102px 500px 155px;
 		grid-template-rows: 45px 40px 228px;
 		column-gap: 25px;
-		img.destinationLogo {
-			grid-row: 1 / 2;
-			grid-column: 1 / 2;
-			height: 100%;
-			max-width: 100%;
-			margin: 0 auto;
+		.logoContainer {
+			display: flex;
+			align-items: center;
+			img.destinationLogo {
+				grid-row: 1 / 2;
+				grid-column: 1 / 2;
+				height: auto;
+				min-width: 100%;
+				max-height: 100%;
+				max-width: 100%;
+				margin: 0 auto;
+			}
 		}
 		div.nameAndAddress {
 			grid-row: 1 / 3;

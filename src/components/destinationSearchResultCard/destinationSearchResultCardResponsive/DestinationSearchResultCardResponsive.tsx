@@ -40,7 +40,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 			<Carousel showControls children={renderPictures(props.picturePaths)} />
 			<div className="info">
 				{props.logoImagePath && props.logoImagePath !== '' && (
-					<img alt={''} src={props.logoImagePath} className="destinationLogo" />
+					<div className={'logoContainer'}>
+						<img alt={''} src={props.logoImagePath} className="destinationLogo" />
+					</div>
 				)}
 				<div className="nameAndAddress">
 					<Label variant="h2">{props.destinationName}</Label>

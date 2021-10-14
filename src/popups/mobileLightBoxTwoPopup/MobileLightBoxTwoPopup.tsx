@@ -25,11 +25,14 @@ const MobileLightBoxTwoPopup: React.FC<MobileLightBoxTwoPopupProps> = (props) =>
 						cursorPointer
 						color={'#ffffff'}
 					/>
+
 					<img src={item.imagePath} alt={item.title} />
 
-					<Accordion title={item.title} backgroundColor={'rgba(30,24,11,.4)'}>
-						<Label variant={'body2'}>{item.description}</Label>
-					</Accordion>
+					{item.description && item.title && (
+						<Accordion title={item.title} backgroundColor={'rgba(30,24,11,.4)'}>
+							<Label variant={'body2'}>{item.description}</Label>
+						</Accordion>
+					)}
 				</Box>
 			);
 		});

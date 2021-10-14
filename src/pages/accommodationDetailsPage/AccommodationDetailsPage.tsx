@@ -259,12 +259,14 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 				>
 					{renderFeatureTiles()}
 				</Box>
-				<Box className={'sectionThree'} marginBottom={'40px'} flexWrap={'wrap'}>
-					<FloorPlanDetailCard
-						accommodationName={accommodationDetails.name}
-						layout={accommodationDetails.layout}
-					/>
-				</Box>
+				{ObjectUtils.isArrayWithData(accommodationDetails.layout) && (
+					<Box className={'sectionThree'} marginBottom={'40px'} flexWrap={'wrap'}>
+						<FloorPlanDetailCard
+							accommodationName={accommodationDetails.name}
+							layout={accommodationDetails.layout}
+						/>
+					</Box>
+				)}
 				{size !== 'small' && (
 					<Box
 						className={'sectionFour'}
