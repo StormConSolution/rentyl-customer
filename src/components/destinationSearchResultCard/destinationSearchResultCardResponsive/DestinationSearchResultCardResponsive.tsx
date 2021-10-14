@@ -39,11 +39,11 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
 			<Carousel showControls children={renderPictures(props.picturePaths)} />
 			<div className="info">
-				<div className={'logoContainer'}>
-					{props.logoImagePath && props.logoImagePath !== '' && (
+				{props.logoImagePath && props.logoImagePath !== '' && (
+					<div className={'logoContainer'}>
 						<img alt={''} src={props.logoImagePath} className="destinationLogo" />
-					)}
-				</div>
+					</div>
+				)}
 				<div className="nameAndAddress">
 					<Label variant="h2">{props.destinationName}</Label>
 					<Label variant="caption">{props.address}</Label>

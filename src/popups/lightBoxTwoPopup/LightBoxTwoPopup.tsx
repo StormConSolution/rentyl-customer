@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import ImageTitleDescription from './imageTitleDescription/ImageTitleDescription';
 import Icon from '@bit/redsky.framework.rs.icon';
 import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
+import { ObjectUtils } from '../../utils/utils';
 
 export interface LightBoxTwoPopupProps extends PopupProps {
 	imageDataArray: { title: string; description: string; imagePath: string }[];
@@ -57,6 +58,31 @@ const LightBoxTwoPopup: React.FC<LightBoxTwoPopupProps> = (props) => {
 		return { backgroundImage: `url(${mainImage})` };
 	}
 
+	function renderButtons() {
+		if (!ObjectUtils.isArrayWithData(props.imageDataArray) || props.imageDataArray.length < 2) return;
+		return (
+			<CarouselButtons
+				position={'absolute'}
+				bottom={'0'}
+				left={'0px'}
+				right={'0px'}
+				onClickRight={() => {
+					if (imageIndex === props.imageDataArray.length - 1) return;
+					setImageIndex(imageIndex + 1);
+					let val = imageContainerWidth * (imageIndex + 1);
+					parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+				}}
+				onClickLeft={() => {
+					if (imageIndex === 0) return;
+					setImageIndex(imageIndex - 1);
+					let val = imageContainerWidth * (imageIndex - 1);
+					if (val < 0) val = parentRef.current!.scrollLeft;
+					parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+				}}
+			/>
+		);
+	}
+
 	return (
 		<Popup className={'rsLightBoxTwoPopup'} opened={props.opened}>
 			<Box className={'lightBoxTwoContent'}>
@@ -68,27 +94,7 @@ const LightBoxTwoPopup: React.FC<LightBoxTwoPopupProps> = (props) => {
 						color={'#ffffff'}
 					/>
 					{imageDescription || ''}
-					{props.imageDataArray.length > 1 && (
-						<CarouselButtons
-							position={'absolute'}
-							bottom={'0'}
-							left={'0px'}
-							right={'0px'}
-							onClickRight={() => {
-								if (imageIndex === props.imageDataArray.length - 1) return;
-								setImageIndex(imageIndex + 1);
-								let val = imageContainerWidth * (imageIndex + 1);
-								parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-							}}
-							onClickLeft={() => {
-								if (imageIndex === 0) return;
-								setImageIndex(imageIndex - 1);
-								let val = imageContainerWidth * (imageIndex - 1);
-								if (val < 0) val = parentRef.current!.scrollLeft;
-								parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-							}}
-						/>
-					)}
+					{renderButtons()}
 				</div>
 				<div ref={parentRef} className={'imageCarousel'}>
 					{renderImages()}

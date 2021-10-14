@@ -140,7 +140,6 @@ const AccountPointsPage: React.FC = () => {
 						justifyContent={'center'}
 						marginTop={'40px'}
 					>
-						{/*<LinkButton look={'containedPrimary'} label={'Purchase Points'} path={'/'} />*/}
 						<LinkButton
 							look={'containedSecondary'}
 							label={'Learn About Points'}
