@@ -39,7 +39,9 @@ const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
 					<Box />
 				</span>
 			</label>
-			<Label variant={'body1'}>{props.text}</Label>
+			<Label variant={'body1'} lineClamp={2}>
+				{props.text}
+			</Label>
 		</div>
 	);
 };

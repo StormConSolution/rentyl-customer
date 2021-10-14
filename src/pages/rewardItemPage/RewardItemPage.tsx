@@ -68,8 +68,13 @@ const RewardItemPage: React.FC = () => {
 				});
 				setCategorySelectList(selectCategories);
 				let vendorList = await rewardService.getVendorsInSelectFormat();
+				const newDestinationSelectList = vendorList.filter((vendor) => {
+					if (vendor.value) {
+						return vendor;
+					}
+				});
 				setFeaturedCategory(featuredCategories.data);
-				setDestinationSelectList(vendorList);
+				setDestinationSelectList(newDestinationSelectList || []);
 				setWaitToLoad(false);
 			} catch (e) {
 				console.error(e);

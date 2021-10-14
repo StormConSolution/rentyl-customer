@@ -23,12 +23,16 @@ const LightBoxTwoPopup: React.FC<LightBoxTwoPopupProps> = (props) => {
 
 	useEffect(() => {
 		setMainImage(props.imageDataArray[imageIndex].imagePath);
-		setImageDescription(
-			<ImageTitleDescription
-				title={props.imageDataArray[imageIndex].title}
-				description={props.imageDataArray[imageIndex].description}
-			/>
-		);
+		let newImageDescription = <div></div>;
+		if (props.imageDataArray[imageIndex].title || props.imageDataArray[imageIndex].description) {
+			newImageDescription = (
+				<ImageTitleDescription
+					title={props.imageDataArray[imageIndex].title}
+					description={props.imageDataArray[imageIndex].description}
+				/>
+			);
+		}
+		setImageDescription(newImageDescription);
 	}, [imageIndex]);
 
 	function renderImages() {
@@ -64,25 +68,27 @@ const LightBoxTwoPopup: React.FC<LightBoxTwoPopupProps> = (props) => {
 						color={'#ffffff'}
 					/>
 					{imageDescription || ''}
-					<CarouselButtons
-						position={'absolute'}
-						bottom={'0'}
-						left={'0px'}
-						right={'0px'}
-						onClickRight={() => {
-							if (imageIndex === props.imageDataArray.length - 1) return;
-							setImageIndex(imageIndex + 1);
-							let val = imageContainerWidth * (imageIndex + 1);
-							parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-						}}
-						onClickLeft={() => {
-							if (imageIndex === 0) return;
-							setImageIndex(imageIndex - 1);
-							let val = imageContainerWidth * (imageIndex - 1);
-							if (val < 0) val = parentRef.current!.scrollLeft;
-							parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-						}}
-					/>
+					{props.imageDataArray.length > 1 && (
+						<CarouselButtons
+							position={'absolute'}
+							bottom={'0'}
+							left={'0px'}
+							right={'0px'}
+							onClickRight={() => {
+								if (imageIndex === props.imageDataArray.length - 1) return;
+								setImageIndex(imageIndex + 1);
+								let val = imageContainerWidth * (imageIndex + 1);
+								parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+							}}
+							onClickLeft={() => {
+								if (imageIndex === 0) return;
+								setImageIndex(imageIndex - 1);
+								let val = imageContainerWidth * (imageIndex - 1);
+								if (val < 0) val = parentRef.current!.scrollLeft;
+								parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+							}}
+						/>
+					)}
 				</div>
 				<div ref={parentRef} className={'imageCarousel'}>
 					{renderImages()}

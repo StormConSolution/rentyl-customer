@@ -38,7 +38,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 			<div ref={parentRef} className={'carouselParent'}>
 				{renderChildren()}
 			</div>
-			{props.showControls && (
+			{props.showControls && props.children.length > 1 && (
 				<>
 					<Button
 						className={'clickLeft'}
