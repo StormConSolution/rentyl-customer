@@ -89,10 +89,7 @@
 			margin-left: auto;
 		}
 		&.hideBtn {
-			position: absolute;
-			margin-right: 8px;
-			opacity: 0;
-			right: -8px;
+			display: none;
 		}
 		&.showBtn {
 			position: absolute;
