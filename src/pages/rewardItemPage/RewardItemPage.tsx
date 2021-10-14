@@ -57,21 +57,18 @@ const RewardItemPage: React.FC = () => {
 			}
 			const vendorResponse = await rewardService.getAllVendors();
 			setVendors(
-				vendorResponse.map((vendor) => {
-					return {
-						value: vendor.brandId
-							? 'b' + vendor.brandId
-							: vendor.destinationId
-							? 'd' + vendor.destinationId
-							: 'a' + vendor.affiliateId,
-						text: vendor.name,
-						selected:
-							ObjectUtils.isArrayWithData(vendorIds) &&
-							(vendorIds.includes('b' + vendor.brandId) ||
-								vendorIds.includes('d' + vendor.destinationId) ||
-								vendorIds.includes('a' + vendor.affiliateId))
-					};
-				})
+				vendorResponse
+					.filter((vendor) => !!vendor.brandId || !!vendor.destinationId)
+					.map((vendor) => {
+						return {
+							value: vendor.brandId ? 'b' + vendor.brandId : 'd' + vendor.destinationId,
+							text: vendor.name,
+							selected:
+								ObjectUtils.isArrayWithData(vendorIds) &&
+								(vendorIds.includes('b' + vendor.brandId) ||
+									vendorIds.includes('d' + vendor.destinationId))
+						};
+					})
 			);
 			const categoryResponse = await rewardService.getAllActiveCategories();
 			setCategories(categoryResponse.data);

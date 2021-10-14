@@ -1936,7 +1936,6 @@ declare namespace Api {
 				name: string;
 				destinationId: number | null;
 				brandId: number | null;
-				affiliateId: number | null;
 			}
 
 			export interface GetByPage {
