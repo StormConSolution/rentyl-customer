@@ -64,9 +64,11 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 			</Label>
 			<Label variant="h4" mb={8}>
 				{company.allowCashBooking && '$' + StringUtils.formatMoney(props.ratePerNightInCents)}
-				{company.allowCashBooking && company.allowPointBooking && ' or '}
-				{company.allowPointBooking && StringUtils.addCommasToNumber(props.ratePerNightInCents) + ' points'} /
-				night
+				{company.allowCashBooking && company.allowPointBooking && props.pointsRatePerNight && ' or '}
+				{company.allowPointBooking &&
+					props.pointsRatePerNight &&
+					StringUtils.addCommasToNumber(props.pointsRatePerNight) + ' points'}
+				/night
 			</Label>
 			<Label variant={'body1'} mb={8}>
 				{props.description}
