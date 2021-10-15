@@ -155,15 +155,6 @@ const AboutSpireSignUpPage: React.FC = () => {
 							width={'100%'}
 							height={'120px'}
 							icon={'icon-resort'}
-							bodyReactNode={
-								<LabelLink
-									path={'/reservation/availability'}
-									label={'Browse Stays'}
-									variant={'button'}
-									iconRight={'icon-chevron-right'}
-									iconSize={7}
-								/>
-							}
 							boxShadow
 							title={'Stay at a resort'}
 						/>
@@ -171,15 +162,6 @@ const AboutSpireSignUpPage: React.FC = () => {
 							width={'100%'}
 							height={'120px'}
 							icon={'icon-gift'}
-							bodyReactNode={
-								<LabelLink
-									path={'/buy-points'}
-									label={'Buy points'}
-									variant={'button'}
-									iconRight={'icon-chevron-right'}
-									iconSize={7}
-								/>
-							}
 							boxShadow
 							title={'Purchase points'}
 						/>
@@ -187,15 +169,6 @@ const AboutSpireSignUpPage: React.FC = () => {
 							width={'100%'}
 							height={'120px'}
 							icon={'icon-for-sale'}
-							bodyReactNode={
-								<LabelLink
-									path={'/'}
-									label={'Learn More'}
-									variant={'button'}
-									iconRight={'icon-chevron-right'}
-									iconSize={7}
-								/>
-							}
 							boxShadow
 							title={'Purchase real estate'}
 						/>
@@ -203,15 +176,6 @@ const AboutSpireSignUpPage: React.FC = () => {
 							width={'100%'}
 							height={'120px'}
 							icon={'icon-for-rental'}
-							bodyReactNode={
-								<LabelLink
-									path={'/'}
-									label={'Browse rentals'}
-									variant={'button'}
-									iconRight={'icon-chevron-right'}
-									iconSize={7}
-								/>
-							}
 							boxShadow
 							title={'Get a rental'}
 						/>

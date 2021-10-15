@@ -66,7 +66,7 @@ const ReservationDetailsPage: React.FC = () => {
 			popupController.closeAll();
 		} catch (e) {
 			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to update'), 'Server Error');
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot modify this reservation.'), 'Error!');
 			} else {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failure to update.'), 'Server Error');
 				console.error(e.message, e.msg);

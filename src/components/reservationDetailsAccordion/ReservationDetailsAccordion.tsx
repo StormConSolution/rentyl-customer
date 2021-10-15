@@ -107,7 +107,24 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 	}
 
 	function renderContactInfo() {
-		if (props.isEdit && !props.isPastReservation) {
+		if (!props.isEdit || !props.isCancelable || props.isPastReservation) {
+			return (
+				<>
+					<div className={'accordionReservationGrid'}>
+						<AccordionTitleDescription title={'Contact Info'} description={props.contactInfo} />
+						<AccordionTitleDescription title={'Email'} description={props.email} />
+						<AccordionTitleDescription
+							title={'Phone'}
+							description={StringUtils.formatCountryCodePhoneNumber(props.phone) || ''}
+						/>
+					</div>
+					<hr />
+					{props.additionalDetails && (
+						<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
+					)}
+				</>
+			);
+		} else {
 			return (
 				<>
 					<div className={'accordionReservationGrid'}>
@@ -148,39 +165,20 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					/>
 				</>
 			);
-		} else {
-			return (
-				<>
-					<div className={'accordionReservationGrid'}>
-						<AccordionTitleDescription title={'Contact Info'} description={props.contactInfo} />
-						<AccordionTitleDescription title={'Email'} description={props.email} />
-						<AccordionTitleDescription
-							title={'Phone'}
-							description={StringUtils.formatCountryCodePhoneNumber(props.phone) || ''}
-						/>
-					</div>
-					<hr />
-					{props.additionalDetails && (
-						<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
-					)}
-				</>
-			);
 		}
 	}
 
 	function renderLinks() {
 		return (
 			<>
-				{props.isCancelable && (
-					<LabelButton
-						look={'none'}
-						variant={'body1'}
-						label={'REMOVE'}
-						onClick={() => {
-							if (props.onRemove) props.onRemove();
-						}}
-					/>
-				)}
+				<LabelButton
+					look={'none'}
+					variant={'body1'}
+					label={'REMOVE'}
+					onClick={() => {
+						if (props.onRemove) props.onRemove();
+					}}
+				/>
 				<LabelButton
 					look={'none'}
 					variant={'body1'}
@@ -226,6 +224,27 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 		});
 	}
 
+	function renderEditableFields() {
+		if (!props.isEdit || !props.isCancelable || props.isPastReservation) return;
+		return (
+			<Box marginLeft={'auto'} position={'relative'}>
+				<LabelButton
+					className={'editCancelBtn'}
+					look={'containedPrimary'}
+					variant={'button'}
+					label={'Edit'}
+					onClick={(event) => {
+						event.stopPropagation();
+						setToggleBtn(!toggleBtn);
+					}}
+				/>
+				<div ref={whiteBox} className={toggleBtn ? 'whiteBox open' : 'whiteBox'}>
+					{renderLinks()}
+				</div>
+			</Box>
+		);
+	}
+
 	return (
 		<Accordion
 			className={'rsReservationDetailsAccordion'}
@@ -251,10 +270,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					<AccordionTitleDescription title={'Property Type'} description={'VIP SUITE'} />
 					<AccordionTitleDescription title={'Adults'} description={props.adultCount} />
 					<AccordionTitleDescription title={'Children'} description={props.childCount} />
-					<AccordionTitleDescription
-						title={'Ada Compliant'}
-						description={props.adaCompliant ? 'Yes' : 'No'}
-					/>
+					<AccordionTitleDescription title={'Accessible'} description={props.adaCompliant ? 'Yes' : 'No'} />
 					<AccordionTitleDescription title={'Extra Bed'} description={props.extraBed ? 'Yes' : 'No'} />
 					<AccordionTitleDescription title={'Floor Count'} description={props.floorCount} />
 					<AccordionTitleDescription title={'Amenities'} description={renderAmenities(props.featureIcons)} />
@@ -280,27 +296,22 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 					/>
 					{!props.isPastReservation && (
 						<Box marginLeft={'auto'} position={'relative'} paddingBottom={'24px'}>
-							<LabelButton
-								className={'editCancelBtn'}
-								look={'containedPrimary'}
-								variant={'button'}
-								label={!props.isEdit ? 'Details' : 'Edit'}
-								onClick={(event) => {
-									if (!props.isEdit) {
+							{renderEditableFields()}
+							{!props.isEdit && (
+								<LabelButton
+									className={'editCancelBtn'}
+									look={'containedPrimary'}
+									variant={'button'}
+									label={'Details'}
+									onClick={(event) => {
 										router
 											.navigate(
 												'/reservations/itinerary/reservation/details?ri=' + props.reservationId
 											)
 											.catch(console.error);
-									} else {
-										event.stopPropagation();
-										setToggleBtn(!toggleBtn);
-									}
-								}}
-							/>
-							<div ref={whiteBox} className={toggleBtn ? 'whiteBox open' : 'whiteBox'}>
-								{renderLinks()}
-							</div>
+									}}
+								/>
+							)}
 						</Box>
 					)}
 				</Box>

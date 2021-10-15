@@ -32,7 +32,7 @@ const InfoCard: React.FC<InfoCardProps> = (props) => {
 			backgroundColor={'#FCFBF8'}
 		>
 			{!!props.icon && <Icon iconImg={props.icon} size={36} color={'#cc9e0d'} />}
-			<Box>
+			<Box className={'centerTitle'}>
 				{!!props.title && <Label variant={size === 'small' ? 'h4' : 'h2'}>{props.title}</Label>}
 				{!!props.body && !props.bodyReactNode && (
 					<Label variant={props.bodyVariant || 'body1'}>{props.body}</Label>
