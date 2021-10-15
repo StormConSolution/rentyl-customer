@@ -56,14 +56,12 @@ const ReservationDetailsPage: React.FC = () => {
 		else return '';
 	}
 
-	async function updateReservation(data: any) {
+	async function updateReservation(data: Api.Reservation.Req.Update) {
 		if (!reservation) return;
-		let newData: any = { ...data, id: reservation.id };
-
 		try {
 			popupController.open(SpinningLoaderPopup);
-			let res = await reservationsService.update(newData);
-			setReservation({ ...res });
+			let res = await reservationsService.update(data);
+			setReservation(res);
 			popupController.close(SpinningLoaderPopup);
 			popupController.closeAll();
 		} catch (e) {
@@ -138,9 +136,11 @@ const ReservationDetailsPage: React.FC = () => {
 									email: data.email,
 									phone: data.phone
 								};
-								updateReservation({ guest, additionalDetails: data.additionalDetails }).catch(
-									console.error
-								);
+								updateReservation({
+									id: reservation.id,
+									guest,
+									additionalDetails: data.additionalDetails
+								}).catch(console.error);
 							}}
 							onRemove={() => {
 								popupController.open<ConfirmRemovePopupProps>(ConfirmRemovePopup, {
@@ -177,12 +177,18 @@ const ReservationDetailsPage: React.FC = () => {
 									arrivalDate: reservation.arrivalDate,
 									departureDate: reservation.departureDate,
 									onApplyChanges: (data) => {
-										let newData: any = { ...data };
-										newData.rateCode = reservation.rateCode;
-										newData.paymentMethodId = reservation.paymentMethod?.id;
-										newData.guest = reservation.guest;
-										newData.accommodationId = reservation.accommodation.id;
-										newData.numberOfAccommodations = 1;
+										let newData: Api.Reservation.Req.Update = {
+											id: reservation.id,
+											adultCount: data.adultCount,
+											childCount: data.childCount,
+											arrivalDate: data.arrivalDate,
+											departureDate: data.departureDate,
+											rateCode: reservation.rateCode,
+											paymentMethodId: reservation.paymentMethod?.id,
+											guest: reservation.guest,
+											accommodationId: reservation.accommodation.id,
+											numberOfAccommodations: 1
+										};
 										updateReservation(newData).catch(console.error);
 									}
 								});
