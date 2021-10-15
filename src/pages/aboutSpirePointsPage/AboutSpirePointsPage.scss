@@ -23,6 +23,10 @@
 	}
 
 	.rsCarousel {
+		.carouselParent {
+			display: flex;
+			justify-content: center;
+		}
 		margin: 0 auto 120px;
 		max-width: 1173px;
 		.carouselChild {
@@ -108,6 +112,13 @@
 			font-weight: 900;
 			line-height: 45px;
 			margin: 0;
+		}
+
+		.rsCarousel {
+			.carouselParent {
+				display: flex;
+				justify-content: flex-start;
+			}
 		}
 
 		.infoCardWrapper {
