@@ -36,7 +36,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 		async function getFeatureRewards() {
 			try {
 				const query = WebUtils.createPageQueryObject(1, 50, 'DESC', 'createdOn', 'exact', [
-					{ column: 'isFeatured', value: 1 }
+					{ column: 'isFeatured', value: 1 },
+					{ column: 'isActive', value: 1, matchType: 'exact', conjunction: 'AND' }
 				]);
 				let rewardCategories = await rewardService.getPagedCategories(query);
 				setFeaturedRewards(rewardCategories.data);
