@@ -39,7 +39,10 @@
 			}
 			&.accommodationDescription {
 				margin-top: 15px;
-				height: clamp(100px, 150px, 183px);
+				height: clamp(100px, 160px, 180px);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				line-height: 20px;
 			}
 		}
 	}
