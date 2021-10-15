@@ -145,7 +145,8 @@ const AboutSpireSignUpPage: React.FC = () => {
 							a technology company, we are committed to creating unique and seamless ways for our partners
 							and members to achieve their goals.
 						</Label>
-						<LinkButton look={'containedPrimary'} label={'Be part of our history'} path={'/signup'} />
+						{/*TODO Add back in when we have a path for it or remove when we know for sure*/}
+						{/*<LinkButton look={'containedPrimary'} label={'Be part of our history'} path={'/signup'} />*/}
 					</Box>
 				</Box>
 				<Box className={'sectionTwo'} mb={120}>

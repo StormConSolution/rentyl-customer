@@ -380,6 +380,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 							look={'containedPrimary'}
 							variant={'button'}
 							label={'How spire loyalty benefits you'}
+							onClick={() => {
+								router.navigate('/features-and-benefits').catch(console.error);
+							}}
 						/>
 					)}
 				</Box>
@@ -445,6 +448,9 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 								look={'containedPrimary'}
 								variant={'button'}
 								label={'How spire loyalty benefits you'}
+								onClick={() => {
+									router.navigate('/features-and-benefits').catch(console.error);
+								}}
 							/>
 						)}
 					</Box>

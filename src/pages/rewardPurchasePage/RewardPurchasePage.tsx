@@ -161,20 +161,21 @@ const RewardPurchasePage: React.FC = () => {
 								onClick={claimRewardVoucher}
 							/>
 						</div>
-						<div className={'policyContainer'}>
-							<LabelLink
-								className={'returnPolicyLink'}
-								path={'/'}
-								label={'Return Policy'}
-								variant={'body2'}
-							/>
+						<Box className={'policyContainer'} display={'flex'} alignItems={'center'}>
+							{/*TODO put back in when we have a place to link to*/}
+							{/*<LabelLink*/}
+							{/*	className={'returnPolicyLink'}*/}
+							{/*	path={'/'}*/}
+							{/*	label={'Return Policy'}*/}
+							{/*	variant={'body2'}*/}
+							{/*/>*/}
 							<LabelLink
 								className={'privacyPolicyLink'}
 								path={'/legal/privacy'}
 								label={'Privacy Policy'}
 								variant={'body2'}
 							/>
-						</div>
+						</Box>
 					</div>
 				</div>
 				<Footer links={FooterLinks} />
