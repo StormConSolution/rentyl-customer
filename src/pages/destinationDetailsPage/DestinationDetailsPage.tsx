@@ -400,9 +400,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderSectionTwo() {
-		if (!ObjectUtils.isArrayWithData(destinationDetails?.features)) return null;
+		if (!ObjectUtils.isArrayWithData(destinationDetails?.features?.filter((item) => !item.isCarousel))) return null;
 		return (
-			<Box className={'sectionTwo'} marginBottom={'160px'}>
+			<Box className={'sectionTwo'} marginBottom={'120px'}>
 				<Label variant={'h1'}>Features</Label>
 				<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
 					{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
