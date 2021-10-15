@@ -3,10 +3,10 @@ import './RewardCategoryCard.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface RewardCategoryCardProps {
-	value: number | string;
+	value: number;
 	title: string;
 	imgPath: string;
-	onClick: (categoryId: number | string) => void;
+	onClick: (categoryId: number) => void;
 	className?: string;
 }
 
