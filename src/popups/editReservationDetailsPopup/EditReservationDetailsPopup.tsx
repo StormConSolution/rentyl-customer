@@ -17,12 +17,8 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
-export interface EditDetailsObj {
-	adults: number;
-	children: number;
-	arrivalDate: string;
-	departureDate: string;
-}
+export interface EditDetailsObj
+	extends Pick<Api.Reservation.Req.Update, 'adultCount' | 'childCount' | 'arrivalDate' | 'departureDate'> {}
 
 export interface EditReservationDetailsPopupProps extends PopupProps {
 	accommodationId: number;
@@ -106,10 +102,16 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 		async function checkAvailability() {
 			popupController.open(SpinningLoaderPopup);
 			setIsInvalidDates(false);
-			let data: Api.Reservation.Req.Verification = editDetailsForm.toModel();
-			data.accommodationId = props.accommodationId;
-			data.destinationId = props.destinationId;
-			data.numberOfAccommodations = 1;
+			let itemsToUpdate: Api.Reservation.Req.Update = editDetailsForm.toModel<Api.Reservation.Req.Update>();
+			let data: Api.Reservation.Req.Verification = {
+				adultCount: itemsToUpdate.adultCount!,
+				childCount: itemsToUpdate.childCount!,
+				arrivalDate: itemsToUpdate.arrivalDate!,
+				departureDate: itemsToUpdate.departureDate!,
+				accommodationId: props.accommodationId,
+				destinationId: props.destinationId,
+				numberOfAccommodations: 1
+			};
 			try {
 				await reservationsService.verifyAvailability(data);
 				popupController.close(SpinningLoaderPopup);
@@ -126,9 +128,8 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 
 	function updateEditDetailsForm(control: RsFormControl) {
 		if (control.key === 'adultCount' || control.key === 'childCount') {
-			if (!!Number(control.value)) {
-				control.value = Number(control.value);
-			}
+			let value = parseInt(control.value as string);
+			control.value = value;
 		}
 		setEditDetailsForm(editDetailsForm.clone().update(control));
 	}
@@ -203,7 +204,7 @@ const EditReservationDetailsPopup: React.FC<EditReservationDetailsPopupProps> = 
 						disabled={!canUpdateDetails}
 						variant={'button'}
 						label={'Apply changes'}
-						onClick={() => props.onApplyChanges({ ...editDetailsForm.toModel() })}
+						onClick={() => props.onApplyChanges({ ...editDetailsForm.toModel<EditDetailsObj>() })}
 					/>
 					<LabelButton
 						look={'containedSecondary'}
