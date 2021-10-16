@@ -536,6 +536,7 @@ declare namespace Api {
 				logoUrl?: string;
 				heroUrl?: string;
 				mediaIds?: MediaDetails[];
+				isActive?: 0 | 1;
 			}
 
 			export interface AccommodationType {
@@ -621,6 +622,7 @@ declare namespace Api {
 				state: string;
 				zip: string;
 				country: string;
+				isActive: 0 | 1;
 				regions: DestinationRegion[];
 				logoUrl: string;
 				heroUrl: string;

@@ -301,6 +301,7 @@ declare namespace Model {
 		chainId: number;
 		reviewRating: number;
 		reviewCount: number;
+		isActive: 0 | 1;
 	}
 
 	export type DestinationPolicy = {
@@ -652,7 +653,7 @@ declare namespace Model {
 		isActive: 0 | 1;
 		startDate: Date | string;
 		endDate: Date | string;
-		pricingType: string;
+		pricingType: Model.UpsellPackagePricingType;
 	}
 
 	export interface User {
@@ -736,7 +737,7 @@ declare namespace Model {
 		cardNumber: string;
 		isPrimary: 0 | 1;
 		createdOn: Date | string;
-		systemProvider: PaymentSystemProviders;
+		systemProvider: PaymentSystemProviders | VaultSystemProviders;
 		metaData: any;
 	}
 

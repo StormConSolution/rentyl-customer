@@ -530,146 +530,154 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				{renderSectionTwo()}
 				{renderSectionThree()}
 				{renderSectionFour()}
-				<div className={'sectionFive'} ref={availableStaysRef}>
-					<Label variant={'h1'} mb={20}>
-						Available Stays
-					</Label>
-					{size !== 'small' ? (
-						<>
-							<FilterBar
-								className={'filterBar'}
-								startDate={startDateControl}
-								endDate={endDateControl}
-								onDatesChange={onDatesChange}
-								focusedInput={focusedInput}
-								onFocusChange={setFocusedInput}
-								monthsToShow={2}
-								onChangeAdults={(value) => {
-									if (value === '') value = 0;
-									updateSearchQueryObj('adults', parseInt(value));
-								}}
-								onChangeChildren={(value) => {
-									if (value !== '') updateSearchQueryObj('children', parseInt(value));
-								}}
-								onChangePriceMin={(value) => {
-									if (value !== '') {
-										updateSearchQueryObj('priceRangeMin', parseInt(value));
-									}
-								}}
-								onChangePriceMax={(value) => {
-									if (value !== '') {
-										updateSearchQueryObj('priceRangeMax', parseInt(value));
-									}
-								}}
-								onChangePropertyType={(control) => {
-									setPropertyType(propertyType.clone().update(control));
-									updateSearchQueryObj('propertyTypeIds', control.value);
-								}}
-								adultsInitialInput={searchQueryObj.adults}
-								childrenInitialInput={searchQueryObj.children}
-								initialPriceMax={
-									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
-								}
-								initialPriceMin={
-									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
-								}
-								options={options}
-								control={propertyType.get('propertyType')}
-							/>
-							<Label variant={'body1'} color={'red'}>
-								{errorMessage}
-							</Label>
-							<Accordion
-								hideHoverEffect
-								hideChevron
-								children={
-									<RateCodeSelect
-										apply={(value) => {
-											setRateCode(value);
-											updateSearchQueryObj('rateCode', value);
-										}}
-										code={rateCode}
-										valid={!validCode}
-									/>
-								}
-								titleReact={<Label variant={'button'}>toggle rate code</Label>}
-							/>
-						</>
-					) : (
-						<IconLabel
-							className={'moreFiltersLink'}
-							labelName={'More Filters'}
-							iconImg={'icon-chevron-right'}
-							iconPosition={'right'}
-							iconSize={8}
-							labelVariant={'caption'}
-							onClick={() => {
-								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									onClickApply: (
-										startDate: moment.Moment | null,
-										endDate: moment.Moment | null,
-										adults: number,
-										children: number,
-										priceRangeMin: string,
-										priceRangeMax: string,
-										propertyTypeIds: number[],
-										rateCode: string
-									): void => {
-										setSearchQueryObj((prev) => {
-											let createSearchQueryObj: any = { ...prev };
-											if (startDate !== null)
-												createSearchQueryObj['startDate'] = formatFilterDateForServer(
-													startDate,
-													'start'
-												);
-											if (endDate !== null)
-												createSearchQueryObj['endDate'] = formatFilterDateForServer(
-													endDate,
-													'end'
-												);
-											createSearchQueryObj['adults'] = adults;
-											createSearchQueryObj['children'] = children;
-											if (ObjectUtils.isArrayWithData(propertyTypeIds))
-												createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-											if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
-												createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
-											if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))
-												createSearchQueryObj['priceRangeMax'] = +priceRangeMax;
-											if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
-											return createSearchQueryObj;
-										});
-										if (!destinationDetails) return;
-										router.updateUrlParams({
-											di: destinationDetails.id,
-											startDate: formatFilterDateForServer(startDate, 'start'),
-											endDate: formatFilterDateForServer(endDate, 'end')
-										});
-									},
-									className: 'filterPopup'
-								});
-							}}
-						/>
-					)}
-					<hr />
-					<div className={'accommodationCardWrapper'}>
-						{availabilityStayList.length <= 0 ? (
-							<Label variant={'h2'}>No available options.</Label>
-						) : (
-							renderAccommodations()
-						)}
+				{!destinationDetails.isActive ? (
+					<div ref={availableStaysRef}>
+						<Label variant={'h2'} color={'red'} className={'noDestinations'}>
+							This destination is currently not accepting reservations from this site.
+						</Label>
 					</div>
-					<PaginationButtons
-						selectedRowsPerPage={5}
-						total={totalResults}
-						setSelectedPage={(newPage) => {
-							updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
-							setPage(newPage);
-							let availableStaysSection = availableStaysRef.current!.offsetTop;
-							window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
-						}}
-						currentPageNumber={page}
-					/>
-				</div>
+				) : (
+					<div className={'sectionFive'} ref={availableStaysRef}>
+						<Label variant={'h1'} mb={20}>
+							Available Stays
+						</Label>
+						{size !== 'small' ? (
+							<>
+								<FilterBar
+									className={'filterBar'}
+									startDate={startDateControl}
+									endDate={endDateControl}
+									onDatesChange={onDatesChange}
+									focusedInput={focusedInput}
+									onFocusChange={setFocusedInput}
+									monthsToShow={2}
+									onChangeAdults={(value) => {
+										if (value === '') value = 0;
+										updateSearchQueryObj('adults', parseInt(value));
+									}}
+									onChangeChildren={(value) => {
+										if (value !== '') updateSearchQueryObj('children', parseInt(value));
+									}}
+									onChangePriceMin={(value) => {
+										if (value !== '') {
+											updateSearchQueryObj('priceRangeMin', parseInt(value));
+										}
+									}}
+									onChangePriceMax={(value) => {
+										if (value !== '') {
+											updateSearchQueryObj('priceRangeMax', parseInt(value));
+										}
+									}}
+									onChangePropertyType={(control) => {
+										setPropertyType(propertyType.clone().update(control));
+										updateSearchQueryObj('propertyTypeIds', control.value);
+									}}
+									adultsInitialInput={searchQueryObj.adults}
+									childrenInitialInput={searchQueryObj.children}
+									initialPriceMax={
+										!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
+									}
+									initialPriceMin={
+										!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
+									}
+									options={options}
+									control={propertyType.get('propertyType')}
+								/>
+								<Label variant={'body1'} color={'red'}>
+									{errorMessage}
+								</Label>
+								<Accordion
+									hideHoverEffect
+									hideChevron
+									children={
+										<RateCodeSelect
+											apply={(value) => {
+												setRateCode(value);
+												updateSearchQueryObj('rateCode', value);
+											}}
+											code={rateCode}
+											valid={!validCode}
+										/>
+									}
+									titleReact={<Label variant={'button'}>toggle rate code</Label>}
+								/>
+							</>
+						) : (
+							<IconLabel
+								className={'moreFiltersLink'}
+								labelName={'More Filters'}
+								iconImg={'icon-chevron-right'}
+								iconPosition={'right'}
+								iconSize={8}
+								labelVariant={'caption'}
+								onClick={() => {
+									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+										onClickApply: (
+											startDate: moment.Moment | null,
+											endDate: moment.Moment | null,
+											adults: number,
+											children: number,
+											priceRangeMin: string,
+											priceRangeMax: string,
+											propertyTypeIds: number[],
+											rateCode: string
+										): void => {
+											setSearchQueryObj((prev) => {
+												let createSearchQueryObj: any = { ...prev };
+												if (startDate !== null)
+													createSearchQueryObj['startDate'] = formatFilterDateForServer(
+														startDate,
+														'start'
+													);
+												if (endDate !== null)
+													createSearchQueryObj['endDate'] = formatFilterDateForServer(
+														endDate,
+														'end'
+													);
+												createSearchQueryObj['adults'] = adults;
+												createSearchQueryObj['children'] = children;
+												if (ObjectUtils.isArrayWithData(propertyTypeIds))
+													createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+												if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
+													createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
+												if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))
+													createSearchQueryObj['priceRangeMax'] = +priceRangeMax;
+												if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
+												return createSearchQueryObj;
+											});
+											if (!destinationDetails) return;
+											router.updateUrlParams({
+												di: destinationDetails.id,
+												startDate: formatFilterDateForServer(startDate, 'start'),
+												endDate: formatFilterDateForServer(endDate, 'end')
+											});
+										},
+										className: 'filterPopup'
+									});
+								}}
+							/>
+						)}
+						<hr />
+						<div className={'accommodationCardWrapper'}>
+							{availabilityStayList.length <= 0 ? (
+								<Label variant={'h2'}>No available options.</Label>
+							) : (
+								renderAccommodations()
+							)}
+						</div>
+						<PaginationButtons
+							selectedRowsPerPage={5}
+							total={totalResults}
+							setSelectedPage={(newPage) => {
+								updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
+								setPage(newPage);
+								let availableStaysSection = availableStaysRef.current!.offsetTop;
+								window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
+							}}
+							currentPageNumber={page}
+						/>
+					</div>
+				)}
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>
