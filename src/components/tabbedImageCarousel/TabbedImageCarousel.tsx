@@ -10,6 +10,7 @@ import MobileLightBoxTwoPopup, {
 	MobileLightBoxTwoPopupProps
 } from '../../popups/mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
 import Img from '@bit/redsky.framework.rs.img';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 export interface ImageTabProp {
 	name: string;
@@ -28,7 +29,7 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0] ? props.tabs[0].name : '');
 	const size = useWindowResizeChange();
 
-	function renderTab(tab: ImageTabProp): JSX.Element {
+	function renderTab(tab: ImageTabProp, index: number): JSX.Element {
 		return (
 			<div
 				className={'tab' + (activeTabName === tab.name ? ' activeTab' : '')}
@@ -51,7 +52,6 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 			<Box className={'galleryItem' + (activeTabName === tab.name ? ' shown' : '')} key={tab.name}>
 				<div className="imageHolder">
 					<Img
-						loading={'lazy'}
 						alt={tab.name}
 						src={tab.imagePath}
 						width={375}
@@ -107,7 +107,9 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 
 	return (
 		<Box className="rsTabbedImageCarousel">
+			<Icon className={'arrowIcon leftArrow'} iconImg={'icon-chevron-left'} cursorPointer onClick={() => {}} />
 			<div className="tabList">{renderAllTabs()}</div>
+			<Icon className={'arrowIcon rightArrow'} iconImg={'icon-chevron-right'} cursorPointer onClick={() => {}} />
 			{renderAllTabContent()}
 		</Box>
 	);

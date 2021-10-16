@@ -46,7 +46,6 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 					alt={'Accommodation Image'}
 					width={278}
 					height={280}
-					loading={'lazy'}
 					rootMargin={'0px 0px 200px 0px'}
 				/>
 			);

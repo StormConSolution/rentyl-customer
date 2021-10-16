@@ -71,7 +71,6 @@ const CategoryImageGalleryResponsive: React.FC<CategoryImageGalleryResponsivePro
 						alt={item.title + ' image'}
 						width={300}
 						height={250}
-						loading={'lazy'}
 						rootMargin={'0px 0px 500px 0px'}
 					/>
 				</Button>

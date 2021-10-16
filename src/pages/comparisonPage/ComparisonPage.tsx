@@ -191,7 +191,7 @@ const ComparisonPage: React.FC = () => {
 			],
 			adaCompliant: [
 				<td key={'titleAdaCompliant'}>
-					<Label variant={'h4'}>Ada Compliant</Label>
+					<Label variant={'h4'}>Accessible</Label>
 				</td>
 			]
 		};

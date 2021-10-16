@@ -24,7 +24,7 @@ const FeatureRoomCard: React.FC<FeatureRoomCardProps> = (props) => {
 					</Label>
 				</Box>
 			)}
-			<img loading={'lazy'} className={'mainImg'} src={props.mainImg} alt={'Main'} />
+			<img className={'mainImg'} src={props.mainImg} alt={'Main'} />
 			<Label className={'titleLabel'} variant={'caption'}>
 				{props.title}
 			</Label>

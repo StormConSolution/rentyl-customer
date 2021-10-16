@@ -269,7 +269,7 @@ const BookingFlowAddRoomPage = () => {
 							datum: accommodation.maxOccupantCount
 						},
 						{
-							label: 'ADA Compliant',
+							label: 'Accessible',
 							datum: accommodation.adaCompliant ? 'Yes' : 'No'
 						},
 						{
@@ -312,7 +312,7 @@ const BookingFlowAddRoomPage = () => {
 								datum: editingAccommodation.maxOccupantCount
 							},
 							{
-								label: 'ADA Compliant',
+								label: 'Accessible',
 								datum: editingAccommodation.adaCompliant ? 'Yes' : 'No'
 							},
 							{

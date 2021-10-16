@@ -271,7 +271,7 @@ const EditFlowModifyRoomPage = () => {
 								datum: destination.maxOccupantCount
 							},
 							{
-								label: 'ADA Compliant',
+								label: 'Accessible',
 								datum: destination.adaCompliant ? 'Yes' : 'No'
 							},
 							{
@@ -333,7 +333,7 @@ const EditFlowModifyRoomPage = () => {
 									datum: reservation.accommodation.maxOccupantCount
 								},
 								{
-									label: 'ADA Compliant',
+									label: 'Accessible',
 									datum: reservation.accommodation.adaCompliant === 1 ? 'Yes' : 'No'
 								},
 								{

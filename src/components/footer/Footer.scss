@@ -50,6 +50,10 @@
 				width: 121px;
 				justify-content: space-between;
 				margin-right: 10px;
+				.socialMediaLink {
+					text-underline: none;
+					text-decoration: none;
+				}
 			}
 		}
 	}

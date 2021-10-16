@@ -2,6 +2,10 @@
 
 .rsAccommodationSearchCallToActionCard {
 	min-height: 186px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 	.earnLabel {
 		display: flex;
 		justify-content: center;
