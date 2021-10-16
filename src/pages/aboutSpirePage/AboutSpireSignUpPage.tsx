@@ -4,7 +4,6 @@ import { Box, Link, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import InfoCard from '../../components/infoCard/InfoCard';
-import LabelLink from '../../components/labelLink/LabelLink';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
@@ -241,7 +240,7 @@ const AboutSpireSignUpPage: React.FC = () => {
 										'Join us at Island H20 Live! Spire Loyalty members receive the VIP treatment'
 									}
 									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/Mask Group 30-2.png')}
+									imgUrl={require('../../images/aboutSpirePage/island_h2o.jpg')}
 								/>,
 								<BookNowImage
 									width={'335px'}
@@ -250,7 +249,7 @@ const AboutSpireSignUpPage: React.FC = () => {
 										'Sunset Walk your way to points earnings - El Jeffe and Estefan Kitchen are offering discounted drinks and appetizers to Spire members'
 									}
 									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/Mask Group 30-1.png')}
+									imgUrl={require('../../images/aboutSpirePage/estefan_kitchen.jpeg')}
 								/>,
 								<BookNowImage
 									width={'335px'}
@@ -259,7 +258,7 @@ const AboutSpireSignUpPage: React.FC = () => {
 										'Upgrade your stay at our partner resort properties where Spire members receive points multipliers on stays and on property spending.'
 									}
 									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/Mask Group 30.png')}
+									imgUrl={require('../../images/aboutSpirePage/upgrade.jpg')}
 								/>
 							]}
 						/>

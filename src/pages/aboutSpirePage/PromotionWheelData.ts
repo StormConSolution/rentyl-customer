@@ -14,19 +14,19 @@ const promotionWheelData = [
 	{
 		title: 'Island H20 Live!',
 		description: 'Join us at Island H20 Live! Spire Loyalty members receive the VIP treatment',
-		imgUrl: require('../../images/aboutSpirePage/Mask Group 30-2.png')
+		imgUrl: require('../../images/aboutSpirePage/island_h2o.jpg')
 	},
 	{
 		title: 'Sunset Walk',
 		description:
 			'Sunset Walk your way to points earnings - El Jeffe and Estefan Kitchen are offering discounted drinks and appetizers to Spire members',
-		imgUrl: require('../../images/aboutSpirePage/Mask Group 30-1.png')
+		imgUrl: require('../../images/aboutSpirePage/estefan_kitchen.jpeg')
 	},
 	{
 		title: 'Upgrade Your Stay',
 		description:
 			'Upgrade your stay at our partner resort properties where Spire members receive points multipliers on stays and on property spending.',
-		imgUrl: require('../../images/aboutSpirePage/Mask Group 30.png')
+		imgUrl: require('../../images/aboutSpirePage/upgrade.jpg')
 	}
 ];
 
