@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ExistingItineraryPage.scss';
-import { Box, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Link, Page } from '@bit/redsky.framework.rs.996';
 import ItineraryCard from '../../components/itineraryCard/ItineraryCard';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
@@ -13,6 +13,7 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { StringUtils, WebUtils } from '../../utils/utils';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 const ExistingItineraryPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -50,6 +51,7 @@ const ExistingItineraryPage: React.FC = () => {
 			try {
 				let res = await reservationService.getByPage(pageQuery);
 				setItineraries(res.data);
+				setLoading(false);
 			} catch (e) {
 				console.error(e);
 			}
@@ -179,6 +181,12 @@ const ExistingItineraryPage: React.FC = () => {
 
 	return loading ? (
 		<LoadingPage />
+	) : !ObjectUtils.isArrayWithData(itineraries) ? (
+		<Page className={'rsExistingItineraryPage noAvailable'}>
+			<Label variant={'h1'}>
+				No Reservations Booked. <Link path={'/reservation/availability'}>Book Now</Link>
+			</Label>
+		</Page>
 	) : (
 		<Page className={'rsExistingItineraryPage'}>
 			<div className={'rs-page-content-wrapper'}>
