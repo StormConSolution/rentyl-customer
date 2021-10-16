@@ -11,6 +11,7 @@ interface LabelCheckboxProps {
 	onSelect: (value: string | number, text: string | number | ReactNode) => void;
 	onDeselect: (value: string | number, text: string | number | ReactNode) => void;
 	className?: string;
+	lineClamp?: number;
 }
 
 const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
@@ -39,7 +40,7 @@ const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
 					<Box />
 				</span>
 			</label>
-			<Label variant={'body1'} lineClamp={2}>
+			<Label variant={'body1'} lineClamp={props.lineClamp || 2}>
 				{props.text}
 			</Label>
 		</div>

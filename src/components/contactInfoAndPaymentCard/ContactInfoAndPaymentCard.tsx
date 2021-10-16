@@ -615,6 +615,7 @@ const ContactInfoAndPaymentCard: React.FC<ContactInfoAndPaymentCardProps> = (pro
 									Spire Loyalty account.
 								</>
 							}
+							lineClamp={10}
 							isChecked={false}
 							onSelect={() => {
 								props.isAuthorized(true);

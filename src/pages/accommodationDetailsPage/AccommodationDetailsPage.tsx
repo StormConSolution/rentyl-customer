@@ -29,6 +29,7 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 interface AccommodationDetailsPageProps {}
 
@@ -94,6 +95,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 			return;
 		if (!accommodationDetails || !destinationDetails) return false;
 		try {
+			popupController.open(SpinningLoaderPopup, { preventCloseByBackgroundClick: true });
 			let data: Api.Reservation.Req.Verification = {
 				accommodationId: accommodationDetails.id,
 				destinationId: destinationDetails.id,
@@ -103,11 +105,16 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 				departureDate: DateUtils.clientToServerDate(new Date(availabilityObj.departureDate)),
 				numberOfAccommodations: 1
 			};
+			if (availabilityObj.rateCode) {
+				data.rateCode = availabilityObj.rateCode;
+			}
 			await reservationsService.verifyAvailability(data);
 			setAvailable(true);
+			popupController.close(SpinningLoaderPopup);
 			return true;
 		} catch {
 			setAvailable(false);
+			popupController.closeAll();
 			return false;
 		}
 	}
