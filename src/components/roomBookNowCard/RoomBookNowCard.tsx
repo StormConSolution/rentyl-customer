@@ -109,14 +109,6 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 					initialValue={props.rateCode}
 					onChange={(value) => props.onRateCodeChange(value)}
 				/>
-				<Box className={'earnPointsBox'}>
-					<Label className={'earnLabel'} variant={'caption'}>
-						Earn Up To
-					</Label>
-					<Label className={'pointsLabel'} variant={size === 'small' ? 'h4' : 'h2'}>
-						{props.points.toLocaleString('en-US', { useGrouping: true })} points
-					</Label>
-				</Box>
 			</Box>
 			<Box className={'roomBookNowBottomContent'}>
 				<LabelButton

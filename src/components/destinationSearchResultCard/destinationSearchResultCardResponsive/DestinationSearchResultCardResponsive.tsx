@@ -29,7 +29,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		return picturePaths.map((path: string) => {
 			return (
 				<Box className={'imageWrapper'}>
-					<Img src={path} loading={'lazy'} alt={'Resort Image'} width={278} height={318} />
+					<Img src={path} alt={'Resort Image'} width={278} height={318} />
 				</Box>
 			);
 		});

@@ -55,16 +55,6 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 							{props.maxSleeps}
 						</Label>
 					</Box>
-					{!!props.points && (
-						<Box className={'earnBoxMobile'}>
-							<Label className={'earnTitle'} variant={'caption'}>
-								Earn Up To
-							</Label>
-							<Label className={'earnContent'} variant={'h4'}>
-								{StringUtils.addCommasToNumber(props.points)} points
-							</Label>
-						</Box>
-					)}
 				</Box>
 				<Box className={'bottomContents'} display={'flex'}>
 					{!props.hideButtons && (
@@ -107,16 +97,6 @@ const AccommodationSearchCallToActionCard: React.FC<AccommodationSearchCallToAct
 				backgroundColor={'#fcfbf8'}
 				padding={'13px 22px 16px'}
 			>
-				{!!props.points && (
-					<Box>
-						<Label className={'earnLabel'} variant={'caption'}>
-							Earn Up To
-						</Label>
-						<Label className={'pointsLabel'} variant={'h2'}>
-							{StringUtils.addCommasToNumber(props.points)} points
-						</Label>
-					</Box>
-				)}
 				<LabelButton
 					className={'bookNowBtnMobile'}
 					variant={'caption'}

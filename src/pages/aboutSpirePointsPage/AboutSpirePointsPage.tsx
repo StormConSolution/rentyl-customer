@@ -97,34 +97,6 @@ const AboutSpirePointsPage: React.FC<AboutSpirePointsPageProps> = (props) => {
 								events and promotions that are exclusive to Spire. You can buy points and share points
 								adding more flexibility to your membership.
 							</Label>
-							<Box display={'flex'} alignItems={'center'} flexWrap={'wrap'}>
-								<Box
-									className={'iconLink'}
-									display={'flex'}
-									alignItems={'center'}
-									mr={75}
-									mb={size === 'small' ? '20px' : ''}
-								>
-									<Icon iconImg={'icon-gift'} size={36} color={'rgb(204,158,13)'} />
-									<LabelLink
-										path={'/'}
-										label={'Buy Points'}
-										variant={'button'}
-										iconRight={'icon-chevron-right'}
-										iconSize={7}
-									/>
-								</Box>
-								<Box className={'iconLink'} display={'flex'} alignItems={'center'}>
-									<Icon iconImg={'icon-share-points'} size={36} color={'rgb(204,158,13)'} />
-									<LabelLink
-										path={'/'}
-										label={'Share Points'}
-										variant={'button'}
-										iconRight={'icon-chevron-right'}
-										iconSize={7}
-									/>
-								</Box>
-							</Box>
 						</Paper>
 					</div>
 					<img src={require('../../images/aboutSpirePointsPage/payment-image.png')} />

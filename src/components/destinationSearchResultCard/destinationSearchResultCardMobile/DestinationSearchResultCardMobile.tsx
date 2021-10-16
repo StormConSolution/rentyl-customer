@@ -30,7 +30,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 		return picturePaths.map((path: string, index) => {
 			return (
 				<Box key={index} className={'imageWrapper'}>
-					<Img src={path} loading={'lazy'} alt={'Resort Image'} width={345} height={290} />
+					<Img src={path} alt={'Resort Image'} width={345} height={290} />
 				</Box>
 			);
 		});

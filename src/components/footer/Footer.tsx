@@ -64,42 +64,18 @@ const Footer: React.FC<FooterProps> = (props) => {
 			<Box className="copyright" display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 				<Label variant={'caption'}>Spire &#169; {new Date().getFullYear()}, all rights reserved.</Label>
 				<Box className={'socialMediaLinks'} display={'flex'}>
-					<Icon
-						iconImg={'icon-facebook'}
-						size={21}
-						color={'#004B98'}
-						cursorPointer
-						onClick={() => {
-							console.log('Navigating to facebook');
-						}}
-					/>
-					<Icon
-						iconImg={'icon-Twitter'}
-						size={21}
-						color={'#004B98'}
-						cursorPointer
-						onClick={() => {
-							console.log('Navigating to Twitter');
-						}}
-					/>
-					<Icon
-						iconImg={'icon-youtube'}
-						size={21}
-						color={'#004B98'}
-						cursorPointer
-						onClick={() => {
-							console.log('Navigating to youtube');
-						}}
-					/>
-					<Icon
-						iconImg={'icon-instagram'}
-						size={21}
-						color={'#004B98'}
-						cursorPointer
-						onClick={() => {
-							console.log('Navigating to instagram');
-						}}
-					/>
+					<a href={'https://business.facebook.com/Spire-Loyalty'} className={'socialMediaLink'}>
+						<Icon iconImg={'icon-facebook'} size={21} color={'#004B98'} cursorPointer />
+					</a>
+					<a href={'https://twitter.com/LoyaltySpire'} className={'socialMediaLink'}>
+						<Icon iconImg={'icon-Twitter'} size={21} color={'#004B98'} cursorPointer />
+					</a>
+					<a href={'https://www.linkedin.com/company/spire-loyalty'} className={'socialMediaLink'}>
+						<Icon iconImg={'icon-linkedin'} size={21} color={'#004B98'} cursorPointer />
+					</a>
+					<a href={'https://www.instagram.com/spireloyalty/'} className={'socialMediaLink'}>
+						<Icon iconImg={'icon-instagram'} size={21} color={'#004B98'} cursorPointer />
+					</a>
 				</Box>
 			</Box>
 		</Box>

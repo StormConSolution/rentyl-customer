@@ -185,7 +185,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={
 										'https://ik.imagekit.io/redsky/LandingPage/travel2x_f_-s5WJsu.png?updatedAt=1630532450621'
 									}
-									loading={'lazy'}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
 									width={236}
@@ -200,7 +199,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={
 										'https://ik.imagekit.io/redsky/LandingPage/real-estate2x_YIKhbr6jy.png?updatedAt=1630532443109'
 									}
-									loading={'lazy'}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 1 ? 'selected' : ''}`}
 									width={577}
@@ -215,7 +213,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={
 										'https://ik.imagekit.io/redsky/LandingPage/hospitality2x_V7OBn0yLg.png?updatedAt=1630532440996'
 									}
-									loading={'lazy'}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
 									width={236}
@@ -285,7 +282,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={
 										'https://ik.imagekit.io/redsky/LandingPage/travel2x_f_-s5WJsu.png?updatedAt=1630532450621'
 									}
-									loading={'lazy'}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
 									width={236}
@@ -300,7 +296,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={
 										'https://ik.imagekit.io/redsky/LandingPage/real-estate2x_YIKhbr6jy.png?updatedAt=1630532443109'
 									}
-									loading={'lazy'}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 1 ? 'selected' : ''}`}
 									width={577}
@@ -315,7 +310,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									src={
 										'https://ik.imagekit.io/redsky/LandingPage/hospitality2x_V7OBn0yLg.png?updatedAt=1630532440996'
 									}
-									loading={'lazy'}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
 									width={236}
@@ -395,7 +389,6 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 					justifyContent={'center'}
 				>
 					<Img
-						loading={'lazy'}
 						rootMargin={'0px 0px 500px 0px'}
 						width={577}
 						height={450}

@@ -348,7 +348,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							datum: item.maxOccupantCount
 						},
 						{
-							label: 'ADA Compliant',
+							label: 'Accessible',
 							datum: item.adaCompliant ? 'Yes' : 'No'
 						},
 						{

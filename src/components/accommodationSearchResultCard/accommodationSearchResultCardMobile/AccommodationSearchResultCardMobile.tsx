@@ -48,7 +48,6 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 						alt={'Accommodation Image'}
 						width={345}
 						height={290}
-						loading={'lazy'}
 						rootMargin={'0px 0px 200px 0px'}
 					/>
 				</Box>
