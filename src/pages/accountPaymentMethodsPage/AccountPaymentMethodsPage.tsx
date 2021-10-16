@@ -405,6 +405,7 @@ const AccountPaymentMethodsPage: React.FC = () => {
 							onDeselect={() => {
 								setIsAuthorized(false);
 							}}
+							lineClamp={10}
 						/>
 
 						<LabelCheckbox

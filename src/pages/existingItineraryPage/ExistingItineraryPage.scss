@@ -1,6 +1,10 @@
 @import '../../themes/themes';
 
 .rsExistingItineraryPage {
+	&.noAvailable {
+		margin-top: 80px;
+		text-align: center;
+	}
 	h1 {
 		font-size: 40px;
 		font-weight: 900;
