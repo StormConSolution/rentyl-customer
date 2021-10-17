@@ -11,6 +11,7 @@ import MobileLightBoxTwoPopup, {
 import { ObjectUtils } from '../../utils/utils';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface CategoryImageGalleryMobileProps {
 	accommodationCategories: Api.AccommodationCategory.Details[];
@@ -68,7 +69,7 @@ const CategoryImageGalleryMobile: React.FC<CategoryImageGalleryMobileProps> = (p
 						});
 					}}
 				>
-					<img src={item.urls.imageKit} alt={item.title + ' image'} />
+					<Img src={item.urls.imageKit} alt={item.title + ' image'} width={600} height={500} />
 				</Button>
 			);
 		});

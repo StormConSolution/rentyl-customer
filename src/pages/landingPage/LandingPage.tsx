@@ -60,7 +60,7 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 			return (
 				<FeaturedRewardCard
 					key={index}
-					mainImg={item.media[0].urls.large}
+					mainImg={item.media.find((image) => image.isPrimary)?.urls.imageKit || item.media[0].urls.imageKit}
 					title={item.name}
 					urlPath={`/reward?cids=[${item.id}]`}
 				/>
@@ -187,8 +187,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
-									width={236}
-									height={206}
+									width={472}
+									height={412}
 									alt={'Travel'}
 									srcSetSizes={[472]}
 									onClick={() => {
@@ -215,8 +215,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
-									width={236}
-									height={206}
+									width={472}
+									height={412}
 									alt={'Hospitality'}
 									srcSetSizes={[472]}
 									onClick={() => {
@@ -284,8 +284,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 0 ? 'selected' : ''}`}
-									width={236}
-									height={206}
+									width={472}
+									height={412}
 									alt={'Travel'}
 									srcSetSizes={[472]}
 									onClick={() => {
@@ -312,8 +312,8 @@ const LandingPage: React.FC<LandingPageProps> = () => {
 									}
 									rootMargin={'0px 0px 500px 0px'}
 									className={`${activeRewards === 2 ? 'selected' : ''}`}
-									width={236}
-									height={206}
+									width={472}
+									height={412}
 									alt={'Hospitality'}
 									srcSetSizes={[472]}
 									onClick={() => {

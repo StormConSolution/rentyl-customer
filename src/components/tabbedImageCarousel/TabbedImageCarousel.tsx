@@ -54,8 +54,8 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 					<Img
 						alt={tab.name}
 						src={tab.imagePath}
-						width={375}
-						height={570}
+						width={750}
+						height={1140}
 						rootMargin={'0px 0px 500px 0px'}
 						srcSetSizes={[1440]}
 					/>

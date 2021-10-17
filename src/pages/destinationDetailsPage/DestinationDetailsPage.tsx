@@ -15,7 +15,6 @@ import Label from '@bit/redsky.framework.rs.label';
 import LabelImage from '../../components/labelImage/LabelImage';
 import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
-import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
 import moment from 'moment';
@@ -191,11 +190,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		let carouselItems: any = [];
 		for (let item of destinationDetails.features) {
 			if (!item.isActive || !item.isCarousel) continue;
-			let img = item.media.filter((value) => value.isPrimary);
+			let imagePath = '';
+			if (ObjectUtils.isArrayWithData(item.media)) {
+				const mainImg = item.media.find((image) => image.isPrimary);
+				imagePath = mainImg?.urls.imageKit || item.media[0].urls.imageKit;
+			}
 			carouselItems.push({
 				name: item.title,
 				title: item.title,
-				imagePath: ObjectUtils.isArrayWithData(img) ? img[0].urls.imageKit : '',
+				imagePath: imagePath,
 				description: item.description,
 				buttonLabel: 'View Photos',
 				otherMedia: item.media
@@ -276,9 +279,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
 		return availabilityStayList.map((item) => {
-			let media = item.media.map((value) => {
-				return value.urls.imageKit;
-			});
 			return (
 				<AccommodationSearchResultCard
 					key={item.id}
@@ -357,7 +357,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						}
 					]}
 					amenityIconNames={item.featureIcons}
-					carouselImagePaths={media.map((media) => (media ? media : ''))}
+					carouselImagePaths={item.media}
 				/>
 			);
 		});
