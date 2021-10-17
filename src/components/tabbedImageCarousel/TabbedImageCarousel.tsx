@@ -1,7 +1,7 @@
 import './TabbedImageCarousel.scss';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Paper from '../paper/Paper';
 import LabelButton from '../labelButton/LabelButton';
 import LightBoxTwoPopup, { LightBoxTwoPopupProps } from '../../popups/lightBoxTwoPopup/LightBoxTwoPopup';
@@ -26,8 +26,20 @@ export interface TabbedImageCarouselProps {
 }
 
 const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props: TabbedImageCarouselProps) {
+	const parentRef = useRef<HTMLElement>(null);
+	const totalChildren = props.tabs.length;
+	const [showIcons, setShowIcons] = useState<boolean>(false);
+	const [imageViewIndex, setImageViewIndex] = useState<number>(1);
 	const [activeTabName, setActiveTabName] = useState<string>(props.tabs[0] ? props.tabs[0].name : '');
 	const size = useWindowResizeChange();
+
+	useEffect(() => {
+		if (parentRef.current) {
+			if (parentRef.current.scrollWidth > 1440) {
+				setShowIcons(true);
+			}
+		}
+	}, []);
 
 	function renderTab(tab: ImageTabProp, index: number): JSX.Element {
 		return (
@@ -107,9 +119,41 @@ const TabbedImageCarousel: React.FC<TabbedImageCarouselProps> = function (props:
 
 	return (
 		<Box className="rsTabbedImageCarousel">
-			<Icon className={'arrowIcon leftArrow'} iconImg={'icon-chevron-left'} cursorPointer onClick={() => {}} />
-			<div className="tabList">{renderAllTabs()}</div>
-			<Icon className={'arrowIcon rightArrow'} iconImg={'icon-chevron-right'} cursorPointer onClick={() => {}} />
+			<Box className={'tabContainer'}>
+				<Icon
+					className={showIcons ? 'arrowIcon leftArrow' : 'none'}
+					iconImg={'icon-chevron-left'}
+					cursorPointer
+					color={'white'}
+					onClick={() => {
+						let val = parentRef.current!.scrollLeft - parentRef.current!.offsetWidth;
+						setImageViewIndex(imageViewIndex - 1);
+						if (imageViewIndex <= 0) {
+							val = parentRef.current!.offsetWidth * totalChildren;
+							setImageViewIndex(totalChildren);
+						}
+						parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+					}}
+				/>
+				<div className="tabList" ref={parentRef}>
+					{renderAllTabs()}
+				</div>
+				<Icon
+					className={showIcons ? 'arrowIcon rightArrow' : 'none'}
+					iconImg={'icon-chevron-right'}
+					cursorPointer
+					color={'white'}
+					onClick={() => {
+						let val = parentRef.current!.offsetWidth + parentRef.current!.scrollLeft;
+						setImageViewIndex(imageViewIndex + 1);
+						if (imageViewIndex > totalChildren) {
+							val = 0;
+							setImageViewIndex(1);
+						}
+						parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+					}}
+				/>
+			</Box>
 			{renderAllTabContent()}
 		</Box>
 	);
