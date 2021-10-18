@@ -61,6 +61,14 @@ const ItineraryDetailsPage: React.FC = () => {
 		if (!itinerary || !ObjectUtils.isArrayWithData(itinerary.stays)) return;
 
 		return itinerary.stays.map((item) => {
+			if (item.externalCancellationId) {
+				rsToastify.error(
+					'There was an issue with this reservation. Reservation has been cancelled. Itinerary unavailable!',
+					'Reservation Cancelled!',
+					{ autoClose: false, position: 'top-center' }
+				);
+				router.navigate('/reservations').catch(console.error);
+			}
 			return (
 				<ReservationDetailsAccordion
 					key={item.reservationId}
