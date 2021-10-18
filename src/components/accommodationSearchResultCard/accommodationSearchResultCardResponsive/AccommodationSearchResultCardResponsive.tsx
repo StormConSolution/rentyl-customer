@@ -23,7 +23,7 @@ interface AccommodationSearchResultCardResponsiveProps {
 	pointsRatePerNight: number;
 	pointsEarnable: number;
 	roomStats: AccommodationStat[];
-	carouselImagePaths: string[];
+	carouselImagePaths: Api.Media[];
 	amenityIconNames: string[];
 	onBookNowClick: () => void;
 	onCompareClick?: () => void;
@@ -36,16 +36,17 @@ interface AccommodationSearchResultCardResponsiveProps {
 const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResultCardResponsiveProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
-	function renderCarouselImages(imagePaths: string[]): JSX.Element[] {
+	function renderCarouselImages(imagePaths: Api.Media[]): JSX.Element[] {
+		imagePaths.sort((img1, img2) => img1.isPrimary - img2.isPrimary);
 		return imagePaths.map((imagePath, index) => {
 			return (
 				<Img
 					className="accommodationGalleryImage"
-					src={imagePath}
+					src={imagePath.urls.imageKit}
 					key={index}
 					alt={'Accommodation Image'}
-					width={278}
-					height={280}
+					width={556}
+					height={560}
 					rootMargin={'0px 0px 200px 0px'}
 				/>
 			);

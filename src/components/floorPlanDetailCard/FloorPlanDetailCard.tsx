@@ -128,8 +128,8 @@ const FloorPlanDetailCard: React.FC<FloorPlanDetailCardProps> = (props) => {
 				<Img
 					src={selectedLayout?.media.urls.imageKit || ''}
 					alt={'Layout Image'}
-					width={335}
-					height={500}
+					width={670}
+					height={1000}
 					srcSetSizes={[400]}
 				/>
 			</Box>
