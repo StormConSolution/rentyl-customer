@@ -134,12 +134,13 @@
 .small {
 	.rsTabbedImageCarousel {
 		--hangover: 160px;
-
-		.tabList {
-			width: 100%;
-			overflow-x: scroll;
-			.arrowIcon {
-				display: none;
+		.tabContainer {
+			.tabList {
+				width: 100%;
+				overflow-x: scroll;
+				.arrowIcon .rightArrow .leftArrow {
+					display: none;
+				}
 			}
 		}
 
