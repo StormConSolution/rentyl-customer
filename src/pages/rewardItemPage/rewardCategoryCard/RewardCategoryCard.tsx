@@ -13,7 +13,7 @@ interface RewardCategoryCardProps {
 const RewardCategoryCard: React.FC<RewardCategoryCardProps> = (props) => {
 	function renderStyles() {
 		let styles: any = {
-			backgroundImage: `url(${props.imgPath})`,
+			backgroundImage: `url(${props.imgPath}?tr=w-$556,tr=h-500)`,
 			height: '250px',
 			width: '278px',
 			backgroundPosition: 'center',

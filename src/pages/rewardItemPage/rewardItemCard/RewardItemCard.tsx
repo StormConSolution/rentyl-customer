@@ -4,6 +4,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import IconLabel from '../../../components/iconLabel/IconLabel';
 import router from '../../../utils/router';
 import { StringUtils } from '../../../utils/utils';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface RewardItemCardProps {
 	imgPath: string;
@@ -41,7 +42,7 @@ const RewardItemCard: React.FC<RewardItemCardProps> = (props) => {
 	return (
 		<div className={`rsRewardItemCard ${props.className || ''}`}>
 			<div className={'imageContainer'}>
-				<img className={'rewardImg'} src={props.imgPath} alt={'rewardImage'} height={'250px'} width={'278px'} />
+				<Img src={props.imgPath} alt={'reward image'} width={556} height={500} />
 			</div>
 			<Label className={'rewardName'} variant={'h2'}>
 				{StringUtils.capitalizeFirst(props.title)}
