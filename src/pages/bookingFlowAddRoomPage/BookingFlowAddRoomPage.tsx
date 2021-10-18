@@ -245,7 +245,6 @@ const BookingFlowAddRoomPage = () => {
 
 	function renderDestinationSearchResultCards() {
 		return accommodations.map((accommodation, index) => {
-			let urls: string[] = getImageUrls(accommodation);
 			return (
 				<AccommodationSearchResultCard
 					key={index}
@@ -280,7 +279,7 @@ const BookingFlowAddRoomPage = () => {
 					onBookNowClick={() => {
 						bookNow(accommodation.id);
 					}}
-					carouselImagePaths={urls}
+					carouselImagePaths={accommodation.media}
 				/>
 			);
 		});
@@ -320,7 +319,7 @@ const BookingFlowAddRoomPage = () => {
 								datum: editingAccommodation.extraBeds ? 'Yes' : 'No'
 							}
 						]}
-						carouselImagePaths={editingAccommodation.media.map((media) => media.urls.imageKit || '')}
+						carouselImagePaths={editingAccommodation.media}
 						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
 						onBookNowClick={() => {
 							bookNow(editStayDetails.accommodationId);

@@ -17,7 +17,7 @@ export interface AccommodationSearchResultCardProps {
 	pointsEarnable: number;
 	// starRating: Rating;
 	roomStats: AccommodationStat[];
-	carouselImagePaths: string[];
+	carouselImagePaths: Api.Media[];
 	amenityIconNames: string[];
 	onBookNowClick: () => void;
 	onCompareClick?: () => void;

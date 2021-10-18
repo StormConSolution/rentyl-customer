@@ -14,7 +14,7 @@ const LabelImage: React.FC<LabelImageProps> = (props) => {
 
 	function renderStyles() {
 		let styles: any = {
-			backgroundImage: `url(${props.mainImg})`,
+			backgroundImage: `url(${props.mainImg}?tr=w-$556,tr=h-320)`,
 			height: size === 'small' ? '165px' : '160px',
 			width: size === 'small' ? '293px' : '278px'
 		};

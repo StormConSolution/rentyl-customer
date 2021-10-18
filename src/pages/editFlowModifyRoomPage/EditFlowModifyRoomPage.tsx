@@ -246,7 +246,6 @@ const EditFlowModifyRoomPage = () => {
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
 		return destinations.map((destination, index) => {
-			let urls: string[] = getImageUrls(destination);
 			return (
 				<>
 					<AccommodationSearchResultCard
@@ -284,7 +283,7 @@ const EditFlowModifyRoomPage = () => {
 								onUpdateRoomClick: () => bookNow(destination.id)
 							});
 						}}
-						carouselImagePaths={urls}
+						carouselImagePaths={destination.media}
 					/>
 					<hr />
 				</>
@@ -341,7 +340,7 @@ const EditFlowModifyRoomPage = () => {
 									datum: reservation.accommodation.extraBed ? 'Yes' : 'No'
 								}
 							]}
-							carouselImagePaths={getImageUrls(reservation.accommodation)}
+							carouselImagePaths={reservation.accommodation.media}
 							amenityIconNames={reservation.accommodation.featureIcons}
 							onBookNowClick={() => {
 								router.navigate(

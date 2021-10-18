@@ -69,8 +69,8 @@ const CategoryImageGalleryResponsive: React.FC<CategoryImageGalleryResponsivePro
 					<Img
 						src={item.urls.imageKit}
 						alt={item.title + ' image'}
-						width={300}
-						height={250}
+						width={600}
+						height={500}
 						rootMargin={'0px 0px 500px 0px'}
 					/>
 				</Button>
