@@ -386,6 +386,7 @@ const BookingFlowCheckoutPage = () => {
 								rateCode: accommodation.rateCode,
 								startDate: accommodation.arrivalDate,
 								endDate: accommodation.departureDate,
+								maxOccupancy: verifiedAccommodations[accommodation.uuid].maxOccupantCount,
 								onApplyChanges(
 									uuid: number,
 									adults: number,

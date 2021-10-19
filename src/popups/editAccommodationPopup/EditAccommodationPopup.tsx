@@ -21,6 +21,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 	children: number;
 	startDate: Date | string;
 	endDate: Date | string;
+	maxOccupancy: number;
 	onApplyChanges: (
 		uuid: number,
 		adults: number,
@@ -55,6 +56,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 
 	useEffect(() => {
 		async function checkAvailability() {
+			if (getOccupantCount() > props.maxOccupancy) return;
 			try {
 				let data: Api.Reservation.Req.Verification = {
 					accommodationId: props.accommodationId,
@@ -91,6 +93,10 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 		setEndDate(end);
 	}
 
+	function getOccupantCount(): number {
+		return parseInt(guestForm.get('adults').value as string) + parseInt(guestForm.get('children').value as string);
+	}
+
 	function updateForm(control: RsFormControl) {
 		setGuestForm(guestForm.clone().update(control));
 	}
@@ -112,6 +118,11 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						updateControl={updateForm}
 					/>
 				</Box>
+				{getOccupantCount() > props.maxOccupancy && (
+					<Label color={'red'} variant={'body1'}>
+						{`Cannot exceed more than ${props.maxOccupancy} guests.`}
+					</Label>
+				)}
 				<DateRangeSelector
 					startDate={startDate}
 					endDate={endDate}
@@ -136,10 +147,14 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 						onClick={() => popupController.closeAll()}
 					/>
 					<LabelButton
-						look={'containedPrimary'}
+						look={
+							!available || getOccupantCount() > props.maxOccupancy
+								? 'containedSecondary'
+								: 'containedPrimary'
+						}
 						variant={'button'}
 						label={'Apply'}
-						disabled={!available}
+						disabled={!available || getOccupantCount() > props.maxOccupancy}
 						onClick={() => {
 							props.onApplyChanges(
 								props.uuid,
