@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RewardItemPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -28,6 +28,7 @@ import IconLabel from '../../components/iconLabel/IconLabel';
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
+	const topContainerRef = useRef<HTMLDivElement>(null);
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ categories: string; vendors: string }>([
 		{ key: 'cids', default: '', type: 'string', alias: 'categories' },
@@ -96,6 +97,8 @@ const RewardItemPage: React.FC = () => {
 			const response = await rewardService.getPagedRewards(pageQuery);
 			setRewardTotal(response.total || 0);
 			setRewards(response.data);
+			let topOfAvailableRewards = topContainerRef.current!.offsetTop;
+			window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
 		}
 		getRewardItems().catch(console.error);
 	}, [page, selectedCategories, selectedVendors, pointCostRange]);
@@ -265,15 +268,19 @@ const RewardItemPage: React.FC = () => {
 	function renderPaginationOrNoRewardsMsg() {
 		if (rewardTotal < 1 || !ObjectUtils.isArrayWithData(categories)) {
 			return <Label variant={'body1'}>There are no rewards available matching your filters.</Label>;
-		} else {
+		} else if (selectedCategories.length > 0) {
 			return (
 				<PaginationButtons
 					selectedRowsPerPage={perPage}
 					currentPageNumber={page}
-					setSelectedPage={(page) => setPage(page)}
+					setSelectedPage={(page) => {
+						setPage(page);
+					}}
 					total={rewardTotal}
 				/>
 			);
+		} else {
+			return '';
 		}
 	}
 
@@ -416,7 +423,9 @@ const RewardItemPage: React.FC = () => {
 							? 'Categories'
 							: 'Available Rewards'}
 					</Label>
-					<div className={'cardContainer'}>{renderCards()}</div>
+					<div ref={topContainerRef} className={'cardContainer'}>
+						{renderCards()}
+					</div>
 					<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 				</Box>
 				<Footer links={FooterLinks} />
@@ -456,7 +465,9 @@ const RewardItemPage: React.FC = () => {
 									<PointsOrLogin />
 								</div>
 							</div>
-							<div className={'cardContainer'}>{renderCards()}</div>
+							<div ref={topContainerRef} className={'cardContainer'}>
+								{renderCards()}
+							</div>
 							<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 						</Box>
 					</Box>
