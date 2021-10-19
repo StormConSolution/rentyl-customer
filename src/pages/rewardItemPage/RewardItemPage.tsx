@@ -5,12 +5,10 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import FeaturedCategoryCard from './featuredCategoryCard/FeaturedCategoryCard';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
 import LabelInput from '../../components/labelInput/LabelInput';
-import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from './rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
-import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import RewardItemCard from './rewardItemCard/RewardItemCard';
@@ -22,6 +20,7 @@ import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { ObjectUtils } from '../../utils/utils';
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
@@ -178,7 +177,11 @@ const RewardItemPage: React.FC = () => {
 
 	function renderCards() {
 		if (!ObjectUtils.isArrayWithData(selectedCategories)) {
-			return categories.map((category: Api.Reward.Category.Res.Get, index) => {
+			let categoriesToDisplay = categories.filter((category) => !category.isFeatured);
+			if (!ObjectUtils.isArrayWithData(categoriesToDisplay)) {
+				categoriesToDisplay = featuredCategories;
+			}
+			return categoriesToDisplay.map((category: Api.Reward.Category.Res.Get, index) => {
 				let media;
 				if (category.media.length >= 1) {
 					let img = category.media.find((image) => image.isPrimary);
@@ -226,8 +229,19 @@ const RewardItemPage: React.FC = () => {
 		setSelectedCategories([categoryId]);
 	}
 
-	function renderFeaturedCategory() {
+	function areCategoriesTheSame(): boolean {
+		const featuredCategoryIds = featuredCategories.map((category) => {
+			return category.id;
+		});
+		const categoryIds = categories.map((category) => {
+			return category.id;
+		});
+		return ObjectUtils.areArraysEqual(featuredCategoryIds, categoryIds);
+	}
+
+	async function renderFeaturedCategory() {
 		if (!ObjectUtils.isArrayWithData(featuredCategories) || ObjectUtils.isArrayWithData(selectedCategories)) return;
+		if (areCategoriesTheSame()) return;
 		return featuredCategories.map((category, index) => {
 			const media = category.media;
 			let imagePath = '';
