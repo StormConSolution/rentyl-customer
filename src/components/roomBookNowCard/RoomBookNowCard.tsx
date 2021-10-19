@@ -25,7 +25,7 @@ interface RoomBookNowCardProps {
 	rateCode?: string;
 	bookNowOnClick?: () => void;
 	compareOnClick?: () => void;
-	bookNowDisabled?: boolean;
+	errorMessage?: string;
 	compareDisabled?: boolean;
 	isAvailable: boolean;
 }
@@ -89,7 +89,7 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 				</Box>
 				{!props.isAvailable && (
 					<Label variant={'body1'} color={'red'}>
-						Those dates are unavailable
+						{props.errorMessage}
 					</Label>
 				)}
 				<LabelInput
@@ -114,9 +114,9 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 				<LabelButton
 					className={'bookNowBtn'}
 					variant={'caption'}
-					look={props.bookNowDisabled && !props.isAvailable ? 'containedSecondary' : 'containedPrimary'}
+					look={!props.isAvailable ? 'containedSecondary' : 'containedPrimary'}
 					label={'BOOK NOW'}
-					disabled={props.bookNowDisabled && !props.isAvailable}
+					disabled={!props.isAvailable}
 					onClick={props.bookNowOnClick}
 				/>
 				{renderCompareLabelOrButton()}
