@@ -54,13 +54,33 @@
 
 .small {
 	.rsRoomBookNowCard {
+		.rsLabelInput {
+			margin: 5px 0 0;
+		}
 		.roomBookNowTopContent {
-			display: flex;
+			width: 100%;
+			display: grid;
+			grid-template-rows: auto auto;
+			align-items: center;
+			justify-content: center;
+			.rsBox {
+				gap: 15px;
+			}
 		}
 
 		.numberOfGuests {
 			.rsInput {
 				height: 42px;
+				width: 95px;
+				margin-top: 4px;
+			}
+		}
+
+		.rateCode {
+			margin-left: 2px;
+			.rsInput {
+				height: 42px;
+				width: 95px;
 				margin-top: 4px;
 			}
 		}

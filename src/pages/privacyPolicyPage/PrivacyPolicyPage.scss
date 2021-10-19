@@ -1,6 +1,9 @@
 @import '../../themes/themes';
 
 .rsPrivacyPolicyPage {
+	p {
+		padding: 20px;
+	}
 	th {
 		border: 1px solid black;
 	}
@@ -10,5 +13,13 @@
 	}
 	.centerAlign {
 		text-align: center;
+	}
+}
+
+.small {
+	.rsPrivacyPolicyPage {
+		.h3 {
+			text-align: center;
+		}
 	}
 }

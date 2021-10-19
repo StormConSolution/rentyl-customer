@@ -10,6 +10,7 @@ import Paper from '../paper/Paper';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import LabelButton from '../labelButton/LabelButton';
+import debounce from 'lodash.debounce';
 
 interface RoomBookNowCardProps {
 	points: number;
@@ -92,23 +93,25 @@ const RoomBookNowCard: React.FC<RoomBookNowCardProps> = (props) => {
 						Those dates are unavailable
 					</Label>
 				)}
-				<LabelInput
-					title={size === 'small' ? 'Guests' : '# of Guest'}
-					inputType={'number'}
-					className={'numberOfGuests'}
-					initialValue={!!props.guestValue ? props.guestValue.toString() : ''}
-					onChange={(value) => {
-						props.onGuestChange(value);
-					}}
-				/>
-				<LabelInput
-					className={'rateCode'}
-					title={'Rate Code'}
-					inputType={'text'}
-					placeholder={'Optional'}
-					initialValue={props.rateCode}
-					onChange={(value) => props.onRateCodeChange(value)}
-				/>
+				<Box display={'flex'} flexDirection={size === 'small' ? 'row' : 'column'} alignItems={'center'}>
+					<LabelInput
+						title={size === 'small' ? 'Guests' : '# of Guest'}
+						inputType={'number'}
+						className={'numberOfGuests'}
+						initialValue={!!props.guestValue ? props.guestValue.toString() : ''}
+						onChange={(value) => {
+							props.onGuestChange(value);
+						}}
+					/>
+					<LabelInput
+						className={'rateCode'}
+						title={'Rate Code'}
+						inputType={'text'}
+						placeholder={'Optional'}
+						initialValue={props.rateCode}
+						onChange={debounce((value) => props.onRateCodeChange(value), 500)}
+					/>
+				</Box>
 			</Box>
 			<Box className={'roomBookNowBottomContent'}>
 				<LabelButton

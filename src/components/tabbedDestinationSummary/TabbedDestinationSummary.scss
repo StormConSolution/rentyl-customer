@@ -2,15 +2,17 @@
 
 .rsTabbedDestinationSummary {
 	background-color: rgba(0, 0, 0, 0);
+	max-width: 100%;
 	div {
 		margin: 0;
 	}
 	.tabSection {
 		width: 100%;
 		display: flex;
+		overflow: scroll;
 		.tab {
 			margin: 8px 0;
-			padding: 5px 30px;
+			padding: 5px 20px;
 			border-bottom: 1px solid theme-var($greyLineColor);
 			.rsLabel {
 				text-align: center;
