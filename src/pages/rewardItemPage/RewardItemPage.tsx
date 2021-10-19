@@ -82,6 +82,7 @@ const RewardItemPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getRewardItems() {
+			setWaitToLoad(true);
 			const searchTerm = formatFilterQuery();
 			const pageQuery: RedSky.PageQuery = {
 				pagination: { page, perPage: 9 },
@@ -90,14 +91,19 @@ const RewardItemPage: React.FC = () => {
 					searchTerm
 				}
 			};
-			const response = await rewardService.getPagedRewards(pageQuery);
-			setRewardTotal(response.total || 0);
-			setRewards(response.data);
-			let topOfAvailableRewards = topContainerRef.current!.offsetTop;
-			window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
+			try {
+				const response = await rewardService.getPagedRewards(pageQuery);
+				setRewardTotal(response.total || 0);
+				setRewards(response.data);
+				let topOfAvailableRewards = topContainerRef.current!.offsetTop;
+				window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
+				setWaitToLoad(false);
+			} catch (e) {
+				setWaitToLoad(false);
+			}
 		}
 		getRewardItems().catch(console.error);
-	}, [page, selectedCategories, selectedVendors, pointCostRange]);
+	}, [page, selectedCategories, selectedVendors, pointCostRange, categories]);
 
 	function formatFilterQuery(): RedSky.FilterQueryValue[] {
 		let filter: RedSky.FilterQueryValue[] = [];
@@ -292,34 +298,36 @@ const RewardItemPage: React.FC = () => {
 	function renderQuerySidebar() {
 		return (
 			<div className={'querySideBar'}>
-				<div className={'rewardCategoryCheckboxList'}>
-					<Label className={'queryTitle'} variant={'h4'}>
-						Business Categories
-					</Label>
-					<CheckboxList
-						onChange={(value, options) => {
-							if (value.length === 0) {
-								router.updateUrlParams({});
-								setSelectedCategories([]);
-							} else {
-								router.updateUrlParams({
-									cids: JSON.stringify(value),
-									vids: JSON.stringify(selectedVendors)
-								});
-								setSelectedCategories(value as number[]);
-							}
-						}}
-						options={categories.map((category) => {
-							return {
-								value: category.id,
-								text: category.name,
-								selected: selectedCategories.includes(category.id)
-							};
-						})}
-						name={'categories'}
-						className={'categoryCheckboxList'}
-					/>
-				</div>
+				{ObjectUtils.isArrayWithData(categories) && (
+					<div className={'rewardCategoryCheckboxList'}>
+						<Label className={'queryTitle'} variant={'h4'}>
+							Business Categories
+						</Label>
+						<CheckboxList
+							onChange={(value, options) => {
+								if (value.length === 0) {
+									router.updateUrlParams({});
+									setSelectedCategories([]);
+								} else {
+									router.updateUrlParams({
+										cids: JSON.stringify(value),
+										vids: JSON.stringify(selectedVendors)
+									});
+									setSelectedCategories(value as number[]);
+								}
+							}}
+							options={categories.map((category) => {
+								return {
+									value: category.id,
+									text: category.name,
+									selected: selectedCategories.includes(category.id)
+								};
+							})}
+							name={'categories'}
+							className={'categoryCheckboxList'}
+						/>
+					</div>
+				)}
 				<Box
 					className={'resortAndPointFilters'}
 					display={!ObjectUtils.isArrayWithData(selectedCategories) ? 'none' : 'block'}
