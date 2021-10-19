@@ -181,13 +181,17 @@ const RewardItemPage: React.FC = () => {
 		return 'noneAvailable';
 	}
 
+	function displayRewards(): boolean {
+		return (
+			ObjectUtils.isArrayWithData(selectedCategories) ||
+			ObjectUtils.isArrayWithData(selectedVendors) ||
+			!(pointCostRange.get('min').value === '' || pointCostRange.get('min').value === undefined) ||
+			!(pointCostRange.get('max').value === '' || pointCostRange.get('max').value === undefined)
+		);
+	}
+
 	function renderCards() {
-		if (
-			!ObjectUtils.isArrayWithData(selectedCategories) &&
-			!ObjectUtils.isArrayWithData(selectedVendors) &&
-			(pointCostRange.get('min').value === '' || pointCostRange.get('min').value === undefined) &&
-			(pointCostRange.get('max').value === '' || pointCostRange.get('max').value === undefined)
-		) {
+		if (!displayRewards()) {
 			return categories.map((category: Api.Reward.Category.Res.Get, index) => {
 				let media;
 				if (category.media.length >= 1) {
@@ -266,10 +270,10 @@ const RewardItemPage: React.FC = () => {
 	}
 
 	function renderPaginationOrNoRewardsMsg() {
-		if (rewardTotal < 1 || !ObjectUtils.isArrayWithData(categories)) {
-			return <Label variant={'body1'}>There are no rewards available matching your filters.</Label>;
-		} else if (selectedCategories.length > 0) {
-			return (
+		if (displayRewards()) {
+			return rewardTotal < 1 ? (
+				<Label variant={'body1'}>There are no rewards available matching your filters.</Label>
+			) : (
 				<PaginationButtons
 					selectedRowsPerPage={perPage}
 					currentPageNumber={page}
@@ -279,18 +283,13 @@ const RewardItemPage: React.FC = () => {
 					total={rewardTotal}
 				/>
 			);
-		} else {
-			return '';
-		}
+		} else return '';
 	}
 
 	function renderQuerySidebar() {
 		return (
 			<div className={'querySideBar'}>
-				{(ObjectUtils.isArrayWithData(selectedCategories) ||
-					ObjectUtils.isArrayWithData(selectedVendors) ||
-					!(pointCostRange.get('min').value === '' || pointCostRange.get('min').value === undefined) ||
-					!(pointCostRange.get('max').value === '' || pointCostRange.get('max').value === undefined)) && (
+				{displayRewards() && (
 					<IconLabel
 						className={'rewardCategoryButton'}
 						labelName={'Back To Categories'}
@@ -376,9 +375,12 @@ const RewardItemPage: React.FC = () => {
 								inputType={'text'}
 								control={pointCostRange.get('min')}
 								updateControl={debounce((control: RsFormControl) => {
-									control.value = StringUtils.addCommasToNumber(
-										parseInt(control.value.toString().replace(',', ''))
-									);
+									let num = parseInt(control.value.toString().replace(',', ''));
+									if (isNaN(num)) {
+										control.value = '';
+									} else {
+										control.value = StringUtils.addCommasToNumber(num);
+									}
 									setPointCostRange(pointCostRange.clone().update(control));
 								}, 500)}
 							/>
@@ -387,9 +389,12 @@ const RewardItemPage: React.FC = () => {
 								inputType={'text'}
 								control={pointCostRange.get('max')}
 								updateControl={debounce((control: RsFormControl) => {
-									control.value = StringUtils.addCommasToNumber(
-										parseInt(control.value.toString().replace(',', ''))
-									);
+									let num = parseInt(control.value.toString().replace(',', ''));
+									if (isNaN(num)) {
+										control.value = '';
+									} else {
+										control.value = StringUtils.addCommasToNumber(num);
+									}
 									setPointCostRange(pointCostRange.clone().update(control));
 								}, 500)}
 							/>
@@ -416,12 +421,7 @@ const RewardItemPage: React.FC = () => {
 					</div>
 					{renderQuerySidebar()}
 					<Label className={'categoriesTitle'} variant={'h4'}>
-						{!ObjectUtils.isArrayWithData(selectedCategories) &&
-						!ObjectUtils.isArrayWithData(selectedVendors) &&
-						(pointCostRange.get('min').value === '' || pointCostRange.get('min').value === undefined) &&
-						(pointCostRange.get('max').value === '' || pointCostRange.get('max').value === undefined)
-							? 'Categories'
-							: 'Available Rewards'}
+						{displayRewards() ? 'Available Rewards' : 'Categories'}
 					</Label>
 					<div ref={topContainerRef} className={'cardContainer'}>
 						{renderCards()}
@@ -452,14 +452,7 @@ const RewardItemPage: React.FC = () => {
 						<Box className={'pagedCategoryCards'} marginTop={user ? 0 : 35}>
 							<div className={'rightSideHeaderContainer'}>
 								<Label className={'categoriesTitle'} variant={'h4'}>
-									{!ObjectUtils.isArrayWithData(selectedCategories) &&
-									!ObjectUtils.isArrayWithData(selectedVendors) &&
-									(pointCostRange.get('min').value === '' ||
-										pointCostRange.get('min').value === undefined) &&
-									(pointCostRange.get('max').value === '' ||
-										pointCostRange.get('max').value === undefined)
-										? 'Categories'
-										: 'Available Rewards'}
+									{!displayRewards() ? 'Categories' : 'Available Rewards'}
 								</Label>
 								<div className={'pointOrLoginContainer'}>
 									<PointsOrLogin />
