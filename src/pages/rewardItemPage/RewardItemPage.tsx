@@ -229,7 +229,7 @@ const RewardItemPage: React.FC = () => {
 		setSelectedCategories([categoryId]);
 	}
 
-	function areCategoriesTheSame(): boolean {
+	function checkCategories(): boolean {
 		const featuredCategoryIds = featuredCategories.map((category) => {
 			return category.id;
 		});
@@ -239,9 +239,10 @@ const RewardItemPage: React.FC = () => {
 		return ObjectUtils.areArraysEqual(featuredCategoryIds, categoryIds);
 	}
 
-	async function renderFeaturedCategory() {
+	function renderFeaturedCategory() {
 		if (!ObjectUtils.isArrayWithData(featuredCategories) || ObjectUtils.isArrayWithData(selectedCategories)) return;
-		if (areCategoriesTheSame()) return;
+		let areArraysEqual = checkCategories();
+		if (areArraysEqual) return;
 		return featuredCategories.map((category, index) => {
 			const media = category.media;
 			let imagePath = '';
@@ -412,7 +413,8 @@ const RewardItemPage: React.FC = () => {
 						className={'pageWrapper'}
 						padding={
 							!ObjectUtils.isArrayWithData(featuredCategories) ||
-							ObjectUtils.isArrayWithData(selectedCategories)
+							ObjectUtils.isArrayWithData(selectedCategories) ||
+							checkCategories()
 								? '120px 140px 50px'
 								: '50px 140px'
 						}
