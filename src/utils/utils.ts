@@ -146,9 +146,9 @@ class DateUtils extends BaseDateUtils {
 	static formatDate(date: Date, formatType?: string): string {
 		if (formatType === 'MM/DD/YYYY') {
 			return (
-				(date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)) +
+				('0' + (date.getMonth() + 1)).slice(-2) +
 				'/' +
-				(date.getDate() > 9 ? date.getDate() : '0' + date.getDate()) +
+				('0' + date.getDate()).slice(-2) +
 				'/' +
 				date.getFullYear()
 			);

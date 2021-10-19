@@ -57,43 +57,81 @@ const ItineraryDetailsPage: React.FC = () => {
 		getItineraryDetails().catch(console.error);
 	}, []);
 
+	useEffect(() => {
+		async function checkReservationStatus() {
+			let cancelledReservations: boolean[] = [];
+			if (itinerary) {
+				itinerary.stays.forEach((stay) => {
+					if (stay.externalCancellationId) {
+						cancelledReservations.push(true);
+					}
+				});
+				if (cancelledReservations.length === itinerary?.stays.length) {
+					rsToastify.error(
+						'There was an issue with this reservation. Reservation has been cancelled. Itinerary unavailable!',
+						'Reservation Cancelled!',
+						{ autoClose: false, position: 'top-center' }
+					);
+					router.navigate('/reservations').catch(console.error);
+				} else if (
+					ObjectUtils.isArrayWithData(
+						cancelledReservations && cancelledReservations.length < itinerary.stays.length
+					)
+				) {
+					rsToastify.error(
+						'There was an issue with this reservation. Part of your reservation has been cancelled. Cancelled itineraries removed!',
+						'Partial Reservation Cancellation!',
+						{ autoClose: false, position: 'top-center' }
+					);
+				}
+			}
+		}
+		checkReservationStatus().catch(console.log);
+	}, [itinerary]);
+
+	useEffect(() => {
+		async function removeCancelledReservations() {
+			if (itinerary && itinerary.stays) {
+				itinerary.stays = itinerary.stays.filter((stay) => {
+					return !stay.externalCancellationId;
+				});
+			}
+		}
+		removeCancelledReservations().catch(console.error);
+	}, []);
+
 	function renderReservations() {
 		if (!itinerary || !ObjectUtils.isArrayWithData(itinerary.stays)) return;
-
-		return itinerary.stays.map((item) => {
-			if (item.externalCancellationId) {
-				rsToastify.error(
-					'There was an issue with this reservation. Reservation has been cancelled. Itinerary unavailable!',
-					'Reservation Cancelled!',
-					{ autoClose: false, position: 'top-center' }
+		return itinerary.stays
+			.filter((item) => {
+				return !item.externalCancellationId;
+			})
+			.map((item) => {
+				return (
+					<ReservationDetailsAccordion
+						key={item.reservationId}
+						reservationId={item.reservationId}
+						accommodationName={item.accommodation.name}
+						arrivalDate={item.arrivalDate}
+						departureDate={item.departureDate}
+						externalConfirmationId={item.externalConfirmationId}
+						maxOccupantCount={item.accommodation.maxOccupantCount}
+						maxSleeps={item.accommodation.maxSleeps}
+						adultCount={item.adultCount}
+						childCount={item.childCount}
+						adaCompliant={item.accommodation.adaCompliant}
+						extraBed={item.accommodation.extraBed}
+						floorCount={item.accommodation.floorCount}
+						featureIcons={item.accommodation.featureIcons}
+						contactInfo={`${item.guest?.firstName} ${item.guest?.lastName}`}
+						email={item.guest?.email}
+						phone={item.guest?.phone}
+						additionalDetails={item.additionalDetails}
+						upsellPackages={item.upsellPackages}
+						destinationHasPackages
+					/>
 				);
-				router.navigate('/reservations').catch(console.error);
-			}
-			return (
-				<ReservationDetailsAccordion
-					key={item.reservationId}
-					reservationId={item.reservationId}
-					accommodationName={item.accommodation.name}
-					arrivalDate={item.arrivalDate}
-					departureDate={item.departureDate}
-					externalConfirmationId={item.externalConfirmationId}
-					maxOccupantCount={item.accommodation.maxOccupantCount}
-					maxSleeps={item.accommodation.maxSleeps}
-					adultCount={item.adultCount}
-					childCount={item.childCount}
-					adaCompliant={item.accommodation.adaCompliant}
-					extraBed={item.accommodation.extraBed}
-					floorCount={item.accommodation.floorCount}
-					featureIcons={item.accommodation.featureIcons}
-					contactInfo={`${item.guest?.firstName} ${item.guest?.lastName}`}
-					email={item.guest?.email}
-					phone={item.guest?.phone}
-					additionalDetails={item.additionalDetails}
-					upsellPackages={item.upsellPackages}
-					destinationHasPackages
-				/>
-			);
-		});
+			});
 	}
 
 	function renderItineraryCostSummary() {
@@ -108,25 +146,29 @@ const ItineraryDetailsPage: React.FC = () => {
 					zip: itinerary.destination.zip,
 					city: itinerary.destination.city
 				}}
-				reservation={itinerary.stays.map((item) => {
-					return {
-						name: item.accommodation.name,
-						nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
-						subtotalCostCents: item.priceDetail.accommodationTotalInCents,
-						arrivalDate: item.arrivalDate,
-						departureDate: item.departureDate,
-						taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
-						subtotalPoints: item.priceDetail.subtotalPoints,
-						packagesTotalCost: item.upsellPackages.reduce((accumulate, booked) => {
-							return (
-								accumulate +
-								(itinerary.paymentMethod
-									? booked.priceDetail.amountBeforeTax
-									: booked.priceDetail.amountPoints)
-							);
-						}, 0)
-					};
-				})}
+				reservation={itinerary.stays
+					.filter((item) => {
+						return !item.externalCancellationId;
+					})
+					.map((item) => {
+						return {
+							name: item.accommodation.name,
+							nights: Object.keys(item.priceDetail.accommodationDailyCostsInCents).length,
+							subtotalCostCents: item.priceDetail.accommodationTotalInCents,
+							arrivalDate: item.arrivalDate,
+							departureDate: item.departureDate,
+							taxesAndFees: item.priceDetail.taxAndFeeTotalInCents,
+							subtotalPoints: item.priceDetail.subtotalPoints,
+							packagesTotalCost: item.upsellPackages.reduce((accumulate, booked) => {
+								return (
+									accumulate +
+									(itinerary.paymentMethod
+										? booked.priceDetail.amountBeforeTax
+										: booked.priceDetail.amountPoints)
+								);
+							}, 0)
+						};
+					})}
 				paidWithPoints={!itinerary.paymentMethod}
 			/>
 		);
@@ -216,13 +258,17 @@ const ItineraryDetailsPage: React.FC = () => {
 								popupController.open<LeaveAReviewPopupProps>(LeaveAReviewPopup, {
 									destinationLogo: itinerary.destination.logoUrl,
 									destinationName: itinerary.destination.name,
-									stays: itinerary.stays.map((item) => {
-										return {
-											id: item.reservationId,
-											name: item.accommodation.name,
-											review: item.review
-										};
-									}),
+									stays: itinerary.stays
+										.filter((item) => {
+											return !item.externalCancellationId;
+										})
+										.map((item) => {
+											return {
+												id: item.reservationId,
+												name: item.accommodation.name,
+												review: item.review
+											};
+										}),
 									updateReview: (reservationId, rating, message) => {
 										let stay = itinerary.stays.find((stay) => stay.reservationId === reservationId);
 										if (stay) {
