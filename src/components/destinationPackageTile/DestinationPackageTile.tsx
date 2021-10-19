@@ -10,6 +10,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import Carousel from '../carousel/Carousel';
 import { useEffect, useState } from 'react';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface DestinationPackageTileProps {
 	title: string;
@@ -32,7 +33,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 		return picturePaths.map((path: string) => {
 			return (
 				<Box className={'imageWrapper'}>
-					<img src={path} alt="" />
+					<Img src={path} alt={''} width={500} height={600} />
 				</Box>
 			);
 		});

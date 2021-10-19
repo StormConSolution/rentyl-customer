@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './RewardItemPage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import FeaturedCategoryCard from './featuredCategoryCard/FeaturedCategoryCard';
 import CheckboxList from '../../components/checkboxList/CheckboxList';
 import LabelInput from '../../components/labelInput/LabelInput';
-import LabelButton from '../../components/labelButton/LabelButton';
 import RewardCategoryCard from './rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
@@ -22,9 +21,14 @@ import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import debounce from 'lodash.debounce';
+import { StringUtils } from '../../utils/utils';
+import LabelButton from '../../components/labelButton/LabelButton';
+import IconLabel from '../../components/iconLabel/IconLabel';
 
 const RewardItemPage: React.FC = () => {
 	let user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
+	const topContainerRef = useRef<HTMLDivElement>(null);
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ categories: string; vendors: string }>([
 		{ key: 'cids', default: '', type: 'string', alias: 'categories' },
@@ -42,7 +46,7 @@ const RewardItemPage: React.FC = () => {
 	const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 	const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
 	const [pointCostRange, setPointCostRange] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('min', 0, []), new RsFormControl('max', 0, [])])
+		new RsFormGroup([new RsFormControl('min', '', []), new RsFormControl('max', '', [])])
 	);
 
 	useEffect(() => {
@@ -93,6 +97,8 @@ const RewardItemPage: React.FC = () => {
 			const response = await rewardService.getPagedRewards(pageQuery);
 			setRewardTotal(response.total || 0);
 			setRewards(response.data);
+			let topOfAvailableRewards = topContainerRef.current!.offsetTop;
+			window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
 		}
 		getRewardItems().catch(console.error);
 	}, [page, selectedCategories, selectedVendors, pointCostRange]);
@@ -127,22 +133,24 @@ const RewardItemPage: React.FC = () => {
 				conjunction: 'AND'
 			});
 		}
-		const minMax: { min: number; max: number } = pointCostRange.toModel<{ min: number; max: number }>();
-		if (minMax.max > 0 && minMax.max < minMax.min) {
+		const minMax: { min: string; max: string } = pointCostRange.toModel<{ min: string; max: string }>();
+		const max = parseInt(minMax.max.replace(',', ''));
+		const min = parseInt(minMax.min.replace(',', ''));
+		if (max > 0 && max < min) {
 			rsToastify.error('Make sure the max is greater than the minimum', 'Price Range Error');
 		} else {
-			if (minMax.min > 0) {
+			if (min > 0) {
 				filter.push({
 					column: 'pointCost',
-					value: minMax.min,
+					value: min,
 					matchType: 'greaterThanEqual',
 					conjunction: 'AND'
 				});
 			}
-			if (minMax.max > 0 && minMax.max > minMax.min) {
+			if (max > 0 && max > min) {
 				filter.push({
 					column: 'pointCost',
-					value: minMax.max,
+					value: max,
 					matchType: 'lessThanEqual',
 					conjunction: 'AND'
 				});
@@ -173,16 +181,25 @@ const RewardItemPage: React.FC = () => {
 		return 'noneAvailable';
 	}
 
+	function displayRewards(): boolean {
+		return (
+			ObjectUtils.isArrayWithData(selectedCategories) ||
+			ObjectUtils.isArrayWithData(selectedVendors) ||
+			!(pointCostRange.get('min').value === '' || pointCostRange.get('min').value === undefined) ||
+			!(pointCostRange.get('max').value === '' || pointCostRange.get('max').value === undefined)
+		);
+	}
+
 	function renderCards() {
-		if (!ObjectUtils.isArrayWithData(selectedCategories)) {
+		if (!displayRewards()) {
 			return categories.map((category: Api.Reward.Category.Res.Get, index) => {
 				let media;
 				if (category.media.length >= 1) {
 					let img = category.media.find((image) => image.isPrimary);
 					if (img) {
-						media = img.urls.imageKit?.toString() || img.urls.thumb;
+						media = img.urls.imageKit;
 					} else {
-						media = category.media[0].urls.imageKit?.toString() || category.media[0].urls.thumb;
+						media = category.media[0].urls.imageKit;
 					}
 				} else {
 					media = '';
@@ -253,23 +270,45 @@ const RewardItemPage: React.FC = () => {
 	}
 
 	function renderPaginationOrNoRewardsMsg() {
-		if (rewardTotal < 1 || !ObjectUtils.isArrayWithData(categories)) {
-			return <Label variant={'body1'}>There are no rewards available matching your filters.</Label>;
-		} else {
-			return (
+		if (displayRewards()) {
+			return rewardTotal < 1 ? (
+				<Label variant={'body1'}>There are no rewards available matching your filters.</Label>
+			) : (
 				<PaginationButtons
 					selectedRowsPerPage={perPage}
 					currentPageNumber={page}
-					setSelectedPage={(page) => setPage(page)}
+					setSelectedPage={(page) => {
+						setPage(page);
+					}}
 					total={rewardTotal}
 				/>
 			);
-		}
+		} else return '';
 	}
 
 	function renderQuerySidebar() {
 		return (
 			<div className={'querySideBar'}>
+				{displayRewards() && (
+					<IconLabel
+						className={'rewardCategoryButton'}
+						labelName={'Back To Categories'}
+						iconImg={'icon-chevron-left'}
+						iconPosition={'left'}
+						iconSize={7}
+						labelVariant={'caption'}
+						onClick={() => {
+							pointCostRange.resetToInitialValue();
+							setSelectedCategories([]);
+							setSelectedVendors([]);
+							setVendors((prev) =>
+								prev.map((vendor) => {
+									return { value: vendor.value, text: vendor.text, selected: false };
+								})
+							);
+						}}
+					/>
+				)}
 				<div className={'rewardCategoryCheckboxList'}>
 					<Label className={'queryTitle'} variant={'h4'}>
 						Business Categories
@@ -298,10 +337,7 @@ const RewardItemPage: React.FC = () => {
 						className={'categoryCheckboxList'}
 					/>
 				</div>
-				<Box
-					className={'resortAndPointFilters'}
-					display={!ObjectUtils.isArrayWithData(selectedCategories) ? 'none' : 'block'}
-				>
+				<Box className={'resortAndPointFilters'}>
 					<div className={'resortSelectFilter'}>
 						<Label className={'resortTitle queryTitle'} variant={'h4'}>
 							Vendors
@@ -338,13 +374,29 @@ const RewardItemPage: React.FC = () => {
 								title={'MIN'}
 								inputType={'text'}
 								control={pointCostRange.get('min')}
-								updateControl={(control) => setPointCostRange(pointCostRange.clone().update(control))}
+								updateControl={debounce((control: RsFormControl) => {
+									let num = parseInt(control.value.toString().replace(',', ''));
+									if (isNaN(num)) {
+										control.value = '';
+									} else {
+										control.value = StringUtils.addCommasToNumber(num);
+									}
+									setPointCostRange(pointCostRange.clone().update(control));
+								}, 500)}
 							/>
 							<LabelInput
 								title={'MAX'}
 								inputType={'text'}
 								control={pointCostRange.get('max')}
-								updateControl={(control) => setPointCostRange(pointCostRange.clone().update(control))}
+								updateControl={debounce((control: RsFormControl) => {
+									let num = parseInt(control.value.toString().replace(',', ''));
+									if (isNaN(num)) {
+										control.value = '';
+									} else {
+										control.value = StringUtils.addCommasToNumber(num);
+									}
+									setPointCostRange(pointCostRange.clone().update(control));
+								}, 500)}
 							/>
 						</div>
 					</div>
@@ -369,9 +421,11 @@ const RewardItemPage: React.FC = () => {
 					</div>
 					{renderQuerySidebar()}
 					<Label className={'categoriesTitle'} variant={'h4'}>
-						{!ObjectUtils.isArrayWithData(selectedCategories) ? 'Categories' : 'Available Rewards'}
+						{displayRewards() ? 'Available Rewards' : 'Categories'}
 					</Label>
-					<div className={'cardContainer'}>{renderCards()}</div>
+					<div ref={topContainerRef} className={'cardContainer'}>
+						{renderCards()}
+					</div>
 					<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 				</Box>
 				<Footer links={FooterLinks} />
@@ -398,15 +452,15 @@ const RewardItemPage: React.FC = () => {
 						<Box className={'pagedCategoryCards'} marginTop={user ? 0 : 35}>
 							<div className={'rightSideHeaderContainer'}>
 								<Label className={'categoriesTitle'} variant={'h4'}>
-									{!ObjectUtils.isArrayWithData(selectedCategories)
-										? 'Categories'
-										: 'Available Rewards'}
+									{!displayRewards() ? 'Categories' : 'Available Rewards'}
 								</Label>
 								<div className={'pointOrLoginContainer'}>
 									<PointsOrLogin />
 								</div>
 							</div>
-							<div className={'cardContainer'}>{renderCards()}</div>
+							<div ref={topContainerRef} className={'cardContainer'}>
+								{renderCards()}
+							</div>
 							<div className={'paginationContainer'}>{renderPaginationOrNoRewardsMsg()}</div>
 						</Box>
 					</Box>

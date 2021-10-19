@@ -24,7 +24,7 @@ interface AccommodationSearchResultCardMobileProps {
 	pointsEarnable: number;
 	// starRating: Rating;
 	roomStats: AccommodationStat[];
-	carouselImagePaths: string[];
+	carouselImagePaths: Api.Media[];
 	amenityIconNames: string[];
 	onBookNowClick: () => void;
 	onCompareClick?: () => void;
@@ -37,17 +37,18 @@ interface AccommodationSearchResultCardMobileProps {
 const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCardMobileProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string, index) => {
+	function renderPictures(picturePaths: Api.Media[]): JSX.Element[] {
+		picturePaths.sort((img1, img2) => img2.isPrimary - img1.isPrimary);
+		return picturePaths.map((path: Api.Media, index) => {
 			return (
 				<Box key={index} className={'imageWrapper'}>
 					<Img
 						className="accommodationGalleryImage"
-						src={path}
+						src={path.urls.imageKit}
 						key={index}
 						alt={'Accommodation Image'}
-						width={345}
-						height={290}
+						width={690}
+						height={580}
 						rootMargin={'0px 0px 200px 0px'}
 					/>
 				</Box>
