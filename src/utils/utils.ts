@@ -136,11 +136,25 @@ class WebUtils extends BaseWebUtils {
 }
 
 class DateUtils extends BaseDateUtils {
-	static displayUserDate(date: string | Date): string {
+	static displayUserDate(date: Date | string, formatType?: string): string {
 		let dateToReturn = new Date(date);
 		let timeZoneOffset = dateToReturn.getTimezoneOffset() * 60000;
 		dateToReturn.setTime(dateToReturn.getTime() + timeZoneOffset);
-		return dateToReturn.toDateString();
+		return this.formatDate(dateToReturn, formatType);
+	}
+
+	static formatDate(date: Date, formatType?: string): string {
+		if (formatType === 'MM/DD/YYYY') {
+			return (
+				('0' + (date.getMonth() + 1)).slice(-2) +
+				'/' +
+				('0' + date.getDate()).slice(-2) +
+				'/' +
+				date.getFullYear()
+			);
+		} else {
+			return date.toDateString();
+		}
 	}
 }
 
