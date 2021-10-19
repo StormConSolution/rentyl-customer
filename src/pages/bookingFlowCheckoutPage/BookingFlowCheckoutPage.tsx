@@ -307,8 +307,9 @@ const BookingFlowCheckoutPage = () => {
 					.catch(console.error);
 			} catch (e) {
 				rsToastify.error(
-					'An error occurred with your preferred method of payment, unable to book your reservation.',
-					'Error!'
+					WebUtils.getRsErrorMessage(e.message, 'An error occurred, unable to book your reservation.'),
+					'Server Error!',
+					{ autoClose: false, position: 'top-center' }
 				);
 				popupController.close(SpinningLoaderPopup);
 			}
