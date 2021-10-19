@@ -11,7 +11,7 @@ import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { StringUtils } from '../../utils/utils';
+import { DateUtils, StringUtils } from '../../utils/utils';
 
 interface AccountOverviewProps {
 	isOpen: boolean;
@@ -98,8 +98,8 @@ const AccountOverview: React.FC<AccountOverviewProps> = (props) => {
 						<Box marginBottom={15}>
 							<Label variant={'caption'}>Dates</Label>
 							<Label variant={'body1'}>
-								{new Date(upComingReservation.arrivalDate).toLocaleDateString()} -{' '}
-								{new Date(upComingReservation.departureDate).toLocaleDateString()}
+								{DateUtils.displayUserDate(upComingReservation.arrivalDate, 'MM/DD/YYYY')} -{' '}
+								{DateUtils.displayUserDate(upComingReservation.departureDate, 'MM/DD/YYYY')}
 							</Label>
 						</Box>
 						<Box marginBottom={15}>
