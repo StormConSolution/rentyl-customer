@@ -32,9 +32,11 @@
 
 				.imageContainer {
 					max-width: 180px;
+					max-height: 180px;
 					padding: 10px;
-					.productImage {
-						width: 100%;
+					img {
+						max-height: 100%;
+						max-width: 100%;
 					}
 				}
 				.rewardText {
