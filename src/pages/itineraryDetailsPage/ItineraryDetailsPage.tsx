@@ -89,17 +89,6 @@ const ItineraryDetailsPage: React.FC = () => {
 		checkReservationStatus().catch(console.log);
 	}, [itinerary]);
 
-	useEffect(() => {
-		async function removeCancelledReservations() {
-			if (itinerary && itinerary.stays) {
-				itinerary.stays = itinerary.stays.filter((stay) => {
-					return !stay.externalCancellationId;
-				});
-			}
-		}
-		removeCancelledReservations().catch(console.error);
-	}, []);
-
 	function renderReservations() {
 		if (!itinerary || !ObjectUtils.isArrayWithData(itinerary.stays)) return;
 		return itinerary.stays
