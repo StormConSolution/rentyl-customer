@@ -38,7 +38,7 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
 	function renderPictures(picturePaths: Api.Media[]): JSX.Element[] {
-		picturePaths.sort((img1, img2) => img1.isPrimary - img2.isPrimary);
+		picturePaths.sort((img1, img2) => img2.isPrimary - img1.isPrimary);
 		return picturePaths.map((path: Api.Media, index) => {
 			return (
 				<Box key={index} className={'imageWrapper'}>

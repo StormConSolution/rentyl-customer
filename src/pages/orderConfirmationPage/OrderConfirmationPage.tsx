@@ -11,6 +11,7 @@ import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Paper from '../../components/paper/Paper';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import Img from '@bit/redsky.framework.rs.img';
 
 const OrderConfirmationPage = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -65,7 +66,15 @@ const OrderConfirmationPage = () => {
 					<hr />
 					<Box display={'flex'} className={'confirmationBody'}>
 						<Box display={'flex'} alignItems={'center'}>
-							<img src={reward.media[0]?.urls.imageKit || ''} alt={'Order Image'} />
+							<Img
+								src={
+									reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
+									reward.media[0].urls.imageKit
+								}
+								alt={'Reward Item'}
+								width={1060}
+								height={900}
+							/>
 							<div>
 								<Label variant={'h3'} mb={10}>
 									{reward.description}

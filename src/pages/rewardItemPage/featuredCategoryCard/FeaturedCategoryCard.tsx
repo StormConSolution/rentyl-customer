@@ -13,7 +13,7 @@ interface FeaturedCategoryCardProps {
 const FeaturedCategoryCard: React.FC<FeaturedCategoryCardProps> = (props) => {
 	function renderStyles() {
 		let styles: any = {
-			backgroundImage: `url(${props.category.imagePath})`,
+			backgroundImage: `url(${props.category.imagePath}?tr=w-$556,tr=h-320)`,
 			height: '160px',
 			width: '278px',
 			backgroundSize: 'cover',
