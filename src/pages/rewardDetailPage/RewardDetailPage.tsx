@@ -15,6 +15,7 @@ import Footer from '../../components/footer/Footer';
 import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
+import Img from '@bit/redsky.framework.rs.img';
 
 const RewardDetailPage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -85,10 +86,12 @@ const RewardDetailPage: React.FC = () => {
 
 	function renderPictures(): JSX.Element[] {
 		if (!reward) return [];
-		return reward.media.map((newMedia: Api.Media) => {
+		let media = reward.media;
+		media.sort((img1, img2) => img2.isPrimary - img1.isPrimary);
+		return media.map((newMedia: Api.Media) => {
 			return (
 				<Box className={'imageWrapper'}>
-					<img src={newMedia.urls.imageKit} alt="" />
+					<Img src={newMedia.urls.imageKit} alt={'reward item'} width={1060} height={900} />
 				</Box>
 			);
 		});

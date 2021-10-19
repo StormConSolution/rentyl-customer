@@ -37,7 +37,7 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
 	function renderCarouselImages(imagePaths: Api.Media[]): JSX.Element[] {
-		imagePaths.sort((img1, img2) => img1.isPrimary - img2.isPrimary);
+		imagePaths.sort((img1, img2) => img2.isPrimary - img1.isPrimary);
 		return imagePaths.map((imagePath, index) => {
 			return (
 				<Img

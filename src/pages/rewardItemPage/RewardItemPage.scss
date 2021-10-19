@@ -7,6 +7,18 @@
 	.rs-page-content-wrapper {
 		height: 100%;
 
+		.rsIconLabel {
+			width: -moz-fit-content;
+		}
+
+		.rewardCategoryButton {
+			margin-bottom: 10px;
+			cursor: pointer;
+			width: -moz-fit-content;
+			width: fit-content;
+			align-items: center;
+		}
+
 		.heroImgTextFeatured {
 			position: relative;
 			box-sizing: border-box;

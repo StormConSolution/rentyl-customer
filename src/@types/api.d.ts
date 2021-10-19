@@ -1217,6 +1217,7 @@ declare namespace Api {
 				rateCode: string;
 				adultCount: number;
 				childCount: number;
+				maxOccupantCount: number;
 				upsellPackages: UpsellPackage.Res.Complete[];
 				prices: PriceDetail;
 				policies: { type: Model.DestinationPolicyType; value: string }[];

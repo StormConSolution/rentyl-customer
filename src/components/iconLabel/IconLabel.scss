@@ -2,6 +2,7 @@
 
 .rsIconLabel.top {
 	width: fit-content;
+	width: -moz-fit-content;
 	.icon {
 		display: flex;
 		justify-content: center;
@@ -11,6 +12,7 @@
 
 .rsIconLabel.right {
 	width: fit-content;
+	width: -moz-fit-content;
 	display: flex;
 	flex-direction: row-reverse;
 	align-items: center;
@@ -21,6 +23,7 @@
 
 .rsIconLabel.bottom {
 	width: fit-content;
+	width: -moz-fit-content;
 	display: flex;
 	flex-direction: column-reverse;
 	.icon {

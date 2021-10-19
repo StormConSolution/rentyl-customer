@@ -17,6 +17,7 @@ import { WebUtils, StringUtils } from '../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
+import Img from '@bit/redsky.framework.rs.img';
 
 const RewardPurchasePage: React.FC = () => {
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
@@ -89,7 +90,15 @@ const RewardPurchasePage: React.FC = () => {
 						</div>
 						<div className={'reward'}>
 							<div className={'imageContainer'}>
-								<img className={'productImage'} src={reward.media[0]?.urls.imageKit || ''} alt={''} />
+								<Img
+									src={
+										reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
+										reward.media[0].urls.imageKit
+									}
+									alt={reward.name}
+									width={360}
+									height={360}
+								/>
 							</div>
 							<div className={'rewardText'}>
 								<div className={'rewardName'}>

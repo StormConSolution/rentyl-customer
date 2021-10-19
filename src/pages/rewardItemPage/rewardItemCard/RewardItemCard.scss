@@ -6,6 +6,10 @@
 	.imageContainer {
 		width: 278px;
 		height: 250px;
+		img {
+			max-width: 100%;
+			max-height: 100%;
+		}
 	}
 	.rewardName {
 		padding-top: 20px;
