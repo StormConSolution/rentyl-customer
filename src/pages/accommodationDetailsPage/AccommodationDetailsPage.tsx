@@ -219,7 +219,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 									? ''
 									: accommodationDetails.maxOccupantCount < availabilityObj.adults
 									? 'Max Occupancy Exceeded'
-									: 'These dates are unavilable.'
+									: 'Invalid Rate Code Or Time Frame'
 							}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
