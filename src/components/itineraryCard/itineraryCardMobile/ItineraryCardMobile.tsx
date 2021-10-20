@@ -57,7 +57,21 @@ const ItineraryCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 					<Label variant={'body1'}>TOTAL PRICE</Label>
 					<LabelLink path={props.linkPath} label={'VIEW DETAILS'} variant={'body1'} />
 				</Box>
-				<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
+				{!props.paidWithPoints ? (
+					<div>
+						<Label variant={'caption'} mb={5}>
+							Total Price
+						</Label>
+						<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
+					</div>
+				) : (
+					<div>
+						<Label variant={'caption'} mb={5}>
+							Points Paid
+						</Label>
+						<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.totalPoints)}</Label>
+					</div>
+				)}
 			</Paper>
 			<ReservationInfoCard
 				reservationDates={props.reservationDates}
