@@ -4,8 +4,10 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import './PrivacyPolicyPage.scss';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const PrivacyPolicyPage: React.FC = () => {
+	const size = useWindowResizeChange();
 	function renderBullets(bullets: string[]) {
 		return (
 			<ul>
@@ -17,7 +19,7 @@ const PrivacyPolicyPage: React.FC = () => {
 	}
 	function renderSectionHeader(text: string) {
 		return (
-			<Label variant={'h2'}>
+			<Label variant={size === 'small' ? 'h3' : 'h2'}>
 				<u>{text}</u>
 			</Label>
 		);
@@ -40,7 +42,7 @@ const PrivacyPolicyPage: React.FC = () => {
 				{renderSectionHeader('Introduction')}
 				<p>
 					<Link path={'/'}>
-						<Label variant={'h1'}>SPIRE TECHNOLOGY INC.</Label>
+						<Label variant={size === 'small' ? 'h2' : 'h1'}>SPIRE TECHNOLOGY INC.</Label>
 					</Link>{' '}
 					a Delaware corporation (together with its affiliates, collectively, the{' '}
 					<b>“Company,” “we,” “our,”</b> or <b>“us”</b>) respect your privacy and are committed to protecting

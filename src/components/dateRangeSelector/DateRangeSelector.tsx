@@ -61,6 +61,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				</Label>
 			</div>
 			<DateRangePicker
+				readOnly
 				startDate={startDateControl}
 				startDateId={`startDate-${instanceId}`}
 				endDate={endDateControl}
