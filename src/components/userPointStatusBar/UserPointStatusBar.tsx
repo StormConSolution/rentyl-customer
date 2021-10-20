@@ -92,12 +92,7 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 	function renderMobileStatusBar() {
 		if (!user) return <></>;
 		return (
-			<Paper
-				className={`rsUserPointStatusBar ${props.className || ''}`}
-				boxShadow
-				padding={'34px 60px 30px 30px'}
-				width={'100%'}
-			>
+			<Paper className={`rsUserPointStatusBar ${props.className || ''}`} boxShadow padding={'10px'}>
 				<Box display={'flex'} justifyContent={'space-between'}>
 					<Box>
 						<Label variant={'h4'}>Points Earned</Label>
@@ -126,7 +121,7 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 						/>
 					</Box>
 				</Box>
-				<Box>
+				<Box mt={10}>
 					<Label variant={'body1'}>
 						You're {user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0} Points until
 						you reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b> Spire tier.
@@ -135,6 +130,7 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 						<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
 					</Box>
 					<LabelButton
+						className={'seeTiers'}
 						look={'none'}
 						label={'See Loyalty Tiers'}
 						variant={'caption'}
