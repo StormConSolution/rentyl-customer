@@ -2,6 +2,19 @@
 
 .rsAccountPointsPage {
 	.rs-page-content-wrapper {
+		.rsChip {
+			font-size: 12px;
+			height: 28px;
+		}
+
+		hr {
+			height: 1px;
+			width: 100%;
+			background: theme-var($greyLineColor);
+			border: none;
+			margin: 5px 0;
+		}
+
 		.rsHeroImage {
 			margin-bottom: 150px;
 			display: grid;
@@ -68,13 +81,9 @@
 				}
 				.date {
 					color: theme-var($disableTextColor);
-					margin-top: auto;
-					margin-bottom: auto;
 				}
 				.points {
 					color: theme-var($iconAndHighlightTextColor);
-					margin-top: auto;
-					margin-bottom: auto;
 				}
 			}
 		}
@@ -87,6 +96,23 @@
 
 .small {
 	.rsAccountPointsPage {
+		.rsChip {
+			font-size: 10px;
+			height: 26px;
+		}
+
+		.rsHeroImage {
+			h1 {
+				font-size: 32px;
+			}
+
+			.rsUserPointStatusBar {
+				position: absolute;
+				bottom: -67%;
+				margin: 0 20px;
+			}
+		}
+
 		.headerAndFilterContainer {
 			flex-direction: column;
 		}
@@ -100,12 +126,22 @@
 		}
 
 		.pointTableContainer {
-			padding: 20px 0;
+			padding: 0;
+			margin-bottom: 20px;
 
 			.pointItemContainer {
 				display: flex;
 				flex-direction: column;
-				padding-bottom: 50px;
+				padding-bottom: 20px;
+				margin-bottom: 15px;
+				border-bottom: 1px solid theme-var($greyLineColor);
+				.pendingPointsDetailsContainer {
+					flex-direction: row;
+					justify-content: space-between;
+				}
+				.date {
+					color: unset;
+				}
 			}
 		}
 	}

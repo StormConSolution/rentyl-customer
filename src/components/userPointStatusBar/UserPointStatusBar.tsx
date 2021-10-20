@@ -92,12 +92,7 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 	function renderMobileStatusBar() {
 		if (!user) return <></>;
 		return (
-			<Paper
-				className={`rsUserPointStatusBar ${props.className || ''}`}
-				boxShadow
-				padding={'34px 60px 30px 30px'}
-				width={'100%'}
-			>
+			<Paper className={`rsUserPointStatusBar ${props.className || ''}`} boxShadow padding={'10px'}>
 				<Box display={'flex'} justifyContent={'space-between'}>
 					<Box>
 						<Label variant={'h4'}>Points Earned</Label>
