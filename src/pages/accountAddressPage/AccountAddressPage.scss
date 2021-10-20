@@ -25,6 +25,10 @@
 			max-width: 190px;
 		}
 	}
+	hr {
+		width: 0;
+		height: 0;
+	}
 }
 
 .small {
@@ -37,6 +41,13 @@
 		}
 		.newAddress {
 			margin: 20px;
+		}
+		hr {
+			width: 90%;
+			height: 1px;
+			border: none;
+			margin: 40px auto;
+			background-color: theme-var($greyLineColor);
 		}
 	}
 }
