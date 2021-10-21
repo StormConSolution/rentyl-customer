@@ -8,9 +8,7 @@ import Carousel from '../../components/carousel/Carousel';
 import InfoCard from '../../components/infoCard/InfoCard';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
-import LabelLink from '../../components/labelLink/LabelLink';
 import Paper from '../../components/paper/Paper';
-import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface AboutSpirePointsPageProps {}
