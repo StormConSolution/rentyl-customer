@@ -12,8 +12,11 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import Paper from '../../components/paper/Paper';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Img from '@bit/redsky.framework.rs.img';
+import Accordion from '@bit/redsky.framework.rs.accordion';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const OrderConfirmationPage = () => {
+	const size = useWindowResizeChange();
 	const rewardService = serviceFactory.get<RewardService>('RewardService');
 	const params = router.getPageUrlParams<{ reward: number; voucherCode: string }>([
 		{ key: 'ri', default: '', type: 'string', alias: 'reward' },
@@ -42,55 +45,78 @@ const OrderConfirmationPage = () => {
 	) : (
 		<Page className={'rsOrderConfirmationPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Label variant={'h1'} mt={80} mb={80}>
-					Thank you for your order
+				<Label variant={'h1'} mt={80}>
+					Order Confirmation
 				</Label>
-
-				<Paper boxShadow padding={'50px'}>
-					<Box display={'flex'} justifyContent={'space-between'} className={'confirmationHeader'}>
-						<div>
-							<Label variant={'h2'} mb={30}>
-								Order Confirmation
-							</Label>
-							<Label variant={'body1'}>Order Number: </Label>
-						</div>
-						<Box display={'flex'} alignItems={'center'}>
-							<Label variant={'h3'} mr={4}>
-								Ordered:
-							</Label>
-							<Label variant={'body1'}>
-								{DateUtils.displayDate(new Date())} {DateUtils.displayTime(new Date())}
-							</Label>
-						</Box>
-					</Box>
-					<hr />
-					<Box display={'flex'} className={'confirmationBody'}>
-						<Box display={'flex'} alignItems={'center'}>
-							<Img
-								src={
-									reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
-									reward.media[0].urls.imageKit
-								}
-								alt={'Reward Item'}
-								width={1060}
-								height={900}
-							/>
-							<div>
-								<Label variant={'h3'} mb={10}>
-									{reward.description}
-								</Label>
-								<Label variant={'h4'} mb={10}>
-									Item #{reward.upc}
-								</Label>
-								<Label variant={'h4'}>Gift Certificate # {params.voucherCode}</Label>
-								<Label variant={'body1'}>{reward.redemptionInstructions}</Label>
-							</div>
-						</Box>
-						<Label variant={'h3'} className={'pointsLabel'}>
-							{StringUtils.addCommasToNumber(reward.pointCost)} <span>points</span>
+				<hr />
+				<Box
+					display={'flex'}
+					flexDirection={size === 'small' ? 'column' : 'row'}
+					justifyContent={'space-between'}
+					alignItems={'flex-start'}
+					padding={size === 'small' ? '0 20px' : '0'}
+					marginBottom={25}
+				>
+					<Paper className={'sectionOne'} boxShadow>
+						<Img
+							src={
+								reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
+								reward.media[0].urls.imageKit
+							}
+							alt={'Reward Image'}
+							width={size === 'small' ? 350 : 800}
+							height={size === 'small' ? 200 : 400}
+						/>
+						<Label variant={'h2'} className={'confirmationLabel'}>
+							Your Order Is Confirmed
 						</Label>
-					</Box>
-				</Paper>
+						<Label variant={'body1'} paddingLeft={size === 'small' ? '10px' : '85px'} margin={10}>
+							Thank you for choosing to shop with us.
+						</Label>
+						<Label variant={'body1'} paddingLeft={size === 'small' ? '10px' : '85px'} margin={10}>
+							Your order has been received and is now being processed.
+						</Label>
+						<Label
+							variant={'body1'}
+							paddingLeft={size === 'small' ? '10px' : '85px'}
+							paddingBottom={'20px'}
+							margin={10}
+						>
+							You will shortly be receiving an email confirmation with all your details
+						</Label>
+					</Paper>
+					<Paper
+						boxShadow
+						padding={'30px'}
+						width={size === 'small' ? '100%' : '600px'}
+						className={'sectionTwo'}
+					>
+						<Label variant={'h3'}>Order</Label>
+						<hr />
+						<Box display={'flex'} flexDirection={'column'}>
+							<Box display={'flex'} justifyContent={'space-between'}>
+								<Label variant={'h4'}>Order:</Label>
+								<Label variant={'body1'}>#{params.voucherCode}</Label>
+							</Box>
+							<Box display={'flex'} justifyContent={'space-between'}>
+								<Label variant={'h4'}>Order Date:</Label>
+								<Label variant={'body1'}>{DateUtils.displayUserDate(new Date(), 'MM/DD/YYYY')}</Label>
+							</Box>
+							<Accordion isOpen titleReact={<Label variant={'h4'}>Items in Order</Label>}>
+								<Box display={'flex'} justifyContent={'space-between'}>
+									<Label variant={'body1'}>{reward.name}</Label>
+									<Label variant={'body1'}>
+										{StringUtils.addCommasToNumber(reward.pointCost)} Points
+									</Label>
+								</Box>
+							</Accordion>
+							<Box display={'flex'} justifyContent={'space-between'} className={'orderTotal'}>
+								<Label variant={'h4'}>Total</Label>
+								<Label variant={'h4'}>{StringUtils.addCommasToNumber(reward.pointCost)} Points</Label>
+							</Box>
+						</Box>
+					</Paper>
+				</Box>
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>

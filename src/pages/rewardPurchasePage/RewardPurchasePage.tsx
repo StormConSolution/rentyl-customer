@@ -17,6 +17,7 @@ import { WebUtils, StringUtils } from '../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
+import Carousel from '../../components/carousel/Carousel';
 import Img from '@bit/redsky.framework.rs.img';
 
 const RewardPurchasePage: React.FC = () => {
@@ -65,6 +66,19 @@ const RewardPurchasePage: React.FC = () => {
 		}
 	}
 
+	function renderPictures(): JSX.Element[] {
+		if (!reward) return [];
+		let media = reward.media;
+		media.sort((img1, img2) => img2.isPrimary - img1.isPrimary);
+		return media.map((newMedia: Api.Media) => {
+			return (
+				<Box className={'imageWrapper'}>
+					<Img src={newMedia.urls.imageKit} alt={'reward item'} width={1060} height={900} />
+				</Box>
+			);
+		});
+	}
+
 	return !reward ? (
 		<LoadingPage />
 	) : (
@@ -84,16 +98,8 @@ const RewardPurchasePage: React.FC = () => {
 							</Label>
 						</div>
 						<div className={'reward'}>
-							<div className={'imageContainer'}>
-								<Img
-									src={
-										reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
-										reward.media[0].urls.imageKit
-									}
-									alt={reward.name}
-									width={360}
-									height={360}
-								/>
+							<div className={'carouselContainer'}>
+								<Carousel children={renderPictures()} showControls={reward.media.length > 1} />
 							</div>
 							<div className={'rewardText'}>
 								<div className={'rewardName'}>

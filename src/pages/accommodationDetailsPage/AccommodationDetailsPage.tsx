@@ -196,7 +196,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 	) : (
 		<Page className={'rsAccommodationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box className={'sectionOne'} marginBottom={size === 'small' ? '325px' : '210px'}>
+				<Box className={'sectionOne'} marginBottom={size === 'small' ? '450px' : '210px'}>
 					<HeroImage image={accommodationDetails.heroUrl} height={'630px'} mobileHeight={'420px'} />
 					<Box className={'rsAccommodationInfoCardWrapper'} display={'flex'} alignItems={'flex-end'}>
 						<AccommodationInfoCard
