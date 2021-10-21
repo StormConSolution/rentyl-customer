@@ -91,30 +91,28 @@ const AccountAddressPage: React.FC = () => {
 
 	function renderPrimaryAddress() {
 		if (!addressList || !ObjectUtils.isArrayWithData(addressList)) return;
-		return addressList
-			.filter((item) => item.isDefault)
-			.map((item) => {
-				return (
-					<AccountAddressTile
-						key={item.id}
-						id={item.id}
-						name={item.name}
-						addressLine1={item.address1}
-						addressLine2={item.address2}
-						zipCode={item.zip}
-						city={item.city}
-						state={item.state}
-						country={item.country}
-						isPrimary={item.isDefault}
-						onDelete={() => {
-							deleteAddress(item.id);
-						}}
-						onPrimaryChange={(addressId) => {
-							updateAddressToDefault(addressId);
-						}}
-					/>
-				);
-			});
+		const address = addressList.find((item) => item.isDefault);
+		if (!address) return;
+		return (
+			<AccountAddressTile
+				key={address.id}
+				id={address.id}
+				name={address.name}
+				addressLine1={address.address1}
+				addressLine2={address.address2}
+				zipCode={address.zip}
+				city={address.city}
+				state={address.state}
+				country={address.country}
+				isPrimary={address.isDefault}
+				onDelete={() => {
+					deleteAddress(address.id);
+				}}
+				onPrimaryChange={(addressId) => {
+					updateAddressToDefault(addressId);
+				}}
+			/>
+		);
 	}
 
 	function renderAddresses() {
