@@ -39,15 +39,23 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const params = router.getPageUrlParams<{
 		startDate: string;
 		endDate: string;
-		adults: number;
-		children: number;
+		adultCount: number;
+		childCount: number;
 		region: string;
+		rateCode: string;
+		priceRangeMax: string;
+		priceRangeMin: string;
+		propertyTypeIds: string;
 	}>([
 		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
 		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
-		{ key: 'adults', default: 2, type: 'integer', alias: 'adults' },
-		{ key: 'children', default: 0, type: 'integer', alias: 'children' },
-		{ key: 'region', default: '', type: 'string', alias: 'region' }
+		{ key: 'adultCount', default: 2, type: 'integer', alias: 'adultCount' },
+		{ key: 'childCount', default: 0, type: 'integer', alias: 'childCount' },
+		{ key: 'region', default: '', type: 'string', alias: 'region' },
+		{ key: 'rateCode', default: '', type: 'string', alias: 'rateCode' },
+		{ key: 'priceRangeMax', default: '', type: 'string', alias: 'priceRangeMax' },
+		{ key: 'priceRangeMin', default: '', type: 'string', alias: 'priceRangeMin' },
+		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
@@ -67,20 +75,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('regions', [], []), new RsFormControl('propertyType', [], [])])
+		new RsFormGroup([
+			new RsFormControl('regions', convertUrlParamRegionOrPropertyType(params.region) || [], []),
+			new RsFormControl('propertyType', convertUrlParamRegionOrPropertyType(params.propertyTypeIds) || [], [])
+		])
 	);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
 		startDate: moment().format('YYYY-MM-DD'),
 		endDate: moment().add(2, 'day').format('YYYY-MM-DD'),
-		adultCount: params.adults || 2,
-		childCount: params.children || 0,
+		adultCount: params.adultCount || 2,
+		childCount: params.childCount || 0,
 		pagination: { page: 1, perPage: 5 }
 	});
-
-	useEffect(() => {
-		if (!params.startDate && !params.endDate) return;
-		onDatesChange(moment(params.startDate), moment(params.endDate));
-	}, []);
 
 	useEffect(() => {
 		async function getFilterOptions() {
@@ -106,6 +112,26 @@ const ReservationAvailabilityPage: React.FC = () => {
 			);
 		}
 		getFilterOptions().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		/**
+		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
+		 */
+		let urlParams: any = { ...params };
+		setSearchQueryObj((pre) => {
+			let createSearchQueryObj: any = { ...pre };
+			for (let i in urlParams) {
+				if (!!urlParams[i].toString().length) {
+					if (i === 'region' || i === 'propertyTypeIds') {
+						createSearchQueryObj[i] = convertUrlParamRegionOrPropertyType(urlParams[i]);
+						continue;
+					}
+					createSearchQueryObj[i] = urlParams[i];
+				}
+			}
+			return createSearchQueryObj;
+		});
 	}, []);
 
 	useEffect(() => {
@@ -148,6 +174,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
+
+	function convertUrlParamRegionOrPropertyType(numberString: string) {
+		let regionOrPropertyTypeArray = numberString.split(',');
+		return regionOrPropertyTypeArray.map((item: string) => {
+			return parseInt(item);
+		});
+	}
 
 	function updateSearchQueryObj(
 		key:
@@ -197,7 +230,33 @@ const ReservationAvailabilityPage: React.FC = () => {
 			if (key === 'regionIds' || key === 'propertyTypeIds') {
 				if (!ObjectUtils.isArrayWithData(value)) delete createSearchQueryObj[key];
 			}
+			let newUrlParams = { ...createSearchQueryObj };
+			delete newUrlParams['pagination'];
+			router.updateUrlParams(newUrlParams);
 			return createSearchQueryObj;
+		});
+	}
+
+	function removeSearchQueryObj(
+		key:
+			| 'startDate'
+			| 'endDate'
+			| 'adultCount'
+			| 'childCount'
+			| 'priceRangeMin'
+			| 'priceRangeMax'
+			| 'pagination'
+			| 'rateCode'
+			| 'regionIds'
+			| 'propertyTypeIds'
+	) {
+		setSearchQueryObj((pre) => {
+			let newSearchQueryObj: any = { ...pre };
+			delete newSearchQueryObj[key];
+			let newUrlParams = { ...newSearchQueryObj };
+			delete newUrlParams['pagination'];
+			router.updateUrlParams(newUrlParams);
+			return newSearchQueryObj;
 		});
 	}
 
@@ -221,26 +280,39 @@ const ReservationAvailabilityPage: React.FC = () => {
 			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
 				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
 			}
-			if (ObjectUtils.isArrayWithData(regionIds)) {
-				createSearchQueryObj['regionIds'] = regionIds;
-			}
-			if (rateCode !== '') {
-				createSearchQueryObj['rateCode'] = rateCode;
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
+			if (ObjectUtils.isArrayWithData(regionIds)) createSearchQueryObj['regionIds'] = regionIds;
+			else delete createSearchQueryObj['regionIds'];
+
+			if (rateCode !== '') createSearchQueryObj['rateCode'] = rateCode;
+			else delete createSearchQueryObj['rateCode'];
+
+			if (priceRangeMin !== '') createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
+			else delete createSearchQueryObj['priceRangeMin'];
+
+			if (priceRangeMax !== '') createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			else delete createSearchQueryObj['priceRangeMax'];
+
 			return createSearchQueryObj;
 		});
-		const dates: Misc.DateRange = {
+		const newUrlParams: any = {
 			startDate: formatFilterDateForServer(checkinDate, 'start'),
-			endDate: formatFilterDateForServer(checkoutDate, 'end')
+			endDate: formatFilterDateForServer(checkoutDate, 'end'),
+			adultCount: adultCount,
+			childCount: childCount,
+			priceRangeMax: priceRangeMax,
+			priceRangeMin: priceRangeMin,
+			rateCode: rateCode,
+			propertyTypeIds: propertyTypeIds.join(',')
 		};
+
+		for (let i in newUrlParams) {
+			if (!newUrlParams[i].toString().length) {
+				delete newUrlParams[i];
+			}
+		}
+
 		router.updateUrlParams({
-			...dates
+			...newUrlParams
 		});
 	}
 
@@ -249,7 +321,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 		setEndDateControl(endDate);
 		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
+
+		let newParams: any = { ...params };
+
+		for (let i in newParams) {
+			if (!newParams[i].toString().length) {
+				delete newParams[i];
+			}
+		}
+
 		router.updateUrlParams({
+			...newParams,
 			startDate: formatFilterDateForServer(startDate, 'start'),
 			endDate: formatFilterDateForServer(endDate, 'end')
 		});
@@ -441,14 +523,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 									if (value !== '') updateSearchQueryObj('childCount', parseInt(value));
 								}}
 								onChangePriceMin={(value) => {
-									if (value !== '') {
-										updateSearchQueryObj('priceRangeMin', parseInt(value));
-									}
+									if (value !== '') updateSearchQueryObj('priceRangeMin', parseInt(value));
+									else removeSearchQueryObj('priceRangeMin');
 								}}
 								onChangePriceMax={(value) => {
-									if (value !== '') {
-										updateSearchQueryObj('priceRangeMax', parseInt(value));
-									}
+									if (value !== '') updateSearchQueryObj('priceRangeMax', parseInt(value));
+									else removeSearchQueryObj('priceRangeMax');
 								}}
 								onChangePropertyType={(control) => {
 									setFilterForm(filterForm.clone().update(control));

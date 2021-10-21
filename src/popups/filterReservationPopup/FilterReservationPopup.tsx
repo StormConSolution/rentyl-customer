@@ -12,11 +12,12 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
+import router from '../../utils/router';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -35,25 +36,61 @@ export interface FilterReservationPopupProps extends PopupProps {
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
+	const params = router.getPageUrlParams<{
+		startDate: string;
+		endDate: string;
+		adultCount: number;
+		childCount: number;
+		region: string;
+		rateCode: string;
+		priceRangeMax: string;
+		priceRangeMin: string;
+		propertyTypeIds: string;
+	}>([
+		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
+		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
+		{ key: 'adultCount', default: 2, type: 'integer', alias: 'adultCount' },
+		{ key: 'childCount', default: 0, type: 'integer', alias: 'childCount' },
+		{ key: 'region', default: '', type: 'string', alias: 'region' },
+		{ key: 'rateCode', default: '', type: 'string', alias: 'rateCode' },
+		{ key: 'priceRangeMax', default: '', type: 'string', alias: 'priceRangeMax' },
+		{ key: 'priceRangeMin', default: '', type: 'string', alias: 'priceRangeMin' },
+		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
+	]);
+
+	const [isValid, setIsValid] = useState<boolean>(true);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const regionService = serviceFactory.get<RegionService>('RegionService');
 	const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
 	const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
-	const [adults, setAdults] = useState<number>(2);
-	const [children, setChildren] = useState<number>(0);
-	const [priceRangeMin, setPriceRangeMin] = useState<string>('');
-	const [priceRangeMax, setPriceRangeMax] = useState<string>('');
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setStartDate(startDate);
 		setEndDate(endDate);
 	}
-	const [rateCode, setRateCode] = useState<string>('');
+
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('regionIds', [], []), new RsFormControl('propertyTypeIds', [], [])])
+		new RsFormGroup([
+			new RsFormControl('regionIds', [], []),
+			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
+			new RsFormControl('adultCount', params.adultCount || 2, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
+			]),
+			new RsFormControl('childCount', params.childCount || 0, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
+			]),
+			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(params.priceRangeMax), []),
+			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(params.priceRangeMin), []),
+			new RsFormControl('rateCode', params.rateCode || '', [])
+		])
 	);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
+
+	useEffect(() => {
+		if (!params.startDate && !params.endDate) return;
+		onDatesChange(moment(params.startDate), moment(params.endDate));
+	}, []);
 
 	useEffect(() => {
 		async function getFilterOptions() {
@@ -72,10 +109,65 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		getFilterOptions().catch(console.error);
 	}, []);
 
+	function setPropertyTypeIds() {
+		if (params.propertyTypeIds.length > 0) {
+			let propertyTypeArray = params.propertyTypeIds.split(',');
+			return propertyTypeArray.map((item) => {
+				return parseInt(item);
+			});
+		}
+		return [];
+	}
+
 	function formatOptions(options: Api.Destination.Res.PropertyType[] | Api.Region.Res.Get[]) {
 		return options.map((value) => {
 			return { value: value.id, label: value.name };
 		});
+	}
+
+	async function updateFilterForm(control: RsFormControl) {
+		if (control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
+			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
+			control.value = newValue;
+		} else if (control.key === 'adultCount' || control.key === 'childCount') {
+			let newValue: string | number = '';
+			if (control.value.toString().length > 0) {
+				let value = StringUtils.removeAllExceptNumbers(control.value.toString());
+				if (value.length !== 0) {
+					newValue = parseInt(value);
+				}
+
+				control.value = newValue;
+			}
+		}
+		filterForm.update(control);
+		let isFormValid = await filterForm.isValid();
+		let _isFormFilledOut = isFormFilledOut();
+		setIsValid(isFormValid && _isFormFilledOut);
+		setFilterForm(filterForm.clone());
+	}
+
+	function isFormFilledOut(): boolean {
+		return (
+			!!filterForm.get('adultCount').value.toString().length &&
+			!!filterForm.get('childCount').value.toString().length
+		);
+	}
+
+	function saveFilter() {
+		let filterObject: Misc.FilterFormPopupOptions = filterForm.toModel();
+		props.onClickApply(
+			startDate,
+			endDate,
+			filterObject.adultCount,
+			filterObject.childCount,
+			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
+			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMax),
+			filterObject.propertyTypeIds,
+			filterObject.rateCode,
+			filterObject.regionIds
+		);
+		popupController.close(FilterReservationPopup);
 	}
 
 	return (
@@ -113,15 +205,15 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								className="numberOfAdults"
 								inputType="text"
 								title="# of Adults"
-								onChange={(value) => setAdults(parseInt(value))}
-								initialValue={'' + adults}
+								control={filterForm.get('adultCount')}
+								updateControl={updateFilterForm}
 							/>
 							<LabelInput
 								className="numberOfChildren"
 								inputType="text"
 								title="# of Children"
-								onChange={(value) => setChildren(parseInt(value))}
-								initialValue={'' + children}
+								control={filterForm.get('childCount')}
+								updateControl={updateFilterForm}
 							/>
 						</div>
 						<div className={'minMaxDiv'}>
@@ -129,37 +221,21 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								className="priceMin"
 								inputType="text"
 								title="Price Min"
-								onChange={(value) => {
-									setPriceRangeMin(value);
-									(document.querySelector(
-										'.rsFilterReservationPopup .priceMin > input'
-									) as HTMLInputElement).value = StringUtils.addCommasToNumber(
-										('' + value).replace(/\D/g, '')
-									);
-								}}
-								initialValue={priceRangeMin}
+								control={filterForm.get('priceRangeMin')}
+								updateControl={updateFilterForm}
 							/>
 							<LabelInput
 								className="priceMax"
 								inputType="text"
 								title="Price Max"
-								onChange={(value) => {
-									setPriceRangeMax(value);
-									(document.querySelector(
-										'.rsFilterReservationPopup .priceMax > input'
-									) as HTMLInputElement).value = StringUtils.addCommasToNumber(
-										('' + value).replace(/\D/g, '')
-									);
-								}}
-								initialValue={priceRangeMax}
+								control={filterForm.get('priceRangeMax')}
+								updateControl={updateFilterForm}
 							/>
 						</div>
 						<LabelSelect
 							title={'Property Type'}
 							control={filterForm.get('propertyTypeIds')}
-							updateControl={(control) => {
-								setFilterForm(filterForm.clone().update(control));
-							}}
+							updateControl={updateFilterForm}
 							options={propertyTypeOptions}
 							isMulti={true}
 						/>
@@ -167,13 +243,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							className={'rateCode'}
 							inputType={'text'}
 							title={'Rate Code'}
-							onChange={(value) => {
-								setRateCode(value);
-								(document.querySelector(
-									'.rsFilterReservationPopup .rateCode > input'
-								) as HTMLInputElement).value = value;
-							}}
-							initialValue={rateCode}
+							control={filterForm.get('rateCode')}
+							updateControl={updateFilterForm}
 						/>
 						<div className={'buttons'}>
 							<LabelButton
@@ -184,23 +255,12 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								onClick={() => popupController.close(FilterReservationPopup)}
 							/>
 							<LabelButton
-								className={'applyButton'}
+								className={isValid ? 'applyButton' : 'applyButton disabled'}
 								look={'containedPrimary'}
 								variant={'button'}
 								label={'Apply'}
 								onClick={() => {
-									props.onClickApply(
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										filterForm.get('propertyTypeIds').value as number[],
-										rateCode,
-										filterForm.get('regionIds').value as number[]
-									);
-									popupController.close(FilterReservationPopup);
+									saveFilter();
 								}}
 							/>
 						</div>
