@@ -42,8 +42,12 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 					<Label variant={'h4'}>Points Earned</Label>
 					<Label variant={'h4'}>Points Pending</Label>
 					<Label variant={'body1'}>
-						You're {user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0} Points until
-						you reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b> Spire tier.
+						You're{' '}
+						{StringUtils.addCommasToNumber(
+							user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0
+						)}{' '}
+						Points until you reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b>{' '}
+						Spire tier.
 					</Label>
 					<Label className={'yellow'} variant={'h1'}>
 						{StringUtils.addCommasToNumber(user.availablePoints)}
@@ -123,8 +127,12 @@ const UserPointStatusBar: React.FC<UserPointStatusBarProps> = (props) => {
 				</Box>
 				<Box mt={10}>
 					<Label variant={'body1'}>
-						You're {user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0} Points until
-						you reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b> Spire tier.
+						You're{' '}
+						{StringUtils.addCommasToNumber(
+							user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0
+						)}{' '}
+						Points until you reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b>{' '}
+						Spire tier.
 					</Label>
 					<Box className={'loadingBarContainer'}>
 						<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
