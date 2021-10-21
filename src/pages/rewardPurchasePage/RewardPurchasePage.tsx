@@ -38,7 +38,12 @@ const RewardPurchasePage: React.FC = () => {
 			}
 			try {
 				let res = await rewardService.getRewardById(Number(params.reward));
-				setReward(res);
+				if (res.isActive) {
+					setReward(res);
+				} else {
+					rsToastify.error('This reward is no longer active', 'Error!');
+					router.navigate(`/reward`).catch(console.error);
+				}
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Reward item no longer exists.'), 'Server Error');
 			}

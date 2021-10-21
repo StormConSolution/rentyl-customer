@@ -18,7 +18,7 @@ export default function useWindowScrollChange() {
 			setScreenScrollDirection('UP');
 		} else if (currentScrollPos < SCROLL_FROM_TOP_BUFFER) {
 			setScreenScrollDirection('UP');
-		} else {
+		} else if (prevScrollPosition + 20 < currentScrollPos) {
 			setScreenScrollDirection('DOWN');
 		}
 		prevScrollPosition = currentScrollPos;
