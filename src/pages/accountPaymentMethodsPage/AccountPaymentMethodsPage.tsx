@@ -21,10 +21,12 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { ObjectUtils } from '../../utils/utils';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 let isPrimary: 1 | 0 = 0;
 
 const AccountPaymentMethodsPage: React.FC = () => {
+	const size = useWindowResizeChange();
 	const numberRef = useRef<HTMLElement>(null);
 	const cvvRef = useRef<HTMLElement>(null);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
@@ -74,14 +76,25 @@ const AccountPaymentMethodsPage: React.FC = () => {
 
 	useEffect(() => {
 		let readyId = paymentService.subscribeToSpreedlyReady(() => {
-			window.Spreedly.setStyle(
-				'number',
-				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
-			);
-			window.Spreedly.setStyle(
-				'cvv',
-				'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; transition: border-color 300ms; '
-			);
+			if (size === 'small') {
+				window.Spreedly.setStyle(
+					'number',
+					'width:139px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
+				);
+				window.Spreedly.setStyle(
+					'cvv',
+					'width:139px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; transition: border-color 300ms; '
+				);
+			} else {
+				window.Spreedly.setStyle(
+					'number',
+					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; transition: border-color 300ms; '
+				);
+				window.Spreedly.setStyle(
+					'cvv',
+					'width:200px;font-size: 16px;height: 40px;padding: 0 10px;box-sizing: border-box;border-radius: 0;border: 1px solid #dedede; color: #001933; background-color: #ffffff; text-align: center; transition: border-color 300ms; '
+				);
+			}
 			window.Spreedly.setFieldType('number', 'text');
 			window.Spreedly.setNumberFormat('prettyFormat');
 		});
@@ -303,10 +316,9 @@ const AccountPaymentMethodsPage: React.FC = () => {
 				className={'fakeCreditCard'}
 				borderRadius={'4px'}
 				boxShadow
-				padding={'25px 30px 16px'}
+				padding={size === 'small' ? '15px 15px 16px' : '25px 30px 16px'}
 				position={'relative'}
 				height={'206px'}
-				width={'390px'}
 			>
 				<Box>
 					<img src={require('../../images/card-chip.png')} width={38} height={30} alt={'card chip'} />
@@ -340,12 +352,18 @@ const AccountPaymentMethodsPage: React.FC = () => {
 		<Page className={'rsAccountPaymentMethodsPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<AccountHeader selected={'PAYMENT_METHODS'} />
-				<Box width={'921px'} margin={'60px auto'} display={'flex'} justifyContent={'space-between'}>
-					<Box width={'420px'}>
+				<Box
+					width={size === 'small' ? '375px' : '921px'}
+					margin={'60px auto'}
+					display={'flex'}
+					justifyContent={'space-between'}
+					flexDirection={size === 'small' ? 'column' : 'row'}
+				>
+					<Box width={size === 'small' ? '100%' : '420px'} className={'primaryCard'}>
 						<Label variant={'h2'}>Primary payment method</Label>
 						{renderPrimaryCard()}
 					</Box>
-					<Box width={'420px'}>
+					<Box width={size === 'small' ? '100%' : '420px'} className={'newPaymentForm'}>
 						<Label variant={'h2'}>Add new payment method</Label>
 						<form id={'payment-form'} action={'/card-payment'}>
 							<LabelInput
@@ -431,13 +449,11 @@ const AccountPaymentMethodsPage: React.FC = () => {
 					</Box>
 				</Box>
 				<hr />
-				{ObjectUtils.isArrayWithData(nonPrimaryCardList) ? (
+				{ObjectUtils.isArrayWithData(nonPrimaryCardList) && (
 					<Box className={'otherCardContainer'} m={'60px 0'}>
 						<Label variant={'h4'}>Other payment methods</Label>
 						<Box className={'otherPaymentCardWrapper'}>{renderOtherPaymentCards()}</Box>
 					</Box>
-				) : (
-					''
 				)}
 				<Footer links={FooterLinks} />
 			</div>

@@ -319,7 +319,12 @@ const AccountAddressPage: React.FC = () => {
 							}}
 						/>
 					</Box>
-					{size === 'small' && renderAddresses()}
+					{size === 'small' && (
+						<Box>
+							<hr />
+							{renderAddresses()}
+						</Box>
+					)}
 				</Box>
 				<Footer links={FooterLinks} />
 			</div>
