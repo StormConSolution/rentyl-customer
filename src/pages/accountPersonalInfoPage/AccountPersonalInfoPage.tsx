@@ -21,10 +21,12 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
 import { WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface AccountPersonalInfoPageProps {}
 
 const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
+	const size = useWindowResizeChange();
 	const userService = serviceFactory.get<UserService>('UserService');
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
@@ -149,7 +151,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 			<div className={'rs-page-content-wrapper'}>
 				<AccountHeader selected={'PERSONAL_INFO'} />
 				<Box className={'personalInfoHeader'}>
-					<Label variant={'h1'}>
+					<Label variant={size === 'small' ? 'h3' : 'h1'}>
 						Welcome, {user.firstName} {user.lastName}
 					</Label>
 					<Box display={'flex'} alignItems={'center'}>
@@ -163,7 +165,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 				</Box>
 
 				<Box className={'editSection'}>
-					<Box>
+					<Box width={'100%'}>
 						<Label variant={'h2'}>Account Info</Label>
 						<LabelInput
 							title={'First Name'}
@@ -197,8 +199,10 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							onClick={saveAccountInfo}
 						/>
 					</Box>
-					<Box>
-						<Label variant={'h2'}>Update Password</Label>
+					<Box width={'100%'}>
+						<Label variant={'h2'} ml={20}>
+							Update Password
+						</Label>
 						<LabelInput
 							className={'accountNameInput'}
 							title={'Current Password'}
@@ -264,7 +268,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							}}
 						/>
 					</Box>
-					<Box>
+					<Box ml={size === 'small' ? '20px' : '0'}>
 						<Label variant={'h2'}>Notification Preferences</Label>
 						<LabelCheckbox
 							value={''}

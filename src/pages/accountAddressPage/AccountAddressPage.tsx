@@ -23,10 +23,12 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
 import { OptionType } from '@bit/redsky.framework.rs.select';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 let isDefault: 1 | 0 = 0;
 
 const AccountAddressPage: React.FC = () => {
+	const size = useWindowResizeChange();
 	const userAddressService = serviceFactory.get<UserAddressService>('UserAddressService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
@@ -87,30 +89,58 @@ const AccountAddressPage: React.FC = () => {
 		getStates().catch(console.error);
 	}, [countryList, newAddressObj.get('country').value]);
 
+	function renderPrimaryAddress() {
+		if (!addressList || !ObjectUtils.isArrayWithData(addressList)) return;
+		const address = addressList.find((item) => item.isDefault);
+		if (!address) return;
+		return (
+			<AccountAddressTile
+				key={address.id}
+				id={address.id}
+				name={address.name}
+				addressLine1={address.address1}
+				addressLine2={address.address2}
+				zipCode={address.zip}
+				city={address.city}
+				state={address.state}
+				country={address.country}
+				isPrimary={address.isDefault}
+				onDelete={() => {
+					deleteAddress(address.id);
+				}}
+				onPrimaryChange={(addressId) => {
+					updateAddressToDefault(addressId);
+				}}
+			/>
+		);
+	}
+
 	function renderAddresses() {
 		if (!addressList || !ObjectUtils.isArrayWithData(addressList)) return;
-		return addressList.map((item) => {
-			return (
-				<AccountAddressTile
-					key={item.id}
-					id={item.id}
-					name={item.name}
-					addressLine1={item.address1}
-					addressLine2={item.address2}
-					zipCode={item.zip}
-					city={item.city}
-					state={item.state}
-					country={item.country}
-					isPrimary={item.isDefault}
-					onDelete={() => {
-						deleteAddress(item.id);
-					}}
-					onPrimaryChange={(addressId) => {
-						updateAddressToDefault(addressId);
-					}}
-				/>
-			);
-		});
+		return addressList
+			.filter((item) => !item.isDefault)
+			.map((item) => {
+				return (
+					<AccountAddressTile
+						key={item.id}
+						id={item.id}
+						name={item.name}
+						addressLine1={item.address1}
+						addressLine2={item.address2}
+						zipCode={item.zip}
+						city={item.city}
+						state={item.state}
+						country={item.country}
+						isPrimary={item.isDefault}
+						onDelete={() => {
+							deleteAddress(item.id);
+						}}
+						onPrimaryChange={(addressId) => {
+							updateAddressToDefault(addressId);
+						}}
+					/>
+				);
+			});
 	}
 
 	function formatStateOrCountryListForSelect(statesOrCountries: Misc.IBaseCountry[]) {
@@ -205,12 +235,19 @@ const AccountAddressPage: React.FC = () => {
 		<Page className={'rsAccountAddressPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<AccountHeader selected={'ADDRESSES'} />
-				<Box maxWidth={'920px'} margin={'60px auto 120px'} display={'flex'} justifyContent={'space-evenly'}>
-					<Box width={'420px'}>
+				<Box
+					maxWidth={'920px'}
+					margin={'60px auto 120px'}
+					display={'flex'}
+					justifyContent={'space-evenly'}
+					flexDirection={size === 'small' ? 'column' : 'row'}
+				>
+					<Box className={'addressList'}>
 						<Label variant={'h2'}>Addresses</Label>
-						{renderAddresses()}
+						{renderPrimaryAddress()}
+						{size !== 'small' && renderAddresses()}
 					</Box>
-					<Box width={'420px'}>
+					<Box className={'newAddress'}>
 						<Label variant={'h2'}>Add new address</Label>
 						<LabelInput
 							className={'inputStretched'}
@@ -233,7 +270,7 @@ const AccountAddressPage: React.FC = () => {
 							control={newAddressObj.get('address2')}
 							updateControl={updateNewAddressObj}
 						/>
-						<Box display={'flex'} justifyContent={'space-between'}>
+						<Box display={'flex'} justifyContent={'space-between'} gap={20}>
 							<LabelInput
 								title={'City'}
 								inputType={'text'}
@@ -247,7 +284,7 @@ const AccountAddressPage: React.FC = () => {
 								updateControl={updateNewAddressObj}
 							/>
 						</Box>
-						<Box display={'flex'} justifyContent={'space-between'}>
+						<Box display={'flex'} justifyContent={'space-between'} gap={20}>
 							<LabelSelect
 								title={'State'}
 								updateControl={updateNewAddressObj}
@@ -282,6 +319,12 @@ const AccountAddressPage: React.FC = () => {
 							}}
 						/>
 					</Box>
+					{size === 'small' && (
+						<Box>
+							<hr />
+							{renderAddresses()}
+						</Box>
+					)}
 				</Box>
 				<Footer links={FooterLinks} />
 			</div>

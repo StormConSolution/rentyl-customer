@@ -1,25 +1,8 @@
 @import '../../themes/themes';
 
 .rsAccountAddressTile {
-	position: relative;
-	.rsLabel {
-		&.h4 {
-			position: absolute;
-			top: 0;
-			left: -80px;
-		}
-	}
-
-	.rsLabelRadioButton {
-		position: absolute;
-		top: 0;
-		left: -140px;
-	}
-
-	.rsButton {
-		margin-top: 7px;
-		.rsLabel {
-			color: theme-var($buttonLinkColor);
-		}
-	}
+	display: grid;
+	grid-template-columns: 150px auto;
+	gap: 20px;
+	padding: 10px 0;
 }
