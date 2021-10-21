@@ -37,7 +37,7 @@ const RewardPurchasePage: React.FC = () => {
 			}
 			try {
 				let res = await rewardService.getRewardById(Number(params.reward));
-				if (res.isActive === 1) {
+				if (res.isActive) {
 					setReward(res);
 				} else {
 					rsToastify.error('This reward is no longer active', 'Error!');

@@ -202,7 +202,10 @@ const RewardItemPage: React.FC = () => {
 			ObjectUtils.isArrayWithData(categories) ||
 			ObjectUtils.isArrayWithData(featuredCategories)
 		) {
-			let categoriesToDisplay = categories.filter((category) => !category.isFeatured);
+			let categoriesToDisplay = categories;
+			if (size !== 'small') {
+				categoriesToDisplay = categories.filter((category) => !category.isFeatured);
+			}
 			if (!ObjectUtils.isArrayWithData(categoriesToDisplay) || !ObjectUtils.isArrayWithData(categories)) {
 				categoriesToDisplay = featuredCategories;
 			}
@@ -268,8 +271,7 @@ const RewardItemPage: React.FC = () => {
 
 	function renderFeaturedCategory() {
 		if (!ObjectUtils.isArrayWithData(featuredCategories) || ObjectUtils.isArrayWithData(selectedCategories)) return;
-		let areArraysEqual = checkCategories();
-		if (areArraysEqual) return;
+		if (checkCategories()) return;
 		return featuredCategories.map((category, index) => {
 			const media = category.media;
 			let imagePath = '';
