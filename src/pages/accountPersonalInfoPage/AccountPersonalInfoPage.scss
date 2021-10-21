@@ -31,7 +31,7 @@
 				line-height: 45px;
 			}
 		}
-		.rsUserPointStatusBar {
+		.rsUserPointStatusBarResponsive {
 			position: absolute;
 			margin: 0 auto;
 			left: 0;
@@ -68,6 +68,49 @@
 
 		.saveBtn {
 			margin-top: 50px;
+			width: fit-content;
+			width: -moz-fit-content;
+		}
+	}
+}
+
+.small {
+	.rsAccountPersonalInfoPage {
+		.personalInfoHeader {
+			padding: 30px 20px 30px;
+			margin-bottom: 150px;
+			height: auto;
+			.h1 {
+				padding: 0;
+			}
+			.rsUserPointStatusBarMobile {
+				position: absolute;
+				margin: 0 20px;
+				left: 0;
+				right: 0;
+				bottom: -140px;
+			}
+		}
+		.editSection {
+			grid-template-columns: auto;
+			justify-items: center;
+			margin: 0 20px;
+			.rsLabelInput {
+				.rsInput {
+					max-width: 400px;
+					width: 100%;
+				}
+				.react-tel-input {
+					max-width: 400px;
+					.phoneInput {
+						max-width: 400px;
+						width: 100%;
+					}
+				}
+			}
+			.rsButton {
+				left: 25%;
+			}
 		}
 	}
 }

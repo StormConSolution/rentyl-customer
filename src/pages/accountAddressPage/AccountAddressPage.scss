@@ -6,10 +6,6 @@
 			margin-bottom: 25px;
 		}
 	}
-	.rsAccountAddressTile {
-		margin-left: 80px;
-		margin-bottom: 20px;
-	}
 
 	.rsLabelInput,
 	.rsLabelSelect,
@@ -27,6 +23,31 @@
 		max-width: 190px;
 		.rsSelect {
 			max-width: 190px;
+		}
+	}
+	hr {
+		width: 0;
+		height: 0;
+	}
+}
+
+.small {
+	.rsAccountAddressPage {
+		.rsAccountAddressTile {
+			margin-left: 20px;
+		}
+		.addressList {
+			margin: 20px;
+		}
+		.newAddress {
+			margin: 20px;
+		}
+		hr {
+			width: 90%;
+			height: 1px;
+			border: none;
+			margin: 40px auto;
+			background-color: theme-var($greyLineColor);
 		}
 	}
 }

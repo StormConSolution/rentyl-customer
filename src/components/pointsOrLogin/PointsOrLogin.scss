@@ -25,3 +25,11 @@
 		}
 	}
 }
+
+.small .rsPointsOrLogin {
+	padding: 10px 20px 0 10px;
+	width: 100%;
+	.availablePendingPointsContainer {
+		justify-content: space-between;
+	}
+}

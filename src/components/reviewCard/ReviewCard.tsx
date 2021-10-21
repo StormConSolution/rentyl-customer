@@ -6,6 +6,7 @@ import StarRating from '../starRating/StarRating';
 import LabelButton from '../labelButton/LabelButton';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Chip from '@bit/redsky.framework.rs.chip';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface ReviewCardProps {
 	guestName: string;
@@ -17,6 +18,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	function renderPackages() {
 		if (props.packages.length > 1) {
 			return props.packages.join(', ');
@@ -24,7 +26,7 @@ const ReviewCard: React.FC<ReviewCardProps> = (props) => {
 	}
 
 	return (
-		<Box className={'rsReviewCard'} maxWidth={'70%'}>
+		<Box className={'rsReviewCard'} maxWidth={size === 'small' ? '100%' : '70%'}>
 			<Label variant={'h4'}>{props.guestName}</Label>
 			<Label variant={'caption'} margin={'6px 0'}>
 				{DateUtils.displayUserDate(props.createdOn)}
@@ -40,8 +42,8 @@ const ReviewCard: React.FC<ReviewCardProps> = (props) => {
 			>
 				{props.message}
 			</Label>
-			<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={10}>
-				<Box maxWidth={'50%'}>
+			<Box className={'packageAndChipWrapper'}>
+				<Box maxWidth={size === 'small' ? '100%' : '50%'} mb={size === 'small' ? 10 : 0}>
 					<Label variant={'body1'}>
 						<i>Packages</i>
 					</Label>

@@ -25,9 +25,21 @@
 		display: grid;
 		place-items: center;
 		margin: 10px 0;
-
+		.DateRangePicker_picker {
+			transform: translate(-25%, -100%);
+		}
 		.DateRangePickerInput {
 			background-color: theme-var($secondaryBackgroundColor);
+		}
+	}
+}
+
+.small {
+	.rsEditAccommodationPopup {
+		.rsDateRangeSelector {
+			.DateRangePicker_picker {
+				transform: translate(-15%, -100%);
+			}
 		}
 	}
 }

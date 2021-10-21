@@ -490,7 +490,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
-					padding={size === 'small' ? '0px 30px 20px 30px' : '20px 140px 60px 140px'}
+					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 140px 60px 140px'}
 					boxSizing={'border-box'}
 				>
 					<Label className={'filterLabel'} variant={'h1'}>

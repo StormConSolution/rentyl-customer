@@ -9,7 +9,6 @@ import RewardCategoryCard from './rewardCategoryCard/RewardCategoryCard';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import serviceFactory from '../../services/serviceFactory';
-import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import RewardService from '../../services/reward/reward.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import RewardItemCard from './rewardItemCard/RewardItemCard';
@@ -22,8 +21,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import debounce from 'lodash.debounce';
-import { StringUtils } from '../../utils/utils';
-import LabelButton from '../../components/labelButton/LabelButton';
+import { StringUtils, ObjectUtils } from '../../utils/utils';
 import IconLabel from '../../components/iconLabel/IconLabel';
 
 const RewardItemPage: React.FC = () => {
@@ -81,11 +79,13 @@ const RewardItemPage: React.FC = () => {
 			);
 			setWaitToLoad(false);
 		}
+
 		getAllRewardInfo().catch(console.error);
 	}, []);
 
 	useEffect(() => {
 		async function getRewardItems() {
+			setWaitToLoad(true);
 			const searchTerm = formatFilterQuery();
 			const pageQuery: RedSky.PageQuery = {
 				pagination: { page, perPage: 9 },
@@ -94,14 +94,20 @@ const RewardItemPage: React.FC = () => {
 					searchTerm
 				}
 			};
-			const response = await rewardService.getPagedRewards(pageQuery);
-			setRewardTotal(response.total || 0);
-			setRewards(response.data);
-			let topOfAvailableRewards = topContainerRef.current!.offsetTop;
-			window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
+			try {
+				const response = await rewardService.getPagedRewards(pageQuery);
+				setRewardTotal(response.total || 0);
+				setRewards(response.data);
+				let topOfAvailableRewards = topContainerRef.current!.offsetTop;
+				window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
+				setWaitToLoad(false);
+			} catch (e) {
+				setWaitToLoad(false);
+			}
 		}
+
 		getRewardItems().catch(console.error);
-	}, [page, selectedCategories, selectedVendors, pointCostRange]);
+	}, [page, selectedCategories, selectedVendors, pointCostRange, categories]);
 
 	function formatFilterQuery(): RedSky.FilterQueryValue[] {
 		let filter: RedSky.FilterQueryValue[] = [];
@@ -191,48 +197,61 @@ const RewardItemPage: React.FC = () => {
 	}
 
 	function renderCards() {
-		if (!displayRewards()) {
-			return categories.map((category: Api.Reward.Category.Res.Get, index) => {
-				let media;
-				if (category.media.length >= 1) {
-					let img = category.media.find((image) => image.isPrimary);
-					if (img) {
-						media = img.urls.imageKit;
+		if (
+			!ObjectUtils.isArrayWithData(selectedCategories) ||
+			ObjectUtils.isArrayWithData(categories) ||
+			ObjectUtils.isArrayWithData(featuredCategories)
+		) {
+			let categoriesToDisplay = categories;
+			if (size !== 'small') {
+				categoriesToDisplay = categories.filter((category) => !category.isFeatured);
+			}
+			if (!ObjectUtils.isArrayWithData(categoriesToDisplay) || !ObjectUtils.isArrayWithData(categories)) {
+				categoriesToDisplay = featuredCategories;
+			}
+			if (!displayRewards()) {
+				return categoriesToDisplay.map((category: Api.Reward.Category.Res.Get, index) => {
+					let media;
+					if (category.media.length >= 1) {
+						let img = category.media.find((image) => image.isPrimary);
+						if (img) {
+							media = img.urls.imageKit;
+						} else {
+							media = category.media[0].urls.imageKit;
+						}
 					} else {
-						media = category.media[0].urls.imageKit;
+						media = '';
 					}
-				} else {
-					media = '';
-				}
+					return (
+						<RewardCategoryCard
+							key={index}
+							value={category.id}
+							title={category.name}
+							imgPath={media}
+							onClick={(categoryId) => {
+								handleCategoryOnClick(categoryId);
+							}}
+						/>
+					);
+				});
+			}
+			if (!ObjectUtils.isArrayWithData(rewards)) return;
+			return rewards.map((reward, index) => {
+				let primaryImg = getPrimaryRewardImg(reward.media);
+				let voucherCode = getRedeemableVoucherCode(reward.vouchers);
 				return (
-					<RewardCategoryCard
+					<RewardItemCard
 						key={index}
-						value={category.id}
-						title={category.name}
-						imgPath={media}
-						onClick={(categoryId) => {
-							handleCategoryOnClick(categoryId);
-						}}
+						imgPath={primaryImg}
+						title={reward.name}
+						points={reward.pointCost}
+						description={reward.description}
+						rewardId={reward.id}
+						voucherCode={voucherCode}
 					/>
 				);
 			});
 		}
-		if (!ObjectUtils.isArrayWithData(rewards)) return;
-		return rewards.map((reward, index) => {
-			let primaryImg = getPrimaryRewardImg(reward.media);
-			let voucherCode = getRedeemableVoucherCode(reward.vouchers);
-			return (
-				<RewardItemCard
-					key={index}
-					imgPath={primaryImg}
-					title={reward.name}
-					points={reward.pointCost}
-					description={reward.description}
-					rewardId={reward.id}
-					voucherCode={voucherCode}
-				/>
-			);
-		});
 	}
 
 	function handleCategoryOnClick(categoryId: number) {
@@ -240,8 +259,19 @@ const RewardItemPage: React.FC = () => {
 		setSelectedCategories([categoryId]);
 	}
 
+	function checkCategoriesAreEqual(): boolean {
+		const featuredCategoryIds = featuredCategories.map((category) => {
+			return category.id;
+		});
+		const categoryIds = categories.map((category) => {
+			return category.id;
+		});
+		return ObjectUtils.areArraysEqual(featuredCategoryIds, categoryIds);
+	}
+
 	function renderFeaturedCategory() {
 		if (!ObjectUtils.isArrayWithData(featuredCategories) || ObjectUtils.isArrayWithData(selectedCategories)) return;
+		if (checkCategoriesAreEqual()) return;
 		return featuredCategories.map((category, index) => {
 			const media = category.media;
 			let imagePath = '';
@@ -309,34 +339,36 @@ const RewardItemPage: React.FC = () => {
 						}}
 					/>
 				)}
-				<div className={'rewardCategoryCheckboxList'}>
-					<Label className={'queryTitle'} variant={'h4'}>
-						Business Categories
-					</Label>
-					<CheckboxList
-						onChange={(value, options) => {
-							if (value.length === 0) {
-								router.updateUrlParams({});
-								setSelectedCategories([]);
-							} else {
-								router.updateUrlParams({
-									cids: JSON.stringify(value),
-									vids: JSON.stringify(selectedVendors)
-								});
-								setSelectedCategories(value as number[]);
-							}
-						}}
-						options={categories.map((category) => {
-							return {
-								value: category.id,
-								text: category.name,
-								selected: selectedCategories.includes(category.id)
-							};
-						})}
-						name={'categories'}
-						className={'categoryCheckboxList'}
-					/>
-				</div>
+				{ObjectUtils.isArrayWithData(categories) && (
+					<div className={'rewardCategoryCheckboxList'}>
+						<Label className={'queryTitle'} variant={'h4'}>
+							Business Categories
+						</Label>
+						<CheckboxList
+							onChange={(value, options) => {
+								if (value.length === 0) {
+									router.updateUrlParams({});
+									setSelectedCategories([]);
+								} else {
+									router.updateUrlParams({
+										cids: JSON.stringify(value),
+										vids: JSON.stringify(selectedVendors)
+									});
+									setSelectedCategories(value as number[]);
+								}
+							}}
+							options={categories.map((category) => {
+								return {
+									value: category.id,
+									text: category.name,
+									selected: selectedCategories.includes(category.id)
+								};
+							})}
+							name={'categories'}
+							className={'categoryCheckboxList'}
+						/>
+					</div>
+				)}
 				<Box className={'resortAndPointFilters'}>
 					<div className={'resortSelectFilter'}>
 						<Label className={'resortTitle queryTitle'} variant={'h4'}>
@@ -443,7 +475,8 @@ const RewardItemPage: React.FC = () => {
 						className={'pageWrapper'}
 						padding={
 							!ObjectUtils.isArrayWithData(featuredCategories) ||
-							ObjectUtils.isArrayWithData(selectedCategories)
+							ObjectUtils.isArrayWithData(selectedCategories) ||
+							checkCategoriesAreEqual()
 								? '120px 140px 50px'
 								: '50px 140px'
 						}

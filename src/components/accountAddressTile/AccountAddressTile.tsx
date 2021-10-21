@@ -3,6 +3,8 @@ import './AccountAddressTile.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../labelButton/LabelButton';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
+import Paper from '../paper/Paper';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface AddressTileProps {
 	id: number;
@@ -20,15 +22,8 @@ interface AddressTileProps {
 
 const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 	return (
-		<div className={'rsAccountAddressTile'}>
-			<Label variant={'body1'}>{props.name}</Label>
-			<Label variant={'body1'}>{props.addressLine1}</Label>
-			{!!props.addressLine2 && <Label variant={'body1'}>{props.addressLine2}</Label>}
-			<Label variant={'body1'}>
-				{props.city} {props.state}, {props.zipCode} {props.country}
-			</Label>
-			<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
-			{!props.isPrimary && (
+		<Paper className={'rsAccountAddressTile'}>
+			{!props.isPrimary ? (
 				<LabelRadioButton
 					radioName={'primaryAddress'}
 					value={props.id}
@@ -38,9 +33,20 @@ const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 						props.onPrimaryChange(+value);
 					}}
 				/>
+			) : (
+				<Label variant={'h4'}>Primary</Label>
 			)}
-			{!!props.isPrimary && <Label variant={'h4'}>Primary</Label>}
-		</div>
+			<Box>
+				<Label variant={'body1'}>{props.name}</Label>
+				<Label variant={'body1'}>{props.addressLine1}</Label>
+				{!!props.addressLine2 && <Label variant={'body1'}>{props.addressLine2}</Label>}
+				<Label variant={'body1'}>{props.city},</Label>
+				<Label variant={'body1'}>
+					{props.state} {props.zipCode} {props.country}
+				</Label>
+				<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
+			</Box>
+		</Paper>
 	);
 };
 

@@ -17,18 +17,47 @@
 		width: 100%;
 		background: theme-var($greyLineColor);
 		border: none;
-		margin: 20px 0;
+		margin: 5px 0 20px;
 	}
 
 	.contentWrapper {
 		width: 1160px;
 		margin: 0 auto;
 
+		.destinationRatingHeader {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+
 		.rsReviewCard {
 			margin-bottom: 25px;
 			border-bottom: 1px solid theme-var($greyLineColor);
 			&:last-child {
 				border-bottom: unset;
+			}
+		}
+	}
+}
+
+.small {
+	.rsDestinationReviewPage {
+		.rsHeroImage {
+			margin-bottom: 20px;
+		}
+
+		.contentWrapper {
+			padding: 20px;
+			box-sizing: border-box;
+			width: 100%;
+
+			.destinationRatingHeader {
+				flex-direction: column;
+
+				.rsLinkButton {
+					margin-top: 20px;
+				}
 			}
 		}
 	}

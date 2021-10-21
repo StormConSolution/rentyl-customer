@@ -14,6 +14,7 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import { DateUtils } from '../../utils/utils';
 import LabelButton from '../../components/labelButton/LabelButton';
 import SpinningLoaderPopup from '../spinningLoaderPopup/SpinningLoaderPopup';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface EditAccommodationPopupProps extends PopupProps {
 	uuid: number;
@@ -38,6 +39,7 @@ export interface EditAccommodationPopupProps extends PopupProps {
 }
 
 const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) => {
+	const size = useWindowResizeChange();
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(
@@ -127,7 +129,7 @@ const EditAccommodationPopup: React.FC<EditAccommodationPopupProps> = (props) =>
 					startDate={startDate}
 					endDate={endDate}
 					onDatesChange={onDatesChange}
-					monthsToShow={2}
+					monthsToShow={size === 'small' ? 1 : 2}
 					focusedInput={focusedInput}
 					onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
 					startDateLabel={'check in'}
