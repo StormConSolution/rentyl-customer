@@ -9,7 +9,6 @@ import router from '../../utils/router';
 import LoadingPage from '../loadingPage/LoadingPage';
 import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import Paper from '../../components/paper/Paper';
-import MultiSelect from '../../components/multiSelect/MultiSelect';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import globalState from '../../state/globalState';

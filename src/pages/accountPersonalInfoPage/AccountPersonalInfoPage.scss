@@ -68,6 +68,45 @@
 
 		.saveBtn {
 			margin-top: 50px;
+			width: fit-content;
+			width: -moz-fit-content;
+		}
+	}
+}
+
+.small {
+	.rsAccountPersonalInfoPage {
+		.personalInfoHeader {
+			padding: 30px 20px 30px;
+			margin-bottom: 150px;
+			height: auto;
+			.h1 {
+				padding: 0;
+			}
+			.rsUserPointStatusBar {
+				margin: 0 20px;
+			}
+		}
+		.editSection {
+			grid-template-columns: auto;
+			justify-items: center;
+			margin: 0 20px;
+			.rsLabelInput {
+				.rsInput {
+					max-width: 400px;
+					width: 100%;
+				}
+				.react-tel-input {
+					max-width: 400px;
+					.phoneInput {
+						max-width: 400px;
+						width: 100%;
+					}
+				}
+			}
+			.rsButton {
+				left: 25%;
+			}
 		}
 	}
 }

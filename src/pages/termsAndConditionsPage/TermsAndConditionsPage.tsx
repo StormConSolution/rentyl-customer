@@ -948,10 +948,12 @@ const TermsAndConditionsPage: React.FC = () => {
 						Email Address.
 					</li>
 				</ol>
-				<b>
-					PLEASE SEE WEBSITE FOR TERMS AND CONDITIONS. ADDITIONAL TERMS AND CONDITIONS APPLY AND MAY CHANGE
-					FROM TIME TO TIME IN THE SOLE DISCRETION OF SPIRE.
-				</b>
+				<p>
+					<b>
+						PLEASE SEE WEBSITE FOR TERMS AND CONDITIONS. ADDITIONAL TERMS AND CONDITIONS APPLY AND MAY
+						CHANGE FROM TIME TO TIME IN THE SOLE DISCRETION OF SPIRE.
+					</b>
+				</p>
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>
