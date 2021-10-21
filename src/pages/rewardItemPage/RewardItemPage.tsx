@@ -259,7 +259,7 @@ const RewardItemPage: React.FC = () => {
 		setSelectedCategories([categoryId]);
 	}
 
-	function checkCategories(): boolean {
+	function checkCategoriesAreEqual(): boolean {
 		const featuredCategoryIds = featuredCategories.map((category) => {
 			return category.id;
 		});
@@ -271,7 +271,7 @@ const RewardItemPage: React.FC = () => {
 
 	function renderFeaturedCategory() {
 		if (!ObjectUtils.isArrayWithData(featuredCategories) || ObjectUtils.isArrayWithData(selectedCategories)) return;
-		if (checkCategories()) return;
+		if (checkCategoriesAreEqual()) return;
 		return featuredCategories.map((category, index) => {
 			const media = category.media;
 			let imagePath = '';
@@ -476,7 +476,7 @@ const RewardItemPage: React.FC = () => {
 						padding={
 							!ObjectUtils.isArrayWithData(featuredCategories) ||
 							ObjectUtils.isArrayWithData(selectedCategories) ||
-							checkCategories()
+							checkCategoriesAreEqual()
 								? '120px 140px 50px'
 								: '50px 140px'
 						}
