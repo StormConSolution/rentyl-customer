@@ -86,15 +86,28 @@ const RewardItemPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getRewardItems() {
-			const searchTerm = formatFilterQuery();
-			const pageQuery: RedSky.PageQuery = {
+			let brands = selectedVendors.filter((vendor) => vendor.startsWith('b'));
+			let destinations = selectedVendors.filter((vendor) => vendor.startsWith('d'));
+
+			const minMax: { min: string; max: string } = pointCostRange.toModel<{ min: string; max: string }>();
+			let max = parseInt(minMax.max.replace(',', '')) || 0;
+			let min = parseInt(minMax.min.replace(',', '')) || 0;
+
+			if (max > 0 && max < min) {
+				rsToastify.error('Make sure the max is greater than the minimum', 'Price Range Error');
+				return;
+			}
+
+			const customRewardPageQuery: Api.Reward.Req.CustomerPaged = {
 				pagination: { page, perPage: 9 },
-				filter: {
-					matchType: 'exact',
-					searchTerm
-				}
+				vendorBrandIds: brands.map((brand) => parseInt(brand.slice(1))),
+				vendorDestinationIds: destinations.map((destination) => parseInt(destination.slice(1))),
+				rewardCategoryIds: selectedCategories,
+				minPointCost: min.toString().length ? min : 0,
+				maxPointCost: max.toString().length ? max : 0
 			};
-			const response = await rewardService.getPagedRewards(pageQuery);
+
+			const response = await rewardService.getPagedRewards(customRewardPageQuery);
 			setRewardTotal(response.total || 0);
 			setRewards(response.data);
 			let topOfAvailableRewards = topContainerRef.current!.offsetTop;
@@ -102,68 +115,6 @@ const RewardItemPage: React.FC = () => {
 		}
 		getRewardItems().catch(console.error);
 	}, [page, selectedCategories, selectedVendors, pointCostRange]);
-
-	function formatFilterQuery(): RedSky.FilterQueryValue[] {
-		let filter: RedSky.FilterQueryValue[] = [];
-		if (ObjectUtils.isArrayWithData(selectedVendors)) {
-			let brands = selectedVendors.filter((vendor) => vendor.startsWith('b'));
-			let destinations = selectedVendors.filter((vendor) => vendor.startsWith('d'));
-			if (ObjectUtils.isArrayWithData(destinations)) {
-				filter.push({
-					column: 'vendor.destinationId',
-					value: destinations.map((destination) => parseInt(destination.slice(1))),
-					matchType: 'exact',
-					conjunction: 'OR'
-				});
-			}
-			if (ObjectUtils.isArrayWithData(brands)) {
-				filter.push({
-					column: 'vendor.brandId',
-					value: brands.map((brand) => parseInt(brand.slice(1))),
-					conjunction: 'OR',
-					matchType: 'exact'
-				});
-			}
-		}
-		if (ObjectUtils.isArrayWithData(selectedCategories)) {
-			filter.push({
-				column: 'map.categoryId',
-				value: selectedCategories,
-				matchType: 'exact',
-				conjunction: 'AND'
-			});
-		}
-		const minMax: { min: string; max: string } = pointCostRange.toModel<{ min: string; max: string }>();
-		const max = parseInt(minMax.max.replace(',', ''));
-		const min = parseInt(minMax.min.replace(',', ''));
-		if (max > 0 && max < min) {
-			rsToastify.error('Make sure the max is greater than the minimum', 'Price Range Error');
-		} else {
-			if (min > 0) {
-				filter.push({
-					column: 'pointCost',
-					value: min,
-					matchType: 'greaterThanEqual',
-					conjunction: 'AND'
-				});
-			}
-			if (max > 0 && max > min) {
-				filter.push({
-					column: 'pointCost',
-					value: max,
-					matchType: 'lessThanEqual',
-					conjunction: 'AND'
-				});
-			}
-		}
-		filter.push({
-			column: 'isActive',
-			value: 1,
-			matchType: 'exact',
-			conjunction: 'AND'
-		});
-		return filter;
-	}
 
 	function getPrimaryRewardImg(medias: Api.Media[]): string {
 		if (!ObjectUtils.isArrayWithData(medias)) return '';
