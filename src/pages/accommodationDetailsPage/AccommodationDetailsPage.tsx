@@ -94,6 +94,10 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 		)
 			return;
 		if (!accommodationDetails || !destinationDetails) return false;
+		if (accommodationDetails.maxOccupantCount < availabilityObj.adults) {
+			setAvailable(false);
+			return;
+		}
 		try {
 			popupController.open(SpinningLoaderPopup, { preventCloseByBackgroundClick: true });
 			let data: Api.Reservation.Req.Verification = {
@@ -119,12 +123,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 		}
 	}
 
-	function isValidBookNow() {
-		return (
-			!!availabilityObj.arrivalDate.length && !!availabilityObj.departureDate.length && !!availabilityObj.adults
-		);
-	}
-
 	function updateAvailabilityObj(key: 'arrivalDate' | 'departureDate' | 'adults' | 'rateCode', value: any) {
 		setAvailabilityObj((prev) => {
 			let createAvailabilityObj: any = { ...prev };
@@ -138,6 +136,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 		setStartDate(calendarStartDate);
 		setEndDate(calendarEndDate);
 		if (calendarStartDate === null || calendarEndDate === null) return;
+		setAvailable(true);
 		updateAvailabilityObj('arrivalDate', formatFilterDateForServer(calendarStartDate, 'start'));
 		updateAvailabilityObj('departureDate', formatFilterDateForServer(calendarEndDate, 'end'));
 	}
@@ -209,21 +208,39 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 						/>
 						<RoomBookNowCard
 							points={2500}
-							bookNowDisabled={!isValidBookNow()}
 							isAvailable={available}
 							onDatesChange={onDatesChange}
 							focusedInput={focusedInput}
 							startDate={startDate}
 							endDate={endDate}
 							rateCode={availabilityObj.rateCode}
+							errorMessage={
+								available
+									? ''
+									: accommodationDetails.maxOccupantCount < availabilityObj.adults
+									? 'Max Occupancy Exceeded'
+									: 'Invalid Rate Code Or Time Frame'
+							}
 							onFocusChange={(focusedInput) => {
 								setFocusedInput(focusedInput);
 							}}
 							onGuestChange={(value) => {
+								if (
+									accommodationDetails?.maxOccupantCount &&
+									accommodationDetails.maxOccupantCount < value
+								) {
+									rsToastify.info(
+										`The maximum number of guests is exceeded, this location can have a max occupancy of ${accommodationDetails.maxOccupantCount}.`,
+										'Max Occupancy Exceeded',
+										{ position: 'top-center' }
+									);
+								}
 								updateAvailabilityObj('adults', +value);
+								setAvailable(true);
 							}}
 							onRateCodeChange={(value) => {
 								updateAvailabilityObj('rateCode', value);
+								setAvailable(true);
 							}}
 							guestValue={availabilityObj.adults}
 							compareOnClick={() => {
