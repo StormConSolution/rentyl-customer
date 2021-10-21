@@ -15,6 +15,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import LinkButton from '../../components/linkButton/LinkButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { ObjectUtils } from '../../utils/utils';
 
 const DestinationReviewPage: React.FC = () => {
 	const reviewService = serviceFactory.get<ReviewService>('ReviewService');
@@ -30,8 +31,7 @@ const DestinationReviewPage: React.FC = () => {
 				let response = await reviewService.getForDestination(params.destinationId);
 				setDestinationReviews(response);
 			} catch (e) {
-				rsToastify.info('No reviews for this destination.', 'No Reviews Available!');
-				router.back();
+				rsToastify.info("There was an issue getting this destination's reviews", 'Uh Oh!');
 			}
 		}
 		getDestinationReviews().catch(console.error);
@@ -39,6 +39,9 @@ const DestinationReviewPage: React.FC = () => {
 
 	function renderReviews() {
 		if (!destinationReviews) return;
+
+		if (!ObjectUtils.isArrayWithData(destinationReviews.reviewRating))
+			return <Label variant={'h4'}>No reviews (yet)</Label>;
 
 		return destinationReviews.reviews.map((item, index) => {
 			let guestName = `${item.guest.firstName} ${item.guest.lastName}`;
@@ -75,10 +78,10 @@ const DestinationReviewPage: React.FC = () => {
 					mobileHeight={'150px'}
 					position={'relative'}
 				>
-					<div className={'tanBox'} />
+					{size !== 'small' && <div className={'tanBox'} />}
 				</HeroImage>
 				<Box className={'contentWrapper'}>
-					<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} flexWrap={'wrap'}>
+					<Box className={'destinationRatingHeader'}>
 						<div>
 							<img src={require('../../images/encore-resort.png')} alt={destinationReviews.name} />
 							<Label variant={'h1'} margin={'15px 0 10px'}>
@@ -92,7 +95,9 @@ const DestinationReviewPage: React.FC = () => {
 							look={'containedPrimary'}
 						/>
 					</Box>
-
+					<Label variant={'h3'} mt={20}>
+						Guest Reviews
+					</Label>
 					<hr />
 					{renderReviews()}
 				</Box>

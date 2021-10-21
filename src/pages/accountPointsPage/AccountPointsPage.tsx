@@ -20,6 +20,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import Chip from '@bit/redsky.framework.rs.chip';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -96,19 +97,33 @@ const AccountPointsPage: React.FC = () => {
 		return pointHistory.map((point, index) => {
 			if (type === 'pending' && point.status !== 'PENDING') return false;
 			if (type === 'completed' && point.status === 'PENDING') return false;
-			return (
+			return size !== 'small' ? (
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
 					<img className={'pointImage'} src={getMedia(point)} alt={''} />
 					<Box className={'pendingPointsDetailsContainer'}>
 						<Label variant={'h3'}>{StringUtils.capitalizeFirst(point.title)}</Label>
-						<Label className={'pointType'} variant={'caption'}>
-							{point.pointType}
-						</Label>
+						<Chip label={point.pointType} look={'standard'} />
 					</Box>
 					<Label className={'date'} variant={'h2'}>
 						{DateUtils.displayUserDate(point.createdOn)}
 					</Label>
 					<Label className={'points'} variant={'h2'}>
+						{getPointAmount(point)}
+					</Label>
+				</Box>
+			) : (
+				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
+					<Label variant={'caption'}>Transaction Type</Label>
+					<Box className={'pendingPointsDetailsContainer'} display={'flex'}>
+						<Label variant={'h3'}>{StringUtils.capitalizeFirst(point.title)}</Label>
+						<Chip label={point.pointType} look={'standard'} />
+					</Box>
+					<Label variant={'caption'}>Date</Label>
+					<Label className={'date'} variant={'h3'} mb={5}>
+						{DateUtils.displayUserDate(point.createdOn)}
+					</Label>
+					<Label variant={'caption'}>Point Amount</Label>
+					<Label className={'points'} variant={'h3'}>
 						{getPointAmount(point)}
 					</Label>
 				</Box>
@@ -124,7 +139,7 @@ const AccountPointsPage: React.FC = () => {
 				<HeroImage
 					image={'../../images/pointsPage/PointsPageHero2x.jpg'}
 					height={'300px'}
-					mobileHeight={'300px'}
+					mobileHeight={'200px'}
 					backgroundPosition={'center 78%'}
 					position={'relative'}
 				>
@@ -168,6 +183,7 @@ const AccountPointsPage: React.FC = () => {
 					>
 						<div className={'pendingPointsContainer'}>
 							<Label variant={'h2'}>Pending Points</Label>
+							{size === 'small' && <hr />}
 							<Box className={'pending pointTableHeader'}>
 								<Label className={'transactionType'} variant={'body1'}>
 									Transaction type
@@ -183,6 +199,7 @@ const AccountPointsPage: React.FC = () => {
 						</div>
 						<div className={'completedTransactionsContainer'}>
 							<Label variant={'h2'}>Completed Transactions</Label>
+							{size === 'small' && <hr />}
 							<Box className={'completed pointTableHeader'}>
 								<Label className={'transactionType'} variant={'body1'}>
 									Transaction type
