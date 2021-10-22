@@ -17,8 +17,10 @@ export default class RewardService extends Service {
 		return response.data.data;
 	}
 
-	async getPagedRewards(data: Api.Reward.Req.Paged): Promise<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>> {
-		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>('/reward/paged', data);
+	async getPagedRewards(
+		data: Api.Reward.Req.CustomerPaged
+	): Promise<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>> {
+		let response = await http.get<RedSky.RsPagedResponseData<Api.Reward.Res.Get[]>>('/reward/customer/paged', data);
 		return response.data;
 	}
 
