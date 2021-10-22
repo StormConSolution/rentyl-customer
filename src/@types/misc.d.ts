@@ -77,6 +77,16 @@ declare namespace Misc {
 		selectedRoom: number;
 	}
 
+	export interface FilterFormPopupOptions {
+		regionIds: number[];
+		propertyTypeIds: number[];
+		adultCount: number;
+		childCount: number;
+		priceRangeMax: string;
+		priceRangeMin: string;
+		rateCode: string;
+	}
+
 	interface IBaseCountry {
 		name: string;
 		isoCode: string;
