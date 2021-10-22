@@ -85,91 +85,35 @@ const RewardItemPage: React.FC = () => {
 
 	useEffect(() => {
 		async function getRewardItems() {
-			setWaitToLoad(true);
-			const searchTerm = formatFilterQuery();
-			const pageQuery: RedSky.PageQuery = {
-				pagination: { page, perPage: 9 },
-				filter: {
-					matchType: 'exact',
-					searchTerm
-				}
-			};
-			try {
-				const response = await rewardService.getPagedRewards(pageQuery);
-				setRewardTotal(response.total || 0);
-				setRewards(response.data);
-				let topOfAvailableRewards = topContainerRef.current!.offsetTop;
-				window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
-				setWaitToLoad(false);
-			} catch (e) {
-				setWaitToLoad(false);
+			let brands = selectedVendors.filter((vendor) => vendor.startsWith('b'));
+			let destinations = selectedVendors.filter((vendor) => vendor.startsWith('d'));
+
+			const minMax: { min: string; max: string } = pointCostRange.toModel<{ min: string; max: string }>();
+			let max = parseInt(minMax.max.replace(',', '')) || 0;
+			let min = parseInt(minMax.min.replace(',', '')) || 0;
+
+			if (max > 0 && max < min) {
+				rsToastify.error('Make sure the max is greater than the minimum', 'Price Range Error');
+				return;
 			}
+
+			const customRewardPageQuery: Api.Reward.Req.CustomerPaged = {
+				pagination: { page, perPage: 9 },
+				vendorBrandIds: brands.map((brand) => parseInt(brand.slice(1))),
+				vendorDestinationIds: destinations.map((destination) => parseInt(destination.slice(1))),
+				rewardCategoryIds: selectedCategories,
+				minPointCost: min.toString().length ? min : 0,
+				maxPointCost: max.toString().length ? max : 0
+			};
+			const response = await rewardService.getPagedRewards(customRewardPageQuery);
+			setRewardTotal(response.total || 0);
+			setRewards(response.data);
+			let topOfAvailableRewards = topContainerRef.current!.offsetTop;
+			window.scrollTo({ top: topOfAvailableRewards - 66, behavior: 'smooth' });
 		}
 
 		getRewardItems().catch(console.error);
 	}, [page, selectedCategories, selectedVendors, pointCostRange, categories]);
-
-	function formatFilterQuery(): RedSky.FilterQueryValue[] {
-		let filter: RedSky.FilterQueryValue[] = [];
-		if (ObjectUtils.isArrayWithData(selectedVendors)) {
-			let brands = selectedVendors.filter((vendor) => vendor.startsWith('b'));
-			let destinations = selectedVendors.filter((vendor) => vendor.startsWith('d'));
-			if (ObjectUtils.isArrayWithData(destinations)) {
-				filter.push({
-					column: 'vendor.destinationId',
-					value: destinations.map((destination) => parseInt(destination.slice(1))),
-					matchType: 'exact',
-					conjunction: 'OR'
-				});
-			}
-			if (ObjectUtils.isArrayWithData(brands)) {
-				filter.push({
-					column: 'vendor.brandId',
-					value: brands.map((brand) => parseInt(brand.slice(1))),
-					conjunction: 'OR',
-					matchType: 'exact'
-				});
-			}
-		}
-		if (ObjectUtils.isArrayWithData(selectedCategories)) {
-			filter.push({
-				column: 'map.categoryId',
-				value: selectedCategories,
-				matchType: 'exact',
-				conjunction: 'AND'
-			});
-		}
-		const minMax: { min: string; max: string } = pointCostRange.toModel<{ min: string; max: string }>();
-		const max = parseInt(minMax.max.replace(',', ''));
-		const min = parseInt(minMax.min.replace(',', ''));
-		if (max > 0 && max < min) {
-			rsToastify.error('Make sure the max is greater than the minimum', 'Price Range Error');
-		} else {
-			if (min > 0) {
-				filter.push({
-					column: 'pointCost',
-					value: min,
-					matchType: 'greaterThanEqual',
-					conjunction: 'AND'
-				});
-			}
-			if (max > 0 && max > min) {
-				filter.push({
-					column: 'pointCost',
-					value: max,
-					matchType: 'lessThanEqual',
-					conjunction: 'AND'
-				});
-			}
-		}
-		filter.push({
-			column: 'isActive',
-			value: 1,
-			matchType: 'exact',
-			conjunction: 'AND'
-		});
-		return filter;
-	}
 
 	function getPrimaryRewardImg(medias: Api.Media[]): string {
 		if (!ObjectUtils.isArrayWithData(medias)) return '';
@@ -210,7 +154,7 @@ const RewardItemPage: React.FC = () => {
 				categoriesToDisplay = featuredCategories;
 			}
 			if (!displayRewards()) {
-				return categoriesToDisplay.map((category: Api.Reward.Category.Res.Get, index) => {
+				return categoriesToDisplay.map((category: Api.Reward.Category.Res.Get) => {
 					let media;
 					if (category.media.length >= 1) {
 						let img = category.media.find((image) => image.isPrimary);
@@ -224,7 +168,7 @@ const RewardItemPage: React.FC = () => {
 					}
 					return (
 						<RewardCategoryCard
-							key={index}
+							key={category.id}
 							value={category.id}
 							title={category.name}
 							imgPath={media}
@@ -236,12 +180,12 @@ const RewardItemPage: React.FC = () => {
 				});
 			}
 			if (!ObjectUtils.isArrayWithData(rewards)) return;
-			return rewards.map((reward, index) => {
+			return rewards.map((reward) => {
 				let primaryImg = getPrimaryRewardImg(reward.media);
 				let voucherCode = getRedeemableVoucherCode(reward.vouchers);
 				return (
 					<RewardItemCard
-						key={index}
+						key={reward.id}
 						imgPath={primaryImg}
 						title={reward.name}
 						points={reward.pointCost}

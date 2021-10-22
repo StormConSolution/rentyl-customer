@@ -1387,6 +1387,15 @@ declare namespace Api {
 
 			export interface Paged extends RedSky.PageQuery {}
 
+			export interface CustomerPaged {
+				pagination: RedSky.PagePagination;
+				vendorBrandIds?: number[];
+				vendorDestinationIds?: number[];
+				rewardCategoryIds?: number[];
+				minPointCost?: number | null;
+				maxPointCost?: number | null;
+			}
+
 			export interface Create {
 				name: string;
 				pointCost: number;
