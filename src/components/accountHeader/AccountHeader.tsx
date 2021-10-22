@@ -19,7 +19,7 @@ const AccountHeader: React.FC<AccountHeaderProps> = (props) => {
 		<div className={'rsAccountHeader'}>
 			<Box>
 				<Label variant={'h1'}>Your Account</Label>
-				<Box display={'flex'} justifyContent={'center'}>
+				<Box display={'flex'} justifyContent={'space-around'}>
 					<LinkButton
 						path={'/account/personal-info'}
 						label={'Personal Info'}

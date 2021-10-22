@@ -1,11 +1,31 @@
 @import '../../themes/themes';
 
 .rsOrderConfirmationPage {
+	hr {
+		margin: 20px 0;
+	}
 	.rsPaper {
 		background-color: theme-var($secondaryBackgroundColor);
-
+		padding: 0;
 		.confirmationHeader {
 			align-items: center;
+		}
+
+		.orderTotal {
+			justify-self: flex-end;
+		}
+
+		.confirmationLabel {
+			text-align: center;
+			margin: 20px auto;
+			color: theme-var($buttonLinkColor);
+		}
+
+		.rsAccordion {
+			margin-bottom: 15px;
+			.articleItemHeader {
+				padding: 0;
+			}
 		}
 
 		.confirmationBody {
@@ -20,59 +40,26 @@
 			margin: 16px 0;
 		}
 		img {
-			width: 200px;
-			height: 200px;
-			object-fit: contain;
-			margin-right: 80px;
+			width: 800px;
+			height: 400px;
 		}
 
-		.pointsLabel {
-			margin-left: auto;
-			color: theme-var($iconAndHighlightTextColor);
-			span {
-				font-size: 16px;
-				line-height: 20px;
-				font-weight: $regular;
-				letter-spacing: 0;
-			}
+		.rsLabel {
+			width: fit-content;
+			width: -moz-fit-content;
 		}
-	}
-
-	.confirmationHeader {
-		.orderDate {
-			width: 230px;
-		}
-	}
-
-	.orderDate {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.pointCost {
-		text-align: start;
-	}
-
-	.rewardImage {
-		background-size: cover;
 	}
 }
 
 .small .rsOrderConfirmationPage {
-	.confirmationHeader {
-		flex-direction: column;
-		align-items: start;
+	align-items: center;
+	.rsPaper {
+		img {
+			width: 100%;
+			height: auto;
+		}
 	}
-
-	.confirmationBody {
-		flex-direction: column;
-		align-items: start;
-		.rsBox {
-			flex-direction: column;
-		}
-		.rsLabel {
-			margin: 0;
-		}
+	.sectionOne {
+		margin-bottom: 25px;
 	}
 }

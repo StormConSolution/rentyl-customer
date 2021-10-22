@@ -5,12 +5,14 @@ import LabelLink from '../labelLink/LabelLink';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { StringUtils } from '../../utils/utils';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface PointsOrLoginProps {
 	className?: string;
 }
 
 const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
+	const size = useWindowResizeChange();
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	function renderPointsOrLogin() {
 		if (user) {
@@ -18,13 +20,13 @@ const PointsOrLogin: React.FC<PointsOrLoginProps> = (props) => {
 				<div className={'availablePendingPointsContainer'}>
 					<div className={'availablePointsContainer'}>
 						<Label variant={'h4'}>Available Points</Label>
-						<Label className={'availablePointsNumber'} variant={'h1'}>
+						<Label className={'availablePointsNumber'} variant={size === 'small' ? 'h3' : 'h1'}>
 							{StringUtils.addCommasToNumber(user.availablePoints)}
 						</Label>
 					</div>
 					<div className={'pendingPointsContainer'}>
 						<Label variant={'h4'}>Points Pending</Label>
-						<Label className={'pendingPointsNumber'} variant={'h1'}>
+						<Label className={'pendingPointsNumber'} variant={size === 'small' ? 'h3' : 'h1'}>
 							{StringUtils.addCommasToNumber(user.pendingPoints)}
 						</Label>
 					</div>

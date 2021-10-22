@@ -4,6 +4,7 @@ import Paper from '../paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { DateUtils, StringUtils } from '../../utils/utils';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface ItineraryCostSummaryCardProps {
 	destinationName: string;
@@ -28,6 +29,7 @@ interface ItineraryCostSummaryCardProps {
 }
 
 const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	let grandTotalCents = 0;
 	let grandTotalTaxFeeCents = 0;
 	let grandTotalPoints = 0;
@@ -51,9 +53,20 @@ const ItineraryCostSummaryCard: React.FC<ItineraryCostSummaryCardProps> = (props
 							<Label variant={'h4'}>{StringUtils.addCommasToNumber(item.subtotalPoints)} points</Label>
 						)}
 					</Box>
-					<Label variant={'body1'}>{`${DateUtils.displayUserDate(
-						item.arrivalDate
-					)} - ${DateUtils.displayUserDate(item.departureDate)}`}</Label>
+					{size === 'small' ? (
+						<Label variant={'body1'}>
+							{`${DateUtils.displayUserDate(
+								item.arrivalDate,
+								'MM/DD/YYYY'
+							)} - ${DateUtils.displayUserDate(item.departureDate, 'MM/DD/YYYY')}`}
+						</Label>
+					) : (
+						<Label variant={'body1'}>
+							{`${DateUtils.displayUserDate(item.arrivalDate)} - ${DateUtils.displayUserDate(
+								item.departureDate
+							)}`}
+						</Label>
+					)}
 					<Label variant={'body1'}>
 						{DateUtils.daysBetweenStartAndEndDates(
 							new Date(item.arrivalDate),

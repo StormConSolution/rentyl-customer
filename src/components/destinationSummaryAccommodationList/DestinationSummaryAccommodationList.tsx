@@ -70,7 +70,8 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						look="containedPrimary"
 						variant={'caption'}
 						label="Book Now"
-						onClick={() => {
+						onClick={(e) => {
+							e.stopPropagation();
 							props.onBookNowClick(accommodation.id);
 						}}
 					/>

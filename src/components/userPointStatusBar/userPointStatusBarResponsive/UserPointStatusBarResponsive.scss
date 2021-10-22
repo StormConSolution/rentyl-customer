@@ -1,6 +1,6 @@
-@import '../../themes/themes';
+@import '../../../themes/themes';
 
-.rsUserPointStatusBar {
+.rsUserPointStatusBarResponsive {
 	background-color: theme-var($primaryBackgroundColor);
 	> .rsBox:first-of-type {
 		width: 100%;
@@ -51,6 +51,17 @@
 		&.h1 {
 			font-size: 40px;
 			line-height: 45px;
+			&.yellow {
+				color: theme-var($iconAndHighlightTextColor);
+			}
+			&.grey {
+				color: #9b9b9b;
+			}
+		}
+		&.h3 {
+			font-size: 30px;
+			line-height: 35px;
+			font-weight: 900;
 			&.yellow {
 				color: theme-var($iconAndHighlightTextColor);
 			}
