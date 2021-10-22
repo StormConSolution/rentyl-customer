@@ -154,7 +154,7 @@ const RewardItemPage: React.FC = () => {
 				categoriesToDisplay = featuredCategories;
 			}
 			if (!displayRewards()) {
-				return categoriesToDisplay.map((category: Api.Reward.Category.Res.Get, index) => {
+				return categoriesToDisplay.map((category: Api.Reward.Category.Res.Get) => {
 					let media;
 					if (category.media.length >= 1) {
 						let img = category.media.find((image) => image.isPrimary);
@@ -168,7 +168,7 @@ const RewardItemPage: React.FC = () => {
 					}
 					return (
 						<RewardCategoryCard
-							key={index}
+							key={category.id}
 							value={category.id}
 							title={category.name}
 							imgPath={media}
@@ -180,12 +180,12 @@ const RewardItemPage: React.FC = () => {
 				});
 			}
 			if (!ObjectUtils.isArrayWithData(rewards)) return;
-			return rewards.map((reward, index) => {
+			return rewards.map((reward) => {
 				let primaryImg = getPrimaryRewardImg(reward.media);
 				let voucherCode = getRedeemableVoucherCode(reward.vouchers);
 				return (
 					<RewardItemCard
-						key={index}
+						key={reward.id}
 						imgPath={primaryImg}
 						title={reward.name}
 						points={reward.pointCost}
