@@ -30,13 +30,27 @@
 				margin-top: 45px;
 				display: flex;
 
-				.imageContainer {
-					max-width: 180px;
-					max-height: 180px;
-					padding: 10px;
-					img {
-						max-height: 100%;
-						max-width: 100%;
+				.carouselContainer {
+					width: clamp(278px, 530px, 530px);
+
+					.rsCarousel {
+						height: 300px;
+						width: 300px;
+						min-width: 278px;
+
+						.carouselParent {
+							overflow-x: hidden;
+							max-height: 530px;
+						}
+
+						.imageWrapper {
+							height: 100%;
+							img {
+								width: 100%;
+								height: 100%;
+								object-fit: cover;
+							}
+						}
 					}
 				}
 				.rewardText {
@@ -197,8 +211,8 @@
 					margin-top: 20px;
 					flex-direction: column;
 
-					.imageContainer {
-						width: 100%;
+					.carouselContainer {
+						width: 350px;
 					}
 
 					.rewardText {
