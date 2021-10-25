@@ -104,7 +104,7 @@ const ComparisonPage: React.FC = () => {
 		}
 		getAccommodation().catch(console.error);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [accommodationIdList]);
+	}, [accommodationIdList, comparisonItems]);
 
 	function pinAccommodationToFirstOfList(index: number) {
 		if (index === 0) return;
@@ -118,7 +118,7 @@ const ComparisonPage: React.FC = () => {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
 			return (
-				<td key={index}>
+				<td key={index} className={'evenCell'}>
 					<ResortComparisonCard
 						key={index}
 						logo={item.logo}
@@ -170,27 +170,27 @@ const ComparisonPage: React.FC = () => {
 		let output: JSX.Element[] = [];
 		let table: TableData = {
 			description: [
-				<td key={'titleDescription'}>
+				<td key={'titleDescription'} className={size === 'small' ? '' : 'oddCell'}>
 					<Label variant={'h4'}>Description</Label>
 				</td>
 			],
 			guestLimit: [
-				<td key={'titleGuestLimit'}>
+				<td key={'titleGuestLimit'} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Guest Limit</Label>
 				</td>
 			],
 			extraBedding: [
-				<td key={'titleExtraBedding'}>
+				<td key={'titleExtraBedding'} className={size === 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Extra Bedding</Label>
 				</td>
 			],
 			features: [
-				<td key={'titleFeatures'}>
+				<td key={'titleFeatures'} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Features</Label>
 				</td>
 			],
 			adaCompliant: [
-				<td key={'titleAdaCompliant'}>
+				<td key={'titleAdaCompliant'} className={size === 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Accessible</Label>
 				</td>
 			]
@@ -202,14 +202,26 @@ const ComparisonPage: React.FC = () => {
 		if (!accommodationDetailList) return [];
 		accommodationDetailList.forEach((accommodation, index) => {
 			if (table.description && size !== 'small') {
-				table.description.push(<td key={index}>{accommodation.longDescription}</td>);
+				table.description.push(
+					<td key={index} className={size === 'small' ? '' : 'oddCell'}>
+						{accommodation.longDescription}
+					</td>
+				);
 			}
-			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
+			table.guestLimit.push(
+				<td key={index} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
+					{accommodation.maxOccupantCount}
+				</td>
+			);
 			table.extraBedding.push(
-				<td key={index}>{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}</td>
+				<td key={index} className={size === 'small' ? 'evenCell' : 'oddCell'}>
+					{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}
+				</td>
 			);
 			table.adaCompliant.push(
-				<td key={index}>{accommodation.adaCompliant === 0 ? 'no' : 'yes' || accommodation.adaCompliant}</td>
+				<td key={index} className={size === 'small' ? 'evenCell' : 'oddCell'}>
+					{accommodation.adaCompliant === 0 ? 'no' : 'yes' || accommodation.adaCompliant}
+				</td>
 			);
 			if (!accommodation.features) return [];
 			let featureList: JSX.Element[] = [];
@@ -224,7 +236,7 @@ const ComparisonPage: React.FC = () => {
 				);
 			}
 			table.features.push(
-				<td key={index}>
+				<td key={index} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
 					<div className={'features'}>{featureList}</div>
 				</td>
 			);

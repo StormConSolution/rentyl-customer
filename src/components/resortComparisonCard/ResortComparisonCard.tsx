@@ -7,6 +7,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
 import Select from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import Img from '@bit/redsky.framework.rs.img';
 
 interface ResortComparisonCardProps {
 	logo: string;
@@ -46,7 +47,9 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 					cursorPointer
 				/>
 				<br />
-				{props.logo && props.logo !== '' && <img src={props.logo} alt={'resort logo'} width={'95px'} />}
+				{props.logo && props.logo !== '' && (
+					<Img src={props.logo} alt={'resort logo'} width={'95px'} height={'auto'} />
+				)}
 				<Label
 					variant={'caption'}
 					onClick={() => {
@@ -68,7 +71,9 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	) : (
 		<div className={`rsResortComparisonCard ${props.className || ''}`}>
 			<Box className={'topContent'} display={'flex'}>
-				{props.logo && props.logo !== '' && <img src={props.logo} alt={'resort logo'} width={'82px'} />}
+				{props.logo && props.logo !== '' && (
+					<Img src={props.logo} alt={'resort logo'} width={'82px'} height={'auto'} />
+				)}
 				<Label className={'title'} variant={'h2'}>
 					{props.title}
 				</Label>

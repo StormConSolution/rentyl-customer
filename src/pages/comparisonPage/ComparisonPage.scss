@@ -78,6 +78,9 @@
 				.comparisonTable {
 					width: auto;
 					border-collapse: separate;
+					.blankCell {
+						background-color: white;
+					}
 					td {
 						border-right: 1px solid theme-var($greyLineColor);
 						max-width: 110px;
@@ -88,31 +91,34 @@
 						padding: 10px;
 						width: 110px;
 						border-right: 1px solid theme-var($greyLineColor);
+						background-color: white;
 					}
 					td:first-child {
 						position: sticky;
 						left: 0;
 						z-index: 1;
-						background: white;
 					}
 					td:nth-child(2) {
 						position: sticky;
 						left: 90px;
 						z-index: 1;
-						background: white;
 					}
 					th:first-child {
 						position: sticky;
 						left: 0;
 						z-index: 1;
-						background: white;
 					}
 					th:nth-child(2) {
 						position: sticky;
 						left: 90px;
 						max-width: 100px;
 						z-index: 1;
-						background: white;
+					}
+					.evenCell {
+						background-color: white;
+					}
+					.oddCell {
+						background-color: #fcfbf8;
 					}
 				}
 			}
