@@ -19,6 +19,7 @@ import SignUpSteps from './signUpSteps/SignUpSteps';
 import SignUpForm from './signUpForm/SignUpForm';
 import LoyaltyTierPopup, { LoyaltyTierPopupProps } from '../../popups/loyaltyTierPopup/LoyaltyTierPopup';
 import LabelButton from '../../components/labelButton/LabelButton';
+import Img from '@bit/redsky.framework.rs.img';
 
 const AboutSpireSignUpPage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
@@ -135,7 +136,14 @@ const AboutSpireSignUpPage: React.FC = () => {
 			</HeroImage>
 			<div className={'rs-page-content-wrapper'}>
 				<Box className={'sectionOne'} mb={120}>
-					<img src={require('../../images/aboutSpirePage/key-chain.png')} alt={'Key Chain'} />
+					<Img
+						src={
+							'https://image.redskytech.io/AboutSpireSignUp/key-chain_eYKVaarFK5I.png?updatedAt=1634923582639'
+						}
+						alt={'Key Chain'}
+						width={577}
+						height={450}
+					/>
 					<Box className={'textBox'}>
 						<h1>History of Spire</h1>
 						<Label variant={'body1'} mb={'20px'}>
@@ -209,59 +217,7 @@ const AboutSpireSignUpPage: React.FC = () => {
 				) : (
 					<Box className={'sectionThree'} mb={120} height={'465px'} position={'relative'}>
 						<div className={'tanBox'} />
-						<Carousel
-							children={[
-								<BookNowImage
-									width={'335px'}
-									height={'440px'}
-									reactTitle={
-										<>
-											<Label variant={'caption'} mb={20}>
-												Featured points promotion
-											</Label>
-											<Label variant={'h1'} mb={20}>
-												Get 2x the points value for Margaritaville today only when paying with
-												points.
-											</Label>
-											<Label variant={'body1'} mb={30}>
-												Earning points is now twice as fun with our Margaritaville points
-												promotion. Increase your points earning power while you enjoy
-												Margaritavilles award winning hospitality…….and Margaritas!
-											</Label>
-										</>
-									}
-									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/credit-card-payment.png')}
-								/>,
-								<BookNowImage
-									width={'335px'}
-									height={'440px'}
-									title={
-										'Join us at Island H20 Live! Spire Loyalty members receive the VIP treatment'
-									}
-									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/island_h2o.jpg')}
-								/>,
-								<BookNowImage
-									width={'335px'}
-									height={'440px'}
-									title={
-										'Sunset Walk your way to points earnings - El Jeffe and Estefan Kitchen are offering discounted drinks and appetizers to Spire members'
-									}
-									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/estefan_kitchen.jpeg')}
-								/>,
-								<BookNowImage
-									width={'335px'}
-									height={'440px'}
-									title={
-										'Upgrade your stay at our partner resort properties where Spire members receive points multipliers on stays and on property spending.'
-									}
-									linkPath={'/'}
-									imgUrl={require('../../images/aboutSpirePage/upgrade.jpg')}
-								/>
-							]}
-						/>
+						<Carousel children={renderBookNowImages()} />
 					</Box>
 				)}
 				<Box className={'sectionOne'} mb={120}>
@@ -281,7 +237,15 @@ const AboutSpireSignUpPage: React.FC = () => {
 							}}
 						/>
 					</Box>
-					<img src={require('../../images/aboutSpirePage/couple-beach.png')} alt={'Key Chain'} />
+					<Img
+						loading={'lazy'}
+						src={
+							'https://image.redskytech.io/AboutSpireSignUp/couple-beach_UDul4lNpA56m.png?updatedAt=1634923582720'
+						}
+						alt={'Key Chain'}
+						width={577}
+						height={450}
+					/>
 				</Box>
 				<Footer links={FooterLinks} />
 			</div>

@@ -37,7 +37,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 	function renderButtons() {
 		if (!props.showControls || !ObjectUtils.isArrayWithData(props.children) || props.children.length < 2) return;
 		return (
-			<>
+			<React.Fragment>
 				<Button
 					className={'clickLeft'}
 					look={'none'}
@@ -45,7 +45,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 						let val = parentRef.current!.scrollLeft - parentRef.current!.offsetWidth;
 
 						setImageViewIndex(imageViewIndex - 1);
-						if (imageViewIndex <= 0) {
+						if (imageViewIndex <= 1) {
 							val = parentRef.current!.offsetWidth * totalChildren;
 							setImageViewIndex(totalChildren);
 						}
@@ -60,7 +60,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 					onClick={() => {
 						let val = parentRef.current!.offsetWidth + parentRef.current!.scrollLeft;
 						setImageViewIndex(imageViewIndex + 1);
-						if (imageViewIndex > totalChildren) {
+						if (imageViewIndex >= totalChildren) {
 							val = 0;
 							setImageViewIndex(1);
 						}
@@ -69,7 +69,7 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 				>
 					<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
 				</Button>
-			</>
+			</React.Fragment>
 		);
 	}
 
