@@ -22,7 +22,7 @@ import { ObjectUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface TableData {
-	description: JSX.Element[];
+	description?: JSX.Element[];
 	guestLimit: JSX.Element[];
 	extraBedding: JSX.Element[];
 	features: JSX.Element[];
@@ -30,8 +30,8 @@ export interface TableData {
 }
 
 const ComparisonPage: React.FC = () => {
-	let accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const size = useWindowResizeChange();
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
@@ -104,7 +104,7 @@ const ComparisonPage: React.FC = () => {
 		}
 		getAccommodation().catch(console.error);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [accommodationIdList]);
+	}, [accommodationIdList, comparisonItems]);
 
 	function pinAccommodationToFirstOfList(index: number) {
 		if (index === 0) return;
@@ -118,7 +118,7 @@ const ComparisonPage: React.FC = () => {
 		if (!comparisonItems || comparisonItems.length > 3) return;
 		return comparisonItems.map((item, index) => {
 			return (
-				<td key={index}>
+				<td key={index} className={'evenCell'}>
 					<ResortComparisonCard
 						key={index}
 						logo={item.logo}
@@ -153,7 +153,7 @@ const ComparisonPage: React.FC = () => {
 		let headerOutput: JSX.Element[] = [];
 		headerOutput = [
 			<th className={'comparisonCardsDiv'} key={'accommodation'}>
-				<Label variant={'h4'}>Accommodation Type</Label>
+				<Label variant={'h4'}>Property Type</Label>
 			</th>
 		];
 		comparisonItems.forEach((item, index) => {
@@ -170,41 +170,58 @@ const ComparisonPage: React.FC = () => {
 		let output: JSX.Element[] = [];
 		let table: TableData = {
 			description: [
-				<td key={'titleDescription'}>
+				<td key={'titleDescription'} className={size === 'small' ? '' : 'oddCell'}>
 					<Label variant={'h4'}>Description</Label>
 				</td>
 			],
 			guestLimit: [
-				<td key={'titleGuestLimit'}>
+				<td key={'titleGuestLimit'} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Guest Limit</Label>
 				</td>
 			],
 			extraBedding: [
-				<td key={'titleExtraBedding'}>
+				<td key={'titleExtraBedding'} className={size === 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Extra Bedding</Label>
 				</td>
 			],
 			features: [
-				<td key={'titleFeatures'}>
+				<td key={'titleFeatures'} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Features</Label>
 				</td>
 			],
 			adaCompliant: [
-				<td key={'titleAdaCompliant'}>
+				<td key={'titleAdaCompliant'} className={size === 'small' ? 'evenCell' : 'oddCell'}>
 					<Label variant={'h4'}>Accessible</Label>
 				</td>
 			]
 		};
+		if (size === 'small') {
+			delete table.description;
+		}
 
 		if (!accommodationDetailList) return [];
 		accommodationDetailList.forEach((accommodation, index) => {
-			table.description.push(<td key={index}>{accommodation.longDescription}</td>);
-			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
+			if (table.description && size !== 'small') {
+				table.description.push(
+					<td key={index} className={size === 'small' ? '' : 'oddCell'}>
+						{accommodation.longDescription}
+					</td>
+				);
+			}
+			table.guestLimit.push(
+				<td key={index} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
+					{accommodation.maxOccupantCount}
+				</td>
+			);
 			table.extraBedding.push(
-				<td key={index}>{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}</td>
+				<td key={index} className={size === 'small' ? 'evenCell' : 'oddCell'}>
+					{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}
+				</td>
 			);
 			table.adaCompliant.push(
-				<td key={index}>{accommodation.adaCompliant === 0 ? 'no' : 'yes' || accommodation.adaCompliant}</td>
+				<td key={index} className={size === 'small' ? 'evenCell' : 'oddCell'}>
+					{accommodation.adaCompliant === 0 ? 'no' : 'yes' || accommodation.adaCompliant}
+				</td>
 			);
 			if (!accommodation.features) return [];
 			let featureList: JSX.Element[] = [];
@@ -219,8 +236,8 @@ const ComparisonPage: React.FC = () => {
 				);
 			}
 			table.features.push(
-				<td className={'features'} key={index}>
-					{featureList}
+				<td key={index} className={size !== 'small' ? 'evenCell' : 'oddCell'}>
+					<div className={'features'}>{featureList}</div>
 				</td>
 			);
 		});
@@ -253,18 +270,35 @@ const ComparisonPage: React.FC = () => {
 					<Label variant={'caption'} onClick={() => router.back()} className={'backNavigation'}>
 						{'<'} back to previous page
 					</Label>
-					<table className={'comparisonTable'}>
-						<thead>
-							<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
-								<td className={'blankCell'} />
-								{renderComparisonCard()}
-							</tr>
-							<tr className={'tableHeader'} key={'trRow'}>
-								{renderAccommodationHeader()}
-							</tr>
-						</thead>
-						<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
-					</table>
+					{size === 'small' ? (
+						<div className={'tableContainer'}>
+							<table className={'comparisonTable'}>
+								<thead>
+									<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
+										<td className={'blankCell'} />
+										{renderComparisonCard()}
+									</tr>
+									<tr className={'tableHeader'} key={'trRow'}>
+										{renderAccommodationHeader()}
+									</tr>
+								</thead>
+								<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
+							</table>
+						</div>
+					) : (
+						<table className={'comparisonTable'}>
+							<thead>
+								<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
+									<td className={'blankCell'} />
+									{renderComparisonCard()}
+								</tr>
+								<tr className={'tableHeader'} key={'trRow'}>
+									{renderAccommodationHeader()}
+								</tr>
+							</thead>
+							<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
+						</table>
+					)}
 				</Paper>
 				<Footer links={FooterLinks} />
 			</div>
