@@ -44,6 +44,14 @@
 				padding-left: 5px;
 			}
 		}
+		.features {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			.rsIconToolTip {
+				padding: 5px;
+			}
+		}
 	}
 
 	.backNavigation {
@@ -59,9 +67,55 @@
 		.destinationPath {
 			margin-top: 18px;
 		}
-		.comparisonTable {
-			border-collapse: separate;
-			border-spacing: 10px;
+		.rsPaper {
+			overflow: hidden;
+			.backNavigation {
+				position: absolute;
+				left: 10px;
+			}
+			.tableContainer {
+				overflow: scroll;
+				.comparisonTable {
+					width: auto;
+					border-collapse: separate;
+					td {
+						border-right: 1px solid theme-var($greyLineColor);
+						max-width: 110px;
+						width: 100px;
+						padding: 10px;
+					}
+					th {
+						padding: 10px;
+						width: 110px;
+						border-right: 1px solid theme-var($greyLineColor);
+					}
+					td:first-child {
+						position: sticky;
+						left: 0;
+						z-index: 1;
+						background: white;
+					}
+					td:nth-child(2) {
+						position: sticky;
+						left: 90px;
+						z-index: 1;
+						background: white;
+					}
+					th:first-child {
+						position: sticky;
+						left: 0;
+						z-index: 1;
+						background: white;
+					}
+					th:nth-child(2) {
+						position: sticky;
+						left: 90px;
+						max-width: 100px;
+						z-index: 1;
+						background: white;
+					}
+				}
+			}
 		}
 	}
 }

@@ -45,9 +45,8 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 					color={'#004b98'}
 					cursorPointer
 				/>
-				<Label className={'title'} variant={'h2'}>
-					{props.title}
-				</Label>
+				<br />
+				{props.logo && props.logo !== '' && <img src={props.logo} alt={'resort logo'} width={'95px'} />}
 				<Label
 					variant={'caption'}
 					onClick={() => {

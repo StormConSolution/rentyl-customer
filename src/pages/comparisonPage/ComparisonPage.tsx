@@ -22,7 +22,7 @@ import { ObjectUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 export interface TableData {
-	description: JSX.Element[];
+	description?: JSX.Element[];
 	guestLimit: JSX.Element[];
 	extraBedding: JSX.Element[];
 	features: JSX.Element[];
@@ -30,8 +30,8 @@ export interface TableData {
 }
 
 const ComparisonPage: React.FC = () => {
-	let accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const size = useWindowResizeChange();
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
@@ -153,7 +153,7 @@ const ComparisonPage: React.FC = () => {
 		let headerOutput: JSX.Element[] = [];
 		headerOutput = [
 			<th className={'comparisonCardsDiv'} key={'accommodation'}>
-				<Label variant={'h4'}>Accommodation Type</Label>
+				<Label variant={'h4'}>Property Type</Label>
 			</th>
 		];
 		comparisonItems.forEach((item, index) => {
@@ -195,10 +195,15 @@ const ComparisonPage: React.FC = () => {
 				</td>
 			]
 		};
+		if (size === 'small') {
+			delete table.description;
+		}
 
 		if (!accommodationDetailList) return [];
 		accommodationDetailList.forEach((accommodation, index) => {
-			table.description.push(<td key={index}>{accommodation.longDescription}</td>);
+			if (table.description && size !== 'small') {
+				table.description.push(<td key={index}>{accommodation.longDescription}</td>);
+			}
 			table.guestLimit.push(<td key={index}>{accommodation.maxOccupantCount}</td>);
 			table.extraBedding.push(
 				<td key={index}>{accommodation.extraBeds === 0 ? 'no' : 'yes' || accommodation.extraBeds}</td>
@@ -219,8 +224,8 @@ const ComparisonPage: React.FC = () => {
 				);
 			}
 			table.features.push(
-				<td className={'features'} key={index}>
-					{featureList}
+				<td key={index}>
+					<div className={'features'}>{featureList}</div>
 				</td>
 			);
 		});
@@ -253,18 +258,35 @@ const ComparisonPage: React.FC = () => {
 					<Label variant={'caption'} onClick={() => router.back()} className={'backNavigation'}>
 						{'<'} back to previous page
 					</Label>
-					<table className={'comparisonTable'}>
-						<thead>
-							<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
-								<td className={'blankCell'} />
-								{renderComparisonCard()}
-							</tr>
-							<tr className={'tableHeader'} key={'trRow'}>
-								{renderAccommodationHeader()}
-							</tr>
-						</thead>
-						<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
-					</table>
+					{size === 'small' ? (
+						<div className={'tableContainer'}>
+							<table className={'comparisonTable'}>
+								<thead>
+									<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
+										<td className={'blankCell'} />
+										{renderComparisonCard()}
+									</tr>
+									<tr className={'tableHeader'} key={'trRow'}>
+										{renderAccommodationHeader()}
+									</tr>
+								</thead>
+								<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
+							</table>
+						</div>
+					) : (
+						<table className={'comparisonTable'}>
+							<thead>
+								<tr className={'tableHeaderComparisonCard'} key={'trComparisonCard'}>
+									<td className={'blankCell'} />
+									{renderComparisonCard()}
+								</tr>
+								<tr className={'tableHeader'} key={'trRow'}>
+									{renderAccommodationHeader()}
+								</tr>
+							</thead>
+							<tbody className={'tableBody'}>{renderAccommodationCompare()}</tbody>
+						</table>
+					)}
 				</Paper>
 				<Footer links={FooterLinks} />
 			</div>
