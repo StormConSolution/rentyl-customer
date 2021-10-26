@@ -60,8 +60,12 @@ const UserPointStatusBarMobile: React.FC<UserPointStatusBarProps> = (props) => {
 			</Box>
 			<Box mt={10}>
 				<Label variant={'body1'}>
-					You're {user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0} Points until you
-					reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b> Spire tier.
+					You're{' '}
+					{StringUtils.addCommasToNumber(
+						user.nextTierThreshold ? user.nextTierThreshold - user.lifeTimePoints : 0
+					)}{' '}
+					Points until you reach <b>{user.nextTierThreshold ? user.nextTierTitle : user.tierTitle}</b> Spire
+					tier.
 				</Label>
 				<Box className={'loadingBarContainer'}>
 					<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
