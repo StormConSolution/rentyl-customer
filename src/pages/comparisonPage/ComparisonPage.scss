@@ -62,66 +62,66 @@
 	}
 }
 
-.small {
-	.rsComparisonPage {
-		.destinationPath {
-			margin-top: 18px;
-		}
-		.rsPaper {
-			overflow: hidden;
-			.backNavigation {
-				position: absolute;
-				left: 10px;
-			}
-			.tableContainer {
-				overflow: scroll;
-				.comparisonTable {
-					width: auto;
-					border-collapse: separate;
-					.blankCell {
-						background-color: white;
-					}
-					td {
-						border-right: 1px solid theme-var($greyLineColor);
-						max-width: 110px;
-						width: 100px;
-						padding: 10px;
-					}
-					th {
-						padding: 10px;
-						width: 110px;
-						border-right: 1px solid theme-var($greyLineColor);
-						background-color: white;
-					}
-					td:first-child {
-						position: sticky;
-						left: 0;
-						z-index: 1;
-					}
-					td:nth-child(2) {
-						position: sticky;
-						left: 90px;
-						z-index: 1;
-					}
-					th:first-child {
-						position: sticky;
-						left: 0;
-						z-index: 1;
-					}
-					th:nth-child(2) {
-						position: sticky;
-						left: 90px;
-						max-width: 100px;
-						z-index: 1;
-					}
-					.evenCell {
-						background-color: white;
-					}
-					.oddCell {
-						background-color: #fcfbf8;
-					}
-				}
-			}
-		}
-	}
-}
+//.small {
+//	.rsComparisonPage {
+//		.destinationPath {
+//			margin-top: 18px;
+//		}
+//		.rsPaper {
+//			overflow: hidden;
+//			.backNavigation {
+//				position: absolute;
+//				left: 10px;
+//			}
+//			.tableContainer {
+//				overflow: scroll;
+//				.comparisonTable {
+//					width: auto;
+//					border-collapse: separate;
+//					.blankCell {
+//						background-color: white;
+//					}
+//					td {
+//						border-right: 1px solid theme-var($greyLineColor);
+//						max-width: 110px;
+//						width: 100px;
+//						padding: 10px;
+//					}
+//					th {
+//						padding: 10px;
+//						width: 110px;
+//						border-right: 1px solid theme-var($greyLineColor);
+//						background-color: white;
+//					}
+//					td:first-child {
+//						position: sticky;
+//						left: 0;
+//						z-index: 1;
+//					}
+//					td:nth-child(2) {
+//						position: sticky;
+//						left: 90px;
+//						z-index: 1;
+//					}
+//					th:first-child {
+//						position: sticky;
+//						left: 0;
+//						z-index: 1;
+//					}
+//					th:nth-child(2) {
+//						position: sticky;
+//						left: 90px;
+//						max-width: 100px;
+//						z-index: 1;
+//					}
+//					.evenCell {
+//						background-color: white;
+//					}
+//					.oddCell {
+//						background-color: #fcfbf8;
+//					}
+//				}
+//			}
+//		}
+//	}
+//}

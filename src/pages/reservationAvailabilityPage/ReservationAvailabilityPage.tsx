@@ -342,7 +342,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		return destinations.map((destination, index) => {
 			let urls: string[] = getImageUrls(destination);
 			let summaryTabs = getSummaryTabs(destination);
-			let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, -1);
+			let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
 			const addressData = {
 				city: destination.city,
 				state: destination.state
@@ -363,13 +363,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
-						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: destination.id,
 							logo: destination.logoUrl,
 							title: destination.name,
 							roomTypes: roomTypes,
-							selectedRoom: 0
+							selectedRoom: destination.accommodations[0].id
 						});
 					}}
 				/>
@@ -377,18 +376,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 		});
 	}
 
-	function formatCompareRoomTypes(
-		destination: Api.Destination.Res.Availability,
-		accommodationIdSelected: number | string
-	): Misc.SelectOptions[] {
+	function formatCompareRoomTypes(destination: Api.Destination.Res.Availability): Misc.OptionType[] {
 		if (!destination.accommodationTypes) return [];
 		return destination.accommodations
 			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
 			.map((room) => {
-				if (accommodationIdSelected === room.id) {
-					return { value: room.id, text: room.name, selected: true };
-				}
-				return { value: room.id, text: room.name, selected: false };
+				return { value: room.id, label: room.name };
 			});
 	}
 
@@ -433,14 +426,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 							}
 						},
 						onAddCompareClick: (accommodationId: ReactText) => {
-							let roomTypes: Misc.SelectOptions[] = formatCompareRoomTypes(destination, accommodationId);
-							let selectedRoom = roomTypes.filter((value) => value.selected);
+							let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
 							comparisonService.addToComparison(recoilComparisonState, {
 								destinationId: destination.id,
 								logo: destination.logoUrl,
 								title: destination.name,
 								roomTypes: roomTypes,
-								selectedRoom: +selectedRoom[0].value
+								selectedRoom: accommodationId as number
 							});
 						}
 					}
