@@ -1,4 +1,4 @@
-image: node:lts
+image: node:14
 
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
@@ -7,36 +7,35 @@ image: node:lts
 #  - template: Dependency-Scanning.gitlab-ci.yml
 
 stages:
-  - clean
-  - test
-  - deploy
+    - clean
+    - test
+    - deploy
 
 Clean Node Modules:
-  stage: clean
-  script:
-    - rm package-lock.json || true
-    - rm yarn.lock || true
-    - echo "Installing Node Modules"
-    - npm config set @bit:registry https://node.bit.dev
-    - yarn install --silent
-  only:
-    changes:
-      - package.json
-  cache:
-    paths:
-      - node_modules/
-    policy: push
-
+    stage: clean
+    script:
+        - rm package-lock.json || true
+        - rm yarn.lock || true
+        - echo "Installing Node Modules"
+        - npm config set @bit:registry https://node.bit.dev
+        - yarn install --silent
+    only:
+        changes:
+            - package.json
+    cache:
+        paths:
+            - node_modules/
+        policy: push
 
 Build Test:
-  stage: test
-  script:
-    - echo "Building Site"
-    - yarn run build
-  cache:
-    paths:
-      - node_modules/
-    policy: pull
+    stage: test
+    script:
+        - echo "Building Site"
+        - yarn run build
+    cache:
+        paths:
+            - node_modules/
+        policy: pull
 
 #Service Tests:
 #  stage: test
@@ -61,41 +60,41 @@ Build Test:
 #    policy: pull
 
 Deploy Sandbox:
-  stage: deploy
-  script:
-    - mkdir ~/.ssh
-    - cp $SAND_SSH_PRIV_KEY_FILE ~/.ssh/id_rsa
-    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-    - eval `ssh-agent -s`
-    - ssh-keygen -yf ~/.ssh/id_rsa >> ~/.ssh/id_rsa.pub
-    - ssh-add ~/.ssh/id_rsa
-    - echo "Test ssh connection"
-    - ssh -o StrictHostKeyChecking=no -T dev@sand.spireloyalty.com
-    - npm i -g pm2
-    - pm2 deploy sand update
-  cache:
-    paths:
-      - node_modules/
-    policy: pull
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+    stage: deploy
+    script:
+        - mkdir ~/.ssh
+        - cp $SAND_SSH_PRIV_KEY_FILE ~/.ssh/id_rsa
+        - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+        - eval `ssh-agent -s`
+        - ssh-keygen -yf ~/.ssh/id_rsa >> ~/.ssh/id_rsa.pub
+        - ssh-add ~/.ssh/id_rsa
+        - echo "Test ssh connection"
+        - ssh -o StrictHostKeyChecking=no -T dev@sand.spireloyalty.com
+        - npm i -g pm2
+        - pm2 deploy sand update
+    cache:
+        paths:
+            - node_modules/
+        policy: pull
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "dev"'
 
 Deploy Production:
-  stage: deploy
-  script:
-    - mkdir ~/.ssh
-    - cp $SAND_SSH_PRIV_KEY_FILE ~/.ssh/id_rsa
-    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-    - eval `ssh-agent -s`
-    - ssh-keygen -yf ~/.ssh/id_rsa >> ~/.ssh/id_rsa.pub
-    - ssh-add ~/.ssh/id_rsa
-    - echo "Test ssh connection"
-    - ssh -o StrictHostKeyChecking=no -T dev@prod.spireloyalty.com
-    - npm i -g pm2
-    - pm2 deploy prod update
-  cache:
-    paths:
-      - node_modules/
-    policy: pull
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
+    stage: deploy
+    script:
+        - mkdir ~/.ssh
+        - cp $SAND_SSH_PRIV_KEY_FILE ~/.ssh/id_rsa
+        - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+        - eval `ssh-agent -s`
+        - ssh-keygen -yf ~/.ssh/id_rsa >> ~/.ssh/id_rsa.pub
+        - ssh-add ~/.ssh/id_rsa
+        - echo "Test ssh connection"
+        - ssh -o StrictHostKeyChecking=no -T dev@prod.spireloyalty.com
+        - npm i -g pm2
+        - pm2 deploy prod update
+    cache:
+        paths:
+            - node_modules/
+        policy: pull
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "master"'
