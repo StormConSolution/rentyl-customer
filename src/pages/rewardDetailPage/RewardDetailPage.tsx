@@ -55,7 +55,7 @@ const RewardDetailPage: React.FC = () => {
 
 	function renderEnabledOrDisabledButton() {
 		if (!reward) return;
-		if (user) {
+		if (user && reward.isActive) {
 			const hasEnoughPoints = user.availablePoints - reward.pointCost > 0;
 			return (
 				<LabelButton
@@ -78,7 +78,13 @@ const RewardDetailPage: React.FC = () => {
 					look={'containedPrimary'}
 					variant={'button'}
 					label={'buy with points'}
-					onClick={() => rsToastify.error('please sign in to redeem points', 'Sign In!')}
+					onClick={() => {
+						if (!user) {
+							rsToastify.error('please sign in to redeem points', 'Sign In!');
+						} else if (!reward.isActive) {
+							rsToastify.error('This reward is no longer active', 'Inactive Reward!');
+						}
+					}}
 				/>
 			);
 		}
