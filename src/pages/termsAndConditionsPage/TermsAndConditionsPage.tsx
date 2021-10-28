@@ -290,17 +290,12 @@ const TermsAndConditionsPage: React.FC = () => {
 								Loyalty. You also acknowledge and agree that Fidel may share certain details of your
 								Eligible Transactions with Spire, its Affiliates, Participating Merchant Partner(s),
 								and/or Payment Card Network(s) to enable your participation in Spire Loyalty and for
-								other purposes in accordance with these Terms and Conditions, the Spire Privacy Policy
-								<b>
-									<u>https:/spireloyalty/legal/privacy</u>
-								</b>{' '}
-								and Fidel’s Privacy Policy
-								<b>
-									<u>https://fidel.uk/legal/privacy</u>
-								</b>{' '}
-								You may opt-out of transaction monitoring on the Linked Card(s) at any time by
-								terminating your participation in Spire Loyalty in accordance with these Terms and
-								Conditions and/or un-linking the Linked Card pursuant to Section 4B above.
+								other purposes in accordance with these Terms and Conditions, the{' '}
+								<Link path={'/legal/privacy'}>Spire Privacy Policy</Link> and{' '}
+								<Link path={'https://fidel.uk/legal/privacy'}>Fidel’s Privacy Policy</Link> You may
+								opt-out of transaction monitoring on the Linked Card(s) at any time by terminating your
+								participation in Spire Loyalty in accordance with these Terms and Conditions and/or
+								un-linking the Linked Card pursuant to Section 4B above.
 							</li>
 							<li>
 								Notwithstanding anything to the herein or in the Privacy Policy to the contrary, Spire
@@ -553,14 +548,14 @@ const TermsAndConditionsPage: React.FC = () => {
 						Spire is conscious and respectful of your personal information. We will maintain all of your
 						personal and private information in confidence and will use such information only in connection
 						with owning, administering and providing Spire Loyalty as provided herein (including as
-						described herein), and as otherwise as provided in our Privacy Policy{' '}
-						<b>https:/spireloyalty/legal/privacy</b>, which is incorporated herein by this reference. Upon
-						enrolling in Spire Loyalty, you may begin receiving promotional emails for promotional purchase
-						and redemption specials. You are encouraged to regularly check the Website for updates and
-						changes to the Privacy Policy, and your continued registration or link of Linked Card(s) into
-						Spire Loyalty, redemption of Spire Points and other transactions with Spire shall be deemed to
-						constitute your agreement to and acceptance of any revision to or replacement of the Privacy
-						Policy.
+						described herein), and as otherwise as provided in our{' '}
+						<Link path={'/legal/privacy'}>Privacy Policy</Link>, which is incorporated herein by this
+						reference. Upon enrolling in Spire Loyalty, you may begin receiving promotional emails for
+						promotional purchase and redemption specials. You are encouraged to regularly check the Website
+						for updates and changes to the Privacy Policy, and your continued registration or link of Linked
+						Card(s) into Spire Loyalty, redemption of Spire Points and other transactions with Spire shall
+						be deemed to constitute your agreement to and acceptance of any revision to or replacement of
+						the Privacy Policy.
 					</li>
 					<li>
 						<Label variant={'h3'}>

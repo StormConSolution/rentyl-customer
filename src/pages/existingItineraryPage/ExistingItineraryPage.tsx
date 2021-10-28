@@ -12,7 +12,7 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 const ExistingItineraryPage: React.FC = () => {
@@ -68,7 +68,7 @@ const ExistingItineraryPage: React.FC = () => {
 				sortedStays.sort(
 					(stay1, stay2) => new Date(stay2.departureDate).getTime() - new Date(stay1.departureDate).getTime()
 				);
-				let date = new Date(sortedStays[0].departureDate);
+				let date = DateUtils.serverToClientDate(sortedStays[0].departureDate as string);
 				return date.getTime() < Date.now();
 			});
 
@@ -78,7 +78,7 @@ const ExistingItineraryPage: React.FC = () => {
 				sortedStays.sort(
 					(stay1, stay2) => new Date(stay2.departureDate).getTime() - new Date(stay1.departureDate).getTime()
 				);
-				let date = new Date(sortedStays[0].departureDate);
+				let date = DateUtils.serverToClientDate(sortedStays[0].departureDate as string);
 				return date.getTime() >= Date.now();
 			});
 
