@@ -1,15 +1,8 @@
 import * as React from 'react';
 import './ComparisonTableResponsive.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
-import ComparisonAccommodationCard from '../../comparisonAccommodationCard/ComparisonAccommodationCard';
+import ComparisonAccommodationCardResponsive from '../../comparisonAccommodationCard/comparisonAccommodationCardResponsive/ComparisonAccommodationCardResponsive';
 import Label from '@bit/redsky.framework.rs.label';
-export interface TableData {
-	description: JSX.Element[];
-	guestLimit: JSX.Element[];
-	extraBedding: JSX.Element[];
-	features: JSX.Element[];
-	adaCompliant: JSX.Element[];
-}
 
 interface ComparisonTableResponsiveProps {
 	comparisonItems: Misc.ComparisonCardInfo[];
@@ -20,11 +13,13 @@ const ComparisonTableResponsive: React.FC<ComparisonTableResponsiveProps> = (pro
 	function renderTableItems() {
 		return props.comparisonItems.map((destination, index) => {
 			let accommodationDetails = props.accommodationDetailList.find((details) => {
-				return details.id === destination.selectedRoom || details.destinationId === destination.destinationId;
+				if (details.id === destination.selectedRoom) {
+					return details;
+				}
 			});
 			return (
-				<Box>
-					<ComparisonAccommodationCard
+				<Box key={destination.comparisonId}>
+					<ComparisonAccommodationCardResponsive
 						accommodationDetails={accommodationDetails || props.accommodationDetailList[0]}
 						destinationDetails={destination}
 					/>

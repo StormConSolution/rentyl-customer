@@ -12,13 +12,16 @@ import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
+import LoadingPage from '../../pages/loadingPage/LoadingPage';
 
 interface ResortComparisonCardProps {
 	destinationDetails: Misc.ComparisonCardInfo;
+	handlePinToFirst?: (pinToFirst: boolean, comparisonId: number) => void;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	const size = useWindowResizeChange();
+	let waitToLoad = false;
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonCardInfo[]>(
 		globalState.destinationComparison
@@ -33,6 +36,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 	}, [props.destinationDetails, roomTypeFormGroup]);
 
 	function updateControl(control: RsFormControl) {
+		waitToLoad = true;
 		setRoomTypeFormGroup(roomTypeFormGroup.clone().update(control));
 		let newRecoilState = comparisonService.setSelectedAccommodation(
 			props.destinationDetails.comparisonId || 0,
@@ -40,6 +44,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			recoilComparisonState
 		);
 		setRecoilComparisonState(newRecoilState);
+		waitToLoad = false;
 	}
 
 	function handleOnClose() {
@@ -50,73 +55,74 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 		setRecoilComparisonState(newComparisonItems);
 	}
 
-	return size === 'small' ? (
-		<div className={`rsResortComparisonCard`}>
-			<Box className={'topContent'}>
-				<Icon
-					className={'close'}
-					iconImg={'icon-close'}
-					onClick={handleOnClose}
-					size={14}
-					color={'#004b98'}
-					cursorPointer
-				/>
-				<br />
-
-				{destinationDetails.logo && destinationDetails.logo !== '' && (
-					<div className={'imageContainer'}>
-						<Img src={destinationDetails.logo} alt={'resort logo'} width={'95px'} height={'auto'} />
-					</div>
-				)}
-				<Label
-					variant={'caption'}
-					onClick={() => {
-						popupController.open<ComparisonCardPopupProps>(ComparisonCardPopup, {
-							logo: destinationDetails.logo,
-							title: destinationDetails.title,
-							roomTypes: destinationDetails.roomTypes,
-							updateControl: updateControl,
-							onClose: handleOnClose,
-							popupOnClick: (pinToFirst) => {
-								// if (pinToFirst) pinAccommodationToFirstOfList(index);
-							},
-							control: roomTypeFormGroup.get('roomValue')
-						});
-					}}
-				>
-					Edit
-				</Label>
-			</Box>
-		</div>
+	return waitToLoad ? (
+		<LoadingPage />
 	) : (
 		<div className={`rsResortComparisonCard`}>
-			<Box className={'topContent'} display={'flex'}>
-				{destinationDetails.logo && destinationDetails.logo !== '' && (
-					<div className={'imageContainer'}>
-						<Img src={destinationDetails.logo} alt={'resort logo'} width={'82px'} height={'auto'} />
-					</div>
-				)}
-				<Label className={'title'} variant={'h2'} lineClamp={2}>
-					{destinationDetails.title}
-				</Label>
-				<Icon
-					className={'close'}
-					iconImg={'icon-close'}
-					onClick={handleOnClose}
-					size={14}
-					color={'#004b98'}
-					cursorPointer
-				/>
-			</Box>
-			<Box className={'bottomContent'} display={'flex'}>
-				<Select
-					control={roomTypeFormGroup.get('roomValue')}
-					updateControl={updateControl}
-					options={destinationDetails.roomTypes}
-					isClearable={false}
-					menuPlacement={'top'}
-				/>
-			</Box>
+			{size === 'small' && (
+				<Box className={'topContent'}>
+					<Icon
+						className={'close'}
+						iconImg={'icon-close'}
+						onClick={handleOnClose}
+						size={14}
+						color={'#004b98'}
+						cursorPointer
+					/>
+					<br />
+					<Label className={'title'} variant={'h2'} lineClamp={2} width={'120px'}>
+						{destinationDetails.title}
+					</Label>
+					<Label
+						variant={'caption'}
+						onClick={() => {
+							popupController.open<ComparisonCardPopupProps>(ComparisonCardPopup, {
+								logo: destinationDetails.logo,
+								title: destinationDetails.title,
+								roomTypes: destinationDetails.roomTypes,
+								comparisonId: destinationDetails.comparisonId || 0,
+								updateControl: updateControl,
+								onClose: handleOnClose,
+								popupOnClick: props.handlePinToFirst,
+								control: roomTypeFormGroup.get('roomValue')
+							});
+						}}
+					>
+						Edit
+					</Label>
+				</Box>
+			)}
+			{size !== 'small' && (
+				<Box className={'topContent'} display={'flex'}>
+					{destinationDetails.logo && destinationDetails.logo !== '' && (
+						<div className={'imageContainer'}>
+							<Img src={destinationDetails.logo} alt={'resort logo'} width={'82px'} height={'auto'} />
+						</div>
+					)}
+					<Label className={'title'} variant={'h2'} lineClamp={2}>
+						{destinationDetails.title}
+					</Label>
+					<Icon
+						className={'close'}
+						iconImg={'icon-close'}
+						onClick={handleOnClose}
+						size={14}
+						color={'#004b98'}
+						cursorPointer
+					/>
+				</Box>
+			)}
+			{size !== 'small' && (
+				<Box className={'bottomContent'} display={'flex'}>
+					<Select
+						control={roomTypeFormGroup.get('roomValue')}
+						updateControl={updateControl}
+						options={destinationDetails.roomTypes}
+						isClearable={false}
+						menuPlacement={'top'}
+					/>
+				</Box>
+			)}
 		</div>
 	);
 };

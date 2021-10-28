@@ -1,10 +1,15 @@
 @import 'src/themes/themes';
 
-.rsComparisonAccommodationCard {
+.rsComparisonAccommodationCardMobile {
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+	grid-template-rows: 100px 40px 40px 40px 40px 1fr;
 	gap: 20px;
+	align-items: center;
+	.cell {
+		max-width: 125px;
+		width: 100%;
+	}
 	.oddCell {
 		background-color: #fcfbf8;
 	}

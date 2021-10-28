@@ -1,21 +1,21 @@
 import { Service } from '../Service';
 import rsToasts from '@bit/redsky.framework.toast';
-import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import { ObjectUtils } from '../../utils/utils';
 
 export default class ComparisonService extends Service {
-	addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
+	async addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
 		const [comparisonItems, setComparisonItems] = recoilState;
 
 		if (comparisonItems.length === 3) throw rsToasts.info('You can only compare three at a time!');
 		let newComparisonItem: Misc.ComparisonCardInfo = compareItem;
-		if (!ObjectUtils.isArrayWithData(comparisonItems)) {
+		if (await !ObjectUtils.isArrayWithData(comparisonItems)) {
 			newComparisonItem.comparisonId = 1;
 		} else {
 			const comparisonIds = comparisonItems.map((item: Misc.ComparisonCardInfo) => {
 				return item.comparisonId;
 			});
-			const lastId = Math.max(comparisonIds);
+			const lastId = Math.max(...comparisonIds);
+			console.log(lastId);
 			newComparisonItem.comparisonId = lastId + 1;
 		}
 		let newArray: Misc.ComparisonCardInfo[] = [...comparisonItems, newComparisonItem];

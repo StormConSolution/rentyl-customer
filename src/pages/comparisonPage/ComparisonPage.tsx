@@ -66,17 +66,6 @@ const ComparisonPage: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [comparisonItems]);
 
-	useEffect(() => {
-		console.log(
-			'recoilComparisonState',
-			recoilComparisonState,
-			'comparisonItems',
-			comparisonItems,
-			'accommodationDetails',
-			accommodationDetailList
-		);
-	}, [recoilComparisonState, comparisonItems, accommodationDetailList]);
-
 	function renderComparisonTable() {
 		return <ComparisonTable comparisonItems={comparisonItems} accommodationDetailList={accommodationDetailList} />;
 	}

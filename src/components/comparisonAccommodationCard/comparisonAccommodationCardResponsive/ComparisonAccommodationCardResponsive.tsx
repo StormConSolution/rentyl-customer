@@ -1,9 +1,9 @@
 import * as React from 'react';
-import './ComparisonAccommodationCard.scss';
+import './ComparisonAccommodationCardResponsive.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
-import ResortComparisonCard from '../resortComparisonCard/ResortComparisonCard';
-import IconToolTip from '../iconToolTip/IconToolTip';
-import LoadingPage from '../../pages/loadingPage/LoadingPage';
+import ResortComparisonCard from '../../resortComparisonCard/ResortComparisonCard';
+import IconToolTip from '../../iconToolTip/IconToolTip';
+import LoadingPage from '../../../pages/loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 interface ComparisonAccommodationCardProps {
@@ -11,7 +11,7 @@ interface ComparisonAccommodationCardProps {
 	destinationDetails: Misc.ComparisonCardInfo;
 }
 
-const ComparisonAccommodationCard: React.FC<ComparisonAccommodationCardProps> = (props) => {
+const ComparisonAccommodationCardResponsive: React.FC<ComparisonAccommodationCardProps> = (props) => {
 	function renderResortComparisonCard() {
 		return (
 			<Box>
@@ -44,7 +44,9 @@ const ComparisonAccommodationCard: React.FC<ComparisonAccommodationCardProps> = 
 		<Box className={'rsComparisonAccommodationCard'}>
 			<Box>{renderResortComparisonCard()}</Box>
 			<Box>
-				<Label variant={'h4'}>{props.accommodationDetails.name}</Label>
+				<Label variant={'h4'} lineClamp={1} showMoreButton={true}>
+					{props.accommodationDetails.name}
+				</Label>
 			</Box>
 			<Box className={'oddCell'}>{props.accommodationDetails.maxOccupantCount}</Box>
 			<Box>
@@ -63,4 +65,4 @@ const ComparisonAccommodationCard: React.FC<ComparisonAccommodationCardProps> = 
 	);
 };
 
-export default ComparisonAccommodationCard;
+export default ComparisonAccommodationCardResponsive;
