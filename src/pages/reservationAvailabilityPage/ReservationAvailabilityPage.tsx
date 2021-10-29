@@ -69,7 +69,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string>('');
-	const [rateCode, setRateCode] = useState<string>('');
+	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
@@ -155,15 +155,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 			if (!!newSearchQueryObj.priceRangeMax) {
 				newSearchQueryObj.priceRangeMax *= 100;
 			}
+			if (!rateCode) {
+				delete newSearchQueryObj.rateCode;
+			} else {
+				newSearchQueryObj.rateCode = rateCode;
+			}
+			updateParams(newSearchQueryObj);
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let res = await destinationService.searchAvailableReservations(newSearchQueryObj);
 				setDestinations(res.data);
 				setAvailabilityTotal(res.total || 0);
 				setValidCode(rateCode === '' || (!!res.data && res.data.length > 0));
-				if (rateCode !== '' && !!res.data && res.data.length > 0) {
-					rsToastify.success('Rate code successfully applied.', 'Success!');
-				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
@@ -230,11 +233,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 			if (key === 'regionIds' || key === 'propertyTypeIds') {
 				if (!ObjectUtils.isArrayWithData(value)) delete createSearchQueryObj[key];
 			}
-			let newUrlParams = { ...createSearchQueryObj };
-			delete newUrlParams['pagination'];
-			router.updateUrlParams(newUrlParams);
+			updateParams(createSearchQueryObj);
 			return createSearchQueryObj;
 		});
+	}
+
+	function updateParams(searchQueryObj: any) {
+		let newUrlParams = { ...searchQueryObj };
+		delete newUrlParams['pagination'];
+		router.updateUrlParams(newUrlParams);
 	}
 
 	function removeSearchQueryObj(
@@ -253,9 +260,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		setSearchQueryObj((pre) => {
 			let newSearchQueryObj: any = { ...pre };
 			delete newSearchQueryObj[key];
-			let newUrlParams = { ...newSearchQueryObj };
-			delete newUrlParams['pagination'];
-			router.updateUrlParams(newUrlParams);
+			updateParams(newSearchQueryObj);
 			return newSearchQueryObj;
 		});
 	}
@@ -363,7 +368,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
-						let selectedRoom = roomTypes.filter((value) => value.selected);
 						comparisonService.addToComparison(recoilComparisonState, {
 							destinationId: destination.id,
 							logo: destination.logoUrl,
@@ -422,7 +426,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 								departureDate: data.endDate,
 								packages: []
 							};
-							if (data.rateCode) newRoom.rateCode = data.rateCode;
+							if (rateCode) newRoom.rateCode = rateCode;
 							data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
 							if (!user) {
 								popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
@@ -554,7 +558,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 								children={
 									<RateCodeSelect
 										apply={(value) => {
-											setRateCode(value);
 											updateSearchQueryObj('rateCode', value);
 										}}
 										code={rateCode}

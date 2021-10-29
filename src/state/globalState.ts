@@ -13,7 +13,8 @@ enum GlobalStateKeys {
 	USER_TOKEN = 'UserToken',
 	USER = 'User',
 	COMPANY = 'Company',
-	VERIFIED_ACCOMMODATIONS = 'VerifiedAccommodations'
+	VERIFIED_ACCOMMODATIONS = 'VerifiedAccommodations',
+	USER_RATE_CODE = 'UserRateCode'
 }
 
 // Change based on project so we don't have classing when developing on localhost (va = Volcanic Admin)
@@ -25,6 +26,7 @@ class GlobalState {
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 	verifiedAccommodations: RecoilState<{ [uuid: number]: Api.Reservation.Res.Verification }>;
+	userRateCode: RecoilState<string>;
 
 	saveToStorageList: string[] = [];
 
@@ -65,6 +67,11 @@ class GlobalState {
 
 		// The following is stored in local storage automatically
 		this.saveToStorageList = [GlobalStateKeys.USER_TOKEN, GlobalStateKeys.COMPARISON_CARD];
+
+		this.userRateCode = atom<string>({
+			key: GlobalStateKeys.USER_RATE_CODE,
+			default: ''
+		});
 	}
 
 	private loadFromLocalStorage<T>(key: string, defaultValue: T): T {

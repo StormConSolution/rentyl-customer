@@ -24,6 +24,8 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
+import { useRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
 
 const BookingFlowAddRoomPage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -38,6 +40,7 @@ const BookingFlowAddRoomPage = () => {
 
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
@@ -56,7 +59,7 @@ const BookingFlowAddRoomPage = () => {
 		children: editStayDetails?.children || 0,
 		pagination: { page: 1, perPage: 5 },
 		destinationId: params.data.destinationId,
-		rateCode: editStayDetails?.rateCode || params.data.stays[0].rateCode || ''
+		rateCode: rateCode || ''
 	});
 	const [options, setOptions] = useState<OptionType[]>([]);
 	const [propertyType, setPropertyType] = useState<RsFormGroup>(
@@ -66,7 +69,6 @@ const BookingFlowAddRoomPage = () => {
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
 
-	const [rateCode, setRateCode] = useState<string | undefined>(params.data.stays[0].rateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
@@ -90,18 +92,17 @@ const BookingFlowAddRoomPage = () => {
 				newSearchQueryObj.priceRangeMax *= 100;
 				newSearchQueryObj.priceRangeMin *= 100;
 			}
-
+			if (!rateCode) {
+				delete newSearchQueryObj.rateCode;
+			} else {
+				newSearchQueryObj.rateCode = rateCode;
+			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
-					delete newSearchQueryObj.rateCode;
 				let res = await accommodationService.availability(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
-				if (rateCode !== '' && !!res.data && res.data.length > 0) {
-					rsToastify.success('Rate code successfully applied.', 'Success!');
-				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
@@ -207,15 +208,6 @@ const BookingFlowAddRoomPage = () => {
 		});
 	}
 
-	function getImageUrls(destination: Api.Accommodation.Res.Availability): string[] {
-		if (destination.media) {
-			return destination.media.map((urlObj) => {
-				return urlObj.urls.imageKit?.toString() || '';
-			});
-		}
-		return [];
-	}
-
 	function bookNow(accommodationId: number) {
 		let stays = params.data.stays;
 		if (editStayDetails) {
@@ -229,11 +221,11 @@ const BookingFlowAddRoomPage = () => {
 			accommodationId,
 			adults: searchQueryObj.adults,
 			children: searchQueryObj.children,
-			rateCode: searchQueryObj.rateCode,
 			arrivalDate: searchQueryObj.startDate as string,
 			departureDate: searchQueryObj.endDate as string,
 			packages: editStayDetails?.packages || []
 		};
+		if (rateCode) newRoom.rateCode = rateCode;
 
 		let bookingParams: Misc.BookingParams = {
 			destinationId: params.data.destinationId,
@@ -416,7 +408,6 @@ const BookingFlowAddRoomPage = () => {
 							children={
 								<RateCodeSelect
 									apply={(value) => {
-										setRateCode(value);
 										updateSearchQueryObj('rateCode', value);
 									}}
 									code={rateCode}
