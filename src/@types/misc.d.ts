@@ -70,10 +70,11 @@ declare namespace Misc {
 	}
 
 	export interface ComparisonCardInfo {
+		comparisonId?: number;
 		destinationId: number;
 		logo: string;
 		title: string;
-		roomTypes: { value: number | string; text: number | string; selected: boolean }[];
+		roomTypes: { value: number | string; label: number | string }[];
 		selectedRoom: number;
 	}
 

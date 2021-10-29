@@ -1,0 +1,14 @@
+@import '../../../themes/themes';
+
+.rsComparisonAccommodationCard {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 100px 20px 16px 16px 16px 35px 1fr;
+	gap: 20px;
+	.oddCell {
+		background-color: #fcfbf8;
+	}
+	.featureIconLabel {
+		padding: 5px;
+	}
+}

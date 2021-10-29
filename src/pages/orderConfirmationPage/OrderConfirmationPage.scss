@@ -39,9 +39,15 @@
 			border: none;
 			margin: 16px 0;
 		}
-		img {
-			width: 800px;
-			height: 400px;
+		.sectionOne {
+			.imageWrapper {
+				height: auto;
+				img {
+					width: 100%;
+					height: auto;
+					object-fit: cover;
+				}
+			}
 		}
 
 		.rsLabel {

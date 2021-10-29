@@ -13,6 +13,13 @@
 			font-size: 16px;
 			line-height: 16px;
 		}
+
+		.imageContainer {
+			max-width: 82px;
+			max-height: 40px;
+			display: flex;
+			justify-content: center;
+		}
 	}
 
 	.bottomContent {
@@ -23,7 +30,12 @@
 			max-width: 180px;
 			height: 30px;
 			margin-top: 15px;
-
+			[class*='menu'] {
+				max-height: 200px;
+			}
+			.css-4ljt47-MenuList {
+				max-height: 200px;
+			}
 			.primaryTextColor {
 				overflow: hidden;
 				white-space: nowrap;
@@ -41,9 +53,13 @@
 
 .small {
 	.rsResortComparisonCard {
-		width: 210px;
-		height: 73px;
-
+		display: flex;
+		justify-content: center;
+		width: 100%;
+		max-width: 130px;
+		.topContent {
+			max-width: 125px;
+		}
 		.title {
 			margin-top: 14px;
 		}

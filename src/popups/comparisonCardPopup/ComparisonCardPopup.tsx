@@ -8,17 +8,17 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl } from '@bit/redsky.framework.rs.form';
-import { useEffect } from 'react';
 
 export interface ComparisonCardPopupProps extends PopupProps {
 	logo: string;
 	title: string;
 	roomTypes: OptionType[];
-	onChange: (value: any) => void;
+	updateControl: (value: any) => void;
 	onClose: () => void;
-	popupOnClick?: (pinToFirst: boolean) => void;
+	popupOnClick?: (pinToFirst: boolean, comparisonId: number) => void;
 	className?: string;
 	control: RsFormControl;
+	comparisonId: number;
 }
 
 const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
@@ -35,7 +35,7 @@ const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 						popupController.close(ComparisonCardPopup);
 					}}
 				/>
-				<Paper className={'paperWrapper'} height={'423px'} width={'335px'} backgroundColor={'#fcfbf8'}>
+				<Paper className={'paperWrapper'} width={'335px'} backgroundColor={'#fcfbf8'}>
 					<img src={props.logo} alt={'resort logo'} width={'82px'} />
 					<Label className={'title'} variant={'h3'}>
 						{props.title}
@@ -44,7 +44,7 @@ const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 						Edit
 					</Label>
 					<Box className={'accommodationSelect'} display={'flex'}>
-						<Select control={props.control} options={props.roomTypes} updateControl={props.onChange} />
+						<Select control={props.control} options={props.roomTypes} updateControl={props.updateControl} />
 					</Box>
 					<div className={'radioDiv'}>
 						<Label variant={'body1'}>Pin to first column?</Label>
@@ -85,7 +85,7 @@ const ComparisonCardPopup: React.FC<ComparisonCardPopupProps> = (props) => {
 							variant={'caption'}
 							look={'containedPrimary'}
 							onClick={() => {
-								if (props.popupOnClick) props.popupOnClick(pinToFirst);
+								if (props.popupOnClick) props.popupOnClick(pinToFirst, props.comparisonId);
 								popupController.close(ComparisonCardPopup);
 							}}
 							label={'apply'}
