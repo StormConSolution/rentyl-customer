@@ -58,15 +58,17 @@ const OrderConfirmationPage = () => {
 					marginBottom={25}
 				>
 					<Paper className={'sectionOne'} boxShadow>
-						<Img
-							src={
-								reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
-								reward.media[0].urls.imageKit
-							}
-							alt={'Reward Image'}
-							width={size === 'small' ? 350 : 800}
-							height={size === 'small' ? 200 : 400}
-						/>
+						<div className={'imageWrapper'}>
+							<Img
+								src={
+									reward.media.find((image) => image.isPrimary)?.urls.imageKit ||
+									reward.media[0].urls.imageKit
+								}
+								alt={'reward image'}
+								width={size === 'small' ? 350 : 800}
+								height={'auto'}
+							/>
+						</div>
 						<Label variant={'h2'} className={'confirmationLabel'}>
 							Your Order Is Confirmed
 						</Label>
