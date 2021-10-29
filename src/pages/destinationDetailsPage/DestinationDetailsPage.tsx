@@ -70,6 +70,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [page, setPage] = useState<number>(1);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const [comparisonId, setComparisonId] = useState<number>(1);
 	const initialStartDate = params.startDate ? moment(params.startDate) : moment();
 	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
@@ -322,7 +323,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					onCompareClick={() => {
 						if (!destinationDetails) return;
 						let selectedRoom = destinationDetails.accommodations.filter((value) => value.id === item.id);
+						setComparisonId(comparisonId + 1);
 						comparisonService.addToComparison(recoilComparisonState, {
+							comparisonId: comparisonId,
 							destinationId: Date.now(),
 							logo: destinationDetails.logoUrl,
 							title: destinationDetails.name,
@@ -331,11 +334,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								.map((value) => {
 									return {
 										value: value.id,
-										text: value.name,
-										selected: value.id === item.id
+										label: value.name
 									};
 								}),
-							selectedRoom: selectedRoom[0].id
+							selectedRoom: selectedRoom[0].id || destinationDetails.accommodations[0].id
 						});
 					}}
 					roomStats={[
