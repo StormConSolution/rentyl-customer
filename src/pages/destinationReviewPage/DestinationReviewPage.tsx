@@ -16,6 +16,7 @@ import LinkButton from '../../components/linkButton/LinkButton';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { ObjectUtils } from '../../utils/utils';
+import Img from '@bit/redsky.framework.rs.img';
 
 const DestinationReviewPage: React.FC = () => {
 	const reviewService = serviceFactory.get<ReviewService>('ReviewService');
@@ -83,7 +84,12 @@ const DestinationReviewPage: React.FC = () => {
 				<Box className={'contentWrapper'}>
 					<Box className={'destinationRatingHeader'}>
 						<div>
-							<img src={require('../../images/encore-resort.png')} alt={destinationReviews.name} />
+							<Img
+								src={destinationReviews.logoUrl}
+								alt={destinationReviews.name}
+								height={''}
+								width={100}
+							/>
 							<Label variant={'h1'} margin={'15px 0 10px'}>
 								{destinationReviews.name}
 							</Label>
