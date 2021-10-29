@@ -5,6 +5,7 @@ import ResortComparisonCard from '../../resortComparisonCard/ResortComparisonCar
 import IconToolTip from '../../iconToolTip/IconToolTip';
 import LoadingPage from '../../../pages/loadingPage/LoadingPage';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import { ObjectUtils } from '../../../utils/utils';
 
 interface ComparisonAccommodationCardProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
@@ -21,7 +22,7 @@ const ComparisonAccommodationCardResponsive: React.FC<ComparisonAccommodationCar
 	}
 
 	function renderFeatures() {
-		if (!props.accommodationDetails.features) return [];
+		if (!ObjectUtils.isArrayWithData(props.accommodationDetails.features)) return;
 		return (
 			<Box display={'flex'} flexWrap={'wrap'}>
 				{props.accommodationDetails.features.map((feature) => {

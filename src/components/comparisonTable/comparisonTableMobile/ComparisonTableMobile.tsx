@@ -47,7 +47,7 @@ const ComparisonTableMobile: React.FC<ComparisonTableMobileProps> = (props) => {
 					(accommodation) => accommodation.id === item.selectedRoom
 				);
 				return (
-					<Box key={item.comparisonId} className={'unpinnedAccommodation'}>
+					<Box className={'unpinnedAccommodation'}>
 						<ComparisonAccommodationCardMobile
 							accommodationDetails={accommodationInfo || props.accommodationDetailList[0]}
 							destinationDetails={item}
