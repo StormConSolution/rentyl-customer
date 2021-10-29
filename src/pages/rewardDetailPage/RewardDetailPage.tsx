@@ -79,10 +79,10 @@ const RewardDetailPage: React.FC = () => {
 					variant={'button'}
 					label={'buy with points'}
 					onClick={() => {
-						if (!user) {
-							rsToastify.error('please sign in to redeem points', 'Sign In!');
-						} else if (!reward.isActive) {
+						if (!reward.isActive) {
 							rsToastify.error('This reward is no longer active', 'Inactive Reward!');
+						} else if (!user) {
+							rsToastify.error('please sign in to redeem points', 'Sign In!');
 						}
 					}}
 				/>
