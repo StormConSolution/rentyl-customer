@@ -481,6 +481,7 @@ declare namespace Model {
 	export interface Region {
 		id: number;
 		name: string;
+		isActive: 1 | 0;
 	}
 
 	export interface ReportTemplate {
@@ -527,6 +528,7 @@ declare namespace Model {
 		itineraryId: string;
 		additionalDetails: string;
 		numberOfAccommodations: number;
+		completedOn: Date | string;
 	}
 
 	export interface ReservationUpsellPackage {

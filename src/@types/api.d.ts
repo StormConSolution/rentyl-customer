@@ -984,14 +984,15 @@ declare namespace Api {
 		export namespace Req {
 			export interface Get {}
 
-			export interface Create {
-				name: string;
+			export interface Create extends Omit<Model.Region, 'id' | 'isActive'> {}
+			export interface Update extends Partial<Model.Region> {
+				id: number;
 			}
 		}
 
 		export namespace Res {
 			export interface Get extends Model.Region {}
-			export interface Update extends Get {}
+			export interface Detail extends Model.Region {}
 		}
 	}
 
@@ -1120,6 +1121,10 @@ declare namespace Api {
 
 			export interface Update extends Partial<Omit<Create, 'destinationId'>> {
 				id: number;
+			}
+
+			export interface Complete {
+				confirmationCode: string;
 			}
 
 			export interface UpdatePayment {
@@ -1273,6 +1278,7 @@ declare namespace Api {
 
 				export interface Get {
 					parentReservationId: number;
+					userId: number;
 					itineraryId: string;
 					billingAddress: BillingAddressDetails;
 					paymentMethod?: PaymentMethod;
