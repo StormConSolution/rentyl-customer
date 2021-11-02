@@ -119,7 +119,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		return [];
 	}
 
-	function formatOptions(options: Api.Destination.Res.PropertyType[] | Api.Region.Res.Get[]) {
+	function formatOptions(options: any[]) {
 		return options.map((value) => {
 			return { value: value.id, label: value.name };
 		});
