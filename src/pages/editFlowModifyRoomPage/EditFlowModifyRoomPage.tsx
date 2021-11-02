@@ -26,6 +26,8 @@ import AccommodationService from '../../services/accommodation/accommodation.ser
 import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { useRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
@@ -46,6 +48,7 @@ const EditFlowModifyRoomPage = () => {
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
 	const [options, setOptions] = useState<OptionType[]>([]);
+	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [propertyType, setPropertyType] = useState<RsFormGroup>(
 		new RsFormGroup([new RsFormControl('propertyType', [], [])])
 	);
@@ -57,7 +60,8 @@ const EditFlowModifyRoomPage = () => {
 		adults: reservation?.adultCount || 1,
 		children: reservation?.childCount || 0,
 		pagination: { page: 1, perPage: 5 },
-		destinationId: params.destinationId
+		destinationId: params.destinationId,
+		rateCode: rateCode || ''
 	});
 
 	useEffect(() => {
@@ -88,11 +92,13 @@ const EditFlowModifyRoomPage = () => {
 				newSearchQueryObj.priceRangeMax *= 100;
 				newSearchQueryObj.priceRangeMin *= 100;
 			}
-
+			if (!rateCode) {
+				delete newSearchQueryObj.rateCode;
+			} else {
+				newSearchQueryObj.rateCode = rateCode;
+			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				if (newSearchQueryObj.rateCode === '' || newSearchQueryObj.rateCode === undefined)
-					delete newSearchQueryObj.rateCode;
 				let res = await accommodationService.availability(newSearchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
@@ -196,21 +202,11 @@ const EditFlowModifyRoomPage = () => {
 				delete createSearchQueryObj['propertyTypeIds'];
 			}
 			if (rateCode !== '' || rateCode !== undefined) {
+				setRateCode(reservation?.rateCode || '');
 				createSearchQueryObj['rateCode'] = reservation?.rateCode;
 			}
 			return createSearchQueryObj;
 		});
-	}
-
-	function getImageUrls(
-		destination: Api.Accommodation.Res.Availability | Api.Reservation.AccommodationDetails
-	): string[] {
-		if (destination.media) {
-			return destination.media.map((urlObj) => {
-				return urlObj.urls.imageKit?.toString() || '';
-			});
-		}
-		return [];
 	}
 
 	async function bookNow(id: number) {
@@ -226,7 +222,7 @@ const EditFlowModifyRoomPage = () => {
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1,
-				rateCode: searchQueryObj.rateCode
+				rateCode: rateCode || searchQueryObj.rateCode
 			};
 			try {
 				await reservationsService.updateReservation(stay);
