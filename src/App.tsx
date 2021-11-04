@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from '@bit/redsky.framework.rs.996';
+import { Box, View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
 import './icons/siteIcons/style.css';
 import './icons/cmsIcons/style.css';
@@ -18,6 +18,7 @@ import useCompanyInfo from './customHooks/useCompanyInfo';
 import { useSetCustomToast } from './customHooks/useSetCustomToast';
 import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
 import { ToastContainer } from '@bit/redsky.framework.rs.toastify';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
@@ -77,6 +78,23 @@ function App() {
 			{renderViewsBasedOnLoginStatus()}
 			{popupController.instance}
 			<ToastContainer />
+			<Box padding={'20px'}>
+				<Label variant={'h1'}>testing text</Label>
+				<Label variant={'h2'}>testing text</Label>
+				<Label variant={'h3'}>testing text</Label>
+				<Label variant={'h4'}>testing text</Label>
+				<Label variant={'h5'}>testing text</Label>
+				<Label variant={'body1'}>testing text</Label>
+				<Label variant={'body2'}>testing text</Label>
+				<Label variant={'body3'}>testing text</Label>
+				<Label variant={'body4'}>testing text</Label>
+				<Label variant={'italicBold'}>testing text</Label>
+				<Label variant={'subtitle1'}>testing text</Label>
+				<Label variant={'subtitle2'}>testing text</Label>
+				<Label variant={'subtitle3'}>testing text</Label>
+				<Label variant={'caption1'}>testing text</Label>
+				<Label variant={'caption2'}>testing text</Label>
+			</Box>
 		</div>
 	);
 }
