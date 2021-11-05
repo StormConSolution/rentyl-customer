@@ -19,15 +19,4 @@ jobs:
     name: Dev
     resourceType: VirtualMachine
     tags: spire
-  strategy:
-    runOnce:
-      deploy:
-        steps:
-        - checkout: self
-          submodules: recursive
-        - script: /bin/bash ./ods.sh
-          displayName: 'Execute ods.sh'
-        - script: |
-            echo Add other tasks to build, test, and deploy your project.
-            echo See https://aka.ms/yaml
-          displayName: 'Run a multi-line script'
+  
