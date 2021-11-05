@@ -49,6 +49,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				});
 			}
 		});
+
 		return lowestPrice;
 	}
 
