@@ -19,3 +19,9 @@ jobs:
     name: Dev
     resourceType: VirtualMachine
     tags: spire
+      strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self
+          submodules: recursive
