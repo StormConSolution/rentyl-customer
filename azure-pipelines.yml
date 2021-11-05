@@ -19,7 +19,7 @@ jobs:
     name: Dev
     resourceType: VirtualMachine
     tags: spire
-      strategy:
+  strategy:
     runOnce:
       deploy:
         steps:
