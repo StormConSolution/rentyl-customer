@@ -71,10 +71,11 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 					setStartDateControl(startDate);
 					setEndDateControl(endDate);
 				}}
+				minimumNights={2}
 				focusedInput={props.focusedInput}
 				onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 				numberOfMonths={props.monthsToShow}
-				noBorder
+				verticalSpacing={20}
 			/>
 		</Box>
 	);

@@ -20,6 +20,7 @@ import SignUpForm from './signUpForm/SignUpForm';
 import LoyaltyTierPopup, { LoyaltyTierPopupProps } from '../../popups/loyaltyTierPopup/LoyaltyTierPopup';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Img from '@bit/redsky.framework.rs.img';
+import GuestCounter from '../../components/guestCounter/GuestCounter';
 
 const AboutSpireSignUpPage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
@@ -91,6 +92,7 @@ const AboutSpireSignUpPage: React.FC = () => {
 
 	return (
 		<Page className={'rsAboutSpireSignUpPage'}>
+			<GuestCounter minCount={1} title={'Counter'} />
 			<HeroImage
 				image={
 					'https://image.redskytech.io/AboutSpireSignUp/Mask_Group_8_abAPMoIhd.jpg?updatedAt=1632324815926&tr=w-1920'
