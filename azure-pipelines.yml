@@ -4,16 +4,30 @@
 # https://aka.ms/yaml
 
 trigger:
-- dev
+  batch: true
+  branches:
+    include:
+    - dev
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+jobs:
+- deployment: VMDeploy
+  displayName: Talend
+  environment:
+    name: Dev
+    resourceType: VirtualMachine
+    tags: spire
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self
+          submodules: recursive
+        - script: /bin/bash ./ods.sh
+          displayName: 'Execute ods.sh'
+        - script: |
+            echo Add other tasks to build, test, and deploy your project.
+            echo See https://aka.ms/yaml
+          displayName: 'Run a multi-line script'
