@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - dev
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- deployment: VMDeploy
+  displayName: Talend
+  environment:
+    name: Dev
+    resourceType: VirtualMachine
+    tags: spire
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self
+          submodules: recursive
