@@ -1,15 +1,18 @@
 @import 'themes';
-.rsButton {
+@import '_variables.scss';
+
+.App .rsButton {
 	&.contained {
 		&.primary {
-			background-color: theme-var($buttonLinkColor) !important;
-			color: #fcfbf8;
+			background-color: theme-var($buttonLinkColor);
 			border-radius: 5px;
 			padding: 0 24px;
 			height: 38px;
+			.rsLabel {
+				color: #fcfbf8;
+			}
 			&.yellow {
-				background-color: theme-var($secondaryButtonLinkColor) !important;
-				color: black;
+				background-color: theme-var($secondaryButtonLinkColor);
 				.rsLabel {
 					color: black;
 				}
@@ -17,13 +20,11 @@
 		}
 
 		&.secondary {
-			background-color: #ffffff !important;
-			color: theme-var($buttonLinkColor);
+			background-color: #ffffff;
 			border: 2px solid theme-var($buttonLinkColor);
 			border-radius: 5px;
 			padding: 0 24px;
 			height: 38px;
-
 			.rsLabel {
 				color: theme-var($buttonLinkColor);
 			}

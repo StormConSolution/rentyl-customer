@@ -7,11 +7,14 @@ import DestinationSearchResultCardResponsive from './destinationSearchResultCard
 export interface DestinationSearchResultCardProps {
 	className?: string;
 	destinationName: string;
+	destinationDescription: string;
+	destinationFeatures: {
+		id: number;
+		title: string;
+		icon: string;
+	}[];
 	address: string;
-	logoImagePath: string;
 	picturePaths: string[];
-	starRating: number;
-	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
@@ -24,10 +27,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 		<DestinationSearchResultCardMobile
 			destinationName={props.destinationName}
 			address={props.address}
-			logoImagePath={props.logoImagePath}
 			picturePaths={props.picturePaths}
-			starRating={props.starRating}
-			reviewPath={props.reviewPath}
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
@@ -35,11 +35,10 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 	) : (
 		<DestinationSearchResultCardResponsive
 			destinationName={props.destinationName}
+			destinationDescription={props.destinationDescription}
+			destinationFeatures={props.destinationFeatures}
 			address={props.address}
-			logoImagePath={props.logoImagePath}
 			picturePaths={props.picturePaths}
-			starRating={props.starRating}
-			reviewPath={props.reviewPath}
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}

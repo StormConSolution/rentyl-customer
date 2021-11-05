@@ -2,84 +2,95 @@ import * as React from 'react';
 import './DestinationSearchResultCardMobile.scss';
 import Carousel from '../../carousel/Carousel';
 import { Box } from '@bit/redsky.framework.rs.996';
-import TabbedDestinationSummary, {
-	DestinationSummaryTab
-} from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import Label from '@bit/redsky.framework.rs.label';
-import LabelButton from '../../labelButton/LabelButton';
 import router from '../../../utils/router';
-import StarRating from '../../starRating/StarRating';
-import LabelLink from '../../labelLink/LabelLink';
 import Img from '@bit/redsky.framework.rs.img';
+import Icon from '@bit/redsky.framework.rs.icon';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../../state/globalState';
+import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
+import { ObjectUtils, StringUtils } from '../../../utils/utils';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
 	destinationName: string;
 	address: string;
-	logoImagePath: string;
 	picturePaths: string[];
-	starRating: number;
-	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
+	const reservationFilters = useRecoilValue(globalState.reservationFilters);
+
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string, index) => {
+		return picturePaths.map((path: string) => {
 			return (
-				<Box key={index} className={'imageWrapper'}>
+				<Box key={path} className={'imageWrapper'}>
 					<Img src={path} alt={'Resort Image'} width={690} height={580} />
 				</Box>
 			);
 		});
 	}
 
+	function findLowestPricedAccommodation() {
+		let lowestPrice: { pricePoints: number; priceCents: number } = { pricePoints: 0, priceCents: 0 };
+		props.summaryTabs.map((accommodationList) => {
+			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
+				return accommodationList.content.accommodations.map((accommodation) => {
+					if (ObjectUtils.isArrayWithData(accommodation.prices)) {
+						accommodation.prices.map((price) => {
+							if (!lowestPrice.priceCents || lowestPrice.priceCents >= price.priceCents) {
+								lowestPrice = { pricePoints: price.pricePoints, priceCents: price.priceCents };
+							}
+						});
+					}
+				});
+			}
+		});
+		return lowestPrice;
+	}
+
+	function renderPricePerNight() {
+		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
+		if (reservationFilters.redeemPoints) {
+			return <Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>;
+		} else {
+			return <Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>;
+		}
+	}
+
 	return (
-		<div className={'rsDestinationSearchResultCardMobile'}>
+		<Box className={'rsDestinationSearchResultCardMobile'}>
 			<Carousel showControls children={renderPictures(props.picturePaths)} />
-			{props.logoImagePath && props.logoImagePath !== '' && (
-				<img className={'logoImg'} src={props.logoImagePath} alt={''} />
-			)}
-			<Label variant={'h1'} mb={8}>
-				{props.destinationName}
-			</Label>
-			<Box display={'flex'} mb={8}>
-				<StarRating size="small16px" rating={props.starRating} />
-				<LabelLink
-					className="ratings"
-					label="View Reviews >"
-					path={props.reviewPath}
-					variant="caption"
-					externalLink={false}
-				/>
-			</Box>
-			<Label variant={'body1'} mb={32}>
-				{props.address}
-			</Label>
-			<TabbedDestinationSummary tabs={props.summaryTabs} />
-			<Box display={'flex'} marginTop={10} justifyContent={'space-between'}>
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'button'}
-					label={'Resort Details'}
-					onClick={() => {
-						router.navigate(props.destinationDetailsPath).catch(console.error);
-					}}
-				/>
-				{!!props.onAddCompareClick && (
-					<LabelButton
-						look={'containedSecondary'}
-						variant={'button'}
-						label={'Add to compare +'}
+			<Box className={'mobileCardInfo'}>
+				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>
+					<Label variant={'subtitle1'}>{props.destinationName}</Label>
+					<Icon
+						iconImg={'icon-info-outline'}
 						onClick={() => {
-							if (props.onAddCompareClick) props.onAddCompareClick();
+							router.navigate(props.destinationDetailsPath).catch(console.error);
 						}}
+						size={20}
 					/>
-				)}
+				</Box>
+				<Box display={'flex'} justifyContent={'space-between'} paddingBottom={'16px'}>
+					<Box display={'flex'}>
+						{renderPricePerNight()}
+						<Label variant={'caption1'}>night</Label>
+					</Box>
+					<Label variant={'caption1'} className={'addressLabel'}>
+						{props.address}
+					</Label>
+				</Box>
+				<Box display={'flex'} justifyContent={'flex-end'}>
+					<Label className={'earnText'} variant={'italicBold'}>
+						You could earn from points for this stay
+					</Label>
+				</Box>
 			</Box>
-		</div>
+		</Box>
 	);
 };
 
