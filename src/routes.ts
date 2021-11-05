@@ -32,8 +32,17 @@ import DestinationReviewPage from './pages/destinationReviewPage/DestinationRevi
 import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
 import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
+import TestComponentsPage from './pages/testComponentsPage/TestComponentsPage';
 
 export const routes: RouteDetails[] = [
+	{
+		path: '/test-components-page',
+		page: TestComponentsPage,
+		routeGuard: verifyRoute,
+		options: {
+			view: 'testComponentsPage'
+		}
+	},
 	{
 		path: '/',
 		page: LandingPage,
