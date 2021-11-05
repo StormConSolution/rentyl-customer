@@ -5,7 +5,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Dropdown from './components/dropdown/Dropdown';
 import Checkbox from './components/checkbox/Checkbox';
-import { useEffect, useState } from 'react';
+import { ReactText, useEffect, useState } from 'react';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
@@ -16,7 +16,8 @@ import PropertyType = Api.Destination.Res.PropertyType;
 const TestComponentsPage: React.FC = () => {
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertySelection, setPropertySelection] = useState<PropertyType[]>([]);
+	const [propertySelection, setPropertySelection] = useState<PropertyType[]>();
+	const [checkedState, setCheckedState] = useState(new Array(options.length).fill(false));
 
 	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
 		return options.map((value) => {
@@ -39,17 +40,42 @@ const TestComponentsPage: React.FC = () => {
 		getPropertyTypes().catch(console.error);
 	}, []);
 
+	console.log(options);
+
+	function collectFilterOptions(position: number) {
+		const updatedCheckedState = checkedState.map((item, idx) => (idx === position ? !item : item));
+		setCheckedState(updatedCheckedState);
+	}
+
 	function displayAllProperties() {
 		return (
 			<Dropdown title="Accommodations">
-				<Box padding="1rem">
-					{options.map((item, idx) => (
-						<Checkbox title={item.label} value={item.value} />
-					))}
-				</Box>
+				<form>
+					<Box padding="1rem">
+						{options.map((item, idx) => (
+							<Checkbox title={item.label} value={item.value} checked={checkedState[idx]} />
+						))}
+					</Box>
+					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
+						<Box
+							display="flex"
+							justifyContent="space-between"
+							alignItems="center"
+							height="75px"
+							paddingX="10px"
+						>
+							<button className="clearBtn">Clear</button>
+							<button type="submit" className="applyBtn">
+								Apply
+							</button>
+						</Box>
+					</Box>
+				</form>
 			</Dropdown>
 		);
 	}
+
+	console.log(checkedState);
 	return (
 		<Page className="rsTestComponentsPage">
 			<Box id="container" width="100%" marginX="auto">
