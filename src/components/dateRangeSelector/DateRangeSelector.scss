@@ -18,8 +18,8 @@
 			width: 88px;
 			height: 40px;
 			padding-right: 5px;
-			border: 1px solid theme-var($greyLineColor);
-			background-color: theme-var($primaryBackgroundColor);
+			//border: 1px solid theme-var($greyLineColor);
+			//background-color: theme-var($primaryBackgroundColor);
 		}
 		.DateInput:last-of-type {
 			margin-left: 13px;
@@ -164,18 +164,21 @@
 		.CalendarDay__default {
 			border: none;
 			position: relative;
-			&:hover {
-				background-color: theme-var($primaryBackgroundColor);
-				&:after {
-					content: '';
-					border: 1px solid theme-var($primaryCalendarColor);
-					border-radius: 50%;
-					position: absolute;
-					top: 0;
-					left: 0;
-					bottom: 0;
-					right: 0;
-					z-index: 0;
+			&:not(.CalendarDay__blocked_out_of_range) {
+				&:hover {
+					background-color: theme-var($primaryBackgroundColor);
+
+					&:after {
+						content: '';
+						border: 1px solid theme-var($primaryCalendarColor);
+						border-radius: 50%;
+						position: absolute;
+						top: 0;
+						left: 0;
+						bottom: 0;
+						right: 0;
+						z-index: 0;
+					}
 				}
 			}
 		}
@@ -183,9 +186,11 @@
 		.CalendarDay__hovered_span {
 			background-color: theme-var($secondaryCalendarColor);
 			color: theme-var($primaryCalendarColor);
-			&:hover {
-				border-radius: 50%;
-				border: 1px solid theme-var($primaryCalendarColor);
+			&:not(.CalendarDay__blocked_out_of_range) {
+				&:hover {
+					border-radius: 50%;
+					border: 1px solid theme-var($primaryCalendarColor);
+				}
 			}
 		}
 
