@@ -20,7 +20,8 @@ import SignUpForm from './signUpForm/SignUpForm';
 import LoyaltyTierPopup, { LoyaltyTierPopupProps } from '../../popups/loyaltyTierPopup/LoyaltyTierPopup';
 import LabelButton from '../../components/labelButton/LabelButton';
 import Img from '@bit/redsky.framework.rs.img';
-import GuestCounter from '../../components/guestCounter/GuestCounter';
+import Counter from '../../components/counter/Counter';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 
 const AboutSpireSignUpPage: React.FC = () => {
 	const parentRef = useRef<HTMLElement>(null);
@@ -29,6 +30,8 @@ const AboutSpireSignUpPage: React.FC = () => {
 	const [mainImage, setMainImage] = useState<string>();
 	const [mainTitleDescription, setMainTitleDescription] = useState<React.ReactNode>();
 	const [imageIndex, setImageIndex] = useState<number>(0);
+
+	const [counter, setCounter] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('guest', 1, [])]));
 
 	useEffect(() => {
 		setMainImage(promotionWheelData[imageIndex].imgUrl);
@@ -90,9 +93,12 @@ const AboutSpireSignUpPage: React.FC = () => {
 		});
 	}
 
+	function updateControl(control: RsFormControl) {
+		setCounter(counter.clone().update(control));
+	}
+
 	return (
 		<Page className={'rsAboutSpireSignUpPage'}>
-			<GuestCounter minCount={1} title={'Counter'} />
 			<HeroImage
 				image={
 					'https://image.redskytech.io/AboutSpireSignUp/Mask_Group_8_abAPMoIhd.jpg?updatedAt=1632324815926&tr=w-1920'
