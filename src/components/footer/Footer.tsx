@@ -45,7 +45,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 					path={link.path}
 					key={index}
 					onClick={() => {
-						router.navigate(link.path).catch(console.error);
+						window.open(link.path, '_blank');
 					}}
 				>
 					{link.text}
@@ -73,13 +73,11 @@ const Footer: React.FC<FooterProps> = (props) => {
 						src={company.squareLogoUrl}
 						alt={company.name}
 						onClick={() => {
-							router.navigate('/').catch(console.error);
+							window.open('https://rentylresorts.com/', '_blank');
 						}}
 					/>
 				</Box>
-				<Box display={'flex'} gap={210}>
-					{renderSections(props.links)}
-				</Box>
+				<Box className={'footerSections'}>{renderSections(props.links)}</Box>
 			</Box>
 			<Box className="copyright" display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 				<Label variant={'caption'}>Spire &#169; {new Date().getFullYear()}, all rights reserved.</Label>

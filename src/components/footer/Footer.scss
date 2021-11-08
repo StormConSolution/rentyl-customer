@@ -3,6 +3,7 @@
 	position: relative;
 	box-sizing: border-box;
 	max-width: 1920px;
+	padding: 0 37px;
 	img {
 		height: 40px;
 		grid-column: 1;
@@ -28,12 +29,11 @@
 				cursor: pointer;
 			}
 		}
+		.footerSections {
+			display: flex;
+			gap: 210px;
+		}
 		.rsBox {
-			grid-template-columns: repeat(4, 1fr);
-			grid-column: 2 / 6;
-			row-gap: 5px;
-			column-gap: 10px;
-
 			a {
 				color: theme-var($buttonLinkColor) !important;
 				font-size: small;
@@ -71,13 +71,11 @@
 		margin: 20px;
 
 		.footerNavigation {
-			grid-template-columns: 1fr;
-
-			.rsBox {
-				grid-template-columns: 1fr;
-				grid-column: 1;
-				row-gap: 10px;
-				margin-top: 20px;
+			flex-direction: column;
+			gap: 10px;
+			.footerSections {
+				flex-direction: column;
+				gap: 10px;
 			}
 		}
 	}
