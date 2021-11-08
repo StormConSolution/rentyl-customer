@@ -1,13 +1,15 @@
 import * as React from 'react';
 import './Checkbox.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { ReactText } from 'react';
+import { ChangeEvent, ReactText } from 'react';
 
 interface CheckboxProps {
 	title?: ReactText | number;
 	value?: ReactText | number;
-	onChange?: () => void;
+	onChange?: ((event: ChangeEvent<HTMLInputElement>) => void) | undefined;
 	checked?: boolean;
+	id?: string;
+	name?: string;
 }
 
 const Checkbox: React.FC<CheckboxProps> = (props) => {
@@ -19,6 +21,8 @@ const Checkbox: React.FC<CheckboxProps> = (props) => {
 				value={props.value}
 				onChange={props.onChange}
 				checked={props.checked}
+				id={props.id}
+				name={props.name}
 			/>
 			<Label className="filterByItemLabel" paddingLeft="10px">
 				{props.title}
