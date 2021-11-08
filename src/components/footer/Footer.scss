@@ -54,6 +54,7 @@
 				}
 			}
 			.socialMediaLinks {
+				gap: 10px;
 				width: 121px;
 				justify-content: space-between;
 				margin-right: 10px;
@@ -76,6 +77,12 @@
 			.footerSections {
 				flex-direction: column;
 				gap: 10px;
+			}
+		}
+		.rsBox:last-of-type {
+			padding: 8px 0;
+			&.copyright {
+				flex-direction: column;
 			}
 		}
 	}
