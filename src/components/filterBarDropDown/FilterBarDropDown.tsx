@@ -9,14 +9,16 @@ interface FilterBarDropDownProps {
 	title?: string;
 	placeholder?: string;
 	onChangeCallBack?: () => void;
+	onClearCallback?: () => void;
 }
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 	const [toggleContent, setToggleContent] = useState<boolean>(false);
-	function sendCallback() {
-		if (props.onChangeCallBack) {
-			props.onChangeCallBack();
-		}
+	function applyBtnCallback() {
+		if (props.onChangeCallBack) props.onChangeCallBack();
+	}
+	function onClearBtnCallBack() {
+		if (props.onClearCallback) props.onClearCallback();
 	}
 	return (
 		<div className="rsFilterBarDropDown">
@@ -50,8 +52,10 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 							height="75px"
 							paddingX="10px"
 						>
-							<button className="clearBtn">Clear</button>
-							<button className="applyBtn" onClick={sendCallback}>
+							<button className="clearBtn" onClick={onClearBtnCallBack}>
+								Clear
+							</button>
+							<button className="applyBtn" onClick={applyBtnCallback}>
 								Apply
 							</button>
 						</Box>
