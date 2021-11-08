@@ -10,6 +10,8 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
+import Button from '@bit/redsky.framework.rs.button';
+import LabelButton from '../../labelButton/LabelButton';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -70,7 +72,19 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				</Box>
 			);
 		} else {
-			return;
+			return (
+				<Box>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'5px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
 		}
 	}
 

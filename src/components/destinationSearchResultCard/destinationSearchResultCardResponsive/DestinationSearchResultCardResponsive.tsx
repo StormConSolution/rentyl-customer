@@ -10,6 +10,9 @@ import LabelButton from '../../labelButton/LabelButton';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
+import LabelImage from '../../labelImage/LabelImage';
+import IconLabel from '../../iconLabel/IconLabel';
+import router from '../../../utils/router';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -74,7 +77,19 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 				</Box>
 			);
 		} else {
-			return;
+			return (
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'16px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
 		}
 	}
 
@@ -91,11 +106,14 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	function renderFeatures() {
 		return props.destinationFeatures.map((feature) => {
 			return (
-				<Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-					<Icon iconImg={'cms-icon-0501'} size={45} />
-					<Label variant={'subtitle1'} className={'featureTitle'} lineClamp={1}>
-						{feature.title}
-					</Label>
+				<Box display={'flex'} flexDirection={'column'} alignItems={'center'} textAlign={'center'}>
+					<IconLabel
+						labelName={feature.title}
+						iconImg={'cms-icon-0501'}
+						iconPosition={'top'}
+						iconSize={45}
+						labelVariant={'subtitle1'}
+					/>
 				</Box>
 			);
 		});
