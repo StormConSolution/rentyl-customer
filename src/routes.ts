@@ -36,14 +36,6 @@ import TestComponentsPage from './pages/testComponentsPage/TestComponentsPage';
 
 export const routes: RouteDetails[] = [
 	{
-		path: '/test-components-page',
-		page: TestComponentsPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'testComponentsPage'
-		}
-	},
-	{
 		path: '/',
 		page: LandingPage,
 		routeGuard: verifyRoute,

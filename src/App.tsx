@@ -49,7 +49,6 @@ function App() {
 					<>
 						<AppBar />
 						<View key="landingPage" id="landingPage" default initialPath="/" />
-						<View key="testComponentsPage" id="testComponentsPage" initialPath="/test-components-page" />
 						<ComparisonDrawer />
 					</>
 				);

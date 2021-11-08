@@ -1,26 +1,25 @@
 import * as React from 'react';
-import './Dropdown.scss';
+import './FilterBarDropDown.scss';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 
-interface DropdownProps {
+interface FilterBarDropDownProps {
 	title?: string;
 	placeholder?: string;
 	onChangeCallBack?: () => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = (props) => {
+const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 	const [toggleContent, setToggleContent] = useState<boolean>(false);
 	function sendCallback() {
 		if (props.onChangeCallBack) {
 			props.onChangeCallBack();
 		}
 	}
-
 	return (
-		<div className="rsDropdown">
+		<div className="rsFilterBarDropDown">
 			<Box
 				className="rsDropdownBtn"
 				display="flex"
@@ -63,4 +62,4 @@ const Dropdown: React.FC<DropdownProps> = (props) => {
 	);
 };
 
-export default Dropdown;
+export default FilterBarDropDown;
