@@ -1,34 +1,49 @@
-.rsButton {
+@import 'themes';
+@import '_variables.scss';
+
+.App .rsButton {
 	&.contained {
 		&.primary {
-			background-color: theme-var($buttonLinkColor) !important;
-			color: #ffffff;
-			border-radius: 20px 0;
+			background-color: theme-var($buttonLinkColor);
+			border-radius: 5px;
 			padding: 0 24px;
-			height: 40px;
-
+			height: 38px;
 			.rsLabel {
-				color: #ffffff;
+				color: #fcfbf8;
+			}
+			&:hover {
+				background-color: theme-var($buttonLinkColor);
 			}
 			&.yellow {
-				background-color: theme-var($iconAndHighlightTextColor) !important;
+				background-color: theme-var($secondaryButtonLinkColor);
+				.rsLabel {
+					color: black;
+				}
+				&:hover {
+					background-color: theme-var($secondaryButtonLinkColor);
+				}
 			}
 		}
 
 		&.secondary {
-			background-color: #ffffff !important;
-			color: theme-var($buttonLinkColor);
+			background-color: white;
 			border: 2px solid theme-var($buttonLinkColor);
-			border-radius: 20px 0;
+			border-radius: 5px;
 			padding: 0 24px;
-			height: 40px;
-
+			height: 38px;
 			.rsLabel {
 				color: theme-var($buttonLinkColor);
+			}
+			&:hover {
+				background-color: white;
 			}
 		}
 	}
 	&:disabled {
+		opacity: 0.65;
 		cursor: not-allowed;
+		.rsLabel {
+			opacity: 0.5;
+		}
 	}
 }
