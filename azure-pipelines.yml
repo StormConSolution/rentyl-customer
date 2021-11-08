@@ -1,0 +1,94 @@
+# Rentyl Customer Dev Pipeline
+
+trigger: none
+
+pool:
+    vmImage: ubuntu-latest
+
+variables:
+    OUTPUT_NAME: 'build'
+
+stages:
+    - stage: build
+      displayName: Prepping application
+      variables:
+          YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+          MODULE_CACHE_HIT: false
+      jobs:
+          - job: packages
+            displayName: Get caches and install
+            steps:
+                - checkout: self
+                  clean: false
+                - task: NodeTool@0
+                  inputs:
+                      versionSpec: '14.x'
+                  displayName: 'Install Node.js'
+                - script: sudo yarn config set cache-folder $(YARN_CACHE_FOLDER)
+                  displayName: Setting Yarn cache folder
+                - task: CacheBeta@1
+                  inputs:
+                      key: 'node_modules | "$(Agent.OS)" | package.json'
+                      path: node_modules
+                      cacheHitVar: MODULE_CACHE_HIT
+                  displayName: Cache Node modules
+                - task: CacheBeta@1
+                  condition: ne(variables.MODULE_CACHE_HIT,'true')
+                  inputs:
+                      key: 'yarn | "$(Agent.OS)" | yarn.lock'
+                      path: $(YARN_CACHE_FOLDER)
+                  displayName: Cache Yarn packages
+                - script: |
+                      npm config set @bit:registry https://node.bit.dev
+                      yarn install --silent
+                  condition: ne(variables.MODULE_CACHE_HIT,'true')
+                  displayName: 'install Yarn packages'
+          - job: build
+            dependsOn: packages
+            displayName: Building
+            steps:
+                - task: NodeTool@0
+                  inputs:
+                      versionSpec: '14.x'
+                  displayName: 'Install Node.js'
+                - task: Cache@2
+                  inputs:
+                      key: 'node_modules | "$(Agent.OS)" | package.json'
+                      path: node_modules
+                  displayName: Getting Node module cache
+                - script: yarn run prettier:check
+                  displayName: Checking for prettyness
+                - script: |
+                      (! grep -r --include="*.spec.ts" "describe.only" src/test)
+                      (! grep -r --include="*.spec.ts" "it.only" src/test)
+                  displayName: 'Checking for only()'
+                - script: yarn run build
+                  displayName: Build application
+                - task: PublishPipelineArtifact@1
+                  inputs:
+                      targetPath: '$(System.DefaultWorkingDirectory)/build'
+                      artifactName: $(OUTPUT_NAME)
+                  displayName: Publish artifacts for deployment
+    - stage: deployment
+      dependsOn: build
+      displayName: Deploying to server
+      jobs:
+          - deployment: SpireDevVMDeploy
+            displayName: Deploy to Dev cluster
+            environment:
+                name: Dev
+                resourceType: VirtualMachine
+                tags: spire
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - checkout: self
+                              submodules: recursive
+                            - script: |
+                                  mkdir --verbose ~/rentyl-customer
+                                  sudo cp --recursive --force --verbose $PIPELINE_WORKSPACE/$OUTPUT_NAME ~/rentyl-customer
+                                  sudo cp --force --verbose ./ecosystem.config.js ./pm2_serve.sh ~/rentyl-customer
+                            - script: |
+                                  cd ~/rentyl-customer
+                                  sudo pm2 startOrReload ecosystem.config.js --only dev-rentyl-customer
