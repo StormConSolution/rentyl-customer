@@ -55,10 +55,22 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 
 	function renderPricePerNight() {
 		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
-		if (reservationFilters.redeemPoints) {
-			return <Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>;
+		if (reservationFilters.redeemPoints && lowestPrice) {
+			return (
+				<Box display={'flex'}>
+					<Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>
+					<Label variant={'caption1'}>night</Label>
+				</Box>
+			);
+		} else if (!reservationFilters.redeemPoints && lowestPrice) {
+			return (
+				<Box display={'flex'}>
+					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>
+					<Label variant={'caption1'}>night</Label>
+				</Box>
+			);
 		} else {
-			return <Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>;
+			return;
 		}
 	}
 
@@ -77,10 +89,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					/>
 				</Box>
 				<Box display={'flex'} justifyContent={'space-between'} paddingBottom={'16px'}>
-					<Box display={'flex'}>
-						{renderPricePerNight()}
-						<Label variant={'caption1'}>night</Label>
-					</Box>
+					{renderPricePerNight()}
 					<Label variant={'caption1'} className={'addressLabel'}>
 						{props.address}
 					</Label>

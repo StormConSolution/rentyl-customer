@@ -50,23 +50,31 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 
 	function renderPricePerNight() {
 		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
-		if (reservationFilters.redeemPoints) {
+		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
-				<Box display={'flex'} alignItems={'flex-end'} flexDirection={'column'}>
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<Label variant={'subtitle3'} className={'fromText'}>
+						from
+					</Label>
 					<Label variant={'h2'} className={'yellowText'}>
 						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
 				</Box>
 			);
-		} else {
+		} else if (!reservationFilters.redeemPoints && lowestPrice) {
 			return (
-				<Box display={'flex'} alignItems={'flex-end'} flexDirection={'column'}>
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<Label variant={'subtitle3'} className={'fromText'}>
+						from
+					</Label>
 					<Label variant={'h2'}>${StringUtils.formatMoney(lowestPrice.priceCents)}</Label>
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
 				</Box>
 			);
+		} else {
+			return;
 		}
 	}
 
@@ -126,12 +134,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					</Box>
 				</Box>
 			</Box>
-			<Box display={'flex'} flexDirection={'column'} alignItems={'flex-end'} justifyContent={'flex-end'}>
-				<Label variant={'subtitle3'} className={'fromText'}>
-					from
-				</Label>
-				{renderPricePerNight()}
-			</Box>
+			{renderPricePerNight()}
 		</Box>
 	);
 };
