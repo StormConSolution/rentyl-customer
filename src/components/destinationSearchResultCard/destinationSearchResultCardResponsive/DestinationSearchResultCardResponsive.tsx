@@ -51,9 +51,22 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	function renderPricePerNight() {
 		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
 		if (reservationFilters.redeemPoints) {
-			return <Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>;
+			return (
+				<Box display={'flex'} alignItems={'flex-end'} flexDirection={'column'}>
+					<Label variant={'h2'} className={'yellowText'}>
+						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}
+					</Label>
+					<Label variant={'subtitle3'}>points per night</Label>
+				</Box>
+			);
 		} else {
-			return <Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>;
+			return (
+				<Box display={'flex'} alignItems={'flex-end'} flexDirection={'column'}>
+					<Label variant={'h2'}>${StringUtils.formatMoney(lowestPrice.priceCents)}</Label>
+					<Label variant={'subtitle3'}>per night</Label>
+					<Label variant={'subtitle2'}>+taxes & fees</Label>
+				</Box>
+			);
 		}
 	}
 
@@ -70,9 +83,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	function renderFeatures() {
 		return props.destinationFeatures.map((feature) => {
 			return (
-				<Box>
-					<Icon iconImg={feature.icon} />
-					<Label variant={'subtitle1'} className={'featureTitle'}>
+				<Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+					<Icon iconImg={'cms-icon-0501'} size={45} />
+					<Label variant={'subtitle1'} className={'featureTitle'} lineClamp={1}>
 						{feature.title}
 					</Label>
 				</Box>
@@ -88,27 +101,35 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
-			<Carousel showControls children={renderPictures(props.picturePaths)} />
-			<Box display={'flex'} flexDirection={'column'} maxWidth={'914px'}>
-				<Label variant={'h4'}>{props.destinationName}</Label>
-				<Box display={'flex'}>
-					<Label variant={'subtitle1'} paddingRight={'74px'}>
-						Bedrooms
+			<Box display={'flex'}>
+				<Carousel showControls children={renderPictures(props.picturePaths)} />
+				<Box display={'flex'} flexDirection={'column'} maxWidth={'1020px'} padding={'5px 45px'}>
+					<Label variant={'h4'} paddingBottom={'10px'}>
+						{props.destinationName}
 					</Label>
-					<Label variant={'subtitle1'}>{props.address}</Label>
-				</Box>
-				<Box display={'flex'}>
-					<Label variant={'body4'} className={'destinationDescription'} lineClamp={2}>
-						{props.destinationDescription}
-					</Label>
-				</Box>
-				<Box className={'featureIcons'}>{renderFeatures()}</Box>
-				<Box display={'flex'} gap={'24px'}>
-					{renderButtons()}
+					<Box display={'flex'} paddingBottom={'16px'}>
+						<Label variant={'subtitle1'} paddingRight={'74px'}>
+							Bedrooms
+						</Label>
+						<Label variant={'subtitle1'}>{props.address}</Label>
+					</Box>
+					<Box display={'flex'} paddingBottom={'18px'}>
+						<Label variant={'body4'} className={'destinationDescription'} lineClamp={2}>
+							{props.destinationDescription}
+						</Label>
+					</Box>
+					<Box className={'featureIcons'} paddingBottom={'30px'}>
+						{renderFeatures()}
+					</Box>
+					<Box display={'flex'} gap={'24px'}>
+						{renderButtons()}
+					</Box>
 				</Box>
 			</Box>
-			<Box>
-				<Label>from</Label>
+			<Box display={'flex'} flexDirection={'column'} alignItems={'flex-end'} justifyContent={'flex-end'}>
+				<Label variant={'subtitle3'} className={'fromText'}>
+					from
+				</Label>
 				{renderPricePerNight()}
 			</Box>
 		</Box>

@@ -82,7 +82,7 @@ class GlobalState {
 				checkIn: new Date(),
 				checkOut: new Date(),
 				adultCount: 1,
-				redeemPoints: false,
+				redeemPoints: true,
 				sortBy: 'ASC'
 			}
 		});

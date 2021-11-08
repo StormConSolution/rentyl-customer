@@ -4,12 +4,12 @@
 	display: flex;
 	max-width: 1844px;
 	width: 100%;
+	justify-content: space-between;
 	.featureIcons {
-		max-width: 914px;
+		max-width: 1020px;
 		width: 100%;
 		display: grid;
-		gap: 34px;
-		grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
 	}
 	.featureTitle {
 		font-weight: $light;
@@ -17,25 +17,33 @@
 	}
 
 	.destinationDescription {
-		max-width: 914px;
 		width: 100%;
+		max-width: 1020px;
+	}
+
+	.fromText {
+		font-weight: bold;
+	}
+
+	.yellowText {
+		color: theme-var($yellowTextColor);
 	}
 
 	.rsCarousel {
-		max-width: 328px;
+		max-width: 414px;
 		width: 100%;
 		.carouselParent {
 			overflow-x: hidden;
 		}
 		.imageWrapper {
-			max-height: 220px;
-			max-width: 328px;
+			max-height: 278px;
+			max-width: 414px;
 			width: 100%;
 			height: 100%;
 			img {
-				width: 328px;
+				width: 414px;
 				height: auto;
-				max-height: 220px;
+				max-height: 278px;
 				object-fit: cover;
 				object-position: center;
 			}
