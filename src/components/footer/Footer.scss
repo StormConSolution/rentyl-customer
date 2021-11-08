@@ -8,7 +8,7 @@
 		height: 40px;
 		grid-column: 1;
 		grid-row: 1 / 2;
-		margin: auto 10px;
+		mix-blend-mode: multiply;
 	}
 	.rsLabel {
 		&.caption {
@@ -69,8 +69,7 @@
 
 .small {
 	.rsFooter {
-		margin: 20px;
-
+		padding: 0 15px;
 		.footerNavigation {
 			flex-direction: column;
 			gap: 10px;
