@@ -18,8 +18,6 @@
 			width: 88px;
 			height: 40px;
 			padding-right: 5px;
-			//border: 1px solid theme-var($greyLineColor);
-			//background-color: theme-var($primaryBackgroundColor);
 		}
 		.DateInput:last-of-type {
 			margin-left: 13px;
@@ -193,12 +191,6 @@
 				}
 			}
 		}
-
-		//.CalendarDay__selected_span:hover {
-		//	background-color: theme-var($primaryBackgroundColor);
-		//	border: 2px solid theme-var($primaryCalendarColor);
-		//	border-radius: 50%;
-		//}
 
 		.DayPickerKeyboardShortcuts_buttonReset {
 			display: none;
