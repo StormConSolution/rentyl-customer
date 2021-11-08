@@ -8,11 +8,16 @@ import { useState } from 'react';
 interface DropdownProps {
 	title?: string;
 	placeholder?: string;
-	applyButtonCallback?: () => void;
+	onChangeCallBack?: () => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = (props) => {
 	const [toggleContent, setToggleContent] = useState<boolean>(false);
+	function sendCallback() {
+		if (props.onChangeCallBack) {
+			props.onChangeCallBack();
+		}
+	}
 
 	return (
 		<div className="rsDropdown">
@@ -35,7 +40,25 @@ const Dropdown: React.FC<DropdownProps> = (props) => {
 					<Icon iconImg={`icon-chevron-${toggleContent ? 'down' : 'up'}`} size={25} />
 				</Box>
 			</Box>
-			{toggleContent && <Box className="DropdownContent">{props.children}</Box>}
+			{toggleContent && (
+				<Box className="DropdownContent">
+					{props.children}
+					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
+						<Box
+							display="flex"
+							justifyContent="space-between"
+							alignItems="center"
+							height="75px"
+							paddingX="10px"
+						>
+							<button className="clearBtn">Clear</button>
+							<button className="applyBtn" onClick={sendCallback}>
+								Apply
+							</button>
+						</Box>
+					</Box>
+				</Box>
+			)}
 		</div>
 	);
 };
