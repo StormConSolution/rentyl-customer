@@ -2,7 +2,7 @@
 .rsFooter {
 	position: relative;
 	box-sizing: border-box;
-
+	max-width: 1920px;
 	img {
 		height: 40px;
 		grid-column: 1;
@@ -17,10 +17,17 @@
 
 	.footerNavigation {
 		color: theme-var($primaryTextColor);
-		grid-template-columns: repeat(7, 1fr);
+		display: flex;
 		padding-bottom: 30px;
 		padding-top: 18px;
-
+		gap: 166px;
+		.companyFooterLogo {
+			width: 307px;
+			display: inline;
+			&:hover {
+				cursor: pointer;
+			}
+		}
 		.rsBox {
 			grid-template-columns: repeat(4, 1fr);
 			grid-column: 2 / 6;

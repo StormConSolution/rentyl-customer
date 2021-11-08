@@ -9,13 +9,18 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 
-export interface FooterLink {
+interface FooterLink {
 	text: string;
 	path: string;
 }
 
-interface FooterProps {
+export interface FooterSection {
+	title: string;
 	links: FooterLink[];
+}
+
+interface FooterProps {
+	links: FooterSection[];
 }
 
 const Footer: React.FC<FooterProps> = (props) => {
@@ -49,17 +54,32 @@ const Footer: React.FC<FooterProps> = (props) => {
 		});
 	}
 
+	function renderSections(sections: FooterSection[]) {
+		return sections.map((section: FooterSection, index) => {
+			return (
+				<Box key={index} display={'flex'} flexDirection={'column'}>
+					<Label variant={'h3'}>{section.title}</Label>
+					{renderLinks(section.links)}
+				</Box>
+			);
+		});
+	}
+
 	return (
 		<Box className={'rsFooter'}>
-			<Box className={'footerNavigation'} display={'grid'}>
-				<img
-					src={company.squareLogoUrl}
-					alt={company.name}
-					onClick={() => {
-						router.navigate('/').catch(console.error);
-					}}
-				/>
-				<Box display={'grid'}>{renderLinks(props.links)}</Box>
+			<Box className={'footerNavigation'}>
+				<Box className={'companyFooterLogo'}>
+					<img
+						src={company.squareLogoUrl}
+						alt={company.name}
+						onClick={() => {
+							router.navigate('/').catch(console.error);
+						}}
+					/>
+				</Box>
+				<Box display={'flex'} gap={210}>
+					{renderSections(props.links)}
+				</Box>
 			</Box>
 			<Box className="copyright" display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
 				<Label variant={'caption'}>Spire &#169; {new Date().getFullYear()}, all rights reserved.</Label>
