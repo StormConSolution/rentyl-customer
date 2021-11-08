@@ -1,0 +1,52 @@
+.rsFilterBarDropDown {
+	height: 60px;
+
+	.rsDropdownBtn {
+		border: 0.1px solid #1e180b;
+		background-color: #ffffff;
+		padding: 5px 10px;
+		border-radius: 10px;
+		.filterTitleLabel {
+			font-family: Montserrat, serif;
+			font-size: 17px;
+		}
+		.chevronIcon {
+			padding-top: 3px;
+		}
+	}
+	.DropdownContent {
+		max-width: 420px;
+		margin-top: 1.5rem;
+		box-shadow: 0 0 8px #00000029;
+		border-radius: 10px;
+		z-index: 1;
+
+		.dropdownFooter {
+			.clearBtn {
+				background-color: unset;
+				border: unset;
+				font-size: 17px;
+				text-decoration: underline;
+
+				&:hover {
+					cursor: pointer;
+				}
+			}
+			.applyBtn {
+				padding: 7px;
+				color: #ffffff;
+				border-radius: 10px;
+				background-color: #2c3c60;
+				border: unset;
+				width: 90px;
+				height: 38px;
+				letter-spacing: 1px;
+
+				&:hover {
+					background-color: #223050;
+					cursor: pointer;
+				}
+			}
+		}
+	}
+}
