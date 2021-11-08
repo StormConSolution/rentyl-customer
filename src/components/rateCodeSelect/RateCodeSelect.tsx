@@ -11,13 +11,13 @@ import globalState from '../../state/globalState';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface RateCodeSelectProps {
-	apply: (value: string) => void;
 	code?: string;
 	valid: boolean;
 }
 
 const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
+	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [rateCodeForm, setRateCodeForm] = useState<RsFormGroup>(
 		new RsFormGroup([new RsFormControl('code', props.code || '', [])])
 	);
@@ -57,7 +57,9 @@ const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 					if (rateCode) {
 						rsToastify.success('Rate code has been successfully applied', 'Success!');
 					}
-					props.apply(rateCodeForm.get('code').value.toString());
+					let newSearchQueryObj: Misc.ReservationFilters = { ...searchQueryObj };
+					newSearchQueryObj.rateCode = rateCodeForm.get('code').value.toString();
+					setSearchQueryObj(newSearchQueryObj);
 				}}
 			/>
 		</Box>
