@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
 import { useEffect, useState } from 'react';
+import { PriceObject } from '../DestinationSearchResultCard';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -26,9 +27,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
-	getLowestAccommodationPrice: (
-		accommodationList: Api.Destination.Res.Accommodation[]
-	) => {
+	getLowestAccommodationPrice: () => {
 		priceCents: number;
 		pricePoints: number;
 		quantityAvailable: number;
@@ -39,12 +38,7 @@ interface DestinationSearchResultCardResponsiveProps {
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
 	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
-	const [lowestPrice, setLowestPrice] = useState<{
-		priceCents: number;
-		pricePoints: number;
-		quantityAvailable: number;
-		rateCode: string;
-	} | null>();
+	const [lowestPrice, setLowestPrice] = useState<PriceObject | null>();
 
 	useEffect(() => {
 		props.summaryTabs.map((accommodationList) => {
@@ -55,7 +49,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}, [props.summaryTabs]);
 
 	useEffect(() => {
-		setLowestPrice(props.getLowestAccommodationPrice(accommodationList));
+		setLowestPrice(props.getLowestAccommodationPrice());
 	}, [accommodationList]);
 
 	function renderPricePerNight() {
@@ -133,7 +127,13 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 
 	function renderButtons() {
 		return props.summaryTabs.map((button) => {
-			return <LabelButton look={'containedPrimary'} variant={'button'} label={button.label} />;
+			if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
+				return <LabelButton look={'containedPrimary'} variant={'button'} label={button.label}></LabelButton>;
+			} else {
+				return (
+					<LabelButton look={'containedPrimary'} variant={'button'} label={'Accommodations'}></LabelButton>
+				);
+			}
 		});
 	}
 

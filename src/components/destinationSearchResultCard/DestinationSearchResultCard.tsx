@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
 import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
-import { ObjectUtils } from '../../utils/utils';
+
+export interface PriceObject {
+	priceCents: number;
+	pricePoints: number;
+	quantityAvailable: number;
+	rateCode: string;
+}
 
 export interface DestinationSearchResultCardProps {
 	className?: string;
 	destinationName: string;
+	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
 	destinationDescription: string;
 	destinationFeatures: {
 		id: number;
@@ -24,30 +31,21 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	function getLowestAccommodationPrice(accommodationList: Api.Destination.Res.Accommodation[]) {
-		let arrayOfPrices: any = accommodationList.map((accommodation: Api.Destination.Res.Accommodation) => {
-			return accommodation.prices;
-		});
-		let mergedArrayOfPrices = [].concat.apply([], arrayOfPrices);
-		return sendPriceObj(mergedArrayOfPrices);
+	function getLowestAccommodationPrice() {
+		let arrayOfPrices: PriceObject[] | undefined = props.unfilteredAccommodations.map(
+			(accommodation: Api.Destination.Res.Accommodation) => {
+				return getLowestAccommodation(accommodation.prices);
+			}
+		);
+		arrayOfPrices.sort((price1, price2) => price1.priceCents - price2.priceCents);
+		return arrayOfPrices[0];
 	}
 
-	function sendPriceObj(
-		accommodationPricesList:
-			| {
-					priceCents: number;
-					pricePoints: number;
-					quantityAvailable: number;
-					rateCode: string;
-			  }[]
-			| undefined
-	) {
-		if (accommodationPricesList) {
-			accommodationPricesList.sort((price1, price2) => price1.priceCents - price2.priceCents);
-			return accommodationPricesList[0];
-		} else {
-			return null;
-		}
+	function getLowestAccommodation(rateCodes: PriceObject[]) {
+		rateCodes.sort((code1, code2) => {
+			return code1.priceCents - code2.priceCents;
+		});
+		return rateCodes[0];
 	}
 
 	return size === 'small' ? (

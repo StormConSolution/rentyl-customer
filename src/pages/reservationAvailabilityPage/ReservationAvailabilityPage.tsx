@@ -355,6 +355,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			return (
 				<DestinationSearchResultCard
 					key={destination.id}
+					unfilteredAccommodations={destination.accommodations}
 					destinationDescription={destination.description}
 					destinationName={destination.name}
 					destinationFeatures={destination.features}

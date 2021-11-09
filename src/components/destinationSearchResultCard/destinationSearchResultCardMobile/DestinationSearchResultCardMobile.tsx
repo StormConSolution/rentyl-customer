@@ -21,9 +21,7 @@ interface DestinationSearchResultCardMobileProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
-	getLowestAccommodationPrice: (
-		accommodationList: Api.Destination.Res.Accommodation[]
-	) => {
+	getLowestAccommodationPrice: () => {
 		priceCents: number;
 		pricePoints: number;
 		quantityAvailable: number;
@@ -33,7 +31,6 @@ interface DestinationSearchResultCardMobileProps {
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
-	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
 	const [lowestPrice, setLowestPrice] = useState<{
 		priceCents: number;
 		pricePoints: number;
@@ -42,16 +39,8 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	} | null>();
 
 	useEffect(() => {
-		props.summaryTabs.map((accommodationList) => {
-			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
-				setAccommodationList(accommodationList.content.accommodations);
-			}
-		});
-	}, [props.summaryTabs]);
-
-	useEffect(() => {
-		setLowestPrice(props.getLowestAccommodationPrice(accommodationList));
-	}, [accommodationList]);
+		setLowestPrice(props.getLowestAccommodationPrice());
+	}, []);
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
 		return picturePaths.map((path: string) => {
