@@ -2,7 +2,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'sand-customer',
+			name: 'dev-rentyl-customer',
 			script: 'pm2_serve.sh',
 			wait_ready: true,
 			kill_timeout: 10000,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, View } from '@bit/redsky.framework.rs.996';
+import { View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
 import './icons/siteIcons/style.css';
 import './icons/cmsIcons/style.css';
@@ -18,7 +18,6 @@ import useCompanyInfo from './customHooks/useCompanyInfo';
 import { useSetCustomToast } from './customHooks/useSetCustomToast';
 import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
 import { ToastContainer } from '@bit/redsky.framework.rs.toastify';
-import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
