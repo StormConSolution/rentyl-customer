@@ -20,6 +20,7 @@ import serviceFactory from '../../services/serviceFactory';
 import router from '../../utils/router';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Icon from '@bit/redsky.framework.rs.icon';
+import LabelRadioButton from '../../components/labelRadioButton/LabelRadioButton';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -60,6 +61,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
 
+	const [sortByHighestToggle, setSortByHighestToggle] = useState<boolean>(false);
+	const [sortByLowestToggle, setSortByLowestToggle] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(true);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const regionService = serviceFactory.get<RegionService>('RegionService');
@@ -176,13 +179,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
 				<Paper className={'paperWrapper'} backgroundColor={'#fcfbf8'}>
-					<Box
-						display="flex"
-						justifyContent="space-between"
-						alignItems="center"
-						borderBottom="0.5px solid #797979"
-						padding="16px 25px"
-					>
+					<Box className="paperHeader">
 						<Label className={'filtersLabel'} variant={'h5'}>
 							Filters
 						</Label>
@@ -191,18 +188,37 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						</Label>
 					</Box>
 					<Box className="paperBody">
-						{props.searchRegion && (
-							<LabelSelect
-								title={'Region'}
-								control={filterForm.get('regionIds')}
-								updateControl={(control) => {
-									setFilterForm(filterForm.clone().update(control));
-								}}
-								options={regionOptions}
-								isMulti
-								isSearchable
-							/>
-						)}
+						<div className="sortByDiv">
+							<Label className="sortByLabel" variant="body1" marginBottom={15}>
+								Sort by
+							</Label>
+							<Box marginBottom={15}>
+								<LabelRadioButton
+									radioName="highestRadioBtn"
+									value="sortHigh"
+									checked={sortByHighestToggle}
+									text="Highest Price"
+									onSelect={() => {
+										setSortByHighestToggle(!sortByHighestToggle);
+										console.log('Sort High');
+									}}
+									labelSize="body2"
+								/>
+							</Box>
+							<Box marginBottom={15}>
+								<LabelRadioButton
+									radioName="lowestRadioBtn"
+									value="sortLow"
+									checked={sortByLowestToggle}
+									text="Lowest Price"
+									onSelect={() => {
+										setSortByLowestToggle(!sortByLowestToggle);
+										console.log('Sort Low');
+									}}
+									labelSize="body2"
+								/>
+							</Box>
+						</div>
 						<div className={'formWrapper'}>
 							<div className={'numberOfGuestDiv'}>
 								<LabelInput
