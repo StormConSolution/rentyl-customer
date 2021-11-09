@@ -1,0 +1,16 @@
+@import '../../themes/themes';
+.rsSigninPopup {
+	background-color: theme-var($primaryBackgroundColor);
+	margin: 0 10px;
+	padding: 14px 28px 39px;
+	border-radius: 20px;
+	.rsIcon {
+		position: absolute;
+		top: 18px;
+		right: 14px;
+	}
+	.rsLabelInput {
+		.rsInput {
+		}
+	}
+}
