@@ -11,7 +11,9 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import Button from '@bit/redsky.framework.rs.button';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
-import SignupPopup from '../signup/SignupPopup';
+import SignupPopup, { SignupPopupProps } from '../signup/SignupPopup';
+import LabelButton from '../../components/labelButton/LabelButton';
+import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../spinningLoaderPopup/SpinningLoaderPopup';
 
 export interface SigninPopupProps extends PopupProps {}
 
@@ -20,7 +22,7 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [signinForm, setSigninForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('email', '', [
+			new RsFormControl('primaryEmail', '', [
 				new RsValidator(RsValidatorEnum.EMAIL, 'Please enter a valid email address')
 			]),
 			new RsFormControl('password', '', [new RsValidator(RsValidatorEnum.REQ, 'Please enter a password')])
@@ -29,18 +31,26 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 
 	function updateForm(control: RsFormControl) {
 		setSigninForm(signinForm.clone().update(control));
+		if (errorMessage !== '') {
+			setErrorMessage('');
+		}
 	}
 
 	async function signin() {
 		if (!(await signinForm.isValid())) {
 			setSigninForm(signinForm.clone());
+			setErrorMessage('Missing information');
 			return;
 		}
-		const { email, password } = signinForm.toModel<{ email: string; password: string }>();
+		const { primaryEmail, password } = signinForm.toModel<{ primaryEmail: string; password: string }>();
 		try {
-			await userService.loginUserByPassword(email, password);
+			popupController.open<SpinningLoaderPopupProps>(SpinningLoaderPopup, {});
+			await userService.loginUserByPassword(primaryEmail, password);
+			setErrorMessage('');
+			popupController.closeAll();
 		} catch (e) {
-			setFailedSignin(true);
+			popupController.close(SpinningLoaderPopup);
+			setErrorMessage('Invalid username/password');
 		}
 	}
 
@@ -60,7 +70,7 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 				<LabelInput
 					title={'Email Address'}
 					inputType={'email'}
-					control={signinForm.get('email')}
+					control={signinForm.get('primaryEmail')}
 					updateControl={updateForm}
 				/>
 				<LabelInput
@@ -72,9 +82,17 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 				<Button look={'containedPrimary'} onClick={signin}>
 					Sign in
 				</Button>
-				<Label variant={'body2'} color={'red'}>
+				<Label className={'errorMessage'} variant={'body2'} color={'red'}>
 					{errorMessage}
 				</Label>
+				<LabelButton
+					look={'none'}
+					variant={'body2'}
+					label={'Forgot password'}
+					onClick={() => {
+						userService.requestPasswordByEmail(signinForm.get('primaryEmail').value as string);
+					}}
+				/>
 				<Box className={'orOption'}>
 					<hr />
 					<Label variant={'body1'}>Or</Label>
@@ -87,7 +105,10 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					look={'containedPrimary'}
 					onClick={() => {
 						popupController.close(SigninPopup);
-						popupController.open(SignupPopup);
+						popupController.open<SignupPopupProps>(SignupPopup, {
+							primaryEmail: signinForm.get('primaryEmail').value as string,
+							password: signinForm.get('password').value as string
+						});
 					}}
 				>
 					Sign up

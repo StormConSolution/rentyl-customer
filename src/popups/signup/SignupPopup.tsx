@@ -10,6 +10,13 @@ import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import LabelInput from '../../components/labelInput/LabelInput';
 import Button from '@bit/redsky.framework.rs.button';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
+import { WebUtils } from '../../utils/utils';
+import serviceFactory from '../../services/serviceFactory';
+import UserService from '../../services/user/user.service';
+import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../spinningLoaderPopup/SpinningLoaderPopup';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 export interface SignupPopupProps extends PopupProps {
 	primaryEmail?: string;
@@ -17,8 +24,9 @@ export interface SignupPopupProps extends PopupProps {
 }
 
 const SignupPopup: React.FC<SignupPopupProps> = (props) => {
-	const [spireSignup, setSpireSignup] = useState<boolean>(false);
+	const userService = serviceFactory.get<UserService>('UserService');
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [signUpForm, setSignUpForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('firstName', '', [new RsValidator(RsValidatorEnum.REQ, 'First name is required')]),
@@ -49,6 +57,32 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 
 	function updateForm(control: RsFormControl) {
 		setSignUpForm(signUpForm.clone().update(control));
+		if (errorMessage !== '') {
+			setErrorMessage('');
+		}
+	}
+
+	async function signup() {
+		if (!(await signUpForm.isValid())) {
+			setSignUpForm(signUpForm.clone());
+			setErrorMessage('Missing information');
+			return;
+		}
+		try {
+			popupController.open<SpinningLoaderPopupProps>(SpinningLoaderPopup, {});
+			const userToCreate: Api.Customer.Req.Create = {
+				name: `${signUpForm.get('firstName').value} ${signUpForm.get('lastName').value}`,
+				password: signUpForm.get('password').value as string,
+				primaryEmail: signUpForm.get('primaryEmail').value as string
+			};
+			await userService.createNewCustomer(userToCreate);
+			rsToastify.success('Account created successfully', 'Success!');
+			popupController.close(SignupPopup);
+			popupController.close(SpinningLoaderPopup);
+			popupController.open<SigninPopupProps>(SigninPopup, {});
+		} catch (e) {
+			setErrorMessage(WebUtils.getRsErrorMessage(e, 'Unexpected Server error'));
+		}
 	}
 
 	return (
@@ -96,25 +130,12 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 				/>
 				<LabelCheckbox
 					value={1}
-					text={<>Sign me up for Spire Loyalty by Rentyl Rewards. I confirm I am at least 18 years old.</>}
-					onSelect={() => {
-						setSpireSignup(true);
-					}}
-					onDeselect={() => {
-						setSpireSignup(false);
-					}}
-					lineClamp={3}
-					isChecked={spireSignup}
-				/>
-				<LabelCheckbox
-					value={1}
 					text={
 						<>
 							I agree to the{' '}
 							<Link path={`/legal/terms-and-conditions`} external target={'blank'}>
 								<span>terms and conditions</span>.
 							</Link>
-							.
 						</>
 					}
 					onSelect={() => {
@@ -125,7 +146,30 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 					}}
 					isChecked={hasAgreedToTerms}
 				/>
-				<Button look={'containedPrimary'}>Sign up</Button>
+				<Button
+					look={hasAgreedToTerms ? 'containedPrimary' : 'containedTertiary'}
+					disabled={!hasAgreedToTerms}
+					onClick={signup}
+				>
+					Sign up
+				</Button>
+				<Label variant={'body2'} color={'red'}>
+					{errorMessage}
+				</Label>
+				<hr />
+				<Label variant={'body2'}>
+					Already a member?{' '}
+					<Button
+						look={'none'}
+						onClick={() => {
+							popupController.close(SignupPopup);
+							popupController.open<SigninPopupProps>(SignupPopup, {});
+						}}
+					>
+						login
+					</Button>{' '}
+					here
+				</Label>
 			</Paper>
 		</Popup>
 	);

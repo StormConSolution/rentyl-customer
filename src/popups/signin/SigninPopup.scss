@@ -1,7 +1,6 @@
 @import '../../themes/themes';
 .rsSigninPopup {
 	width: 356px;
-	height: 423px;
 	background-color: theme-var($primaryBackgroundColor);
 	margin: 0 10px;
 	padding: 14px 28px 39px;
@@ -24,6 +23,14 @@
 			border-radius: 5px;
 			background: theme-var($primaryBackgroundColor);
 		}
+	}
+
+	.errorMessage {
+		text-align: center;
+	}
+
+	.rsLabelButton {
+		padding: 10px;
 	}
 
 	.rsButton {
