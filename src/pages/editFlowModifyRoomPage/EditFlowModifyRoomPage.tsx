@@ -6,7 +6,7 @@ import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import serviceFactory from '../../services/serviceFactory';
-import { DateUtils, formatFilterDateForServer, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -78,41 +78,6 @@ const EditFlowModifyRoomPage = () => {
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
-
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adults: number,
-		children: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string
-	) {
-		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = adults;
-			createSearchQueryObj['children'] = children;
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else {
-				delete createSearchQueryObj['propertyTypeIds'];
-			}
-			if (rateCode !== '' || rateCode !== undefined) {
-				setRateCode(reservation?.rateCode || '');
-				createSearchQueryObj['rateCode'] = reservation?.rateCode;
-			}
-			return createSearchQueryObj;
-		});
-	}
 
 	async function bookNow(id: number) {
 		if (reservation) {
@@ -267,27 +232,6 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (
-									startDate,
-									endDate,
-									adults,
-									children,
-									priceRangeMin,
-									priceRangeMax,
-									propertyTypeIds,
-									rateCode
-								) => {
-									popupSearch(
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										propertyTypeIds,
-										rateCode
-									);
-								},
 								className: 'filterPopup'
 							});
 						}}

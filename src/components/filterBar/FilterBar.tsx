@@ -4,16 +4,17 @@ import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { formatFilterDateForServer, ObjectUtils } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
 import LabelSelect from '../labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import router from '../../utils/router';
 
 export interface FilterBarProps {
 	destinationId?: number;
@@ -29,19 +30,38 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date().getTime()));
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [isFilterFormValid, setIsFilterFormValid] = useState<boolean>(true);
 	const [errorMessage, setErrorMessage] = useState<string>('');
-
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regions', searchQueryObj.regionIds || [], []),
-			new RsFormControl('propertyType', searchQueryObj.propertyTypeIds || [], []),
-			new RsFormControl('adultCount', searchQueryObj.adultCount, []),
-			new RsFormControl('childCount', searchQueryObj.childCount, []),
-			new RsFormControl('priceRangeMin', searchQueryObj.priceRangeMin || 0, []),
-			new RsFormControl('priceChangeMax', searchQueryObj.priceRangeMax || 0, [])
+			new RsFormControl('regionIds', searchQueryObj.regionIds || [], []),
+			new RsFormControl('propertyTypeIds', searchQueryObj.propertyTypeIds || [], []),
+			new RsFormControl('adultCount', searchQueryObj.adultCount || 2, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required'),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Required', (control) => {
+					return control.value !== 0;
+				})
+			]),
+			new RsFormControl('childCount', searchQueryObj.childCount || 0, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
+			]),
+			new RsFormControl('priceRangeMax', searchQueryObj.priceRangeMax || 0, []),
+			new RsFormControl('priceRangeMin', searchQueryObj.priceRangeMin || 0, [])
 		])
 	);
+
+	useEffect(() => {
+		router.updateUrlParams({
+			startDate: searchQueryObj.startDate.toString(),
+			endDate: searchQueryObj.endDate.toString(),
+			adultCount: searchQueryObj.adultCount,
+			childCount: searchQueryObj.childCount,
+			region: searchQueryObj.regionIds ? searchQueryObj.regionIds.join(',') : '',
+			rateCode: searchQueryObj.rateCode || '',
+			priceRangeMax: searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : '',
+			priceRangeMin: searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : '',
+			propertyTypeIds: searchQueryObj.propertyTypeIds ? searchQueryObj.propertyTypeIds.join(',') : ''
+		});
+	}, [searchQueryObj]);
 
 	useEffect(() => {
 		async function getDropdownOptions() {
@@ -70,13 +90,51 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		getDropdownOptions().catch(console.error);
 	}, [searchQueryObj]);
 
-	useEffect(() => {
-		async function validateForm() {
-			let isValid = await filterForm.isValid();
-			setIsFilterFormValid(isValid);
+	async function updateFilterForm(
+		key:
+			| 'startDate'
+			| 'endDate'
+			| 'adultCount'
+			| 'childCount'
+			| 'priceRangeMin'
+			| 'priceRangeMax'
+			| 'pagination'
+			| 'rateCode'
+			| 'regionIds'
+			| 'propertyTypeIds',
+		control: RsFormControl
+	) {
+		if (
+			control.key === 'adultCount' ||
+			control.key === 'childCount' ||
+			control.key === 'priceRangeMax' ||
+			control.key === 'priceRangeMin'
+		) {
+			let newValue: string | number = '';
+			if (control.value.toString().length > 0) {
+				let value = StringUtils.removeAllExceptNumbers(control.value.toString());
+				if (value.length !== 0) {
+					newValue = parseInt(value);
+				}
+
+				control.value = newValue;
+			}
 		}
-		validateForm().catch(console.error);
-	}, [filterForm]);
+		filterForm.update(control);
+		let isFormValid = await filterForm.isValid();
+		let _isFormFilledOut = isFormFilledOut();
+		setFilterForm(filterForm.clone());
+		if (await (isFormValid && _isFormFilledOut)) {
+			updateSearchQueryObj(key, control.value);
+		}
+	}
+
+	function isFormFilledOut(): boolean {
+		return (
+			!!filterForm.get('adultCount').value.toString().length &&
+			!!filterForm.get('childCount').value.toString().length
+		);
+	}
 
 	function updateSearchQueryObj(
 		key:
@@ -92,7 +150,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			| 'propertyTypeIds',
 		value: any
 	) {
-		if (!isFilterFormValid) return;
 		if (key === 'adultCount' && value === 0) {
 			//this should never evaluate to true with current implementations.
 			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
@@ -138,35 +195,13 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
-	function updateFilterForm(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'childCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'rateCode'
-			| 'regionIds'
-			| 'propertyTypeIds',
-		control: RsFormControl
-	) {
-		setFilterForm(filterForm.clone().update(control));
-		if (key === 'adultCount' || key === 'childCount' || key === 'priceRangeMin' || key === 'priceRangeMax') {
-			updateSearchQueryObj(key, +control.value);
-		} else {
-			updateSearchQueryObj(key, control.value);
-		}
-	}
-
 	return (
 		<Box className={`rsFilterBar`}>
 			<LabelSelect
 				title={'Regions'}
 				updateControl={(control) => updateFilterForm('regionIds', control)}
 				options={regionOptions}
-				control={filterForm.get('regions')}
+				control={filterForm.get('regionIds')}
 				isMulti
 				isSearchable
 			/>
@@ -202,7 +237,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Price Min"
 			/>
 			<LabelInput
-				control={filterForm.get('priceChangeMax')}
+				control={filterForm.get('priceRangeMax')}
 				updateControl={(control) => updateFilterForm('priceRangeMax', control)}
 				className="priceMax"
 				inputType="number"
@@ -210,7 +245,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			/>
 			<LabelSelect
 				title="Property Type"
-				control={filterForm.get('propertyType')}
+				control={filterForm.get('propertyTypeIds')}
 				updateControl={(control) => updateFilterForm('propertyTypeIds', control)}
 				options={propertyTypeOptions}
 				isMulti={true}

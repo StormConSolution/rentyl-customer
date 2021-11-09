@@ -5,12 +5,11 @@ import HeroImage from '../../components/heroImage/HeroImage';
 import FilterBar from '../../components/filterBar/FilterBar';
 import Label from '@bit/redsky.framework.rs.label';
 import serviceFactory from '../../services/serviceFactory';
-import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { formatFilterDateForServer, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -34,27 +33,6 @@ import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
-	const params = router.getPageUrlParams<{
-		startDate: string;
-		endDate: string;
-		adultCount: number;
-		childCount: number;
-		region: string;
-		rateCode: string;
-		priceRangeMax: string;
-		priceRangeMin: string;
-		propertyTypeIds: string;
-	}>([
-		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
-		{ key: 'adultCount', default: 2, type: 'integer', alias: 'adultCount' },
-		{ key: 'childCount', default: 0, type: 'integer', alias: 'childCount' },
-		{ key: 'region', default: '', type: 'string', alias: 'region' },
-		{ key: 'rateCode', default: '', type: 'string', alias: 'rateCode' },
-		{ key: 'priceRangeMax', default: '', type: 'string', alias: 'priceRangeMax' },
-		{ key: 'priceRangeMin', default: '', type: 'string', alias: 'priceRangeMin' },
-		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
-	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -64,20 +42,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
-
-	useEffect(() => {
-		router.updateUrlParams({
-			startDate: searchQueryObj.startDate.toString(),
-			endDate: searchQueryObj.endDate.toString(),
-			adultCount: searchQueryObj.adultCount,
-			childCount: searchQueryObj.childCount,
-			region: searchQueryObj.regionIds ? searchQueryObj.regionIds.join(',') : '',
-			rateCode: searchQueryObj.rateCode || '',
-			priceRangeMax: searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : '',
-			priceRangeMin: searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : '',
-			propertyTypeIds: searchQueryObj.propertyTypeIds ? searchQueryObj.propertyTypeIds.join(',') : ''
-		});
-	}, [searchQueryObj]);
 
 	useEffect(() => {
 		async function getReservations() {
@@ -256,29 +220,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 							labelVariant={'caption'}
 							onClick={() => {
 								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									onClickApply: (
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										propertyTypeIds,
-										rateCode,
-										regionIds
-									) => {
-										popupSearch(
-											startDate,
-											endDate,
-											adults,
-											children,
-											priceRangeMin,
-											priceRangeMax,
-											propertyTypeIds,
-											rateCode,
-											regionIds
-										);
-									},
 									className: 'filterPopup'
 								});
 							}}

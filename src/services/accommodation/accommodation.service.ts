@@ -32,9 +32,6 @@ export default class AccommodationService extends Service {
 			children: searchQueryObj.childCount,
 			pagination: { page: 1, perPage: 5 }
 		};
-		if (searchQueryObj.rateCode) {
-			newSearchQueryObj.rateCode = searchQueryObj.rateCode;
-		}
 		if (searchQueryObj.priceRangeMin) {
 			newSearchQueryObj.priceRangeMin = searchQueryObj.priceRangeMin;
 		}

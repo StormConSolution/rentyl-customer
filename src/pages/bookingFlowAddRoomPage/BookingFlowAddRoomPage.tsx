@@ -55,7 +55,6 @@ const BookingFlowAddRoomPage = () => {
 	// 	pagination: { page: 1, perPage: 5 },
 	// 	destinationId: params.data.destinationId
 	// });
-
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
@@ -102,38 +101,6 @@ const BookingFlowAddRoomPage = () => {
 		}
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
-
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adults: number,
-		children: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string
-	) {
-		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = adults;
-			createSearchQueryObj['children'] = children;
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
-				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
-			}
-			if (rateCode !== '') {
-				createSearchQueryObj['rateCode'] = rateCode;
-			}
-			return createSearchQueryObj;
-		});
-	}
 
 	function bookNow(accommodationId: number) {
 		let stays = params.data.stays;
@@ -262,28 +229,6 @@ const BookingFlowAddRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (
-									startDate: moment.Moment | null,
-									endDate: moment.Moment | null,
-									adults: number,
-									children: number,
-									priceRangeMin: string,
-									priceRangeMax: string,
-									propertyTypeIds: number[],
-									rateCode: string,
-									regionIds
-								) => {
-									popupSearch(
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										propertyTypeIds,
-										rateCode
-									);
-								},
 								className: 'filterPopup'
 							});
 						}}
