@@ -9,10 +9,17 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import LabelInput from '../../components/labelInput/LabelInput';
 import Button from '@bit/redsky.framework.rs.button';
+import serviceFactory from '../../services/serviceFactory';
+import UserService from '../../services/user/user.service';
+import SignupPopup from '../signup/SignupPopup';
+import { useSetRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
 
 export interface SigninPopupProps extends PopupProps {}
 
 const SigninPopup: React.FC<SigninPopupProps> = (props) => {
+	const userService = serviceFactory.get<UserService>('UserService');
+	const [failedSignin, setFailedSignin] = useState<boolean>(false);
 	const [signinForm, setSigninForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('email', '', [
@@ -26,6 +33,19 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 		setSigninForm(signinForm.clone().update(control));
 	}
 
+	async function signin() {
+		if (!(await signinForm.isValid())) {
+			setSigninForm(signinForm.clone());
+			return;
+		}
+		const { email, password } = signinForm.toModel<{ email: string; password: string }>();
+		try {
+			await userService.loginUserByPassword(email, password);
+		} catch (e) {
+			setFailedSignin(true);
+		}
+	}
+
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<Paper className={'rsSigninPopup'} width={'420px'} position={'relative'}>
@@ -37,8 +57,8 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					size={14}
 					cursorPointer
 				/>
-				<Label variant={'h2'}>Sign in / Sign up</Label>
-				<hr />
+				<Label variant={'body1'}>Sign in / Sign up</Label>
+				<hr className={'linethrough'} />
 				<LabelInput
 					title={'Email Address'}
 					inputType={'email'}
@@ -51,14 +71,24 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					control={signinForm.get('password')}
 					updateControl={updateForm}
 				/>
-				<Button look={'containedPrimary'}>Sign in</Button>
+				<Button look={'containedPrimary'} onClick={signin}>
+					Sign in
+				</Button>
 				<Box className={'orOption'}>
 					<hr />
 					<Label variant={'body1'}>Or</Label>
 					<hr />
 				</Box>
-				<Label variant={'body1'}>No account? Save time on your next booking.</Label>
-				<Button look={'containedPrimary'} onClick={() => {}}>
+				<Label variant={'body2'} mb={18}>
+					No account? Save time on your next booking
+				</Label>
+				<Button
+					look={'containedPrimary'}
+					onClick={() => {
+						popupController.close(SigninPopup);
+						popupController.open(SignupPopup);
+					}}
+				>
 					Sign up
 				</Button>
 			</Paper>

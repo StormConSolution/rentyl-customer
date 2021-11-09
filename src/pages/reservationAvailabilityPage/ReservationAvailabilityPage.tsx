@@ -34,6 +34,7 @@ import RegionService from '../../services/region/region.service';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import SigninPopup, { SigninPopupProps } from '../../popups/signin/SigninPopup';
+import SignupPopup, { SignupPopupProps } from '../../popups/signup/SignupPopup';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -426,7 +427,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							if (data.rateCode) newRoom.rateCode = data.rateCode;
 							data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
 							if (!user) {
-								popupController.open<SigninPopupProps>(SigninPopup, {});
+								popupController.open<SignupPopupProps>(SignupPopup, {});
 							} else {
 								router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 							}
