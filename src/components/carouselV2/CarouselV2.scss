@@ -29,14 +29,16 @@
 	&:hover {
 		.clickRight,
 		.clickLeft,
-		.addToCompareButton {
+		.addToCompareButton,
+		.imageCountContainer {
 			opacity: 1;
 		}
 	}
 
 	.clickLeft,
 	.clickRight,
-	.addToCompareButton {
+	.addToCompareButton,
+	.imageCountContainer {
 		opacity: 0;
 		transition: opacity 300ms;
 	}
@@ -73,20 +75,22 @@
 		width: 30px;
 		height: 30px;
 		border-radius: 50%;
-		background: #00000088;
+		background: rgba(0, 0, 0, 0.53);
 		border: 2px solid #ffffff;
 		overflow: unset;
 
 		&:hover {
 			.compareToolTip {
 				opacity: 1;
+				height: 30px;
+				overflow: unset;
 			}
 		}
 		.compareToolTip {
 			position: absolute;
 			display: grid;
 			place-items: center;
-			height: 30px;
+			height: 0;
 			width: 115px;
 			background: #191919;
 			left: 36px;
@@ -96,6 +100,7 @@
 			transition: opacity 500ms;
 			opacity: 0;
 			border-radius: 4px;
+			overflow: hidden;
 			.rsLabel {
 				color: #ffffff;
 			}
@@ -107,6 +112,24 @@
 				clip-path: polygon(100% 0, 0 50%, 100% 100%);
 				background: #191919;
 			}
+		}
+	}
+
+	.imageCountContainer {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		background: rgba(0, 0, 0, 0.53);
+		padding: 5px 16px;
+		box-sizing: border-box;
+		border-radius: 5px;
+		bottom: 15px;
+		right: 15px;
+		.rsIcon {
+			margin-right: 11px;
+		}
+		.rsLabel {
+			color: #ffffff;
 		}
 	}
 }

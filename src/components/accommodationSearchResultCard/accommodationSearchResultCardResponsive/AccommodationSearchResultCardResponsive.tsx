@@ -11,6 +11,7 @@ import AccommodationSearchDetailCard, {
 	AccommodationStat
 } from '../../accommodationSearchDetailCard/AccommodationSearchDetailCard';
 import Img from '@bit/redsky.framework.rs.img';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 
 interface AccommodationSearchResultCardResponsiveProps {
 	id: number | string;
@@ -36,26 +37,27 @@ interface AccommodationSearchResultCardResponsiveProps {
 const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResultCardResponsiveProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 
-	function renderCarouselImages(imagePaths: Api.Media[]): JSX.Element[] {
+	function renderCarouselImages(imagePaths: Api.Media[]): string[] {
 		imagePaths.sort((img1, img2) => img2.isPrimary - img1.isPrimary);
 		return imagePaths.map((imagePath, index) => {
-			return (
-				<Img
-					className="accommodationGalleryImage"
-					src={imagePath.urls.imageKit}
-					key={index}
-					alt={'Accommodation Image'}
-					width={556}
-					height={560}
-					rootMargin={'0px 0px 200px 0px'}
-				/>
-			);
+			return imagePath.urls.imageKit;
 		});
 	}
 
 	return (
 		<Box className="rsAccommodationSearchResultCardResponsive">
-			<Carousel showControls>{renderCarouselImages(props.carouselImagePaths)}</Carousel>
+			<CarouselV2
+				path={() => {
+					if (props.onViewDetailsClick) props.onViewDetailsClick();
+				}}
+				imgPaths={renderCarouselImages(props.carouselImagePaths)}
+				onAddCompareClick={() => {
+					if (props.onCompareClick) props.onCompareClick();
+				}}
+				onGalleryClick={() => {
+					console.log('Show LightboxV2 images...');
+				}}
+			/>
 			<div className="info">
 				<Label className="accommodationName" variant="h2">
 					{props.name}

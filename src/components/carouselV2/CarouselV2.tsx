@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import Img from '@bit/redsky.framework.rs.img';
 import Button from '@bit/redsky.framework.rs.button';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { Box } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
 import Label from '@bit/redsky.framework.rs.label';
 
 interface CarouselV2Props {
-	path: string;
+	path: string | (() => void);
 	imgPaths: string[];
 	onAddCompareClick: () => void;
+	onGalleryClick: () => void;
 }
 
 const CarouselV2: React.FC<CarouselV2Props> = (props) => {
@@ -26,13 +26,6 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 	}, []);
 
 	function renderImages() {
-		// let images = [
-		// 	"https://ik.imagekit.io/redsky/spire/1633461917373_L.jpg",
-		// 	"https://ik.imagekit.io/redsky/spire/1633461930016_L.jpg",
-		// 	"https://ik.imagekit.io/redsky/spire/1633461920632_L.jpg",
-		// 	"https://ik.imagekit.io/redsky/spire/1633461924642_L.jpg"
-		// ];
-
 		return props.imgPaths.map((item, index) => {
 			return (
 				<div key={index}>
@@ -46,7 +39,8 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 		<div
 			className={'rsCarouselV2'}
 			onClick={() => {
-				router.navigate(props.path).catch(console.error);
+				if (typeof props.path === 'string') router.navigate(props.path).catch(console.error);
+				else props.path();
 			}}
 		>
 			<div ref={parentRef} className={'imageCarouselContainer'}>
@@ -100,10 +94,17 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 					<Label className={'caption'}>Compare</Label>
 				</div>
 			</Button>
-			<div className={'imageCountContainer'}>
-				<Icon iconImg={'icon-gallery'} />
-				<Label variant={'body1'}></Label>
-			</div>
+			<Button
+				look={'none'}
+				className={'imageCountContainer'}
+				onClick={(event) => {
+					event.stopPropagation();
+					props.onGalleryClick();
+				}}
+			>
+				<Icon iconImg={'icon-gallery'} color={'#ffffff'} size={18} />
+				<Label variant={'subtitle1'}>{`${imageViewIndex} / ${totalChildren}`}</Label>
+			</Button>
 		</div>
 	);
 };

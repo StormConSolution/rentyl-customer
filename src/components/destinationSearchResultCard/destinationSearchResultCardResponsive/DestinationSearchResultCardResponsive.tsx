@@ -26,16 +26,6 @@ interface DestinationSearchResultCardResponsiveProps {
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box className={'imageWrapper'}>
-					<Img src={path} alt={'Resort Image'} width={556} height={636} />
-				</Box>
-			);
-		});
-	}
-
 	function renderPictureUrls() {
 		return props.picturePaths.map((item) => {
 			return item;
@@ -44,12 +34,14 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
-			{/*<Carousel showControls children={renderPictures(props.picturePaths)} />*/}
 			<CarouselV2
 				path={props.destinationDetailsPath}
 				imgPaths={renderPictureUrls()}
 				onAddCompareClick={() => {
 					if (props.onAddCompareClick) props.onAddCompareClick();
+				}}
+				onGalleryClick={() => {
+					console.log('Show LightboxV2 images...');
 				}}
 			/>
 			<div className="info">
