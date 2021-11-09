@@ -9,10 +9,29 @@ interface LabelRadioButtonProps {
 	checked: boolean;
 	text: string;
 	onSelect: (value: string | number) => void;
+	labelSize?:
+		| 'h1'
+		| 'h2'
+		| 'h3'
+		| 'h4'
+		| 'h5'
+		| 'h6'
+		| 'link1'
+		| 'link2'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
+		| string;
 	// onClick?: (event?:React.MouseEvent) => void;
 }
 
 const LabelRadioButton: React.FC<LabelRadioButtonProps> = (props) => {
+	const defaultTextSize = 'body1';
+
 	return (
 		<div
 			className={'rsLabelRadioButton'}
@@ -35,7 +54,7 @@ const LabelRadioButton: React.FC<LabelRadioButtonProps> = (props) => {
 					<Box />
 				</span>
 			</label>
-			<Label variant={'body1'}>{props.text}</Label>
+			<Label variant={props.labelSize ? props.labelSize : defaultTextSize}>{props.text}</Label>
 		</div>
 	);
 };
