@@ -9,7 +9,7 @@ import LabelInput from '../../components/labelInput/LabelInput';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import LabelSelect from '../../components/labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
@@ -18,6 +18,8 @@ import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import router from '../../utils/router';
+import globalState from '../../state/globalState';
+import { useRecoilState } from 'recoil';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -58,34 +60,30 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
 
-	const [isValid, setIsValid] = useState<boolean>(true);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const regionService = serviceFactory.get<RegionService>('RegionService');
+	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [isValid, setIsValid] = useState<boolean>(true);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
 	const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		setStartDate(startDate);
-		setEndDate(endDate);
-	}
-
-	const [filterForm, setFilterForm] = useState<RsFormGroup>(
-		new RsFormGroup([
-			new RsFormControl('regionIds', [], []),
-			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
-			new RsFormControl('adultCount', params.adultCount || 2, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
-			]),
-			new RsFormControl('childCount', params.childCount || 0, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
-			]),
-			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(params.priceRangeMax), []),
-			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(params.priceRangeMin), []),
-			new RsFormControl('rateCode', params.rateCode || '', [])
-		])
-	);
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
+	const [filterForm, setFilterForm] = useState<RsFormGroup>(
+		new RsFormGroup([
+			new RsFormControl('regionIds', searchQueryObj.regionIds || [], []),
+			new RsFormControl('propertyTypeIds', searchQueryObj.propertyTypeIds || [], []),
+			new RsFormControl('adultCount', searchQueryObj.adultCount || 2, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
+			]),
+			new RsFormControl('childCount', searchQueryObj.childCount || 0, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
+			]),
+			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(searchQueryObj.priceRangeMax), []),
+			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(searchQueryObj.priceRangeMin), [])
+		])
+	);
 
 	useEffect(() => {
 		if (!params.startDate && !params.endDate) return;
@@ -109,14 +107,11 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		getFilterOptions().catch(console.error);
 	}, []);
 
-	function setPropertyTypeIds() {
-		if (params.propertyTypeIds.length > 0) {
-			let propertyTypeArray = params.propertyTypeIds.split(',');
-			return propertyTypeArray.map((item) => {
-				return parseInt(item);
-			});
-		}
-		return [];
+	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
+		setStartDate(startDate);
+		setEndDate(endDate);
+		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
+		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
 	function formatOptions(options: any[]) {
@@ -145,6 +140,48 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		let _isFormFilledOut = isFormFilledOut();
 		setIsValid(isFormValid && _isFormFilledOut);
 		setFilterForm(filterForm.clone());
+		if (isFormValid && _isFormFilledOut) {
+			updateSearchQueryObj(control.key, control.value);
+		}
+	}
+
+	function updateSearchQueryObj(key: string, value: any) {
+		if (key === 'adultCount' && value === 0) {
+			//this should never evaluate to true with current implementations.
+			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
+		}
+		if (key === 'adultCount' && isNaN(value)) {
+			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
+		}
+		if (key === 'childCount' && isNaN(value)) {
+			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
+		}
+		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
+			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
+		}
+		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
+			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
+		}
+		if (key === 'priceRangeMin' && searchQueryObj['priceRangeMax'] && value > searchQueryObj['priceRangeMax']) {
+			setErrorMessage('Price min must be lower than the max');
+		} else if (
+			key === 'priceRangeMax' &&
+			searchQueryObj['priceRangeMin'] &&
+			value < searchQueryObj['priceRangeMin']
+		) {
+			setErrorMessage('Price max must be greater than the min');
+		} else {
+			setErrorMessage('');
+		}
+		setSearchQueryObj((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			if (value === '' || value === undefined) delete createSearchQueryObj[key];
+			else createSearchQueryObj[key] = value;
+			if (key === 'regionIds' || key === 'propertyTypeIds') {
+				if (!ObjectUtils.isArrayWithData(value)) delete createSearchQueryObj[key];
+			}
+			return createSearchQueryObj;
+		});
 	}
 
 	function isFormFilledOut(): boolean {
@@ -152,22 +189,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			!!filterForm.get('adultCount').value.toString().length &&
 			!!filterForm.get('childCount').value.toString().length
 		);
-	}
-
-	function saveFilter() {
-		let filterObject: Misc.FilterFormPopupOptions = filterForm.toModel();
-		props.onClickApply(
-			startDate,
-			endDate,
-			filterObject.adultCount,
-			filterObject.childCount,
-			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
-			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMax),
-			filterObject.propertyTypeIds,
-			filterObject.rateCode,
-			filterObject.regionIds
-		);
-		popupController.close(FilterReservationPopup);
 	}
 
 	return (
@@ -203,14 +224,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						<div className={'numberOfGuestDiv'}>
 							<LabelInput
 								className="numberOfAdults"
-								inputType="text"
+								inputType="number"
 								title="# of Adults"
 								control={filterForm.get('adultCount')}
 								updateControl={updateFilterForm}
 							/>
 							<LabelInput
 								className="numberOfChildren"
-								inputType="text"
+								inputType="number"
 								title="# of Children"
 								control={filterForm.get('childCount')}
 								updateControl={updateFilterForm}
@@ -219,14 +240,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						<div className={'minMaxDiv'}>
 							<LabelInput
 								className="priceMin"
-								inputType="text"
+								inputType="number"
 								title="Price Min"
 								control={filterForm.get('priceRangeMin')}
 								updateControl={updateFilterForm}
 							/>
 							<LabelInput
 								className="priceMax"
-								inputType="text"
+								inputType="number"
 								title="Price Max"
 								control={filterForm.get('priceRangeMax')}
 								updateControl={updateFilterForm}
@@ -239,28 +260,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							options={propertyTypeOptions}
 							isMulti={true}
 						/>
-						<LabelInput
-							className={'rateCode'}
-							inputType={'text'}
-							title={'Rate Code'}
-							control={filterForm.get('rateCode')}
-							updateControl={updateFilterForm}
-						/>
 						<div className={'buttons'}>
-							<LabelButton
-								className={'cancelButton'}
-								look={'containedSecondary'}
-								variant={'button'}
-								label={'Cancel'}
-								onClick={() => popupController.close(FilterReservationPopup)}
-							/>
 							<LabelButton
 								className={isValid ? 'applyButton' : 'applyButton disabled'}
 								look={'containedPrimary'}
 								variant={'button'}
 								label={'Apply'}
 								onClick={() => {
-									saveFilter();
+									popupController.close(FilterReservationPopup);
 								}}
 							/>
 						</div>

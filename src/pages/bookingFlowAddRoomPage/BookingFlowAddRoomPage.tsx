@@ -40,20 +40,21 @@ const BookingFlowAddRoomPage = () => {
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
-	const initialStartDate = editStayDetails?.arrivalDate
-		? moment(editStayDetails?.arrivalDate)
-		: moment(params.data.stays[0].arrivalDate);
-	const initialEndDate = editStayDetails?.departureDate
-		? moment(editStayDetails?.departureDate)
-		: moment(params.data.stays[0].departureDate);
-	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
-		startDate: initialStartDate.format('YYYY-MM-DD'),
-		endDate: initialEndDate.format('YYYY-MM-DD'),
-		adults: editStayDetails?.adults || 1,
-		children: editStayDetails?.children || 0,
-		pagination: { page: 1, perPage: 5 },
-		destinationId: params.data.destinationId
-	});
+	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
+	// const initialStartDate = editStayDetails?.arrivalDate
+	// 	? moment(editStayDetails?.arrivalDate)
+	// 	: moment(params.data.stays[0].arrivalDate);
+	// const initialEndDate = editStayDetails?.departureDate
+	// 	? moment(editStayDetails?.departureDate)
+	// 	: moment(params.data.stays[0].departureDate);
+	// const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
+	// 	startDate: initialStartDate.format('YYYY-MM-DD'),
+	// 	endDate: initialEndDate.format('YYYY-MM-DD'),
+	// 	adults: editStayDetails?.adults || 1,
+	// 	children: editStayDetails?.children || 0,
+	// 	pagination: { page: 1, perPage: 5 },
+	// 	destinationId: params.data.destinationId
+	// });
 
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
@@ -85,7 +86,7 @@ const BookingFlowAddRoomPage = () => {
 			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(newSearchQueryObj);
+				let res = await accommodationService.availability(params.data.destinationId, searchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
 				setValidCode(rateCode === '' || res.data.length > 0);
@@ -145,8 +146,8 @@ const BookingFlowAddRoomPage = () => {
 		let newRoom: Misc.StayParams = {
 			uuid: editStayDetails?.uuid || Date.now(),
 			accommodationId,
-			adults: searchQueryObj.adults,
-			children: searchQueryObj.children,
+			adults: searchQueryObj.adultCount,
+			children: searchQueryObj.childCount,
 			arrivalDate: searchQueryObj.startDate as string,
 			departureDate: searchQueryObj.endDate as string,
 			packages: editStayDetails?.packages || []

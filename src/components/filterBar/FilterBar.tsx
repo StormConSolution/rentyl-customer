@@ -7,7 +7,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import { formatFilterDateForServer, ObjectUtils } from '../../utils/utils';
 import LabelSelect from '../labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
+import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
@@ -36,9 +36,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		new RsFormGroup([
 			new RsFormControl('regions', searchQueryObj.regionIds || [], []),
 			new RsFormControl('propertyType', searchQueryObj.propertyTypeIds || [], []),
-			new RsFormControl('adultCount', searchQueryObj.adultCount, [
-				new RsValidator(RsValidatorEnum.REQ, 'Please provide number of guests.')
-			]),
+			new RsFormControl('adultCount', searchQueryObj.adultCount, []),
 			new RsFormControl('childCount', searchQueryObj.childCount, []),
 			new RsFormControl('priceRangeMin', searchQueryObj.priceRangeMin || 0, []),
 			new RsFormControl('priceChangeMax', searchQueryObj.priceRangeMax || 0, [])
@@ -74,10 +72,8 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 
 	useEffect(() => {
 		async function validateForm() {
-			if (filterForm.isModified()) {
-				let isValid = await filterForm.isValid();
-				setIsFilterFormValid(isValid);
-			}
+			let isValid = await filterForm.isValid();
+			setIsFilterFormValid(isValid);
 		}
 		validateForm().catch(console.error);
 	}, [filterForm]);

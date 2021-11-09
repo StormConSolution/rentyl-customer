@@ -87,29 +87,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	useEffect(() => {
 		async function getAvailableStays() {
-			const newSearchQueryObj: Api.Accommodation.Req.Availability = {
-				destinationId: params.destinationId,
-				startDate: searchQueryObj.startDate,
-				endDate: searchQueryObj.endDate,
-				adults: searchQueryObj.adultCount,
-				children: searchQueryObj.childCount,
-				pagination: { page: 1, perPage: 5 }
-			};
-			if (searchQueryObj.rateCode) {
-				newSearchQueryObj.rateCode = searchQueryObj.rateCode;
-			}
-			if (searchQueryObj.priceRangeMin) {
-				newSearchQueryObj.priceRangeMin = searchQueryObj.priceRangeMin;
-			}
-			if (searchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = searchQueryObj.priceRangeMax;
-			}
-			if (searchQueryObj.propertyTypeIds) {
-				newSearchQueryObj.propertyTypeIds = searchQueryObj.propertyTypeIds;
-			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let result = await accommodationService.availability(newSearchQueryObj);
+				let result = await accommodationService.availability(params.destinationId, searchQueryObj);
 				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);

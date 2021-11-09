@@ -98,41 +98,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adultCount: number,
-		childCount: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string,
-		regionIds?: number[]
-	) {
-		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: Misc.ReservationFilters = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adultCount'] = adultCount;
-			if (ObjectUtils.isArrayWithData(propertyTypeIds)) createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			else delete createSearchQueryObj['propertyTypeIds'];
-
-			if (ObjectUtils.isArrayWithData(regionIds)) createSearchQueryObj['regionIds'] = regionIds;
-			else delete createSearchQueryObj['regionIds'];
-
-			if (rateCode !== '') createSearchQueryObj['rateCode'] = rateCode;
-			else delete createSearchQueryObj['rateCode'];
-
-			if (priceRangeMin !== '') createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			else delete createSearchQueryObj['priceRangeMin'];
-
-			if (priceRangeMax !== '') createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			else delete createSearchQueryObj['priceRangeMax'];
-
-			return createSearchQueryObj;
-		});
-	}
-
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
 		return destinations.map((destination, index) => {

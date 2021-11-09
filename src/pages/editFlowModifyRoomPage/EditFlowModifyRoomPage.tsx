@@ -58,33 +58,13 @@ const EditFlowModifyRoomPage = () => {
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
-	}, []);
+	}, [params.reservationId]);
 
 	useEffect(() => {
 		async function getReservations() {
-			const newSearchQueryObj: Api.Accommodation.Req.Availability = {
-				destinationId: params.destinationId,
-				startDate: searchQueryObj.startDate,
-				endDate: searchQueryObj.endDate,
-				adults: searchQueryObj.adultCount,
-				children: searchQueryObj.childCount,
-				pagination: { page: 1, perPage: 5 }
-			};
-			if (searchQueryObj.rateCode) {
-				newSearchQueryObj.rateCode = searchQueryObj.rateCode;
-			}
-			if (searchQueryObj.priceRangeMin) {
-				newSearchQueryObj.priceRangeMin = searchQueryObj.priceRangeMin;
-			}
-			if (searchQueryObj.priceRangeMax) {
-				newSearchQueryObj.priceRangeMax = searchQueryObj.priceRangeMax;
-			}
-			if (searchQueryObj.propertyTypeIds) {
-				newSearchQueryObj.propertyTypeIds = searchQueryObj.propertyTypeIds;
-			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(newSearchQueryObj);
+				let res = await accommodationService.availability(params.destinationId, searchQueryObj);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
