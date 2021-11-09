@@ -5,11 +5,13 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import Carousel from '../../carousel/Carousel';
 import Img from '@bit/redsky.framework.rs.img';
-import Icon from '@bit/redsky.framework.rs.icon';
 import LabelButton from '../../labelButton/LabelButton';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
+import IconLabel from '../../iconLabel/IconLabel';
+import { useEffect, useState } from 'react';
+import { PriceObject } from '../DestinationSearchResultCard';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -25,31 +27,32 @@ interface DestinationSearchResultCardResponsiveProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	getLowestAccommodationPrice: () => {
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+	} | null;
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
+	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
+	const [lowestPrice, setLowestPrice] = useState<PriceObject | null>();
 
-	function findLowestPricedAccommodation() {
-		let lowestPrice: { pricePoints: number; priceCents: number } = { pricePoints: 0, priceCents: 0 };
+	useEffect(() => {
 		props.summaryTabs.map((accommodationList) => {
 			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
-				return accommodationList.content.accommodations.map((accommodation) => {
-					if (ObjectUtils.isArrayWithData(accommodation.prices)) {
-						accommodation.prices.map((price) => {
-							if (!lowestPrice.priceCents || lowestPrice.priceCents >= price.priceCents) {
-								lowestPrice = { pricePoints: price.pricePoints, priceCents: price.priceCents };
-							}
-						});
-					}
-				});
+				setAccommodationList(accommodationList.content.accommodations);
 			}
 		});
-		return lowestPrice;
-	}
+	}, [props.summaryTabs]);
+
+	useEffect(() => {
+		setLowestPrice(props.getLowestAccommodationPrice());
+	}, [accommodationList]);
 
 	function renderPricePerNight() {
-		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
 		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
 				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
@@ -74,7 +77,25 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 				</Box>
 			);
 		} else {
-			return;
+			return (
+				<Box
+					display={'flex'}
+					alignItems={'flex-end'}
+					justifyContent={'flex-end'}
+					flexDirection={'column'}
+					textAlign={'center'}
+				>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'16px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
 		}
 	}
 
@@ -91,11 +112,14 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	function renderFeatures() {
 		return props.destinationFeatures.map((feature) => {
 			return (
-				<Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
-					<Icon iconImg={'cms-icon-0501'} size={45} />
-					<Label variant={'subtitle1'} className={'featureTitle'} lineClamp={1}>
-						{feature.title}
-					</Label>
+				<Box display={'flex'} flexDirection={'column'} alignItems={'center'} textAlign={'center'}>
+					<IconLabel
+						labelName={feature.title}
+						iconImg={feature.icon}
+						iconPosition={'top'}
+						iconSize={45}
+						labelVariant={'subtitle1'}
+					/>
 				</Box>
 			);
 		});
@@ -103,7 +127,13 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 
 	function renderButtons() {
 		return props.summaryTabs.map((button) => {
-			return <LabelButton look={'containedPrimary'} variant={'button'} label={button.label} />;
+			if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
+				return <LabelButton look={'containedPrimary'} variant={'button'} label={button.label}></LabelButton>;
+			} else {
+				return (
+					<LabelButton look={'containedPrimary'} variant={'button'} label={'Accommodations'}></LabelButton>
+				);
+			}
 		});
 	}
 

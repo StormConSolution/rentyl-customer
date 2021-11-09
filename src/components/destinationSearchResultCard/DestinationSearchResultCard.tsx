@@ -4,9 +4,17 @@ import { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestina
 import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
 import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
 
+export interface PriceObject {
+	priceCents: number;
+	pricePoints: number;
+	quantityAvailable: number;
+	rateCode: string;
+}
+
 export interface DestinationSearchResultCardProps {
 	className?: string;
 	destinationName: string;
+	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
 	destinationDescription: string;
 	destinationFeatures: {
 		id: number;
@@ -23,6 +31,23 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
+	function getLowestAccommodationPrice() {
+		let arrayOfPrices: PriceObject[] | undefined = props.unfilteredAccommodations.map(
+			(accommodation: Api.Destination.Res.Accommodation) => {
+				return getLowestAccommodation(accommodation.prices);
+			}
+		);
+		arrayOfPrices.sort((price1, price2) => price1.priceCents - price2.priceCents);
+		return arrayOfPrices[0];
+	}
+
+	function getLowestAccommodation(rateCodes: PriceObject[]) {
+		rateCodes.sort((code1, code2) => {
+			return code1.priceCents - code2.priceCents;
+		});
+		return rateCodes[0];
+	}
+
 	return size === 'small' ? (
 		<DestinationSearchResultCardMobile
 			destinationName={props.destinationName}
@@ -31,6 +56,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
@@ -42,6 +68,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	);
 };

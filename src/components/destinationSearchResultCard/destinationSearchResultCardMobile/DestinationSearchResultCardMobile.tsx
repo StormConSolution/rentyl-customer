@@ -10,6 +10,8 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
+import LabelButton from '../../labelButton/LabelButton';
+import { useEffect, useState } from 'react';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -19,10 +21,26 @@ interface DestinationSearchResultCardMobileProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	getLowestAccommodationPrice: () => {
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+	} | null;
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
+	const [lowestPrice, setLowestPrice] = useState<{
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+	} | null>();
+
+	useEffect(() => {
+		setLowestPrice(props.getLowestAccommodationPrice());
+	}, []);
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
 		return picturePaths.map((path: string) => {
@@ -34,27 +52,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 		});
 	}
 
-	function findLowestPricedAccommodation() {
-		let lowestPrice: { pricePoints: number; priceCents: number } = { pricePoints: 0, priceCents: 0 };
-		props.summaryTabs.map((accommodationList) => {
-			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
-				return accommodationList.content.accommodations.map((accommodation) => {
-					if (ObjectUtils.isArrayWithData(accommodation.prices)) {
-						accommodation.prices.map((price) => {
-							if (!lowestPrice.priceCents || lowestPrice.priceCents >= price.priceCents) {
-								lowestPrice = { pricePoints: price.pricePoints, priceCents: price.priceCents };
-							}
-						});
-					}
-				});
-			}
-		});
-
-		return lowestPrice;
-	}
-
 	function renderPricePerNight() {
-		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
 		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
 				<Box display={'flex'}>
@@ -70,7 +68,19 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				</Box>
 			);
 		} else {
-			return;
+			return (
+				<Box>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'5px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
 		}
 	}
 
