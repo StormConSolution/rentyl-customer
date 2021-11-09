@@ -18,6 +18,8 @@ import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import router from '../../utils/router';
+import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -173,98 +175,95 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
-				<Paper className={'paperWrapper'} width={'330px'} backgroundColor={'#fcfbf8'}>
-					<Label className={'filtersLabel'} variant={'h2'}>
-						Filters
-					</Label>
-					{props.searchRegion && (
-						<LabelSelect
-							title={'Region'}
-							control={filterForm.get('regionIds')}
-							updateControl={(control) => {
-								setFilterForm(filterForm.clone().update(control));
-							}}
-							options={regionOptions}
-							isMulti
-							isSearchable
-						/>
-					)}
-					<div className={'formWrapper'}>
-						<DateRangeSelector
-							startDate={startDate}
-							endDate={endDate}
-							onDatesChange={onDatesChange}
-							monthsToShow={1}
-							focusedInput={focusedInput}
-							onFocusChange={setFocusedInput}
-							startDateLabel={'check in'}
-							endDateLabel={'check out'}
-						/>
-						<div className={'numberOfGuestDiv'}>
-							<LabelInput
-								className="numberOfAdults"
-								inputType="text"
-								title="# of Adults"
-								control={filterForm.get('adultCount')}
-								updateControl={updateFilterForm}
-							/>
-							<LabelInput
-								className="numberOfChildren"
-								inputType="text"
-								title="# of Children"
-								control={filterForm.get('childCount')}
-								updateControl={updateFilterForm}
-							/>
-						</div>
-						<div className={'minMaxDiv'}>
-							<LabelInput
-								className="priceMin"
-								inputType="text"
-								title="Price Min"
-								control={filterForm.get('priceRangeMin')}
-								updateControl={updateFilterForm}
-							/>
-							<LabelInput
-								className="priceMax"
-								inputType="text"
-								title="Price Max"
-								control={filterForm.get('priceRangeMax')}
-								updateControl={updateFilterForm}
-							/>
-						</div>
-						<LabelSelect
-							title={'Property Type'}
-							control={filterForm.get('propertyTypeIds')}
-							updateControl={updateFilterForm}
-							options={propertyTypeOptions}
-							isMulti={true}
-						/>
-						<LabelInput
-							className={'rateCode'}
-							inputType={'text'}
-							title={'Rate Code'}
-							control={filterForm.get('rateCode')}
-							updateControl={updateFilterForm}
-						/>
-						<div className={'buttons'}>
-							<LabelButton
-								className={'cancelButton'}
-								look={'containedSecondary'}
-								variant={'button'}
-								label={'Cancel'}
-								onClick={() => popupController.close(FilterReservationPopup)}
-							/>
-							<LabelButton
-								className={isValid ? 'applyButton' : 'applyButton disabled'}
-								look={'containedPrimary'}
-								variant={'button'}
-								label={'Apply'}
-								onClick={() => {
-									saveFilter();
+				<Paper className={'paperWrapper'} backgroundColor={'#fcfbf8'}>
+					<Box
+						display="flex"
+						justifyContent="space-between"
+						alignItems="center"
+						borderBottom="0.5px solid #797979"
+						padding="16px 25px"
+					>
+						<Label className={'filtersLabel'} variant={'h5'}>
+							Filters
+						</Label>
+						<Label onClick={() => popupController.closeLast()}>
+							<Icon iconImg="icon-close" color="#797979" size={20} className="closeIcon" />
+						</Label>
+					</Box>
+					<Box className="paperBody">
+						{props.searchRegion && (
+							<LabelSelect
+								title={'Region'}
+								control={filterForm.get('regionIds')}
+								updateControl={(control) => {
+									setFilterForm(filterForm.clone().update(control));
 								}}
+								options={regionOptions}
+								isMulti
+								isSearchable
 							/>
+						)}
+						<div className={'formWrapper'}>
+							<div className={'numberOfGuestDiv'}>
+								<LabelInput
+									className="numberOfAdults"
+									inputType="text"
+									title="# of Adults"
+									control={filterForm.get('adultCount')}
+									updateControl={updateFilterForm}
+								/>
+								<LabelInput
+									className="numberOfChildren"
+									inputType="text"
+									title="# of Children"
+									control={filterForm.get('childCount')}
+									updateControl={updateFilterForm}
+								/>
+							</div>
+							<div className={'minMaxDiv'}>
+								<LabelInput
+									className="priceMin"
+									inputType="text"
+									title="Price Min"
+									control={filterForm.get('priceRangeMin')}
+									updateControl={updateFilterForm}
+								/>
+								<LabelInput
+									className="priceMax"
+									inputType="text"
+									title="Price Max"
+									control={filterForm.get('priceRangeMax')}
+									updateControl={updateFilterForm}
+								/>
+							</div>
+							<LabelSelect
+								title={'Property Type'}
+								control={filterForm.get('propertyTypeIds')}
+								updateControl={updateFilterForm}
+								options={propertyTypeOptions}
+								isMulti={true}
+							/>
+
+							<div className={'buttons'}>
+								<LabelButton
+									className={'cancelButton'}
+									look={'containedSecondary'}
+									variant={'button'}
+									label={'Cancel'}
+									onClick={() => popupController.close(FilterReservationPopup)}
+								/>
+								<LabelButton
+									className={isValid ? 'applyButton' : 'applyButton disabled'}
+									look={'containedPrimary'}
+									variant={'button'}
+									label={'Apply'}
+									onClick={() => {
+										saveFilter();
+									}}
+								/>
+							</div>
 						</div>
-					</div>
+					</Box>
 				</Paper>
 			</div>
 		</Popup>

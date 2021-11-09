@@ -1,77 +1,87 @@
 @import 'src/themes/themes';
 
 .rsFilterReservationPopup {
+	position: absolute;
+	top: 40px;
+
 	.paperWrapper {
-		padding: 20px 10px;
+		width: 341px;
+		min-width: 320px;
+		border-radius: 15px;
 
-		.formWrapper {
-			padding: 0 10px;
-		}
+		.paperBody {
+			padding: 20px 10px;
 
-		.filtersLabel {
-			margin-bottom: 20px;
-		}
-
-		.rsDateRangeSelector .DateRangePicker {
-			.DateInput {
-				width: 130px;
+			.formWrapper {
+				padding: 0 10px;
 			}
 
-			.DateInput_input {
-				width: 125px;
-			}
-		}
+			.rsDateRangeSelector .DateRangePicker {
+				.DateInput {
+					width: 130px;
+				}
 
-		.rsDateRangeSelector .startEndLabels .endDateLabel {
-			margin-left: 89px;
-		}
-
-		.numberOfGuestDiv {
-			display: flex;
-
-			.rsLabelInput {
-				margin: 20px 0;
-			}
-			.numberOfAdults {
-				margin-right: 7px;
-			}
-
-			.rsInput {
-				max-width: 200px;
-				width: 135px;
-			}
-		}
-
-		.minMaxDiv {
-			display: flex;
-			justify-content: space-between;
-			padding-right: 9px;
-
-			.rsInput.priceMin {
-				width: 135px;
-			}
-
-			.rsInput.priceMax {
-				width: 135px;
-			}
-		}
-
-		.buttons {
-			display: flex;
-			margin-top: 40px;
-			padding: 0 9px;
-			justify-content: center;
-
-			.cancelButton {
-				margin-right: 10px;
-			}
-
-			.applyButton {
-				margin-left: 10px;
-				&.disabled {
-					display: none;
+				.DateInput_input {
+					width: 125px;
 				}
 			}
+
+			.rsDateRangeSelector .startEndLabels .endDateLabel {
+				margin-left: 89px;
+			}
+
+			.numberOfGuestDiv {
+				display: flex;
+
+				.rsLabelInput {
+					margin: 20px 0;
+				}
+				.numberOfAdults {
+					margin-right: 7px;
+				}
+
+				.rsInput {
+					max-width: 200px;
+					width: 135px;
+				}
+			}
+
+			.minMaxDiv {
+				display: flex;
+				justify-content: space-between;
+				padding-right: 9px;
+
+				.rsInput.priceMin {
+					width: 135px;
+				}
+
+				.rsInput.priceMax {
+					width: 135px;
+				}
+			}
+
+			.buttons {
+				display: flex;
+				margin-top: 40px;
+				padding: 0 9px;
+				justify-content: center;
+
+				.cancelButton {
+					margin-right: 10px;
+				}
+
+				.applyButton {
+					margin-left: 10px;
+					&.disabled {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+	@media screen and (max-width: 374px) {
+		.paperWrapper {
+			width: 310px;
 		}
 	}
 }
