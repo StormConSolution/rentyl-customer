@@ -1,21 +1,29 @@
+@import '../../themes/themes.scss';
+
 .rsFilterBarDropDown {
-	height: 60px;
+	min-height: 60px;
 
 	.rsDropdownBtn {
-		border: 0.1px solid #1e180b;
+		border: 0.1px solid $secondaryTextColor;
 		background-color: #ffffff;
 		padding: 5px 10px;
 		border-radius: 10px;
-		.filterTitleLabel {
-			font-family: Montserrat, serif;
-			font-size: 17px;
+
+		.labelContainer {
+			.filerByLabel {
+				color: #0000007c;
+			}
+			.filterTitleLabel {
+				font-family: Montserrat, serif;
+				font-size: 17px;
+				color: #000000bc;
+			}
 		}
 		.chevronIcon {
 			padding-top: 3px;
 		}
 	}
 	.DropdownContent {
-		width: 421px;
 		margin-top: 1.5rem;
 		box-shadow: 0 0 8px #00000029;
 		border-radius: 10px;
