@@ -8,8 +8,8 @@ import { useState } from 'react';
 interface FilterBarDropDownProps {
 	title?: string;
 	placeholder?: string;
-	onChangeCallBack?: () => void;
-	onClearCallback?: () => void;
+	onChangeCallBack: () => void;
+	onClearCallback: () => void;
 }
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
@@ -30,12 +30,10 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				onClick={() => setToggleContent((prevState) => !prevState)}
 			>
 				<Box id="labelContainer">
-					<Label variant="body2" color="#0000007C" paddingBottom={4}>
+					<Label variant="body2" className="filterByLabel" paddingBottom={4}>
 						Filter By
 					</Label>
-					<Label color="#000000BC" className="filterTitleLabel">
-						{props.title}
-					</Label>
+					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
 					<Icon iconImg={`icon-chevron-${toggleContent ? 'down' : 'up'}`} size={25} />
