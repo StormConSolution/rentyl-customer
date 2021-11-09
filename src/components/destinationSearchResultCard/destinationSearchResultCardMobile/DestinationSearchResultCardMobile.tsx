@@ -21,7 +21,7 @@ interface DestinationSearchResultCardMobileProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
-	getAccommodationPrices: (
+	getLowestAccommodationPrice: (
 		accommodationList: Api.Destination.Res.Accommodation[]
 	) => {
 		priceCents: number;
@@ -50,7 +50,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	}, [props.summaryTabs]);
 
 	useEffect(() => {
-		setLowestPrice(props.getAccommodationPrices(accommodationList));
+		setLowestPrice(props.getLowestAccommodationPrice(accommodationList));
 	}, [accommodationList]);
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {

@@ -26,7 +26,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
-	getAccommodationPrices: (
+	getLowestAccommodationPrice: (
 		accommodationList: Api.Destination.Res.Accommodation[]
 	) => {
 		priceCents: number;
@@ -55,7 +55,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}, [props.summaryTabs]);
 
 	useEffect(() => {
-		setLowestPrice(props.getAccommodationPrices(accommodationList));
+		setLowestPrice(props.getLowestAccommodationPrice(accommodationList));
 	}, [accommodationList]);
 
 	function renderPricePerNight() {
@@ -84,7 +84,13 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 			);
 		} else {
 			return (
-				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+				<Box
+					display={'flex'}
+					alignItems={'flex-end'}
+					justifyContent={'flex-end'}
+					flexDirection={'column'}
+					textAlign={'center'}
+				>
 					<LabelButton
 						look={'containedPrimary'}
 						className={'yellow'}
@@ -115,7 +121,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 				<Box display={'flex'} flexDirection={'column'} alignItems={'center'} textAlign={'center'}>
 					<IconLabel
 						labelName={feature.title}
-						iconImg={'cms-icon-0501'}
+						iconImg={feature.icon}
 						iconPosition={'top'}
 						iconSize={45}
 						labelVariant={'subtitle1'}

@@ -94,12 +94,12 @@ declare namespace Misc {
 	}
 
 	export interface ReservationFilters {
-		location: number;
 		checkIn: Date | string;
 		checkOut: Date | string;
 		adultCount: number;
 		redeemPoints: boolean;
 		sortBy: string;
+		location?: number;
 		inUnitAmenities?: number[];
 		view?: number[];
 		groupAmenities?: number[];

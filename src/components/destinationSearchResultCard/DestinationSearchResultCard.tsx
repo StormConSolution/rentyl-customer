@@ -24,40 +24,15 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	function getAccommodationPrices(accommodationList: Api.Destination.Res.Accommodation[]) {
-		let arrayOfPrices: any;
-		accommodationList.map((accommodation: Api.Destination.Res.Accommodation) => {
-			if (arrayOfPrices) {
-				return (arrayOfPrices = [
-					...arrayOfPrices,
-					...accommodation.prices.map(
-						(priceObj: {
-							priceCents: number;
-							pricePoints: number;
-							quantityAvailable: number;
-							rateCode: string;
-						}) => {
-							return priceObj;
-						}
-					)
-				]);
-			} else {
-				return (arrayOfPrices = accommodation.prices.map(
-					(priceObj: {
-						priceCents: number;
-						pricePoints: number;
-						quantityAvailable: number;
-						rateCode: string;
-					}) => {
-						return priceObj;
-					}
-				));
-			}
+	function getLowestAccommodationPrice(accommodationList: Api.Destination.Res.Accommodation[]) {
+		let arrayOfPrices: any = accommodationList.map((accommodation: Api.Destination.Res.Accommodation) => {
+			return accommodation.prices;
 		});
-		return getLowestAccommodationPrice(arrayOfPrices);
+		let mergedArrayOfPrices = [].concat.apply([], arrayOfPrices);
+		return sendPriceObj(mergedArrayOfPrices);
 	}
 
-	function getLowestAccommodationPrice(
+	function sendPriceObj(
 		accommodationPricesList:
 			| {
 					priceCents: number;
@@ -83,7 +58,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
-			getAccommodationPrices={getAccommodationPrices}
+			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
@@ -95,7 +70,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
-			getAccommodationPrices={getAccommodationPrices}
+			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	);
 };
