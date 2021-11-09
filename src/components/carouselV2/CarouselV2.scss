@@ -1,0 +1,112 @@
+@import '../../themes/themes';
+.rsCarouselV2 {
+	position: relative;
+	width: 414px;
+	height: 278px;
+	.imageCarouselContainer {
+		height: 100%;
+		border-radius: 20px;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		display: flex;
+		overflow: auto;
+		overflow-x: hidden;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		-webkit-scroll-snap-type: mandatory;
+		scroll-snap-type: x mandatory;
+		-webkit-scroll-snap-points-x: repeat(100%);
+		scroll-snap-points-x: repeat(100%);
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+		img {
+			overflow: visible;
+			scroll-snap-align: center;
+		}
+	}
+	&:hover {
+		.clickRight,
+		.clickLeft,
+		.addToCompareButton {
+			opacity: 1;
+		}
+	}
+
+	.clickLeft,
+	.clickRight,
+	.addToCompareButton {
+		opacity: 0;
+		transition: opacity 300ms;
+	}
+
+	.clickLeft {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 16px;
+		margin: auto;
+		background-color: #fcfbf8;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+	}
+	.clickRight {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 16px;
+		margin: auto;
+		background-color: #fcfbf8;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+	}
+
+	.addToCompareButton {
+		position: absolute;
+		top: 20px;
+		right: 15px;
+		width: 30px;
+		height: 30px;
+		border-radius: 50%;
+		background: #00000088;
+		border: 2px solid #ffffff;
+		overflow: unset;
+
+		&:hover {
+			.compareToolTip {
+				opacity: 1;
+			}
+		}
+		.compareToolTip {
+			position: absolute;
+			display: grid;
+			place-items: center;
+			height: 30px;
+			width: 115px;
+			background: #191919;
+			left: 36px;
+			top: 0;
+			bottom: 0;
+			margin: auto;
+			transition: opacity 500ms;
+			opacity: 0;
+			border-radius: 4px;
+			.rsLabel {
+				color: #ffffff;
+			}
+			.toolTipTriangle {
+				position: absolute;
+				left: -9px;
+				height: 15px;
+				width: 10px;
+				clip-path: polygon(100% 0, 0 50%, 100% 100%);
+				background: #191919;
+			}
+		}
+	}
+}

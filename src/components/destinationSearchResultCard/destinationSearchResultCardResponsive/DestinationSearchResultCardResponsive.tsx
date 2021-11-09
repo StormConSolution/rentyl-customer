@@ -10,6 +10,7 @@ import Carousel from '../../carousel/Carousel';
 import LabelLink from '../../labelLink/LabelLink';
 import StarRating from '../../starRating/StarRating';
 import Img from '@bit/redsky.framework.rs.img';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -35,9 +36,22 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		});
 	}
 
+	function renderPictureUrls() {
+		return props.picturePaths.map((item) => {
+			return item;
+		});
+	}
+
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
-			<Carousel showControls children={renderPictures(props.picturePaths)} />
+			{/*<Carousel showControls children={renderPictures(props.picturePaths)} />*/}
+			<CarouselV2
+				path={props.destinationDetailsPath}
+				imgPaths={renderPictureUrls()}
+				onAddCompareClick={() => {
+					if (props.onAddCompareClick) props.onAddCompareClick();
+				}}
+			/>
 			<div className="info">
 				{props.logoImagePath && props.logoImagePath !== '' && (
 					<div className={'logoContainer'}>
