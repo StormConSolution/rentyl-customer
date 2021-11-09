@@ -12,14 +12,12 @@ import Button from '@bit/redsky.framework.rs.button';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import SignupPopup from '../signup/SignupPopup';
-import { useSetRecoilState } from 'recoil';
-import globalState from '../../state/globalState';
 
 export interface SigninPopupProps extends PopupProps {}
 
 const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
-	const [failedSignin, setFailedSignin] = useState<boolean>(false);
+	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [signinForm, setSigninForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('email', '', [
@@ -74,6 +72,9 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 				<Button look={'containedPrimary'} onClick={signin}>
 					Sign in
 				</Button>
+				<Label variant={'body2'} color={'red'}>
+					{errorMessage}
+				</Label>
 				<Box className={'orOption'}>
 					<hr />
 					<Label variant={'body1'}>Or</Label>

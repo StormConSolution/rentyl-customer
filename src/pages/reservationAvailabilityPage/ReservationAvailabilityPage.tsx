@@ -427,7 +427,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							if (data.rateCode) newRoom.rateCode = data.rateCode;
 							data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
 							if (!user) {
-								popupController.open<SignupPopupProps>(SignupPopup, {});
+								popupController.open<SigninPopupProps>(SigninPopup, {});
 							} else {
 								router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 							}
