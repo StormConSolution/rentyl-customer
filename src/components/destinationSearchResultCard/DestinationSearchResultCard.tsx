@@ -23,25 +23,57 @@ export interface DestinationSearchResultCardProps {
 
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
-	const [lowestPrice, setLowestPrice] = useState<{ pricePoints: number; priceCents: number }>();
 
-	useEffect(() => {
-		let newLowPrice: { pricePoints: number; priceCents: number } = { pricePoints: 0, priceCents: 0 };
-		props.summaryTabs.map((accommodationList) => {
-			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
-				return accommodationList.content.accommodations.map((accommodation) => {
-					if (ObjectUtils.isArrayWithData(accommodation.prices)) {
-						accommodation.prices.map((price) => {
-							if (!newLowPrice.priceCents || newLowPrice.priceCents >= price.priceCents) {
-								newLowPrice = { pricePoints: price.pricePoints, priceCents: price.priceCents };
-							}
-						});
+	function getAccommodationPrices(accommodationList: Api.Destination.Res.Accommodation[]) {
+		let arrayOfPrices: any;
+		accommodationList.map((accommodation: Api.Destination.Res.Accommodation) => {
+			if (arrayOfPrices) {
+				return (arrayOfPrices = [
+					...arrayOfPrices,
+					...accommodation.prices.map(
+						(priceObj: {
+							priceCents: number;
+							pricePoints: number;
+							quantityAvailable: number;
+							rateCode: string;
+						}) => {
+							return priceObj;
+						}
+					)
+				]);
+			} else {
+				return (arrayOfPrices = accommodation.prices.map(
+					(priceObj: {
+						priceCents: number;
+						pricePoints: number;
+						quantityAvailable: number;
+						rateCode: string;
+					}) => {
+						return priceObj;
 					}
-				});
+				));
 			}
 		});
-		setLowestPrice(newLowPrice);
-	}, [props.summaryTabs]);
+		return getLowestAccommodationPrice(arrayOfPrices);
+	}
+
+	function getLowestAccommodationPrice(
+		accommodationPricesList:
+			| {
+					priceCents: number;
+					pricePoints: number;
+					quantityAvailable: number;
+					rateCode: string;
+			  }[]
+			| undefined
+	) {
+		if (accommodationPricesList) {
+			accommodationPricesList.sort((price1, price2) => price1.priceCents - price2.priceCents);
+			return accommodationPricesList[0];
+		} else {
+			return null;
+		}
+	}
 
 	return size === 'small' ? (
 		<DestinationSearchResultCardMobile
@@ -51,6 +83,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			getAccommodationPrices={getAccommodationPrices}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
@@ -62,6 +95,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			getAccommodationPrices={getAccommodationPrices}
 		/>
 	);
 };

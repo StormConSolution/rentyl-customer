@@ -10,8 +10,8 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
-import Button from '@bit/redsky.framework.rs.button';
 import LabelButton from '../../labelButton/LabelButton';
+import { useEffect, useState } from 'react';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -21,10 +21,37 @@ interface DestinationSearchResultCardMobileProps {
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	getAccommodationPrices: (
+		accommodationList: Api.Destination.Res.Accommodation[]
+	) => {
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+	} | null;
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
+	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
+	const [lowestPrice, setLowestPrice] = useState<{
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+	} | null>();
+
+	useEffect(() => {
+		props.summaryTabs.map((accommodationList) => {
+			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
+				setAccommodationList(accommodationList.content.accommodations);
+			}
+		});
+	}, [props.summaryTabs]);
+
+	useEffect(() => {
+		setLowestPrice(props.getAccommodationPrices(accommodationList));
+	}, [accommodationList]);
 
 	function renderPictures(picturePaths: string[]): JSX.Element[] {
 		return picturePaths.map((path: string) => {
@@ -36,27 +63,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 		});
 	}
 
-	function findLowestPricedAccommodation() {
-		let lowestPrice: { pricePoints: number; priceCents: number } = { pricePoints: 0, priceCents: 0 };
-		props.summaryTabs.map((accommodationList) => {
-			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
-				return accommodationList.content.accommodations.map((accommodation) => {
-					if (ObjectUtils.isArrayWithData(accommodation.prices)) {
-						accommodation.prices.map((price) => {
-							if (!lowestPrice.priceCents || lowestPrice.priceCents >= price.priceCents) {
-								lowestPrice = { pricePoints: price.pricePoints, priceCents: price.priceCents };
-							}
-						});
-					}
-				});
-			}
-		});
-
-		return lowestPrice;
-	}
-
 	function renderPricePerNight() {
-		let lowestPrice: { pricePoints: number; priceCents: number } = findLowestPricedAccommodation();
 		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
 				<Box display={'flex'}>
