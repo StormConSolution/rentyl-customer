@@ -4,13 +4,11 @@ import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import './FilterReservationPopup.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
-import DateRangeSelector from '../../components/dateRangeSelector/DateRangeSelector';
 import LabelInput from '../../components/labelInput/LabelInput';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { StringUtils, WebUtils } from '../../utils/utils';
-import LabelSelect from '../../components/labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -21,6 +19,9 @@ import router from '../../utils/router';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Icon from '@bit/redsky.framework.rs.icon';
 import LabelRadioButton from '../../components/labelRadioButton/LabelRadioButton';
+import Counter from '../../components/counter/Counter';
+import Switch from '@bit/redsky.framework.rs.switch';
+import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -63,6 +64,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	const [sortByHighestToggle, setSortByHighestToggle] = useState<boolean>(false);
 	const [sortByLowestToggle, setSortByLowestToggle] = useState<boolean>(false);
+	const [redeemCodeToggle, setRedeemCodeToggle] = useState<boolean>(false);
+	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(true);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const regionService = serviceFactory.get<RegionService>('RegionService');
@@ -78,7 +81,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		new RsFormGroup([
 			new RsFormControl('regionIds', [], []),
 			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
-			new RsFormControl('adultCount', params.adultCount || 2, [
+			new RsFormControl('adultCount', params.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
 			new RsFormControl('childCount', params.childCount || 0, [
@@ -89,13 +92,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			new RsFormControl('rateCode', params.rateCode || '', [])
 		])
 	);
+	const [averagePrice, setAveragePrice] = useState(0);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
-
-	useEffect(() => {
-		if (!params.startDate && !params.endDate) return;
-		onDatesChange(moment(params.startDate), moment(params.endDate));
-	}, []);
 
 	useEffect(() => {
 		async function getFilterOptions() {
@@ -134,29 +133,11 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		if (control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
 			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
 			control.value = newValue;
-		} else if (control.key === 'adultCount' || control.key === 'childCount') {
-			let newValue: string | number = '';
-			if (control.value.toString().length > 0) {
-				let value = StringUtils.removeAllExceptNumbers(control.value.toString());
-				if (value.length !== 0) {
-					newValue = parseInt(value);
-				}
-
-				control.value = newValue;
-			}
 		}
 		filterForm.update(control);
 		let isFormValid = await filterForm.isValid();
-		let _isFormFilledOut = isFormFilledOut();
-		setIsValid(isFormValid && _isFormFilledOut);
+		setIsValid(isFormValid);
 		setFilterForm(filterForm.clone());
-	}
-
-	function isFormFilledOut(): boolean {
-		return (
-			!!filterForm.get('adultCount').value.toString().length &&
-			!!filterForm.get('childCount').value.toString().length
-		);
 	}
 
 	function saveFilter() {
@@ -175,6 +156,54 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		popupController.close(FilterReservationPopup);
 	}
 
+	function renderAccommodationCheckboxes() {
+		return (
+			<>
+				{propertyTypeOptions.map((item, idx) => (
+					<LabelCheckbox
+						value={item.value}
+						text={item.label}
+						onSelect={() => setAccommodationToggle(true)}
+						isChecked={accommodationToggle}
+						onDeselect={() => setAccommodationToggle(false)}
+					/>
+				))}
+			</>
+		);
+	}
+
+	function renderResortExperiences() {
+		return (
+			<>
+				{destinationService.resortExperiences.map((item, idx) => (
+					<LabelCheckbox
+						value={item.value}
+						text={item.label}
+						onSelect={() => setAccommodationToggle(true)}
+						isChecked={accommodationToggle}
+						onDeselect={() => setAccommodationToggle(false)}
+					/>
+				))}
+			</>
+		);
+	}
+
+	function renderInUnitAmenities() {
+		return (
+			<>
+				{destinationService.inUnitAmenities.map((item, idx) => (
+					<LabelCheckbox
+						value={item.value}
+						text={item.label}
+						onSelect={() => setAccommodationToggle(true)}
+						isChecked={accommodationToggle}
+						onDeselect={() => setAccommodationToggle(false)}
+					/>
+				))}
+			</>
+		);
+	}
+
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<div className={'rsFilterReservationPopup'}>
@@ -188,7 +217,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						</Label>
 					</Box>
 					<Box className="paperBody">
-						<div className="sortByDiv">
+						<div className="formDiv" id="sortByDiv">
 							<Label className="sortByLabel" variant="body1" marginBottom={15}>
 								Sort by
 							</Label>
@@ -219,67 +248,113 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								/>
 							</Box>
 						</div>
-						<div className={'formWrapper'}>
-							<div className={'numberOfGuestDiv'}>
-								<LabelInput
-									className="numberOfAdults"
-									inputType="text"
-									title="# of Adults"
+						<div className="formDiv" id="guestsDiv">
+							<Box marginY={15}>
+								<Counter
+									title="Guests"
 									control={filterForm.get('adultCount')}
 									updateControl={updateFilterForm}
+									className={'filterCounter'}
 								/>
-								<LabelInput
-									className="numberOfChildren"
-									inputType="text"
-									title="# of Children"
+							</Box>
+							<Box marginBottom={15}>
+								<Counter
+									title="Bedrooms"
 									control={filterForm.get('childCount')}
 									updateControl={updateFilterForm}
+									className={'filterCounter'}
 								/>
-							</div>
-							<div className={'minMaxDiv'}>
-								<LabelInput
-									className="priceMin"
-									inputType="text"
-									title="Price Min"
-									control={filterForm.get('priceRangeMin')}
+							</Box>
+							<Box marginBottom={15}>
+								<Counter
+									title="Bathrooms"
+									control={filterForm.get('childCount')}
 									updateControl={updateFilterForm}
+									className={'filterCounter'}
 								/>
-								<LabelInput
-									className="priceMax"
-									inputType="text"
-									title="Price Max"
-									control={filterForm.get('priceRangeMax')}
-									updateControl={updateFilterForm}
-								/>
-							</div>
-							<LabelSelect
-								title={'Property Type'}
-								control={filterForm.get('propertyTypeIds')}
-								updateControl={updateFilterForm}
-								options={propertyTypeOptions}
-								isMulti={true}
-							/>
-
-							<div className={'buttons'}>
-								<LabelButton
-									className={'cancelButton'}
-									look={'containedSecondary'}
-									variant={'button'}
-									label={'Cancel'}
-									onClick={() => popupController.close(FilterReservationPopup)}
-								/>
-								<LabelButton
-									className={isValid ? 'applyButton' : 'applyButton disabled'}
-									look={'containedPrimary'}
-									variant={'button'}
-									label={'Apply'}
-									onClick={() => {
-										saveFilter();
-									}}
-								/>
-							</div>
+							</Box>
+						</div>
+						<div className="formDiv" id="redeemPointsDiv">
+							<Box className="redeemPointsContainer">
+								<Label className="redeemPointsLabel" variant="body1">
+									Redeem Points
+								</Label>
+								<Switch checked={redeemCodeToggle} label={'{"left":"" }'} />
+							</Box>
+						</div>
+						<div className="formDiv" id="priceSliderDiv">
+							<Label className="priceLabel" variant="body1" marginY={15}>
+								Price
+							</Label>
+							<Box marginBottom={15}>
+								<Label marginTop={22} marginBottom={15}>
+									The average nightly price is ${isNaN(averagePrice) ? '0' : averagePrice}
+								</Label>
+								<div className={'minMaxDiv'}>
+									<LabelInput
+										className="priceMin"
+										inputType="text"
+										title="Price Min"
+										control={filterForm.get('priceRangeMin')}
+										updateControl={updateFilterForm}
+									/>
+									<hr className="divider" />
+									<LabelInput
+										className="priceMax"
+										inputType="text"
+										title="Price Max"
+										control={filterForm.get('priceRangeMax')}
+										updateControl={updateFilterForm}
+									/>
+								</div>
+							</Box>
+						</div>
+						<div className="formDiv" id="accommodationDiv">
+							<Label className="accommodationLabel" variant="body1" marginY={15}>
+								Accommodation
+							</Label>
+							<Box marginBottom={15}>{renderAccommodationCheckboxes()}</Box>
+						</div>
+						<div className="formDiv" id="resortExperiencesDiv">
+							<Label className="accommodationLabel" variant="body1" marginY={15}>
+								Resort Experiences
+							</Label>
+							<Box marginBottom={15}>{renderResortExperiences()}</Box>
+						</div>
+						<div className="formDiv" id="resortExperiencesDiv">
+							<Label className="accommodationLabel" variant="body1" marginY={15}>
+								In Unit Amenities
+							</Label>
+							<Box marginBottom={15}>{renderInUnitAmenities()}</Box>
+						</div>
+						<div className={'formWrapper'}>
+							{/*<LabelSelect*/}
+							{/*	title={'Property Type'}*/}
+							{/*	control={filterForm.get('propertyTypeIds')}*/}
+							{/*	updateControl={updateFilterForm}*/}
+							{/*	options={propertyTypeOptions}*/}
+							{/*	isMulti={true}*/}
+							{/*/>*/}
 						</div>
 					</Box>
+					<div className={'buttons'}>
+						<LabelButton
+							className={'cancelButton'}
+							look={'containedSecondary'}
+							variant={'button'}
+							label={'Cancel'}
+							onClick={() => popupController.close(FilterReservationPopup)}
+						/>
+						<LabelButton
+							className={isValid ? 'applyButton' : 'applyButton disabled'}
+							look={'containedPrimary'}
+							variant={'button'}
+							label={'Apply'}
+							onClick={() => {
+								saveFilter();
+							}}
+						/>
+					</div>
 				</Paper>
 			</div>
 		</Popup>
