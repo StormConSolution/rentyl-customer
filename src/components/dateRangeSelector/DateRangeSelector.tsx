@@ -9,7 +9,7 @@ import './DateRangeSelector.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Label from '@bit/redsky.framework.rs.label';
-import { DateUtils } from '../../utils/utils';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 export interface DateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
@@ -56,11 +56,14 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
 					{props.startDateLabel}
 				</Label>
+				<hr />
 				<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
 					{props.endDateLabel}
 				</Label>
 			</div>
 			<DateRangePicker
+				navPrev={<Icon iconImg={'icon-chevron-left'} size={10} />}
+				navNext={<Icon iconImg={'icon-chevron-right'} size={10} />}
 				readOnly
 				startDate={startDateControl}
 				startDateId={`startDate-${instanceId}`}
@@ -74,6 +77,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				focusedInput={props.focusedInput}
 				onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 				numberOfMonths={props.monthsToShow}
+				verticalSpacing={20}
 				noBorder
 			/>
 		</Box>
