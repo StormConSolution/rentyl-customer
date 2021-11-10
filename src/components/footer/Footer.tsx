@@ -72,13 +72,9 @@ const Footer: React.FC<FooterProps> = (props) => {
 			<Box className={'rsFooter'}>
 				<Box className={'footerNavigation'}>
 					<Box className={'companyFooterLogo'}>
-						<img
-							src={company.wideLogoUrl}
-							alt={company.name}
-							onClick={() => {
-								window.open('https://rentylresorts.com/', '_blank');
-							}}
-						/>
+						<Link path={`https://rentylresorts.com/`} external target={'blank'}>
+							<img src={company.wideLogoUrl} alt={company.name} />
+						</Link>
 					</Box>
 					<Box className={'footerSections'}>{renderSections(props.links)}</Box>
 				</Box>
