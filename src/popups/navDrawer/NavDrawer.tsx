@@ -2,7 +2,7 @@ import * as React from 'react';
 import './NavDrawer.scss';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useEffect, useRef } from 'react';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../../components/labelLink/LabelLink';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import { NavData } from './NavData';
+import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
 
 interface NavPopoutProps {
 	onClose: () => void;
@@ -90,13 +91,13 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconColor={'#ffffff'}
 							/>
 							<LabelLink
-								path={'/signin'}
+								path={'#'}
 								label={'Log in'}
 								variant={'button'}
 								iconRight={'icon-chevron-right'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signin').catch(console.error);
+									popupController.open<SigninPopupProps>(SigninPopup, {});
 								}}
 								iconSize={7}
 								iconColor={'#ffffff'}

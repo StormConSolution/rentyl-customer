@@ -65,23 +65,23 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					size={14}
 					cursorPointer
 				/>
-				<Label variant={'body1'}>Sign in / Sign up</Label>
+				<Label variant={'h4'}>Sign in / Sign up</Label>
 				<hr className={'linethrough'} />
 				<LabelInput
 					title={'Email Address'}
 					inputType={'email'}
 					control={signinForm.get('primaryEmail')}
 					updateControl={updateForm}
+					labelVariant={'body5'}
 				/>
 				<LabelInput
 					title={'Password'}
 					inputType={'password'}
 					control={signinForm.get('password')}
 					updateControl={updateForm}
+					labelVariant={'body5'}
 				/>
-				<Button look={'containedPrimary'} onClick={signin}>
-					Sign in
-				</Button>
+				<LabelButton look={'containedPrimary'} onClick={signin} label={'Sign in'} variant={'button'} />
 				<Label className={'errorMessage'} variant={'body2'} color={'red'}>
 					{errorMessage}
 				</Label>
@@ -98,10 +98,11 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					<Label variant={'body1'}>Or</Label>
 					<hr />
 				</Box>
-				<Label variant={'body2'} mb={18}>
+				<Label className={'noAccount'} variant={'body5'} mb={18}>
 					No account? Save time on your next booking
 				</Label>
-				<Button
+				<LabelButton
+					className={'yellow'}
 					look={'containedPrimary'}
 					onClick={() => {
 						popupController.close(SigninPopup);
@@ -110,9 +111,9 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 							password: signinForm.get('password').value as string
 						});
 					}}
-				>
-					Sign up
-				</Button>
+					label={'Sign up'}
+					variant={'button'}
+				/>
 			</Paper>
 		</Popup>
 	);
