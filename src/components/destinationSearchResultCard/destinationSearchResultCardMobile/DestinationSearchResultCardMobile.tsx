@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
+	destinationId: number;
 	destinationName: string;
 	address: string;
 	picturePaths: string[];
@@ -75,6 +76,9 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 						className={'yellow'}
 						variant={'button'}
 						label={'Contact Us'}
+						onClick={(event) => {
+							event.stopPropagation();
+						}}
 					/>
 					<Label variant={'subtitle3'} paddingTop={'5px'}>
 						to inquire about booking

@@ -17,8 +17,7 @@ import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImag
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
-import moment from 'moment';
-import { formatFilterDateForServer, StringUtils, WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -33,26 +32,30 @@ import FilterReservationPopup, {
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
 import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import Accordion from '@bit/redsky.framework.rs.accordion';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import moment from 'moment';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
-	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const params = router.getPageUrlParams<{
 		destinationId: number;
 		startDate?: string;
 		endDate?: string;
-		adults: number;
-		children: number;
+		guests: number;
 	}>([
 		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
-		{ key: 'startDate', default: searchQueryObj.startDate.toString() || '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: searchQueryObj.endDate.toString() || '', type: 'string', alias: 'endDate' },
-		{ key: 'adults', default: searchQueryObj.adultCount || 2, type: 'integer', alias: 'adults' },
-		{ key: 'children', default: searchQueryObj.childCount || 0, type: 'integer', alias: 'children' }
+		{
+			key: 'startDate',
+			default: reservationFilters.startDate.toString() || '',
+			type: 'string',
+			alias: 'startDate'
+		},
+		{ key: 'endDate', default: reservationFilters.endDate.toString() || '', type: 'string', alias: 'endDate' },
+		{ key: 'guests', default: reservationFilters.adultCount || 1, type: 'integer', alias: 'guests' }
 	]);
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
@@ -60,15 +63,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
-	const rateCode = useRecoilValue<string>(globalState.userRateCode);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const [comparisonId, setComparisonId] = useState<number>(1);
-	const [validCode, setValidCode] = useState<boolean>(true);
-	const [errorMessage, setErrorMessage] = useState<string>();
 
 	useEffect(() => {
 		async function getDestinationDetails(id: number) {
@@ -86,17 +86,24 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}, [params.destinationId]);
 
 	useEffect(() => {
+		router.updateUrlParams({
+			di: params.destinationId,
+			startDate: reservationFilters.startDate.toString(),
+			endDate: reservationFilters.endDate.toString(),
+			guests: reservationFilters.adultCount,
+			priceRangeMax: reservationFilters.priceRangeMax ? reservationFilters.priceRangeMax.toString() : '',
+			priceRangeMin: reservationFilters.priceRangeMin ? reservationFilters.priceRangeMin.toString() : '',
+			propertyTypeIds: reservationFilters.propertyTypeIds ? reservationFilters.propertyTypeIds.join(',') : ''
+		});
 		async function getAvailableStays() {
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let result = await accommodationService.availability(params.destinationId, searchQueryObj);
-				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
+				let result = await accommodationService.availability(params.destinationId, reservationFilters);
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				popupController.close(SpinningLoaderPopup);
-				setValidCode(rateCode === '');
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Unable to get available accommodations.'),
 					'Server Error'
@@ -104,7 +111,26 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			}
 		}
 		getAvailableStays().catch(console.error);
-	}, [searchQueryObj]);
+	}, [reservationFilters]);
+
+	useEffect(() => {
+		if (!reservationFilters) {
+			setReservationFilters({
+				destinationId: params.destinationId,
+				startDate: moment(new Date(params.startDate || '').getTime()).format('YYYY-MM-DD'),
+				endDate: params.endDate
+					? moment(new Date(params.endDate).getTime()).format('YYYY-MM-DD')
+					: moment(new Date(params.startDate || ''))
+							.add(2, 'days')
+							.format('YYYY-MM-DD'),
+				adultCount: params.guests || 1,
+				childCount: 0,
+				redeemPoints: false,
+				sortBy: 'ASC',
+				pagination: { page: 1, perPage: 10 }
+			});
+		}
+	}, []);
 
 	function renderFeatures() {
 		if (!destinationDetails || !destinationDetails.features) return;
@@ -172,13 +198,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						const newRoom: Misc.StayParams = {
 							uuid: Date.now(),
 							accommodationId: item.id,
-							adults: searchQueryObj.adultCount,
-							children: searchQueryObj.childCount,
-							arrivalDate: searchQueryObj.startDate.toString(),
-							departureDate: searchQueryObj.endDate.toString(),
+							adults: reservationFilters.adultCount,
+							children: 0,
+							arrivalDate: reservationFilters.startDate.toString(),
+							departureDate: reservationFilters.endDate.toString(),
 							packages: []
 						};
-						if (rateCode) newRoom.rateCode = rateCode;
 						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
@@ -190,8 +215,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					}}
 					onViewDetailsClick={() => {
 						const dates =
-							!!searchQueryObj.startDate && !!searchQueryObj.endDate
-								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+							!!reservationFilters.startDate && !!reservationFilters.endDate
+								? `&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
 								: '';
 						router.navigate(`/accommodation/details?ai=${item.id}${dates}`).catch(console.error);
 					}}
@@ -340,15 +365,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						{size !== 'small' ? (
 							<>
 								<FilterBar destinationId={destinationDetails.id} />
-								<Label variant={'body1'} color={'red'}>
-									{errorMessage}
-								</Label>
-								<Accordion
-									hideHoverEffect
-									hideChevron
-									children={<RateCodeSelect code={rateCode} valid={!validCode} />}
-									titleReact={<Label variant={'button'}>toggle rate code</Label>}
-								/>
 							</>
 						) : (
 							<IconLabel
@@ -360,46 +376,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								labelVariant={'caption'}
 								onClick={() => {
 									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-										// onClickApply: (
-										// 	startDate: moment.Moment | null,
-										// 	endDate: moment.Moment | null,
-										// 	adults: number,
-										// 	children: number,
-										// 	priceRangeMin: string,
-										// 	priceRangeMax: string,
-										// 	propertyTypeIds: number[],
-										// 	rateCode: string
-										// ): void => {
-										// 	setSearchQueryObj((prev) => {
-										// 		let createSearchQueryObj: any = { ...prev };
-										// 		if (startDate !== null)
-										// 			createSearchQueryObj['startDate'] = formatFilterDateForServer(
-										// 				startDate,
-										// 				'start'
-										// 			);
-										// 		if (endDate !== null)
-										// 			createSearchQueryObj['endDate'] = formatFilterDateForServer(
-										// 				endDate,
-										// 				'end'
-										// 			);
-										// 		createSearchQueryObj['adults'] = adults;
-										// 		createSearchQueryObj['children'] = children;
-										// 		if (ObjectUtils.isArrayWithData(propertyTypeIds))
-										// 			createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-										// 		if (priceRangeMin !== '' && !isNaN(parseInt(priceRangeMin)))
-										// 			createSearchQueryObj['priceRangeMin'] = +priceRangeMin;
-										// 		if (priceRangeMax !== '' && !isNaN(parseInt(priceRangeMax)))
-										// 			createSearchQueryObj['priceRangeMax'] = +priceRangeMax;
-										// 		if (rateCode !== '') createSearchQueryObj['rate'] = rateCode;
-										// 		return createSearchQueryObj;
-										// 	});
-										// 	if (!destinationDetails) return;
-										// 	router.updateUrlParams({
-										// 		di: destinationDetails.id,
-										// 		startDate: formatFilterDateForServer(startDate, 'start'),
-										// 		endDate: formatFilterDateForServer(endDate, 'end')
-										// 	});
-										// },
 										className: 'filterPopup'
 									});
 								}}
@@ -418,9 +394,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							total={totalResults}
 							setSelectedPage={(newPage) => {
 								setPage(newPage);
-								let newSearchQueryObj = { ...searchQueryObj };
-								newSearchQueryObj.pagination = { page: newPage, perPage: 5 };
-								setSearchQueryObj(newSearchQueryObj);
+								setReservationFilters({
+									...reservationFilters,
+									pagination: { page: newPage, perPage: 5 }
+								});
 								let availableStaysSection = availableStaysRef.current!.offsetTop;
 								window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
 							}}

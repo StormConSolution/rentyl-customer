@@ -7,7 +7,6 @@ import {
 	useRecoilTransactionObserver_UNSTABLE
 } from 'recoil';
 import * as React from 'react';
-import { formatDateForServer, formatDateTime, formatFilterDateForServer } from '../utils/utils';
 import moment from 'moment';
 
 enum GlobalStateKeys {
@@ -80,10 +79,9 @@ class GlobalState {
 		this.reservationFilters = atom<Misc.ReservationFilters>({
 			key: GlobalStateKeys.RESERVATION_FILTERS,
 			default: {
-				regionIds: [],
 				startDate: moment(new Date().getTime()).format('YYYY-MM-DD'),
 				endDate: moment(new Date()).add(2, 'days').format('YYYY-MM-DD'),
-				adultCount: 2,
+				adultCount: 1,
 				childCount: 0,
 				redeemPoints: false,
 				sortBy: 'ASC',

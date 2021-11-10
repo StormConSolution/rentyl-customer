@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import './BookingFlowAddRoomPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
-import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import serviceFactory from '../../services/serviceFactory';
-import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import FilterReservationPopup, {
@@ -21,7 +18,7 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 
 const BookingFlowAddRoomPage = () => {
@@ -36,12 +33,12 @@ const BookingFlowAddRoomPage = () => {
 	});
 
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const rateCode = useRecoilValue<string>(globalState.userRateCode);
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
-	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
-	const [validCode, setValidCode] = useState<boolean>(true);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
 	useEffect(() => {
@@ -58,22 +55,20 @@ const BookingFlowAddRoomPage = () => {
 		async function getReservations() {
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(params.data.destinationId, searchQueryObj);
+				let res = await accommodationService.availability(params.data.destinationId, reservationFilters);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
-				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Unable to get a list of accommodations.'),
 					'Server Error'
 				);
-				setValidCode(rateCode === '' || rateCode === undefined);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
 		getReservations().catch(console.error);
-	}, [searchQueryObj]);
+	}, [reservationFilters]);
 
 	function bookNow(accommodationId: number) {
 		let stays = params.data.stays;
@@ -86,14 +81,12 @@ const BookingFlowAddRoomPage = () => {
 		let newRoom: Misc.StayParams = {
 			uuid: editStayDetails?.uuid || Date.now(),
 			accommodationId,
-			adults: searchQueryObj.adultCount,
-			children: searchQueryObj.childCount,
-			arrivalDate: searchQueryObj.startDate as string,
-			departureDate: searchQueryObj.endDate as string,
+			adults: reservationFilters.adultCount,
+			children: 0,
+			arrivalDate: reservationFilters.startDate as string,
+			departureDate: reservationFilters.endDate as string,
 			packages: editStayDetails?.packages || []
 		};
-		if (rateCode) newRoom.rateCode = rateCode;
-
 		let bookingParams: Misc.BookingParams = {
 			destinationId: params.data.destinationId,
 			stays,
@@ -202,18 +195,14 @@ const BookingFlowAddRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								className: 'filterPopup'
+								className: 'filterPopup',
+								searchRegion: false
 							});
 						}}
 					/>
 				) : (
 					<>
 						<FilterBar destinationId={params.data.destinationId} />
-						<Accordion
-							hideHoverEffect
-							children={<RateCodeSelect code={rateCode} valid={!validCode} />}
-							titleReact={<Label variant={'button'}>toggle rate code</Label>}
-						/>
 					</>
 				)}
 				<Box
@@ -234,9 +223,10 @@ const BookingFlowAddRoomPage = () => {
 					currentPageNumber={page}
 					setSelectedPage={(newPage) => {
 						setPage(newPage);
-						let newSearchQueryObj = { ...searchQueryObj };
-						newSearchQueryObj.pagination = { page: newPage, perPage: 5 };
-						setSearchQueryObj(newSearchQueryObj);
+						setReservationFilters({
+							...reservationFilters,
+							pagination: { page: newPage, perPage: 5 }
+						});
 						let filterSection = filterRef.current!.offsetTop;
 						window.scrollTo({ top: filterSection, behavior: 'smooth' });
 					}}

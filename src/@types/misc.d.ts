@@ -112,5 +112,7 @@ declare namespace Misc {
 		bathrooms?: number;
 		resortExperiences?: number[];
 		rateCode?: string;
+		destinationId?: number;
+		accommodationId?: number;
 	}
 }

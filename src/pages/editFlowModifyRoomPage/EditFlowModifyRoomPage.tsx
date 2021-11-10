@@ -34,7 +34,9 @@ const EditFlowModifyRoomPage = () => {
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
@@ -46,10 +48,10 @@ const EditFlowModifyRoomPage = () => {
 			try {
 				let res = await reservationsService.get(id);
 				setReservation(res);
-				const newSearchQueryObj = { ...searchQueryObj };
+				const newSearchQueryObj = { ...reservationFilters };
 				newSearchQueryObj.startDate = res.arrivalDate;
 				newSearchQueryObj.endDate = res.departureDate;
-				setSearchQueryObj(newSearchQueryObj);
+				setReservationFilters(newSearchQueryObj);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
 				router.navigate('/reservations').catch(console.error);
@@ -62,7 +64,7 @@ const EditFlowModifyRoomPage = () => {
 		async function getReservations() {
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(params.destinationId, searchQueryObj);
+				let res = await accommodationService.availability(params.destinationId, reservationFilters);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
@@ -75,7 +77,7 @@ const EditFlowModifyRoomPage = () => {
 			}
 		}
 		getReservations().catch(console.error);
-	}, [searchQueryObj]);
+	}, [reservationFilters, params.destinationId]);
 
 	async function bookNow(id: number) {
 		if (reservation) {
@@ -85,10 +87,10 @@ const EditFlowModifyRoomPage = () => {
 				paymentMethodId: reservation.paymentMethod?.id,
 				guest: reservation.guest,
 				accommodationId: id,
-				adultCount: searchQueryObj.adultCount,
-				childCount: searchQueryObj.childCount,
-				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
-				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
+				adultCount: reservationFilters.adultCount,
+				childCount: reservationFilters.childCount,
+				arrivalDate: moment(reservationFilters.startDate).format('YYYY-MM-DD'),
+				departureDate: moment(reservationFilters.endDate).format('YYYY-MM-DD'),
 				numberOfAccommodations: 1
 			};
 			try {
@@ -229,6 +231,7 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+								searchRegion: false,
 								className: 'filterPopup'
 							});
 						}}
@@ -255,10 +258,11 @@ const EditFlowModifyRoomPage = () => {
 					selectedRowsPerPage={5}
 					currentPageNumber={page}
 					setSelectedPage={(newPage) => {
-						let newSearchQueryObj = { ...searchQueryObj };
-						newSearchQueryObj.pagination = { page: newPage, perPage: 5 };
-						setSearchQueryObj(newSearchQueryObj);
 						setPage(newPage);
+						setReservationFilters({
+							...reservationFilters,
+							pagination: { page: newPage, perPage: 5 }
+						});
 					}}
 					total={availabilityTotal}
 				/>
