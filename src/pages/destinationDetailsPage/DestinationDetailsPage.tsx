@@ -70,11 +70,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [page, setPage] = useState<number>(1);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const [comparisonId, setComparisonId] = useState<number>(1);
 	const initialStartDate = params.startDate ? moment(params.startDate) : moment();
 	const initialEndDate = params.endDate ? moment(params.endDate) : moment().add(2, 'days');
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
-	const [rateCode, setRateCode] = useState<string>('');
+	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [errorMessage, setErrorMessage] = useState<string>();
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
@@ -122,15 +123,17 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			if (!!newSearchQueryObj.priceRangeMax) {
 				newSearchQueryObj.priceRangeMax *= 100;
 			}
+			if (!rateCode) {
+				delete newSearchQueryObj.rateCode;
+			} else {
+				newSearchQueryObj.rateCode = rateCode;
+			}
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let result = await accommodationService.availability(newSearchQueryObj);
 				setValidCode(rateCode === '' || (!!result.data && result.data.length > 0));
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
-				if (rateCode !== '' && !!result.data && result.data.length > 0) {
-					rsToastify.success('Rate code successfully applied.', 'Success!');
-				}
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				popupController.close(SpinningLoaderPopup);
@@ -302,7 +305,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							departureDate: searchQueryObj.endDate as string,
 							packages: []
 						};
-						if (searchQueryObj.rateCode) newRoom.rateCode = searchQueryObj.rateCode;
+						if (rateCode) newRoom.rateCode = rateCode;
 						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
 							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
@@ -322,7 +325,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					onCompareClick={() => {
 						if (!destinationDetails) return;
 						let selectedRoom = destinationDetails.accommodations.filter((value) => value.id === item.id);
+						setComparisonId(comparisonId + 1);
 						comparisonService.addToComparison(recoilComparisonState, {
+							comparisonId: comparisonId,
 							destinationId: Date.now(),
 							logo: destinationDetails.logoUrl,
 							title: destinationDetails.name,
@@ -331,11 +336,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								.map((value) => {
 									return {
 										value: value.id,
-										text: value.name,
-										selected: value.id === item.id
+										label: value.name
 									};
 								}),
-							selectedRoom: selectedRoom[0].id
+							selectedRoom: selectedRoom[0].id || destinationDetails.accommodations[0].id
 						});
 					}}
 					roomStats={[
@@ -592,7 +596,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									children={
 										<RateCodeSelect
 											apply={(value) => {
-												setRateCode(value);
 												updateSearchQueryObj('rateCode', value);
 											}}
 											code={rateCode}

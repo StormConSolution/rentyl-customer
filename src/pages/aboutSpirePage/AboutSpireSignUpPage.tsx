@@ -73,14 +73,17 @@ const AboutSpireSignUpPage: React.FC = () => {
 	}
 
 	function renderBookNowImages() {
-		let images: IPromotionWheel[] = promotionWheelData.filter((item) => item.imgUrl !== mainImage);
+		let images: IPromotionWheel[] = promotionWheelData;
+		if (size !== 'small') {
+			images = promotionWheelData.filter((item) => item.imgUrl !== mainImage);
+		}
 		return images.map((item, index) => {
 			return (
-				<div key={index}>
+				<div key={item.imgUrl}>
 					<BookNowImage
 						width={'270px'}
 						height={'200px'}
-						title={item.description}
+						title={item.title}
 						linkPath={'/reservation/availability'}
 						imgUrl={item.imgUrl}
 					/>
@@ -152,8 +155,6 @@ const AboutSpireSignUpPage: React.FC = () => {
 							a technology company, we are committed to creating unique and seamless ways for our partners
 							and members to achieve their goals.
 						</Label>
-						{/*TODO Add back in when we have a path for it or remove when we know for sure*/}
-						{/*<LinkButton look={'containedPrimary'} label={'Be part of our history'} path={'/signup'} />*/}
 					</Box>
 				</Box>
 				<Box className={'sectionTwo'} mb={120}>

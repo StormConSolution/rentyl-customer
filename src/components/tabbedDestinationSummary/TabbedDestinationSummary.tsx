@@ -10,7 +10,7 @@ import './TabbedDestinationSummary.scss';
 
 export interface DestinationSummaryTab {
 	label: string;
-	content: string | DestinationSummaryAccommodationListProps | DestinationSummaryOverviewProps;
+	content: DestinationSummaryAccommodationListProps;
 }
 
 export interface TabbedDestinationSummaryProps {

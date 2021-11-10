@@ -70,10 +70,11 @@ declare namespace Misc {
 	}
 
 	export interface ComparisonCardInfo {
+		comparisonId?: number;
 		destinationId: number;
 		logo: string;
 		title: string;
-		roomTypes: { value: number | string; text: number | string; selected: boolean }[];
+		roomTypes: { value: number | string; label: number | string }[];
 		selectedRoom: number;
 	}
 
@@ -90,5 +91,23 @@ declare namespace Misc {
 	interface IBaseCountry {
 		name: string;
 		isoCode: string;
+	}
+
+	export interface ReservationFilters {
+		checkIn: Date | string;
+		checkOut: Date | string;
+		adultCount: number;
+		redeemPoints: boolean;
+		sortBy: string;
+		location?: number;
+		inUnitAmenities?: number[];
+		view?: number[];
+		groupAmenities?: number[];
+		minPrice?: number;
+		maxPrice?: number;
+		accommodations?: number[];
+		bedrooms?: number;
+		bathrooms?: number;
+		resortExperiences?: number[];
 	}
 }

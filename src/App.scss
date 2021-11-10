@@ -1,4 +1,5 @@
-@import url('./fonts/MrsEavesXL/font.scss');
+@import url('./fonts/Montserrat/font.scss');
+@import url('./fonts/Gothic/font.scss');
 @import 'themes/themes';
 @import 'themes/label';
 @import 'themes/button';
@@ -34,7 +35,7 @@ body {
 			background-color: inherit;
 			color: inherit;
 			margin: 0 auto;
-			max-width: 1440px;
+			max-width: 1845px;
 		}
 	}
 }

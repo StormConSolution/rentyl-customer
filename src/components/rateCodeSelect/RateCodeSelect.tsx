@@ -2,10 +2,13 @@ import * as React from 'react';
 import './RateCodeSelect.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LabelInput from '../labelInput/LabelInput';
 import LabelButton from '../labelButton/LabelButton';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import { useRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 interface RateCodeSelectProps {
 	apply: (value: string) => void;
@@ -14,11 +17,19 @@ interface RateCodeSelectProps {
 }
 
 const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
+	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [rateCodeForm, setRateCodeForm] = useState<RsFormGroup>(
 		new RsFormGroup([new RsFormControl('code', props.code || '', [])])
 	);
 
+	useEffect(() => {
+		let newRateCode = rateCodeForm.get('code');
+		newRateCode.value = rateCode;
+		setRateCodeForm(rateCodeForm.cloneDeep().update(newRateCode));
+	}, [rateCode]);
+
 	function updateRateCodeForm(control: RsFormControl) {
+		setRateCode(control.value as string);
 		setRateCodeForm(rateCodeForm.clone().update(control));
 	}
 
@@ -43,6 +54,9 @@ const RateCodeSelect: React.FC<RateCodeSelectProps> = (props) => {
 				label={'Apply'}
 				className={'applyButton'}
 				onClick={() => {
+					if (rateCode) {
+						rsToastify.success('Rate code has been successfully applied', 'Success!');
+					}
 					props.apply(rateCodeForm.get('code').value.toString());
 				}}
 			/>
