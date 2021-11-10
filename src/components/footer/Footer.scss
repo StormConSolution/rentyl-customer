@@ -2,12 +2,13 @@
 .rsFooter {
 	position: relative;
 	box-sizing: border-box;
-
+	max-width: 1920px;
+	padding: 0 37px;
 	img {
 		height: 40px;
 		grid-column: 1;
 		grid-row: 1 / 2;
-		margin: auto 10px;
+		mix-blend-mode: multiply;
 	}
 	.rsLabel {
 		&.caption {
@@ -17,16 +18,22 @@
 
 	.footerNavigation {
 		color: theme-var($primaryTextColor);
-		grid-template-columns: repeat(7, 1fr);
+		display: flex;
 		padding-bottom: 30px;
 		padding-top: 18px;
-
+		gap: 166px;
+		.companyFooterLogo {
+			width: 307px;
+			display: inline;
+			&:hover {
+				cursor: pointer;
+			}
+		}
+		.footerSections {
+			display: flex;
+			gap: 210px;
+		}
 		.rsBox {
-			grid-template-columns: repeat(4, 1fr);
-			grid-column: 2 / 6;
-			row-gap: 5px;
-			column-gap: 10px;
-
 			a {
 				color: theme-var($buttonLinkColor) !important;
 				font-size: small;
@@ -47,6 +54,7 @@
 				}
 			}
 			.socialMediaLinks {
+				gap: 10px;
 				width: 121px;
 				justify-content: space-between;
 				margin-right: 10px;
@@ -61,16 +69,19 @@
 
 .small {
 	.rsFooter {
-		margin: 20px;
-
+		padding: 0 15px;
 		.footerNavigation {
-			grid-template-columns: 1fr;
-
-			.rsBox {
-				grid-template-columns: 1fr;
-				grid-column: 1;
-				row-gap: 10px;
-				margin-top: 20px;
+			flex-direction: column;
+			gap: 10px;
+			.footerSections {
+				flex-direction: column;
+				gap: 10px;
+			}
+		}
+		.rsBox:last-of-type {
+			padding: 8px 0;
+			&.copyright {
+				flex-direction: column;
 			}
 		}
 	}
