@@ -16,7 +16,7 @@ import UserService from '../../services/user/user.service';
 import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../spinningLoaderPopup/SpinningLoaderPopup';
-import LabelButton from '../../components/labelButton/LabelButton';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface SignupPopupProps extends PopupProps {
 	primaryEmail?: string;
@@ -25,6 +25,7 @@ export interface SignupPopupProps extends PopupProps {
 
 const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 	const userService = serviceFactory.get<UserService>('UserService');
+	const size = useWindowResizeChange();
 	const [hasAgreedToTerms, setHasAgreedToTerms] = useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [signUpForm, setSignUpForm] = useState<RsFormGroup>(
@@ -87,7 +88,7 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
-			<Paper className={'rsSignupPopup'} width={'420px'} position={'relative'}>
+			<Paper className={'rsSignupPopup'} position={'relative'}>
 				<Icon
 					iconImg={'icon-close'}
 					onClick={() => {
@@ -98,36 +99,48 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 				/>
 				<Label variant={'body1'}>Sign up</Label>
 				<hr className={'linethrough'} />
-				<LabelInput
-					title={'First name'}
-					inputType={'text'}
-					control={signUpForm.get('firstName')}
-					updateControl={updateForm}
-				/>
-				<LabelInput
-					title={'Last name'}
-					inputType={'text'}
-					control={signUpForm.get('lastName')}
-					updateControl={updateForm}
-				/>
+				<Box
+					display={'flex'}
+					flexDirection={size === 'small' ? 'column' : 'row'}
+					gap={size === 'small' ? 0 : 36}
+				>
+					<LabelInput
+						title={'First name'}
+						inputType={'text'}
+						control={signUpForm.get('firstName')}
+						updateControl={updateForm}
+					/>
+					<LabelInput
+						title={'Last name'}
+						inputType={'text'}
+						control={signUpForm.get('lastName')}
+						updateControl={updateForm}
+					/>
+				</Box>
 				<LabelInput
 					title={'Email Address'}
 					inputType={'email'}
 					control={signUpForm.get('primaryEmail')}
 					updateControl={updateForm}
 				/>
-				<LabelInput
-					title={'Create new password'}
-					inputType={'password'}
-					control={signUpForm.get('password')}
-					updateControl={updateForm}
-				/>
-				<LabelInput
-					title={'Confirm new password'}
-					inputType={'password'}
-					control={signUpForm.get('confirmPassword')}
-					updateControl={updateForm}
-				/>
+				<Box
+					display={'flex'}
+					flexDirection={size === 'small' ? 'column' : 'row'}
+					gap={size === 'small' ? 0 : 36}
+				>
+					<LabelInput
+						title={'Create new password'}
+						inputType={'password'}
+						control={signUpForm.get('password')}
+						updateControl={updateForm}
+					/>
+					<LabelInput
+						title={'Confirm new password'}
+						inputType={'password'}
+						control={signUpForm.get('confirmPassword')}
+						updateControl={updateForm}
+					/>
+				</Box>
 				<LabelCheckbox
 					value={1}
 					text={
