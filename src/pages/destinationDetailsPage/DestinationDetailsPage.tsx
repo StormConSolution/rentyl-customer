@@ -40,6 +40,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
+	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
 	const params = router.getPageUrlParams<{
 		destinationId: number;
 		startDate?: string;
@@ -47,11 +48,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		adults: number;
 		children: number;
 	}>([
-		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }, //need to coordinate with NDM on getting the correct destination from them to us
-		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
-		{ key: 'adults', default: 2, type: 'integer', alias: 'adults' },
-		{ key: 'children', default: 0, type: 'integer', alias: 'children' }
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
+		{ key: 'startDate', default: searchQueryObj.startDate.toString() || '', type: 'string', alias: 'startDate' },
+		{ key: 'endDate', default: searchQueryObj.endDate.toString() || '', type: 'string', alias: 'endDate' },
+		{ key: 'adults', default: searchQueryObj.adultCount || 2, type: 'integer', alias: 'adults' },
+		{ key: 'children', default: searchQueryObj.childCount || 0, type: 'integer', alias: 'children' }
 	]);
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
@@ -61,7 +62,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const rateCode = useRecoilValue<string>(globalState.userRateCode);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
-	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [totalResults, setTotalResults] = useState<number>(0);
@@ -83,7 +83,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			}
 		}
 		getDestinationDetails(params.destinationId).catch(console.error);
-	}, []);
+	}, [params.destinationId]);
 
 	useEffect(() => {
 		async function getAvailableStays() {
@@ -174,8 +174,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							accommodationId: item.id,
 							adults: searchQueryObj.adultCount,
 							children: searchQueryObj.childCount,
-							arrivalDate: searchQueryObj.startDate as string,
-							departureDate: searchQueryObj.endDate as string,
+							arrivalDate: searchQueryObj.startDate.toString(),
+							departureDate: searchQueryObj.endDate.toString(),
 							packages: []
 						};
 						if (rateCode) newRoom.rateCode = rateCode;
@@ -339,7 +339,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						</Label>
 						{size !== 'small' ? (
 							<>
-								<FilterBar />
+								<FilterBar destinationId={destinationDetails.id} />
 								<Label variant={'body1'} color={'red'}>
 									{errorMessage}
 								</Label>

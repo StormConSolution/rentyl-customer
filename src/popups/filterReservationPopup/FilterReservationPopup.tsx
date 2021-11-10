@@ -19,6 +19,7 @@ import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import globalState from '../../state/globalState';
 import { useRecoilState } from 'recoil';
+import router from '../../utils/router';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -46,8 +47,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			new RsFormControl('childCount', searchQueryObj.childCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
 			]),
-			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(searchQueryObj.priceRangeMax), []),
-			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(searchQueryObj.priceRangeMin), [])
+			new RsFormControl('priceRangeMax', searchQueryObj.priceRangeMax || 0, []),
+			new RsFormControl('priceRangeMin', searchQueryObj.priceRangeMin || 0, [])
 		])
 	);
 

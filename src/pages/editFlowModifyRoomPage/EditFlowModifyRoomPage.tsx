@@ -34,7 +34,6 @@ const EditFlowModifyRoomPage = () => {
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
@@ -48,7 +47,6 @@ const EditFlowModifyRoomPage = () => {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 				const newSearchQueryObj = { ...searchQueryObj };
-				newSearchQueryObj.rateCode = res.rateCode;
 				newSearchQueryObj.startDate = res.arrivalDate;
 				newSearchQueryObj.endDate = res.departureDate;
 				setSearchQueryObj(newSearchQueryObj);
@@ -91,8 +89,7 @@ const EditFlowModifyRoomPage = () => {
 				childCount: searchQueryObj.childCount,
 				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
 				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
-				numberOfAccommodations: 1,
-				rateCode: rateCode || searchQueryObj.rateCode
+				numberOfAccommodations: 1
 			};
 			try {
 				await reservationsService.updateReservation(stay);
@@ -238,7 +235,7 @@ const EditFlowModifyRoomPage = () => {
 					/>
 				) : (
 					<>
-						<FilterBar />
+						<FilterBar destinationId={params.destinationId} />
 					</>
 				)}
 				<Box

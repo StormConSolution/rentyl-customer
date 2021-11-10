@@ -41,20 +41,6 @@ const BookingFlowAddRoomPage = () => {
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
-	// const initialStartDate = editStayDetails?.arrivalDate
-	// 	? moment(editStayDetails?.arrivalDate)
-	// 	: moment(params.data.stays[0].arrivalDate);
-	// const initialEndDate = editStayDetails?.departureDate
-	// 	? moment(editStayDetails?.departureDate)
-	// 	: moment(params.data.stays[0].departureDate);
-	// const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
-	// 	startDate: initialStartDate.format('YYYY-MM-DD'),
-	// 	endDate: initialEndDate.format('YYYY-MM-DD'),
-	// 	adults: editStayDetails?.adults || 1,
-	// 	children: editStayDetails?.children || 0,
-	// 	pagination: { page: 1, perPage: 5 },
-	// 	destinationId: params.data.destinationId
-	// });
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
@@ -70,19 +56,6 @@ const BookingFlowAddRoomPage = () => {
 
 	useEffect(() => {
 		async function getReservations() {
-			let newSearchQueryObj = { ...searchQueryObj };
-			if (
-				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
-				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
-			) {
-				newSearchQueryObj.priceRangeMax *= 100;
-				newSearchQueryObj.priceRangeMin *= 100;
-			}
-			if (!rateCode) {
-				delete newSearchQueryObj.rateCode;
-			} else {
-				newSearchQueryObj.rateCode = rateCode;
-			}
 			try {
 				popupController.open(SpinningLoaderPopup);
 				let res = await accommodationService.availability(params.data.destinationId, searchQueryObj);
@@ -235,7 +208,7 @@ const BookingFlowAddRoomPage = () => {
 					/>
 				) : (
 					<>
-						<FilterBar />
+						<FilterBar destinationId={params.data.destinationId} />
 						<Accordion
 							hideHoverEffect
 							children={<RateCodeSelect code={rateCode} valid={!validCode} />}

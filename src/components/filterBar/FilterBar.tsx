@@ -14,7 +14,6 @@ import serviceFactory from '../../services/serviceFactory';
 import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import router from '../../utils/router';
 
 export interface FilterBarProps {
 	destinationId?: number;
@@ -48,20 +47,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			new RsFormControl('priceRangeMin', searchQueryObj.priceRangeMin || 0, [])
 		])
 	);
-
-	useEffect(() => {
-		router.updateUrlParams({
-			startDate: searchQueryObj.startDate.toString(),
-			endDate: searchQueryObj.endDate.toString(),
-			adultCount: searchQueryObj.adultCount,
-			childCount: searchQueryObj.childCount,
-			region: searchQueryObj.regionIds ? searchQueryObj.regionIds.join(',') : '',
-			rateCode: searchQueryObj.rateCode || '',
-			priceRangeMax: searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : '',
-			priceRangeMin: searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : '',
-			propertyTypeIds: searchQueryObj.propertyTypeIds ? searchQueryObj.propertyTypeIds.join(',') : ''
-		});
-	}, [searchQueryObj]);
 
 	useEffect(() => {
 		async function getDropdownOptions() {
@@ -116,7 +101,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				if (value.length !== 0) {
 					newValue = parseInt(value);
 				}
-
 				control.value = newValue;
 			}
 		}
@@ -197,14 +181,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 
 	return (
 		<Box className={`rsFilterBar`}>
-			<LabelSelect
-				title={'Regions'}
-				updateControl={(control) => updateFilterForm('regionIds', control)}
-				options={regionOptions}
-				control={filterForm.get('regionIds')}
-				isMulti
-				isSearchable
-			/>
+			{!props.destinationId && (
+				<LabelSelect
+					title={'Regions'}
+					updateControl={(control) => updateFilterForm('regionIds', control)}
+					options={regionOptions}
+					control={filterForm.get('regionIds')}
+					isMulti
+					isSearchable
+				/>
+			)}
 			<DateRangeSelector
 				startDate={startDateControl}
 				endDate={endDateControl}

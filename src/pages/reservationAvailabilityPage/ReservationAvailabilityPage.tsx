@@ -62,6 +62,20 @@ const ReservationAvailabilityPage: React.FC = () => {
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
+	useEffect(() => {
+		router.updateUrlParams({
+			startDate: WebUtils.convertDataForUrlParams(searchQueryObj.startDate.toString()),
+			endDate: WebUtils.convertDataForUrlParams(searchQueryObj.endDate.toString()),
+			adults: searchQueryObj.adultCount,
+			children: searchQueryObj.childCount,
+			region: searchQueryObj.regionIds ? searchQueryObj.regionIds.join(',') : '',
+			rateCode: searchQueryObj.rateCode || '',
+			priceRangeMax: searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : '',
+			priceRangeMin: searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : '',
+			propertyTypeIds: searchQueryObj.propertyTypeIds ? searchQueryObj.propertyTypeIds.join(',') : ''
+		});
+	}, [searchQueryObj]);
+
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
 		return destinations.map((destination, index) => {
@@ -81,7 +95,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					destinationFeatures={destination.features}
 					address={StringUtils.buildAddressString(addressData)}
 					picturePaths={urls}
-					destinationDetailsPath={`/destination/details?di=${destination.id}`}
+					destinationDetailsPath={
+						!!searchQueryObj.startDate && !!searchQueryObj.endDate
+							? `/destination/details?di=${destination.id}&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+							: `/destination/details?di=${destination.id}`
+					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
 						comparisonService.addToComparison(recoilComparisonState, {
