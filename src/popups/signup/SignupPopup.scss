@@ -42,6 +42,12 @@
 		}
 	}
 
+	.loginButton {
+		.rsLabel {
+			color: theme-var($yellowTextColor);
+		}
+	}
+
 	.rsLabelCheckbox {
 		align-items: start;
 		margin-bottom: 16px;

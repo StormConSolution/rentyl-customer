@@ -17,6 +17,7 @@ import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../spinningLoaderPopup/SpinningLoaderPopup';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 export interface SignupPopupProps extends PopupProps {
 	primaryEmail?: string;
@@ -159,28 +160,29 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 					}}
 					isChecked={hasAgreedToTerms}
 				/>
-				<Button
-					look={hasAgreedToTerms ? 'containedPrimary' : 'containedTertiary'}
+				<LabelButton
+					look={hasAgreedToTerms ? 'containedPrimary' : 'containedSecondary'}
 					disabled={!hasAgreedToTerms}
 					onClick={signup}
-				>
-					Sign up
-				</Button>
+					label={'Sign up'}
+					variant={'button'}
+				/>
 				<Label variant={'body2'} color={'red'}>
 					{errorMessage}
 				</Label>
 				<hr />
 				<Label variant={'body2'}>
 					Already a member?{' '}
-					<Button
+					<LabelButton
+						className={'loginButton'}
 						look={'none'}
 						onClick={() => {
 							popupController.close(SignupPopup);
-							popupController.open<SigninPopupProps>(SignupPopup, {});
+							popupController.open<SigninPopupProps>(SigninPopup, {});
 						}}
-					>
-						login
-					</Button>{' '}
+						label={'login'}
+						variant={'button'}
+					/>{' '}
 					here
 				</Label>
 			</Paper>

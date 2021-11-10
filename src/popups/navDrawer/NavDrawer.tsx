@@ -12,6 +12,7 @@ import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import { NavData } from './NavData';
 import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
+import SignupPopup, { SignupPopupProps } from '../signup/SignupPopup';
 
 interface NavPopoutProps {
 	onClose: () => void;
@@ -85,7 +86,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconRight={'icon-chevron-right'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signup').catch(console.error);
+									popupController.open<SignupPopupProps>(SignupPopup, {});
 								}}
 								iconSize={7}
 								iconColor={'#ffffff'}
