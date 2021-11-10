@@ -26,6 +26,7 @@ interface LabelRadioButtonProps {
 		| 'button'
 		| 'overline'
 		| string;
+	isDisabled?: boolean;
 	// onClick?: (event?:React.MouseEvent) => void;
 }
 
@@ -49,6 +50,7 @@ const LabelRadioButton: React.FC<LabelRadioButtonProps> = (props) => {
 						let inputValue = e.target as HTMLInputElement;
 						if (inputValue.checked) props.onSelect(props.value);
 					}}
+					disabled={props.isDisabled}
 				/>
 				<span className={'radioButton'}>
 					<Box />

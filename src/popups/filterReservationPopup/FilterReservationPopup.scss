@@ -1,8 +1,10 @@
 @import 'src/themes/themes';
 
 .rsFilterReservationPopup {
+	height: 95vh;
 	position: absolute;
 	top: 40px;
+	overflow: scroll;
 
 	.paperWrapper {
 		width: 341px;

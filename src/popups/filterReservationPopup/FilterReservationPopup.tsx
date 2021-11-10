@@ -5,7 +5,6 @@ import './FilterReservationPopup.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import LabelInput from '../../components/labelInput/LabelInput';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { StringUtils, WebUtils } from '../../utils/utils';
@@ -21,75 +20,50 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelRadioButton from '../../components/labelRadioButton/LabelRadioButton';
 import Counter from '../../components/counter/Counter';
 import Switch from '@bit/redsky.framework.rs.switch';
+import LabelCheckboxV2 from '../../components/labelCheckboxV2/LabelCheckboxV2';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
-	onClickApply: (
-		startDate: moment.Moment | null,
-		endDate: moment.Moment | null,
-		adults: number,
-		children: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string,
-		regionIds?: number[]
-	) => void;
+	onClickApply: (adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) => void;
 	className?: string;
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
 	const params = router.getPageUrlParams<{
-		startDate: string;
-		endDate: string;
 		adultCount: number;
-		childCount: number;
-		region: string;
-		rateCode: string;
 		priceRangeMax: string;
 		priceRangeMin: string;
 		propertyTypeIds: string;
 	}>([
-		{ key: 'startDate', default: '', type: 'string', alias: 'startDate' },
-		{ key: 'endDate', default: '', type: 'string', alias: 'endDate' },
-		{ key: 'adultCount', default: 2, type: 'integer', alias: 'adultCount' },
-		{ key: 'childCount', default: 0, type: 'integer', alias: 'childCount' },
-		{ key: 'region', default: '', type: 'string', alias: 'region' },
-		{ key: 'rateCode', default: '', type: 'string', alias: 'rateCode' },
+		{ key: 'adultCount', default: 1, type: 'integer', alias: 'adultCount' },
 		{ key: 'priceRangeMax', default: '', type: 'string', alias: 'priceRangeMax' },
 		{ key: 'priceRangeMin', default: '', type: 'string', alias: 'priceRangeMin' },
 		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
 
-	const [sortByHighestToggle, setSortByHighestToggle] = useState<boolean>(false);
-	const [sortByLowestToggle, setSortByLowestToggle] = useState<boolean>(false);
+	const [sortBySelection, setSortBySelection] = useState<number>();
 	const [redeemCodeToggle, setRedeemCodeToggle] = useState<boolean>(false);
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(true);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const regionService = serviceFactory.get<RegionService>('RegionService');
-	const [startDate, setStartDate] = useState<moment.Moment | null>(moment());
-	const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, 'd'));
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		setStartDate(startDate);
-		setEndDate(endDate);
-	}
 
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regionIds', [], []),
 			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
 			new RsFormControl('adultCount', params.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
-			new RsFormControl('childCount', params.childCount || 0, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
+			new RsFormControl('bedroomCount', params.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
+			]),
+			new RsFormControl('bathroomCount', params.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
 			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(params.priceRangeMax), []),
 			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(params.priceRangeMin), []),
-			new RsFormControl('rateCode', params.rateCode || '', [])
+			new RsFormControl('accommodationType', [], [])
 		])
 	);
 	const [averagePrice, setAveragePrice] = useState(0);
@@ -143,15 +117,10 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	function saveFilter() {
 		let filterObject: Misc.FilterFormPopupOptions = filterForm.toModel();
 		props.onClickApply(
-			startDate,
-			endDate,
 			filterObject.adultCount,
-			filterObject.childCount,
 			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
 			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMax),
-			filterObject.propertyTypeIds,
-			filterObject.rateCode,
-			filterObject.regionIds
+			filterObject.propertyTypeIds
 		);
 		popupController.close(FilterReservationPopup);
 	}
@@ -160,12 +129,23 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		return (
 			<>
 				{propertyTypeOptions.map((item, idx) => (
-					<LabelCheckbox
+					<LabelCheckboxV2
+						key={item.value}
 						value={item.value}
 						text={item.label}
-						onSelect={() => setAccommodationToggle(true)}
-						isChecked={accommodationToggle}
-						onDeselect={() => setAccommodationToggle(false)}
+						onSelect={() => {
+							let tempControl = filterForm.get('accommodationType');
+							tempControl.value = [...(tempControl.value as number[]), item.value as number];
+							updateFilterForm(tempControl);
+						}}
+						isChecked={(filterForm.get('accommodationType').value as number[]).includes(
+							item.value as number
+						)}
+						onDeselect={() => {
+							filterForm.get('accommodationType').value = (filterForm.get('accommodationType')
+								.value as number[]).filter((type) => type !== item.value);
+							updateFilterForm(filterForm.get('accommodationType'));
+						}}
 					/>
 				))}
 			</>
@@ -176,12 +156,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		return (
 			<>
 				{destinationService.resortExperiences.map((item, idx) => (
-					<LabelCheckbox
+					<LabelCheckboxV2
+						key={item.value}
 						value={item.value}
 						text={item.label}
-						onSelect={() => setAccommodationToggle(true)}
+						onSelect={() => console.log('selected')}
 						isChecked={accommodationToggle}
-						onDeselect={() => setAccommodationToggle(false)}
+						onDeselect={() => console.log('Deselected')}
+						isDisabled={true}
 					/>
 				))}
 			</>
@@ -193,11 +175,13 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			<>
 				{destinationService.inUnitAmenities.map((item, idx) => (
 					<LabelCheckbox
+						key={item.value}
 						value={item.value}
 						text={item.label}
-						onSelect={() => setAccommodationToggle(true)}
+						onSelect={() => console.log('selected')}
 						isChecked={accommodationToggle}
-						onDeselect={() => setAccommodationToggle(false)}
+						onDeselect={() => console.log('Deselected')}
+						isDisabled={false}
 					/>
 				))}
 			</>
@@ -225,26 +209,26 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								<LabelRadioButton
 									radioName="highestRadioBtn"
 									value="sortHigh"
-									checked={sortByHighestToggle}
+									checked={sortBySelection === 0}
 									text="Highest Price"
 									onSelect={() => {
-										setSortByHighestToggle(!sortByHighestToggle);
-										console.log('Sort High');
+										setSortBySelection(0);
 									}}
 									labelSize="body2"
+									isDisabled={true}
 								/>
 							</Box>
 							<Box marginBottom={15}>
 								<LabelRadioButton
 									radioName="lowestRadioBtn"
 									value="sortLow"
-									checked={sortByLowestToggle}
+									checked={sortBySelection === 1}
 									text="Lowest Price"
 									onSelect={() => {
-										setSortByLowestToggle(!sortByLowestToggle);
-										console.log('Sort Low');
+										setSortBySelection(1);
 									}}
 									labelSize="body2"
+									isDisabled={true}
 								/>
 							</Box>
 						</div>
@@ -255,22 +239,25 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									control={filterForm.get('adultCount')}
 									updateControl={updateFilterForm}
 									className={'filterCounter'}
+									minCount={1}
 								/>
 							</Box>
 							<Box marginBottom={15}>
 								<Counter
 									title="Bedrooms"
-									control={filterForm.get('childCount')}
+									control={filterForm.get('bedroomCount')}
 									updateControl={updateFilterForm}
 									className={'filterCounter'}
+									minCount={1}
 								/>
 							</Box>
 							<Box marginBottom={15}>
 								<Counter
 									title="Bathrooms"
-									control={filterForm.get('childCount')}
+									control={filterForm.get('bathroomCount')}
 									updateControl={updateFilterForm}
 									className={'filterCounter'}
+									minCount={1}
 								/>
 							</Box>
 						</div>
@@ -326,15 +313,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								In Unit Amenities
 							</Label>
 							<Box marginBottom={15}>{renderInUnitAmenities()}</Box>
-						</div>
-						<div className={'formWrapper'}>
-							{/*<LabelSelect*/}
-							{/*	title={'Property Type'}*/}
-							{/*	control={filterForm.get('propertyTypeIds')}*/}
-							{/*	updateControl={updateFilterForm}*/}
-							{/*	options={propertyTypeOptions}*/}
-							{/*	isMulti={true}*/}
-							{/*/>*/}
 						</div>
 					</Box>
 					<div className={'buttons'}>

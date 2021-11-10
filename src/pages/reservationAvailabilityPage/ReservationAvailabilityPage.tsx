@@ -265,28 +265,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 		});
 	}
 
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adultCount: number,
-		childCount: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string,
-		regionIds?: number[]
-	) {
+	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: Api.Destination.Req.Availability = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adultCount'] = adultCount;
 			createSearchQueryObj['adultCount'] = adultCount;
 			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
 				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			}
-			if (ObjectUtils.isArrayWithData(regionIds)) createSearchQueryObj['regionIds'] = regionIds;
-			else delete createSearchQueryObj['regionIds'];
+			} else delete createSearchQueryObj['regionIds'];
 
 			if (rateCode !== '') createSearchQueryObj['rateCode'] = rateCode;
 			else delete createSearchQueryObj['rateCode'];
@@ -300,10 +286,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			return createSearchQueryObj;
 		});
 		const newUrlParams: any = {
-			startDate: formatFilterDateForServer(checkinDate, 'start'),
-			endDate: formatFilterDateForServer(checkoutDate, 'end'),
 			adultCount: adultCount,
-			childCount: childCount,
 			priceRangeMax: priceRangeMax,
 			priceRangeMin: priceRangeMin,
 			rateCode: rateCode,
@@ -570,28 +553,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 							labelVariant={'caption'}
 							onClick={() => {
 								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									onClickApply: (
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										propertyTypeIds,
-										rateCode,
-										regionIds
-									) => {
-										popupSearch(
-											startDate,
-											endDate,
-											adults,
-											children,
-											priceRangeMin,
-											priceRangeMax,
-											propertyTypeIds,
-											rateCode,
-											regionIds
-										);
+									onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
+										popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
 									},
 									className: 'filterPopup'
 								});

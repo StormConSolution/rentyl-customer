@@ -176,22 +176,10 @@ const BookingFlowAddRoomPage = () => {
 		});
 	}
 
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adults: number,
-		children: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string
-	) {
+	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adults'] = adults;
-			createSearchQueryObj['children'] = children;
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
 			}
@@ -200,9 +188,6 @@ const BookingFlowAddRoomPage = () => {
 			}
 			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
 				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
-			}
-			if (rateCode !== '') {
-				createSearchQueryObj['rateCode'] = rateCode;
 			}
 			return createSearchQueryObj;
 		});
@@ -336,26 +321,12 @@ const BookingFlowAddRoomPage = () => {
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
 								onClickApply: (
-									startDate: moment.Moment | null,
-									endDate: moment.Moment | null,
 									adults: number,
-									children: number,
 									priceRangeMin: string,
 									priceRangeMax: string,
-									propertyTypeIds: number[],
-									rateCode: string,
-									regionIds
+									propertyTypeIds: number[]
 								) => {
-									popupSearch(
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										propertyTypeIds,
-										rateCode
-									);
+									popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
 								},
 								className: 'filterPopup'
 							});
