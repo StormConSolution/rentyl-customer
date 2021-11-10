@@ -56,7 +56,7 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
-			<Paper className={'rsSigninPopup'} width={'420px'} position={'relative'}>
+			<Paper className={'rsSigninPopup'} position={'relative'}>
 				<Icon
 					iconImg={'icon-close'}
 					onClick={() => {
