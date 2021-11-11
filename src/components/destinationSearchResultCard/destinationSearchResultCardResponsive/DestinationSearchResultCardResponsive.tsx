@@ -26,17 +26,11 @@ interface DestinationSearchResultCardResponsiveProps {
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
-	function renderPictureUrls() {
-		return props.picturePaths.map((item) => {
-			return item;
-		});
-	}
-
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
 			<CarouselV2
 				path={props.destinationDetailsPath}
-				imgPaths={renderPictureUrls()}
+				imgPaths={props.picturePaths}
 				onAddCompareClick={() => {
 					if (props.onAddCompareClick) props.onAddCompareClick();
 				}}
