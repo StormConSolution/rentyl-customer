@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './LabelCheckboxV2.scss';
-import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import { ReactNode, useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
@@ -39,7 +38,7 @@ const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
 					disabled={props.isDisabled}
 				/>
 			</label>
-			<Label variant={'body1'} lineClamp={props.lineClamp || 2}>
+			<Label variant={'body1'} lineClamp={props.lineClamp || 2} className="titleLabel">
 				{props.text}
 			</Label>
 		</div>

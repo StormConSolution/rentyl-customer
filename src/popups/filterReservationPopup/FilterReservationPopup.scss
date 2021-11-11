@@ -10,23 +10,33 @@
 		width: 341px;
 		min-width: 320px;
 		border-radius: 15px;
+		background: theme-var($primaryBackgroundColor);
 
 		.paperHeader {
-			border-bottom: 0.5px solid #7070706e;
+			border-bottom: 0.5px solid theme-var($greyLineColor);
 			padding: 16px 25px;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+
+			.closeIcon {
+				color: theme-var($disableTextColor);
+			}
 		}
 
 		.paperBody {
 			padding: 20px 30px;
 
 			.formDiv {
-				border-bottom: 0.5px solid #7070706e;
+				border-bottom: 0.5px solid theme-var($greyLineColor);
 
 				.filterCounter {
 					padding: unset;
+				}
+
+				.priceSliderRail {
+					color: theme-var($greyLineColor);
+					opacity: 0.35;
 				}
 			}
 
@@ -60,13 +70,12 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				padding-right: 9px;
 				margin-bottom: 22px;
 
 				.divider {
 					width: 11px;
-					border: 1px solid #707070;
-					margin-top: 37px;
+					border: 1px solid theme-var($greyLineColor);
+					margin: 5px 5px 0 5px;
 				}
 
 				.rsInput.priceMin {
@@ -78,11 +87,17 @@
 				}
 			}
 		}
-		.buttons {
+		.paperFooter {
 			display: flex;
-			margin-top: 40px;
-			padding: 0 9px;
-			justify-content: center;
+			justify-content: space-between;
+			align-items: center;
+			position: fixed;
+			bottom: 0;
+			background: theme-var($primaryBackgroundColor);
+			height: 62px;
+			width: 321px;
+			padding: 0 10px;
+			box-shadow: 0px -7px 10px -3px theme-var($greyLineColor);
 
 			.cancelButton {
 				margin-right: 10px;
@@ -99,6 +114,10 @@
 	@media screen and (max-width: 374px) {
 		.paperWrapper {
 			width: 310px;
+
+			.paperFooter {
+				width: 300px;
+			}
 		}
 	}
 }
