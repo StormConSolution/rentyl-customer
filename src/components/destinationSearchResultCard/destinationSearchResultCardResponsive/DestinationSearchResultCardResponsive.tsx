@@ -1,73 +1,168 @@
 import * as React from 'react';
 import './DestinationSearchResultCardResponsive.scss';
-import TabbedDestinationSummary, {
-	DestinationSummaryTab
-} from '../../tabbedDestinationSummary/TabbedDestinationSummary';
+import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
-import LinkButton from '../../linkButton/LinkButton';
-import Carousel from '../../carousel/Carousel';
-import LabelLink from '../../labelLink/LabelLink';
-import StarRating from '../../starRating/StarRating';
-import Img from '@bit/redsky.framework.rs.img';
+import CarouselV2 from '../../carouselV2/CarouselV2';
+import LabelButton from '../../labelButton/LabelButton';
+import { ObjectUtils, StringUtils } from '../../../utils/utils';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../../state/globalState';
+import IconLabel from '../../iconLabel/IconLabel';
+import { useEffect, useState } from 'react';
+import { PriceObject } from '../DestinationSearchResultCard';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
 	destinationName: string;
+	destinationDescription: string;
+	destinationFeatures: {
+		id: number;
+		title: string;
+		icon: string;
+	}[];
 	address: string;
-	logoImagePath: string;
 	picturePaths: string[];
-	starRating: number;
-	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	getLowestAccommodationPrice: () => {
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+	} | null;
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
+	const reservationFilters = useRecoilValue(globalState.reservationFilters);
+	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
+	const [lowestPrice, setLowestPrice] = useState<PriceObject | null>();
+
+	useEffect(() => {
+		props.summaryTabs.map((accommodationList) => {
+			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
+				setAccommodationList(accommodationList.content.accommodations);
+			}
+		});
+	}, [props.summaryTabs]);
+
+	useEffect(() => {
+		setLowestPrice(props.getLowestAccommodationPrice());
+	}, [accommodationList]);
+
+	function renderPricePerNight() {
+		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
-				<Box className={'imageWrapper'}>
-					<Img src={path} alt={'Resort Image'} width={556} height={636} />
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<Label variant={'subtitle3'} className={'fromText'}>
+						from
+					</Label>
+					<Label variant={'h2'} className={'yellowText'}>
+						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}
+					</Label>
+					<Label variant={'subtitle3'}>points per night</Label>
+				</Box>
+			);
+		} else if (!reservationFilters.redeemPoints && lowestPrice) {
+			return (
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<Label variant={'subtitle3'} className={'fromText'}>
+						from
+					</Label>
+					<Label variant={'h2'}>${StringUtils.formatMoney(lowestPrice.priceCents)}</Label>
+					<Label variant={'subtitle3'}>per night</Label>
+					<Label variant={'subtitle2'}>+taxes & fees</Label>
+				</Box>
+			);
+		} else {
+			return (
+				<Box
+					display={'flex'}
+					alignItems={'flex-end'}
+					justifyContent={'flex-end'}
+					flexDirection={'column'}
+					textAlign={'center'}
+				>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'16px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
+		}
+	}
+
+	function renderFeatures() {
+		return props.destinationFeatures.map((feature) => {
+			return (
+				<Box display={'flex'} flexDirection={'column'} alignItems={'center'} textAlign={'center'}>
+					<IconLabel
+						labelName={feature.title}
+						iconImg={feature.icon}
+						iconPosition={'top'}
+						iconSize={45}
+						labelVariant={'subtitle1'}
+					/>
 				</Box>
 			);
 		});
 	}
 
+	function renderButtons() {
+		return props.summaryTabs.map((button) => {
+			if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
+				return <LabelButton look={'containedPrimary'} variant={'button'} label={button.label}></LabelButton>;
+			} else {
+				return (
+					<LabelButton look={'containedPrimary'} variant={'button'} label={'Accommodations'}></LabelButton>
+				);
+			}
+		});
+	}
+
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
-			<Carousel showControls children={renderPictures(props.picturePaths)} />
-			<div className="info">
-				{props.logoImagePath && props.logoImagePath !== '' && (
-					<div className={'logoContainer'}>
-						<img alt={''} src={props.logoImagePath} className="destinationLogo" />
-					</div>
-				)}
-				<div className="nameAndAddress">
-					<Label variant="h2">{props.destinationName}</Label>
-					<Label variant="caption">{props.address}</Label>
-				</div>
-				<LinkButton label="Resort Details" path={props.destinationDetailsPath} look={'containedPrimary'} />
-				<StarRating size="small16px" rating={props.starRating} />
-				<LabelLink
-					className="ratings"
-					label="View Reviews >"
-					path={props.reviewPath}
-					variant="caption"
-					externalLink={false}
+			<Box display={'flex'}>
+				<CarouselV2
+					path={props.destinationDetailsPath}
+					imgPaths={props.picturePaths}
+					onAddCompareClick={() => {
+						if (props.onAddCompareClick) props.onAddCompareClick();
+					}}
+					onGalleryClick={() => {
+						console.log('Show LightboxV2 images...');
+					}}
 				/>
-				<LabelLink
-					className="addCompare"
-					label="Add to compare +"
-					variant="caption"
-					onClick={props.onAddCompareClick}
-					path=""
-					externalLink={false}
-				/>
-
-				<TabbedDestinationSummary tabs={props.summaryTabs} />
-			</div>
+				<Box display={'flex'} flexDirection={'column'} maxWidth={'1020px'} padding={'5px 45px'}>
+					<Label variant={'h4'} paddingBottom={'10px'}>
+						{props.destinationName}
+					</Label>
+					<Box display={'flex'} paddingBottom={'16px'}>
+						<Label variant={'subtitle1'} paddingRight={'74px'}>
+							Bedrooms
+						</Label>
+						<Label variant={'subtitle1'}>{props.address}</Label>
+					</Box>
+					<Box display={'flex'} paddingBottom={'18px'}>
+						<Label variant={'body4'} className={'destinationDescription'} lineClamp={2}>
+							{props.destinationDescription}
+						</Label>
+					</Box>
+					<Box className={'featureIcons'} paddingBottom={'30px'}>
+						{renderFeatures()}
+					</Box>
+					<Box display={'flex'} gap={'24px'}>
+						{renderButtons()}
+					</Box>
+				</Box>
+			</Box>
+			{renderPricePerNight()}
 		</Box>
 	);
 };

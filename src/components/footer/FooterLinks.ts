@@ -1,36 +1,47 @@
-import { FooterLink } from './Footer';
+import { FooterSection } from './Footer';
 
-export const FooterLinks: FooterLink[] = [
+export const FooterLinks: FooterSection[] = [
 	{
-		text: 'Browse Destinations',
-		path: '/reservation/availability'
+		title: 'Company',
+		links: [
+			{
+				text: 'About',
+				path: 'https://rentylresorts.com/history/'
+			},
+			{
+				text: 'Jobs',
+				path: 'https://ndmhospitality.applicantpro.com/jobs/'
+			},
+			{
+				text: 'Partnerships',
+				path: 'https://rentylresorts.com/partners/'
+			}
+		]
 	},
 	{
-		text: 'Learn About Spire Points',
-		path: '/about-spire-points'
+		title: 'Explore',
+		links: [
+			{
+				text: 'Resorts',
+				path: 'https://rentylresorts.com/resorts/'
+			},
+			{
+				text: 'Deals',
+				path: 'https://rentylresorts.com/deals-packages/'
+			}
+		]
 	},
 	{
-		text: 'Manage Points',
-		path: '/account/points'
-	},
-	{
-		text: 'Privacy Policy',
-		path: '/legal/privacy'
-	},
-	{
-		text: 'About Spire Loyalty',
-		path: '/about-spire'
-	},
-	{
-		text: 'My Account',
-		path: '/account/personal-info'
-	},
-	{
-		text: 'Redeem Points',
-		path: '/reward'
-	},
-	{
-		text: 'Terms And Conditions',
-		path: '/legal/terms-and-conditions'
+		title: 'Terms and Policies',
+		links: [
+			{
+				text: 'Privacy Policy',
+				path: 'https://rentylresorts.com/privacy-policy/'
+			},
+			{
+				text: 'Terms Of Use',
+				path: 'https://rentylresorts.com/terms-conditions/'
+			}
+		]
 	}
 ];
