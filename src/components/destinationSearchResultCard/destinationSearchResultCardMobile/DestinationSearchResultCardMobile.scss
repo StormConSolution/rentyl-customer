@@ -1,30 +1,30 @@
 @import '../../../themes/themes';
 .rsDestinationSearchResultCardMobile {
-	width: 345px;
-	border-bottom: 1px solid theme-var($greyLineColor);
-	box-sizing: border-box;
-	padding-bottom: 20px;
-
+	max-width: 328px;
+	width: 100%;
 	.rsCarousel {
-		margin: 0 auto 16px;
-		height: 290px;
-		width: 345px;
-		min-width: 345px;
+		max-width: 328px;
+		width: 100%;
 		.carouselParent {
 			overflow-x: hidden;
 		}
 		.imageWrapper {
-			width: 345px;
-			height: 290px;
+			max-height: 220px;
+			max-width: 328px;
+			width: 100%;
+			height: 100%;
 			img {
-				width: 100%;
-				height: 100%;
+				width: 328px;
+				height: auto;
+				max-height: 220px;
 				object-fit: cover;
+				object-position: center;
 			}
 		}
 	}
-
-	.logoImg {
-		max-width: 100px;
+	.earnText {
+		font-size: 13px;
+		line-height: 15px;
+		color: theme-var($yellowTextColor);
 	}
 }

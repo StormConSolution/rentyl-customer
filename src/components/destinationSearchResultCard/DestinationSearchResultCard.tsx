@@ -4,14 +4,25 @@ import { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestina
 import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
 import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
 
+export interface PriceObject {
+	priceCents: number;
+	pricePoints: number;
+	quantityAvailable: number;
+	rateCode: string;
+}
+
 export interface DestinationSearchResultCardProps {
 	className?: string;
 	destinationName: string;
+	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
+	destinationDescription: string;
+	destinationFeatures: {
+		id: number;
+		title: string;
+		icon: string;
+	}[];
 	address: string;
-	logoImagePath: string;
 	picturePaths: string[];
-	starRating: number;
-	reviewPath: string;
 	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
@@ -20,29 +31,44 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
+	function getLowestAccommodationPrice() {
+		let arrayOfPrices: PriceObject[] | undefined = props.unfilteredAccommodations.map(
+			(accommodation: Api.Destination.Res.Accommodation) => {
+				return getLowestAccommodation(accommodation.prices);
+			}
+		);
+		arrayOfPrices.sort((price1, price2) => price1.priceCents - price2.priceCents);
+		return arrayOfPrices[0];
+	}
+
+	function getLowestAccommodation(rateCodes: PriceObject[]) {
+		rateCodes.sort((code1, code2) => {
+			return code1.priceCents - code2.priceCents;
+		});
+		return rateCodes[0];
+	}
+
 	return size === 'small' ? (
 		<DestinationSearchResultCardMobile
 			destinationName={props.destinationName}
 			address={props.address}
-			logoImagePath={props.logoImagePath}
 			picturePaths={props.picturePaths}
-			starRating={props.starRating}
-			reviewPath={props.reviewPath}
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
 			destinationName={props.destinationName}
+			destinationDescription={props.destinationDescription}
+			destinationFeatures={props.destinationFeatures}
 			address={props.address}
-			logoImagePath={props.logoImagePath}
 			picturePaths={props.picturePaths}
-			starRating={props.starRating}
-			reviewPath={props.reviewPath}
 			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	);
 };

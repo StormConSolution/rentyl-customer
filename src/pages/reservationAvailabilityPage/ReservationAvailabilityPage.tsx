@@ -338,12 +338,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 			return (
 				<DestinationSearchResultCard
 					key={destination.id}
+					unfilteredAccommodations={destination.accommodations}
+					destinationDescription={destination.description}
 					destinationName={destination.name}
+					destinationFeatures={destination.features}
 					address={StringUtils.buildAddressString(addressData)}
-					logoImagePath={destination.logoUrl}
 					picturePaths={urls}
-					starRating={destination.reviewRating}
-					reviewPath={`/destination/reviews?di=${destination.id}`}
 					destinationDetailsPath={
 						!!params.startDate && !!params.endDate
 							? `/destination/details?di=${destination.id}&startDate=${params.startDate}&endDate=${params.endDate}`
@@ -374,61 +374,56 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function getSummaryTabs(destination: Api.Destination.Res.Availability): DestinationSummaryTab[] {
-		let propertyTypes = [{ name: 'All Available', id: 0 }, ...destination.propertyTypes];
-		const summaryTabs = propertyTypes.reduce(
-			(acc: DestinationSummaryTab[], propertyType) => {
-				let accommodationList = handleAccommodationList(destination.accommodations, propertyType);
-				let destinationSummaryTab: DestinationSummaryTab = {
-					label: propertyType.name,
-					content: {
-						accommodationType: 'Available',
-						accommodations: accommodationList,
-						onDetailsClick: (accommodationId: ReactText) => {
-							let dates =
-								!!searchQueryObj.startDate && !!searchQueryObj.endDate
-									? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
-									: '';
-							router
-								.navigate(`/accommodation/details?ai=${accommodationId}${dates}`)
-								.catch(console.error);
-						},
-						onBookNowClick: (accommodationId: number) => {
-							let data: any = { ...searchQueryObj };
-							let newRoom: Misc.StayParams = {
-								uuid: Date.now(),
-								adults: data.adultCount,
-								children: data.childCount,
-								accommodationId: accommodationId,
-								arrivalDate: data.startDate,
-								departureDate: data.endDate,
-								packages: []
-							};
-							if (rateCode) newRoom.rateCode = rateCode;
-							data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
-							if (!user) {
-								popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
-									query: data
-								});
-							} else {
-								router.navigate(`/booking/packages?data=${data}`).catch(console.error);
-							}
-						},
-						onAddCompareClick: (accommodationId: ReactText) => {
-							let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
-							comparisonService.addToComparison(recoilComparisonState, {
-								destinationId: destination.id,
-								logo: destination.logoUrl,
-								title: destination.name,
-								roomTypes: roomTypes,
-								selectedRoom: accommodationId as number
+		let propertyTypes = destination.propertyTypes;
+		const summaryTabs = propertyTypes.reduce((acc: DestinationSummaryTab[], propertyType) => {
+			let accommodationList = handleAccommodationList(destination.accommodations, propertyType);
+			let destinationSummaryTab: DestinationSummaryTab = {
+				label: propertyType.name,
+				content: {
+					accommodationType: 'Available',
+					accommodations: accommodationList,
+					onDetailsClick: (accommodationId: ReactText) => {
+						let dates =
+							!!searchQueryObj.startDate && !!searchQueryObj.endDate
+								? `&startDate=${searchQueryObj.startDate}&endDate=${searchQueryObj.endDate}`
+								: '';
+						router.navigate(`/accommodation/details?ai=${accommodationId}${dates}`).catch(console.error);
+					},
+					onBookNowClick: (accommodationId: number) => {
+						let data: any = { ...searchQueryObj };
+						let newRoom: Misc.StayParams = {
+							uuid: Date.now(),
+							adults: data.adultCount,
+							children: data.childCount,
+							accommodationId: accommodationId,
+							arrivalDate: data.startDate,
+							departureDate: data.endDate,
+							packages: []
+						};
+						if (rateCode) newRoom.rateCode = rateCode;
+						data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
+						if (!user) {
+							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+								query: data
 							});
+						} else {
+							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
+					},
+					onAddCompareClick: (accommodationId: ReactText) => {
+						let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
+						comparisonService.addToComparison(recoilComparisonState, {
+							destinationId: destination.id,
+							logo: destination.logoUrl,
+							title: destination.name,
+							roomTypes: roomTypes,
+							selectedRoom: accommodationId as number
+						});
 					}
-				};
-				return [...acc, destinationSummaryTab];
-			},
-			[{ label: 'Overview', content: { text: destination.description } }]
-		);
+				}
+			};
+			return [...acc, destinationSummaryTab];
+		}, []);
 		return summaryTabs;
 	}
 
@@ -564,13 +559,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 					<div className={'bottomBorderDiv'} />
 				</Box>
-				<Box
-					className={'searchResultsWrapper'}
-					bgcolor={'#ffffff'}
-					width={size === 'small' ? '100%' : '1165px'}
-					padding={size === 'small' ? '0 10px 20px' : '0 140px 60px'}
-					boxSizing={'border-box'}
-				>
+				<Box className={'searchResultsWrapper'}>
 					{destinations.length <= 0 ? (
 						<Label variant={'h2'}>No available options.</Label>
 					) : (
