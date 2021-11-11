@@ -1,0 +1,53 @@
+@import '../../themes/themes';
+
+.rsLabelCheckboxV2 {
+	display: flex;
+	align-items: center;
+	height: 30px;
+	width: 100%;
+	box-sizing: border-box;
+
+	.checkboxContainer {
+		position: relative;
+		padding-right: 16px;
+	}
+
+	.titleLabel {
+		padding-bottom: 7px;
+	}
+
+	input {
+		height: 25px;
+		width: 25px;
+		border: 1px solid theme-var($greyLineColor);
+		border-radius: 4px;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		-o-appearance: none;
+		appearance: none;
+		outline: none;
+		transition-duration: 0.3s;
+		background-color: theme-var($primaryBackgroundColor);
+		cursor: pointer;
+
+		&:checked {
+			border: 1px solid theme-var($primaryTextColor);
+			background-color: theme-var($primaryTextColor);
+			&::before {
+				content: '\2713';
+				display: block;
+				text-align: center;
+				color: theme-var($primaryBackgroundColor);
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				right: 14px;
+				font-size: 20px;
+			}
+		}
+		&:active {
+			border: 2px solid;
+		}
+	}
+}

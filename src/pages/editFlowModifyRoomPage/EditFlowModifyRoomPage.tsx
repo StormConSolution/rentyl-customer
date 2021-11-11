@@ -174,22 +174,10 @@ const EditFlowModifyRoomPage = () => {
 		});
 	}
 
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adults: number,
-		children: number,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string
-	) {
+	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
 			createSearchQueryObj['adults'] = adults;
-			createSearchQueryObj['children'] = children;
 			if (priceRangeMax !== '') {
 				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
 			}
@@ -200,10 +188,6 @@ const EditFlowModifyRoomPage = () => {
 				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
 			} else {
 				delete createSearchQueryObj['propertyTypeIds'];
-			}
-			if (rateCode !== '' || rateCode !== undefined) {
-				setRateCode(reservation?.rateCode || '');
-				createSearchQueryObj['rateCode'] = reservation?.rateCode;
 			}
 			return createSearchQueryObj;
 		});
@@ -362,26 +346,8 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (
-									startDate,
-									endDate,
-									adults,
-									children,
-									priceRangeMin,
-									priceRangeMax,
-									propertyTypeIds,
-									rateCode
-								) => {
-									popupSearch(
-										startDate,
-										endDate,
-										adults,
-										children,
-										priceRangeMin,
-										priceRangeMax,
-										propertyTypeIds,
-										rateCode
-									);
+								onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
+									popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
 								},
 								className: 'filterPopup'
 							});
