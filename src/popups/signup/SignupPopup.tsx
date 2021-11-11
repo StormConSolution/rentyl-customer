@@ -39,11 +39,15 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 			]),
 			new RsFormControl('password', props.password || '', [
 				new RsValidator(RsValidatorEnum.REQ, 'Please provide a password'),
-				new RsValidator(RsValidatorEnum.CUSTOM, '', (control) => {
-					return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
-						control.value.toString()
-					);
-				}),
+				new RsValidator(
+					RsValidatorEnum.CUSTOM,
+					'Need 8 characters, 1 special character or number and a capital',
+					(control) => {
+						return /(?=(.*[0-9])+|(.*[ !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~])+)(?=(.*[a-z])+)(?=(.*[A-Z])+)[0-9a-zA-Z !\"#$%&'()*+,\-.\/:;<=>?@\[\\\]^_`{|}~]{8,}/g.test(
+							control.value.toString()
+						);
+					}
+				),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Password must not be password', (control) => {
 					return control.value.toString() !== 'password';
 				})
