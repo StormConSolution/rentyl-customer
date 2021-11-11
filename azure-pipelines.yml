@@ -69,32 +69,32 @@ stages:
     #                   targetPath: '$(System.DefaultWorkingDirectory)/build'
     #                   artifactName: $(OUTPUT_NAME)
     #               displayName: Publish artifacts for deployment
-    - stage: deployment
-      dependsOn: build
-      displayName: Deploying to server
-      jobs:
-          - deployment: SpireDevVMDeploy
-            displayName: Deploy to Dev cluster
-            environment:
-                name: Dev
-                resourceType: VirtualMachine
-                tags: spire
-            strategy:
-                runOnce:
-                    deploy:
-                        steps:
-                            - checkout: self
-                              submodules: recursive
-                            - script: |
-                                  mkdir --verbose ~/rentyl-customer
-                                  sudo cp --recursive --force --verbose ./* ~/rentyl-customer
-                                  cd ~/rentyl-customer
-                            - script: |
-                                  rm package-lock.json || true
-                                  rm yarn.lock || true
-                                  echo "Installing Node Modules"
-                                  npm config set @bit:registry https://node.bit.dev
-                                  yarn install --silent
-                            - script: |
-                                  sudo yarn build:debug
-                                  sudo pm2 startOrReload ecosystem.config.js --only dev-rentyl-customer
+- stage: deployment
+#   dependsOn: build
+  # displayName: Deploying to server
+  jobs:
+      - deployment: SpireDevVMDeploy
+        displayName: Deploy to Dev cluster
+        environment:
+            name: Dev
+            resourceType: VirtualMachine
+            tags: spire
+        strategy:
+            runOnce:
+                deploy:
+                    steps:
+                        - checkout: self
+                          submodules: recursive
+                        - script: |
+                              mkdir --verbose ~/rentyl-customer
+                              sudo cp --recursive --force --verbose ./* ~/rentyl-customer
+                              cd ~/rentyl-customer
+                        - script: |
+                              rm package-lock.json || true
+                              rm yarn.lock || true
+                              echo "Installing Node Modules"
+                              npm config set @bit:registry https://node.bit.dev
+                              yarn install --silent
+                        - script: |
+                              sudo yarn build:debug
+                              sudo pm2 startOrReload ecosystem.config.js --only dev-rentyl-customer
