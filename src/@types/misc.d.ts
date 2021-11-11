@@ -92,4 +92,22 @@ declare namespace Misc {
 		name: string;
 		isoCode: string;
 	}
+
+	export interface ReservationFilters {
+		checkIn: Date | string;
+		checkOut: Date | string;
+		adultCount: number;
+		redeemPoints: boolean;
+		sortBy: string;
+		location?: number;
+		inUnitAmenities?: number[];
+		view?: number[];
+		groupAmenities?: number[];
+		minPrice?: number;
+		maxPrice?: number;
+		accommodations?: number[];
+		bedrooms?: number;
+		bathrooms?: number;
+		resortExperiences?: number[];
+	}
 }
