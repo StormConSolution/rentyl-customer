@@ -15,6 +15,7 @@ import serviceFactory from '../../services/serviceFactory';
 import RegionService from '../../services/region/region.service';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface DatePickerCardProps {
 	onSearch: (data: { regionId: number; guest: number; startDate: string; endDate: string }) => void;
@@ -71,17 +72,21 @@ const TopSearchBar: React.FC<DatePickerCardProps> = (props) => {
 			let isSelected = topSearchBarForm.get('regionId').value === item.id;
 
 			return (
-				<Label
-					variant={'caption3'}
+				<Box
 					className={`regionItem ${isSelected ? 'selected' : ''}`}
 					onClick={() => {
 						let newControl = topSearchBarForm.get('regionId');
 						newControl.value = item.id;
 						setTopSearchBarForm(topSearchBarForm.clone().update(newControl));
 					}}
+					display={'flex'}
+					alignItems={'center'}
 				>
-					{item.name}
-				</Label>
+					<Icon iconImg={'icon-pin'} color={'#FF6469'} />
+					<Label ml={25} variant={'caption3'}>
+						{item.name}
+					</Label>
+				</Box>
 			);
 		});
 	}
