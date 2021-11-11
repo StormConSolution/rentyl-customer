@@ -33,6 +33,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import RegionService from '../../services/region/region.service';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
+import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -475,6 +476,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 					image={require('../../images/destinationResultsPage/momDaughterHero.jpg')}
 					height={'200px'}
 					mobileHeight={'100px'}
+				/>
+
+				<TopSearchBar
+					onSearch={(data) => {
+						console.log(data);
+					}}
 				/>
 				<Box className={'pointsDisplay'}>
 					<PointsOrLogin />
