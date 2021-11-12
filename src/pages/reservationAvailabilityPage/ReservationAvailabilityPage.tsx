@@ -2,7 +2,6 @@ import React, { ReactText, useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import HeroImage from '../../components/heroImage/HeroImage';
-import FilterBar from '../../components/filterBar/FilterBar';
 import Label from '@bit/redsky.framework.rs.label';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
@@ -11,7 +10,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { formatFilterDateForServer, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
+import { ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -26,13 +25,12 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import RegionService from '../../services/region/region.service';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
+import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -71,13 +69,25 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
+	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regions', convertUrlParamRegionOrPropertyType(params.region) || [], []),
-			new RsFormControl('propertyType', convertUrlParamRegionOrPropertyType(params.propertyTypeIds) || [], [])
+			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
+			new RsFormControl('adultCount', params.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
+			]),
+			new RsFormControl('bedroomCount', params.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
+			]),
+			new RsFormControl('bathroomCount', params.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
+			]),
+			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(params.priceRangeMax), []),
+			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(params.priceRangeMin), []),
+			new RsFormControl('accommodationType', [], [])
 		])
 	);
 	const [searchQueryObj, setSearchQueryObj] = useState<Api.Destination.Req.Availability>({
@@ -178,6 +188,38 @@ const ReservationAvailabilityPage: React.FC = () => {
 		getReservations().catch(console.error);
 	}, [searchQueryObj]);
 
+	function setPropertyTypeIds() {
+		if (params.propertyTypeIds.length > 0) {
+			let propertyTypeArray = params.propertyTypeIds.split(',');
+			return propertyTypeArray.map((item) => {
+				return parseInt(item);
+			});
+		}
+		return [];
+	}
+
+	async function updateFilterForm(control: RsFormControl | undefined) {
+		if (!control) return;
+		if (control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
+			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
+			control.value = newValue;
+		}
+		filterForm.update(control);
+		let isFormValid = await filterForm.isValid();
+		setValidCode(isFormValid);
+		setFilterForm(filterForm.clone());
+	}
+
+	function saveFilter() {
+		let filterObject: Misc.FilterFormPopupOptions = filterForm.toModel();
+		popupSearch(
+			filterObject.adultCount,
+			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
+			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMax),
+			filterObject.propertyTypeIds
+		);
+	}
+
 	function convertUrlParamRegionOrPropertyType(numberString: string) {
 		let regionOrPropertyTypeArray = numberString.split(',');
 		return regionOrPropertyTypeArray.map((item: string) => {
@@ -244,27 +286,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		router.updateUrlParams(newUrlParams);
 	}
 
-	function removeSearchQueryObj(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'childCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'rateCode'
-			| 'regionIds'
-			| 'propertyTypeIds'
-	) {
-		setSearchQueryObj((pre) => {
-			let newSearchQueryObj: any = { ...pre };
-			delete newSearchQueryObj[key];
-			updateParams(newSearchQueryObj);
-			return newSearchQueryObj;
-		});
-	}
-
 	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setSearchQueryObj((prev) => {
 			let createSearchQueryObj: Api.Destination.Req.Availability = { ...prev };
@@ -301,27 +322,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 		router.updateUrlParams({
 			...newUrlParams
-		});
-	}
-
-	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		setStartDateControl(startDate);
-		setEndDateControl(endDate);
-		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
-		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
-
-		let newParams: any = { ...params };
-
-		for (let i in newParams) {
-			if (!newParams[i].toString().length) {
-				delete newParams[i];
-			}
-		}
-
-		router.updateUrlParams({
-			...newParams,
-			startDate: formatFilterDateForServer(startDate, 'start'),
-			endDate: formatFilterDateForServer(endDate, 'end')
 		});
 	}
 
@@ -465,78 +465,23 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<Box
 					className={'filterResultsWrapper'}
 					bgcolor={'#ffffff'}
-					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 140px 60px 140px'}
+					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 0 60px 0'}
 					boxSizing={'border-box'}
 				>
-					<Label className={'filterLabel'} variant={'h1'}>
-						Filter by
-					</Label>
-
 					{size !== 'small' ? (
 						<>
-							<FilterBar
-								className={'filterBar'}
-								startDate={startDateControl}
-								endDate={endDateControl}
-								onDatesChange={onDatesChange}
-								focusedInput={focusedInput}
-								onFocusChange={setFocusedInput}
-								monthsToShow={2}
-								regionSelect={{
-									options: regionOptions,
-									control: filterForm.get('regions'),
-									updateControl: (control) => {
-										setFilterForm(filterForm.clone().update(control));
-										updateSearchQueryObj('regionIds', control.value as number[]);
-									}
-								}}
-								onChangeAdults={(value) => {
-									if (value === '' || isNaN(parseInt(value))) return;
-									updateSearchQueryObj('adultCount', parseInt(value));
-								}}
-								onChangeChildren={(value) => {
-									if (value !== '') updateSearchQueryObj('childCount', parseInt(value));
-								}}
-								onChangePriceMin={(value) => {
-									if (value !== '') updateSearchQueryObj('priceRangeMin', parseInt(value));
-									else removeSearchQueryObj('priceRangeMin');
-								}}
-								onChangePriceMax={(value) => {
-									if (value !== '') updateSearchQueryObj('priceRangeMax', parseInt(value));
-									else removeSearchQueryObj('priceRangeMax');
-								}}
-								onChangePropertyType={(control) => {
-									setFilterForm(filterForm.clone().update(control));
-									updateSearchQueryObj('propertyTypeIds', control.value);
-								}}
-								adultsInitialInput={searchQueryObj.adultCount}
-								childrenInitialInput={searchQueryObj.childCount}
-								initialPriceMax={
-									!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
-								}
-								initialPriceMin={
-									!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
-								}
-								options={propertyTypeOptions}
-								control={filterForm.get('propertyType')}
+							<FilterBarV2
+								filterForm={filterForm}
+								updateFilterForm={updateFilterForm}
+								destinationService={destinationService}
+								accommodationToggle={accommodationToggle}
+								accommodationList={propertyTypeOptions}
+								redeemCodeToggle={false}
+								onApplyClick={saveFilter}
 							/>
 							<Label variant={'body1'} color={'red'}>
 								{errorMessage}
 							</Label>
-							<Accordion
-								hideHoverEffect
-								hideChevron
-								children={
-									<RateCodeSelect
-										apply={(value) => {
-											updateSearchQueryObj('rateCode', value);
-										}}
-										code={rateCode}
-										valid={!validCode}
-									/>
-								}
-								titleReact={<Label variant={'button'}>toggle rate code</Label>}
-							/>
 						</>
 					) : (
 						<IconLabel

@@ -5,9 +5,9 @@
 
 	.rsDropdownBtn {
 		border: 1px solid theme-var($secondaryTextColor);
-		background-color: theme-var($primaryBackgroundColor);
 		padding: 5px 10px;
 		border-radius: 10px;
+		background: #fff;
 
 		.labelContainer {
 			.filerByLabel {
@@ -25,11 +25,12 @@
 		}
 	}
 	.DropdownContent {
-		margin-top: 1.5rem;
-		box-shadow: 0 0 8px theme-var($secondaryTextColor);
-		opacity: 0.25;
+		margin-left: 12px;
+		box-shadow: 0 0 8px theme-var($greyLineColor);
 		border-radius: 10px;
 		z-index: 1;
+		position: absolute;
+		background: theme-var($primaryBackgroundColor);
 
 		.dropdownFooter {
 			.clearBtn {

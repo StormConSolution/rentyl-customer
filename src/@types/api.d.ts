@@ -1925,6 +1925,18 @@ declare namespace Api {
 		}
 	}
 
+	export namespace UserCampaign {
+		export namespace Req {
+			export interface Get {}
+		}
+
+		export namespace Res {
+			export interface Get extends Model.UserCompletedCampaign {
+				completionPoints: number;
+			}
+		}
+	}
+
 	export namespace UserPoint {
 		export namespace Req {
 			export interface Create {

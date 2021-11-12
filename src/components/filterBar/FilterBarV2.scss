@@ -1,0 +1,68 @@
+@import 'src/themes/themes';
+.rsFilterBarV2 {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+
+	display: flex;
+	flex-wrap: wrap;
+
+	.largeCol {
+		flex: 0 0 auto;
+		width: 70%;
+
+		.priceCol {
+			flex: 0 0 auto;
+			width: 17%;
+
+			.minMaxDiv {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 22px;
+
+				.divider {
+					width: 11px;
+					border: 1px solid theme-var($greyLineColor);
+					margin: 5px 5px 0 5px;
+				}
+
+				.rsInput.priceMin {
+					width: 115px;
+				}
+
+				.rsInput.priceMax {
+					width: 115px;
+				}
+			}
+		}
+		.filterCol {
+			flex: 0 0 auto;
+			width: 22%;
+
+			.filterCounter {
+				padding-bottom: 15px;
+			}
+		}
+	}
+	.smallCol {
+		flex: 0 0 auto;
+		width: 30%;
+
+		.halfCol {
+			flex: 0 0 auto;
+			width: 50%;
+		}
+	}
+	.dropdownMarginX {
+		margin: 0 12px;
+	}
+
+	.subRow {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.rightBorder {
+		border-right: 1px solid theme-var($secondaryTextColor);
+	}
+}
