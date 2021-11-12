@@ -85,18 +85,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		});
 	}
 
-	async function updateFilterForm(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'regionIds'
-			| 'propertyTypeIds',
-		control: RsFormControl
-	) {
+	async function updateFilterForm(control: RsFormControl) {
 		if (control.key === 'adultCount' || control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
 			let newValue: string | number = '';
 			if (control.value.toString().length > 0) {
@@ -113,7 +102,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		setFilterForm(filterForm.clone());
 		if (await (isFormValid && _isFormFilledOut)) {
 			setIsValid(true);
-			updateSearchQueryObj(key, control.value);
+			updateSearchQueryObj(control.key, control.value);
 		} else {
 			setIsValid(false);
 		}
@@ -123,18 +112,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		return !!filterForm.get('adultCount').value.toString().length;
 	}
 
-	function updateSearchQueryObj(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'regionIds'
-			| 'propertyTypeIds',
-		value: any
-	) {
+	function updateSearchQueryObj(key: string, value: any) {
 		if (key === 'adultCount' && value === 0) {
 			//this should never evaluate to true with current implementations.
 			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
@@ -185,7 +163,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 						<LabelSelect
 							title={'Region'}
 							control={filterForm.get('regionIds')}
-							updateControl={(control) => updateFilterForm('adultCount', control)}
+							updateControl={updateFilterForm}
 							options={regionOptions}
 							isMulti
 							isSearchable
@@ -208,7 +186,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								inputType="number"
 								title="# of Adults"
 								control={filterForm.get('adultCount')}
-								updateControl={(control) => updateFilterForm('adultCount', control)}
+								updateControl={updateFilterForm}
 							/>
 						</div>
 						<div className={'minMaxDiv'}>
@@ -217,20 +195,20 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								inputType="number"
 								title="Price Min"
 								control={filterForm.get('priceRangeMin')}
-								updateControl={(control) => updateFilterForm('priceRangeMin', control)}
+								updateControl={updateFilterForm}
 							/>
 							<LabelInput
 								className="priceMax"
 								inputType="number"
 								title="Price Max"
 								control={filterForm.get('priceRangeMax')}
-								updateControl={(control) => updateFilterForm('priceRangeMax', control)}
+								updateControl={updateFilterForm}
 							/>
 						</div>
 						<LabelSelect
 							title={'Property Type'}
 							control={filterForm.get('propertyTypeIds')}
-							updateControl={(control) => updateFilterForm('propertyTypeIds', control)}
+							updateControl={updateFilterForm}
 							options={propertyTypeOptions}
 							isMulti={true}
 						/>

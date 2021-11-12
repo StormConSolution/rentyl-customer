@@ -105,13 +105,11 @@ declare namespace Misc {
 		regionIds?: number[];
 		inUnitAmenities?: number[];
 		view?: number[];
-		groupAmenities?: number[];
 		priceRangeMin?: number;
 		priceRangeMax?: number;
 		bedrooms?: number;
 		bathrooms?: number;
 		resortExperiences?: number[];
-		rateCode?: string;
 		destinationId?: number;
 		accommodationId?: number;
 	}

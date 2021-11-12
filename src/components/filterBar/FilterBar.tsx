@@ -67,30 +67,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 						return { value: propertyType.id, label: propertyType.name };
 					})
 				);
-			} else {
-				let propertyTypes = await destinationService.getAllPropertyTypes();
-				setPropertyTypeOptions(
-					propertyTypes.map((propertyType) => {
-						return { value: propertyType.id, label: propertyType.name };
-					})
-				);
 			}
 		}
 		getDropdownOptions().catch(console.error);
-	}, [reservationFilters]);
+	}, []);
 
-	async function updateFilterForm(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'regionIds'
-			| 'propertyTypeIds',
-		control: RsFormControl
-	) {
+	async function updateFilterForm(control: RsFormControl) {
 		if (control.key === 'adultCount' || control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
 			let newValue: string | number = '';
 			if (control.value.toString().length > 0) {
@@ -106,7 +88,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		let _isFormFilledOut = isFormFilledOut();
 		setFilterForm(filterForm.clone());
 		if (await (isFormValid && _isFormFilledOut)) {
-			updateSearchQueryObj(key, control.value);
+			updateSearchQueryObj(control.key, control.value);
 		}
 	}
 
@@ -114,18 +96,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		return !!filterForm.get('adultCount').value.toString().length;
 	}
 
-	function updateSearchQueryObj(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'regionIds'
-			| 'propertyTypeIds',
-		value: any
-	) {
+	function updateSearchQueryObj(key: string, value: any) {
 		if (key === 'adultCount' && value === 0) {
 			//this should never evaluate to true with current implementations.
 			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
@@ -177,7 +148,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			{!props.destinationId && (
 				<LabelSelect
 					title={'Regions'}
-					updateControl={(control) => updateFilterForm('regionIds', control)}
+					updateControl={updateFilterForm}
 					options={regionOptions}
 					control={filterForm.get('regionIds')}
 					isMulti
@@ -196,21 +167,21 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			/>
 			<LabelInput
 				control={filterForm.get('adultCount')}
-				updateControl={(control) => updateFilterForm('adultCount', control)}
+				updateControl={updateFilterForm}
 				className="numberOfAdults"
 				inputType="number"
 				title="# of Adults"
 			/>
 			<LabelInput
 				control={filterForm.get('priceRangeMin')}
-				updateControl={(control) => updateFilterForm('priceRangeMin', control)}
+				updateControl={updateFilterForm}
 				className="priceMin"
 				inputType="number"
 				title="Price Min"
 			/>
 			<LabelInput
 				control={filterForm.get('priceRangeMax')}
-				updateControl={(control) => updateFilterForm('priceRangeMax', control)}
+				updateControl={updateFilterForm}
 				className="priceMax"
 				inputType="number"
 				title="Price Max"
@@ -218,7 +189,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			<LabelSelect
 				title="Property Type"
 				control={filterForm.get('propertyTypeIds')}
-				updateControl={(control) => updateFilterForm('propertyTypeIds', control)}
+				updateControl={updateFilterForm}
 				options={propertyTypeOptions}
 				isMulti={true}
 			/>
