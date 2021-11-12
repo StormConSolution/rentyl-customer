@@ -6,7 +6,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 import LabelButton from '../../labelButton/LabelButton';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
 import { useEffect, useState } from 'react';
@@ -37,10 +37,11 @@ interface DestinationSearchResultCardResponsiveProps {
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
-	const reservationFilters = useRecoilValue(globalState.reservationFilters);
 	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
 	const [lowestPrice, setLowestPrice] = useState<PriceObject | null>();
-	const [searchQueryObj, setSearchQueryObj] = useRecoilState<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 
 	useEffect(() => {
 		props.summaryTabs.map((accommodationList) => {
@@ -164,8 +165,8 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					maxWidth={'1020px'}
 					padding={'5px 45px'}
 					onClick={() => {
-						setSearchQueryObj({ ...searchQueryObj, destinationId: props.destinationId });
 						router.navigate(props.destinationDetailsPath).catch(console.error);
+						setReservationFilters({ ...reservationFilters, destinationId: props.destinationId });
 					}}
 				>
 					<Label variant={'h4'} paddingBottom={'10px'}>
