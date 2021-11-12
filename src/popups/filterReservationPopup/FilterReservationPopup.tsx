@@ -246,6 +246,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									updateControl={updateFilterForm}
 									className={'filterCounter'}
 									minCount={1}
+									labelMarginRight={5}
 								/>
 							</Box>
 							<Box marginBottom={15}>
@@ -255,6 +256,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									updateControl={updateFilterForm}
 									className={'filterCounter'}
 									minCount={1}
+									labelMarginRight={5}
 								/>
 							</Box>
 							<Box marginBottom={15}>
@@ -264,6 +266,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									updateControl={updateFilterForm}
 									className={'filterCounter'}
 									minCount={1}
+									labelMarginRight={5}
 								/>
 							</Box>
 						</div>

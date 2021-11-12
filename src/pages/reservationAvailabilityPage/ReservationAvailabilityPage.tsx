@@ -1,7 +1,6 @@
 import React, { ReactText, useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
-import HeroImage from '../../components/heroImage/HeroImage';
 import Label from '@bit/redsky.framework.rs.label';
 import serviceFactory from '../../services/serviceFactory';
 import moment from 'moment';
@@ -52,8 +51,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 		{ key: 'childCount', default: 0, type: 'integer', alias: 'childCount' },
 		{ key: 'region', default: '', type: 'string', alias: 'region' },
 		{ key: 'rateCode', default: '', type: 'string', alias: 'rateCode' },
-		{ key: 'priceRangeMax', default: '', type: 'string', alias: 'priceRangeMax' },
-		{ key: 'priceRangeMin', default: '', type: 'string', alias: 'priceRangeMin' },
+		{ key: 'priceRangeMax', default: 1, type: 'string', alias: 'priceRangeMax' },
+		{ key: 'priceRangeMin', default: 1, type: 'string', alias: 'priceRangeMin' },
 		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
@@ -64,17 +63,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(moment(new Date()));
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(new Date()).add(2, 'days'));
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
-	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
-	const [filterForm, setFilterForm] = useState<RsFormGroup>(
+	const [filterbarForm, setFilterBarForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
 			new RsFormControl('adultCount', params.adultCount || 1, [
@@ -86,8 +81,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 			new RsFormControl('bathroomCount', params.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
-			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(params.priceRangeMax), []),
-			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(params.priceRangeMin), []),
+			new RsFormControl('priceRangeMax', StringUtils.addCommasToNumber(params.priceRangeMax) || 1, []),
+			new RsFormControl('priceRangeMin', StringUtils.addCommasToNumber(params.priceRangeMin) || 1, []),
 			new RsFormControl('accommodationType', [], [])
 		])
 	);
@@ -98,32 +93,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		childCount: params.childCount || 0,
 		pagination: { page: 1, perPage: 5 }
 	});
-
-	useEffect(() => {
-		async function getFilterOptions() {
-			let regions: Api.Region.Res.Get[] = await regionService.getAllRegions();
-			setRegionOptions(
-				regions.map((region) => {
-					return { value: region.id, label: region.name };
-				})
-			);
-			if (params.region) {
-				const region = regions.find((region) => region.name.toLowerCase() === params.region.toLowerCase());
-				if (region) {
-					const regionControl = filterForm.getClone('regions');
-					regionControl.value = [region.id];
-					setFilterForm(filterForm.clone().update(regionControl));
-				}
-			}
-			let propertyTypes = await destinationService.getAllPropertyTypes();
-			setPropertyTypeOptions(
-				propertyTypes.map((propertyType) => {
-					return { value: propertyType.id, label: propertyType.name };
-				})
-			);
-		}
-		getFilterOptions().catch(console.error);
-	}, []);
 
 	useEffect(() => {
 		/**
@@ -205,14 +174,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
 			control.value = newValue;
 		}
-		filterForm.update(control);
-		let isFormValid = await filterForm.isValid();
+		filterbarForm.update(control);
+		let isFormValid = await filterbarForm.isValid();
 		setValidCode(isFormValid);
-		setFilterForm(filterForm.clone());
+		setFilterBarForm(filterbarForm.clone());
 	}
 
 	function saveFilter() {
-		let filterObject: Misc.FilterFormPopupOptions = filterForm.toModel();
+		let filterObject: Misc.FilterFormPopupOptions = filterbarForm.toModel();
 		popupSearch(
 			filterObject.adultCount,
 			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
@@ -454,13 +423,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<HeroImage
-					className={'heroImage'}
-					image={require('../../images/destinationResultsPage/momDaughterHero.jpg')}
-					height={'200px'}
-					mobileHeight={'100px'}
-				/>
-
 				<TopSearchBar
 					onSearch={(data) => {
 						console.log(data);
@@ -478,7 +440,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					{size !== 'small' ? (
 						<>
 							<FilterBarV2
-								filterForm={filterForm}
+								filterForm={filterbarForm}
 								updateFilterForm={updateFilterForm}
 								destinationService={destinationService}
 								accommodationToggle={accommodationToggle}
