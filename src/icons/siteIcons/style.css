@@ -1,9 +1,9 @@
 @font-face {
 	font-family: 'icomoon';
-	src: url('fonts/icomoon.eot?utvg9j');
-	src: url('fonts/icomoon.eot?utvg9j#iefix') format('embedded-opentype'),
-		url('fonts/icomoon.woff2?utvg9j') format('woff2'), url('fonts/icomoon.ttf?utvg9j') format('truetype'),
-		url('fonts/icomoon.woff?utvg9j') format('woff'), url('fonts/icomoon.svg?utvg9j#icomoon') format('svg');
+	src: url('fonts/icomoon.eot?zeuvc0');
+	src: url('fonts/icomoon.eot?zeuvc0#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff2?zeuvc0') format('woff2'), url('fonts/icomoon.ttf?zeuvc0') format('truetype'),
+		url('fonts/icomoon.woff?zeuvc0') format('woff'), url('fonts/icomoon.svg?zeuvc0#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -25,6 +25,18 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-pin:before {
+	content: '\e938';
+}
+.icon-minus:before {
+	content: '\e937';
+}
+.icon-search:before {
+	content: '\e936';
+}
+.icon-gallery:before {
+	content: '\e935';
+}
 .icon-info-outline:before {
 	content: '\e934';
 }

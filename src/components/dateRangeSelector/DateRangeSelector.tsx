@@ -21,22 +21,29 @@ export interface DateRangeSelectorProps {
 	className?: string;
 	startDateLabel?: string;
 	endDateLabel?: string;
+	startDatePlaceholderText?: string;
+	endDatePlaceholderText?: string;
 	labelVariant?:
 		| 'h1'
 		| 'h2'
 		| 'h3'
 		| 'h4'
 		| 'h5'
-		| 'h6'
-		| 'link1'
-		| 'link2'
-		| 'subtitle1'
-		| 'subtitle2'
+		| 'button'
+		| 'buttonBoldText'
 		| 'body1'
 		| 'body2'
-		| 'caption'
-		| 'button'
-		| 'overline'
+		| 'body3'
+		| 'body4'
+		| 'caption1'
+		| 'boldCaption1'
+		| 'caption2'
+		| 'caption3'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'subtitle3'
+		| 'italicBold'
+		| 'error'
 		| string;
 }
 
@@ -56,7 +63,6 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
 					{props.startDateLabel}
 				</Label>
-				<hr />
 				<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
 					{props.endDateLabel}
 				</Label>
@@ -65,6 +71,8 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				navPrev={<Icon iconImg={'icon-chevron-left'} size={10} />}
 				navNext={<Icon iconImg={'icon-chevron-right'} size={10} />}
 				readOnly
+				startDatePlaceholderText={props.startDatePlaceholderText}
+				endDatePlaceholderText={props.endDatePlaceholderText}
 				startDate={startDateControl}
 				startDateId={`startDate-${instanceId}`}
 				endDate={endDateControl}
@@ -77,7 +85,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				focusedInput={props.focusedInput}
 				onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 				numberOfMonths={props.monthsToShow}
-				verticalSpacing={20}
+				verticalSpacing={0}
 				noBorder
 			/>
 		</Box>

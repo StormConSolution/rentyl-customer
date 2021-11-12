@@ -3,8 +3,7 @@ import './DestinationSearchResultCardResponsive.scss';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
-import Carousel from '../../carousel/Carousel';
-import Img from '@bit/redsky.framework.rs.img';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 import LabelButton from '../../labelButton/LabelButton';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import { useRecoilState } from 'recoil';
@@ -103,16 +102,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		}
 	}
 
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box className={'imageWrapper'}>
-					<Img src={path} alt={'Resort Image'} width={556} height={636} />
-				</Box>
-			);
-		});
-	}
-
 	function renderFeatures() {
 		return props.destinationFeatures.map((feature) => {
 			return (
@@ -160,7 +149,16 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
 			<Box display={'flex'}>
-				<Carousel showControls children={renderPictures(props.picturePaths)} />
+				<CarouselV2
+					path={props.destinationDetailsPath}
+					imgPaths={props.picturePaths}
+					onAddCompareClick={() => {
+						if (props.onAddCompareClick) props.onAddCompareClick();
+					}}
+					onGalleryClick={() => {
+						console.log('Show LightboxV2 images...');
+					}}
+				/>
 				<Box
 					display={'flex'}
 					flexDirection={'column'}
