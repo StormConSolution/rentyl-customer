@@ -34,6 +34,7 @@ import RegionService from '../../services/region/region.service';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
+import TopSearchBarMobile from '../../components/topSearchBar/topSearchBarMobile/TopSearchBarMobile';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();

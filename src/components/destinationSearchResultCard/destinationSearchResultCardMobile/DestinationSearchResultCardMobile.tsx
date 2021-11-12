@@ -12,6 +12,7 @@ import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDest
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import { useEffect, useState } from 'react';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -41,16 +42,6 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	useEffect(() => {
 		setLowestPrice(props.getLowestAccommodationPrice());
 	}, []);
-
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box key={path} className={'imageWrapper'}>
-					<Img src={path} alt={'Resort Image'} width={690} height={580} />
-				</Box>
-			);
-		});
-	}
 
 	function renderPricePerNight() {
 		if (reservationFilters.redeemPoints && lowestPrice) {
@@ -86,7 +77,16 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 
 	return (
 		<Box className={'rsDestinationSearchResultCardMobile'}>
-			<Carousel showControls children={renderPictures(props.picturePaths)} />
+			<CarouselV2
+				path={props.destinationDetailsPath}
+				imgPaths={props.picturePaths}
+				onAddCompareClick={() => {
+					if (props.onAddCompareClick) props.onAddCompareClick();
+				}}
+				onGalleryClick={() => {
+					console.log('');
+				}}
+			/>
 			<Box className={'mobileCardInfo'}>
 				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>
 					<Label variant={'subtitle1'}>{props.destinationName}</Label>
