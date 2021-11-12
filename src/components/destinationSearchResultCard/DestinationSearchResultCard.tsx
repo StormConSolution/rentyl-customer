@@ -13,6 +13,7 @@ export interface PriceObject {
 
 export interface DestinationSearchResultCardProps {
 	className?: string;
+	destinationId: number;
 	destinationName: string;
 	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
 	destinationDescription: string;
@@ -50,6 +51,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 
 	return size === 'small' ? (
 		<DestinationSearchResultCardMobile
+			destinationId={props.destinationId}
 			destinationName={props.destinationName}
 			address={props.address}
 			picturePaths={props.picturePaths}
@@ -60,6 +62,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
+			destinationId={props.destinationId}
 			destinationName={props.destinationName}
 			destinationDescription={props.destinationDescription}
 			destinationFeatures={props.destinationFeatures}
