@@ -1,0 +1,59 @@
+@import '../../themes/themes';
+.rsSigninPopup {
+	width: clamp(356px, 50vw, 488px);
+	background-color: theme-var($primaryBackgroundColor);
+	margin: 0 10px;
+	padding: 14px 28px 39px;
+	border-radius: 20px;
+	.rsIcon {
+		position: absolute;
+		top: 18px;
+		right: 14px;
+	}
+	hr {
+		color: theme-var($greyLineColor);
+		opacity: 1;
+	}
+	.rsLabelInput {
+		margin-bottom: 17px;
+		.rsInput {
+			height: clamp(28px, 10vh, 38px);
+			max-width: 400px;
+			padding: 10px;
+			border-radius: 5px;
+			background: theme-var($primaryBackgroundColor);
+		}
+	}
+
+	.errorMessage {
+		text-align: center;
+	}
+
+	.rsLabelButton {
+		padding: 10px;
+	}
+
+	.rsButton {
+		width: 100%;
+	}
+
+	.orOption {
+		margin: 28px 0;
+		display: flex;
+		align-items: center;
+		color: theme-var($greyLineColor);
+		hr {
+			margin: 0 6px;
+			width: 100%;
+		}
+	}
+	.noAccount {
+		font-weight: 300;
+	}
+}
+
+@media screen and (min-width: 640px) {
+	.linethrough {
+		margin-bottom: 45px;
+	}
+}
