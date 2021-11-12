@@ -91,11 +91,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 					destinationFeatures={destination.features}
 					address={StringUtils.buildAddressString(addressData)}
 					picturePaths={urls}
-					destinationDetailsPath={
-						!!reservationFilters.startDate && !!reservationFilters.endDate
-							? `/destination/details?di=${destination.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
-							: `/reservation/availability`
-					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
 						comparisonService.addToComparison(recoilComparisonState, {
