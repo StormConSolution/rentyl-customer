@@ -1,0 +1,68 @@
+@import '../../themes/themes';
+.rsSignupPopup {
+	width: clamp(356px, 90vw, 933px);
+	background-color: theme-var($primaryBackgroundColor);
+	margin: 0 10px;
+	padding: 14px 28px 25px;
+	border-radius: 20px;
+	.rsIcon {
+		position: absolute;
+		top: 18px;
+		right: 14px;
+	}
+	.rsInput {
+		max-width: 800px;
+	}
+	hr {
+		color: theme-var($greyLineColor);
+		opacity: 1;
+	}
+	.rsLabelInput {
+		width: 100%;
+		margin-bottom: 17px;
+		.rsInput {
+			height: 28px;
+			max-width: 920px;
+			padding: 10px;
+			border-radius: 5px;
+			background: theme-var($primaryBackgroundColor);
+		}
+	}
+
+	.rsButton {
+		margin: 24px auto 0 auto;
+		width: clamp(300px, 100%, 413px);
+	}
+
+	.rsLabel {
+		.rsButton {
+			display: inline-block;
+			width: -moz-fit-content;
+			width: fit-content;
+		}
+	}
+
+	.loginButton {
+		.rsLabel {
+			color: theme-var($yellowTextColor);
+		}
+	}
+
+	.rsLabelCheckbox {
+		align-items: start;
+		margin-bottom: 16px;
+		height: auto;
+		padding: 0;
+		.checkboxContainer {
+			input {
+				height: 26px;
+				width: 26px;
+			}
+			.checkbox {
+				border-radius: 5px;
+				height: 26px;
+				width: 26px;
+			}
+		}
+	}
+}

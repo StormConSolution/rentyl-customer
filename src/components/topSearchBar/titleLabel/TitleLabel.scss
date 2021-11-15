@@ -1,0 +1,20 @@
+@import '../../../themes/themes';
+.rsTitleLabel {
+	position: relative;
+	.popupBox {
+		position: absolute;
+		padding: 40px 20px;
+		border-radius: 20px;
+		background: #ffffff;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		box-sizing: border-box;
+		display: none;
+		top: 152%;
+		z-index: 10;
+	}
+	.rsLabel {
+		&.subtitle3 {
+			cursor: pointer;
+		}
+	}
+}
