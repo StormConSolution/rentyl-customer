@@ -7,13 +7,12 @@
 	overflow: scroll;
 
 	.paperWrapper {
-		width: 341px;
-		min-width: 320px;
+		width: clamp(320px, 90vw, 341px);
 		border-radius: 15px;
 		background: theme-var($primaryBackgroundColor);
 
 		.paperHeader {
-			border-bottom: 0.5px solid theme-var($greyLineColor);
+			border-bottom: 1px solid theme-var($greyLineColor);
 			padding: 16px 25px;
 			display: flex;
 			justify-content: space-between;
@@ -28,7 +27,7 @@
 			padding: 20px 30px;
 
 			.formDiv {
-				border-bottom: 0.5px solid theme-var($greyLineColor);
+				border-bottom: 1px solid theme-var($greyLineColor);
 
 				.filterCounter {
 					padding: unset;
