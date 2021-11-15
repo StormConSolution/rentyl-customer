@@ -77,11 +77,11 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	useEffect(() => {
 		async function getInUnitAmenities() {
 			const array = await destinationService.getAllInUnitAmenities();
-			setInUnitAmenities(formatOptions(array));
+			setInUnitAmenities(array);
 		}
 		async function getExperiences() {
 			const array = await destinationService.getAllExperiences();
-			setResortExperiences(formatOptions(array));
+			setResortExperiences(array);
 		}
 		getInUnitAmenities().catch(console.error);
 		getExperiences().catch(console.error);
@@ -146,6 +146,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	function renderAccommodationCheckboxes() {
 		return propertyTypeOptions.map((item) => (
 			<LabelCheckboxV2
+				className="listCheckboxes"
 				key={item.value}
 				value={item.value}
 				text={item.label}
@@ -167,6 +168,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	function renderResortExperiences() {
 		return resortExperiences.map((item) => (
 			<LabelCheckboxV2
+				className="listCheckboxes"
 				key={item.value}
 				value={item.value}
 				text={item.label}
@@ -181,6 +183,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	function renderInUnitAmenities() {
 		return inUnitAmenities.map((item) => (
 			<LabelCheckboxV2
+				className="listCheckboxes"
 				key={item.value}
 				value={item.value}
 				text={item.label}
@@ -218,6 +221,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									setSortBySelection(0);
 								}}
 								labelSize="body2"
+								className="labelRadio"
 								isDisabled={true}
 							/>
 							<LabelRadioButton
@@ -229,6 +233,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									setSortBySelection(1);
 								}}
 								labelSize="body2"
+								className="labelRadio"
 								isDisabled={true}
 							/>
 						</div>

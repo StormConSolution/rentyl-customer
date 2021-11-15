@@ -28,25 +28,31 @@
 
 			.formDiv {
 				border-bottom: 1px solid theme-var($greyLineColor);
+				margin-bottom: 10px;
 
 				.filterCounter {
-					padding: unset;
+					padding-bottom: 15px;
+					padding-left: 0;
 				}
 
 				.priceSliderRail {
 					color: theme-var($greyLineColor);
 					opacity: 0.35;
 				}
-			}
 
-			.formWrapper {
-				padding: 0 10px;
+				.listCheckboxes {
+					margin-bottom: 10px;
+				}
 			}
 			.redeemPointsContainer {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				margin: 25px 0;
+			}
+
+			.labelRadio {
+				padding-bottom: 15px;
 			}
 
 			.numberOfGuestDiv {

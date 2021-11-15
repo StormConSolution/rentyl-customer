@@ -27,6 +27,7 @@ interface LabelRadioButtonProps {
 		| 'overline'
 		| string;
 	isDisabled?: boolean;
+	className?: string;
 	// onClick?: (event?:React.MouseEvent) => void;
 }
 
@@ -35,7 +36,7 @@ const LabelRadioButton: React.FC<LabelRadioButtonProps> = (props) => {
 
 	return (
 		<div
-			className={'rsLabelRadioButton'}
+			className={`rsLabelRadioButton${props.className ? ` ${props.className}` : ''}`}
 			onClick={(event: React.MouseEvent) => {
 				event?.stopPropagation();
 			}}
