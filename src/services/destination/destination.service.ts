@@ -38,31 +38,39 @@ export default class DestinationService extends Service {
 		return res.data.data;
 	}
 
-	resortExperiences = [
-		{ label: 'Golf', value: 1 },
-		{ label: 'Waterpark', value: 2 },
-		{ label: 'Spa', value: 3 },
-		{ label: 'Resort pool', value: 4 },
-		{ label: 'In home chef', value: 5 },
-		{ label: 'Butler Service', value: 6 },
-		{ label: 'Tennis Courts', value: 7 },
-		{ label: 'Restaurants', value: 8 },
-		{ label: 'Kids clubs', value: 9 },
-		{ label: 'Bike Rentals', value: 10 }
-	];
+	// TODO: Waiting for backend changes for this call, temporarily hard coding a list for UI Testing
+	async getAllExperiences() {
+		let resortExperiences = [
+			{ label: 'Golf', value: 1 },
+			{ label: 'Waterpark', value: 2 },
+			{ label: 'Spa', value: 3 },
+			{ label: 'Resort pool', value: 4 },
+			{ label: 'In home chef', value: 5 },
+			{ label: 'Butler Service', value: 6 },
+			{ label: 'Tennis Courts', value: 7 },
+			{ label: 'Restaurants', value: 8 },
+			{ label: 'Kids clubs', value: 9 },
+			{ label: 'Bike Rentals', value: 10 }
+		];
+		return resortExperiences;
+	}
 
-	inUnitAmenities = [
-		{ label: 'Air Conditioning', value: 1 },
-		{ label: 'Washer / Dryer', value: 2 },
-		{ label: 'Private Pool', value: 3 },
-		{ label: 'Full Kitchen', value: 4 },
-		{ label: 'Theater Room', value: 5 },
-		{ label: 'Games Room', value: 6 },
-		{ label: 'Outdoor Kitchen', value: 7 },
-		{ label: 'Hot Tub / Spa', value: 8 },
-		{ label: 'Wetbar', value: 9 },
-		{ label: 'First Floor Bedroom', value: 10 },
-		{ label: 'Pet Friendly', value: 11 },
-		{ label: 'Free Parking', value: 12 }
-	];
+	// TODO: Waiting for backend changes for this call, temporarily hard coding a list for UI Testing
+	async getAllInUnitAmenities() {
+		let inUnitAmenities = [
+			{ label: 'Air Conditioning', value: 1 },
+			{ label: 'Washer / Dryer', value: 2 },
+			{ label: 'Private Pool', value: 3 },
+			{ label: 'Full Kitchen', value: 4 },
+			{ label: 'Theater Room', value: 5 },
+			{ label: 'Games Room', value: 6 },
+			{ label: 'Outdoor Kitchen', value: 7 },
+			{ label: 'Hot Tub / Spa', value: 8 },
+			{ label: 'Wetbar', value: 9 },
+			{ label: 'First Floor Bedroom', value: 10 },
+			{ label: 'Pet Friendly', value: 11 },
+			{ label: 'Free Parking', value: 12 }
+		];
+		return inUnitAmenities;
+	}
 }
