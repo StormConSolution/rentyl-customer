@@ -11,6 +11,7 @@ export interface GuestCounterProps {
 	control: RsFormControl;
 	updateControl: (control: RsFormControl) => void;
 	className?: string;
+	labelMarginRight?: number;
 }
 
 const Counter: React.FC<GuestCounterProps> = (props) => {
