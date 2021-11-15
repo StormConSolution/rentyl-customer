@@ -9,7 +9,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
-import { ObjectUtils, StringUtils } from '../../../utils/utils';
+import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import { useEffect, useState } from 'react';
 
@@ -19,7 +19,6 @@ interface DestinationSearchResultCardMobileProps {
 	destinationName: string;
 	address: string;
 	picturePaths: string[];
-	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 	getLowestAccommodationPrice: () => {
@@ -97,7 +96,11 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Icon
 						iconImg={'icon-info-outline'}
 						onClick={() => {
-							router.navigate(props.destinationDetailsPath).catch(console.error);
+							router
+								.navigate(
+									`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+								)
+								.catch(console.error);
 						}}
 						size={20}
 					/>

@@ -24,7 +24,6 @@ export interface DestinationSearchResultCardProps {
 	}[];
 	address: string;
 	picturePaths: string[];
-	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 }
@@ -55,7 +54,6 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationName={props.destinationName}
 			address={props.address}
 			picturePaths={props.picturePaths}
-			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
 			getLowestAccommodationPrice={getLowestAccommodationPrice}
@@ -68,7 +66,6 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationFeatures={props.destinationFeatures}
 			address={props.address}
 			picturePaths={props.picturePaths}
-			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
 			getLowestAccommodationPrice={getLowestAccommodationPrice}

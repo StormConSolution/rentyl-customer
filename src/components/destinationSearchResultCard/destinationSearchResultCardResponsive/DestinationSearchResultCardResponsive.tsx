@@ -25,7 +25,6 @@ interface DestinationSearchResultCardResponsiveProps {
 	}[];
 	address: string;
 	picturePaths: string[];
-	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 	getLowestAccommodationPrice: () => {
@@ -150,7 +149,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
 			<Box display={'flex'}>
 				<CarouselV2
-					path={props.destinationDetailsPath}
+					path={`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`}
 					imgPaths={props.picturePaths}
 					onAddCompareClick={() => {
 						if (props.onAddCompareClick) props.onAddCompareClick();
@@ -165,7 +164,11 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					maxWidth={'1020px'}
 					padding={'5px 45px'}
 					onClick={() => {
-						router.navigate(props.destinationDetailsPath).catch(console.error);
+						router
+							.navigate(
+								`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+							)
+							.catch(console.error);
 						setReservationFilters({ ...reservationFilters, destinationId: props.destinationId });
 					}}
 				>

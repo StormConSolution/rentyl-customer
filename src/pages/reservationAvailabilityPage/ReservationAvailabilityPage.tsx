@@ -27,6 +27,7 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
+import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -90,11 +91,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 					destinationFeatures={destination.features}
 					address={StringUtils.buildAddressString(addressData)}
 					picturePaths={urls}
-					destinationDetailsPath={
-						!!reservationFilters.startDate && !!reservationFilters.endDate
-							? `/destination/details?di=${destination.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
-							: `/destination/details?di=${destination.id}`
-					}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
 						comparisonService.addToComparison(recoilComparisonState, {
@@ -199,6 +195,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 					image={require('../../images/destinationResultsPage/momDaughterHero.jpg')}
 					height={'200px'}
 					mobileHeight={'100px'}
+				/>
+
+				<TopSearchBar
+					onSearch={(data) => {
+						console.log(data);
+					}}
 				/>
 				<Box className={'pointsDisplay'}>
 					<PointsOrLogin />
