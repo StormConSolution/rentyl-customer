@@ -6,14 +6,16 @@ import Label from '@bit/redsky.framework.rs.label';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 import LabelButton from '../../labelButton/LabelButton';
 import { ObjectUtils, StringUtils } from '../../../utils/utils';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
 import { useEffect, useState } from 'react';
 import { PriceObject } from '../DestinationSearchResultCard';
+import router from '../../../utils/router';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
+	destinationId: number;
 	destinationName: string;
 	destinationDescription: string;
 	destinationFeatures: {
@@ -23,7 +25,6 @@ interface DestinationSearchResultCardResponsiveProps {
 	}[];
 	address: string;
 	picturePaths: string[];
-	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 	getLowestAccommodationPrice: () => {
@@ -35,9 +36,11 @@ interface DestinationSearchResultCardResponsiveProps {
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
-	const reservationFilters = useRecoilValue(globalState.reservationFilters);
 	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
 	const [lowestPrice, setLowestPrice] = useState<PriceObject | null>();
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 
 	useEffect(() => {
 		props.summaryTabs.map((accommodationList) => {
@@ -117,10 +120,26 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	function renderButtons() {
 		return props.summaryTabs.map((button) => {
 			if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
-				return <LabelButton look={'containedPrimary'} variant={'button'} label={button.label}></LabelButton>;
+				return (
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={button.label}
+						onClick={(event) => {
+							event.stopPropagation();
+						}}
+					/>
+				);
 			} else {
 				return (
-					<LabelButton look={'containedPrimary'} variant={'button'} label={'Accommodations'}></LabelButton>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Accommodations'}
+						onClick={(event) => {
+							event.stopPropagation();
+						}}
+					/>
 				);
 			}
 		});
@@ -130,7 +149,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
 			<Box display={'flex'}>
 				<CarouselV2
-					path={props.destinationDetailsPath}
+					path={`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`}
 					imgPaths={props.picturePaths}
 					onAddCompareClick={() => {
 						if (props.onAddCompareClick) props.onAddCompareClick();
@@ -139,7 +158,20 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						console.log('Show LightboxV2 images...');
 					}}
 				/>
-				<Box display={'flex'} flexDirection={'column'} maxWidth={'1020px'} padding={'5px 45px'}>
+				<Box
+					display={'flex'}
+					flexDirection={'column'}
+					maxWidth={'1020px'}
+					padding={'5px 45px'}
+					onClick={() => {
+						router
+							.navigate(
+								`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+							)
+							.catch(console.error);
+						setReservationFilters({ ...reservationFilters, destinationId: props.destinationId });
+					}}
+				>
 					<Label variant={'h4'} paddingBottom={'10px'}>
 						{props.destinationName}
 					</Label>
