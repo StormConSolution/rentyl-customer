@@ -29,7 +29,6 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				justifyContent="space-between"
 				alignItems="center"
 				onClick={() => setToggleContent((prevState) => !prevState)}
-				marginTop="1rem"
 			>
 				<Box id="labelContainer">
 					<Label variant="body2" className="filterByLabel" paddingBottom={4}>

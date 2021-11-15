@@ -37,8 +37,7 @@
 			}
 		}
 		.filterCol {
-			flex: 0 0 auto;
-			width: 22%;
+			flex: 1 0 0%;
 
 			.filterCounter {
 				padding-bottom: 15px;
@@ -50,12 +49,11 @@
 		width: 30%;
 
 		.halfCol {
-			flex: 0 0 auto;
-			width: 50%;
+			flex: 1 0 0%;
 		}
 	}
 	.dropdownMarginX {
-		margin: 0 12px;
+		margin: 10px 12px;
 	}
 
 	.subRow {
@@ -64,5 +62,24 @@
 	}
 	.rightBorder {
 		border-right: 1px solid theme-var($secondaryTextColor);
+	}
+
+	@media screen and (max-width: 768px) {
+		.largeCol {
+			.priceCol {
+				flex: 0 0 auto;
+				width: 30%;
+			}
+		}
+		.smallCol {
+			.halfCol {
+				flex: 0 0 auto;
+				width: 100%;
+			}
+			.redeemToggle {
+				padding-left: 15px;
+				padding-top: 15px;
+			}
+		}
 	}
 }

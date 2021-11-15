@@ -29,53 +29,38 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 
 	function renderAccommodationList() {
 		if (!props.accommodationList) return;
-		return (
-			<Box padding="1rem">
-				{props.accommodationList.map((item) => (
-					<Box marginY={10}>
-						<LabelCheckboxV2
-							key={item.value}
-							value={item.value}
-							text={item.label}
-							onSelect={() => {
-								let tempControl = props.filterForm.get('accommodationType');
-								tempControl.value = [...(tempControl.value as number[]), item.value as number];
-								props.updateFilterForm(tempControl);
-							}}
-							isChecked={(props.filterForm.get('accommodationType').value as number[]).includes(
-								item.value as number
-							)}
-							onDeselect={() => {
-								props.filterForm.get('accommodationType').value = (props.filterForm.get(
-									'accommodationType'
-								).value as number[]).filter((type) => type !== item.value);
-								props.updateFilterForm(props.filterForm.get('accommodationType'));
-							}}
-						/>
-					</Box>
-				))}
-			</Box>
-		);
+		return props.accommodationList.map((item) => (
+			<LabelCheckboxV2
+				key={item.value}
+				value={item.value}
+				text={item.label}
+				onSelect={() => {
+					let tempControl = props.filterForm.get('accommodationType');
+					tempControl.value = [...(tempControl.value as number[]), item.value as number];
+					props.updateFilterForm(tempControl);
+				}}
+				isChecked={(props.filterForm.get('accommodationType').value as number[]).includes(item.value as number)}
+				onDeselect={() => {
+					props.filterForm.get('accommodationType').value = (props.filterForm.get('accommodationType')
+						.value as number[]).filter((type) => type !== item.value);
+					props.updateFilterForm(props.filterForm.get('accommodationType'));
+				}}
+			/>
+		));
 	}
 
 	function renderResortExperiences() {
-		return (
-			<Box padding="1rem">
-				{props.destinationService.resortExperiences.map((item) => (
-					<Box marginY={10}>
-						<LabelCheckboxV2
-							key={item.value}
-							value={item.value}
-							text={item.label}
-							onSelect={() => console.log('selected')}
-							isChecked={props.accommodationToggle}
-							onDeselect={() => console.log('Deselected')}
-							isDisabled={true}
-						/>
-					</Box>
-				))}
-			</Box>
-		);
+		return props.destinationService.resortExperiences.map((item) => (
+			<LabelCheckboxV2
+				key={item.value}
+				value={item.value}
+				text={item.label}
+				onSelect={() => console.log('selected')}
+				isChecked={props.accommodationToggle}
+				onDeselect={() => console.log('Deselected')}
+				isDisabled={true}
+			/>
+		));
 	}
 
 	return (
@@ -89,38 +74,36 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							title="Price"
 							className="dropdownMarginX"
 						>
-							<Box padding="1rem">
-								<Slider
-									range={[1, 1000]}
-									minControl={props.filterForm.get('priceRangeMin')}
-									maxControl={props.filterForm.get('priceRangeMax')}
-									sliderIcons={'icon-hamburger-menu'}
-									rotate={90}
-									updateMinControl={props.updateFilterForm}
-									updateMaxControl={props.updateFilterForm}
-									mode={SliderMode.COLLISION}
-									handleStyle={{ border: '1px solid black', borderRadius: '50%' }}
-									railClass="priceSliderRail"
-									sliderClass="priceSlider"
+							<Slider
+								range={[1, 1000]}
+								minControl={props.filterForm.get('priceRangeMin')}
+								maxControl={props.filterForm.get('priceRangeMax')}
+								sliderIcons={'icon-hamburger-menu'}
+								rotate={90}
+								updateMinControl={props.updateFilterForm}
+								updateMaxControl={props.updateFilterForm}
+								mode={SliderMode.COLLISION}
+								handleStyle={{ border: '1px solid black', borderRadius: '50%' }}
+								railClass="priceSliderRail"
+								sliderClass="priceSlider"
+							/>
+							<div className="minMaxDiv">
+								<LabelInputV2
+									className="priceMin"
+									inputType="text"
+									title="min price"
+									control={props.filterForm.get('priceRangeMin')}
+									updateControl={props.updateFilterForm}
 								/>
-								<div className="minMaxDiv">
-									<LabelInputV2
-										className="priceMin"
-										inputType="text"
-										title="min price"
-										control={props.filterForm.get('priceRangeMin')}
-										updateControl={props.updateFilterForm}
-									/>
-									<hr className="divider" />
-									<LabelInputV2
-										className="priceMax"
-										inputType="text"
-										title="max price"
-										control={props.filterForm.get('priceRangeMax')}
-										updateControl={props.updateFilterForm}
-									/>
-								</div>
-							</Box>
+								<hr className="divider" />
+								<LabelInputV2
+									className="priceMax"
+									inputType="text"
+									title="max price"
+									control={props.filterForm.get('priceRangeMax')}
+									updateControl={props.updateFilterForm}
+								/>
+							</div>
 						</FilterBarDropDown>
 					</Box>
 					<Box id="accommodationCol" className="filterCol">
@@ -140,24 +123,22 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							title="Bedrooms"
 							className="dropdownMarginX"
 						>
-							<Box padding="1rem">
-								<Counter
-									title="Bedrooms"
-									control={props.filterForm.get('bedroomCount')}
-									updateControl={props.updateFilterForm}
-									className={'filterCounter'}
-									minCount={1}
-									labelMarginRight={5}
-								/>
-								<Counter
-									title="Bathrooms"
-									control={props.filterForm.get('bathroomCount')}
-									updateControl={props.updateFilterForm}
-									className={'filterCounter'}
-									minCount={1}
-									labelMarginRight={5}
-								/>
-							</Box>
+							<Counter
+								title="Bedrooms"
+								control={props.filterForm.get('bedroomCount')}
+								updateControl={props.updateFilterForm}
+								className={'filterCounter'}
+								minCount={1}
+								labelMarginRight={5}
+							/>
+							<Counter
+								title="Bathrooms"
+								control={props.filterForm.get('bathroomCount')}
+								updateControl={props.updateFilterForm}
+								className={'filterCounter'}
+								minCount={1}
+								labelMarginRight={5}
+							/>
 						</FilterBarDropDown>
 					</Box>
 					<Box id="resortExpCol" className="filterCol">
@@ -165,6 +146,16 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={props.onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Resort Experiences"
+							className="dropdownMarginX"
+						>
+							{renderResortExperiences()}
+						</FilterBarDropDown>
+					</Box>
+					<Box id="otherFilter" className="filterCol">
+						<FilterBarDropDown
+							onChangeCallBack={props.onApplyClick}
+							onClearCallback={() => console.log('Clear Form')}
+							title="Other Filters"
 							className="dropdownMarginX"
 						>
 							{renderResortExperiences()}
@@ -181,37 +172,31 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							title="Lowest Prices"
 							className="dropdownMarginX"
 						>
-							<Box padding="1rem">
-								<Box marginBottom={15}>
-									<LabelRadioButton
-										radioName="highestRadioBtn"
-										value="sortHigh"
-										checked={sortBySelection === 0}
-										text="Highest Price"
-										onSelect={() => {
-											setSortBySelection(0);
-										}}
-										labelSize="body2"
-										isDisabled={true}
-									/>
-								</Box>
-								<Box marginBottom={15}>
-									<LabelRadioButton
-										radioName="lowestRadioBtn"
-										value="sortLow"
-										checked={sortBySelection === 1}
-										text="Lowest Price"
-										onSelect={() => {
-											setSortBySelection(1);
-										}}
-										labelSize="body2"
-										isDisabled={true}
-									/>
-								</Box>
-							</Box>
+							<LabelRadioButton
+								radioName="highestRadioBtn"
+								value="sortHigh"
+								checked={sortBySelection === 0}
+								text="Highest Price"
+								onSelect={() => {
+									setSortBySelection(0);
+								}}
+								labelSize="body2"
+								isDisabled={true}
+							/>
+							<LabelRadioButton
+								radioName="lowestRadioBtn"
+								value="sortLow"
+								checked={sortBySelection === 1}
+								text="Lowest Price"
+								onSelect={() => {
+									setSortBySelection(1);
+								}}
+								labelSize="body2"
+								isDisabled={true}
+							/>
 						</FilterBarDropDown>
 					</Box>
-					<Box className="halfCol">
+					<Box className="halfCol redeemToggle">
 						<Label className="redeemPointsLabel" variant="body1">
 							Redeem Points
 						</Label>
