@@ -315,7 +315,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							</Label>
 							{renderResortExperiences()}
 						</div>
-						<div className="formDiv" id="resortExperiencesDiv">
+						<div className="formDiv bottomForm" id="resortExperiencesDiv">
 							<Label className="accommodationLabel" variant="body1" marginY={15}>
 								In Unit Amenities
 							</Label>
