@@ -40,7 +40,7 @@ export default class DestinationService extends Service {
 
 	// TODO: Waiting for backend changes for this call, temporarily hard coding a list for UI Testing
 	async getAllExperiences() {
-		let resortExperiences = [
+		return [
 			{ label: 'Golf', value: 1 },
 			{ label: 'Waterpark', value: 2 },
 			{ label: 'Spa', value: 3 },
@@ -52,12 +52,11 @@ export default class DestinationService extends Service {
 			{ label: 'Kids clubs', value: 9 },
 			{ label: 'Bike Rentals', value: 10 }
 		];
-		return resortExperiences;
 	}
 
 	// TODO: Waiting for backend changes for this call, temporarily hard coding a list for UI Testing
 	async getAllInUnitAmenities() {
-		let inUnitAmenities = [
+		return [
 			{ label: 'Air Conditioning', value: 1 },
 			{ label: 'Washer / Dryer', value: 2 },
 			{ label: 'Private Pool', value: 3 },
@@ -71,6 +70,5 @@ export default class DestinationService extends Service {
 			{ label: 'Pet Friendly', value: 11 },
 			{ label: 'Free Parking', value: 12 }
 		];
-		return inUnitAmenities;
 	}
 }
