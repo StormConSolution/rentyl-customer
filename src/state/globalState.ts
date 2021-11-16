@@ -78,8 +78,8 @@ class GlobalState {
 		this.reservationFilters = atom<Misc.ReservationFilters>({
 			key: GlobalStateKeys.RESERVATION_FILTERS,
 			default: {
-				checkIn: new Date(),
-				checkOut: new Date(),
+				startDate: new Date(),
+				endDate: new Date(),
 				adultCount: 1,
 				redeemPoints: false,
 				sortBy: 'ASC'

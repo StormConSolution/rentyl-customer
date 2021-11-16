@@ -94,8 +94,8 @@ declare namespace Misc {
 	}
 
 	export interface ReservationFilters {
-		checkIn: Date | string;
-		checkOut: Date | string;
+		startDate: Date | string;
+		endDate: Date | string;
 		adultCount: number;
 		redeemPoints: boolean;
 		sortBy: string;

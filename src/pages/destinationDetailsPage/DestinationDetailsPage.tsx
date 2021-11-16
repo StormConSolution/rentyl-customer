@@ -155,22 +155,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	let imageIndex = 0;
 
-	function moveImagesRight() {
-		if (parentRef.current!.childElementCount - 1 === imageIndex) {
-			imageIndex = 0;
-		}
-		imageIndex++;
-		let childWidth = childRef.current!.offsetWidth;
-		parentRef.current!.style.transform = `translateX(-${imageIndex * childWidth}px)`;
-	}
-
-	function moveImagesLeft() {
-		if (imageIndex === 0) imageIndex = parentRef.current!.childElementCount;
-		imageIndex--;
-		let childWidth = childRef.current!.offsetWidth;
-		parentRef.current!.style.transform = `translateX(-${imageIndex * childWidth}px)`;
-	}
-
 	function renderFeatures() {
 		if (!destinationDetails || !destinationDetails.features) return;
 		let featureArray: any = [];
@@ -364,42 +348,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					carouselImagePaths={item.media}
 				/>
 			);
-		});
-	}
-
-	function popupSearch(
-		checkinDate: moment.Moment | null,
-		checkoutDate: moment.Moment | null,
-		adults: string,
-		children: string,
-		priceRangeMin: string,
-		priceRangeMax: string,
-		propertyTypeIds: number[],
-		rateCode: string
-	) {
-		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['startDate'] = formatFilterDateForServer(checkinDate, 'start');
-			createSearchQueryObj['endDate'] = formatFilterDateForServer(checkoutDate, 'end');
-			createSearchQueryObj['adults'] = parseInt(adults);
-			if (children !== '') {
-				createSearchQueryObj['children'] = parseInt(children);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else {
-				delete createSearchQueryObj['propertyTypeIds'];
-			}
-			if (rateCode !== '') {
-				createSearchQueryObj['rateCode'] = rateCode;
-			}
-			return createSearchQueryObj;
 		});
 	}
 

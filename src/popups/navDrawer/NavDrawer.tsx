@@ -11,6 +11,9 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import { NavData } from './NavData';
+import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
+import SignupPopup, { SignupPopupProps } from '../signup/SignupPopup';
+import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
 
 interface NavPopoutProps {
 	onClose: () => void;
@@ -84,7 +87,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconRight={'icon-chevron-right'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signup').catch(console.error);
+									popupController.open<SignupPopupProps>(SignupPopup, {});
 								}}
 								iconSize={7}
 								iconColor={'#ffffff'}
@@ -96,7 +99,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconRight={'icon-chevron-right'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/signin').catch(console.error);
+									popupController.open<SigninPopupProps>(SigninPopup, {});
 								}}
 								iconSize={7}
 								iconColor={'#ffffff'}

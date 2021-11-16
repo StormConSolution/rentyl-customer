@@ -9,6 +9,8 @@ import { StringUtils } from '../../utils/utils';
 import LabelSelect from '../labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { useRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
 
 export interface SelectOptionControls {
 	options: OptionType[];
@@ -33,27 +35,17 @@ export interface FilterBarProps {
 	initialPriceMin?: string;
 	initialPriceMax?: string;
 	className?: string;
-	display?: string;
 	control: RsFormControl;
 	options: OptionType[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
+	const [filter, setFilter] = useRecoilState(globalState.reservationFilters);
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
-			{props.regionSelect && (
-				<LabelSelect
-					title={'Regions'}
-					updateControl={props.regionSelect.updateControl}
-					options={props.regionSelect.options}
-					control={props.regionSelect.control}
-					isMulti
-					isSearchable
-				/>
-			)}
 			<DateRangeSelector
-				startDate={props.startDate}
-				endDate={props.endDate}
+				startDate={moment(filter.startDate)}
+				endDate={moment(filter.endDate)}
 				onDatesChange={props.onDatesChange}
 				monthsToShow={props.monthsToShow}
 				focusedInput={props.focusedInput}
@@ -105,7 +97,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				}, 500)}
 			/>
 			<LabelSelect
-				className={props.display}
 				title="Property Type"
 				control={props.control}
 				updateControl={(control) => {
