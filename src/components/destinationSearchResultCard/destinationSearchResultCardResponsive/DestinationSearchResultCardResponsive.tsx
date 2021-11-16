@@ -55,39 +55,41 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}, [accommodationList]);
 
 	function renderPricePerNight() {
-		return reservationFilters.redeemPoints && lowestPrice ? (
-			<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
-				<Label variant={'subtitle3'} className={'fromText'}>
-					from
-				</Label>
-				<Label variant={'h2'} className={'yellowText'}>
-					{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}
-				</Label>
-				<Label variant={'subtitle3'}>points per night</Label>
-			</Box>
-		) : !reservationFilters.redeemPoints && lowestPrice ? (
-			<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
-				<Label variant={'subtitle3'} className={'fromText'}>
-					from
-				</Label>
-				<Label variant={'h2'}>${StringUtils.formatMoney(lowestPrice.priceCents)}</Label>
-				<Label variant={'subtitle3'}>per night</Label>
-				<Label variant={'subtitle2'}>+taxes & fees</Label>
-			</Box>
-		) : (
-			<Box
-				display={'flex'}
-				alignItems={'flex-end'}
-				justifyContent={'flex-end'}
-				flexDirection={'column'}
-				textAlign={'center'}
-			>
-				<LabelButton look={'containedPrimary'} className={'yellow'} variant={'button'} label={'Contact Us'} />
-				<Label variant={'subtitle3'} paddingTop={'16px'}>
-					to inquire about booking
-				</Label>
-			</Box>
-		);
+		if (lowestPrice) {
+			return (
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<Label variant={'subtitle3'} className={'fromText'}>
+						from
+					</Label>
+					<Label variant={'h2'} className={'yellowText'}>
+						{reservationFilters.redeemPoints
+							? StringUtils.addCommasToNumber(lowestPrice.pricePoints)
+							: StringUtils.formatMoney(lowestPrice.priceCents)}
+					</Label>
+					<Label variant={'subtitle3'}>points per night</Label>
+				</Box>
+			);
+		} else {
+			return (
+				<Box
+					display={'flex'}
+					alignItems={'flex-end'}
+					justifyContent={'flex-end'}
+					flexDirection={'column'}
+					textAlign={'center'}
+				>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'16px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
+		}
 	}
 
 	function renderFeatures() {
