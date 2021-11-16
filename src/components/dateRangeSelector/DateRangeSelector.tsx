@@ -96,8 +96,6 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				numberOfMonths={props.monthsToShow}
 				verticalSpacing={0}
 				noBorder
-				startDatePlaceholderText={props.startDatePlaceholderText}
-				endDatePlaceholderText={props.endDatePlaceholderText}
 			/>
 		</Box>
 	);
