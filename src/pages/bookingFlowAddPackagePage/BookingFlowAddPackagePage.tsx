@@ -6,7 +6,7 @@ import router from '../../utils/router';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
-import { ObjectUtils, WebUtils } from '../../utils/utils';
+import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';

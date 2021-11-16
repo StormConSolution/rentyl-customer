@@ -13,6 +13,7 @@ export interface PriceObject {
 
 export interface DestinationSearchResultCardProps {
 	className?: string;
+	destinationId: number;
 	destinationName: string;
 	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
 	destinationDescription: string;
@@ -23,7 +24,6 @@ export interface DestinationSearchResultCardProps {
 	}[];
 	address: string;
 	picturePaths: string[];
-	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 }
@@ -50,22 +50,22 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 
 	return size === 'small' ? (
 		<DestinationSearchResultCardMobile
+			destinationId={props.destinationId}
 			destinationName={props.destinationName}
 			address={props.address}
 			picturePaths={props.picturePaths}
-			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
 			getLowestAccommodationPrice={getLowestAccommodationPrice}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
+			destinationId={props.destinationId}
 			destinationName={props.destinationName}
 			destinationDescription={props.destinationDescription}
 			destinationFeatures={props.destinationFeatures}
 			address={props.address}
 			picturePaths={props.picturePaths}
-			destinationDetailsPath={props.destinationDetailsPath}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
 			getLowestAccommodationPrice={getLowestAccommodationPrice}

@@ -9,17 +9,17 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
-import { ObjectUtils, StringUtils } from '../../../utils/utils';
+import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import { useEffect, useState } from 'react';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
+	destinationId: number;
 	destinationName: string;
 	address: string;
 	picturePaths: string[];
-	destinationDetailsPath: string;
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 	getLowestAccommodationPrice: () => {
@@ -66,6 +66,9 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 						className={'yellow'}
 						variant={'button'}
 						label={'Contact Us'}
+						onClick={(event) => {
+							event.stopPropagation();
+						}}
 					/>
 					<Label variant={'subtitle3'} paddingTop={'5px'}>
 						to inquire about booking
@@ -93,7 +96,11 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Icon
 						iconImg={'icon-info-outline'}
 						onClick={() => {
-							router.navigate(props.destinationDetailsPath).catch(console.error);
+							router
+								.navigate(
+									`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+								)
+								.catch(console.error);
 						}}
 						size={20}
 					/>
