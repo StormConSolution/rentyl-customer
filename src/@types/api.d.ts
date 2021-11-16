@@ -4,6 +4,17 @@ declare namespace Api {
 		isPrimary: 0 | 1;
 	}
 
+	export interface AvailabilityFilter {
+		startDate: Date | string;
+		endDate: Date | string;
+		adultCount: number;
+		childCount: number;
+		priceRangeMin?: number;
+		priceRangeMax?: number;
+		propertyTypeIds?: number[];
+		pagination: RedSky.PagePagination;
+	}
+
 	export interface Media extends Omit<Model.Media, 'storageDetails'> {}
 
 	export namespace Accommodation {
@@ -28,6 +39,7 @@ declare namespace Api {
 				status?: Model.AccommodationStatusType;
 				heroUrl?: string;
 				mediaIds?: MediaDetails[];
+				amenityIds?: number[];
 			}
 
 			export interface GetByPage {
@@ -36,17 +48,8 @@ declare namespace Api {
 				filter: string;
 			}
 
-			export interface Availability {
+			export interface Availability extends AvailabilityFilter {
 				destinationId: number;
-				startDate: Date | string;
-				endDate: Date | string;
-				adults: number;
-				children: number;
-				rateCode?: string;
-				priceRangeMin?: number;
-				priceRangeMax?: number;
-				propertyTypeIds?: number[];
-				pagination: RedSky.PagePagination;
 			}
 		}
 		export namespace Res {
@@ -60,10 +63,7 @@ declare namespace Api {
 				media: Media[];
 				layout: AccommodationLayout.Details[];
 				categories: AccommodationCategory.Details[];
-				features: Omit<
-					Feature.Details,
-					'brandId' | 'destinationId' | 'accommodationCategoryId' | 'accommodationId'
-				>[];
+				amenities: Model.Amenity[];
 			}
 
 			export interface GetByPage {
@@ -77,7 +77,7 @@ declare namespace Api {
 				propertyTypeId: number;
 				longDescription: string;
 				media: Media[]; //*All media for accommodation and accommodation categories*
-				featureIcons: string[]; //*Limit it to the first five*
+				amenities: Model.Amenity[];
 				maxSleeps: number;
 				maxOccupantCount: number;
 				roomCount: number;
@@ -278,6 +278,32 @@ declare namespace Api {
 			export interface CampaignDetails extends Omit<Model.Campaign, 'companyId'> {
 				campaignActionId: number;
 				actionCount: number;
+			}
+		}
+	}
+
+	export namespace Amenity {
+		export namespace Req {
+			export interface Create extends Omit<Model.Amenity, 'id'> {}
+
+			export interface Update extends Partial<Create> {
+				id: number;
+			}
+
+			export interface Delete {
+				id: number;
+			}
+		}
+
+		export namespace Res {
+			export interface Create extends Model.Amenity {}
+
+			export interface Update extends Create {}
+
+			export interface Get extends Create {}
+
+			export interface Delete {
+				id: number;
 			}
 		}
 	}
@@ -571,17 +597,8 @@ declare namespace Api {
 				filter: string;
 			}
 
-			export interface Availability {
-				startDate: Date | string;
-				endDate: Date | string;
-				adultCount: number;
-				childCount: number;
-				rateCode?: string;
-				priceRangeMin?: number;
-				priceRangeMax?: number;
-				propertyTypeIds?: number[];
+			export interface Availability extends AvailabilityFilter {
 				regionIds?: number[];
-				pagination: RedSky.PagePagination;
 			}
 		}
 		export namespace Res {
@@ -606,6 +623,7 @@ declare namespace Api {
 			export interface Update extends Details {}
 
 			export interface PropertyType extends Model.PropertyType {}
+
 			export interface DestinationRegion extends Model.Region {}
 
 			export interface Details {
@@ -631,18 +649,27 @@ declare namespace Api {
 				reviewCount: number;
 				propertyTypes: PropertyType[];
 				media: Media[];
-				features: Omit<
-					Feature.Details,
-					'brandId' | 'accommodationId' | 'accommodationCategoryId' | 'destinationId'
-				>[];
+				experiences: {
+					id: number;
+					experienceId: number;
+					title: string;
+					icon: string;
+					description: string;
+					isHighlighted: 0 | 1;
+					media: Media[];
+				}[];
 				packages: UpsellPackage.Details[];
 				accommodations: {
 					id: number;
 					name: string;
+					propertyTypeId: number;
+					amenities: Model.Amenity[];
+					roomCount: number;
+					bedDetails: { [key: string]: string };
 					shortDescription: string;
 					longDescription: string;
+					priceCents: string;
 					maxOccupantCount: number;
-					status: Model.AccommodationStatusType;
 				}[];
 				accommodationTypes: {
 					id: number;
@@ -668,7 +695,7 @@ declare namespace Api {
 					rateCode: string;
 					minStay: number;
 				}[];
-				features: {
+				amenities: {
 					id: number;
 					title: string;
 					icon: string;
@@ -692,10 +719,13 @@ declare namespace Api {
 				reviewRating: number;
 				reviewCount: number;
 				media: Media[];
-				features: {
+				experiences: {
 					id: number;
 					title: string;
 					icon: string;
+					description: string;
+					isHighlighted: 0 | 1;
+					media: Media[];
 				}[];
 				accommodationTypes: {
 					id: number;
@@ -704,16 +734,46 @@ declare namespace Api {
 				accommodations: Accommodation[];
 			}
 
-			export interface GetByPageAvailability {
-				data: Availability[];
-				total: number;
-			}
-
 			export interface AccommodationType extends Model.AccommodationType {}
 
 			export interface GetByPage {
 				data: Details[];
 				total: number;
+			}
+		}
+	}
+
+	export namespace Experience {
+		export namespace Req {
+			export interface Create extends Omit<Model.Experience, 'id'> {}
+
+			export interface CreateDestinationExperience {
+				destinationId: number;
+				experienceId: number;
+				description: string;
+				isHighlighted: 0 | 1;
+				mediaIds: MediaDetails[];
+			}
+
+			export interface Update extends Partial<Create> {
+				id: number;
+			}
+
+			export interface Delete {
+				id?: number;
+				ids?: number[];
+			}
+		}
+
+		export namespace Res {
+			export interface Create extends Model.Experience {}
+
+			export interface Update extends Create {}
+
+			export interface Get extends Create {}
+
+			export interface Delete {
+				id: number;
 			}
 		}
 	}
@@ -873,7 +933,9 @@ declare namespace Api {
 				name: string;
 				pointCost: number;
 			}
+
 			interface Create extends Get {}
+
 			interface Update extends Get {}
 
 			interface PaymentMethodDetail {
@@ -987,6 +1049,7 @@ declare namespace Api {
 			export interface Get {}
 
 			export interface Create extends Omit<Model.Region, 'id' | 'isActive'> {}
+
 			export interface Update extends Partial<Model.Region> {
 				id: number;
 			}
@@ -994,6 +1057,7 @@ declare namespace Api {
 
 		export namespace Res {
 			export interface Get extends Model.Region {}
+
 			export interface Detail extends Model.Region {}
 		}
 	}
@@ -1087,18 +1151,10 @@ declare namespace Api {
 		}
 
 		export namespace Req {
-			export interface Availability {
-				startDate: Date | string;
-				endDate: Date | string;
-				adults: number;
+			export interface Availability extends AvailabilityFilter {
 				destinationId?: number;
-				children?: number;
 				currencyCode?: string;
 				roomClass?: 'adacompliance';
-				priceRangeMin?: number;
-				priceRangeMax?: number;
-				page?: number;
-				limit?: number;
 			}
 
 			export interface Verification {
@@ -1370,8 +1426,11 @@ declare namespace Api {
 		}
 		export namespace Res {
 			export interface Get extends Details {}
+
 			export interface Create extends Get {}
+
 			export interface Update extends Get {}
+
 			export interface ForDestination {
 				name: string;
 				description: string;

@@ -10,14 +10,16 @@ export interface GuestCounterProps {
 	title: string;
 	control: RsFormControl;
 	updateControl: (control: RsFormControl) => void;
+	labelMarginRight: number;
 	className?: string;
-	labelMarginRight?: number;
 }
 
 const Counter: React.FC<GuestCounterProps> = (props) => {
 	return (
 		<Box className={`rsCounter${props.className ? ` ${props.className}` : ''}`}>
-			<Label variant={'body1'}>{props.title}</Label>
+			<Label variant={'subtitle1'} mr={props.labelMarginRight}>
+				{props.title}
+			</Label>
 			<Box className={'valueChanger'}>
 				<Icon
 					iconImg={'icon-minus'}

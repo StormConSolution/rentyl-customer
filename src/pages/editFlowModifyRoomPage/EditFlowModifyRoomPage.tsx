@@ -6,7 +6,7 @@ import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import serviceFactory from '../../services/serviceFactory';
-import { DateUtils, formatFilterDateForServer, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -25,7 +25,6 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 
@@ -38,68 +37,38 @@ const EditFlowModifyRoomPage = () => {
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const perPage = 5;
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
+	const [options, setOptions] = useState<OptionType[]>([]);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
-	const [propertyType, setPropertyType] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', [], [])])
-	);
-	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
-		startDate: moment(reservation?.arrivalDate).format('YYYY-MM-DD'),
-		endDate: !!reservation
-			? moment(reservation.departureDate).format('YYYY-MM-DD')
-			: moment().add(2, 'day').format('YYYY-MM-DD'),
-		adults: reservation?.adultCount || 1,
-		children: reservation?.childCount || 0,
-		pagination: { page: 1, perPage: 5 },
-		destinationId: params.destinationId,
-		rateCode: rateCode || ''
-	});
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
 			try {
 				let res = await reservationsService.get(id);
 				setReservation(res);
-				updateSearchQueryObj('rateCode', res.rateCode);
-				onDatesChange(
-					moment(DateUtils.displayUserDate(res.arrivalDate)),
-					moment(DateUtils.displayUserDate(res.departureDate))
-				);
+				const newSearchQueryObj = { ...reservationFilters };
+				newSearchQueryObj.startDate = res.arrivalDate;
+				newSearchQueryObj.endDate = res.departureDate;
+				setReservationFilters(newSearchQueryObj);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
 				router.navigate('/reservations').catch(console.error);
 			}
 		}
 		getReservationData(params.reservationId).catch(console.error);
-	}, []);
+	}, [params.reservationId]);
 
 	useEffect(() => {
 		async function getReservations() {
-			let newSearchQueryObj = { ...searchQueryObj };
-			if (
-				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
-				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
-			) {
-				newSearchQueryObj.priceRangeMax *= 100;
-				newSearchQueryObj.priceRangeMin *= 100;
-			}
-			if (!rateCode) {
-				delete newSearchQueryObj.rateCode;
-			} else {
-				newSearchQueryObj.rateCode = rateCode;
-			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(newSearchQueryObj);
+				let res = await accommodationService.availability(params.destinationId, reservationFilters);
 				setAvailabilityTotal(res.total || 0);
 				setDestinations(res.data);
 				popupController.close(SpinningLoaderPopup);
@@ -112,7 +81,7 @@ const EditFlowModifyRoomPage = () => {
 			}
 		}
 		getReservations().catch(console.error);
-	}, [searchQueryObj]);
+	}, [reservationFilters, params.destinationId]);
 
 	useEffect(() => {
 		async function getAllPropertyTypes() {
@@ -136,46 +105,8 @@ const EditFlowModifyRoomPage = () => {
 		});
 	}
 
-	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		setStartDateControl(startDate);
-		setEndDateControl(endDate);
-		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
-		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
-	}
-
-	function updateSearchQueryObj(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adults'
-			| 'children'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'rateCode'
-			| 'propertyTypeIds',
-		value: any
-	) {
-		if (key === 'adults' && value === 0)
-			throw rsToastify.error('There must be at least one adult.', 'Missing or Incorrect Information');
-		if (key === 'adults' && isNaN(value))
-			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
-		if (key === 'children' && isNaN(value))
-			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
-		if (key === 'priceRangeMin' && isNaN(value))
-			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
-		if (key === 'priceRangeMax' && isNaN(value))
-			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
-		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined || value.length <= 0) delete createSearchQueryObj[key];
-			else createSearchQueryObj[key] = value;
-			return createSearchQueryObj;
-		});
-	}
-
 	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setSearchQueryObj((prev) => {
+		setReservationFilters((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['adults'] = adults;
 			if (priceRangeMax !== '') {
@@ -201,12 +132,11 @@ const EditFlowModifyRoomPage = () => {
 				paymentMethodId: reservation.paymentMethod?.id,
 				guest: reservation.guest,
 				accommodationId: id,
-				adultCount: Number(searchQueryObj.adults),
-				childCount: Number(searchQueryObj.children),
-				arrivalDate: moment(searchQueryObj.startDate).format('YYYY-MM-DD'),
-				departureDate: moment(searchQueryObj.endDate).format('YYYY-MM-DD'),
-				numberOfAccommodations: 1,
-				rateCode: rateCode || searchQueryObj.rateCode
+				adultCount: reservationFilters.adultCount,
+				childCount: reservationFilters.childCount,
+				arrivalDate: moment(reservationFilters.startDate).format('YYYY-MM-DD'),
+				departureDate: moment(reservationFilters.endDate).format('YYYY-MM-DD'),
+				numberOfAccommodations: 1
 			};
 			try {
 				await reservationsService.updateReservation(stay);
@@ -237,7 +167,7 @@ const EditFlowModifyRoomPage = () => {
 						description={destination.longDescription}
 						ratePerNightInCents={destination.costPerNightCents}
 						pointsRatePerNight={destination.pointsPerNight}
-						amenityIconNames={destination.featureIcons}
+						amenityIconNames={destination.amenities.map((item) => item.title)}
 						pointsEarnable={destination.pointsEarned}
 						hideButtons={true}
 						roomStats={[
@@ -355,46 +285,7 @@ const EditFlowModifyRoomPage = () => {
 					/>
 				) : (
 					<>
-						<FilterBar
-							className={'filterBar'}
-							startDate={startDateControl}
-							endDate={endDateControl}
-							onDatesChange={onDatesChange}
-							focusedInput={focusedInput}
-							onFocusChange={setFocusedInput}
-							monthsToShow={2}
-							onChangeAdults={(value) => {
-								if (value === '') value = 0;
-								updateSearchQueryObj('adults', value);
-							}}
-							onChangeChildren={(value) => {
-								if (value !== '') updateSearchQueryObj('children', value);
-							}}
-							onChangePriceMin={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMin', value);
-								}
-							}}
-							onChangePriceMax={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMax', value);
-								}
-							}}
-							onChangePropertyType={(control) => {
-								setPropertyType(propertyType.clone().update(control));
-								updateSearchQueryObj('propertyTypeIds', control.value);
-							}}
-							adultsInitialInput={searchQueryObj.adults}
-							childrenInitialInput={searchQueryObj.children}
-							initialPriceMax={
-								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
-							}
-							initialPriceMin={
-								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
-							}
-							options={options}
-							control={propertyType.get('propertyType')}
-						/>
+						<FilterBar destinationId={params.destinationId} />
 					</>
 				)}
 				<Box
@@ -411,11 +302,14 @@ const EditFlowModifyRoomPage = () => {
 					)}
 				</Box>
 				<PaginationButtons
-					selectedRowsPerPage={perPage}
+					selectedRowsPerPage={5}
 					currentPageNumber={page}
 					setSelectedPage={(newPage) => {
-						updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
 						setPage(newPage);
+						setReservationFilters({
+							...reservationFilters,
+							pagination: { page: newPage, perPage: 5 }
+						});
 					}}
 					total={availabilityTotal}
 				/>

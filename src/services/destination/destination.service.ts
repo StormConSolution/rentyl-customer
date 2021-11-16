@@ -38,8 +38,7 @@ export default class DestinationService extends Service {
 		return res.data.data;
 	}
 
-	// TODO: Waiting for backend changes for this call, temporarily hard coding a list for UI Testing
-	async getAllExperiences() {
+	async getDummyExperienceTypes() {
 		return [
 			{ label: 'Golf', value: 1 },
 			{ label: 'Waterpark', value: 2 },
@@ -54,8 +53,7 @@ export default class DestinationService extends Service {
 		];
 	}
 
-	// TODO: Waiting for backend changes for this call, temporarily hard coding a list for UI Testing
-	async getAllInUnitAmenities() {
+	async getDummyInUnitAmenities() {
 		return [
 			{ label: 'Air Conditioning', value: 1 },
 			{ label: 'Washer / Dryer', value: 2 },
@@ -69,6 +67,18 @@ export default class DestinationService extends Service {
 			{ label: 'First Floor Bedroom', value: 10 },
 			{ label: 'Pet Friendly', value: 11 },
 			{ label: 'Free Parking', value: 12 }
+		];
+	}
+
+	async getDummyViewOptions() {
+		return [
+			{ label: 'Golf', value: 1 },
+			{ label: 'Mountain', value: 2 },
+			{ label: 'Pool', value: 3 },
+			{ label: 'City', value: 4 },
+			{ label: 'Ocean', value: 5 },
+			{ label: 'Lake', value: 6 },
+			{ label: 'Garden', value: 7 }
 		];
 	}
 }

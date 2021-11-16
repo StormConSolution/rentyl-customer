@@ -66,6 +66,11 @@ html {
 		line-height: 22px;
 		font-weight: $light;
 	}
+	&.body5 {
+		font-size: 18px;
+		line-height: 24px;
+		font-weight: $regular;
+	}
 	&.caption1 {
 		font-size: 14px;
 		line-height: 16px;
@@ -109,11 +114,6 @@ html {
 		line-height: 20px;
 		font-weight: $semiBold;
 		font-style: italic;
-	}
-	&.custom1 {
-		font-size: 22px;
-		line-height: 37px;
-		font-weight: $regular;
 	}
 	&.error {
 		font-size: 19px;

@@ -108,6 +108,11 @@ declare namespace Model {
 		size: string; // of type {max: number; min: number; units: string}
 	}
 
+	export interface AccommodationAmenity {
+		accommodationId: number;
+		amenityId: number;
+	}
+
 	export interface AccommodationBedDetails {
 		type: string;
 		isPrimary: boolean | number;
@@ -166,6 +171,12 @@ declare namespace Model {
 		isActive: 0 | 1;
 		type: string;
 		pointValue: number;
+	}
+
+	export interface Amenity {
+		id: number;
+		title: string;
+		icon: string;
 	}
 
 	export interface Brand {
@@ -317,6 +328,14 @@ declare namespace Model {
 		isActive: 0 | 1;
 	}
 
+	export interface DestinationExperience {
+		id: number;
+		destinationId: number;
+		experienceId: number;
+		description: string;
+		isHighlighted: 0 | 1;
+	}
+
 	export type DestinationPolicy = {
 		destinationId: number;
 		companyId: number;
@@ -362,6 +381,12 @@ declare namespace Model {
 		subject: string;
 		design: string;
 		html: string;
+	}
+
+	export interface Experience {
+		id: number;
+		title: string;
+		icon: string;
 	}
 
 	export interface Feature {
@@ -430,6 +455,7 @@ declare namespace Model {
 		rewardId: number;
 		rewardCategoryId: number;
 		tierId: number;
+		destinationExperienceId: number;
 	}
 
 	export interface OrderProduct {

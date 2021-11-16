@@ -22,6 +22,8 @@ import Switch from '@bit/redsky.framework.rs.switch';
 import LabelCheckboxV2 from '../../components/labelCheckbox/LabelCheckboxV2';
 import Slider, { SliderMode } from '@bit/redsky.framework.rs.slider';
 import LabelInputV2 from '../../components/labelInput/LabelInputV2';
+import globalState from '../../state/globalState';
+import { useRecoilState } from 'recoil';
 
 export interface FilterReservationPopupProps extends PopupProps {
 	searchRegion?: boolean;
@@ -41,17 +43,19 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		{ key: 'priceRangeMin', default: '', type: 'string', alias: 'priceRangeMin' },
 		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
-
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const regionService = serviceFactory.get<RegionService>('RegionService');
 	const [sortBySelection, setSortBySelection] = useState<number>();
 	const [redeemCodeToggle, setRedeemCodeToggle] = useState<boolean>(false);
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [isValid, setIsValid] = useState<boolean>(true);
-	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const regionService = serviceFactory.get<RegionService>('RegionService');
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
+			new RsFormControl('propertyTypeIds', reservationFilters.propertyTypeIds || [], []),
 			new RsFormControl('adultCount', params.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
@@ -69,18 +73,15 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 
-	//TODO: Remove once service call has been created
 	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
 	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
-
-	//TODO: Remove once service call has been created
 	useEffect(() => {
 		async function getInUnitAmenities() {
-			const array = await destinationService.getAllInUnitAmenities();
+			const array = await destinationService.getDummyInUnitAmenities();
 			setInUnitAmenities(array);
 		}
 		async function getExperiences() {
-			const array = await destinationService.getAllExperiences();
+			const array = await destinationService.getDummyExperienceTypes();
 			setResortExperiences(array);
 		}
 		getInUnitAmenities().catch(console.error);
@@ -104,15 +105,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		getFilterOptions().catch(console.error);
 	}, []);
 
-	function setPropertyTypeIds() {
-		if (params.propertyTypeIds.length > 0) {
-			let propertyTypeArray = params.propertyTypeIds.split(',');
-			return propertyTypeArray.map((item) => {
-				return parseInt(item);
-			});
-		}
-		return [];
-	}
+	useEffect(() => {
+		WebUtils.updateUrlParams(reservationFilters);
+	}, [reservationFilters]);
 
 	function formatOptions(options: any[]) {
 		return options.map((value) => {
@@ -131,9 +126,20 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		setIsValid(isFormValid);
 		setFilterForm(filterForm.clone());
 	}
-
 	function saveFilter() {
 		let filterObject: Misc.FilterFormPopupOptions = filterForm.toModel();
+		setReservationFilters((prev) => {
+			const form = filterForm.toModel<{
+				adultCount: number;
+				priceRangeMin: number;
+				priceRangeMax: number;
+				accommodationType: number[];
+				bedroomCount: number;
+				bathroomCount: number;
+				propertyTypeIds: number[];
+			}>();
+			return { ...prev, ...form };
+		});
 		props.onClickApply(
 			filterObject.adultCount,
 			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
@@ -166,33 +172,43 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	}
 
 	function renderResortExperiences() {
-		return resortExperiences.map((item) => (
-			<LabelCheckboxV2
-				className="listCheckboxes"
-				key={item.value}
-				value={item.value}
-				text={item.label}
-				onSelect={() => console.log('selected')}
-				isChecked={accommodationToggle}
-				onDeselect={() => console.log('Deselected')}
-				isDisabled={true}
-			/>
-		));
+		return (
+			<>
+				{resortExperiences.map((item) => (
+					<Box marginY={10}>
+						<LabelCheckboxV2
+							key={item.value}
+							value={item.value}
+							text={item.label}
+							onSelect={() => console.log('selected')}
+							isChecked={accommodationToggle}
+							onDeselect={() => console.log('Deselected')}
+							isDisabled={true}
+						/>
+					</Box>
+				))}
+			</>
+		);
 	}
 
 	function renderInUnitAmenities() {
-		return inUnitAmenities.map((item) => (
-			<LabelCheckboxV2
-				className="listCheckboxes"
-				key={item.value}
-				value={item.value}
-				text={item.label}
-				onSelect={() => console.log('selected')}
-				isChecked={accommodationToggle}
-				onDeselect={() => console.log('Deselected')}
-				isDisabled={true}
-			/>
-		));
+		return (
+			<>
+				{inUnitAmenities.map((item) => (
+					<Box marginY={10}>
+						<LabelCheckboxV2
+							key={item.value}
+							value={item.value}
+							text={item.label}
+							onSelect={() => console.log('selected')}
+							isChecked={accommodationToggle}
+							onDeselect={() => console.log('Deselected')}
+							isDisabled={true}
+						/>
+					</Box>
+				))}
+			</>
+		);
 	}
 
 	return (
@@ -244,6 +260,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={1}
+								labelMarginRight={5}
 							/>
 							<Counter
 								title="Bedrooms"
@@ -251,6 +268,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={1}
+								labelMarginRight={5}
 							/>
 							<Counter
 								title="Bathrooms"
@@ -258,6 +276,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={1}
+								labelMarginRight={5}
 							/>
 						</div>
 						<div className="formDiv" id="redeemPointsDiv">

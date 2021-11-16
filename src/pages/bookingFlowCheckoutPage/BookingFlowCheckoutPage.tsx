@@ -28,8 +28,6 @@ import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
 import globalState from '../../state/globalState';
-import { Simulate } from 'react-dom/test-utils';
-import load = Simulate.load;
 
 let existingCardId = 0;
 
@@ -307,7 +305,7 @@ const BookingFlowCheckoutPage = () => {
 					.catch(console.error);
 			} catch (e) {
 				rsToastify.error(
-					WebUtils.getRsErrorMessage(e.message, 'An error occurred, unable to book your reservation.'),
+					WebUtils.getRsErrorMessage(e, 'An error occurred, unable to book your reservation.'),
 					'Server Error!',
 					{ autoClose: false, position: 'top-center' }
 				);

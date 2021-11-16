@@ -5,9 +5,9 @@
 
 	.rsDropdownBtn {
 		border: 1px solid theme-var($secondaryTextColor);
-		background-color: theme-var($primaryBackgroundColor);
 		padding: 5px 10px;
 		border-radius: 10px;
+		background: #fff;
 
 		.labelContainer {
 			.filterByLabel {

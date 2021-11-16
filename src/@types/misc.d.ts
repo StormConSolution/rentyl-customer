@@ -93,21 +93,16 @@ declare namespace Misc {
 		isoCode: string;
 	}
 
-	export interface ReservationFilters {
-		startDate: Date | string;
-		endDate: Date | string;
-		adultCount: number;
+	export interface ReservationFilters extends Api.AvailabilityFilter {
 		redeemPoints: boolean;
 		sortBy: string;
-		location?: number;
+		regionIds?: number[];
 		inUnitAmenities?: number[];
 		view?: number[];
-		groupAmenities?: number[];
-		minPrice?: number;
-		maxPrice?: number;
-		accommodations?: number[];
 		bedrooms?: number;
 		bathrooms?: number;
 		resortExperiences?: number[];
+		destinationId?: number;
+		accommodationId?: number;
 	}
 }

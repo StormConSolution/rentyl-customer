@@ -2,7 +2,7 @@ import * as React from 'react';
 import './NavDrawer.scss';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useEffect, useRef } from 'react';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import LabelLink from '../../components/labelLink/LabelLink';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
@@ -11,9 +11,8 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import { NavData } from './NavData';
-import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
-import SignupPopup, { SignupPopupProps } from '../signup/SignupPopup';
 import SigninPopup, { SigninPopupProps } from '../signin/SigninPopup';
+import SignupPopup, { SignupPopupProps } from '../signup/SignupPopup';
 
 interface NavPopoutProps {
 	onClose: () => void;
