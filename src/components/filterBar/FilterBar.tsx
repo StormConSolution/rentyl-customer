@@ -8,7 +8,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '../../utils/utils';
 import LabelSelect from '../labelSelect/LabelSelect';
 import { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { RsFormControl } from '@bit/redsky.framework.rs.form';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import Switch from '@bit/redsky.framework.rs.switch';
@@ -42,12 +42,12 @@ export interface FilterBarProps {
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
-	const [filter, setFilter] = useRecoilState(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState(globalState.reservationFilters);
 	return (
 		<Box className={`rsFilterBar ${props.className || ''}`}>
 			<DateRangeSelector
-				startDate={moment(filter.startDate)}
-				endDate={moment(filter.endDate)}
+				startDate={moment(reservationFilters.startDate)}
+				endDate={moment(reservationFilters.endDate)}
 				onDatesChange={props.onDatesChange}
 				monthsToShow={props.monthsToShow}
 				focusedInput={props.focusedInput}
