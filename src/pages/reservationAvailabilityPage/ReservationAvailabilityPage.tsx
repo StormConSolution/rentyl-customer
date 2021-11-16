@@ -31,6 +31,7 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
+import PropertyType = Api.Destination.Res.PropertyType;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -68,8 +69,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
-	const [filterbarForm, setFilterBarForm] = useState<RsFormGroup>(
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
+	const [filterBarForm, setFilterBarForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
 			new RsFormControl('adultCount', params.adultCount || 1, [
@@ -93,6 +94,40 @@ const ReservationAvailabilityPage: React.FC = () => {
 		childCount: params.childCount || 0,
 		pagination: { page: 1, perPage: 5 }
 	});
+
+	// TODO: Just a temporary placeholder list objects
+	const [testViewOptions, setTestViewOptions] = useState<OptionType[]>([]);
+	const [testInUnitAmenities, setTestInUnitAmenities] = useState<OptionType[]>([]);
+	const [testResortExperiences, setTestResortExperiences] = useState<OptionType[]>([]);
+
+	// TODO: Remove once api calls are working and responding the correct data
+	useEffect(() => {
+		async function getViewOptions() {
+			let res = await destinationService.getDummyViewOptions();
+			setTestViewOptions(res);
+		}
+		getViewOptions().catch(console.error);
+
+		async function getResortExperiences() {
+			let res = await destinationService.getDummyExperienceTypes();
+			setTestResortExperiences(res);
+		}
+		getResortExperiences().catch(console.error);
+
+		async function getInUnitAmenities() {
+			let res = await destinationService.getDummyInUnitAmenities();
+			setTestInUnitAmenities(res);
+		}
+		getInUnitAmenities().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getAccommodations() {
+			const list = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(list);
+		}
+		getAccommodations().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		/**
@@ -174,14 +209,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
 			control.value = newValue;
 		}
-		filterbarForm.update(control);
-		let isFormValid = await filterbarForm.isValid();
+		filterBarForm.update(control);
+		let isFormValid = await filterBarForm.isValid();
 		setValidCode(isFormValid);
-		setFilterBarForm(filterbarForm.clone());
+		setFilterBarForm(filterBarForm.clone());
 	}
 
 	function saveFilter() {
-		let filterObject: Misc.FilterFormPopupOptions = filterbarForm.toModel();
+		let filterObject: Misc.FilterFormPopupOptions = filterBarForm.toModel();
 		popupSearch(
 			filterObject.adultCount,
 			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
@@ -217,9 +252,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 		if (key === 'adultCount' && isNaN(value)) {
 			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
-		}
-		if (key === 'childCount' && isNaN(value)) {
-			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
 		}
 		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
 			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
@@ -404,6 +436,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		const accommodationsByPropertyType = accommodationsList.filter(
 			(accommodation) => propertyType.id === 0 || accommodation.propertyTypeId === propertyType.id
 		);
+
 		return accommodationsByPropertyType;
 	}
 
@@ -440,13 +473,16 @@ const ReservationAvailabilityPage: React.FC = () => {
 					{size !== 'small' ? (
 						<>
 							<FilterBarV2
-								filterForm={filterbarForm}
+								filterForm={filterBarForm}
 								updateFilterForm={updateFilterForm}
 								destinationService={destinationService}
 								accommodationToggle={accommodationToggle}
-								accommodationList={propertyTypeOptions}
+								accommodationOptions={propertyTypeOptions}
 								redeemCodeToggle={false}
 								onApplyClick={saveFilter}
+								resortExperiencesOptions={testResortExperiences}
+								viewOptions={testViewOptions}
+								inUnitAmenitiesOptions={testInUnitAmenities}
 							/>
 							<Label variant={'body1'} color={'red'}>
 								{errorMessage}

@@ -4,7 +4,6 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import FilterBarDropDown from '../filterBarDropDown/FilterBarDropDown';
 import LabelCheckboxV2 from '../labelCheckbox/LabelCheckboxV2';
 import { useState } from 'react';
-import { OptionType } from '@bit/redsky.framework.rs.select';
 import Slider, { SliderMode } from '@bit/redsky.framework.rs.slider';
 import LabelInputV2 from '../labelInput/LabelInputV2';
 import Counter from '../counter/Counter';
@@ -13,44 +12,77 @@ import Label from '@bit/redsky.framework.rs.label';
 import Switch from '@bit/redsky.framework.rs.switch';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import DestinationService from '../../services/destination/destination.service';
+import PropertyType = Model.PropertyType;
+import OptionType = Misc.OptionType;
 
 interface FilterBarV2Props {
 	onApplyClick: () => void;
-	accommodationList: OptionType[];
 	filterForm: RsFormGroup;
 	updateFilterForm: (control: RsFormControl | undefined) => void;
 	destinationService: DestinationService;
 	accommodationToggle: boolean;
 	redeemCodeToggle: boolean;
+	accommodationOptions: PropertyType[];
+	resortExperiencesOptions: OptionType[];
+	inUnitAmenitiesOptions: OptionType[];
+	viewOptions: OptionType[];
 }
 
 const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 	const [sortBySelection, setSortBySelection] = useState<number>();
 
 	function renderAccommodationList() {
-		if (!props.accommodationList) return;
-		return props.accommodationList.map((item) => (
+		if (!props.accommodationOptions) return;
+		return props.accommodationOptions.map((item) => (
 			<LabelCheckboxV2
-				key={item.value}
-				value={item.value}
-				text={item.label}
+				key={item.name}
+				value={item.id}
+				text={item.name}
 				onSelect={() => {
 					let tempControl = props.filterForm.get('accommodationType');
-					tempControl.value = [...(tempControl.value as number[]), item.value as number];
+					tempControl.value = [...(tempControl.value as number[]), item.id as number];
 					props.updateFilterForm(tempControl);
 				}}
-				isChecked={(props.filterForm.get('accommodationType').value as number[]).includes(item.value as number)}
+				isChecked={(props.filterForm.get('accommodationType').value as number[]).includes(item.id as number)}
 				onDeselect={() => {
 					props.filterForm.get('accommodationType').value = (props.filterForm.get('accommodationType')
-						.value as number[]).filter((type) => type !== item.value);
+						.value as number[]).filter((type) => type !== item.id);
 					props.updateFilterForm(props.filterForm.get('accommodationType'));
 				}}
 			/>
 		));
 	}
 
-	function renderResortExperiences() {
-		return props.destinationService.resortExperiences.map((item) => (
+	function renderResortExperiencesOptionsList() {
+		return props.resortExperiencesOptions.map((item) => (
+			<LabelCheckboxV2
+				key={item.value}
+				value={item.value}
+				text={item.label}
+				onSelect={() => console.log('selected')}
+				isChecked={props.accommodationToggle}
+				onDeselect={() => console.log('Deselected')}
+				isDisabled={true}
+			/>
+		));
+	}
+
+	function renderViewOptionsList() {
+		return props.viewOptions.map((item) => (
+			<LabelCheckboxV2
+				key={item.value}
+				value={item.value}
+				text={item.label}
+				onSelect={() => console.log('selected')}
+				isChecked={props.accommodationToggle}
+				onDeselect={() => console.log('Deselected')}
+				isDisabled={true}
+			/>
+		));
+	}
+
+	function renderInUnitAmenitiesOptionsList() {
+		return props.inUnitAmenitiesOptions.map((item) => (
 			<LabelCheckboxV2
 				key={item.value}
 				value={item.value}
@@ -73,6 +105,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onClearCallback={() => console.log('Clear Form')}
 							title="Price"
 							className="dropdownMarginX"
+							dropdownContentClassName="destinationFilterDropdown"
 						>
 							<Slider
 								range={[1, 1000]}
@@ -112,6 +145,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onClearCallback={() => console.log('Clear Form')}
 							title="Accommodation"
 							className="dropdownMarginX"
+							dropdownContentClassName="destinationFilterDropdown"
 						>
 							{renderAccommodationList()}
 						</FilterBarDropDown>
@@ -122,6 +156,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onClearCallback={() => console.log('Clear Form')}
 							title="Bedrooms"
 							className="dropdownMarginX"
+							dropdownContentClassName="destinationFilterDropdown"
 						>
 							<Counter
 								title="Bedrooms"
@@ -147,8 +182,9 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onClearCallback={() => console.log('Clear Form')}
 							title="Resort Experiences"
 							className="dropdownMarginX"
+							dropdownContentClassName="destinationFilterDropdown"
 						>
-							{renderResortExperiences()}
+							{renderResortExperiencesOptionsList()}
 						</FilterBarDropDown>
 					</Box>
 					<Box id="otherFilter" className="filterCol">
@@ -157,8 +193,16 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onClearCallback={() => console.log('Clear Form')}
 							title="Other Filters"
 							className="dropdownMarginX"
+							dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
 						>
-							{renderResortExperiences()}
+							<Label variant="body1" paddingTop={10} paddingLeft={10}>
+								In Unit Amenities
+							</Label>
+							<Box className="inUnitAmenitiesWrapper">{renderInUnitAmenitiesOptionsList()}</Box>
+							<Label variant="body1" paddingTop={10} paddingLeft={10}>
+								View
+							</Label>
+							<Box className="viewOptionsWrapper">{renderViewOptionsList()}</Box>
 						</FilterBarDropDown>
 					</Box>
 				</Box>

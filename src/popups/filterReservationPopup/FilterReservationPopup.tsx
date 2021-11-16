@@ -69,6 +69,22 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 
+	const [testInUnitAmenities, setTestInUnitAmenities] = useState<OptionType[]>([]);
+	const [testResortExperiences, setTestResortExperiences] = useState<OptionType[]>([]);
+	useEffect(() => {
+		async function getResortExperiences() {
+			let res = await destinationService.getDummyExperienceTypes();
+			setTestResortExperiences(res);
+		}
+		getResortExperiences().catch(console.error);
+
+		async function getInUnitAmenities() {
+			let res = await destinationService.getDummyInUnitAmenities();
+			setTestInUnitAmenities(res);
+		}
+		getInUnitAmenities().catch(console.error);
+	}, []);
+
 	useEffect(() => {
 		async function getFilterOptions() {
 			try {
@@ -157,7 +173,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	function renderResortExperiences() {
 		return (
 			<>
-				{destinationService.resortExperiences.map((item, idx) => (
+				{testResortExperiences.map((item) => (
 					<Box marginY={10}>
 						<LabelCheckboxV2
 							key={item.value}
@@ -177,7 +193,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	function renderInUnitAmenities() {
 		return (
 			<>
-				{destinationService.inUnitAmenities.map((item, idx) => (
+				{testInUnitAmenities.map((item) => (
 					<Box marginY={10}>
 						<LabelCheckboxV2
 							key={item.value}

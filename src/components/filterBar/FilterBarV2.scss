@@ -42,6 +42,26 @@
 			.filterCounter {
 				padding-bottom: 15px;
 			}
+
+			.inUnitAmenitiesCheckboxContentBody {
+				min-width: 500px;
+			}
+
+			.inUnitAmenitiesWrapper {
+				border-bottom: 1px solid theme-var($greyLineColor);
+				padding: 15px;
+				height: 200px;
+				display: flex;
+				flex-wrap: wrap;
+				flex-direction: column;
+			}
+			.viewOptionsWrapper {
+				padding: 10px;
+				height: 130px;
+				display: flex;
+				flex-wrap: wrap;
+				flex-direction: column;
+			}
 		}
 	}
 	.smallCol {
@@ -52,13 +72,17 @@
 			flex: 1 0 0%;
 		}
 	}
-	.dropdownMarginX {
-		margin: 10px 12px;
-	}
 
 	.subRow {
 		display: flex;
 		flex-wrap: wrap;
+
+		.dropdownMarginX {
+			margin: 10px 12px;
+		}
+		.destinationFilterDropdown {
+			padding: 15px;
+		}
 	}
 	.rightBorder {
 		border-right: 1px solid theme-var($secondaryTextColor);

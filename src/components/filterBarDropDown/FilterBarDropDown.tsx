@@ -11,6 +11,7 @@ interface FilterBarDropDownProps {
 	onChangeCallBack: () => void;
 	onClearCallback: () => void;
 	className?: string;
+	dropdownContentClassName?: string;
 }
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
@@ -41,7 +42,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				</Box>
 			</Box>
 			{toggleContent && (
-				<Box className="DropdownContent">
+				<Box className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
 					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
 						<Box
