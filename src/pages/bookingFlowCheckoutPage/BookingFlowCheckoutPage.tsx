@@ -305,7 +305,7 @@ const BookingFlowCheckoutPage = () => {
 					.catch(console.error);
 			} catch (e) {
 				rsToastify.error(
-					WebUtils.getRsErrorMessage(e.message, 'An error occurred, unable to book your reservation.'),
+					WebUtils.getRsErrorMessage(e, 'An error occurred, unable to book your reservation.'),
 					'Server Error!',
 					{ autoClose: false, position: 'top-center' }
 				);

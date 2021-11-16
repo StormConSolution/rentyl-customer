@@ -1,0 +1,47 @@
+@import '../../../themes/themes';
+.rsTopSearchBarMobile {
+	position: relative;
+	border-top: 1px solid theme-var($greyLineColor);
+	border-bottom: 1px solid theme-var($greyLineColor);
+	height: 50px;
+	width: 100%;
+	padding: 0 10px 0 15px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	hr {
+		border: none;
+		width: 1px;
+		background: #707070;
+		height: 27px;
+		margin: 0 10px 0 0;
+	}
+
+	.popoutBox {
+		position: absolute;
+		top: 46px;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		width: 90%;
+		z-index: 10;
+		display: none;
+
+		.rsPaper {
+			&:first-of-type {
+				margin-bottom: 3px;
+			}
+			&.regionList {
+				.regionItem {
+					width: 100%;
+					padding: 8px 0;
+					&.selected {
+						border-radius: 4px;
+						background: #deebff;
+					}
+				}
+			}
+		}
+	}
+}

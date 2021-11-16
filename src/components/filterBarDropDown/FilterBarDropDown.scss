@@ -10,7 +10,7 @@
 		background: #fff;
 
 		.labelContainer {
-			.filerByLabel {
+			.filterByLabel {
 				color: theme-var($secondaryTextColor);
 				opacity: 0.49;
 			}
@@ -25,39 +25,9 @@
 		}
 	}
 	.DropdownContent {
-		margin-left: 12px;
-		box-shadow: 0 0 8px theme-var($greyLineColor);
+		box-shadow: 0 0 8px theme-var($secondaryTextColor);
+		opacity: 0.25;
 		border-radius: 10px;
 		z-index: 1;
-		position: absolute;
-		background: theme-var($primaryBackgroundColor);
-
-		.dropdownFooter {
-			.clearBtn {
-				background-color: unset;
-				border: unset;
-				font-size: 17px;
-				text-decoration: underline;
-
-				&:hover {
-					cursor: pointer;
-				}
-			}
-			.applyBtn {
-				padding: 7px;
-				color: theme-var($primaryBackgroundColor);
-				border-radius: 10px;
-				background-color: theme-var($buttonLinkColor);
-				border: unset;
-				width: 90px;
-				height: 38px;
-				letter-spacing: 1px;
-
-				&:hover {
-					background-color: theme-var($primaryTextColor);
-					cursor: pointer;
-				}
-			}
-		}
 	}
 }

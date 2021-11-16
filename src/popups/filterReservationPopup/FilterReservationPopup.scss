@@ -7,13 +7,12 @@
 	overflow: scroll;
 
 	.paperWrapper {
-		width: 341px;
-		min-width: 320px;
+		width: clamp(320px, 90vw, 341px);
 		border-radius: 15px;
 		background: theme-var($primaryBackgroundColor);
 
 		.paperHeader {
-			border-bottom: 0.5px solid theme-var($greyLineColor);
+			border-bottom: 1px solid theme-var($greyLineColor);
 			padding: 16px 25px;
 			display: flex;
 			justify-content: space-between;
@@ -28,26 +27,37 @@
 			padding: 20px 30px;
 
 			.formDiv {
-				border-bottom: 0.5px solid theme-var($greyLineColor);
+				border-bottom: 1px solid theme-var($greyLineColor);
+				margin-bottom: 10px;
 
 				.filterCounter {
-					padding: unset;
+					padding-bottom: 15px;
+					padding-left: 0;
 				}
 
 				.priceSliderRail {
 					color: theme-var($greyLineColor);
 					opacity: 0.35;
 				}
+
+				.listCheckboxes {
+					margin-bottom: 10px;
+				}
 			}
 
-			.formWrapper {
-				padding: 0 10px;
+			.bottomForm {
+				margin-bottom: 55px;
 			}
+
 			.redeemPointsContainer {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				margin: 25px 0;
+			}
+
+			.labelRadio {
+				padding-bottom: 15px;
 			}
 
 			.numberOfGuestDiv {

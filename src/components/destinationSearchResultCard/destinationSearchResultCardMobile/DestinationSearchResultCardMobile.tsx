@@ -1,10 +1,9 @@
 import * as React from 'react';
 import './DestinationSearchResultCardMobile.scss';
-import Carousel from '../../carousel/Carousel';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import router from '../../../utils/router';
-import Img from '@bit/redsky.framework.rs.img';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
@@ -42,28 +41,16 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 		setLowestPrice(props.getLowestAccommodationPrice());
 	}, []);
 
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box key={path} className={'imageWrapper'}>
-					<Img src={path} alt={'Resort Image'} width={690} height={580} />
-				</Box>
-			);
-		});
-	}
-
 	function renderPricePerNight() {
-		if (reservationFilters.redeemPoints && lowestPrice) {
+		if (lowestPrice) {
 			return (
 				<Box display={'flex'}>
-					<Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>
-					<Label variant={'caption1'}>night</Label>
-				</Box>
-			);
-		} else if (!reservationFilters.redeemPoints && lowestPrice) {
-			return (
-				<Box display={'flex'}>
-					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>
+					<Label variant={'boldCaption1'}>
+						{reservationFilters.redeemPoints
+							? StringUtils.addCommasToNumber(lowestPrice.pricePoints)
+							: StringUtils.formatMoney(lowestPrice.priceCents)}
+						pts/
+					</Label>
 					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
@@ -89,7 +76,16 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 
 	return (
 		<Box className={'rsDestinationSearchResultCardMobile'}>
-			<Carousel showControls children={renderPictures(props.picturePaths)} />
+			<CarouselV2
+				path={`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`}
+				imgPaths={props.picturePaths}
+				onAddCompareClick={() => {
+					if (props.onAddCompareClick) props.onAddCompareClick();
+				}}
+				onGalleryClick={() => {
+					console.log('');
+				}}
+			/>
 			<Box className={'mobileCardInfo'}>
 				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>
 					<Label variant={'subtitle1'}>{props.destinationName}</Label>

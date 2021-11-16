@@ -40,6 +40,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
+	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [errorMessage, setErrorMessage] = useState<string>('');
@@ -260,14 +261,18 @@ const ReservationAvailabilityPage: React.FC = () => {
 					accommodationType: 'Available',
 					accommodations: accommodationList,
 					onDetailsClick: (accommodationId: ReactText) => {
-						router.navigate(`/accommodation/details?ai=${accommodationId}`).catch(console.error);
+						let dates =
+							!!reservationFilters.startDate && !!reservationFilters.endDate
+								? `&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+								: '';
+						router.navigate(`/accommodation/details?ai=${accommodationId}${dates}`).catch(console.error);
 					},
 					onBookNowClick: (accommodationId: number) => {
 						let data: any = { ...reservationFilters };
 						let newRoom: Misc.StayParams = {
 							uuid: Date.now(),
 							adults: data.adultCount,
-							children: 0,
+							children: data.childCount || 0,
 							accommodationId: accommodationId,
 							arrivalDate: data.startDate,
 							departureDate: data.endDate,
@@ -388,7 +393,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				</Box>
 				<div className={'paginationDiv'}>
 					<PaginationButtons
-						selectedRowsPerPage={5}
+						selectedRowsPerPage={perPage}
 						currentPageNumber={page}
 						setSelectedPage={(newPage) => {
 							setReservationFilters({
