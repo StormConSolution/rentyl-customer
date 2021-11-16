@@ -53,24 +53,33 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	}
 
 	function renderPricePerNight() {
-		return reservationFilters.redeemPoints && lowestPrice ? (
-			<Box display={'flex'}>
-				<Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>
-				<Label variant={'caption1'}>night</Label>
-			</Box>
-		) : !reservationFilters.redeemPoints && lowestPrice ? (
-			<Box display={'flex'}>
-				<Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>
-				<Label variant={'caption1'}>night</Label>
-			</Box>
-		) : (
-			<Box>
-				<LabelButton look={'containedPrimary'} className={'yellow'} variant={'button'} label={'Contact Us'} />
-				<Label variant={'subtitle3'} paddingTop={'5px'}>
-					to inquire about booking
-				</Label>
-			</Box>
-		);
+		if (lowestPrice) {
+			return (
+				<Box display={'flex'}>
+					<Label variant={'boldCaption1'}>
+						{reservationFilters.redeemPoints
+							? StringUtils.addCommasToNumber(lowestPrice.pricePoints)
+							: StringUtils.formatMoney(lowestPrice.priceCents)}
+						pts/
+					</Label>
+					<Label variant={'caption1'}>night</Label>
+				</Box>
+			);
+		} else {
+			return (
+				<Box>
+					<LabelButton
+						look={'containedPrimary'}
+						className={'yellow'}
+						variant={'button'}
+						label={'Contact Us'}
+					/>
+					<Label variant={'subtitle3'} paddingTop={'5px'}>
+						to inquire about booking
+					</Label>
+				</Box>
+			);
+		}
 	}
 
 	return (
