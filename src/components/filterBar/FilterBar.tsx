@@ -14,6 +14,8 @@ import serviceFactory from '../../services/serviceFactory';
 import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import Switch from '@bit/redsky.framework.rs.switch';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 export interface FilterBarProps {
 	destinationId?: number;
@@ -193,6 +195,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				options={propertyTypeOptions}
 				isMulti={true}
 			/>
+			<Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+				<Label variant={'caption1'}>Redeem Points</Label>
+				<Switch
+					labelPosition={'top'}
+					className={'toggleButton'}
+					onChange={() =>
+						setReservationFilters({ ...reservationFilters, redeemPoints: !reservationFilters.redeemPoints })
+					}
+				/>
+			</Box>
 		</Box>
 	);
 };
