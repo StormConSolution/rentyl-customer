@@ -81,7 +81,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	return (
 		<Box className={'rsDestinationSearchResultCardMobile'}>
 			<CarouselV2
-				path={props.destinationDetailsPath}
+				path={`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`}
 				imgPaths={props.picturePaths}
 				onAddCompareClick={() => {
 					if (props.onAddCompareClick) props.onAddCompareClick();
