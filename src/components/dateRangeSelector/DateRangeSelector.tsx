@@ -24,8 +24,6 @@ export interface DateRangeSelectorProps {
 	className?: string;
 	startDateLabel?: string;
 	endDateLabel?: string;
-	startDatePlaceholderText?: string;
-	endDatePlaceholderText?: string;
 	labelVariant?:
 		| 'h1'
 		| 'h2'
