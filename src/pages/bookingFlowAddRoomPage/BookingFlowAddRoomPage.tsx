@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import './BookingFlowAddRoomPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
-import moment from 'moment';
 import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import serviceFactory from '../../services/serviceFactory';
-import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
-import RateCodeSelect from '../../components/rateCodeSelect/RateCodeSelect';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import FilterReservationPopup, {
@@ -21,9 +18,6 @@ import PaginationButtons from '../../components/paginationButtons/PaginationButt
 import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
-import DestinationService from '../../services/destination/destination.service';
-import { OptionType } from '@bit/redsky.framework.rs.select';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 
@@ -39,37 +33,12 @@ const BookingFlowAddRoomPage = () => {
 	});
 
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const [rateCode, setRateCode] = useRecoilState<string>(globalState.userRateCode);
-	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
-	const initialStartDate = editStayDetails?.arrivalDate
-		? moment(editStayDetails?.arrivalDate)
-		: moment(params.data.stays[0].arrivalDate);
-	const initialEndDate = editStayDetails?.departureDate
-		? moment(editStayDetails?.departureDate)
-		: moment(params.data.stays[0].departureDate);
-	const [searchQueryObj, setSearchQueryObj] = useState<Api.Accommodation.Req.Availability>({
-		startDate: initialStartDate.format('YYYY-MM-DD'),
-		endDate: initialEndDate.format('YYYY-MM-DD'),
-		adults: editStayDetails?.adults || 1,
-		children: editStayDetails?.children || 0,
-		pagination: { page: 1, perPage: 5 },
-		destinationId: params.data.destinationId,
-		rateCode: rateCode || ''
-	});
-	const [options, setOptions] = useState<OptionType[]>([]);
-	const [propertyType, setPropertyType] = useState<RsFormGroup>(
-		new RsFormGroup([new RsFormControl('propertyType', [], [])])
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
 	);
-
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(initialStartDate);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(initialEndDate);
-
-	const [validCode, setValidCode] = useState<boolean>(true);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
 
 	useEffect(() => {
@@ -84,100 +53,50 @@ const BookingFlowAddRoomPage = () => {
 
 	useEffect(() => {
 		async function getReservations() {
-			let newSearchQueryObj = { ...searchQueryObj };
-			if (
-				(!!newSearchQueryObj.priceRangeMin || newSearchQueryObj.priceRangeMin === 0) &&
-				(!!newSearchQueryObj.priceRangeMax || newSearchQueryObj.priceRangeMax === 0)
-			) {
-				newSearchQueryObj.priceRangeMax *= 100;
-				newSearchQueryObj.priceRangeMin *= 100;
-			}
-			if (!rateCode) {
-				delete newSearchQueryObj.rateCode;
-			} else {
-				newSearchQueryObj.rateCode = rateCode;
-			}
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(newSearchQueryObj);
+				let res = await accommodationService.availability(params.data.destinationId, reservationFilters);
 				setAvailabilityTotal(res.total || 0);
 				setAccommodations(res.data);
-				setValidCode(rateCode === '' || res.data.length > 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Unable to get a list of accommodations.'),
 					'Server Error'
 				);
-				setValidCode(rateCode === '' || rateCode === undefined);
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
 		getReservations().catch(console.error);
-	}, [searchQueryObj]);
+	}, [reservationFilters]);
 
-	useEffect(() => {
-		async function getAllPropertyTypes() {
-			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
+	function bookNow(accommodationId: number) {
+		let stays = params.data.stays;
+		if (editStayDetails) {
+			stays = params.data.stays.filter((stay) => {
+				return stay.uuid !== editStayDetails.uuid;
+			});
 		}
-		getAllPropertyTypes().catch(console.error);
-	}, []);
 
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
-
-	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
-		setStartDateControl(startDate);
-		setEndDateControl(endDate);
-		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
-		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
-	}
-
-	function updateSearchQueryObj(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adults'
-			| 'children'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'rateCode'
-			| 'propertyTypeIds',
-		value: any
-	) {
-		if (key === 'adults' && value === 0)
-			throw rsToastify.error('There must be at least one adult.', 'Information Required');
-		if (key === 'adults' && isNaN(value))
-			throw rsToastify.error('# of adults must be a number', 'Incorrect or Missing Information');
-		if (key === 'children' && isNaN(value))
-			throw rsToastify.error('# of children must be a number', 'Incorrect or Missing Information');
-		if (key === 'priceRangeMin' && isNaN(value))
-			throw rsToastify.error('Price min must be a number', 'Incorrect or Missing Information');
-		if (key === 'priceRangeMax' && isNaN(value))
-			throw rsToastify.error('Price max must be a number', 'Incorrect or Missing Information');
-		setSearchQueryObj((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined || value.length <= 0) delete createSearchQueryObj[key];
-			else createSearchQueryObj[key] = value;
-			return createSearchQueryObj;
-		});
+		let newRoom: Misc.StayParams = {
+			uuid: editStayDetails?.uuid || Date.now(),
+			accommodationId,
+			adults: reservationFilters.adultCount,
+			children: 0,
+			arrivalDate: reservationFilters.startDate as string,
+			departureDate: reservationFilters.endDate as string,
+			packages: editStayDetails?.packages || []
+		};
+		let bookingParams: Misc.BookingParams = {
+			destinationId: params.data.destinationId,
+			stays,
+			newRoom
+		};
+		router.navigate(`/booking/packages?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 	}
 
 	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setSearchQueryObj((prev) => {
+		setReservationFilters((prev) => {
 			let createSearchQueryObj: any = { ...prev };
 			createSearchQueryObj['adults'] = adults;
 			if (priceRangeMax !== '') {
@@ -191,33 +110,6 @@ const BookingFlowAddRoomPage = () => {
 			}
 			return createSearchQueryObj;
 		});
-	}
-
-	function bookNow(accommodationId: number) {
-		let stays = params.data.stays;
-		if (editStayDetails) {
-			stays = params.data.stays.filter((stay) => {
-				return stay.uuid !== editStayDetails.uuid;
-			});
-		}
-
-		let newRoom: Misc.StayParams = {
-			uuid: editStayDetails?.uuid || Date.now(),
-			accommodationId,
-			adults: searchQueryObj.adults,
-			children: searchQueryObj.children,
-			arrivalDate: searchQueryObj.startDate as string,
-			departureDate: searchQueryObj.endDate as string,
-			packages: editStayDetails?.packages || []
-		};
-		if (rateCode) newRoom.rateCode = rateCode;
-
-		let bookingParams: Misc.BookingParams = {
-			destinationId: params.data.destinationId,
-			stays,
-			newRoom
-		};
-		router.navigate(`/booking/packages?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 	}
 
 	function renderDestinationSearchResultCards() {
@@ -334,59 +226,7 @@ const BookingFlowAddRoomPage = () => {
 					/>
 				) : (
 					<>
-						<FilterBar
-							className={'filterBar'}
-							startDate={startDateControl}
-							endDate={endDateControl}
-							onDatesChange={onDatesChange}
-							focusedInput={focusedInput}
-							onFocusChange={setFocusedInput}
-							monthsToShow={2}
-							onChangeAdults={(value) => {
-								if (value === '') value = 0;
-								updateSearchQueryObj('adults', parseInt(value));
-							}}
-							onChangeChildren={(value) => {
-								if (value !== '') updateSearchQueryObj('children', parseInt(value));
-							}}
-							onChangePriceMin={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMin', value);
-								}
-							}}
-							onChangePriceMax={(value) => {
-								if (value !== '') {
-									updateSearchQueryObj('priceRangeMax', value);
-								}
-							}}
-							onChangePropertyType={(control: RsFormControl) => {
-								setPropertyType(propertyType.clone().update(control));
-								updateSearchQueryObj('propertyTypeIds', control.value);
-							}}
-							adultsInitialInput={searchQueryObj.adults}
-							childrenInitialInput={searchQueryObj.children}
-							initialPriceMax={
-								!!searchQueryObj.priceRangeMax ? searchQueryObj.priceRangeMax.toString() : ''
-							}
-							initialPriceMin={
-								!!searchQueryObj.priceRangeMin ? searchQueryObj.priceRangeMin.toString() : ''
-							}
-							options={options}
-							control={propertyType.get('propertyType')}
-						/>
-						<Accordion
-							hideHoverEffect
-							children={
-								<RateCodeSelect
-									apply={(value) => {
-										updateSearchQueryObj('rateCode', value);
-									}}
-									code={rateCode}
-									valid={!validCode}
-								/>
-							}
-							titleReact={<Label variant={'button'}>toggle rate code</Label>}
-						/>
+						<FilterBar destinationId={params.data.destinationId} />
 					</>
 				)}
 				<Box
@@ -403,11 +243,14 @@ const BookingFlowAddRoomPage = () => {
 					)}
 				</Box>
 				<PaginationButtons
-					selectedRowsPerPage={perPage}
+					selectedRowsPerPage={5}
 					currentPageNumber={page}
 					setSelectedPage={(newPage) => {
-						updateSearchQueryObj('pagination', { page: newPage, perPage: perPage });
 						setPage(newPage);
+						setReservationFilters({
+							...reservationFilters,
+							pagination: { page: newPage, perPage: 5 }
+						});
 						let filterSection = filterRef.current!.offsetTop;
 						window.scrollTo({ top: filterSection, behavior: 'smooth' });
 					}}
