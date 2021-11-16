@@ -94,23 +94,20 @@ declare namespace Misc {
 	}
 
 	export interface ReservationFilters {
-		startDate: string | Date;
-		endDate: string | Date;
+		startDate: Date | string;
+		endDate: Date | string;
 		adultCount: number;
-		childCount: number;
 		redeemPoints: boolean;
 		sortBy: string;
-		pagination: RedSky.PagePagination;
-		propertyTypeIds?: number[];
-		regionIds?: number[];
+		location?: number;
 		inUnitAmenities?: number[];
 		view?: number[];
-		priceRangeMin?: number;
-		priceRangeMax?: number;
+		groupAmenities?: number[];
+		minPrice?: number;
+		maxPrice?: number;
+		accommodations?: number[];
 		bedrooms?: number;
 		bathrooms?: number;
 		resortExperiences?: number[];
-		destinationId?: number;
-		accommodationId?: number;
 	}
 }

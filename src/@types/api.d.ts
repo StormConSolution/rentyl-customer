@@ -297,6 +297,7 @@ declare namespace Api {
 
 	export namespace Campaign {
 		export interface Action extends Omit<Model.Action, 'companyId'> {
+			campaignActionId: number;
 			actionCount: number;
 		}
 
@@ -665,6 +666,7 @@ declare namespace Api {
 					pricePoints: number;
 					quantityAvailable: number;
 					rateCode: string;
+					minStay: number;
 				}[];
 				features: {
 					id: number;
@@ -1908,6 +1910,18 @@ declare namespace Api {
 			export interface Create extends Model.UserAddress {}
 
 			export interface Update extends Model.UserAddress {}
+		}
+	}
+
+	export namespace UserCampaign {
+		export namespace Req {
+			export interface Get {}
+		}
+
+		export namespace Res {
+			export interface Get extends Model.UserCompletedCampaign {
+				completionPoints: number;
+			}
 		}
 	}
 

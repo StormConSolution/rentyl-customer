@@ -7,7 +7,6 @@ import {
 	useRecoilTransactionObserver_UNSTABLE
 } from 'recoil';
 import * as React from 'react';
-import moment from 'moment';
 
 enum GlobalStateKeys {
 	COMPARISON_CARD = 'DestinationComparison',
@@ -79,13 +78,11 @@ class GlobalState {
 		this.reservationFilters = atom<Misc.ReservationFilters>({
 			key: GlobalStateKeys.RESERVATION_FILTERS,
 			default: {
-				startDate: moment(new Date().getTime()).format('YYYY-MM-DD'),
-				endDate: moment(new Date()).add(2, 'days').format('YYYY-MM-DD'),
+				startDate: new Date(),
+				endDate: new Date(),
 				adultCount: 1,
-				childCount: 0,
 				redeemPoints: false,
-				sortBy: 'ASC',
-				pagination: { page: 1, perPage: 10 }
+				sortBy: 'ASC'
 			}
 		});
 	}

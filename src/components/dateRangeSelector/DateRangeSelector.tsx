@@ -16,35 +16,30 @@ export interface DateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
+	startDatePlaceholderText?: string;
+	endDatePlaceholderText?: string;
 	focusedInput: 'startDate' | 'endDate' | null;
 	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	monthsToShow: number;
 	className?: string;
 	startDateLabel?: string;
 	endDateLabel?: string;
-	startDatePlaceholderText?: string;
-	endDatePlaceholderText?: string;
 	labelVariant?:
 		| 'h1'
 		| 'h2'
 		| 'h3'
 		| 'h4'
 		| 'h5'
-		| 'button'
-		| 'buttonBoldText'
-		| 'body1'
-		| 'body2'
-		| 'body3'
-		| 'body4'
-		| 'caption1'
-		| 'boldCaption1'
-		| 'caption2'
-		| 'caption3'
+		| 'h6'
+		| 'link1'
+		| 'link2'
 		| 'subtitle1'
 		| 'subtitle2'
-		| 'subtitle3'
-		| 'italicBold'
-		| 'error'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
 		| string;
 	isMobile?: boolean;
 }
@@ -92,7 +87,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				focusedInput={props.focusedInput}
 				onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 				numberOfMonths={props.monthsToShow}
-				verticalSpacing={0}
+				verticalSpacing={20}
 				noBorder
 			/>
 		</Box>

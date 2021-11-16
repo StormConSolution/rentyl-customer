@@ -42,6 +42,7 @@ declare namespace Model {
 		| 'GOODWILL'
 		| 'VOUCHER_CLAIM'
 		| 'CAMPAIGN_ACTION'
+		| 'CAMPAIGN_COMPLETION'
 		| 'TRANSACTION_REFUND';
 	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
 	export type PaymentSystemProviders = 'adyen' | 'mock';
@@ -220,6 +221,7 @@ declare namespace Model {
 		endOn: Date | string;
 		pointValueMultiplier: number;
 		activityReferenceNumber: string;
+		completionPoints: number;
 	}
 
 	export interface CampaignAction {
@@ -229,6 +231,17 @@ declare namespace Model {
 		createdOn: Date | string;
 		actionCount: number;
 		isActive: 0 | 1;
+		pointValue: number;
+	}
+
+	export interface UserCompletedCampaign {
+		id: number;
+		userId: number;
+		campaignId: number;
+		hasAwarded: 0 | 1;
+		createdOn: string | Date;
+		modifiedOn: string | Date;
+		refundedOn: Date | string;
 	}
 
 	export interface Company {
@@ -698,6 +711,7 @@ declare namespace Model {
 		hasAwarded: 0 | 1;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+		refundedOn: Date | string;
 	}
 
 	export interface UserAddress {
@@ -757,6 +771,7 @@ declare namespace Model {
 		orderId: number;
 		reservationId: number;
 		rewardVoucherId: number;
+		campaignId: number;
 		campaignActionId: number;
 		description: string;
 		status: UserPointStatusTypes;

@@ -2,45 +2,7 @@
 module.exports = {
 	apps: [
 		{
-			name: 'dev-customer',
-			script: 'pm2_serve.sh',
-			wait_ready: true,
-			kill_timeout: 10000,
-			listen_timeout: 10000,
-			// Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/#ecosystem-file
-			args: '',
-			// instances: 'max',
-			// exec_mode: 'cluster',
-			autorestart: true,
-			watch: false,
-			max_memory_restart: '1G',
-			env: {
-				SERVE_PORT: 5100,
-				NODE_ENV: 'development',
-				PM2_KILL_TIMEOUT: 10000
-			}
-		},
-		{
-			name: 'qa-customer',
-			script: 'pm2_serve.sh',
-			wait_ready: true,
-			kill_timeout: 10000,
-			listen_timeout: 10000,
-			// Options reference: https://pm2.keymetrics.io/docs/usage/application-declaration/#ecosystem-file
-			args: '',
-			// instances: 'max',
-			// exec_mode: 'cluster',
-			autorestart: true,
-			watch: false,
-			max_memory_restart: '1G',
-			env: {
-				SERVE_PORT: 5100,
-				NODE_ENV: 'development',
-				PM2_KILL_TIMEOUT: 10000
-			}
-		},
-		{
-			name: 'uat-customer',
+			name: 'dev-rentyl-customer',
 			script: 'pm2_serve.sh',
 			wait_ready: true,
 			kill_timeout: 10000,

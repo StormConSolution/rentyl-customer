@@ -1,28 +1,14 @@
 @import '../../themes/themes.scss';
 
 .rsDateRangeSelector {
-	width: fit-content;
 	.startEndLabels {
 		display: grid;
-		grid-template-columns: 114px auto;
-		column-gap: 31px;
-		margin-bottom: 10px;
-		.startDateLabel {
-			position: relative;
-			&::after {
-				content: '';
-				position: absolute;
-				width: 1px;
-				background: #707070;
-				height: 46px;
-				z-index: 99;
-				right: 0;
-			}
-		}
+		grid-template-columns: repeat(2, minmax(90px, 1fr));
+		column-gap: 10px;
+		padding-bottom: 10px;
 	}
 	.DateRangePicker {
 		.DateRangePicker_picker {
-			top: 46px !important;
 			border-radius: 32px;
 			div {
 				border-radius: 32px;
@@ -30,9 +16,11 @@
 		}
 		.DateInput {
 			width: 88px;
-			&.DateInput_1:first-of-type {
-				margin-right: 60px;
-			}
+			height: 40px;
+			padding-right: 5px;
+		}
+		.DateInput:last-of-type {
+			margin-left: 13px;
 		}
 		.DateInput_input {
 			font-size: 15px;
@@ -40,18 +28,10 @@
 			line-height: 16px;
 			height: 16px;
 			width: 80px;
-			padding: 0;
+			padding: 11px 5px;
 			color: #adadad;
 			&:hover {
 				cursor: pointer;
-			}
-			&::placeholder {
-				font-family: 'Gothic', sans-serif;
-				font-size: 16px;
-				line-height: 21px;
-				letter-spacing: 0;
-				font-weight: 300;
-				color: #1e180b;
 			}
 		}
 		.DateRangePickerInput {

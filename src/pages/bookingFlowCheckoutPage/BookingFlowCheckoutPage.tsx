@@ -28,6 +28,8 @@ import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LinkButton from '../../components/linkButton/LinkButton';
 import globalState from '../../state/globalState';
+import { Simulate } from 'react-dom/test-utils';
+import load = Simulate.load;
 
 let existingCardId = 0;
 

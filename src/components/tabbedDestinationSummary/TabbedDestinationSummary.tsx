@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
+import React, { useState } from 'react';
 import DestinationSummaryAccommodationList, {
 	DestinationSummaryAccommodationListProps
 } from '../destinationSummaryAccommodationList/DestinationSummaryAccommodationList';

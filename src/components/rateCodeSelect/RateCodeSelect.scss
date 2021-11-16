@@ -1,0 +1,16 @@
+.rsRateCodeSelect {
+	display: flex;
+	align-items: flex-end;
+	.rsLabelButton {
+		margin-left: 15px;
+	}
+	.rsLabelInput {
+		margin: 1px;
+	}
+}
+
+.small {
+	.rsRateCodeSelect {
+		grid-template-columns: 50% 50%;
+	}
+}

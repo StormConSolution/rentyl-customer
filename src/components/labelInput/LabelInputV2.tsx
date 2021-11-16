@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './LabelInput.scss';
+import './LabelInputV2.scss';
 import debounce from 'lodash.debounce';
 import Label from '@bit/redsky.framework.rs.label';
 import Input from '@bit/redsky.framework.rs.input';
@@ -10,7 +10,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { StringUtils } from '../../utils/utils';
 
-interface LabelInputProps {
+interface LabelInputV2Props {
 	title: string;
 	onChange?: (value: any) => void;
 	control?: RsFormControl;
@@ -47,7 +47,7 @@ interface LabelInputProps {
 		| string;
 }
 
-const LabelInput: React.FC<LabelInputProps> = (props) => {
+const LabelInputV2: React.FC<LabelInputV2Props> = (props) => {
 	const [isValid, setIsValid] = useState<boolean>(true);
 	const form = new RsFormGroup([
 		new RsFormControl(
@@ -83,13 +83,11 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 	}
 
 	return (
-		<div className={`rsLabelInput ${props.className || ''}`}>
-			<Label variant={props.labelVariant || 'caption'}>{props.title}</Label>
-			{!!props.iconImage && (
-				<div className="iconHolder">
-					<Icon iconImg={props.iconImage} size={props.iconSize} />
-				</div>
-			)}
+		<div className={`rsLabelInputV2 ${props.className || ''}`}>
+			<Label variant={props.labelVariant || 'caption'} className="titleLabel">
+				{props.title}
+			</Label>
+
 			{!props.isPhoneInput ? (
 				<Input
 					className={renderClassNames()}
@@ -123,4 +121,4 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 	);
 };
 
-export default LabelInput;
+export default LabelInputV2;

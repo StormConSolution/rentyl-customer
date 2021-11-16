@@ -21,29 +21,11 @@ export default class AccommodationService extends Service {
 	}
 
 	async availability(
-		destinationId: number,
-		searchQueryObj: Misc.ReservationFilters
+		data: Api.Accommodation.Req.Availability
 	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
-		const newSearchQueryObj: Api.Accommodation.Req.Availability = {
-			destinationId: destinationId,
-			startDate: searchQueryObj.startDate,
-			endDate: searchQueryObj.endDate,
-			adults: searchQueryObj.adultCount,
-			children: searchQueryObj.childCount,
-			pagination: { page: 1, perPage: 5 }
-		};
-		if (searchQueryObj.priceRangeMin) {
-			newSearchQueryObj.priceRangeMin = searchQueryObj.priceRangeMin;
-		}
-		if (searchQueryObj.priceRangeMax) {
-			newSearchQueryObj.priceRangeMax = searchQueryObj.priceRangeMax;
-		}
-		if (searchQueryObj.propertyTypeIds) {
-			newSearchQueryObj.propertyTypeIds = searchQueryObj.propertyTypeIds;
-		}
 		let res = await http.get<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>>(
 			'accommodation/availability',
-			newSearchQueryObj
+			data
 		);
 		return res.data;
 	}

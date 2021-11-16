@@ -1,10 +1,9 @@
 import * as React from 'react';
-import './LabelCheckbox.scss';
-import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
+import './LabelCheckboxV2.scss';
 import { ReactNode, useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
-interface LabelCheckboxProps {
+interface LabelCheckboxV2Props {
 	value: string | number;
 	text: string | number | ReactNode;
 	isChecked?: boolean;
@@ -15,7 +14,7 @@ interface LabelCheckboxProps {
 	isDisabled?: boolean;
 }
 
-const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
+const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
 	const [isChecked, setIsChecked] = useState<boolean>(props.isChecked || false);
 
 	useEffect(() => {
@@ -23,7 +22,7 @@ const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
 	}, [props.isChecked]);
 
 	return (
-		<div className={`rsLabelCheckbox ${props.className || ''}`}>
+		<div className={`rsLabelCheckboxV2 ${props.className || ''}`}>
 			<label className={'checkboxContainer'}>
 				<input
 					value={props.value}
@@ -38,15 +37,12 @@ const LabelCheckbox: React.FC<LabelCheckboxProps> = (props) => {
 					checked={isChecked}
 					disabled={props.isDisabled}
 				/>
-				<span className={'checkbox'}>
-					<Box />
-				</span>
 			</label>
-			<Label variant={'body1'} lineClamp={props.lineClamp || 2}>
+			<Label variant={'body1'} lineClamp={props.lineClamp || 2} className="titleLabel">
 				{props.text}
 			</Label>
 		</div>
 	);
 };
 
-export default LabelCheckbox;
+export default LabelCheckboxV2;
