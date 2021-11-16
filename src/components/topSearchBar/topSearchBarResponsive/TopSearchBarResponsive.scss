@@ -1,0 +1,35 @@
+@import '../../../themes/themes';
+.rsTopSearchBarResponsive {
+	padding: 9px 12px 9px 50px;
+	background: #ffffff;
+	max-width: 782px;
+	display: flex;
+	align-items: center;
+	hr {
+		border: none;
+		width: 1px;
+		background: #707070;
+		height: 46px;
+		margin: 0 30px;
+	}
+	.searchButton {
+		background: #001933;
+		border-radius: 20px;
+		border: 1px solid #707070;
+		margin-left: auto;
+		padding: 17px 22px;
+	}
+	.regionList {
+		.regionItem {
+			width: 200px;
+			padding: 8px 0;
+			&:hover {
+				cursor: pointer;
+				background: #deebff;
+			}
+			&.selected {
+				background: #deebff;
+			}
+		}
+	}
+}

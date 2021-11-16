@@ -110,6 +110,11 @@ html {
 		font-weight: $semiBold;
 		font-style: italic;
 	}
+	&.custom1 {
+		font-size: 22px;
+		line-height: 37px;
+		font-weight: $regular;
+	}
 	&.error {
 		font-size: 19px;
 		line-height: 22px;

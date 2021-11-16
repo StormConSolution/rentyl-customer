@@ -10,6 +10,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface DateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
@@ -40,9 +41,11 @@ export interface DateRangeSelectorProps {
 		| 'button'
 		| 'overline'
 		| string;
+	isMobile?: boolean;
 }
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
+	const size = useWindowResizeChange();
 	const [instanceId] = useState<string>(StringUtils.generateGuid());
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(props.startDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(props.endDate);
@@ -54,19 +57,24 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 
 	return (
 		<Box className={`rsDateRangeSelector ${props.className || ''}`}>
-			<div className={'startEndLabels'}>
-				<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
-					{props.startDateLabel}
-				</Label>
-				<hr />
-				<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
-					{props.endDateLabel}
-				</Label>
-			</div>
+			{!props.isMobile && (
+				<div className={'startEndLabels'}>
+					<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
+						{props.startDateLabel}
+					</Label>
+					<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
+						{props.endDateLabel}
+					</Label>
+				</div>
+			)}
 			<DateRangePicker
 				navPrev={<Icon iconImg={'icon-chevron-left'} size={10} />}
 				navNext={<Icon iconImg={'icon-chevron-right'} size={10} />}
 				readOnly
+				startDatePlaceholderText={props.startDatePlaceholderText}
+				endDatePlaceholderText={props.endDatePlaceholderText}
+				displayFormat={size === 'small' ? 'MMM DD' : ''}
+				customArrowIcon={<Icon iconImg={'icon-minus'} size={12} color={'#767676'} />}
 				startDate={startDateControl}
 				startDateId={`startDate-${instanceId}`}
 				endDate={endDateControl}

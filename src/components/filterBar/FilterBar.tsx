@@ -11,6 +11,8 @@ import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
+import Switch from '@bit/redsky.framework.rs.switch';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 export interface SelectOptionControls {
 	options: OptionType[];
@@ -105,6 +107,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				options={props.options}
 				isMulti={true}
 			/>
+			<Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+				<Label variant={'caption1'}>Redeem Points</Label>
+				<Switch
+					labelPosition={'top'}
+					className={'toggleButton'}
+					onChange={() =>
+						setReservationFilters({ ...reservationFilters, redeemPoints: !reservationFilters.redeemPoints })
+					}
+				/>
+			</Box>
 		</Box>
 	);
 };

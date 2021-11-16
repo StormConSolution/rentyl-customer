@@ -6,6 +6,7 @@ import Button from '@bit/redsky.framework.rs.button';
 import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
 import Label from '@bit/redsky.framework.rs.label';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface CarouselV2Props {
 	path: string | (() => void);
@@ -15,6 +16,7 @@ interface CarouselV2Props {
 }
 
 const CarouselV2: React.FC<CarouselV2Props> = (props) => {
+	const size = useWindowResizeChange();
 	const parentRef = useRef<HTMLDivElement>(null);
 	const totalChildren = props.imgPaths.length;
 	const [imageViewIndex, setImageViewIndex] = useState<number>(1);
@@ -29,7 +31,12 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 		return props.imgPaths.map((item, index) => {
 			return (
 				<div key={index}>
-					<Img src={item} alt={'img alt'} width={414} height={278} />
+					<Img
+						src={item}
+						alt={'img alt'}
+						width={size === 'small' ? 327 : 414}
+						height={size === 'small' ? 220 : 278}
+					/>
 				</div>
 			);
 		});
