@@ -24,7 +24,9 @@ export default class AccommodationService extends Service {
 		destinationId: number,
 		searchQueryObj: Misc.ReservationFilters
 	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
-		const newSearchQueryObj: Api.Accommodation.Req.Availability = {
+		const newSearchQueryObj: Misc.ReservationFilters = {
+			redeemPoints: searchQueryObj.redeemPoints,
+			sortBy: '',
 			destinationId: destinationId,
 			startDate: searchQueryObj.startDate,
 			endDate: searchQueryObj.endDate,

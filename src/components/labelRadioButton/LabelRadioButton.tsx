@@ -9,13 +9,34 @@ interface LabelRadioButtonProps {
 	checked: boolean;
 	text: string;
 	onSelect: (value: string | number) => void;
+	labelSize?:
+		| 'h1'
+		| 'h2'
+		| 'h3'
+		| 'h4'
+		| 'h5'
+		| 'h6'
+		| 'link1'
+		| 'link2'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
+		| string;
+	isDisabled?: boolean;
+	className?: string;
 	// onClick?: (event?:React.MouseEvent) => void;
 }
 
 const LabelRadioButton: React.FC<LabelRadioButtonProps> = (props) => {
+	const defaultTextSize = 'body1';
+
 	return (
 		<div
-			className={'rsLabelRadioButton'}
+			className={`rsLabelRadioButton${props.className ? ` ${props.className}` : ''}`}
 			onClick={(event: React.MouseEvent) => {
 				event?.stopPropagation();
 			}}
@@ -30,12 +51,13 @@ const LabelRadioButton: React.FC<LabelRadioButtonProps> = (props) => {
 						let inputValue = e.target as HTMLInputElement;
 						if (inputValue.checked) props.onSelect(props.value);
 					}}
+					disabled={props.isDisabled}
 				/>
 				<span className={'radioButton'}>
 					<Box />
 				</span>
 			</label>
-			<Label variant={'body1'}>{props.text}</Label>
+			<Label variant={props.labelSize ? props.labelSize : defaultTextSize}>{props.text}</Label>
 		</div>
 	);
 };

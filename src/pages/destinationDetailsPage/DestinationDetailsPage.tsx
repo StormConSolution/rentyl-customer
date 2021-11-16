@@ -132,6 +132,37 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 	}, []);
 
+	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
+		setReservationFilters((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			createSearchQueryObj['adultCount'] = adultCount;
+			createSearchQueryObj['adultCount'] = adultCount;
+			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
+				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			} else delete createSearchQueryObj['regionIds'];
+
+			if (priceRangeMin !== '') createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
+			else delete createSearchQueryObj['priceRangeMin'];
+
+			if (priceRangeMax !== '') createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			else delete createSearchQueryObj['priceRangeMax'];
+
+			return createSearchQueryObj;
+		});
+		const newUrlParams: any = {
+			adultCount: adultCount,
+			priceRangeMax: priceRangeMax,
+			priceRangeMin: priceRangeMin,
+			propertyTypeIds: propertyTypeIds.join(',')
+		};
+
+		for (let i in newUrlParams) {
+			if (!newUrlParams[i].toString().length) {
+				delete newUrlParams[i];
+			}
+		}
+	}
+
 	function renderFeatures() {
 		if (!destinationDetails || !destinationDetails.experiences) return;
 		let featureArray: any = [];
@@ -256,7 +287,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							datum: item.extraBeds ? 'Yes' : 'No'
 						}
 					]}
-					amenityIconNames={item.amenities}
+					amenityIconNames={item.amenities.map((amenity) => {
+						return amenity.icon;
+					})}
 					carouselImagePaths={item.media}
 				/>
 			);
@@ -373,6 +406,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								labelVariant={'caption'}
 								onClick={() => {
 									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+										onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
+											popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
+										},
 										className: 'filterPopup'
 									});
 								}}

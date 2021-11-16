@@ -1,66 +1,113 @@
 @import 'src/themes/themes';
 
 .rsFilterReservationPopup {
+	height: 95vh;
+	position: absolute;
+	top: 40px;
+	overflow: scroll;
+
 	.paperWrapper {
-		padding: 20px 10px;
+		width: clamp(320px, 90vw, 341px);
+		border-radius: 15px;
+		background: theme-var($primaryBackgroundColor);
 
-		.formWrapper {
-			padding: 0 10px;
-		}
-
-		.filtersLabel {
-			margin-bottom: 20px;
-		}
-
-		.rsDateRangeSelector .DateRangePicker {
-			.DateInput {
-				width: 130px;
-			}
-
-			.DateInput_input {
-				width: 125px;
-			}
-		}
-
-		.rsDateRangeSelector .startEndLabels .endDateLabel {
-			margin-left: 89px;
-		}
-
-		.numberOfGuestDiv {
-			display: flex;
-
-			.rsLabelInput {
-				margin: 20px 0;
-			}
-			.numberOfAdults {
-				margin-right: 7px;
-			}
-
-			.rsInput {
-				max-width: 200px;
-				width: 135px;
-			}
-		}
-
-		.minMaxDiv {
+		.paperHeader {
+			border-bottom: 1px solid theme-var($greyLineColor);
+			padding: 16px 25px;
 			display: flex;
 			justify-content: space-between;
-			padding-right: 9px;
+			align-items: center;
 
-			.rsInput.priceMin {
-				width: 135px;
-			}
-
-			.rsInput.priceMax {
-				width: 135px;
+			.closeIcon {
+				color: theme-var($disableTextColor);
 			}
 		}
 
-		.buttons {
+		.paperBody {
+			padding: 20px 30px;
+
+			.formDiv {
+				border-bottom: 1px solid theme-var($greyLineColor);
+				margin-bottom: 10px;
+
+				.filterCounter {
+					padding-bottom: 15px;
+					padding-left: 0;
+				}
+
+				.priceSliderRail {
+					color: theme-var($greyLineColor);
+					opacity: 0.35;
+				}
+
+				.listCheckboxes {
+					margin-bottom: 10px;
+				}
+			}
+
+			.bottomForm {
+				margin-bottom: 55px;
+			}
+
+			.redeemPointsContainer {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin: 25px 0;
+			}
+
+			.labelRadio {
+				padding-bottom: 15px;
+			}
+
+			.numberOfGuestDiv {
+				display: flex;
+
+				.rsLabelInput {
+					margin: 20px 0;
+				}
+				.numberOfAdults {
+					margin-right: 7px;
+				}
+
+				.rsInput {
+					max-width: 200px;
+					width: 135px;
+				}
+			}
+
+			.minMaxDiv {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 22px;
+
+				.divider {
+					width: 11px;
+					border: 1px solid theme-var($greyLineColor);
+					margin: 5px 5px 0 5px;
+				}
+
+				.rsInput.priceMin {
+					width: 115px;
+				}
+
+				.rsInput.priceMax {
+					width: 115px;
+				}
+			}
+		}
+		.paperFooter {
 			display: flex;
-			margin-top: 40px;
-			padding: 0 9px;
-			justify-content: center;
+			justify-content: space-between;
+			align-items: center;
+			position: fixed;
+			bottom: 0;
+			background: theme-var($primaryBackgroundColor);
+			height: 62px;
+			width: 321px;
+			padding: 0 10px;
+			box-shadow: 0px -7px 10px -3px theme-var($greyLineColor);
 
 			.cancelButton {
 				margin-right: 10px;
@@ -71,6 +118,15 @@
 				&.disabled {
 					display: none;
 				}
+			}
+		}
+	}
+	@media screen and (max-width: 374px) {
+		.paperWrapper {
+			width: 310px;
+
+			.paperFooter {
+				width: 300px;
 			}
 		}
 	}

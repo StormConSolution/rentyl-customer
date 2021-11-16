@@ -2,20 +2,24 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 0 28px;
 	.valueChanger {
 		display: grid;
 		grid-template-columns: repeat(3, 26px);
 		align-items: center;
-		margin-left: auto;
 		.rsLabel {
 			text-align: center;
 		}
-
-		.rsButton {
-			width: 26px;
+		.rsIcon {
 			height: 26px;
+			width: 26px;
+			border: 1px solid black;
 			border-radius: 50%;
-			border: 1px solid #7070706e;
+			text-align: center;
+			&:before {
+				position: relative;
+				top: 15%;
+			}
 		}
 	}
 }

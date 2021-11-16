@@ -92,7 +92,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								iconColor={'#ffffff'}
 							/>
 							<LabelLink
-								path={'#'}
+								path={'/signin'}
 								label={'Log in'}
 								variant={'button'}
 								iconRight={'icon-chevron-right'}

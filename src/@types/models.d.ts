@@ -42,6 +42,7 @@ declare namespace Model {
 		| 'GOODWILL'
 		| 'VOUCHER_CLAIM'
 		| 'CAMPAIGN_ACTION'
+		| 'CAMPAIGN_COMPLETION'
 		| 'TRANSACTION_REFUND';
 	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
 	export type PaymentSystemProviders = 'adyen' | 'mock';
@@ -107,6 +108,11 @@ declare namespace Model {
 		size: string; // of type {max: number; min: number; units: string}
 	}
 
+	export interface AccommodationAmenity {
+		accommodationId: number;
+		amenityId: number;
+	}
+
 	export interface AccommodationBedDetails {
 		type: string;
 		isPrimary: boolean | number;
@@ -167,6 +173,12 @@ declare namespace Model {
 		pointValue: number;
 	}
 
+	export interface Amenity {
+		id: number;
+		title: string;
+		icon: string;
+	}
+
 	export interface Brand {
 		id: number;
 		companyId: number;
@@ -220,6 +232,7 @@ declare namespace Model {
 		endOn: Date | string;
 		pointValueMultiplier: number;
 		activityReferenceNumber: string;
+		completionPoints: number;
 	}
 
 	export interface CampaignAction {
@@ -229,6 +242,17 @@ declare namespace Model {
 		createdOn: Date | string;
 		actionCount: number;
 		isActive: 0 | 1;
+		pointValue: number;
+	}
+
+	export interface UserCompletedCampaign {
+		id: number;
+		userId: number;
+		campaignId: number;
+		hasAwarded: 0 | 1;
+		createdOn: string | Date;
+		modifiedOn: string | Date;
+		refundedOn: Date | string;
 	}
 
 	export interface Company {
@@ -304,6 +328,14 @@ declare namespace Model {
 		isActive: 0 | 1;
 	}
 
+	export interface DestinationExperience {
+		id: number;
+		destinationId: number;
+		experienceId: number;
+		description: string;
+		isHighlighted: 0 | 1;
+	}
+
 	export type DestinationPolicy = {
 		destinationId: number;
 		companyId: number;
@@ -349,6 +381,12 @@ declare namespace Model {
 		subject: string;
 		design: string;
 		html: string;
+	}
+
+	export interface Experience {
+		id: number;
+		title: string;
+		icon: string;
 	}
 
 	export interface Feature {
@@ -417,6 +455,7 @@ declare namespace Model {
 		rewardId: number;
 		rewardCategoryId: number;
 		tierId: number;
+		destinationExperienceId: number;
 	}
 
 	export interface OrderProduct {
@@ -698,6 +737,7 @@ declare namespace Model {
 		hasAwarded: 0 | 1;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
+		refundedOn: Date | string;
 	}
 
 	export interface UserAddress {
@@ -757,6 +797,7 @@ declare namespace Model {
 		orderId: number;
 		reservationId: number;
 		rewardVoucherId: number;
+		campaignId: number;
 		campaignActionId: number;
 		description: string;
 		status: UserPointStatusTypes;

@@ -23,6 +23,8 @@ import ConfirmChangeRoomPopup, {
 } from '../../popups/confirmChangeRoomPopup/ConfirmChangeRoomPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import AccommodationService from '../../services/accommodation/accommodation.service';
+import DestinationService from '../../services/destination/destination.service';
+import { OptionType } from '@bit/redsky.framework.rs.select';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 
@@ -34,12 +36,14 @@ const EditFlowModifyRoomPage = () => {
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
+	const [options, setOptions] = useState<OptionType[]>([]);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
 
@@ -78,6 +82,47 @@ const EditFlowModifyRoomPage = () => {
 		}
 		getReservations().catch(console.error);
 	}, [reservationFilters, params.destinationId]);
+
+	useEffect(() => {
+		async function getAllPropertyTypes() {
+			try {
+				let response = await destinationService.getAllPropertyTypes();
+				let newOptions = formatOptions(response);
+				setOptions(newOptions);
+			} catch (e) {
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
+					'Server Error'
+				);
+			}
+		}
+		getAllPropertyTypes().catch(console.error);
+	}, []);
+
+	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
+		return options.map((value) => {
+			return { value: value.id, label: value.name };
+		});
+	}
+
+	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
+		setReservationFilters((prev) => {
+			let createSearchQueryObj: any = { ...prev };
+			createSearchQueryObj['adults'] = adults;
+			if (priceRangeMax !== '') {
+				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
+			}
+			if (priceRangeMax !== '') {
+				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
+			}
+			if (propertyTypeIds.length >= 1) {
+				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
+			} else {
+				delete createSearchQueryObj['propertyTypeIds'];
+			}
+			return createSearchQueryObj;
+		});
+	}
 
 	async function bookNow(id: number) {
 		if (reservation) {
@@ -122,7 +167,7 @@ const EditFlowModifyRoomPage = () => {
 						description={destination.longDescription}
 						ratePerNightInCents={destination.costPerNightCents}
 						pointsRatePerNight={destination.pointsPerNight}
-						amenityIconNames={destination.amenities}
+						amenityIconNames={destination.amenities.map((item) => item.title)}
 						pointsEarnable={destination.pointsEarned}
 						hideButtons={true}
 						roomStats={[
@@ -231,7 +276,9 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								searchRegion: false,
+								onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
+									popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
+								},
 								className: 'filterPopup'
 							});
 						}}

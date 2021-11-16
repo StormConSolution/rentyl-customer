@@ -10,44 +10,42 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface DateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
 	startDate: moment.Moment | null;
 	endDate: moment.Moment | null;
+	startDatePlaceholderText?: string;
+	endDatePlaceholderText?: string;
 	focusedInput: 'startDate' | 'endDate' | null;
 	onFocusChange: (focusedInput: 'startDate' | 'endDate' | null) => void;
 	monthsToShow: number;
 	className?: string;
 	startDateLabel?: string;
 	endDateLabel?: string;
-	startDatePlaceholderText?: string;
-	endDatePlaceholderText?: string;
 	labelVariant?:
 		| 'h1'
 		| 'h2'
 		| 'h3'
 		| 'h4'
 		| 'h5'
-		| 'button'
-		| 'buttonBoldText'
-		| 'body1'
-		| 'body2'
-		| 'body3'
-		| 'body4'
-		| 'caption1'
-		| 'boldCaption1'
-		| 'caption2'
-		| 'caption3'
+		| 'h6'
+		| 'link1'
+		| 'link2'
 		| 'subtitle1'
 		| 'subtitle2'
-		| 'subtitle3'
-		| 'italicBold'
-		| 'error'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
 		| string;
+	isMobile?: boolean;
 }
 
 const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
+	const size = useWindowResizeChange();
 	const [instanceId] = useState<string>(StringUtils.generateGuid());
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(props.startDate);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(props.endDate);
@@ -59,20 +57,24 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 
 	return (
 		<Box className={`rsDateRangeSelector ${props.className || ''}`}>
-			<div className={'startEndLabels'}>
-				<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
-					{props.startDateLabel}
-				</Label>
-				<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
-					{props.endDateLabel}
-				</Label>
-			</div>
+			{!props.isMobile && (
+				<div className={'startEndLabels'}>
+					<Label className={'startDateLabel'} variant={props.labelVariant || 'caption'}>
+						{props.startDateLabel}
+					</Label>
+					<Label className={'endDateLabel'} variant={props.labelVariant || 'caption'}>
+						{props.endDateLabel}
+					</Label>
+				</div>
+			)}
 			<DateRangePicker
 				navPrev={<Icon iconImg={'icon-chevron-left'} size={10} />}
 				navNext={<Icon iconImg={'icon-chevron-right'} size={10} />}
 				readOnly
 				startDatePlaceholderText={props.startDatePlaceholderText}
 				endDatePlaceholderText={props.endDatePlaceholderText}
+				displayFormat={size === 'small' ? 'MMM DD' : ''}
+				customArrowIcon={<Icon iconImg={'icon-minus'} size={12} color={'#767676'} />}
 				startDate={startDateControl}
 				startDateId={`startDate-${instanceId}`}
 				endDate={endDateControl}
@@ -85,7 +87,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 				focusedInput={props.focusedInput}
 				onFocusChange={(focusedInput) => props.onFocusChange(focusedInput)}
 				numberOfMonths={props.monthsToShow}
-				verticalSpacing={0}
+				verticalSpacing={20}
 				noBorder
 			/>
 		</Box>
