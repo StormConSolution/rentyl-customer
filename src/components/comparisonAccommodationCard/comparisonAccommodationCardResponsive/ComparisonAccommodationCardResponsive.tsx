@@ -22,10 +22,10 @@ const ComparisonAccommodationCardResponsive: React.FC<ComparisonAccommodationCar
 	}
 
 	function renderFeatures() {
-		if (!ObjectUtils.isArrayWithData(props.accommodationDetails.features)) return;
+		if (!ObjectUtils.isArrayWithData(props.accommodationDetails.amenities)) return;
 		return (
 			<Box display={'flex'} flexWrap={'wrap'}>
-				{props.accommodationDetails.features.map((feature) => {
+				{props.accommodationDetails.amenities.map((feature) => {
 					return (
 						<IconToolTip
 							key={feature.title}

@@ -143,10 +143,8 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 
 	function renderFeatureTiles() {
 		if (!accommodationDetails) return '';
-		let accommodationDetailsFeaturesActive = accommodationDetails.features.filter((item) => {
-			return item.isActive;
-		});
-		return accommodationDetailsFeaturesActive.map((item) => {
+
+		return accommodationDetails.amenities.map((item) => {
 			return <IconFeatureTile key={item.title} title={item.title} icon={item.icon} />;
 		});
 	}
