@@ -4,6 +4,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
+import Button from '@bit/redsky.framework.rs.button';
 
 interface FilterBarDropDownProps {
 	title?: string;
@@ -50,12 +51,12 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 							height="75px"
 							paddingX="10px"
 						>
-							<button className="clearBtn" onClick={onClearBtnCallBack}>
-								Clear
-							</button>
-							<button className="applyBtn" onClick={applyBtnCallback}>
+							<Button look="none" onClick={onClearBtnCallBack}>
+								clear
+							</Button>
+							<Button look="containedPrimary" onClick={applyBtnCallback}>
 								Apply
-							</button>
+							</Button>
 						</Box>
 					</Box>
 				</Box>
