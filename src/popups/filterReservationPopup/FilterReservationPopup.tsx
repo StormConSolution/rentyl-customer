@@ -56,7 +56,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('propertyTypeIds', setPropertyTypeIds(), []),
+			new RsFormControl('propertyTypeIds', reservationFilters.propertyTypeIds || [], []),
 			new RsFormControl('adultCount', params.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
@@ -73,8 +73,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
-	const [testInUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
-	const [testResortExperiences, setResortExperiences] = useState<OptionType[]>([]);
+	const [testInUnitAmenities, setTestInUnitAmenities] = useState<OptionType[]>([]);
+	const [testResortExperiences, setTestResortExperiences] = useState<OptionType[]>([]);
 
 	useEffect(() => {
 		async function getResortExperiences() {
@@ -106,6 +106,10 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		}
 		getFilterOptions().catch(console.error);
 	}, []);
+
+	useEffect(() => {
+		WebUtils.updateUrlParams(reservationFilters);
+	}, [reservationFilters]);
 
 	function formatOptions(options: any[]) {
 		return options.map((value) => {

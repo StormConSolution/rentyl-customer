@@ -93,20 +93,12 @@ declare namespace Misc {
 		isoCode: string;
 	}
 
-	export interface ReservationFilters {
-		startDate: string | Date;
-		endDate: string | Date;
-		adultCount: number;
-		childCount: number;
+	export interface ReservationFilters extends Api.AvailabilityFilter {
 		redeemPoints: boolean;
 		sortBy: string;
-		pagination: RedSky.PagePagination;
-		propertyTypeIds?: number[];
 		regionIds?: number[];
 		inUnitAmenities?: number[];
 		view?: number[];
-		priceRangeMin?: number;
-		priceRangeMax?: number;
 		bedrooms?: number;
 		bathrooms?: number;
 		resortExperiences?: number[];

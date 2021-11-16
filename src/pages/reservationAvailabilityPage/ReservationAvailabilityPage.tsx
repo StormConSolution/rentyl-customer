@@ -25,7 +25,6 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import RegionService from '../../services/region/region.service';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
@@ -112,20 +111,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		/**
 		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
 		 */
-		let urlParams: any = { ...params };
-		setReservationFilters((pre) => {
-			let createSearchQueryObj: any = { ...pre };
-			for (let i in urlParams) {
-				if (!!urlParams[i].toString().length) {
-					if (i === 'region' || i === 'propertyTypeIds') {
-						createSearchQueryObj[i] = convertUrlParamRegionOrPropertyType(urlParams[i]);
-						continue;
-					}
-					createSearchQueryObj[i] = urlParams[i];
-				}
-			}
-			return createSearchQueryObj;
-		});
+		setReservationFilters(WebUtils.parseURLParamsToFilters());
 	}, []);
 
 	useEffect(() => {
@@ -175,75 +161,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMax),
 			filterObject.propertyTypeIds
 		);
-	}
-	function convertUrlParamRegionOrPropertyType(numberString: string) {
-		let regionOrPropertyTypeArray = numberString.split(',');
-		return regionOrPropertyTypeArray.map((item: string) => {
-			return parseInt(item);
-		});
-	}
-
-	function updateSearchQueryObj(
-		key:
-			| 'startDate'
-			| 'endDate'
-			| 'adultCount'
-			| 'childCount'
-			| 'priceRangeMin'
-			| 'priceRangeMax'
-			| 'pagination'
-			| 'rateCode'
-			| 'regionIds'
-			| 'propertyTypeIds',
-		value: any
-	) {
-		if (key === 'adultCount' && value === 0) {
-			//this should never evaluate to true with current implementations.
-			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
-		}
-		if (key === 'adultCount' && isNaN(value)) {
-			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
-		}
-		if (key === 'childCount' && isNaN(value)) {
-			throw rsToastify.error('# of children must be a number', 'Missing or Incorrect Information');
-		}
-		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
-			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
-		}
-		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
-			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
-		}
-		if (
-			key === 'priceRangeMin' &&
-			reservationFilters['priceRangeMax'] &&
-			value > reservationFilters['priceRangeMax']
-		) {
-			setErrorMessage('Price min must be lower than the max');
-		} else if (
-			key === 'priceRangeMax' &&
-			reservationFilters['priceRangeMin'] &&
-			value < reservationFilters['priceRangeMin']
-		) {
-			setErrorMessage('Price max must be greater than the min');
-		} else {
-			setErrorMessage('');
-		}
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			if (value === '' || value === undefined) delete createSearchQueryObj[key];
-			else createSearchQueryObj[key] = value;
-			if (key === 'regionIds' || key === 'propertyTypeIds') {
-				if (!ObjectUtils.isArrayWithData(value)) delete createSearchQueryObj[key];
-			}
-			updateParams(createSearchQueryObj);
-			return createSearchQueryObj;
-		});
-	}
-
-	function updateParams(searchQueryObj: any) {
-		let newUrlParams = { ...searchQueryObj };
-		delete newUrlParams['pagination'];
-		router.updateUrlParams(newUrlParams);
 	}
 
 	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
@@ -306,7 +223,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					unfilteredAccommodations={destination.accommodations}
 					destinationDescription={destination.description}
 					destinationName={destination.name}
-					destinationFeatures={destination.features}
+					destinationFeatures={destination.experiences}
 					address={StringUtils.buildAddressString(addressData)}
 					picturePaths={urls}
 					summaryTabs={summaryTabs}

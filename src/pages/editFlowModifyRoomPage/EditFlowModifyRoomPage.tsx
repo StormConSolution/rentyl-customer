@@ -167,7 +167,7 @@ const EditFlowModifyRoomPage = () => {
 						description={destination.longDescription}
 						ratePerNightInCents={destination.costPerNightCents}
 						pointsRatePerNight={destination.pointsPerNight}
-						amenityIconNames={destination.featureIcons}
+						amenityIconNames={destination.amenities.map((item) => item.title)}
 						pointsEarnable={destination.pointsEarned}
 						hideButtons={true}
 						roomStats={[

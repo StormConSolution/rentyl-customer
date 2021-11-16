@@ -107,6 +107,77 @@ class WebUtils extends BaseWebUtils {
 		return window.location.host.includes('localhost');
 	}
 
+	static parseURLParamsToFilters(): Misc.ReservationFilters {
+		const urlParams = new URLSearchParams(window.location.search);
+		let startDate = urlParams.get('startDate')
+			? urlParams.get('startDate')!
+			: moment(new Date()).add(14, 'days').format('YYYY-MM-DD');
+		let endDate = urlParams.get('endDate')
+			? urlParams.get('endDate')!
+			: moment(startDate).add(2, 'days').format('YYYY-MM-DD');
+
+		let reservationFilter: Misc.ReservationFilters = {
+			accommodationId: urlParams.get('ai') ? parseInt(urlParams.get('ai')!) : undefined,
+			adultCount: urlParams.get('adultCount') ? parseInt(urlParams.get('adultCount')!) : 1,
+			bathrooms: urlParams.get('bathrooms') ? parseInt(urlParams.get('bathrooms')!) : 1,
+			bedrooms: urlParams.get('bedrooms') ? parseInt(urlParams.get('bedrooms')!) : 1,
+			childCount: 0,
+			destinationId: urlParams.get('destinationId') ? parseInt(urlParams.get('destinationId')!) : undefined,
+			inUnitAmenities: urlParams.get('inUnitAmenities')
+				? JSON.parse(urlParams.get('inUnitAmenities')!)
+				: undefined,
+			pagination: { page: 1, perPage: 10 },
+			priceRangeMax: urlParams.get('priceRangeMax') ? parseInt(urlParams.get('priceRangeMax')!) : 1,
+			priceRangeMin: urlParams.get('priceRangeMin') ? parseInt(urlParams.get('priceRangeMin')!) : 1,
+			propertyTypeIds: urlParams.get('propertyTypeIds')
+				? JSON.parse(urlParams.get('propertyTypeIds')!)
+				: undefined,
+			redeemPoints: !!urlParams.get('redeemPoints'),
+			regionIds: urlParams.get('regionIds') ? JSON.parse(urlParams.get('regionIds')!) : undefined,
+			resortExperiences: urlParams.get('resortExperiences')
+				? JSON.parse(urlParams.get('resortExperiences')!)
+				: undefined,
+			sortBy: urlParams.get('sortBy') ? urlParams.get('sortBy')! : '',
+			view: urlParams.get('view') ? JSON.parse(urlParams.get('view')!) : undefined,
+			startDate,
+			endDate
+		};
+		return reservationFilter;
+	}
+
+	static updateUrlParams(reservationFilters: Misc.ReservationFilters): string {
+		let stringBuilder: string[] = [];
+		if (reservationFilters.accommodationId) {
+			stringBuilder.push(`ai=${reservationFilters.accommodationId}`);
+		}
+		if (reservationFilters.destinationId) {
+			stringBuilder.push(`di=${reservationFilters.destinationId}`);
+		}
+		if (reservationFilters.startDate) {
+			stringBuilder.push(`startDate=${reservationFilters.startDate}`);
+		}
+		if (reservationFilters.endDate) {
+			stringBuilder.push(`endDate=${reservationFilters.endDate}`);
+		}
+		if (reservationFilters.bathrooms) stringBuilder.push(`bathrooms=${reservationFilters.bathrooms}`);
+		if (reservationFilters.bedrooms) stringBuilder.push(`bedrooms=${reservationFilters.bedrooms}`);
+		if (reservationFilters.inUnitAmenities)
+			stringBuilder.push(`inUnitAmenities=${JSON.stringify(reservationFilters.inUnitAmenities)}`);
+		if (reservationFilters.redeemPoints) stringBuilder.push(`redeemPoints=${reservationFilters.redeemPoints}`);
+		if (reservationFilters.regionIds)
+			stringBuilder.push(`regionIds=${JSON.stringify(reservationFilters.regionIds)}`);
+		if (reservationFilters.resortExperiences)
+			stringBuilder.push(`resortExperiences=${JSON.stringify(reservationFilters.resortExperiences)}`);
+		if (reservationFilters.sortBy) stringBuilder.push(`sortBy=${reservationFilters.sortBy}`);
+		if (reservationFilters.view) stringBuilder.push(`view=${JSON.stringify(reservationFilters.view)}`);
+		if (reservationFilters.adultCount) stringBuilder.push(`adultCount=${reservationFilters.adultCount}`);
+		if (reservationFilters.propertyTypeIds)
+			stringBuilder.push(`propertyTypeIds=${JSON.stringify(reservationFilters.propertyTypeIds)}`);
+
+		let builtString = stringBuilder.join('&');
+		window.history.replaceState(null, '', '?' + builtString);
+		return '?' + builtString;
+	}
 	/**
 	 * Takes parameters and creates a pageQuery object
 	 * @param page - must be a number
