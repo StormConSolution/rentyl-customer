@@ -133,3 +133,15 @@
 		}
 	}
 }
+.small {
+	.rsCarouselV2 {
+		width: 100%;
+		height: 220px;
+		.clickRight,
+		.clickLeft,
+		.addToCompareButton,
+		.imageCountContainer {
+			opacity: 1;
+		}
+	}
+}

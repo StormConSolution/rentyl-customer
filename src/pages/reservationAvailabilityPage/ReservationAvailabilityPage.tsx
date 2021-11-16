@@ -28,6 +28,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
+import TopSearchBarMobile from '../../components/topSearchBar/topSearchBarMobile/TopSearchBarMobile';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();

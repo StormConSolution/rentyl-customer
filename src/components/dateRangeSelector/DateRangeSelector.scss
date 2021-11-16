@@ -199,7 +199,6 @@
 						left: 0;
 						bottom: 0;
 						right: 0;
-						z-index: 0;
 					}
 				}
 			}
@@ -218,6 +217,40 @@
 
 		.DayPickerKeyboardShortcuts_buttonReset {
 			display: none;
+		}
+	}
+}
+.small {
+	.rsDateRangeSelector {
+		.DateRangePicker {
+			.DateInput_input {
+				font-size: 18px;
+				line-height: 37px;
+				color: #767676;
+				width: 60px;
+				height: unset;
+				font-weight: 400;
+				&::placeholder {
+					font-family: 'Montserrat', sans-serif;
+					font-size: 18px;
+					line-height: 37px;
+					letter-spacing: 0;
+					color: #767676;
+					font-weight: 400;
+				}
+			}
+			.DateInput {
+				width: fit-content;
+				&.DateInput_1:first-of-type {
+					margin-right: 0;
+				}
+			}
+			.DateRangePickerInput_arrow {
+				display: unset;
+				.rsIcon {
+					margin-right: 5px;
+				}
+			}
 		}
 	}
 }
