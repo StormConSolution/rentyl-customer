@@ -37,7 +37,7 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						<Label display={'flex'} className={'icons'}>
 							{renderIcons(accommodation.amenities)}
 						</Label>
-						<Label variant={'caption'}>{accommodation.roomCount}</Label>
+						<Label variant={'caption'}>{accommodation.bathroomCount}</Label>
 						<Label variant={'caption'}>{accommodation.maxOccupantCount}</Label>
 					</>
 				)}

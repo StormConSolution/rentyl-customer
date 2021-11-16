@@ -98,7 +98,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		async function getAvailableStays() {
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let result = await accommodationService.availability(params.destinationId, reservationFilters);
+				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
+				let key: keyof Misc.ReservationFilters;
+				for (key in searchQueryObj) {
+					if (!searchQueryObj[key]) delete searchQueryObj[key];
+				}
+				let result = await accommodationService.availability(params.destinationId, searchQueryObj);
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
 				popupController.close(SpinningLoaderPopup);
@@ -126,7 +131,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				adultCount: params.guests || 1,
 				childCount: 0,
 				redeemPoints: false,
-				sortBy: 'ASC',
+				sortOrder: 'ASC',
 				pagination: { page: 1, perPage: 10 }
 			});
 		}
