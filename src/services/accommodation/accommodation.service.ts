@@ -28,8 +28,8 @@ export default class AccommodationService extends Service {
 			destinationId: destinationId,
 			startDate: searchQueryObj.startDate,
 			endDate: searchQueryObj.endDate,
-			adults: searchQueryObj.adultCount,
-			children: searchQueryObj.childCount,
+			adultCount: searchQueryObj.adultCount,
+			childCount: searchQueryObj.childCount,
 			pagination: { page: 1, perPage: 5 }
 		};
 		if (searchQueryObj.priceRangeMin) {

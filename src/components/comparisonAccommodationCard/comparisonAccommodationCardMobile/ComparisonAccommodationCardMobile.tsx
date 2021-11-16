@@ -25,15 +25,15 @@ const ComparisonAccommodationCardMobile: React.FC<ComparisonAccommodationCardMob
 	}
 
 	function renderFeatures() {
-		if (!props.accommodationDetails.features) return [];
+		if (!props.accommodationDetails.amenities) return [];
 		return (
 			<Box display={'flex'} flexWrap={'wrap'}>
-				{props.accommodationDetails.features.map((feature) => {
+				{props.accommodationDetails.amenities.map((amenity) => {
 					return (
 						<IconToolTip
-							key={feature.title}
-							title={feature.title}
-							iconImg={feature.icon}
+							key={amenity.title}
+							title={amenity.title}
+							iconImg={amenity.icon}
 							className={'featureIconLabel'}
 						/>
 					);

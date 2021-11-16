@@ -18,7 +18,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	destinationId: number;
 	destinationName: string;
 	destinationDescription: string;
-	destinationFeatures: {
+	destinationExperiences: {
 		id: number;
 		title: string;
 		icon: string;
@@ -102,12 +102,12 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderFeatures() {
-		return props.destinationFeatures.map((feature) => {
+		return props.destinationExperiences.map((experience) => {
 			return (
 				<Box display={'flex'} flexDirection={'column'} alignItems={'center'} textAlign={'center'}>
 					<IconLabel
-						labelName={feature.title}
-						iconImg={feature.icon}
+						labelName={experience.title}
+						iconImg={experience.icon}
 						iconPosition={'top'}
 						iconSize={45}
 						labelVariant={'subtitle1'}

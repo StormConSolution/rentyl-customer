@@ -133,10 +133,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}, []);
 
 	function renderFeatures() {
-		if (!destinationDetails || !destinationDetails.features) return;
+		if (!destinationDetails || !destinationDetails.experiences) return;
 		let featureArray: any = [];
-		destinationDetails.features.forEach((item) => {
-			if (!item.isActive || item.isCarousel) return false;
+		destinationDetails.experiences.forEach((item) => {
 			let primaryMedia: any = '';
 			for (let value of item.media) {
 				if (!value.isPrimary) continue;
@@ -150,10 +149,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderFeatureCarousel() {
-		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.features)) return;
+		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.experiences)) return;
 		let carouselItems: any = [];
-		for (let item of destinationDetails.features) {
-			if (!item.isActive || !item.isCarousel) continue;
+		for (let item of destinationDetails.experiences) {
 			let imagePath = '';
 			if (ObjectUtils.isArrayWithData(item.media)) {
 				const mainImg = item.media.find((image) => image.isPrimary);
@@ -258,7 +256,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							datum: item.extraBeds ? 'Yes' : 'No'
 						}
 					]}
-					amenityIconNames={item.featureIcons}
+					amenityIconNames={item.amenities}
 					carouselImagePaths={item.media}
 				/>
 			);
@@ -266,7 +264,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderSectionTwo() {
-		if (!ObjectUtils.isArrayWithData(destinationDetails?.features?.filter((item) => !item.isCarousel))) return null;
 		return (
 			<Box className={'sectionTwo'} marginBottom={'120px'}>
 				<Label variant={'h1'}>Features</Label>
@@ -278,11 +275,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderSectionThree() {
-		if (!destinationDetails?.features) return null;
+		if (!destinationDetails?.experiences) return null;
 		return (
 			<Box className={'sectionThree'} marginBottom={'190px'}>
 				{renderFeatureCarousel()}
-				{ObjectUtils.isArrayWithData(destinationDetails.features) && <div className={'yellowSquare'} />}
+				{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
 			</Box>
 		);
 	}

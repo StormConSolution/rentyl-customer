@@ -88,7 +88,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					unfilteredAccommodations={destination.accommodations}
 					destinationDescription={destination.description}
 					destinationName={destination.name}
-					destinationFeatures={destination.features}
+					destinationExperiences={destination.experiences}
 					address={StringUtils.buildAddressString(addressData)}
 					picturePaths={urls}
 					summaryTabs={summaryTabs}
@@ -190,13 +190,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<HeroImage
-					className={'heroImage'}
-					image={require('../../images/destinationResultsPage/momDaughterHero.jpg')}
-					height={'200px'}
-					mobileHeight={'100px'}
-				/>
-
 				<TopSearchBar
 					onSearch={(data) => {
 						console.log(data);

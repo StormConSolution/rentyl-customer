@@ -107,7 +107,7 @@ const BookingFlowAddRoomPage = () => {
 					description={accommodation.longDescription}
 					ratePerNightInCents={accommodation.costPerNightCents}
 					pointsRatePerNight={accommodation.pointsPerNight}
-					amenityIconNames={accommodation.featureIcons}
+					amenityIconNames={accommodation.amenities}
 					pointsEarnable={accommodation.pointsEarned}
 					hideButtons={true}
 					roomStats={[
@@ -172,7 +172,7 @@ const BookingFlowAddRoomPage = () => {
 							}
 						]}
 						carouselImagePaths={editingAccommodation.media}
-						amenityIconNames={editingAccommodation.features.map((feature) => feature.title)}
+						amenityIconNames={editingAccommodation.amenities.map((amenities) => amenities.title)}
 						onBookNowClick={() => {
 							bookNow(editStayDetails.accommodationId);
 						}}
