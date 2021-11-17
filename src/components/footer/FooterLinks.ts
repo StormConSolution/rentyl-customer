@@ -26,7 +26,7 @@ export const FooterLinks: FooterSection[] = [
 				path: 'https://rentylresorts.com/resorts/'
 			},
 			{
-				text: 'Deals',
+				text: 'Amenities',
 				path: 'https://rentylresorts.com/deals-packages/'
 			}
 		]

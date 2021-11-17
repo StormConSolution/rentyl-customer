@@ -326,14 +326,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 						console.log(data);
 					}}
 				/>
-				<Box className={'pointsDisplay'}>
-					<PointsOrLogin />
-				</Box>
 				<Box
 					className={'filterResultsWrapper'}
-					bgcolor={'#ffffff'}
 					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 0 60px 0'}
-					boxSizing={'border-box'}
 				>
 					{size !== 'small' ? (
 						<>
