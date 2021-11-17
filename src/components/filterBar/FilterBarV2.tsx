@@ -31,7 +31,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const [sortBySelection, setSortBySelection] = useState<number>();
+	const [sortOrderSelection, setSortOrderSelection] = useState<string>('ASC');
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			//propertyTypeIds are the text accommodationType on the front end.
@@ -57,7 +57,8 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				[]
 			),
 			new RsFormControl('experienceIds', reservationFilters.experienceIds || [], []),
-			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], [])
+			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], []),
+			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
 		])
 	);
 	function updateFilterForm(control: RsFormControl | undefined) {
@@ -81,6 +82,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				priceRangeMin: number;
 				experienceIds: number[];
 				amenityIds: number[];
+				sortOrder: 'ASC' | 'DESC';
 			} = filterForm.toModel();
 			return { ...prev, ...form };
 		});
@@ -265,31 +267,35 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box className="halfCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => console.log('Clear Form')}
-							title="Lowest Prices"
+							onClearCallback={() => setSortOrderSelection('')}
+							title={sortOrderSelection === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
 							className="dropdownMarginX"
 						>
 							<LabelRadioButton
 								radioName="highestRadioBtn"
 								value="sortHigh"
-								checked={sortBySelection === 0}
-								text="Highest Price"
+								checked={sortOrderSelection === 'DESC'}
+								text="Highest Prices"
 								onSelect={() => {
-									setSortBySelection(0);
+									setSortOrderSelection('DESC');
+									let tempControl = filterForm.get('sortOrder');
+									tempControl.value = 'DESC';
+									updateFilterForm(tempControl);
 								}}
 								labelSize="body2"
-								isDisabled={true}
 							/>
 							<LabelRadioButton
 								radioName="lowestRadioBtn"
 								value="sortLow"
-								checked={sortBySelection === 1}
-								text="Lowest Price"
+								checked={sortOrderSelection === 'ASC'}
+								text="Lowest Prices"
 								onSelect={() => {
-									setSortBySelection(1);
+									setSortOrderSelection('ASC');
+									let tempControl = filterForm.get('sortOrder');
+									tempControl.value = 'ASC';
+									updateFilterForm(tempControl);
 								}}
 								labelSize="body2"
-								isDisabled={true}
 							/>
 						</FilterBarDropDown>
 					</Box>
