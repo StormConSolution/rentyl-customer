@@ -6,10 +6,11 @@
 	width: 100%;
 	justify-content: space-between;
 	.featureIcons {
-		max-width: 1020px;
-		width: 100%;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+		display: flex;
+		gap: 34px;
+		flex-wrap: wrap;
+		align-items: center;
+		text-align: center;
 	}
 	.featureTitle {
 		font-weight: $light;

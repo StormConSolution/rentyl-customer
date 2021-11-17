@@ -25,12 +25,12 @@ const ComparisonAccommodationCardResponsive: React.FC<ComparisonAccommodationCar
 		if (!ObjectUtils.isArrayWithData(props.accommodationDetails.amenities)) return;
 		return (
 			<Box display={'flex'} flexWrap={'wrap'}>
-				{props.accommodationDetails.amenities.map((feature) => {
+				{props.accommodationDetails.amenities.map((amenity) => {
 					return (
 						<IconToolTip
-							key={feature.title}
-							title={feature.title}
-							iconImg={feature.icon}
+							key={amenity.title}
+							title={amenity.title}
+							iconImg={amenity.icon}
 							className={'featureIconLabel'}
 						/>
 					);

@@ -18,7 +18,7 @@ export interface DestinationSearchResultCardProps {
 	destinationName: string;
 	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
 	destinationDescription: string;
-	destinationFeatures: {
+	destinationExperiences: {
 		id: number;
 		title: string;
 		icon: string;
@@ -67,7 +67,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			destinationId={props.destinationId}
 			destinationName={props.destinationName}
 			destinationDescription={props.destinationDescription}
-			destinationFeatures={props.destinationFeatures}
+			destinationExperiences={props.destinationExperiences}
 			address={props.address}
 			picturePaths={props.picturePaths}
 			summaryTabs={props.summaryTabs}

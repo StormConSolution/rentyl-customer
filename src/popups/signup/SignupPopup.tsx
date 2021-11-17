@@ -108,6 +108,7 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 					display={'flex'}
 					flexDirection={size === 'small' ? 'column' : 'row'}
 					gap={size === 'small' ? 0 : 36}
+					paddingTop={'30px'}
 				>
 					<LabelInput
 						title={'First name'}
