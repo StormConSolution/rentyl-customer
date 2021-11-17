@@ -40,10 +40,10 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 			new RsFormControl('adultCount', reservationFilters.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
-			new RsFormControl('bedroomCount', reservationFilters.adultCount || 1, [
+			new RsFormControl('bedroomCount', reservationFilters.bedroomCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
 			]),
-			new RsFormControl('bathroomCount', reservationFilters.adultCount || 1, [
+			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
 			new RsFormControl(
@@ -211,7 +211,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					</Box>
 					<Box id="bedroomsCol" className="filterCol">
 						<FilterBarDropDown
-							onChangeCallBack={() => console.log('Bedroom Dropdown')}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Bedrooms"
 							className="dropdownMarginX"
