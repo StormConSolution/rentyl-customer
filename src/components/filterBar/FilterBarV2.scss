@@ -11,9 +11,8 @@
 		flex: 0 0 auto;
 		width: 70%;
 
-		.priceCol {
-			flex: 0 0 auto;
-			width: 17%;
+		.filterCol {
+			flex: 1 0 0%;
 
 			.minMaxDiv {
 				display: flex;
@@ -35,16 +34,14 @@
 					width: 115px;
 				}
 			}
-		}
-		.filterCol {
-			flex: 1 0 0%;
 
 			.filterCounter {
 				padding-bottom: 15px;
 			}
 
 			.inUnitAmenitiesCheckboxContentBody {
-				min-width: 500px;
+				min-width: 230px;
+				max-width: 500px;
 			}
 
 			.inUnitAmenitiesWrapper {
@@ -89,12 +86,6 @@
 	}
 
 	@media screen and (max-width: 768px) {
-		.largeCol {
-			.priceCol {
-				flex: 0 0 auto;
-				width: 30%;
-			}
-		}
 		.smallCol {
 			.halfCol {
 				flex: 0 0 auto;
