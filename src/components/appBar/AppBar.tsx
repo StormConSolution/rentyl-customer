@@ -16,14 +16,13 @@ const AppBar: React.FC = () => {
 	return (
 		<div ref={appBarRef} className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'}`}>
 			<Link path={'/'}>
-				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} />
+				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} className={'logo'} />
 			</Link>
 
-			<Box display={'flex'} alignItems={'center'}>
+			<Box display={'flex'} alignItems={'center'} className={'menuContainer'}>
 				<Icon
 					iconImg={'icon-hamburger-menu'}
-					color={'#003A76'}
-					size={21}
+					size={16}
 					cursorPointer
 					onClick={() => {
 						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
