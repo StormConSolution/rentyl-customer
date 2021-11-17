@@ -115,7 +115,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderButtons() {
-		console.log(props.summaryTabs);
 		return props.summaryTabs.map((button) => {
 			if (ObjectUtils.isArrayWithData(props.summaryTabs)) {
 				if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
