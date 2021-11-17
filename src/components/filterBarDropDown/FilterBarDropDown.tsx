@@ -5,6 +5,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 import LabelButton from '../labelButton/LabelButton';
+import useOnClickOutsideRef from '../../customHooks/useOnClickOutsideRef';
 
 interface FilterBarDropDownProps {
 	title?: string;
@@ -17,6 +18,9 @@ interface FilterBarDropDownProps {
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 	const [toggleContent, setToggleContent] = useState<boolean>(false);
+	const modalRef = useOnClickOutsideRef(() => {
+		if (toggleContent) setToggleContent(false);
+	});
 	function applyBtnCallback() {
 		if (props.onChangeCallBack) props.onChangeCallBack();
 	}
@@ -33,17 +37,23 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				onClick={() => setToggleContent((prevState) => !prevState)}
 			>
 				<Box id="labelContainer">
-					<Label variant="body2" className="filterByLabel" paddingBottom={4}>
+					<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
 						Filter By
 					</Label>
-					<Label className="filterTitleLabel">{props.title}</Label>
+					<Label variant="body3" className="filterTitleLabel">
+						{props.title}
+					</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
-					<Icon iconImg={`icon-chevron-${toggleContent ? 'down' : 'up'}`} size={25} />
+					<Icon
+						iconImg={`icon-chevron-thin-${toggleContent ? 'down' : 'up'}`}
+						size={25}
+						color={'#000000BD'}
+					/>
 				</Box>
 			</Box>
 			{toggleContent && (
-				<Box className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
+				<Box boxRef={modalRef} className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
 					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
 						<Box
