@@ -25,8 +25,11 @@
 		}
 	}
 	.DropdownContent {
-		box-shadow: 0 0 8px theme-var($secondaryTextColor);
+		margin-left: 12px;
+		box-shadow: 0 0 8px theme-var($greyLineColor);
 		border-radius: 10px;
+		position: absolute;
 		z-index: 1;
+		background: theme-var($primaryBackgroundColor);
 	}
 }

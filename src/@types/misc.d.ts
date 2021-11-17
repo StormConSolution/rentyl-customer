@@ -96,8 +96,6 @@ declare namespace Misc {
 	export interface ReservationFilters extends Api.AvailabilityFilter {
 		redeemPoints: boolean;
 		regionIds?: number[];
-		bedroomCount?: number;
-		bathroomCount?: number;
 		destinationId?: number;
 		accommodationId?: number;
 	}
