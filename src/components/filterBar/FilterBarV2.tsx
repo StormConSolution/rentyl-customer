@@ -158,7 +158,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		<div className="rsFilterBarV2">
 			<Box className="largeCol">
 				<Box className="subRow rightBorder">
-					<Box id="priceDropdown" className="priceCol">
+					<Box id="priceDropdown" className="filterCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
