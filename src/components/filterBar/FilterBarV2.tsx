@@ -34,6 +34,8 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 	const [sortBySelection, setSortBySelection] = useState<number>();
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
+			//propertyTypeIds are the text accommodationType on the front end.
+			//We already have accommodationType and this was already listed as propertyType on the backend.
 			new RsFormControl('propertyTypeIds', reservationFilters.propertyTypeIds || [], []),
 			new RsFormControl('adultCount', reservationFilters.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
