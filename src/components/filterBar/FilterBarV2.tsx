@@ -1,5 +1,8 @@
 import * as React from 'react';
 import './FilterBarV2.scss';
+import { StringUtils } from '../../utils/utils';
+import { useRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import FilterBarDropDown from '../filterBarDropDown/FilterBarDropDown';
 import LabelCheckboxV2 from '../labelCheckbox/LabelCheckboxV2';
@@ -10,26 +13,78 @@ import Counter from '../counter/Counter';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
 import Label from '@bit/redsky.framework.rs.label';
 import Switch from '@bit/redsky.framework.rs.switch';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
+import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import DestinationService from '../../services/destination/destination.service';
 import PropertyType = Model.PropertyType;
 import OptionType = Misc.OptionType;
 
 interface FilterBarV2Props {
-	onApplyClick: () => void;
-	filterForm: RsFormGroup;
-	updateFilterForm: (control: RsFormControl | undefined) => void;
 	destinationService: DestinationService;
 	accommodationToggle: boolean;
 	redeemCodeToggle: boolean;
 	accommodationOptions: PropertyType[];
 	resortExperiencesOptions: OptionType[];
 	inUnitAmenitiesOptions: OptionType[];
-	viewOptions: OptionType[];
 }
 
 const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const [sortBySelection, setSortBySelection] = useState<number>();
+	const [filterForm, setFilterForm] = useState<RsFormGroup>(
+		new RsFormGroup([
+			//propertyTypeIds are the text accommodationType on the front end.
+			//We already have accommodationType and this was already listed as propertyType on the backend.
+			new RsFormControl('propertyTypeIds', reservationFilters.propertyTypeIds || [], []),
+			new RsFormControl('adultCount', reservationFilters.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
+			]),
+			new RsFormControl('bedroomCount', reservationFilters.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
+			]),
+			new RsFormControl('bathroomCount', reservationFilters.adultCount || 1, [
+				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
+			]),
+			new RsFormControl(
+				'priceRangeMax',
+				StringUtils.addCommasToNumber(reservationFilters.priceRangeMax) || 1000,
+				[]
+			),
+			new RsFormControl(
+				'priceRangeMin',
+				StringUtils.addCommasToNumber(reservationFilters.priceRangeMin) || 1,
+				[]
+			),
+			new RsFormControl('experienceIds', reservationFilters.experienceIds || [], []),
+			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], [])
+		])
+	);
+	function updateFilterForm(control: RsFormControl | undefined) {
+		if (!control) return;
+		if (control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
+			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
+			control.value = newValue;
+		}
+		filterForm.update(control);
+		setFilterForm(filterForm.clone());
+	}
+
+	function onApplyClick() {
+		setReservationFilters((prev) => {
+			const form: {
+				propertyTypeIds: number[];
+				adultCount: number;
+				bedroomCount: number;
+				bathroomCount: number;
+				priceRangeMax: number;
+				priceRangeMin: number;
+				experienceIds: number[];
+				amenityIds: number[];
+			} = filterForm.toModel();
+			return { ...prev, ...form };
+		});
+	}
 
 	function renderAccommodationList() {
 		if (!props.accommodationOptions) return;
@@ -39,15 +94,15 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				value={item.id}
 				text={item.name}
 				onSelect={() => {
-					let tempControl = props.filterForm.get('accommodationType');
+					let tempControl = filterForm.get('propertyTypeIds');
 					tempControl.value = [...(tempControl.value as number[]), item.id as number];
-					props.updateFilterForm(tempControl);
+					updateFilterForm(tempControl);
 				}}
-				isChecked={(props.filterForm.get('accommodationType').value as number[]).includes(item.id as number)}
+				isChecked={(filterForm.get('propertyTypeIds').value as number[]).includes(item.id as number)}
 				onDeselect={() => {
-					props.filterForm.get('accommodationType').value = (props.filterForm.get('accommodationType')
+					filterForm.get('propertyTypeIds').value = (filterForm.get('propertyTypeIds')
 						.value as number[]).filter((type) => type !== item.id);
-					props.updateFilterForm(props.filterForm.get('accommodationType'));
+					updateFilterForm(filterForm.get('propertyTypeIds'));
 				}}
 			/>
 		));
@@ -59,24 +114,18 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				key={item.value}
 				value={item.value}
 				text={item.label}
-				onSelect={() => console.log('selected')}
+				onSelect={() => {
+					let tempControl = filterForm.get('experienceIds');
+					tempControl.value = [...(tempControl.value as number[]), item.value as number];
+					updateFilterForm(tempControl);
+				}}
 				isChecked={props.accommodationToggle}
-				onDeselect={() => console.log('Deselected')}
-				isDisabled={true}
-			/>
-		));
-	}
-
-	function renderViewOptionsList() {
-		return props.viewOptions.map((item) => (
-			<LabelCheckboxV2
-				key={item.value}
-				value={item.value}
-				text={item.label}
-				onSelect={() => console.log('selected')}
-				isChecked={props.accommodationToggle}
-				onDeselect={() => console.log('Deselected')}
-				isDisabled={true}
+				onDeselect={() => {
+					filterForm.get('experienceIds').value = (filterForm.get('experienceIds').value as number[]).filter(
+						(type) => type !== item.value
+					);
+					updateFilterForm(filterForm.get('experienceIds'));
+				}}
 			/>
 		));
 	}
@@ -87,10 +136,18 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				key={item.value}
 				value={item.value}
 				text={item.label}
-				onSelect={() => console.log('selected')}
+				onSelect={() => {
+					let tempControl = filterForm.get('amenityIds');
+					tempControl.value = [...(tempControl.value as number[]), item.value as number];
+					updateFilterForm(tempControl);
+				}}
 				isChecked={props.accommodationToggle}
-				onDeselect={() => console.log('Deselected')}
-				isDisabled={true}
+				onDeselect={() => {
+					filterForm.get('amenityIds').value = (filterForm.get('amenityIds').value as number[]).filter(
+						(type) => type !== item.value
+					);
+					updateFilterForm(filterForm.get('amenityIds'));
+				}}
 			/>
 		));
 	}
@@ -101,7 +158,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				<Box className="subRow rightBorder">
 					<Box id="priceDropdown" className="priceCol">
 						<FilterBarDropDown
-							onChangeCallBack={props.onApplyClick}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Price"
 							className="dropdownMarginX"
@@ -109,12 +166,12 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						>
 							<Slider
 								range={[1, 1000]}
-								minControl={props.filterForm.get('priceRangeMin')}
-								maxControl={props.filterForm.get('priceRangeMax')}
+								minControl={filterForm.get('priceRangeMin')}
+								maxControl={filterForm.get('priceRangeMax')}
 								sliderIcons={'icon-hamburger-menu'}
 								rotate={90}
-								updateMinControl={props.updateFilterForm}
-								updateMaxControl={props.updateFilterForm}
+								updateMinControl={updateFilterForm}
+								updateMaxControl={updateFilterForm}
 								mode={SliderMode.COLLISION}
 								handleStyle={{ border: '1px solid black', borderRadius: '50%' }}
 								railClass="priceSliderRail"
@@ -125,23 +182,23 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 									className="priceMin"
 									inputType="text"
 									title="min price"
-									control={props.filterForm.get('priceRangeMin')}
-									updateControl={props.updateFilterForm}
+									control={filterForm.get('priceRangeMin')}
+									updateControl={updateFilterForm}
 								/>
 								<hr className="divider" />
 								<LabelInputV2
 									className="priceMax"
 									inputType="text"
 									title="max price"
-									control={props.filterForm.get('priceRangeMax')}
-									updateControl={props.updateFilterForm}
+									control={filterForm.get('priceRangeMax')}
+									updateControl={updateFilterForm}
 								/>
 							</div>
 						</FilterBarDropDown>
 					</Box>
 					<Box id="accommodationCol" className="filterCol">
 						<FilterBarDropDown
-							onChangeCallBack={props.onApplyClick}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Accommodation"
 							className="dropdownMarginX"
@@ -160,16 +217,16 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						>
 							<Counter
 								title="Bedrooms"
-								control={props.filterForm.get('bedroomCount')}
-								updateControl={props.updateFilterForm}
+								control={filterForm.get('bedroomCount')}
+								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={1}
 								labelMarginRight={5}
 							/>
 							<Counter
 								title="Bathrooms"
-								control={props.filterForm.get('bathroomCount')}
-								updateControl={props.updateFilterForm}
+								control={filterForm.get('bathroomCount')}
+								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={1}
 								labelMarginRight={5}
@@ -178,7 +235,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					</Box>
 					<Box id="resortExpCol" className="filterCol">
 						<FilterBarDropDown
-							onChangeCallBack={props.onApplyClick}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Resort Experiences"
 							className="dropdownMarginX"
@@ -189,7 +246,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					</Box>
 					<Box id="otherFilter" className="filterCol">
 						<FilterBarDropDown
-							onChangeCallBack={props.onApplyClick}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Other Filters"
 							className="dropdownMarginX"
@@ -199,10 +256,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								In Unit Amenities
 							</Label>
 							<Box className="inUnitAmenitiesWrapper">{renderInUnitAmenitiesOptionsList()}</Box>
-							<Label variant="body1" paddingTop={10} paddingLeft={10}>
-								View
-							</Label>
-							<Box className="viewOptionsWrapper">{renderViewOptionsList()}</Box>
 						</FilterBarDropDown>
 					</Box>
 				</Box>
@@ -211,7 +264,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				<Box className="subRow">
 					<Box className="halfCol">
 						<FilterBarDropDown
-							onChangeCallBack={props.onApplyClick}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Lowest Prices"
 							className="dropdownMarginX"
@@ -244,7 +297,18 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						<Label className="redeemPointsLabel" variant="body1">
 							Redeem Points
 						</Label>
-						<Switch checked={props.redeemCodeToggle} label={'{"left":"" }'} />
+						<Switch
+							checked={props.redeemCodeToggle}
+							label={'{"left":"" }'}
+							onChange={() => {
+								setReservationFilters((prev) => {
+									return {
+										...prev,
+										redeemPoints: !prev.redeemPoints
+									};
+								});
+							}}
+						/>
 					</Box>
 				</Box>
 			</Box>

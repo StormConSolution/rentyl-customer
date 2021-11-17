@@ -121,8 +121,8 @@ class WebUtils extends BaseWebUtils {
 		let reservationFilter: Misc.ReservationFilters = {
 			accommodationId: urlParams.get('ai') ? parseInt(urlParams.get('ai')!) : undefined,
 			adultCount: urlParams.get('adultCount') ? parseInt(urlParams.get('adultCount')!) : 1,
-			bathrooms: urlParams.get('bathrooms') ? parseInt(urlParams.get('bathrooms')!) : 1,
-			bedrooms: urlParams.get('bedrooms') ? parseInt(urlParams.get('bedrooms')!) : 1,
+			bathroomCount: urlParams.get('bathroomCount') ? parseInt(urlParams.get('bathroomCount')!) : 1,
+			bedroomCount: urlParams.get('bedroomCount') ? parseInt(urlParams.get('bedroomCount')!) : 1,
 			childCount: 0,
 			destinationId: urlParams.get('destinationId') ? parseInt(urlParams.get('destinationId')!) : undefined,
 			amenityIds: urlParams.get('amenityIds') ? JSON.parse(urlParams.get('amenityIds')!) : undefined,
@@ -156,8 +156,8 @@ class WebUtils extends BaseWebUtils {
 		if (reservationFilters.endDate) {
 			stringBuilder.push(`endDate=${reservationFilters.endDate}`);
 		}
-		if (reservationFilters.bathrooms) stringBuilder.push(`bathrooms=${reservationFilters.bathrooms}`);
-		if (reservationFilters.bedrooms) stringBuilder.push(`bedrooms=${reservationFilters.bedrooms}`);
+		if (reservationFilters.bathroomCount) stringBuilder.push(`bathroomCount=${reservationFilters.bathroomCount}`);
+		if (reservationFilters.bedroomCount) stringBuilder.push(`bedroomCount=${reservationFilters.bedroomCount}`);
 		if (reservationFilters.amenityIds)
 			stringBuilder.push(`amenityIds=${JSON.stringify(reservationFilters.amenityIds)}`);
 		if (reservationFilters.redeemPoints) stringBuilder.push(`redeemPoints=${reservationFilters.redeemPoints}`);

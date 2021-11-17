@@ -10,7 +10,6 @@ import { StringUtils, WebUtils } from '../../utils/utils';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import RegionService from '../../services/region/region.service';
 import DestinationService from '../../services/destination/destination.service';
 import serviceFactory from '../../services/serviceFactory';
 import router from '../../utils/router';
@@ -44,7 +43,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		{ key: 'propertyTypeIds', default: '', type: 'string', alias: 'propertyTypeIds' }
 	]);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const regionService = serviceFactory.get<RegionService>('RegionService');
 	const [sortBySelection, setSortBySelection] = useState<number>();
 	const [redeemCodeToggle, setRedeemCodeToggle] = useState<boolean>(false);
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
@@ -71,21 +69,36 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		])
 	);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
-	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
 
-	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
 	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
+
 	useEffect(() => {
-		async function getInUnitAmenities() {
-			const array = await destinationService.getDummyInUnitAmenities();
-			setInUnitAmenities(array);
+		async function getResortExperiences() {
+			let res = await destinationService.getExperienceTypes();
+			setResortExperiences(
+				res.map((experience) => {
+					return {
+						value: experience.id,
+						label: experience.title
+					};
+				})
+			);
 		}
-		async function getExperiences() {
-			const array = await destinationService.getDummyExperienceTypes();
-			setResortExperiences(array);
+		getResortExperiences().catch(console.error);
+
+		async function getInUnitAmenities() {
+			let res = await destinationService.getInUnitAmenities();
+			setInUnitAmenities(
+				res.map((amenity) => {
+					return {
+						value: amenity.id,
+						label: amenity.title
+					};
+				})
+			);
 		}
 		getInUnitAmenities().catch(console.error);
-		getExperiences().catch(console.error);
 	}, []);
 
 	useEffect(() => {
@@ -93,8 +106,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			try {
 				const propertyTypes = await destinationService.getAllPropertyTypes();
 				setPropertyTypeOptions(formatOptions(propertyTypes));
-				const regions = await regionService.getAllRegions();
-				setRegionOptions(formatOptions(regions));
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
