@@ -8,7 +8,7 @@
 	.rsIcon {
 		position: absolute;
 		top: 18px;
-		right: 14px;
+		right: 20px;
 	}
 	hr {
 		color: theme-var($greyLineColor);
@@ -48,12 +48,17 @@
 		}
 	}
 	.noAccount {
+		text-align: center;
 		font-weight: 300;
+	}
+
+	.forgotPasswordText {
+		margin-top: 5px;
 	}
 }
 
 @media screen and (min-width: 640px) {
-	.linethrough {
+	.lineThrough {
 		margin-bottom: 45px;
 	}
 }

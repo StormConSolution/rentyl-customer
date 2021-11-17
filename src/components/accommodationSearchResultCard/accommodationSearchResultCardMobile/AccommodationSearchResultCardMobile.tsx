@@ -73,7 +73,7 @@ const AccommodationSearchResultCardMobile: React.FC<AccommodationSearchResultCar
 			<Label variant={'body1'} mb={8}>
 				{props.description}
 			</Label>
-			<AccommodationSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
+			<AccommodationSearchDetailCard stats={props.roomStats} />
 			<Box display={'flex'} justifyContent={!props.hideButtons ? 'space-between' : 'center'} mt={10}>
 				<LabelButton
 					className={'small'}

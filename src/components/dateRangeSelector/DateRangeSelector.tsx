@@ -70,6 +70,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = (props) => {
 			<DateRangePicker
 				navPrev={<Icon iconImg={'icon-chevron-left'} size={10} />}
 				navNext={<Icon iconImg={'icon-chevron-right'} size={10} />}
+				minimumNights={2}
 				readOnly
 				startDatePlaceholderText={props.startDatePlaceholderText}
 				endDatePlaceholderText={props.endDatePlaceholderText}

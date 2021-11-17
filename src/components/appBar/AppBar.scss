@@ -19,9 +19,30 @@
 		top: -80px;
 	}
 
-	.rsIcon {
-		&.icon-hamburger-menu {
-			margin-left: 33px;
+	.menuContainer {
+		background-color: white;
+		border: 1px solid theme-var($greyLineColor);
+		border-radius: 10px;
+		max-width: 76px;
+		max-height: 39px;
+		margin: 12px;
+		.rsIcon {
+			&.icon-hamburger-menu {
+				padding: 12px;
+			}
 		}
+	}
+}
+
+.small {
+	.rsAppBar {
+		max-height: 64px;
+		width: 100%;
+		background-color: white;
+		.logo {
+			padding: 14px;
+			max-width: 100px;
+		}
+		border-bottom: 1px solid theme-var($greyLineColor);
 	}
 }
