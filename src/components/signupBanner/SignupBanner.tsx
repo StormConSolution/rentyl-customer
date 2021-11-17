@@ -10,7 +10,6 @@ const SignupBanner: React.FC = () => {
 
 	return (
 		<Box className={'rsSignupBanner'}>
-			{/*<div>*/}
 			<Label variant={`${size === 'small' ? 'h2' : 'h1'}`} className={'textTag'}>
 				Where convenience meets luxury
 			</Label>
@@ -19,7 +18,6 @@ const SignupBanner: React.FC = () => {
 				children={<Label variant={'body1'}>Sign up for spire Loyalty today!</Label>}
 				look={'containedPrimary'}
 			/>
-			{/*</div>*/}
 		</Box>
 	);
 };
