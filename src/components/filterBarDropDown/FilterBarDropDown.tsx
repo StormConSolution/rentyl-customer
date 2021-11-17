@@ -37,10 +37,12 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				onClick={() => setToggleContent((prevState) => !prevState)}
 			>
 				<Box id="labelContainer">
-					<Label variant="body2" className="filterByLabel" paddingBottom={4}>
+					<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
 						Filter By
 					</Label>
-					<Label className="filterTitleLabel">{props.title}</Label>
+					<Label variant="body3" className="filterTitleLabel">
+						{props.title}
+					</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
 					<Icon
