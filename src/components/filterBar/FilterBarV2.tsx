@@ -294,21 +294,24 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						</FilterBarDropDown>
 					</Box>
 					<Box className="halfCol redeemToggle">
-						<Label className="redeemPointsLabel" variant="body1">
-							Redeem Points
-						</Label>
-						<Switch
-							checked={props.redeemCodeToggle}
-							label={'{"left":"" }'}
-							onChange={() => {
-								setReservationFilters((prev) => {
-									return {
-										...prev,
-										redeemPoints: !prev.redeemPoints
-									};
-								});
-							}}
-						/>
+						<Box
+							display={'flex'}
+							flexDirection={'column'}
+							alignItems={'center'}
+							justifyContent={'flex-start'}
+						>
+							<Label variant={'caption1'}>Redeem Points</Label>
+							<Switch
+								labelPosition={'top'}
+								className={'toggleButton'}
+								onChange={() =>
+									setReservationFilters({
+										...reservationFilters,
+										redeemPoints: !reservationFilters.redeemPoints
+									})
+								}
+							/>
+						</Box>
 					</Box>
 				</Box>
 			</Box>

@@ -10,16 +10,11 @@ export interface AccommodationStat {
 }
 
 export interface AccommodationSearchDetailCardProps {
-	amenityIconNames: Array<string>;
 	stats: Array<AccommodationStat>;
 	className?: string;
 }
 
 const AccommodationSearchDetailCard: React.FC<AccommodationSearchDetailCardProps> = (props) => {
-	function renderAmenityIcons(iconPaths: Array<string>): Array<JSX.Element> {
-		return iconPaths.map((icon, index) => <Icon key={index} iconImg={icon} />);
-	}
-
 	function renderStats(stats: Array<AccommodationStat>): Array<JSX.Element> {
 		return stats.map((stat, index) => {
 			return (
@@ -33,9 +28,6 @@ const AccommodationSearchDetailCard: React.FC<AccommodationSearchDetailCardProps
 
 	return (
 		<Box className={`rsAccommodationSearchDetailCard ${props.className || ''}`}>
-			{!!props.amenityIconNames.length && (
-				<Box className="amenityIcons">{renderAmenityIcons(props.amenityIconNames)}</Box>
-			)}
 			<Box className="stats">{renderStats(props.stats)}</Box>
 		</Box>
 	);

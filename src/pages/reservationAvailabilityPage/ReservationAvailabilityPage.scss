@@ -10,21 +10,6 @@
 		margin: 25px auto 0;
 	}
 
-	.heroImage {
-		background-position-y: 38%;
-	}
-
-	.pointsDisplay {
-		display: flex;
-		justify-content: flex-end;
-		padding: 20px 45px 16px 45px;
-		.rsPointsOrLogin {
-			.signinContainer {
-				display: none;
-			}
-		}
-	}
-
 	.filterResultsWrapper {
 		.filterLabel {
 			padding-bottom: 17px;

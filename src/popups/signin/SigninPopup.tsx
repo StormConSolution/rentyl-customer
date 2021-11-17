@@ -62,11 +62,11 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					onClick={() => {
 						popupController.close(SigninPopup);
 					}}
-					size={14}
+					size={20}
 					cursorPointer
 				/>
 				<Label variant={'h4'}>Sign in / Sign up</Label>
-				<hr className={'linethrough'} />
+				<hr className={'lineThrough'} />
 				<LabelInput
 					title={'Email Address'}
 					inputType={'email'}
@@ -86,6 +86,7 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					{errorMessage}
 				</Label>
 				<LabelButton
+					className={'forgotPasswordText'}
 					look={'none'}
 					variant={'body2'}
 					label={'Forgot password'}
@@ -99,7 +100,7 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 					<hr />
 				</Box>
 				<Label className={'noAccount'} variant={'body5'} mb={18}>
-					No account? Save time on your next booking
+					No account? Save time on your next booking.
 				</Label>
 				<LabelButton
 					className={'yellow'}
