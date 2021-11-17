@@ -6,8 +6,10 @@ import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const AppBar: React.FC = () => {
+	const size = useWindowResizeChange();
 	const appBarRef = useRef<HTMLElement>(null);
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
@@ -16,14 +18,13 @@ const AppBar: React.FC = () => {
 	return (
 		<div ref={appBarRef} className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'}`}>
 			<Link path={'/'}>
-				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} />
+				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} className={'logo'} />
 			</Link>
 
-			<Box display={'flex'} alignItems={'center'}>
+			<Box display={'flex'} alignItems={'center'} className={'menuContainer'}>
 				<Icon
 					iconImg={'icon-hamburger-menu'}
-					color={'#003A76'}
-					size={21}
+					size={16}
 					cursorPointer
 					onClick={() => {
 						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
