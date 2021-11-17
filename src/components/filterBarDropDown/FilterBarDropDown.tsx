@@ -39,7 +39,11 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
-					<Icon iconImg={`icon-chevron-${toggleContent ? 'down' : 'up'}`} size={25} />
+					<Icon
+						iconImg={`icon-chevron-thin-${toggleContent ? 'down' : 'up'}`}
+						size={25}
+						color={'#000000BD'}
+					/>
 				</Box>
 			</Box>
 			{toggleContent && (
