@@ -82,16 +82,12 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 						</Label>
 					)}
 				</div>
-				{/*<div>*/}
-				{/*	<StarRating rating={props.starRating} size="small16px" />*/}
-				{/*	<LabelLink variant="caption" path="" label={`View ${props.accommodationType} Ratings >`} />*/}
-				{/*</div>*/}
 				<Label className="accommodationDescription" variant="body2">
 					{props.description}
 				</Label>
 			</div>
 			<Box className="detailCardHolder" alignSelf={'flex-end'}>
-				<AccommodationSearchDetailCard stats={props.roomStats} amenityIconNames={props.amenityIconNames} />
+				<AccommodationSearchDetailCard stats={props.roomStats} />
 			</Box>
 			<Box display={'flex'}>
 				<AccommodationSearchCallToActionCard

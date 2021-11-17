@@ -18,7 +18,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	destinationId: number;
 	destinationName: string;
 	destinationDescription: string;
-	destinationFeatures: {
+	destinationExperiences: {
 		id: number;
 		title: string;
 		icon: string;
@@ -55,18 +55,27 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}, [accommodationList]);
 
 	function renderPricePerNight() {
-		if (lowestPrice) {
+		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
 				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
 					<Label variant={'subtitle3'} className={'fromText'}>
 						from
 					</Label>
 					<Label variant={'h2'} className={'yellowText'}>
-						{reservationFilters.redeemPoints
-							? StringUtils.addCommasToNumber(lowestPrice.pricePoints)
-							: StringUtils.formatMoney(lowestPrice.priceCents)}
+						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
+				</Box>
+			);
+		} else if (!reservationFilters.redeemPoints && lowestPrice) {
+			return (
+				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
+					<Label variant={'subtitle3'} className={'fromText'}>
+						from
+					</Label>
+					<Label variant={'h2'}>${StringUtils.formatMoney(lowestPrice.priceCents)}</Label>
+					<Label variant={'subtitle3'}>per night</Label>
+					<Label variant={'subtitle2'}>+taxes & fees</Label>
 				</Box>
 			);
 		} else {
@@ -93,19 +102,18 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderFeatures() {
-		if (!ObjectUtils.isArrayWithData(props.destinationFeatures)) return;
-		return props.destinationFeatures.map((feature) => {
+		return props.destinationExperiences.map((experience) => {
 			return (
 				<Box
 					display={'flex'}
 					flexDirection={'column'}
 					alignItems={'center'}
 					textAlign={'center'}
-					key={feature.id}
+					key={experience.id}
 				>
 					<IconLabel
-						labelName={feature.title}
-						iconImg={feature.icon}
+						labelName={experience.title}
+						iconImg={experience.icon}
 						iconPosition={'top'}
 						iconSize={45}
 						labelVariant={'subtitle1'}
@@ -116,23 +124,25 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderButtons() {
-		return props.summaryTabs.map((button, idx) => {
-			if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
-				return (
-					<LabelButton
-						key={idx}
-						look={'containedPrimary'}
-						variant={'button'}
-						label={button.label}
-						onClick={(event) => {
-							event.stopPropagation();
-						}}
-					/>
-				);
+		return props.summaryTabs.map((button) => {
+			if (ObjectUtils.isArrayWithData(props.summaryTabs)) {
+				if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
+					return (
+						<LabelButton
+							key={button.label}
+							look={'containedPrimary'}
+							variant={'button'}
+							label={button.label}
+							onClick={(event) => {
+								event.stopPropagation();
+							}}
+						/>
+					);
+				}
 			} else {
 				return (
 					<LabelButton
-						key={idx}
+						key={button.label}
 						look={'containedPrimary'}
 						variant={'button'}
 						label={'Accommodations'}

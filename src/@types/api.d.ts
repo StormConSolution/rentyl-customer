@@ -14,6 +14,8 @@ declare namespace Api {
 		propertyTypeIds?: number[];
 		experienceIds?: number[];
 		amenityIds?: number[];
+		bedroomCount?: number;
+		bathroomCount?: number;
 		sortOrder: 'ASC' | 'DESC';
 		pagination: RedSky.PagePagination;
 	}
@@ -654,6 +656,8 @@ declare namespace Api {
 				reviewCount: number;
 				minBedroom: number;
 				maxBedroom: number;
+				minBathroom: number;
+				maxBathroom: number;
 				propertyTypes: PropertyType[];
 				media: Media[];
 				experiences: {
@@ -724,6 +728,8 @@ declare namespace Api {
 				country: string;
 				minBedroom: number;
 				maxBedroom: number;
+				minBathroom: number;
+				maxBathroom: number;
 				propertyTypes: PropertyType[];
 				logoUrl: string;
 				reviewRating: number;

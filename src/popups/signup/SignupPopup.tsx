@@ -87,6 +87,7 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 			popupController.close(SpinningLoaderPopup);
 			popupController.open<SigninPopupProps>(SigninPopup, {});
 		} catch (e) {
+			popupController.close(SpinningLoaderPopup);
 			setErrorMessage(WebUtils.getRsErrorMessage(e, 'Unexpected Server error'));
 		}
 	}
@@ -108,6 +109,7 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 					display={'flex'}
 					flexDirection={size === 'small' ? 'column' : 'row'}
 					gap={size === 'small' ? 0 : 36}
+					paddingTop={'30px'}
 				>
 					<LabelInput
 						title={'First name'}

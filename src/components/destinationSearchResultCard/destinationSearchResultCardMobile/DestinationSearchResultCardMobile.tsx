@@ -42,15 +42,20 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	}, []);
 
 	function renderPricePerNight() {
-		if (lowestPrice) {
+		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
 				<Box display={'flex'}>
-					<Label variant={'boldCaption1'}>
-						{reservationFilters.redeemPoints
-							? StringUtils.addCommasToNumber(lowestPrice.pricePoints)
-							: StringUtils.formatMoney(lowestPrice.priceCents)}
-						pts/
+					<Label variant={'boldCaption1'} className={'yellowText'}>
+						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts
 					</Label>
+					<Label variant={'caption1'}>/</Label>
+					<Label variant={'caption1'}>night</Label>
+				</Box>
+			);
+		} else if (!reservationFilters.redeemPoints && lowestPrice) {
+			return (
+				<Box display={'flex'}>
+					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>
 					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
