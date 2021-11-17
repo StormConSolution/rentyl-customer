@@ -5,6 +5,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 import Button from '@bit/redsky.framework.rs.button';
+import useOnClickOutsideRef from '../../customHooks/useOnClickOutsideRef';
 
 interface FilterBarDropDownProps {
 	title?: string;
@@ -17,6 +18,9 @@ interface FilterBarDropDownProps {
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 	const [toggleContent, setToggleContent] = useState<boolean>(false);
+	const modalRef = useOnClickOutsideRef(() => {
+		if (toggleContent) setToggleContent(false);
+	});
 	function applyBtnCallback() {
 		if (props.onChangeCallBack) props.onChangeCallBack();
 	}
@@ -47,7 +51,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				</Box>
 			</Box>
 			{toggleContent && (
-				<Box className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
+				<Box boxRef={modalRef} className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
 					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
 						<Box
