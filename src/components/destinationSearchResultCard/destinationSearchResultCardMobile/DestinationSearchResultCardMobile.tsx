@@ -45,7 +45,10 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 		if (reservationFilters.redeemPoints && lowestPrice) {
 			return (
 				<Box display={'flex'}>
-					<Label variant={'boldCaption1'}>{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts/</Label>
+					<Label variant={'boldCaption1'} className={'yellowText'}>
+						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts
+					</Label>
+					<Label variant={'caption1'}>/</Label>
 					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
