@@ -116,6 +116,8 @@ class WebUtils extends BaseWebUtils {
 			? urlParams.get('endDate')!
 			: moment(startDate).add(2, 'days').format('YYYY-MM-DD');
 
+		let sortOrder = urlParams.get('sortOrder') ? urlParams.get('sortOrder')! : 'ASC';
+
 		let reservationFilter: Misc.ReservationFilters = {
 			accommodationId: urlParams.get('ai') ? parseInt(urlParams.get('ai')!) : undefined,
 			adultCount: urlParams.get('adultCount') ? parseInt(urlParams.get('adultCount')!) : 1,
@@ -123,24 +125,19 @@ class WebUtils extends BaseWebUtils {
 			bedrooms: urlParams.get('bedrooms') ? parseInt(urlParams.get('bedrooms')!) : 1,
 			childCount: 0,
 			destinationId: urlParams.get('destinationId') ? parseInt(urlParams.get('destinationId')!) : undefined,
-			inUnitAmenities: urlParams.get('inUnitAmenities')
-				? JSON.parse(urlParams.get('inUnitAmenities')!)
-				: undefined,
+			amenityIds: urlParams.get('amenityIds') ? JSON.parse(urlParams.get('amenityIds')!) : undefined,
 			pagination: { page: 1, perPage: 10 },
-			priceRangeMax: urlParams.get('priceRangeMax') ? parseInt(urlParams.get('priceRangeMax')!) : 1,
+			priceRangeMax: urlParams.get('priceRangeMax') ? parseInt(urlParams.get('priceRangeMax')!) : 1000,
 			priceRangeMin: urlParams.get('priceRangeMin') ? parseInt(urlParams.get('priceRangeMin')!) : 1,
 			propertyTypeIds: urlParams.get('propertyTypeIds')
 				? JSON.parse(urlParams.get('propertyTypeIds')!)
 				: undefined,
 			redeemPoints: !!urlParams.get('redeemPoints'),
 			regionIds: urlParams.get('regionIds') ? JSON.parse(urlParams.get('regionIds')!) : undefined,
-			resortExperiences: urlParams.get('resortExperiences')
-				? JSON.parse(urlParams.get('resortExperiences')!)
-				: undefined,
-			sortBy: urlParams.get('sortBy') ? urlParams.get('sortBy')! : '',
-			view: urlParams.get('view') ? JSON.parse(urlParams.get('view')!) : undefined,
+			experienceIds: urlParams.get('experienceIds') ? JSON.parse(urlParams.get('experienceIds')!) : undefined,
 			startDate,
-			endDate
+			endDate,
+			sortOrder: sortOrder === 'ASC' || sortOrder === 'DESC' ? sortOrder : 'ASC'
 		};
 		return reservationFilter;
 	}
@@ -161,15 +158,14 @@ class WebUtils extends BaseWebUtils {
 		}
 		if (reservationFilters.bathrooms) stringBuilder.push(`bathrooms=${reservationFilters.bathrooms}`);
 		if (reservationFilters.bedrooms) stringBuilder.push(`bedrooms=${reservationFilters.bedrooms}`);
-		if (reservationFilters.inUnitAmenities)
-			stringBuilder.push(`inUnitAmenities=${JSON.stringify(reservationFilters.inUnitAmenities)}`);
+		if (reservationFilters.amenityIds)
+			stringBuilder.push(`amenityIds=${JSON.stringify(reservationFilters.amenityIds)}`);
 		if (reservationFilters.redeemPoints) stringBuilder.push(`redeemPoints=${reservationFilters.redeemPoints}`);
 		if (reservationFilters.regionIds)
 			stringBuilder.push(`regionIds=${JSON.stringify(reservationFilters.regionIds)}`);
-		if (reservationFilters.resortExperiences)
-			stringBuilder.push(`resortExperiences=${JSON.stringify(reservationFilters.resortExperiences)}`);
-		if (reservationFilters.sortBy) stringBuilder.push(`sortBy=${reservationFilters.sortBy}`);
-		if (reservationFilters.view) stringBuilder.push(`view=${JSON.stringify(reservationFilters.view)}`);
+		if (reservationFilters.experienceIds)
+			stringBuilder.push(`experienceIds=${JSON.stringify(reservationFilters.experienceIds)}`);
+		if (reservationFilters.sortOrder) stringBuilder.push(`sortOrder=${reservationFilters.sortOrder}`);
 		if (reservationFilters.adultCount) stringBuilder.push(`adultCount=${reservationFilters.adultCount}`);
 		if (reservationFilters.propertyTypeIds)
 			stringBuilder.push(`propertyTypeIds=${JSON.stringify(reservationFilters.propertyTypeIds)}`);

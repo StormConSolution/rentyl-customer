@@ -93,9 +93,16 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderFeatures() {
+		if (!ObjectUtils.isArrayWithData(props.destinationFeatures)) return;
 		return props.destinationFeatures.map((feature) => {
 			return (
-				<Box display={'flex'} flexDirection={'column'} alignItems={'center'} textAlign={'center'}>
+				<Box
+					display={'flex'}
+					flexDirection={'column'}
+					alignItems={'center'}
+					textAlign={'center'}
+					key={feature.id}
+				>
 					<IconLabel
 						labelName={feature.title}
 						iconImg={feature.icon}
@@ -109,10 +116,11 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderButtons() {
-		return props.summaryTabs.map((button) => {
+		return props.summaryTabs.map((button, idx) => {
 			if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
 				return (
 					<LabelButton
+						key={idx}
 						look={'containedPrimary'}
 						variant={'button'}
 						label={button.label}
@@ -124,6 +132,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 			} else {
 				return (
 					<LabelButton
+						key={idx}
 						look={'containedPrimary'}
 						variant={'button'}
 						label={'Accommodations'}

@@ -74,28 +74,26 @@ const ReservationAvailabilityPage: React.FC = () => {
 		])
 	);
 
-	// TODO: Just a temporary placeholder list objects
-	const [testViewOptions, setTestViewOptions] = useState<OptionType[]>([]);
-	const [testInUnitAmenities, setTestInUnitAmenities] = useState<OptionType[]>([]);
-	const [testResortExperiences, setTestResortExperiences] = useState<OptionType[]>([]);
+	const [viewOptions, setViewOptions] = useState<OptionType[]>([]);
+	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
 
-	// TODO: Remove once api calls are working and responding the correct data
 	useEffect(() => {
 		async function getViewOptions() {
 			let res = await destinationService.getDummyViewOptions();
-			setTestViewOptions(res);
+			setViewOptions(res);
 		}
 		getViewOptions().catch(console.error);
 
 		async function getResortExperiences() {
 			let res = await destinationService.getDummyExperienceTypes();
-			setTestResortExperiences(res);
+			setResortExperiences(res);
 		}
 		getResortExperiences().catch(console.error);
 
 		async function getInUnitAmenities() {
 			let res = await destinationService.getDummyInUnitAmenities();
-			setTestInUnitAmenities(res);
+			setInUnitAmenities(res);
 		}
 		getInUnitAmenities().catch(console.error);
 	}, []);
@@ -119,7 +117,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 		async function getReservations() {
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await destinationService.searchAvailableReservations(reservationFilters);
+				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
+				let key: keyof Misc.ReservationFilters;
+				for (key in searchQueryObj) {
+					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
+				}
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data);
 				setAvailabilityTotal(res.total || 0);
 				popupController.close(SpinningLoaderPopup);
@@ -131,16 +134,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 		getReservations().catch(console.error);
 	}, [reservationFilters]);
-
-	// function setPropertyTypeIds() {
-	// 	if (reservationFilters.propertyTypeIds.length > 0) {
-	// 		let propertyTypeArray = reservationFilters.propertyTypeIds.split(',');
-	// 		return propertyTypeArray.map((item) => {
-	// 			return parseInt(item);
-	// 		});
-	// 	}
-	// 	return [];
-	// }
 
 	async function updateFilterForm(control: RsFormControl | undefined) {
 		if (!control) return;
@@ -355,9 +348,9 @@ const ReservationAvailabilityPage: React.FC = () => {
 								accommodationOptions={propertyTypeOptions}
 								redeemCodeToggle={false}
 								onApplyClick={saveFilter}
-								resortExperiencesOptions={testResortExperiences}
-								viewOptions={testViewOptions}
-								inUnitAmenitiesOptions={testInUnitAmenities}
+								resortExperiencesOptions={resortExperiences}
+								viewOptions={viewOptions}
+								inUnitAmenitiesOptions={inUnitAmenities}
 							/>
 							<Label variant={'body1'} color={'red'}>
 								{errorMessage}
