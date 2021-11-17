@@ -54,7 +54,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				StringUtils.addCommasToNumber(reservationFilters.priceRangeMin) || 1,
 				[]
 			),
-			new RsFormControl('accommodationType', [], []),
 			new RsFormControl('experienceIds', reservationFilters.experienceIds || [], []),
 			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], [])
 		])
@@ -78,7 +77,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				bathroomCount: number;
 				priceRangeMax: number;
 				priceRangeMin: number;
-				accommodationType: number[];
 				experienceIds: number[];
 				amenityIds: number[];
 			} = filterForm.toModel();
@@ -94,15 +92,15 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				value={item.id}
 				text={item.name}
 				onSelect={() => {
-					let tempControl = filterForm.get('accommodationType');
+					let tempControl = filterForm.get('propertyTypeIds');
 					tempControl.value = [...(tempControl.value as number[]), item.id as number];
 					updateFilterForm(tempControl);
 				}}
-				isChecked={(filterForm.get('accommodationType').value as number[]).includes(item.id as number)}
+				isChecked={(filterForm.get('propertyTypeIds').value as number[]).includes(item.id as number)}
 				onDeselect={() => {
-					filterForm.get('accommodationType').value = (filterForm.get('accommodationType')
+					filterForm.get('propertyTypeIds').value = (filterForm.get('propertyTypeIds')
 						.value as number[]).filter((type) => type !== item.id);
-					updateFilterForm(filterForm.get('accommodationType'));
+					updateFilterForm(filterForm.get('propertyTypeIds'));
 				}}
 			/>
 		));
