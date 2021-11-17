@@ -209,7 +209,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					</Box>
 					<Box id="bedroomsCol" className="filterCol">
 						<FilterBarDropDown
-							onChangeCallBack={() => console.log('Bedroom Dropdown')}
+							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Bedrooms"
 							className="dropdownMarginX"
