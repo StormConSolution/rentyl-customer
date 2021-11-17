@@ -26,7 +26,11 @@
 		max-width: 76px;
 		max-height: 39px;
 		margin: 12px;
+		cursor: pointer;
 		.rsIcon {
+			&.icon-account-icon {
+				padding-right: 10px;
+			}
 			&.icon-hamburger-menu {
 				padding: 12px;
 			}

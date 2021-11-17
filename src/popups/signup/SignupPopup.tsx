@@ -87,6 +87,7 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 			popupController.close(SpinningLoaderPopup);
 			popupController.open<SigninPopupProps>(SigninPopup, {});
 		} catch (e) {
+			popupController.close(SpinningLoaderPopup);
 			setErrorMessage(WebUtils.getRsErrorMessage(e, 'Unexpected Server error'));
 		}
 	}
