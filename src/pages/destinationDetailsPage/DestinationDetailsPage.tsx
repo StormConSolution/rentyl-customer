@@ -35,6 +35,8 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import moment from 'moment';
+import { OptionType } from '@bit/redsky.framework.rs.select';
+import PropertyType = Api.Destination.Res.PropertyType;
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -69,6 +71,44 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const [comparisonId, setComparisonId] = useState<number>(1);
+
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
+	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
+
+	useEffect(() => {
+		async function getResortExperiences() {
+			let res = await destinationService.getExperienceTypes();
+			setResortExperiences(
+				res.map((experience) => {
+					return {
+						value: experience.id,
+						label: experience.title
+					};
+				})
+			);
+		}
+		getResortExperiences().catch(console.error);
+
+		async function getInUnitAmenities() {
+			let res = await destinationService.getInUnitAmenities();
+			setInUnitAmenities(
+				res.map((amenity) => {
+					return {
+						value: amenity.id,
+						label: amenity.title
+					};
+				})
+			);
+		}
+		getInUnitAmenities().catch(console.error);
+
+		async function getAccommodations() {
+			const list = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(list);
+		}
+		getAccommodations().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function getDestinationDetails(id: number) {
@@ -411,10 +451,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								labelVariant={'caption'}
 								onClick={() => {
 									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-										onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
-											popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-										},
-										className: 'filterPopup'
+										className: 'filterPopup',
+										resortExperiencesOptions: resortExperiences,
+										inUnitAmenitiesOptions: inUnitAmenities,
+										accommodationOptions: propertyTypeOptions
 									});
 								}}
 							/>

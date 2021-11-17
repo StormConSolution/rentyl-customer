@@ -25,8 +25,6 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 import PropertyType = Api.Destination.Res.PropertyType;
@@ -47,8 +45,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [validCode, setValidCode] = useState<boolean>(true);
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
 
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
 	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
 	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
 
@@ -78,9 +76,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 			);
 		}
 		getInUnitAmenities().catch(console.error);
-	}, []);
 
-	useEffect(() => {
 		async function getAccommodations() {
 			const list = await destinationService.getAllPropertyTypes();
 			setPropertyTypeOptions(list);
@@ -116,37 +112,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 		getReservations().catch(console.error);
 	}, [reservationFilters]);
-
-	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['adultCount'] = adultCount;
-			createSearchQueryObj['adultCount'] = adultCount;
-			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else delete createSearchQueryObj['regionIds'];
-
-			if (priceRangeMin !== '') createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			else delete createSearchQueryObj['priceRangeMin'];
-
-			if (priceRangeMax !== '') createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			else delete createSearchQueryObj['priceRangeMax'];
-
-			return createSearchQueryObj;
-		});
-		const newUrlParams: any = {
-			adultCount: adultCount,
-			priceRangeMax: priceRangeMax,
-			priceRangeMin: priceRangeMin,
-			propertyTypeIds: propertyTypeIds.join(',')
-		};
-
-		for (let i in newUrlParams) {
-			if (!newUrlParams[i].toString().length) {
-				delete newUrlParams[i];
-			}
-		}
-	}
 
 	useEffect(() => {
 		router.updateUrlParams({
@@ -317,10 +282,10 @@ const ReservationAvailabilityPage: React.FC = () => {
 							labelVariant={'caption'}
 							onClick={() => {
 								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
-										popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-									},
-									className: 'filterPopup'
+									className: 'filterPopup',
+									resortExperiencesOptions: resortExperiences,
+									inUnitAmenitiesOptions: inUnitAmenities,
+									accommodationOptions: propertyTypeOptions
 								});
 							}}
 						/>

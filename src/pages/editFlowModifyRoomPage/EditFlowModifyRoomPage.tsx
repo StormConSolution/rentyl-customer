@@ -27,6 +27,7 @@ import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
+import PropertyType = Api.Destination.Res.PropertyType;
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
@@ -43,9 +44,46 @@ const EditFlowModifyRoomPage = () => {
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
-	const [options, setOptions] = useState<OptionType[]>([]);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
 	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
+
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
+	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
+
+	useEffect(() => {
+		async function getResortExperiences() {
+			let res = await destinationService.getExperienceTypes();
+			setResortExperiences(
+				res.map((experience) => {
+					return {
+						value: experience.id,
+						label: experience.title
+					};
+				})
+			);
+		}
+		getResortExperiences().catch(console.error);
+
+		async function getInUnitAmenities() {
+			let res = await destinationService.getInUnitAmenities();
+			setInUnitAmenities(
+				res.map((amenity) => {
+					return {
+						value: amenity.id,
+						label: amenity.title
+					};
+				})
+			);
+		}
+		getInUnitAmenities().catch(console.error);
+
+		async function getAccommodations() {
+			const list = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(list);
+		}
+		getAccommodations().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
@@ -82,47 +120,6 @@ const EditFlowModifyRoomPage = () => {
 		}
 		getReservations().catch(console.error);
 	}, [reservationFilters, params.destinationId]);
-
-	useEffect(() => {
-		async function getAllPropertyTypes() {
-			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
-		}
-		getAllPropertyTypes().catch(console.error);
-	}, []);
-
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
-
-	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['adults'] = adults;
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else {
-				delete createSearchQueryObj['propertyTypeIds'];
-			}
-			return createSearchQueryObj;
-		});
-	}
 
 	async function bookNow(id: number) {
 		if (reservation) {
@@ -276,10 +273,10 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
-									popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-								},
-								className: 'filterPopup'
+								className: 'filterPopup',
+								resortExperiencesOptions: resortExperiences,
+								inUnitAmenitiesOptions: inUnitAmenities,
+								accommodationOptions: propertyTypeOptions
 							});
 						}}
 					/>
