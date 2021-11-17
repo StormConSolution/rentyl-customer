@@ -6,10 +6,8 @@ import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const AppBar: React.FC = () => {
-	const size = useWindowResizeChange();
 	const appBarRef = useRef<HTMLElement>(null);
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
