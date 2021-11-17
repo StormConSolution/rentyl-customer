@@ -48,54 +48,34 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
-	const [filterBarForm, setFilterBarForm] = useState<RsFormGroup>(
-		new RsFormGroup([
-			new RsFormControl('propertyTypeIds', reservationFilters.propertyTypeIds || [], []),
-			new RsFormControl('adultCount', reservationFilters.adultCount || 1, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
-			]),
-			new RsFormControl('bedroomCount', reservationFilters.adultCount || 1, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
-			]),
-			new RsFormControl('bathroomCount', reservationFilters.adultCount || 1, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
-			]),
-			new RsFormControl(
-				'priceRangeMax',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMax) || 1,
-				[]
-			),
-			new RsFormControl(
-				'priceRangeMin',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMin) || 1,
-				[]
-			),
-			new RsFormControl('accommodationType', [], [])
-		])
-	);
 
-	// TODO: Just a temporary placeholder list objects
-	const [testViewOptions, setTestViewOptions] = useState<OptionType[]>([]);
-	const [testInUnitAmenities, setTestInUnitAmenities] = useState<OptionType[]>([]);
-	const [testResortExperiences, setTestResortExperiences] = useState<OptionType[]>([]);
+	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
 
-	// TODO: Remove once api calls are working and responding the correct data
 	useEffect(() => {
-		async function getViewOptions() {
-			let res = await destinationService.getDummyViewOptions();
-			setTestViewOptions(res);
-		}
-		getViewOptions().catch(console.error);
-
 		async function getResortExperiences() {
-			let res = await destinationService.getDummyExperienceTypes();
-			setTestResortExperiences(res);
+			let res = await destinationService.getExperienceTypes();
+			setResortExperiences(
+				res.map((experience) => {
+					return {
+						value: experience.id,
+						label: experience.title
+					};
+				})
+			);
 		}
 		getResortExperiences().catch(console.error);
 
 		async function getInUnitAmenities() {
-			let res = await destinationService.getDummyInUnitAmenities();
-			setTestInUnitAmenities(res);
+			let res = await destinationService.getInUnitAmenities();
+			setInUnitAmenities(
+				res.map((amenity) => {
+					return {
+						value: amenity.id,
+						label: amenity.title
+					};
+				})
+			);
 		}
 		getInUnitAmenities().catch(console.error);
 	}, []);
@@ -119,7 +99,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 		async function getReservations() {
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await destinationService.searchAvailableReservations(reservationFilters);
+				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
+				let key: keyof Misc.ReservationFilters;
+				for (key in searchQueryObj) {
+					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
+				}
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data);
 				setAvailabilityTotal(res.total || 0);
 				popupController.close(SpinningLoaderPopup);
@@ -131,28 +116,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 
 		getReservations().catch(console.error);
 	}, [reservationFilters]);
-
-	async function updateFilterForm(control: RsFormControl | undefined) {
-		if (!control) return;
-		if (control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
-			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
-			control.value = newValue;
-		}
-		filterBarForm.update(control);
-		let isFormValid = await filterBarForm.isValid();
-		setValidCode(isFormValid);
-		setFilterBarForm(filterBarForm.clone());
-	}
-
-	function saveFilter() {
-		let filterObject: Misc.FilterFormPopupOptions = filterBarForm.toModel();
-		popupSearch(
-			filterObject.adultCount,
-			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMin),
-			StringUtils.removeAllExceptNumbers(filterObject.priceRangeMax),
-			filterObject.propertyTypeIds
-		);
-	}
 
 	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setReservationFilters((prev) => {
@@ -333,16 +296,12 @@ const ReservationAvailabilityPage: React.FC = () => {
 					{size !== 'small' ? (
 						<>
 							<FilterBarV2
-								filterForm={filterBarForm}
-								updateFilterForm={updateFilterForm}
 								destinationService={destinationService}
 								accommodationToggle={accommodationToggle}
 								accommodationOptions={propertyTypeOptions}
 								redeemCodeToggle={false}
-								onApplyClick={saveFilter}
-								resortExperiencesOptions={testResortExperiences}
-								viewOptions={testViewOptions}
-								inUnitAmenitiesOptions={testInUnitAmenities}
+								resortExperiencesOptions={resortExperiences}
+								inUnitAmenitiesOptions={inUnitAmenities}
 							/>
 							<Label variant={'body1'} color={'red'}>
 								{errorMessage}

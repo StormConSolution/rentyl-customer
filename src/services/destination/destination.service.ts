@@ -1,6 +1,7 @@
 import { Service } from '../Service';
 import http from '../../utils/http';
 import { RsResponseData } from '@bit/redsky.framework.rs.http';
+import { NumberUtils } from '../../utils/utils';
 
 export default class DestinationService extends Service {
 	async getDestinations(): Promise<Api.Destination.Res.Details[]> {
@@ -26,6 +27,8 @@ export default class DestinationService extends Service {
 	async searchAvailableReservations(
 		data: Api.Destination.Req.Availability
 	): Promise<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>> {
+		if (data.priceRangeMin) data.priceRangeMin = NumberUtils.dollarsToCents(data.priceRangeMin);
+		if (data.priceRangeMax) data.priceRangeMax = NumberUtils.dollarsToCents(data.priceRangeMax);
 		let response = await http.get<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>>(
 			'destination/availability',
 			data
@@ -38,47 +41,13 @@ export default class DestinationService extends Service {
 		return res.data.data;
 	}
 
-	async getDummyExperienceTypes() {
-		return [
-			{ label: 'Golf', value: 1 },
-			{ label: 'Waterpark', value: 2 },
-			{ label: 'Spa', value: 3 },
-			{ label: 'Resort pool', value: 4 },
-			{ label: 'In home chef', value: 5 },
-			{ label: 'Butler Service', value: 6 },
-			{ label: 'Tennis Courts', value: 7 },
-			{ label: 'Restaurants', value: 8 },
-			{ label: 'Kids clubs', value: 9 },
-			{ label: 'Bike Rentals', value: 10 }
-		];
+	async getExperienceTypes(): Promise<Api.Experience.Res.Get[]> {
+		const res = await http.get<RsResponseData<Api.Experience.Res.Get[]>>('experience');
+		return res.data.data;
 	}
 
-	async getDummyInUnitAmenities() {
-		return [
-			{ label: 'Air Conditioning', value: 1 },
-			{ label: 'Washer / Dryer', value: 2 },
-			{ label: 'Private Pool', value: 3 },
-			{ label: 'Full Kitchen', value: 4 },
-			{ label: 'Theater Room', value: 5 },
-			{ label: 'Games Room', value: 6 },
-			{ label: 'Outdoor Kitchen', value: 7 },
-			{ label: 'Hot Tub / Spa', value: 8 },
-			{ label: 'Wetbar', value: 9 },
-			{ label: 'First Floor Bedroom', value: 10 },
-			{ label: 'Pet Friendly', value: 11 },
-			{ label: 'Free Parking', value: 12 }
-		];
-	}
-
-	async getDummyViewOptions() {
-		return [
-			{ label: 'Golf', value: 1 },
-			{ label: 'Mountain', value: 2 },
-			{ label: 'Pool', value: 3 },
-			{ label: 'City', value: 4 },
-			{ label: 'Ocean', value: 5 },
-			{ label: 'Lake', value: 6 },
-			{ label: 'Garden', value: 7 }
-		];
+	async getInUnitAmenities(): Promise<Api.Amenity.Res.Get[]> {
+		const res = await http.get<RsResponseData<Api.Amenity.Res.Get[]>>('accommodation/amenity');
+		return res.data.data;
 	}
 }

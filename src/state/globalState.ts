@@ -84,7 +84,7 @@ class GlobalState {
 				adultCount: 1,
 				childCount: 0,
 				redeemPoints: false,
-				sortBy: 'ASC',
+				sortOrder: 'ASC',
 				pagination: { page: 1, perPage: 10 }
 			}
 		});

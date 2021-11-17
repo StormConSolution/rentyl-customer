@@ -76,6 +76,7 @@ declare namespace Model {
 		zip: string;
 		country: string;
 		roomCount: number;
+		bathroomCount: number;
 		floorCount: number;
 		createdOn: Date | string;
 		modifiedOn: Date | string;

@@ -12,6 +12,9 @@ declare namespace Api {
 		priceRangeMin?: number;
 		priceRangeMax?: number;
 		propertyTypeIds?: number[];
+		experienceIds?: number[];
+		amenityIds?: number[];
+		sortOrder: 'ASC' | 'DESC';
 		pagination: RedSky.PagePagination;
 	}
 
@@ -29,7 +32,8 @@ declare namespace Api {
 				shortDescription?: string;
 				longDescription?: string;
 				propertyTypeId?: number;
-				roomCount?: number;
+				bedroomCount?: number;
+				bathroomCount?: number;
 				address1?: string;
 				address2?: string;
 				city?: string;
@@ -80,7 +84,8 @@ declare namespace Api {
 				amenities: Model.Amenity[];
 				maxSleeps: number;
 				maxOccupantCount: number;
-				roomCount: number;
+				bedroomCount: number;
+				bathroomCount: number;
 				size: { max: number; min: number; units: string }; //*square footage, if we have it. Let me know what other info we might be able to grab that would be relivant*
 				adaCompliant: 0 | 1;
 				extraBeds: 0 | 1;
@@ -647,6 +652,8 @@ declare namespace Api {
 				heroUrl: string;
 				reviewRating: number;
 				reviewCount: number;
+				minBedroom: number;
+				maxBedroom: number;
 				propertyTypes: PropertyType[];
 				media: Media[];
 				experiences: {
@@ -684,7 +691,8 @@ declare namespace Api {
 				id: number;
 				name: string;
 				propertyTypeId: number;
-				roomCount: number;
+				bedroomCount: number;
+				bathroomCount: number;
 				bedDetails: any;
 				priceCents: number;
 				maxOccupantCount: number;
@@ -714,11 +722,15 @@ declare namespace Api {
 				state: string;
 				zip: string;
 				country: string;
+				minBedroom: number;
+				maxBedroom: number;
 				propertyTypes: PropertyType[];
 				logoUrl: string;
 				reviewRating: number;
 				reviewCount: number;
 				media: Media[];
+				minAccommodationPrice: number;
+				minAccommodationPoints: number;
 				experiences: {
 					id: number;
 					title: string;
