@@ -27,7 +27,9 @@ import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -36,6 +38,37 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<Api.Destination.Res.PropertyType[]>([]);
+	const [inUnitAmenities, setInUnitAmenities] = useState<Misc.OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<Misc.OptionType[]>([]);
+
+	useEffect(() => {
+		async function getResortExperiences() {
+			let res = await destinationService.getExperienceTypes();
+			setResortExperiences(
+				res.map((experience) => {
+					return {
+						value: experience.id,
+						label: experience.title
+					};
+				})
+			);
+		}
+		getResortExperiences().catch(console.error);
+
+		async function getAccommodations() {
+			const list = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(list);
+		}
+		getAccommodations().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		/**
+		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
+		 */
+		setReservationFilters(WebUtils.parseURLParamsToFilters());
+	}, []);
 
 	useEffect(() => {
 		async function getReservations() {

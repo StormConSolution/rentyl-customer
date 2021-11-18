@@ -20,6 +20,9 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
+import { OptionType } from '@bit/redsky.framework.rs.select';
+import DestinationService from '../../services/destination/destination.service';
+import PropertyType = Api.Destination.Res.PropertyType;
 
 const BookingFlowAddRoomPage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -33,6 +36,7 @@ const BookingFlowAddRoomPage = () => {
 	});
 
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
@@ -40,6 +44,30 @@ const BookingFlowAddRoomPage = () => {
 		globalState.reservationFilters
 	);
 	const [editingAccommodation, setEditingAccommodation] = useState<Api.Accommodation.Res.Details>();
+	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
+	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
+	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
+
+	useEffect(() => {
+		async function getResortExperiences() {
+			let res = await destinationService.getExperienceTypes();
+			setResortExperiences(
+				res.map((experience) => {
+					return {
+						value: experience.id,
+						label: experience.title
+					};
+				})
+			);
+		}
+		getResortExperiences().catch(console.error);
+
+		async function getAccommodations() {
+			const list = await destinationService.getAllPropertyTypes();
+			setPropertyTypeOptions(list);
+		}
+		getAccommodations().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function checkForEdit() {
@@ -93,23 +121,6 @@ const BookingFlowAddRoomPage = () => {
 			newRoom
 		};
 		router.navigate(`/booking/packages?data=${JSON.stringify(bookingParams)}`).catch(console.error);
-	}
-
-	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['adults'] = adults;
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
-				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
-			}
-			return createSearchQueryObj;
-		});
 	}
 
 	function renderDestinationSearchResultCards() {

@@ -25,7 +25,7 @@ import { useRecoilState } from 'recoil';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 
 export interface FilterReservationPopupProps extends PopupProps {
-	className?: string;
+	searchRegion?: boolean;
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
@@ -37,6 +37,10 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypes, setPropertyTypes] = useState<Model.PropertyType[]>([]);
 	const [experienceOptions, setExperienceOptions] = useState<Misc.OptionType[]>([]);
 	const [amenityOptions, setAmenityOptions] = useState<Misc.OptionType[]>([]);
+	const [sortBySelection, setSortBySelection] = useState<number>();
+	const [redeemCodeToggle, setRedeemCodeToggle] = useState<boolean>(false);
+	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
+
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			//propertyTypeIds are the text accommodationType on the front end.
@@ -45,10 +49,10 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			new RsFormControl('adultCount', reservationFilters.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
-			new RsFormControl('bedroomCount', reservationFilters.bedroomCount || 0, [
+			new RsFormControl('bedroomCount', reservationFilters.bedroomCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
 			]),
-			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 0, [
+			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
 			new RsFormControl(
@@ -177,15 +181,16 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	function saveFilter() {
 		setReservationFilters((prev) => {
-			const form = filterForm.toModel<{
+			const form: {
+				propertyTypeIds: number[];
 				adultCount: number;
-				priceRangeMin: number;
-				priceRangeMax: number;
-				accommodationType: number[];
 				bedroomCount: number;
 				bathroomCount: number;
-				propertyTypeIds: number[];
-			}>();
+				priceRangeMax: number;
+				priceRangeMin: number;
+				experienceIds: number[];
+				amenityIds: number[];
+			} = filterForm.toModel();
 			return { ...prev, ...form };
 		});
 		popupController.close(FilterReservationPopup);
@@ -193,6 +198,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	function renderAccommodationCheckboxes() {
 		return propertyTypes.map((item) => (
+			// return props.accommodationOptions.map((item) => (
 			<LabelCheckboxV2
 				className="listCheckboxes"
 				key={item.id}
@@ -208,6 +214,17 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 					filterForm.get('propertyTypeIds').value = (filterForm.get('propertyTypeIds')
 						.value as number[]).filter((type) => type !== item.id);
 					updateFilterForm(filterForm.get('propertyTypeIds'));
+					// =======
+					// 					let tempControl = filterForm.get('accommodationType');
+					// 					tempControl.value = [...(tempControl.value as number[]), item.id as number];
+					// 					updateFilterForm(tempControl);
+					// 				}}
+					// 				isChecked={(filterForm.get('accommodationType').value as number[]).includes(item.id as number)}
+					// 				onDeselect={() => {
+					// 					filterForm.get('accommodationType').value = (filterForm.get('accommodationType')
+					// 						.value as number[]).filter((type) => type !== item.id);
+					// 					updateFilterForm(filterForm.get('accommodationType'));
+					// >>>>>>> c2ffa720cf2ceec8bdc6266bf7bdad206256a605
 				}}
 			/>
 		));
@@ -269,6 +286,52 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 				))}
 			</>
 		);
+		// =======
+		// 		return props.resortExperiencesOptions.map((item) => (
+		// 			<Box marginY={10}>
+		// 				<LabelCheckboxV2
+		// 					key={item.value}
+		// 					value={item.value}
+		// 					text={item.label}
+		// 					onSelect={() => {
+		// 						let tempControl = filterForm.get('experienceIds');
+		// 						tempControl.value = [...(tempControl.value as number[]), item.value as number];
+		// 						updateFilterForm(tempControl);
+		// 					}}
+		// 					isChecked={accommodationToggle}
+		// 					onDeselect={() => {
+		// 						filterForm.get('experienceIds').value = (filterForm.get('experienceIds')
+		// 							.value as number[]).filter((type) => type !== item.value);
+		// 						updateFilterForm(filterForm.get('experienceIds'));
+		// 					}}
+		// 				/>
+		// 			</Box>
+		// 		));
+		// 	}
+		//
+		// 	function renderInUnitAmenities() {
+		// 		return props.inUnitAmenitiesOptions.map((item) => (
+		// 			<Box marginY={10}>
+		// 				<LabelCheckboxV2
+		// 					key={item.value}
+		// 					value={item.value}
+		// 					text={item.label}
+		// 					onSelect={() => {
+		// 						let tempControl = filterForm.get('amenityIds');
+		// 						tempControl.value = [...(tempControl.value as number[]), item.value as number];
+		// 						updateFilterForm(tempControl);
+		// 					}}
+		// 					isChecked={accommodationToggle}
+		// 					onDeselect={() => {
+		// 						filterForm.get('amenityIds').value = (filterForm.get('amenityIds').value as number[]).filter(
+		// 							(type) => type !== item.value
+		// 						);
+		// 						updateFilterForm(filterForm.get('amenityIds'));
+		// 					}}
+		// 				/>
+		// 			</Box>
+		// 		));
+		// >>>>>>> c2ffa720cf2ceec8bdc6266bf7bdad206256a605
 	}
 
 	return (
