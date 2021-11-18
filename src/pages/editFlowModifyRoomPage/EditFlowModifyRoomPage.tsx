@@ -27,7 +27,6 @@ import DestinationService from '../../services/destination/destination.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
-import PropertyType = Api.Destination.Res.PropertyType;
 
 const EditFlowModifyRoomPage = () => {
 	const size = useWindowResizeChange();
@@ -37,7 +36,6 @@ const EditFlowModifyRoomPage = () => {
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
@@ -45,54 +43,21 @@ const EditFlowModifyRoomPage = () => {
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
-	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
-
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
-	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
-	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
-
-	useEffect(() => {
-		async function getResortExperiences() {
-			let res = await destinationService.getExperienceTypes();
-			setResortExperiences(
-				res.map((experience) => {
-					return {
-						value: experience.id,
-						label: experience.title
-					};
-				})
-			);
-		}
-		getResortExperiences().catch(console.error);
-
-		async function getInUnitAmenities() {
-			let res = await destinationService.getInUnitAmenities();
-			setInUnitAmenities(
-				res.map((amenity) => {
-					return {
-						value: amenity.id,
-						label: amenity.title
-					};
-				})
-			);
-		}
-		getInUnitAmenities().catch(console.error);
-
-		async function getAccommodations() {
-			const list = await destinationService.getAllPropertyTypes();
-			setPropertyTypeOptions(list);
-		}
-		getAccommodations().catch(console.error);
-	}, []);
+	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
+			if (!params.reservationId) {
+				rsToastify.error('No reservation chosen to look at, please try again', 'No reservation');
+				router.back('/reservations');
+			}
 			try {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 				const newSearchQueryObj = { ...reservationFilters };
 				newSearchQueryObj.startDate = res.arrivalDate;
 				newSearchQueryObj.endDate = res.departureDate;
+				newSearchQueryObj.destinationId = res.destination.id;
 				setReservationFilters(newSearchQueryObj);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
@@ -103,12 +68,16 @@ const EditFlowModifyRoomPage = () => {
 	}, [params.reservationId]);
 
 	useEffect(() => {
-		async function getReservations() {
+		async function getAvailableAccommodations() {
+			if (!reservationFilters.destinationId && !params.destinationId) return;
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(params.destinationId, reservationFilters);
+				let res = await accommodationService.availability(
+					reservationFilters.destinationId || params.destinationId,
+					reservationFilters
+				);
 				setAvailabilityTotal(res.total || 0);
-				setDestinations(res.data);
+				setAccommodations(res.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
@@ -118,7 +87,7 @@ const EditFlowModifyRoomPage = () => {
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
-		getReservations().catch(console.error);
+		getAvailableAccommodations().catch(console.error);
 	}, [reservationFilters, params.destinationId]);
 
 	async function bookNow(id: number) {
@@ -151,8 +120,8 @@ const EditFlowModifyRoomPage = () => {
 	}
 
 	function renderDestinationSearchResultCards() {
-		if (!destinations) return;
-		return destinations.map((destination, index) => {
+		if (!accommodations) return;
+		return accommodations.map((destination, index) => {
 			return (
 				<>
 					<AccommodationSearchResultCard
@@ -273,10 +242,7 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								className: 'filterPopup',
-								resortExperiencesOptions: resortExperiences,
-								inUnitAmenitiesOptions: inUnitAmenities,
-								accommodationOptions: propertyTypeOptions
+								className: 'filterPopup'
 							});
 						}}
 					/>
@@ -292,7 +258,7 @@ const EditFlowModifyRoomPage = () => {
 					margin={'85px auto'}
 					boxSizing={'border-box'}
 				>
-					{destinations.length <= 0 ? (
+					{accommodations.length <= 0 ? (
 						<Label variant={'h2'}>No available options.</Label>
 					) : (
 						renderDestinationSearchResultCards()
