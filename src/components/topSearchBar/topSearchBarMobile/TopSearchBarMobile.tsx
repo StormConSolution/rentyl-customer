@@ -12,25 +12,31 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import serviceFactory from '../../../services/serviceFactory';
 import RegionService from '../../../services/region/region.service';
 import Paper from '../../paper/Paper';
+import { useRecoilState } from 'recoil';
+import globalState from '../../../state/globalState';
 
 interface TopSearchBarMobileProps {
 	onFilterClick?: () => void;
-	onChangeCallBack: (data: { regionId?: number; startDate?: string; endDate?: string }) => void;
 }
 
 const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 	const boxRef = useRef<HTMLDivElement>(null);
 	const regionService = serviceFactory.get<RegionService>('RegionService');
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(
+		moment(reservationFilters.startDate)
+	);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(reservationFilters.endDate));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [regionList, setRegionList] = useState<Api.Region.Res.Get[]>([]);
 
 	const [topSearchBarForm, setTopSearchBarForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regionId', '', []),
-			new RsFormControl('startDate', '', []),
-			new RsFormControl('endDate', '', [])
+			new RsFormControl('regionId', reservationFilters.regionIds || '', []),
+			new RsFormControl('startDate', (reservationFilters.startDate as string) || '', []),
+			new RsFormControl('endDate', (reservationFilters.endDate as string) || '', [])
 		])
 	);
 
@@ -63,7 +69,7 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 		setEndDateControl(endDate);
 		updateDatesForSearchBarForm('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateDatesForSearchBarForm('endDate', formatFilterDateForServer(endDate, 'end'));
-		onChangeCallback();
+		onApplyClick();
 	}
 
 	function updateDatesForSearchBarForm(key: 'startDate' | 'endDate', value: any) {
@@ -97,7 +103,7 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 						setTimeout(() => {
 							boxRef.current!.style.display = 'none';
 						}, 50);
-						onChangeCallback();
+						onApplyClick();
 					}}
 					display={'flex'}
 					alignItems={'center'}
@@ -111,12 +117,21 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 		});
 	}
 
-	function onChangeCallback() {
-		let data: any = topSearchBarForm.toModel();
-		for (let i in data) {
-			if (!data[i].toString().length) delete data[i];
-		}
-		props.onChangeCallBack(data);
+	function onApplyClick() {
+		setReservationFilters((prev) => {
+			const form: {
+				propertyTypeIds: number[];
+				adultCount: number;
+				bedroomCount: number;
+				bathroomCount: number;
+				priceRangeMax: number;
+				priceRangeMin: number;
+				experienceIds: number[];
+				amenityIds: number[];
+				sortOrder: 'ASC' | 'DESC';
+			} = topSearchBarForm.toModel();
+			return { ...prev, ...form };
+		});
 	}
 
 	return (

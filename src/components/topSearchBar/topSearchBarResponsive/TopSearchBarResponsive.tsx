@@ -16,24 +16,28 @@ import TitleLabel from '../titleLabel/TitleLabel';
 import Paper from '../../paper/Paper';
 import Counter from '../../counter/Counter';
 import router from '../../../utils/router';
+import { useRecoilState } from 'recoil';
+import globalState from '../../../state/globalState';
 
-interface DatePickerCardProps {
-	onSearch: (data: { regionId: number; guest: number; startDate: string; endDate: string }) => void;
-}
+interface DatePickerCardProps {}
 
 const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 	const regionService = serviceFactory.get<RegionService>('RegionService');
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(
+		moment(reservationFilters.startDate)
+	);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(reservationFilters.endDate));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [regionList, setRegionList] = useState<Api.Region.Res.Get[]>([]);
-
 	const [topSearchBarForm, setTopSearchBarForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regionId', '', []),
-			new RsFormControl('guest', 1, []),
-			new RsFormControl('startDate', '', []),
-			new RsFormControl('endDate', '', [])
+			new RsFormControl('regionIds', reservationFilters.regionIds || [], []),
+			new RsFormControl('adultCount', reservationFilters.adultCount || 1, []),
+			new RsFormControl('startDate', (reservationFilters.startDate as string) || '', []),
+			new RsFormControl('endDate', (reservationFilters.endDate as string) || '', [])
 		])
 	);
 
@@ -47,6 +51,26 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 			}
 		})();
 	}, []);
+
+	function onApplyClick() {
+		setReservationFilters((prev) => {
+			const form: {
+				propertyTypeIds: number[];
+				adultCount: number;
+				bedroomCount: number;
+				bathroomCount: number;
+				priceRangeMax: number;
+				priceRangeMin: number;
+				experienceIds: number[];
+				amenityIds: number[];
+				regionIds: number[];
+				startDate: string;
+				endDate: string;
+				sortOrder: 'ASC' | 'DESC';
+			} = topSearchBarForm.toModel();
+			return { ...prev, ...form };
+		});
+	}
 
 	function updateTopSearchBarForm(control: RsFormControl) {
 		setTopSearchBarForm(topSearchBarForm.clone().update(control));
@@ -69,15 +93,16 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 		if (!ObjectUtils.isArrayWithData(regionList)) return;
 
 		return regionList.map((item, index) => {
-			let isSelected = topSearchBarForm.get('regionId').value === item.id;
+			let isSelected = topSearchBarForm.get('regionIds').value === item.id;
 
 			return (
 				<Box
 					key={item.id}
 					className={`regionItem ${isSelected ? 'selected' : ''}`}
 					onClick={() => {
-						let newControl = topSearchBarForm.get('regionId');
-						newControl.value = item.id;
+						console.log('clicked');
+						let newControl = topSearchBarForm.get('regionIds');
+						newControl.value = [item.id];
 						setTopSearchBarForm(topSearchBarForm.clone().update(newControl));
 					}}
 					display={'flex'}
@@ -93,10 +118,10 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 	}
 
 	function renderRegionLabel() {
-		let regionId = topSearchBarForm.get('regionId').value;
-		if (!regionId.toString().length) return 'Where are you going?';
+		let regionId = topSearchBarForm.get('regionIds').value as number[];
+		if (!ObjectUtils.isArrayWithData(regionId)) return 'Where are you going?';
 
-		let regionName = regionList.filter((item) => item.id === regionId);
+		let regionName = regionList.filter((item) => item.id === regionId[0]);
 		return regionName[0].name;
 	}
 
@@ -128,7 +153,7 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 				popoutBoxContent={
 					<Counter
 						title={'Guests'}
-						control={topSearchBarForm.get('guest')}
+						control={topSearchBarForm.get('adultCount')}
 						updateControl={updateTopSearchBarForm}
 						minCount={1}
 						labelMarginRight={84}
@@ -139,9 +164,7 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 				className={'searchButton'}
 				look={'none'}
 				onClick={() => {
-					let data: any = topSearchBarForm.toModel();
-					router.updateUrlParams(data);
-					props.onSearch(data);
+					onApplyClick();
 				}}
 			>
 				<Icon iconImg={'icon-search'} color={'#ffffff'} size={36} />

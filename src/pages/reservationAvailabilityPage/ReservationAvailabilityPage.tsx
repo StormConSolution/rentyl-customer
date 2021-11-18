@@ -284,11 +284,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<TopSearchBar
-					onSearch={(data) => {
-						console.log(data);
-					}}
-				/>
+				<TopSearchBar />
 				<Box
 					className={'filterResultsWrapper'}
 					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 0 60px 0'}
