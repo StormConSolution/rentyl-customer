@@ -201,7 +201,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									.value as number[]).filter((id) => id !== item.value);
 								updateFilterForm(filterForm.get('propertyTypeIds'));
 							}}
-							isDisabled={true}
 						/>
 					</Box>
 				))}
@@ -229,7 +228,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									.value as number[]).filter((id) => id !== item.value);
 								updateFilterForm(filterForm.get('propertyTypeIds'));
 							}}
-							isDisabled={true}
 						/>
 					</Box>
 				))}
