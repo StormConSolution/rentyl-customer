@@ -292,9 +292,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							datum: item.extraBeds ? 'Yes' : 'No'
 						}
 					]}
-					amenityIconNames={item.amenities.map((amenity) => {
-						return amenity.icon;
-					})}
+					amenityIconNames={[]}
 					carouselImagePaths={item.media}
 				/>
 			);
