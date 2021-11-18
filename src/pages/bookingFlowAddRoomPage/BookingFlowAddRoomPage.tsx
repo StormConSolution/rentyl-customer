@@ -95,23 +95,6 @@ const BookingFlowAddRoomPage = () => {
 		router.navigate(`/booking/packages?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 	}
 
-	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['adults'] = adults;
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
-				createSearchQueryObj['propertyTypeIds'] = [propertyTypeIds];
-			}
-			return createSearchQueryObj;
-		});
-	}
-
 	function renderDestinationSearchResultCards() {
 		return accommodations.map((accommodation, index) => {
 			return (
