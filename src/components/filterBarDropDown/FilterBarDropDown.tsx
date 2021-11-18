@@ -12,6 +12,7 @@ interface FilterBarDropDownProps {
 	placeholder?: string;
 	onChangeCallBack: () => void;
 	onClearCallback: () => void;
+	isSortField?: boolean;
 	className?: string;
 	dropdownContentClassName?: string;
 	isDropdownButtons: boolean;
@@ -24,9 +25,12 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 	});
 	function applyBtnCallback() {
 		if (props.onChangeCallBack) props.onChangeCallBack();
+		setToggleContent(false);
 	}
 	function onClearBtnCallBack() {
 		if (props.onClearCallback) props.onClearCallback();
+		if (props.onChangeCallBack) props.onChangeCallBack();
+		setToggleContent(false);
 	}
 	return (
 		<div className="rsFilterBarDropDown">
@@ -39,7 +43,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 			>
 				<Box id="labelContainer">
 					<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
-						Filter By
+						{props.isSortField ? 'Sort By' : 'Filter By'}
 					</Label>
 					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>

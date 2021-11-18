@@ -35,30 +35,12 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import moment from 'moment';
-import { OptionType } from '@bit/redsky.framework.rs.select';
-import PropertyType = Api.Destination.Res.PropertyType;
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const params = router.getPageUrlParams<{
-		destinationId: number;
-		startDate?: string;
-		endDate?: string;
-		guests: number;
-	}>([
-		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
-		{
-			key: 'startDate',
-			default: reservationFilters.startDate.toString() || '',
-			type: 'string',
-			alias: 'startDate'
-		},
-		{ key: 'endDate', default: reservationFilters.endDate.toString() || '', type: 'string', alias: 'endDate' },
-		{ key: 'guests', default: reservationFilters.adultCount || 1, type: 'integer', alias: 'guests' }
-	]);
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
@@ -72,45 +54,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [page, setPage] = useState<number>(1);
 	const [comparisonId, setComparisonId] = useState<number>(1);
 
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
-	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
-	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
-
 	useEffect(() => {
-		async function getResortExperiences() {
-			let res = await destinationService.getExperienceTypes();
-			setResortExperiences(
-				res.map((experience) => {
-					return {
-						value: experience.id,
-						label: experience.title
-					};
-				})
-			);
-		}
-		getResortExperiences().catch(console.error);
-
-		async function getInUnitAmenities() {
-			let res = await destinationService.getInUnitAmenities();
-			setInUnitAmenities(
-				res.map((amenity) => {
-					return {
-						value: amenity.id,
-						label: amenity.title
-					};
-				})
-			);
-		}
-		getInUnitAmenities().catch(console.error);
-
-		async function getPropertyTypes() {
-			const list = await destinationService.getAllPropertyTypes();
-			setPropertyTypeOptions(list);
-		}
-		getPropertyTypes().catch(console.error);
+		const filtersFromUrl = WebUtils.parseURLParamsToFilters();
+		setReservationFilters(filtersFromUrl);
 	}, []);
 
 	useEffect(() => {
+		if (!reservationFilters.destinationId) return;
 		async function getDestinationDetails(id: number) {
 			try {
 				let dest = await destinationService.getDestinationDetails(id);
@@ -122,28 +72,20 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				);
 			}
 		}
-		getDestinationDetails(params.destinationId).catch(console.error);
-	}, [params.destinationId]);
+		getDestinationDetails(reservationFilters.destinationId).catch(console.error);
+	}, [reservationFilters.destinationId]);
 
 	useEffect(() => {
-		router.updateUrlParams({
-			di: params.destinationId,
-			startDate: reservationFilters.startDate.toString(),
-			endDate: reservationFilters.endDate.toString(),
-			guests: reservationFilters.adultCount,
-			priceRangeMax: reservationFilters.priceRangeMax ? reservationFilters.priceRangeMax.toString() : '',
-			priceRangeMin: reservationFilters.priceRangeMin ? reservationFilters.priceRangeMin.toString() : '',
-			propertyTypeIds: reservationFilters.propertyTypeIds ? reservationFilters.propertyTypeIds.join(',') : ''
-		});
 		async function getAvailableStays() {
+			if (!reservationFilters.destinationId) return;
 			try {
 				popupController.open(SpinningLoaderPopup);
 				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
 				let key: keyof Misc.ReservationFilters;
 				for (key in searchQueryObj) {
-					if (!searchQueryObj[key]) delete searchQueryObj[key];
+					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
 				}
-				let result = await accommodationService.availability(params.destinationId, searchQueryObj);
+				let result = await accommodationService.availability(reservationFilters.destinationId, searchQueryObj);
 				setTotalResults(result.total || 0);
 				setAvailabilityStayList(result.data);
 				popupController.close(SpinningLoaderPopup);
@@ -157,25 +99,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		getAvailableStays().catch(console.error);
 	}, [reservationFilters]);
-
-	useEffect(() => {
-		if (!reservationFilters) {
-			setReservationFilters({
-				destinationId: params.destinationId,
-				startDate: moment(new Date(params.startDate || '').getTime()).format('YYYY-MM-DD'),
-				endDate: params.endDate
-					? moment(new Date(params.endDate).getTime()).format('YYYY-MM-DD')
-					: moment(new Date(params.startDate || ''))
-							.add(2, 'days')
-							.format('YYYY-MM-DD'),
-				adultCount: params.guests || 1,
-				childCount: 0,
-				redeemPoints: false,
-				sortOrder: 'ASC',
-				pagination: { page: 1, perPage: 10 }
-			});
-		}
-	}, []);
 
 	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setReservationFilters((prev) => {
@@ -451,10 +374,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								labelVariant={'caption'}
 								onClick={() => {
 									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-										className: 'filterPopup',
-										resortExperiencesOptions: resortExperiences,
-										inUnitAmenitiesOptions: inUnitAmenities,
-										accommodationOptions: propertyTypeOptions
+										className: 'filterPopup'
 									});
 								}}
 							/>

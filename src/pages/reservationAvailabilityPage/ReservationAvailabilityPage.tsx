@@ -31,9 +31,7 @@ import PropertyType = Api.Destination.Res.PropertyType;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
-		globalState.reservationFilters
-	);
+	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -41,55 +39,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
-	const [errorMessage, setErrorMessage] = useState<string>('');
-	const [validCode, setValidCode] = useState<boolean>(true);
-	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
-
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
-	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
-	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
-
-	useEffect(() => {
-		async function getResortExperiences() {
-			let res = await destinationService.getExperienceTypes();
-			setResortExperiences(
-				res.map((experience) => {
-					return {
-						value: experience.id,
-						label: experience.title
-					};
-				})
-			);
-		}
-		getResortExperiences().catch(console.error);
-
-		async function getInUnitAmenities() {
-			let res = await destinationService.getInUnitAmenities();
-			setInUnitAmenities(
-				res.map((amenity) => {
-					return {
-						value: amenity.id,
-						label: amenity.title
-					};
-				})
-			);
-		}
-		getInUnitAmenities().catch(console.error);
-
-		async function getAccommodations() {
-			const list = await destinationService.getAllPropertyTypes();
-			setPropertyTypeOptions(list);
-		}
-		getAccommodations().catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		/**
-		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
-		 */
-		setReservationFilters(WebUtils.parseURLParamsToFilters());
-	}, []);
 
 	useEffect(() => {
 		async function getReservations() {
@@ -111,18 +61,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 
 		getReservations().catch(console.error);
-	}, [reservationFilters]);
-
-	useEffect(() => {
-		router.updateUrlParams({
-			startDate: reservationFilters.startDate.toString(),
-			endDate: reservationFilters.endDate.toString(),
-			guests: reservationFilters.adultCount,
-			region: reservationFilters.regionIds ? reservationFilters.regionIds.join(',') : '',
-			priceRangeMax: reservationFilters.priceRangeMax ? reservationFilters.priceRangeMax.toString() : '',
-			priceRangeMin: reservationFilters.priceRangeMin ? reservationFilters.priceRangeMin.toString() : '',
-			propertyTypeIds: reservationFilters.propertyTypeIds ? reservationFilters.propertyTypeIds.join(',') : ''
-		});
 	}, [reservationFilters]);
 
 	function renderDestinationSearchResultCards() {
@@ -260,17 +198,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				>
 					{size !== 'small' ? (
 						<>
-							<FilterBarV2
-								destinationService={destinationService}
-								accommodationToggle={accommodationToggle}
-								accommodationOptions={propertyTypeOptions}
-								redeemCodeToggle={false}
-								resortExperiencesOptions={resortExperiences}
-								inUnitAmenitiesOptions={inUnitAmenities}
-							/>
-							<Label variant={'body1'} color={'red'}>
-								{errorMessage}
-							</Label>
+							<FilterBarV2 />
 						</>
 					) : (
 						<IconLabel
@@ -282,10 +210,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							labelVariant={'caption'}
 							onClick={() => {
 								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									className: 'filterPopup',
-									resortExperiencesOptions: resortExperiences,
-									inUnitAmenitiesOptions: inUnitAmenities,
-									accommodationOptions: propertyTypeOptions
+									className: 'filterPopup'
 								});
 							}}
 						/>
@@ -300,20 +225,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						renderDestinationSearchResultCards()
 					)}
 				</Box>
-				<div className={'paginationDiv'}>
-					<PaginationButtons
-						selectedRowsPerPage={perPage}
-						currentPageNumber={page}
-						setSelectedPage={(newPage) => {
-							setReservationFilters({
-								...reservationFilters,
-								pagination: { page: newPage, perPage: 5 }
-							});
-							setPage(newPage);
-						}}
-						total={availabilityTotal}
-					/>
-				</div>
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>
