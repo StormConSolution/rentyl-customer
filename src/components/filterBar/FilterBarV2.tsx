@@ -448,7 +448,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								control={filterForm.get('bedroomCount')}
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
-								minCount={1}
+								minCount={0}
 								labelMarginRight={5}
 							/>
 							<Counter
@@ -456,7 +456,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								control={filterForm.get('bathroomCount')}
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
-								minCount={1}
+								minCount={0}
 								labelMarginRight={5}
 							/>
 						</FilterBarDropDown>
