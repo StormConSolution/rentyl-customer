@@ -15,7 +15,6 @@ interface FilterBarDropDownProps {
 	isSortField?: boolean;
 	className?: string;
 	dropdownContentClassName?: string;
-	isDropdownButtons: boolean;
 }
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
@@ -58,7 +57,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 			{toggleContent && (
 				<Box boxRef={modalRef} className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
-					{props.isDropdownButtons && (
+					{!props.isSortField && (
 						<Box className="dropdownFooter">
 							<LabelButton variant="body1" label="Clear" look="none" onClick={onClearBtnCallBack} />
 							<LabelButton

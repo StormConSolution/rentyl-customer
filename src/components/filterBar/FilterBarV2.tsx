@@ -353,7 +353,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						}}
 						title="Price"
 						dropdownContentClassName="destinationFilterDropdown"
-						isDropdownButtons
 					>
 						<Box className="paddingDropdownBody">
 							<Slider
@@ -397,7 +396,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						}}
 						title="Accommodation"
 						dropdownContentClassName="destinationFilterDropdown"
-						isDropdownButtons
 					>
 						<Box className="paddingDropdownBody">{renderAccommodationList()}</Box>
 					</FilterBarDropDown>
@@ -415,7 +413,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						}}
 						title="Bedrooms"
 						dropdownContentClassName="destinationFilterDropdown"
-						isDropdownButtons
 					>
 						<Box className="paddingDropdownBody">
 							<Counter
@@ -445,7 +442,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						}}
 						title="Resort Experiences"
 						dropdownContentClassName="destinationFilterDropdown"
-						isDropdownButtons
 					>
 						<Box className="paddingDropdownBody">{renderResortExperiencesOptionsList()}</Box>
 					</FilterBarDropDown>
@@ -458,7 +454,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						}}
 						title="Other Filters"
 						dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
-						isDropdownButtons
 					>
 						<Label variant="body1" paddingTop={10} paddingLeft={10}>
 							In Unit Amenities
@@ -478,14 +473,13 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								tempControl.value = 'ASC';
 								updateFilterForm(tempControl);
 							}}
-							title={filterForm.get('sortOrder').value === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
-							isDropdownButtons={false}
+							title={reservationFilters.sortOrder === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
 							dropdownContentClassName="pricesDropdown"
 						>
 							<LabelRadioButton
 								radioName="highestRadioBtn"
 								value="sortHigh"
-								checked={filterForm.get('sortOrder').value === 'DESC'}
+								checked={reservationFilters.sortOrder === 'DESC'}
 								text="Highest Prices"
 								onSelect={() => {
 									setReservationFilters({
@@ -499,7 +493,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							<LabelRadioButton
 								radioName="lowestRadioBtn"
 								value="sortLow"
-								checked={filterForm.get('sortOrder').value === 'ASC'}
+								checked={reservationFilters.sortOrder === 'ASC'}
 								text="Lowest Prices"
 								onSelect={() => {
 									setReservationFilters({
