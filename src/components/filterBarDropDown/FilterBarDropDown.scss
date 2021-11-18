@@ -5,9 +5,10 @@
 
 	.rsDropdownBtn {
 		border: 1px solid theme-var($greyLineColor);
-		padding: 5px 10px;
+		padding: 10px 17px;
 		border-radius: 10px;
 		background: #fff;
+		gap: 55px;
 
 		.labelContainer {
 			.filterByLabel {
@@ -25,7 +26,6 @@
 		}
 	}
 	.DropdownContent {
-		margin-left: 12px;
 		box-shadow: 0 0 8px theme-var($greyLineColor);
 		border-radius: 10px;
 		position: absolute;

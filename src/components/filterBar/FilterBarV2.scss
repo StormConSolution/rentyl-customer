@@ -1,8 +1,7 @@
 @import 'src/themes/themes';
 .rsFilterBarV2 {
 	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 20px;
 
 	display: flex;
 	flex-wrap: wrap;
@@ -12,8 +11,6 @@
 		width: 70%;
 
 		.filterCol {
-			flex: 1 0 0%;
-
 			.minMaxDiv {
 				display: flex;
 				justify-content: space-between;
@@ -73,10 +70,8 @@
 	.subRow {
 		display: flex;
 		flex-wrap: wrap;
+		gap: 24px;
 
-		.dropdownMarginX {
-			margin: 10px 12px;
-		}
 		.destinationFilterDropdown {
 			padding: 15px;
 		}

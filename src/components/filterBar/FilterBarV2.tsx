@@ -163,7 +163,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Price"
-							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
 						>
 							<Slider
@@ -203,7 +202,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Accommodation"
-							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
 						>
 							{renderAccommodationList()}
@@ -214,7 +212,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Bedrooms"
-							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
 						>
 							<Counter
@@ -240,7 +237,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Resort Experiences"
-							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
 						>
 							{renderResortExperiencesOptionsList()}
@@ -251,7 +247,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => console.log('Clear Form')}
 							title="Other Filters"
-							className="dropdownMarginX"
 							dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
 						>
 							<Label variant="body1" paddingTop={10} paddingLeft={10}>
@@ -269,7 +264,6 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							onChangeCallBack={onApplyClick}
 							onClearCallback={() => setSortOrderSelection('')}
 							title={sortOrderSelection === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
-							className="dropdownMarginX"
 						>
 							<LabelRadioButton
 								radioName="highestRadioBtn"

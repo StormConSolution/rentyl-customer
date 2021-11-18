@@ -32,7 +32,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 			<Box
 				className={`rsDropdownBtn${props.className ? ` ${props.className}` : ''}`}
 				display="flex"
-				justifyContent="space-between"
+				justifyContent="start"
 				alignItems="center"
 				onClick={() => setToggleContent((prevState) => !prevState)}
 			>
