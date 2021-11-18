@@ -1,8 +1,6 @@
 @import 'src/themes/themes';
 .rsFilterBarV2 {
 	width: 100%;
-	margin: 0 20px;
-
 	display: flex;
 	flex-wrap: wrap;
 
@@ -57,16 +55,11 @@
 	.smallCol {
 		flex: 0 0 auto;
 		width: 30%;
+		.pricesDropdown {
+			padding: 37px 37px;
 
-		.halfCol {
-			flex: 1 0 0%;
-
-			.pricesDropdown {
-				padding: 37px 37px;
-
-				.priceHighRadio {
-					margin-bottom: 20px;
-				}
+			.priceHighRadio {
+				margin-bottom: 20px;
 			}
 		}
 	}
