@@ -296,7 +296,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								control={filterForm.get('bedroomCount')}
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
-								minCount={1}
+								minCount={0}
 								labelMarginRight={5}
 							/>
 							<Counter
@@ -304,7 +304,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								control={filterForm.get('bathroomCount')}
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
-								minCount={1}
+								minCount={0}
 								labelMarginRight={5}
 							/>
 						</div>

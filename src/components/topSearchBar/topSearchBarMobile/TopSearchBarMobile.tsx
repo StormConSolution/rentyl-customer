@@ -6,33 +6,46 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import DateRangeSelector from '../../dateRangeSelector/DateRangeSelector';
 import { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
-import { formatFilterDateForServer, ObjectUtils } from '../../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../../utils/utils';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import serviceFactory from '../../../services/serviceFactory';
 import RegionService from '../../../services/region/region.service';
 import Paper from '../../paper/Paper';
+import { useRecoilState } from 'recoil';
+import globalState from '../../../state/globalState';
 
 interface TopSearchBarMobileProps {
 	onFilterClick?: () => void;
-	onChangeCallBack: (data: { regionId?: number; startDate?: string; endDate?: string }) => void;
 }
 
 const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 	const boxRef = useRef<HTMLDivElement>(null);
 	const regionService = serviceFactory.get<RegionService>('RegionService');
-	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(null);
-	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(null);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
+	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(
+		moment(reservationFilters.startDate)
+	);
+	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(reservationFilters.endDate));
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [regionList, setRegionList] = useState<Api.Region.Res.Get[]>([]);
 
 	const [topSearchBarForm, setTopSearchBarForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regionId', '', []),
-			new RsFormControl('startDate', '', []),
-			new RsFormControl('endDate', '', [])
+			new RsFormControl('regionIds', reservationFilters.regionIds || [], []),
+			new RsFormControl('startDate', (reservationFilters.startDate as string) || '', []),
+			new RsFormControl('endDate', (reservationFilters.endDate as string) || '', [])
 		])
 	);
+
+	useEffect(() => {
+		/**
+		 * This is used to update the url parameters anytime the recoil state changes
+		 */
+		WebUtils.updateUrlParams(reservationFilters);
+	}, [reservationFilters]);
 
 	useEffect(() => {
 		(async () => {
@@ -63,7 +76,7 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 		setEndDateControl(endDate);
 		updateDatesForSearchBarForm('startDate', formatFilterDateForServer(startDate, 'start'));
 		updateDatesForSearchBarForm('endDate', formatFilterDateForServer(endDate, 'end'));
-		onChangeCallback();
+		onApplyClick();
 	}
 
 	function updateDatesForSearchBarForm(key: 'startDate' | 'endDate', value: any) {
@@ -73,10 +86,10 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 	}
 
 	function renderRegionLabel() {
-		let regionId = topSearchBarForm.get('regionId').value;
-		if (!regionId.toString().length) return 'Select Location';
+		let regionId = topSearchBarForm.get('regionIds').value as number[];
+		if (!ObjectUtils.isArrayWithData(regionId)) return 'Location';
 
-		let regionName = regionList.filter((item) => item.id === regionId);
+		let regionName = regionList.filter((item) => item.id === regionId[0]);
 		return regionName[0].name;
 	}
 
@@ -84,20 +97,20 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 		if (!ObjectUtils.isArrayWithData(regionList)) return;
 
 		return regionList.map((item, index) => {
-			let isSelected = topSearchBarForm.get('regionId').value === item.id;
+			let isSelected = topSearchBarForm.get('regionIds').value === item.id;
 
 			return (
 				<Box
 					key={item.id}
 					className={`regionItem ${isSelected ? 'selected' : ''}`}
 					onClick={() => {
-						let newControl = topSearchBarForm.get('regionId');
-						newControl.value = item.id;
+						let newControl = topSearchBarForm.get('regionIds');
+						newControl.value = [item.id];
 						setTopSearchBarForm(topSearchBarForm.clone().update(newControl));
+						onApplyClick();
 						setTimeout(() => {
 							boxRef.current!.style.display = 'none';
 						}, 50);
-						onChangeCallback();
 					}}
 					display={'flex'}
 					alignItems={'center'}
@@ -111,22 +124,35 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 		});
 	}
 
-	function onChangeCallback() {
-		let data: any = topSearchBarForm.toModel();
-		for (let i in data) {
-			if (!data[i].toString().length) delete data[i];
-		}
-		props.onChangeCallBack(data);
+	function onApplyClick() {
+		setReservationFilters((prev) => {
+			const form: {
+				propertyTypeIds: number[];
+				adultCount: number;
+				bedroomCount: number;
+				bathroomCount: number;
+				priceRangeMax: number;
+				priceRangeMin: number;
+				experienceIds: number[];
+				amenityIds: number[];
+				regionIds: number[];
+				startDate: string;
+				endDate: string;
+				sortOrder: 'ASC' | 'DESC';
+			} = topSearchBarForm.toModel();
+			return { ...prev, ...form };
+		});
 	}
 
 	return (
 		<div className={'rsTopSearchBarMobile'}>
 			<Label
-				variant={'custom1'}
+				className={'locationTitle'}
+				variant={'body1'}
 				textOverflow={'ellipsis'}
 				whiteSpace={'nowrap'}
 				overflow={'hidden'}
-				width={'12ch'}
+				width={'9ch'}
 				onClick={() => {
 					boxRef.current!.style.display = 'block';
 				}}

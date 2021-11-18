@@ -7,17 +7,14 @@ import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { OptionType } from '@bit/redsky.framework.rs.select';
-import { ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import DestinationService from '../../services/destination/destination.service';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
-import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
@@ -27,7 +24,6 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
-import PropertyType = Api.Destination.Res.PropertyType;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -188,32 +184,20 @@ const ReservationAvailabilityPage: React.FC = () => {
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
 				<TopSearchBar
-					onSearch={(data) => {
-						console.log(data);
-					}}
+					onFilterClick={() =>
+						popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+							className: 'filterPopup'
+						})
+					}
 				/>
 				<Box
 					className={'filterResultsWrapper'}
 					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 0 60px 0'}
 				>
-					{size !== 'small' ? (
+					{size !== 'small' && (
 						<>
 							<FilterBarV2 />
 						</>
-					) : (
-						<IconLabel
-							className={'moreFiltersLink'}
-							labelName={'More Filters'}
-							iconImg={'icon-chevron-right'}
-							iconPosition={'right'}
-							iconSize={8}
-							labelVariant={'caption'}
-							onClick={() => {
-								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									className: 'filterPopup'
-								});
-							}}
-						/>
 					)}
 
 					<div className={'bottomBorderDiv'} />

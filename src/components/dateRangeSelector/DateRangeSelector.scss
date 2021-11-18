@@ -5,7 +5,7 @@
 		display: grid;
 		grid-template-columns: repeat(2, minmax(90px, 1fr));
 		column-gap: 10px;
-		padding-bottom: 10px;
+		padding-top: 15px;
 	}
 	.DateRangePicker {
 		.DateRangePicker_picker {
@@ -35,6 +35,7 @@
 			}
 		}
 		.DateRangePickerInput {
+			display: flex;
 			align-items: center;
 		}
 		.DateRangePickerInput_arrow {
@@ -203,6 +204,7 @@
 .small {
 	.rsDateRangeSelector {
 		.DateRangePicker {
+			padding-top: 4px;
 			.DateInput_input {
 				font-size: 18px;
 				color: #767676;
@@ -218,9 +220,13 @@
 				}
 			}
 			.DateInput {
+				padding: 0;
 				width: fit-content;
 				&.DateInput_1:first-of-type {
 					margin-right: 0;
+				}
+				&.DateInput:last-of-type {
+					margin: 0;
 				}
 			}
 			.DateRangePickerInput_arrow {

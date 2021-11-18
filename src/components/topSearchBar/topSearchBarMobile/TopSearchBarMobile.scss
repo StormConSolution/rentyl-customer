@@ -10,12 +10,17 @@
 	align-items: center;
 	justify-content: space-between;
 	margin-top: 64px;
+	z-index: 1;
 	hr {
 		border: none;
 		width: 1px;
 		background: #707070;
 		height: 27px;
 		margin: 0 10px 0 0;
+	}
+
+	.locationTitle {
+		font-size: 22px;
 	}
 
 	.popoutBox {
@@ -29,9 +34,6 @@
 		display: none;
 
 		.rsPaper {
-			&:first-of-type {
-				margin-bottom: 3px;
-			}
 			&.regionList {
 				.regionItem {
 					width: 100%;

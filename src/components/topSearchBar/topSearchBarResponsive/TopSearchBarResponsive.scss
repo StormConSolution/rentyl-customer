@@ -5,6 +5,7 @@
 	max-width: 782px;
 	display: flex;
 	align-items: center;
+	margin: 25px auto 0;
 	hr {
 		border: none;
 		width: 1px;
@@ -18,6 +19,12 @@
 		border: 1px solid #707070;
 		margin-left: auto;
 		padding: 17px 22px;
+		cursor: pointer;
+		width: clamp(50px, 100%, 82px);
+		height: clamp(50px, 100%, 72px);
+	}
+	.rsTitleLabel {
+		width: clamp(50px, 100%, 157px);
 	}
 	.regionList {
 		.regionItem {
@@ -31,5 +38,11 @@
 				background: #deebff;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 1230px) {
+	.rsTopSearchBarResponsive {
+		margin-top: 68px;
 	}
 }

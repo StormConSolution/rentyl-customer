@@ -106,17 +106,24 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 	}, []);
 
 	useEffect(() => {
-		async function getAllFiltersOptions() {
+		async function getPropertyTypeOptions() {
 			try {
 				const propertyTypes = await destinationService.getAllPropertyTypes();
-				const experiences = await destinationService.getExperienceTypes();
-				const amenities = await accommodationService.getAllAmenities();
 				setPropertyTypes(propertyTypes);
-				setExperienceOptions(
-					experiences.map((experience) => {
-						return { value: experience.id, label: experience.title };
-					})
+			} catch (e) {
+				rsToastify.error(
+					'An unexpected error occurred on the server, unable to get all the options.',
+					'Server Error!'
 				);
+			}
+		}
+		getPropertyTypeOptions().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getAmenityOptions() {
+			try {
+				const amenities = await accommodationService.getAllAmenities();
 				setAmenityOptions(
 					amenities.map((amenity) => {
 						return { value: amenity.id, label: amenity.title };
@@ -129,7 +136,26 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 				);
 			}
 		}
-		getAllFiltersOptions().catch(console.error);
+		getAmenityOptions().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getExperienceOptions() {
+			try {
+				const experiences = await destinationService.getExperienceTypes();
+				setExperienceOptions(
+					experiences.map((experience) => {
+						return { value: experience.id, label: experience.title };
+					})
+				);
+			} catch (e) {
+				rsToastify.error(
+					'An unexpected error occurred on the server, unable to get all the options.',
+					'Server Error!'
+				);
+			}
+		}
+		getExperienceOptions().catch(console.error);
 	}, []);
 
 	useEffect(() => {
@@ -422,7 +448,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								control={filterForm.get('bedroomCount')}
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
-								minCount={1}
+								minCount={0}
 								labelMarginRight={5}
 							/>
 							<Counter
@@ -430,7 +456,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								control={filterForm.get('bathroomCount')}
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
-								minCount={1}
+								minCount={0}
 								labelMarginRight={5}
 							/>
 						</FilterBarDropDown>

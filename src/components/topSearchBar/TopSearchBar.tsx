@@ -4,26 +4,16 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import TopSearchBarMobile from './topSearchBarMobile/TopSearchBarMobile';
 import TopSearchBarResponsive from './topSearchBarResponsive/TopSearchBarResponsive';
 
-interface DatePickerCardProps {
-	onSearch: (data: { regionId?: number; guest?: number; startDate?: string; endDate?: string }) => void;
+interface TopSearchBarProps {
+	onFilterClick?: () => void;
 }
 
-const TopSearchBar: React.FC<DatePickerCardProps> = (props) => {
+interface DatePickerCardProps {}
+
+const TopSearchBar: React.FC<TopSearchBarProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	return size === 'small' ? (
-		<TopSearchBarMobile
-			onChangeCallBack={(data) => {
-				props.onSearch(data);
-			}}
-		/>
-	) : (
-		<TopSearchBarResponsive
-			onSearch={(data) => {
-				props.onSearch(data);
-			}}
-		/>
-	);
+	return size === 'small' ? <TopSearchBarMobile onFilterClick={props.onFilterClick} /> : <TopSearchBarResponsive />;
 };
 
 export default TopSearchBar;
