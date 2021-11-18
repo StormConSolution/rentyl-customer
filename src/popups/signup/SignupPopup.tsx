@@ -8,7 +8,6 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { PopupProps } from '@bit/redsky.framework.rs.996/dist/popup/Popup';
 import LabelInput from '../../components/labelInput/LabelInput';
-import Button from '@bit/redsky.framework.rs.button';
 import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
 import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';

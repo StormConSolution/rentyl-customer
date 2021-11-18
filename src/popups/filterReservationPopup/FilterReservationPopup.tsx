@@ -6,8 +6,7 @@ import './FilterReservationPopup.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import LabelButton from '../../components/labelButton/LabelButton';
-import { StringUtils, WebUtils } from '../../utils/utils';
-import { OptionType } from '@bit/redsky.framework.rs.select';
+import { WebUtils } from '../../utils/utils';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import DestinationService from '../../services/destination/destination.service';
@@ -25,7 +24,7 @@ import { useRecoilState } from 'recoil';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 
 export interface FilterReservationPopupProps extends PopupProps {
-	searchRegion?: boolean;
+	className?: string;
 }
 
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
@@ -37,10 +36,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypes, setPropertyTypes] = useState<Model.PropertyType[]>([]);
 	const [experienceOptions, setExperienceOptions] = useState<Misc.OptionType[]>([]);
 	const [amenityOptions, setAmenityOptions] = useState<Misc.OptionType[]>([]);
-	const [sortBySelection, setSortBySelection] = useState<number>();
-	const [redeemCodeToggle, setRedeemCodeToggle] = useState<boolean>(false);
-	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
-
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			//propertyTypeIds are the text accommodationType on the front end.
@@ -49,22 +44,14 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			new RsFormControl('adultCount', reservationFilters.adultCount || 1, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required')
 			]),
-			new RsFormControl('bedroomCount', reservationFilters.bedroomCount || 1, [
+			new RsFormControl('bedroomCount', reservationFilters.bedroomCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bedrooms Required')
 			]),
-			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 1, [
+			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
-			new RsFormControl(
-				'priceRangeMax',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMax) || 1000,
-				[]
-			),
-			new RsFormControl(
-				'priceRangeMin',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMin) || 1,
-				[]
-			),
+			new RsFormControl('priceRangeMax', reservationFilters.priceRangeMax || 1000, []),
+			new RsFormControl('priceRangeMin', reservationFilters.priceRangeMin || 1, []),
 			new RsFormControl('experienceIds', reservationFilters.experienceIds || [], []),
 			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], []),
 			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
@@ -114,24 +101,17 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	}, []);
 
 	useEffect(() => {
-		async function getPropertyTypeOptions() {
+		async function getAllFiltersOptions() {
 			try {
 				const propertyTypes = await destinationService.getAllPropertyTypes();
-				setPropertyTypes(propertyTypes);
-			} catch (e) {
-				rsToastify.error(
-					'An unexpected error occurred on the server, unable to get all the options.',
-					'Server Error!'
-				);
-			}
-		}
-		getPropertyTypeOptions().catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		async function getAmenityOptions() {
-			try {
+				const experiences = await destinationService.getExperienceTypes();
 				const amenities = await accommodationService.getAllAmenities();
+				setPropertyTypes(propertyTypes);
+				setExperienceOptions(
+					experiences.map((experience) => {
+						return { value: experience.id, label: experience.title };
+					})
+				);
 				setAmenityOptions(
 					amenities.map((amenity) => {
 						return { value: amenity.id, label: amenity.title };
@@ -144,26 +124,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 				);
 			}
 		}
-		getAmenityOptions().catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		async function getExperienceOptions() {
-			try {
-				const experiences = await destinationService.getExperienceTypes();
-				setExperienceOptions(
-					experiences.map((experience) => {
-						return { value: experience.id, label: experience.title };
-					})
-				);
-			} catch (e) {
-				rsToastify.error(
-					'An unexpected error occurred on the server, unable to get all the options.',
-					'Server Error!'
-				);
-			}
-		}
-		getExperienceOptions().catch(console.error);
+		getAllFiltersOptions().catch(console.error);
 	}, []);
 
 	useEffect(() => {
@@ -181,16 +142,15 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	function saveFilter() {
 		setReservationFilters((prev) => {
-			const form: {
-				propertyTypeIds: number[];
+			const form = filterForm.toModel<{
 				adultCount: number;
+				priceRangeMin: number;
+				priceRangeMax: number;
+				accommodationType: number[];
 				bedroomCount: number;
 				bathroomCount: number;
-				priceRangeMax: number;
-				priceRangeMin: number;
-				experienceIds: number[];
-				amenityIds: number[];
-			} = filterForm.toModel();
+				propertyTypeIds: number[];
+			}>();
 			return { ...prev, ...form };
 		});
 		popupController.close(FilterReservationPopup);
@@ -198,7 +158,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	function renderAccommodationCheckboxes() {
 		return propertyTypes.map((item) => (
-			// return props.accommodationOptions.map((item) => (
 			<LabelCheckboxV2
 				className="listCheckboxes"
 				key={item.id}
@@ -214,17 +173,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 					filterForm.get('propertyTypeIds').value = (filterForm.get('propertyTypeIds')
 						.value as number[]).filter((type) => type !== item.id);
 					updateFilterForm(filterForm.get('propertyTypeIds'));
-					// =======
-					// 					let tempControl = filterForm.get('accommodationType');
-					// 					tempControl.value = [...(tempControl.value as number[]), item.id as number];
-					// 					updateFilterForm(tempControl);
-					// 				}}
-					// 				isChecked={(filterForm.get('accommodationType').value as number[]).includes(item.id as number)}
-					// 				onDeselect={() => {
-					// 					filterForm.get('accommodationType').value = (filterForm.get('accommodationType')
-					// 						.value as number[]).filter((type) => type !== item.id);
-					// 					updateFilterForm(filterForm.get('accommodationType'));
-					// >>>>>>> c2ffa720cf2ceec8bdc6266bf7bdad206256a605
 				}}
 			/>
 		));
@@ -286,52 +234,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 				))}
 			</>
 		);
-		// =======
-		// 		return props.resortExperiencesOptions.map((item) => (
-		// 			<Box marginY={10}>
-		// 				<LabelCheckboxV2
-		// 					key={item.value}
-		// 					value={item.value}
-		// 					text={item.label}
-		// 					onSelect={() => {
-		// 						let tempControl = filterForm.get('experienceIds');
-		// 						tempControl.value = [...(tempControl.value as number[]), item.value as number];
-		// 						updateFilterForm(tempControl);
-		// 					}}
-		// 					isChecked={accommodationToggle}
-		// 					onDeselect={() => {
-		// 						filterForm.get('experienceIds').value = (filterForm.get('experienceIds')
-		// 							.value as number[]).filter((type) => type !== item.value);
-		// 						updateFilterForm(filterForm.get('experienceIds'));
-		// 					}}
-		// 				/>
-		// 			</Box>
-		// 		));
-		// 	}
-		//
-		// 	function renderInUnitAmenities() {
-		// 		return props.inUnitAmenitiesOptions.map((item) => (
-		// 			<Box marginY={10}>
-		// 				<LabelCheckboxV2
-		// 					key={item.value}
-		// 					value={item.value}
-		// 					text={item.label}
-		// 					onSelect={() => {
-		// 						let tempControl = filterForm.get('amenityIds');
-		// 						tempControl.value = [...(tempControl.value as number[]), item.value as number];
-		// 						updateFilterForm(tempControl);
-		// 					}}
-		// 					isChecked={accommodationToggle}
-		// 					onDeselect={() => {
-		// 						filterForm.get('amenityIds').value = (filterForm.get('amenityIds').value as number[]).filter(
-		// 							(type) => type !== item.value
-		// 						);
-		// 						updateFilterForm(filterForm.get('amenityIds'));
-		// 					}}
-		// 				/>
-		// 			</Box>
-		// 		));
-		// >>>>>>> c2ffa720cf2ceec8bdc6266bf7bdad206256a605
 	}
 
 	return (
