@@ -490,7 +490,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 			</Box>
 			<Box className="smallCol">
 				<Box className="subRow">
-					<Box className="halfCol" marginLeft={24}>
+					<Box marginLeft={24}>
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
 							isSortField
@@ -531,7 +531,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							/>
 						</FilterBarDropDown>
 					</Box>
-					<Box className="halfCol redeemToggle">
+					<Box className="redeemToggle">
 						<Box
 							display={'flex'}
 							flexDirection={'column'}

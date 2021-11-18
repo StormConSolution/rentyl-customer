@@ -192,7 +192,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				/>
 				<Box
 					className={'filterResultsWrapper'}
-					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 0 60px 0'}
+					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 20px 60px 20px'}
 				>
 					{size !== 'small' && (
 						<>
