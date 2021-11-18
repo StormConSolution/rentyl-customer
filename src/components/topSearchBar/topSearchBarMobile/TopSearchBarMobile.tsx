@@ -6,7 +6,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import DateRangeSelector from '../../dateRangeSelector/DateRangeSelector';
 import { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
-import { formatFilterDateForServer, ObjectUtils } from '../../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../../utils/utils';
 import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import serviceFactory from '../../../services/serviceFactory';
@@ -39,6 +39,13 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 			new RsFormControl('endDate', (reservationFilters.endDate as string) || '', [])
 		])
 	);
+
+	useEffect(() => {
+		/**
+		 * This is used to update the url parameters anytime the recoil state changes
+		 */
+		WebUtils.updateUrlParams(reservationFilters);
+	}, [reservationFilters]);
 
 	useEffect(() => {
 		(async () => {

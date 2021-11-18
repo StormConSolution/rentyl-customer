@@ -10,12 +10,11 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { Box } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../../services/serviceFactory';
 import RegionService from '../../../services/region/region.service';
-import { formatFilterDateForServer, ObjectUtils } from '../../../utils/utils';
+import { formatFilterDateForServer, ObjectUtils, WebUtils } from '../../../utils/utils';
 import DateRangeSelector from '../../dateRangeSelector/DateRangeSelector';
 import TitleLabel from '../titleLabel/TitleLabel';
 import Paper from '../../paper/Paper';
 import Counter from '../../counter/Counter';
-import router from '../../../utils/router';
 import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
 
@@ -40,6 +39,13 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 			new RsFormControl('endDate', (reservationFilters.endDate as string) || '', [])
 		])
 	);
+
+	useEffect(() => {
+		/**
+		 * This is used to update the url parameters anytime the recoil state changes
+		 */
+		WebUtils.updateUrlParams(reservationFilters);
+	}, [reservationFilters]);
 
 	useEffect(() => {
 		(async () => {
