@@ -36,6 +36,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypes, setPropertyTypes] = useState<Model.PropertyType[]>([]);
 	const [experienceOptions, setExperienceOptions] = useState<Misc.OptionType[]>([]);
 	const [amenityOptions, setAmenityOptions] = useState<Misc.OptionType[]>([]);
+	const [toggleSort, setToggleSort] = useState<string>('ASC');
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			//propertyTypeIds are the text accommodationType on the front end.
@@ -200,7 +201,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									.value as number[]).filter((id) => id !== item.value);
 								updateFilterForm(filterForm.get('propertyTypeIds'));
 							}}
-							isDisabled={true}
 						/>
 					</Box>
 				))}
@@ -228,7 +228,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									.value as number[]).filter((id) => id !== item.value);
 								updateFilterForm(filterForm.get('propertyTypeIds'));
 							}}
-							isDisabled={true}
 						/>
 					</Box>
 				))}
@@ -256,30 +255,30 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							<LabelRadioButton
 								radioName="highestRadioBtn"
 								value="sortHigh"
-								checked={filterForm.get('sortOrder').value === 'DESC'}
+								checked={toggleSort === 'DESC'}
 								text="Highest Price"
 								onSelect={() => {
+									setToggleSort('DESC');
 									let tempControl = filterForm.get('sortOrder');
 									tempControl.value = 'DESC';
 									updateFilterForm(tempControl);
 								}}
 								labelSize="body2"
 								className="labelRadio"
-								isDisabled={true}
 							/>
 							<LabelRadioButton
 								radioName="lowestRadioBtn"
 								value="sortLow"
-								checked={filterForm.get('sortOrder').value === 'ASC'}
+								checked={toggleSort === 'ASC'}
 								text="Lowest Price"
 								onSelect={() => {
+									setToggleSort('ASC');
 									let tempControl = filterForm.get('sortOrder');
 									tempControl.value = 'ASC';
 									updateFilterForm(tempControl);
 								}}
 								labelSize="body2"
 								className="labelRadio"
-								isDisabled={true}
 							/>
 						</div>
 						<div className="formDiv" id="guestsDiv">
