@@ -6,8 +6,7 @@ import './FilterReservationPopup.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Paper from '../../components/paper/Paper';
 import LabelButton from '../../components/labelButton/LabelButton';
-import { StringUtils, WebUtils } from '../../utils/utils';
-import { OptionType } from '@bit/redsky.framework.rs.select';
+import { WebUtils } from '../../utils/utils';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import DestinationService from '../../services/destination/destination.service';
@@ -51,16 +50,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
-			new RsFormControl(
-				'priceRangeMax',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMax) || 1000,
-				[]
-			),
-			new RsFormControl(
-				'priceRangeMin',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMin) || 1,
-				[]
-			),
+			new RsFormControl('priceRangeMax', reservationFilters.priceRangeMax || 1000, []),
+			new RsFormControl('priceRangeMin', reservationFilters.priceRangeMin || 1, []),
 			new RsFormControl('experienceIds', reservationFilters.experienceIds || [], []),
 			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], []),
 			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
