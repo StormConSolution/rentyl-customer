@@ -60,3 +60,22 @@
 		border-bottom: 1px solid theme-var($greyLineColor);
 	}
 }
+
+@media screen and (max-width: 1230px) {
+	.rsAppBar {
+		max-height: 64px;
+		width: 100%;
+		background-color: white;
+		.logo {
+			padding: 14px;
+			max-width: 100px;
+		}
+		.logoContainer {
+			margin: 15px;
+		}
+		.menuContainer {
+			margin: 15px;
+		}
+		border-bottom: 1px solid theme-var($greyLineColor);
+	}
+}

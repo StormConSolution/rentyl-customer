@@ -25,7 +25,7 @@ export default class AccommodationService extends Service {
 		searchQueryObj: Misc.ReservationFilters
 	): Promise<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>> {
 		searchQueryObj.destinationId = destinationId;
-		searchQueryObj.childCount = +0;
+		searchQueryObj.childCount = 0;
 		let res = await http.get<RedSky.RsPagedResponseData<Api.Accommodation.Res.Availability>>(
 			'accommodation/availability',
 			searchQueryObj
