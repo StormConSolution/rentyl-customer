@@ -14,6 +14,7 @@ interface FilterBarDropDownProps {
 	onClearCallback: () => void;
 	className?: string;
 	dropdownContentClassName?: string;
+	isDropdownButtons: boolean;
 }
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
@@ -40,9 +41,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 					<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
 						Filter By
 					</Label>
-					<Label variant="body3" className="filterTitleLabel">
-						{props.title}
-					</Label>
+					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
 					<Icon
@@ -55,14 +54,8 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 			{toggleContent && (
 				<Box boxRef={modalRef} className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
-					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
-						<Box
-							display="flex"
-							justifyContent="space-between"
-							alignItems="center"
-							height="75px"
-							paddingX="10px"
-						>
+					{props.isDropdownButtons && (
+						<Box className="dropdownFooter">
 							<LabelButton variant="body1" label="Clear" look="none" onClick={onClearBtnCallBack} />
 							<LabelButton
 								variant="body2"
@@ -71,7 +64,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 								onClick={applyBtnCallback}
 							/>
 						</Box>
-					</Box>
+					)}
 				</Box>
 			)}
 		</div>

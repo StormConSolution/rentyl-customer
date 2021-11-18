@@ -10,26 +10,32 @@
 		background: #fff;
 		gap: 55px;
 
-		.labelContainer {
-			.filterByLabel {
-				color: theme-var($secondaryTextColor);
-				opacity: 0.5;
-			}
-			.filterTitleLabel {
-				font-family: Montserrat, serif;
-				font-size: 17px;
-				color: theme-var($secondaryTextColor);
-			}
+		.filterByLabel {
+			color: theme-var($secondaryTextColor);
+			opacity: 0.5;
+		}
+		.filterTitleLabel {
+			font-family: Montserrat, serif;
+			font-size: 15px;
+			color: theme-var($secondaryTextColor);
 		}
 		.chevronIcon {
 			padding-top: 3px;
 		}
 	}
 	.DropdownContent {
-		box-shadow: 0 0 8px theme-var($greyLineColor);
+		box-shadow: 0 4px 5px 0 theme-var($greyLineColor);
 		border-radius: 10px;
 		position: absolute;
 		z-index: 1;
-		background: theme-var($primaryBackgroundColor);
+		background: #fff;
+
+		.dropdownFooter {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-top: 1px solid rgb(224, 224, 224);
+			padding: 22px 30px;
+		}
 	}
 }
