@@ -212,14 +212,6 @@ const BookingFlowAddRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (
-									adults: number,
-									priceRangeMin: string,
-									priceRangeMax: string,
-									propertyTypeIds: number[]
-								) => {
-									popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-								},
 								className: 'filterPopup'
 							});
 						}}

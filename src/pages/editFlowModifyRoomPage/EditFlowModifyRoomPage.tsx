@@ -36,25 +36,28 @@ const EditFlowModifyRoomPage = () => {
 	]);
 	let reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	let destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
 	const [page, setPage] = useState<number>(1);
 	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(5);
-	const [options, setOptions] = useState<OptionType[]>([]);
 	const [reservation, setReservation] = useState<Api.Reservation.Res.Get>();
-	const [destinations, setDestinations] = useState<Api.Accommodation.Res.Availability[]>([]);
+	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Availability[]>([]);
 
 	useEffect(() => {
 		async function getReservationData(id: number) {
+			if (!params.reservationId) {
+				rsToastify.error('No reservation chosen to look at, please try again', 'No reservation');
+				router.back('/reservations');
+			}
 			try {
 				let res = await reservationsService.get(id);
 				setReservation(res);
 				const newSearchQueryObj = { ...reservationFilters };
 				newSearchQueryObj.startDate = res.arrivalDate;
 				newSearchQueryObj.endDate = res.departureDate;
+				newSearchQueryObj.destinationId = res.destination.id;
 				setReservationFilters(newSearchQueryObj);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find reservation.'), 'Server Error');
@@ -65,12 +68,16 @@ const EditFlowModifyRoomPage = () => {
 	}, [params.reservationId]);
 
 	useEffect(() => {
-		async function getReservations() {
+		async function getAvailableAccommodations() {
+			if (!reservationFilters.destinationId && !params.destinationId) return;
 			try {
 				popupController.open(SpinningLoaderPopup);
-				let res = await accommodationService.availability(params.destinationId, reservationFilters);
+				let res = await accommodationService.availability(
+					reservationFilters.destinationId || params.destinationId,
+					reservationFilters
+				);
 				setAvailabilityTotal(res.total || 0);
-				setDestinations(res.data);
+				setAccommodations(res.data);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(
@@ -80,49 +87,8 @@ const EditFlowModifyRoomPage = () => {
 				popupController.close(SpinningLoaderPopup);
 			}
 		}
-		getReservations().catch(console.error);
+		getAvailableAccommodations().catch(console.error);
 	}, [reservationFilters, params.destinationId]);
-
-	useEffect(() => {
-		async function getAllPropertyTypes() {
-			try {
-				let response = await destinationService.getAllPropertyTypes();
-				let newOptions = formatOptions(response);
-				setOptions(newOptions);
-			} catch (e) {
-				rsToastify.error(
-					WebUtils.getRsErrorMessage(e, 'An unexpected server error has occurred'),
-					'Server Error'
-				);
-			}
-		}
-		getAllPropertyTypes().catch(console.error);
-	}, []);
-
-	function formatOptions(options: Api.Destination.Res.PropertyType[]) {
-		return options.map((value) => {
-			return { value: value.id, label: value.name };
-		});
-	}
-
-	function popupSearch(adults: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['adults'] = adults;
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			}
-			if (priceRangeMax !== '') {
-				createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			}
-			if (propertyTypeIds.length >= 1) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else {
-				delete createSearchQueryObj['propertyTypeIds'];
-			}
-			return createSearchQueryObj;
-		});
-	}
 
 	async function bookNow(id: number) {
 		if (reservation) {
@@ -154,8 +120,8 @@ const EditFlowModifyRoomPage = () => {
 	}
 
 	function renderDestinationSearchResultCards() {
-		if (!destinations) return;
-		return destinations.map((destination, index) => {
+		if (!accommodations) return;
+		return accommodations.map((destination, index) => {
 			return (
 				<>
 					<AccommodationSearchResultCard
@@ -276,9 +242,6 @@ const EditFlowModifyRoomPage = () => {
 						labelVariant={'caption'}
 						onClick={() => {
 							popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-								onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
-									popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-								},
 								className: 'filterPopup'
 							});
 						}}
@@ -295,7 +258,7 @@ const EditFlowModifyRoomPage = () => {
 					margin={'85px auto'}
 					boxSizing={'border-box'}
 				>
-					{destinations.length <= 0 ? (
+					{accommodations.length <= 0 ? (
 						<Label variant={'h2'}>No available options.</Label>
 					) : (
 						renderDestinationSearchResultCards()

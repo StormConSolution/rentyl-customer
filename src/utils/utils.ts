@@ -8,7 +8,6 @@ import {
 } from '@bit/redsky.framework.rs.utils';
 import moment from 'moment';
 
-import router from './router';
 import globalState, { getRecoilExternalValue } from '../state/globalState';
 
 class StringUtils extends BaseStringUtils {
@@ -27,18 +26,6 @@ class StringUtils extends BaseStringUtils {
 		stays?: Misc.StayParams[];
 	}): string {
 		return JSON.stringify(data);
-	}
-
-	static setCheckoutParams(data: { destinationId: number; stays: Misc.StayParams[] }): string {
-		return `destinationId=${data.destinationId}&stays=${JSON.stringify(data.stays)}`;
-	}
-
-	static getCheckoutParms() {
-		const params = router.getPageUrlParams<{ destinationId: number; stays: Misc.StayParams[] }>([
-			{ key: 'destinationId', default: 0, type: 'integer', alias: 'destinationId' },
-			{ key: 'stays', default: '', type: 'string', alias: 'stays' }
-		]);
-		params.stays = ObjectUtils.smartParse(params.stays);
 	}
 
 	static buildAddressString(address: {
@@ -124,7 +111,7 @@ class WebUtils extends BaseWebUtils {
 			bathroomCount: urlParams.get('bathroomCount') ? parseInt(urlParams.get('bathroomCount')!) : 1,
 			bedroomCount: urlParams.get('bedroomCount') ? parseInt(urlParams.get('bedroomCount')!) : 1,
 			childCount: 0,
-			destinationId: urlParams.get('destinationId') ? parseInt(urlParams.get('destinationId')!) : undefined,
+			destinationId: urlParams.get('di') ? parseInt(urlParams.get('di')!) : undefined,
 			amenityIds: urlParams.get('amenityIds') ? JSON.parse(urlParams.get('amenityIds')!) : undefined,
 			pagination: { page: 1, perPage: 10 },
 			priceRangeMax: urlParams.get('priceRangeMax') ? parseInt(urlParams.get('priceRangeMax')!) : 1000,

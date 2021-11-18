@@ -1,37 +1,36 @@
 import * as React from 'react';
 import './FilterBarV2.scss';
-import { StringUtils } from '../../utils/utils';
+import { ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import FilterBarDropDown from '../filterBarDropDown/FilterBarDropDown';
 import LabelCheckboxV2 from '../labelCheckbox/LabelCheckboxV2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Slider, { SliderMode } from '@bit/redsky.framework.rs.slider';
 import LabelInputV2 from '../labelInput/LabelInputV2';
 import Counter from '../counter/Counter';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
 import Label from '@bit/redsky.framework.rs.label';
+import serviceFactory from '../../services/serviceFactory';
 import Switch from '@bit/redsky.framework.rs.switch';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import DestinationService from '../../services/destination/destination.service';
-import PropertyType = Model.PropertyType;
-import OptionType = Misc.OptionType;
+import AccommodationService from '../../services/accommodation/accommodation.service';
+import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import LabelButton from '../labelButton/LabelButton';
 
-interface FilterBarV2Props {
-	destinationService: DestinationService;
-	accommodationToggle: boolean;
-	redeemCodeToggle: boolean;
-	accommodationOptions: PropertyType[];
-	resortExperiencesOptions: OptionType[];
-	inUnitAmenitiesOptions: OptionType[];
-}
+interface FilterBarV2Props {}
 
 const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const [sortOrderSelection, setSortOrderSelection] = useState<string>('ASC');
+	const [propertyTypes, setPropertyTypes] = useState<Model.PropertyType[]>([]);
+	const [experienceOptions, setExperienceOptions] = useState<Misc.OptionType[]>([]);
+	const [amenityOptions, setAmenityOptions] = useState<Misc.OptionType[]>([]);
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			//propertyTypeIds are the text accommodationType on the front end.
@@ -61,12 +60,113 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
 		])
 	);
+
+	useEffect(() => {
+		/**
+		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
+		 */
+		//get all filterForm controls to update
+		let {
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		} = getAllControls();
+
+		//set values from the url params
+		const filters = WebUtils.parseURLParamsToFilters();
+		propertyTypeControl.value = filters.propertyTypeIds || [];
+		adultCountControl.value = filters.adultCount;
+		bedroomCountControl.value = filters.bedroomCount || 0;
+		bathroomCountControl.value = filters.bathroomCount || 0;
+		priceRangeMinControl.value = filters.priceRangeMin || 10;
+		priceRangeMaxControl.value = filters.priceRangeMax || 1000;
+		experienceIdsControl.value = filters.experienceIds || [];
+		amenityIdsControl.value = filters.amenityIds || [];
+		sortOrderControl.value = filters.sortOrder;
+
+		updateAllControls([
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		]);
+
+		setReservationFilters(filters);
+	}, []);
+
+	useEffect(() => {
+		async function getPropertyTypeOptions() {
+			try {
+				const propertyTypes = await destinationService.getAllPropertyTypes();
+				setPropertyTypes(propertyTypes);
+			} catch (e) {
+				rsToastify.error(
+					'An unexpected error occurred on the server, unable to get all the options.',
+					'Server Error!'
+				);
+			}
+		}
+		getPropertyTypeOptions().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getAmenityOptions() {
+			try {
+				const amenities = await accommodationService.getAllAmenities();
+				setAmenityOptions(
+					amenities.map((amenity) => {
+						return { value: amenity.id, label: amenity.title };
+					})
+				);
+			} catch (e) {
+				rsToastify.error(
+					'An unexpected error occurred on the server, unable to get all the options.',
+					'Server Error!'
+				);
+			}
+		}
+		getAmenityOptions().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function getExperienceOptions() {
+			try {
+				const experiences = await destinationService.getExperienceTypes();
+				setExperienceOptions(
+					experiences.map((experience) => {
+						return { value: experience.id, label: experience.title };
+					})
+				);
+			} catch (e) {
+				rsToastify.error(
+					'An unexpected error occurred on the server, unable to get all the options.',
+					'Server Error!'
+				);
+			}
+		}
+		getExperienceOptions().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		/**
+		 * This is used to update the url parameters anytime the recoil state changes
+		 */
+		WebUtils.updateUrlParams(reservationFilters);
+	}, [reservationFilters]);
+
 	function updateFilterForm(control: RsFormControl | undefined) {
 		if (!control) return;
-		if (control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
-			let newValue = StringUtils.addCommasToNumber(StringUtils.removeAllExceptNumbers(control.value.toString()));
-			control.value = newValue;
-		}
 		filterForm.update(control);
 		setFilterForm(filterForm.clone());
 	}
@@ -88,9 +188,113 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		});
 	}
 
+	function checkForFilters(): boolean {
+		let {
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		} = getAllControls();
+
+		if (ObjectUtils.isArrayWithData(propertyTypeControl.value as number[])) {
+			return true;
+		}
+		if ((adultCountControl.value as number) > 1) return true;
+		if ((bedroomCountControl.value as number) > 0) return true;
+		if ((bathroomCountControl.value as number) > 0) return true;
+		if ((priceRangeMinControl.value as number) > 10) return true;
+		if ((priceRangeMaxControl.value as number) < 1000) return true;
+		if (ObjectUtils.isArrayWithData(experienceIdsControl.value as number[])) {
+			return true;
+		}
+		if (ObjectUtils.isArrayWithData(amenityIdsControl.value as number[])) {
+			return true;
+		}
+		if (sortOrderControl.value !== 'ASC') return true;
+		return false;
+	}
+
+	function clearAll() {
+		const filters = WebUtils.parseURLParamsToFilters();
+		let {
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		} = getAllControls();
+
+		propertyTypeControl.value = [];
+		adultCountControl.value = 1;
+		bedroomCountControl.value = 0;
+		bathroomCountControl.value = 0;
+		priceRangeMinControl.value = 10;
+		priceRangeMaxControl.value = 1000;
+		experienceIdsControl.value = [];
+		amenityIdsControl.value = [];
+		sortOrderControl.value = 'ASC';
+
+		updateAllControls([
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		]);
+		//update all controls
+
+		setReservationFilters(filters);
+		setTimeout(() => {
+			onApplyClick();
+		}, 300);
+	}
+
+	function getAllControls(): { [key: string]: RsFormControl } {
+		let propertyTypeControl = filterForm.get('propertyTypeIds');
+		let adultCountControl = filterForm.get('adultCount');
+		let bedroomCountControl = filterForm.get('bedroomCount');
+		let bathroomCountControl = filterForm.get('bathroomCount');
+		let priceRangeMinControl = filterForm.get('priceRangeMin');
+		let priceRangeMaxControl = filterForm.get('priceRangeMax');
+		let experienceIdsControl = filterForm.get('experienceIds');
+		let amenityIdsControl = filterForm.get('amenityIds');
+		let sortOrderControl = filterForm.get('sortOrder');
+		return {
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		};
+	}
+
+	function updateAllControls(controls: RsFormControl[]) {
+		let formClone = filterForm.clone();
+		controls.forEach((control) => {
+			formClone.update(control);
+		});
+		setFilterForm(formClone);
+	}
+
 	function renderAccommodationList() {
-		if (!props.accommodationOptions) return;
-		return props.accommodationOptions.map((item) => (
+		return propertyTypes.map((item) => (
 			<LabelCheckboxV2
 				key={item.name}
 				value={item.id}
@@ -111,7 +315,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 	}
 
 	function renderResortExperiencesOptionsList() {
-		return props.resortExperiencesOptions.map((item) => (
+		return experienceOptions.map((item) => (
 			<LabelCheckboxV2
 				key={item.value}
 				value={item.value}
@@ -121,7 +325,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					tempControl.value = [...(tempControl.value as number[]), item.value as number];
 					updateFilterForm(tempControl);
 				}}
-				isChecked={props.accommodationToggle}
+				isChecked={(filterForm.get('experienceIds').value as number[]).includes(item.value as number)}
 				onDeselect={() => {
 					filterForm.get('experienceIds').value = (filterForm.get('experienceIds').value as number[]).filter(
 						(type) => type !== item.value
@@ -133,7 +337,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 	}
 
 	function renderInUnitAmenitiesOptionsList() {
-		return props.inUnitAmenitiesOptions.map((item) => (
+		return amenityOptions.map((item) => (
 			<LabelCheckboxV2
 				key={item.value}
 				value={item.value}
@@ -143,7 +347,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					tempControl.value = [...(tempControl.value as number[]), item.value as number];
 					updateFilterForm(tempControl);
 				}}
-				isChecked={props.accommodationToggle}
+				isChecked={(filterForm.get('amenityIds').value as number[]).includes(item.value as number)}
 				onDeselect={() => {
 					filterForm.get('amenityIds').value = (filterForm.get('amenityIds').value as number[]).filter(
 						(type) => type !== item.value
@@ -161,7 +365,16 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box id="priceDropdown" className="filterCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => console.log('Clear Form')}
+							onClearCallback={() => {
+								let minPrice = filterForm.get('priceRangeMin');
+								let maxPrice = filterForm.get('priceRangeMax');
+								minPrice.value = 10;
+								maxPrice.value = 1000;
+								let formCopy = filterForm.clone();
+								formCopy.update(minPrice);
+								formCopy.update(maxPrice);
+								setFilterForm(formCopy);
+							}}
 							title="Price"
 							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
@@ -201,7 +414,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box id="accommodationCol" className="filterCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => console.log('Clear Form')}
+							onClearCallback={() => {
+								let tempControl = filterForm.get('propertyTypeIds');
+								tempControl.value = [];
+								updateFilterForm(tempControl);
+							}}
 							title="Accommodation"
 							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
@@ -212,7 +429,16 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box id="bedroomsCol" className="filterCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => console.log('Clear Form')}
+							onClearCallback={() => {
+								let bedroom = filterForm.get('bedroomCount');
+								bedroom.value = 0;
+								let bathroom = filterForm.get('bathroomCount');
+								bathroom.value = 0;
+								let copyForm = filterForm.clone();
+								copyForm.update(bedroom);
+								copyForm.update(bathroom);
+								setFilterForm(copyForm);
+							}}
 							title="Bedrooms"
 							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
@@ -238,7 +464,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box id="resortExpCol" className="filterCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => console.log('Clear Form')}
+							onClearCallback={() => {
+								let tempControl = filterForm.get('experienceIds');
+								tempControl.value = [];
+								updateFilterForm(tempControl);
+							}}
 							title="Resort Experiences"
 							className="dropdownMarginX"
 							dropdownContentClassName="destinationFilterDropdown"
@@ -249,7 +479,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box id="otherFilter" className="filterCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => console.log('Clear Form')}
+							onClearCallback={() => {
+								let tempControl = filterForm.get('amenityIds');
+								tempControl.value = [];
+								updateFilterForm(tempControl);
+							}}
 							title="Other Filters"
 							className="dropdownMarginX"
 							dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
@@ -267,17 +501,21 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					<Box className="halfCol">
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
-							onClearCallback={() => setSortOrderSelection('')}
-							title={sortOrderSelection === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
+							isSortField
+							onClearCallback={() => {
+								let tempControl = filterForm.get('sortOrder');
+								tempControl.value = 'ASC';
+								updateFilterForm(tempControl);
+							}}
+							title={filterForm.get('sortOrder').value === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
 							className="dropdownMarginX"
 						>
 							<LabelRadioButton
 								radioName="highestRadioBtn"
 								value="sortHigh"
-								checked={sortOrderSelection === 'DESC'}
+								checked={filterForm.get('sortOrder').value === 'DESC'}
 								text="Highest Prices"
 								onSelect={() => {
-									setSortOrderSelection('DESC');
 									let tempControl = filterForm.get('sortOrder');
 									tempControl.value = 'DESC';
 									updateFilterForm(tempControl);
@@ -287,10 +525,9 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							<LabelRadioButton
 								radioName="lowestRadioBtn"
 								value="sortLow"
-								checked={sortOrderSelection === 'ASC'}
+								checked={filterForm.get('sortOrder').value === 'ASC'}
 								text="Lowest Prices"
 								onSelect={() => {
-									setSortOrderSelection('ASC');
 									let tempControl = filterForm.get('sortOrder');
 									tempControl.value = 'ASC';
 									updateFilterForm(tempControl);
@@ -318,6 +555,15 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								}
 							/>
 						</Box>
+						{checkForFilters() && (
+							<LabelButton
+								look={'none'}
+								label={'Clear All'}
+								className={'clearAllButton'}
+								variant={'body1'}
+								onClick={clearAll}
+							/>
+						)}
 					</Box>
 				</Box>
 			</Box>

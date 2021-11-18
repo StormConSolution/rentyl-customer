@@ -7,17 +7,14 @@ import router from '../../utils/router';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { OptionType } from '@bit/redsky.framework.rs.select';
-import { ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import DestinationService from '../../services/destination/destination.service';
 import ComparisonService from '../../services/comparison/comparison.service';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
-import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
@@ -25,17 +22,12 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import PointsOrLogin from '../../components/pointsOrLogin/PointsOrLogin';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
-import PropertyType = Api.Destination.Res.PropertyType;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
-		globalState.reservationFilters
-	);
+	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -43,57 +35,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const perPage = 5;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
-	const [errorMessage, setErrorMessage] = useState<string>('');
-	const [validCode, setValidCode] = useState<boolean>(true);
-	const [accommodationToggle, setAccommodationToggle] = useState<boolean>(false);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<PropertyType[]>([]);
-
-	const [inUnitAmenities, setInUnitAmenities] = useState<OptionType[]>([]);
-	const [resortExperiences, setResortExperiences] = useState<OptionType[]>([]);
-
-	useEffect(() => {
-		async function getResortExperiences() {
-			let res = await destinationService.getExperienceTypes();
-			setResortExperiences(
-				res.map((experience) => {
-					return {
-						value: experience.id,
-						label: experience.title
-					};
-				})
-			);
-		}
-		getResortExperiences().catch(console.error);
-
-		async function getInUnitAmenities() {
-			let res = await destinationService.getInUnitAmenities();
-			setInUnitAmenities(
-				res.map((amenity) => {
-					return {
-						value: amenity.id,
-						label: amenity.title
-					};
-				})
-			);
-		}
-		getInUnitAmenities().catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		async function getAccommodations() {
-			const list = await destinationService.getAllPropertyTypes();
-			setPropertyTypeOptions(list);
-		}
-		getAccommodations().catch(console.error);
-	}, []);
-
-	useEffect(() => {
-		/**
-		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
-		 */
-		setReservationFilters(WebUtils.parseURLParamsToFilters());
-	}, []);
 
 	useEffect(() => {
 		async function getReservations() {
@@ -115,49 +57,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 
 		getReservations().catch(console.error);
-	}, [reservationFilters]);
-
-	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
-		setReservationFilters((prev) => {
-			let createSearchQueryObj: any = { ...prev };
-			createSearchQueryObj['adultCount'] = adultCount;
-			createSearchQueryObj['adultCount'] = adultCount;
-			if (ObjectUtils.isArrayWithData(propertyTypeIds)) {
-				createSearchQueryObj['propertyTypeIds'] = propertyTypeIds;
-			} else delete createSearchQueryObj['regionIds'];
-
-			if (priceRangeMin !== '') createSearchQueryObj['priceRangeMin'] = parseInt(priceRangeMin);
-			else delete createSearchQueryObj['priceRangeMin'];
-
-			if (priceRangeMax !== '') createSearchQueryObj['priceRangeMax'] = parseInt(priceRangeMax);
-			else delete createSearchQueryObj['priceRangeMax'];
-
-			return createSearchQueryObj;
-		});
-		const newUrlParams: any = {
-			adultCount: adultCount,
-			priceRangeMax: priceRangeMax,
-			priceRangeMin: priceRangeMin,
-			propertyTypeIds: propertyTypeIds.join(',')
-		};
-
-		for (let i in newUrlParams) {
-			if (!newUrlParams[i].toString().length) {
-				delete newUrlParams[i];
-			}
-		}
-	}
-
-	useEffect(() => {
-		router.updateUrlParams({
-			startDate: reservationFilters.startDate.toString(),
-			endDate: reservationFilters.endDate.toString(),
-			guests: reservationFilters.adultCount,
-			region: reservationFilters.regionIds ? reservationFilters.regionIds.join(',') : '',
-			priceRangeMax: reservationFilters.priceRangeMax ? reservationFilters.priceRangeMax.toString() : '',
-			priceRangeMin: reservationFilters.priceRangeMin ? reservationFilters.priceRangeMin.toString() : '',
-			propertyTypeIds: reservationFilters.propertyTypeIds ? reservationFilters.propertyTypeIds.join(',') : ''
-		});
 	}, [reservationFilters]);
 
 	function renderDestinationSearchResultCards() {
@@ -287,9 +186,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<TopSearchBar
 					onFilterClick={() =>
 						popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-							onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
-								popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-							},
 							className: 'filterPopup'
 						})
 					}
@@ -300,17 +196,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				>
 					{size !== 'small' && (
 						<>
-							<FilterBarV2
-								destinationService={destinationService}
-								accommodationToggle={accommodationToggle}
-								accommodationOptions={propertyTypeOptions}
-								redeemCodeToggle={false}
-								resortExperiencesOptions={resortExperiences}
-								inUnitAmenitiesOptions={inUnitAmenities}
-							/>
-							<Label variant={'body1'} color={'red'}>
-								{errorMessage}
-							</Label>
+							<FilterBarV2 />
 						</>
 					)}
 
@@ -323,20 +209,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						renderDestinationSearchResultCards()
 					)}
 				</Box>
-				<div className={'paginationDiv'}>
-					<PaginationButtons
-						selectedRowsPerPage={perPage}
-						currentPageNumber={page}
-						setSelectedPage={(newPage) => {
-							setReservationFilters({
-								...reservationFilters,
-								pagination: { page: newPage, perPage: 5 }
-							});
-							setPage(newPage);
-						}}
-						total={availabilityTotal}
-					/>
-				</div>
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>

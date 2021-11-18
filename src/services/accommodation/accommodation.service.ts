@@ -43,4 +43,9 @@ export default class AccommodationService extends Service {
 		}
 		return accommodations;
 	}
+
+	async getAllAmenities(): Promise<Api.Amenity.Res.Get[]> {
+		const res = await http.get<RsResponseData<Api.Amenity.Res.Get[]>>('accommodation/amenity');
+		return res.data.data;
+	}
 }

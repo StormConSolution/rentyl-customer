@@ -45,9 +45,4 @@ export default class DestinationService extends Service {
 		const res = await http.get<RsResponseData<Api.Experience.Res.Get[]>>('experience');
 		return res.data.data;
 	}
-
-	async getInUnitAmenities(): Promise<Api.Amenity.Res.Get[]> {
-		const res = await http.get<RsResponseData<Api.Amenity.Res.Get[]>>('accommodation/amenity');
-		return res.data.data;
-	}
 }
