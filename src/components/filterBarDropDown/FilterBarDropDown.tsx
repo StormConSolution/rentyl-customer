@@ -36,7 +36,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 			<Box
 				className={`rsDropdownBtn${props.className ? ` ${props.className}` : ''}`}
 				display="flex"
-				justifyContent="space-between"
+				justifyContent="start"
 				alignItems="center"
 				onClick={() => setToggleContent((prevState) => !prevState)}
 			>
@@ -44,9 +44,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 					<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
 						{props.isSortField ? 'Sort By' : 'Filter By'}
 					</Label>
-					<Label variant="body3" className="filterTitleLabel">
-						{props.title}
-					</Label>
+					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
 					<Icon
@@ -59,14 +57,8 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 			{toggleContent && (
 				<Box boxRef={modalRef} className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
-					<Box className="dropdownFooter" borderTop="1px solid #e0e0e0">
-						<Box
-							display="flex"
-							justifyContent="space-between"
-							alignItems="center"
-							height="75px"
-							paddingX="10px"
-						>
+					{!props.isSortField && (
+						<Box className="dropdownFooter">
 							<LabelButton variant="body1" label="Clear" look="none" onClick={onClearBtnCallBack} />
 							<LabelButton
 								variant="body2"
@@ -75,7 +67,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 								onClick={applyBtnCallback}
 							/>
 						</Box>
-					</Box>
+					)}
 				</Box>
 			)}
 		</div>

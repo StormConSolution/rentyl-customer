@@ -310,6 +310,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						.value as number[]).filter((type) => type !== item.id);
 					updateFilterForm(filterForm.get('propertyTypeIds'));
 				}}
+				className="filterCheckbox"
 			/>
 		));
 	}
@@ -332,6 +333,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					);
 					updateFilterForm(filterForm.get('experienceIds'));
 				}}
+				className="filterCheckbox"
 			/>
 		));
 	}
@@ -354,6 +356,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 					);
 					updateFilterForm(filterForm.get('amenityIds'));
 				}}
+				className="filterCheckbox"
 			/>
 		));
 	}
@@ -362,23 +365,22 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		<div className="rsFilterBarV2">
 			<Box className="largeCol">
 				<Box className="subRow rightBorder">
-					<Box id="priceDropdown" className="filterCol">
-						<FilterBarDropDown
-							onChangeCallBack={onApplyClick}
-							onClearCallback={() => {
-								let minPrice = filterForm.get('priceRangeMin');
-								let maxPrice = filterForm.get('priceRangeMax');
-								minPrice.value = 10;
-								maxPrice.value = 1000;
-								let formCopy = filterForm.clone();
-								formCopy.update(minPrice);
-								formCopy.update(maxPrice);
-								setFilterForm(formCopy);
-							}}
-							title="Price"
-							className="dropdownMarginX"
-							dropdownContentClassName="destinationFilterDropdown"
-						>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let minPrice = filterForm.get('priceRangeMin');
+							let maxPrice = filterForm.get('priceRangeMax');
+							minPrice.value = 10;
+							maxPrice.value = 1000;
+							let formCopy = filterForm.clone();
+							formCopy.update(minPrice);
+							formCopy.update(maxPrice);
+							setFilterForm(formCopy);
+						}}
+						title="Price"
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						<Box className="paddingDropdownBody">
 							<Slider
 								range={[1, 1000]}
 								minControl={filterForm.get('priceRangeMin')}
@@ -409,40 +411,36 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 									updateControl={updateFilterForm}
 								/>
 							</div>
-						</FilterBarDropDown>
-					</Box>
-					<Box id="accommodationCol" className="filterCol">
-						<FilterBarDropDown
-							onChangeCallBack={onApplyClick}
-							onClearCallback={() => {
-								let tempControl = filterForm.get('propertyTypeIds');
-								tempControl.value = [];
-								updateFilterForm(tempControl);
-							}}
-							title="Accommodation"
-							className="dropdownMarginX"
-							dropdownContentClassName="destinationFilterDropdown"
-						>
-							{renderAccommodationList()}
-						</FilterBarDropDown>
-					</Box>
-					<Box id="bedroomsCol" className="filterCol">
-						<FilterBarDropDown
-							onChangeCallBack={onApplyClick}
-							onClearCallback={() => {
-								let bedroom = filterForm.get('bedroomCount');
-								bedroom.value = 0;
-								let bathroom = filterForm.get('bathroomCount');
-								bathroom.value = 0;
-								let copyForm = filterForm.clone();
-								copyForm.update(bedroom);
-								copyForm.update(bathroom);
-								setFilterForm(copyForm);
-							}}
-							title="Bedrooms"
-							className="dropdownMarginX"
-							dropdownContentClassName="destinationFilterDropdown"
-						>
+						</Box>
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let tempControl = filterForm.get('propertyTypeIds');
+							tempControl.value = [];
+							updateFilterForm(tempControl);
+						}}
+						title="Accommodation"
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						<Box className="paddingDropdownBody">{renderAccommodationList()}</Box>
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let bedroom = filterForm.get('bedroomCount');
+							bedroom.value = 0;
+							let bathroom = filterForm.get('bathroomCount');
+							bathroom.value = 0;
+							let copyForm = filterForm.clone();
+							copyForm.update(bedroom);
+							copyForm.update(bathroom);
+							setFilterForm(copyForm);
+						}}
+						title="Bedrooms"
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						<Box className="paddingDropdownBody">
 							<Counter
 								title="Bedrooms"
 								control={filterForm.get('bedroomCount')}
@@ -459,46 +457,40 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								minCount={0}
 								labelMarginRight={5}
 							/>
-						</FilterBarDropDown>
-					</Box>
-					<Box id="resortExpCol" className="filterCol">
-						<FilterBarDropDown
-							onChangeCallBack={onApplyClick}
-							onClearCallback={() => {
-								let tempControl = filterForm.get('experienceIds');
-								tempControl.value = [];
-								updateFilterForm(tempControl);
-							}}
-							title="Resort Experiences"
-							className="dropdownMarginX"
-							dropdownContentClassName="destinationFilterDropdown"
-						>
-							{renderResortExperiencesOptionsList()}
-						</FilterBarDropDown>
-					</Box>
-					<Box id="otherFilter" className="filterCol">
-						<FilterBarDropDown
-							onChangeCallBack={onApplyClick}
-							onClearCallback={() => {
-								let tempControl = filterForm.get('amenityIds');
-								tempControl.value = [];
-								updateFilterForm(tempControl);
-							}}
-							title="Other Filters"
-							className="dropdownMarginX"
-							dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
-						>
-							<Label variant="body1" paddingTop={10} paddingLeft={10}>
-								In Unit Amenities
-							</Label>
-							<Box className="inUnitAmenitiesWrapper">{renderInUnitAmenitiesOptionsList()}</Box>
-						</FilterBarDropDown>
-					</Box>
+						</Box>
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let tempControl = filterForm.get('experienceIds');
+							tempControl.value = [];
+							updateFilterForm(tempControl);
+						}}
+						title="Resort Experiences"
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						<Box className="paddingDropdownBody">{renderResortExperiencesOptionsList()}</Box>
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let tempControl = filterForm.get('amenityIds');
+							tempControl.value = [];
+							updateFilterForm(tempControl);
+						}}
+						title="Other Filters"
+						dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
+					>
+						<Label variant="body1" paddingTop={10} paddingLeft={10}>
+							In Unit Amenities
+						</Label>
+						<Box className="inUnitAmenitiesWrapper">{renderInUnitAmenitiesOptionsList()}</Box>
+					</FilterBarDropDown>
 				</Box>
 			</Box>
 			<Box className="smallCol">
 				<Box className="subRow">
-					<Box className="halfCol">
+					<Box className="halfCol" marginLeft={24}>
 						<FilterBarDropDown
 							onChangeCallBack={onApplyClick}
 							isSortField
@@ -507,32 +499,35 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 								tempControl.value = 'ASC';
 								updateFilterForm(tempControl);
 							}}
-							title={filterForm.get('sortOrder').value === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
-							className="dropdownMarginX"
+							title={reservationFilters.sortOrder === 'DESC' ? 'Highest Prices' : 'Lowest Prices'}
+							dropdownContentClassName="pricesDropdown"
 						>
 							<LabelRadioButton
 								radioName="highestRadioBtn"
 								value="sortHigh"
-								checked={filterForm.get('sortOrder').value === 'DESC'}
+								checked={reservationFilters.sortOrder === 'DESC'}
 								text="Highest Prices"
 								onSelect={() => {
-									let tempControl = filterForm.get('sortOrder');
-									tempControl.value = 'DESC';
-									updateFilterForm(tempControl);
+									setReservationFilters({
+										...reservationFilters,
+										sortOrder: 'DESC'
+									});
 								}}
-								labelSize="body2"
+								labelSize="body1"
+								className="priceHighRadio"
 							/>
 							<LabelRadioButton
 								radioName="lowestRadioBtn"
 								value="sortLow"
-								checked={filterForm.get('sortOrder').value === 'ASC'}
+								checked={reservationFilters.sortOrder === 'ASC'}
 								text="Lowest Prices"
 								onSelect={() => {
-									let tempControl = filterForm.get('sortOrder');
-									tempControl.value = 'ASC';
-									updateFilterForm(tempControl);
+									setReservationFilters({
+										...reservationFilters,
+										sortOrder: 'ASC'
+									});
 								}}
-								labelSize="body2"
+								labelSize="body1"
 							/>
 						</FilterBarDropDown>
 					</Box>

@@ -1,8 +1,7 @@
 @import 'src/themes/themes';
 .rsFilterBarV2 {
 	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 0 20px;
 
 	display: flex;
 	flex-wrap: wrap;
@@ -11,54 +10,48 @@
 		flex: 0 0 auto;
 		width: 70%;
 
-		.filterCol {
-			flex: 1 0 0%;
+		.minMaxDiv {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 22px;
 
-			.minMaxDiv {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				margin-bottom: 22px;
-
-				.divider {
-					width: 11px;
-					border: 1px solid theme-var($greyLineColor);
-					margin: 5px 5px 0 5px;
-				}
-
-				.rsInput.priceMin {
-					width: 115px;
-				}
-
-				.rsInput.priceMax {
-					width: 115px;
-				}
+			.divider {
+				width: 11px;
+				border: 1px solid theme-var($greyLineColor);
+				margin: 5px 5px 0 5px;
 			}
 
-			.filterCounter {
-				padding-bottom: 15px;
+			.rsInput.priceMin {
+				width: 115px;
 			}
 
-			.inUnitAmenitiesCheckboxContentBody {
-				min-width: 230px;
-				max-width: 500px;
+			.rsInput.priceMax {
+				width: 115px;
 			}
+		}
 
-			.inUnitAmenitiesWrapper {
-				border-bottom: 1px solid theme-var($greyLineColor);
-				padding: 15px;
-				height: 200px;
-				display: flex;
-				flex-wrap: wrap;
-				flex-direction: column;
-			}
-			.viewOptionsWrapper {
-				padding: 10px;
-				height: 130px;
-				display: flex;
-				flex-wrap: wrap;
-				flex-direction: column;
-			}
+		.filterCounter {
+			padding-bottom: 15px;
+		}
+		.inUnitAmenitiesCheckboxContentBody {
+			width: clamp(200px, 40%, 525px);
+		}
+
+		.inUnitAmenitiesWrapper {
+			border-bottom: 1px solid theme-var($greyLineColor);
+			padding: 15px;
+			height: 200px;
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: column;
+		}
+		.viewOptionsWrapper {
+			padding: 10px;
+			height: 130px;
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: column;
 		}
 	}
 	.smallCol {
@@ -67,18 +60,31 @@
 
 		.halfCol {
 			flex: 1 0 0%;
+
+			.pricesDropdown {
+				padding: 37px 37px;
+
+				.priceHighRadio {
+					margin-bottom: 20px;
+				}
+			}
 		}
 	}
 
 	.subRow {
 		display: flex;
 		flex-wrap: wrap;
+		gap: 24px;
 
-		.dropdownMarginX {
-			margin: 10px 12px;
-		}
 		.destinationFilterDropdown {
-			padding: 15px;
+			width: clamp(200px, 40%, 390px);
+
+			.paddingDropdownBody {
+				padding: 24px;
+			}
+		}
+		.filterCheckbox {
+			margin-bottom: 10px;
 		}
 	}
 	.rightBorder {
