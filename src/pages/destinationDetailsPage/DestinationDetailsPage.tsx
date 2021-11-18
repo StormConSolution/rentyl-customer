@@ -103,11 +103,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		getInUnitAmenities().catch(console.error);
 
-		async function getAccommodations() {
+		async function getPropertyTypes() {
 			const list = await destinationService.getAllPropertyTypes();
 			setPropertyTypeOptions(list);
 		}
-		getAccommodations().catch(console.error);
+		getPropertyTypes().catch(console.error);
 	}, []);
 
 	useEffect(() => {
