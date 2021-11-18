@@ -284,12 +284,21 @@ const ReservationAvailabilityPage: React.FC = () => {
 	return (
 		<Page className={'rsReservationAvailabilityPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<TopSearchBar />
+				<TopSearchBar
+					onFilterClick={() =>
+						popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
+							onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
+								popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
+							},
+							className: 'filterPopup'
+						})
+					}
+				/>
 				<Box
 					className={'filterResultsWrapper'}
 					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 0 60px 0'}
 				>
-					{size !== 'small' ? (
+					{size !== 'small' && (
 						<>
 							<FilterBarV2
 								destinationService={destinationService}
@@ -303,23 +312,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 								{errorMessage}
 							</Label>
 						</>
-					) : (
-						<IconLabel
-							className={'moreFiltersLink'}
-							labelName={'More Filters'}
-							iconImg={'icon-chevron-right'}
-							iconPosition={'right'}
-							iconSize={8}
-							labelVariant={'caption'}
-							onClick={() => {
-								popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-									onClickApply: (adults, priceRangeMin, priceRangeMax, propertyTypeIds) => {
-										popupSearch(adults, priceRangeMin, priceRangeMax, propertyTypeIds);
-									},
-									className: 'filterPopup'
-								});
-							}}
-						/>
 					)}
 
 					<div className={'bottomBorderDiv'} />

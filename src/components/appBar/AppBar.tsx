@@ -15,7 +15,7 @@ const AppBar: React.FC = () => {
 
 	return (
 		<div ref={appBarRef} className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'}`}>
-			<Link path={'/'}>
+			<Link path={'/'} className={'logoContainer'}>
 				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} className={'logo'} />
 			</Link>
 

@@ -26,7 +26,7 @@
 	}
 
 	.searchResultsWrapper {
-		padding-left: 20px;
+		padding: 40px;
 	}
 
 	.rsDestinationSearchResultCardResponsive,
@@ -54,15 +54,12 @@
 }
 
 .small {
-	.filterResultsWrapper {
-		.moreFiltersLink {
-			display: flex;
-			cursor: pointer;
-			margin: auto 0;
+	.rsReservationAvailabilityPage {
+		.searchResultsWrapper {
+			padding: 30px;
 		}
-	}
-	.pointsDisplay {
-		padding: 0;
-		justify-content: center;
+		.filterResultsWrapper {
+			display: none;
+		}
 	}
 }

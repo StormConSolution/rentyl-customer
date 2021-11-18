@@ -19,6 +19,10 @@
 		margin: 0 10px 0 0;
 	}
 
+	.locationTitle {
+		font-size: 22px;
+	}
+
 	.popoutBox {
 		position: absolute;
 		top: 46px;
@@ -30,9 +34,6 @@
 		display: none;
 
 		.rsPaper {
-			&:first-of-type {
-				margin-bottom: 3px;
-			}
 			&.regionList {
 				.regionItem {
 					width: 100%;

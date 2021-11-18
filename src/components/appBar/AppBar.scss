@@ -13,10 +13,14 @@
 	justify-content: space-between;
 	box-sizing: border-box;
 	height: 80px;
-	width: clamp(335px, 90%, 1284px);
+	width: clamp(335px, 100%, 1920px);
 	transition: top 300ms;
 	&.hide {
-		top: -80px;
+		top: -90px;
+	}
+
+	.logoContainer {
+		margin: 42px 0 0 34px;
 	}
 
 	.menuContainer {
@@ -25,7 +29,7 @@
 		border-radius: 10px;
 		max-width: 76px;
 		max-height: 39px;
-		margin: 12px;
+		margin: 42px 34px 12px 12px;
 		cursor: pointer;
 		.rsIcon {
 			&.icon-account-icon {
@@ -46,6 +50,12 @@
 		.logo {
 			padding: 14px;
 			max-width: 100px;
+		}
+		.logoContainer {
+			margin: 15px;
+		}
+		.menuContainer {
+			margin: 15px;
 		}
 		border-bottom: 1px solid theme-var($greyLineColor);
 	}

@@ -34,7 +34,7 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 
 	const [topSearchBarForm, setTopSearchBarForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regionId', reservationFilters.regionIds || '', []),
+			new RsFormControl('regionIds', reservationFilters.regionIds || [], []),
 			new RsFormControl('startDate', (reservationFilters.startDate as string) || '', []),
 			new RsFormControl('endDate', (reservationFilters.endDate as string) || '', [])
 		])
@@ -79,10 +79,10 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 	}
 
 	function renderRegionLabel() {
-		let regionId = topSearchBarForm.get('regionId').value;
-		if (!regionId.toString().length) return 'Select Location';
+		let regionId = topSearchBarForm.get('regionIds').value as number[];
+		if (!ObjectUtils.isArrayWithData(regionId)) return 'Location';
 
-		let regionName = regionList.filter((item) => item.id === regionId);
+		let regionName = regionList.filter((item) => item.id === regionId[0]);
 		return regionName[0].name;
 	}
 
@@ -90,20 +90,20 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 		if (!ObjectUtils.isArrayWithData(regionList)) return;
 
 		return regionList.map((item, index) => {
-			let isSelected = topSearchBarForm.get('regionId').value === item.id;
+			let isSelected = topSearchBarForm.get('regionIds').value === item.id;
 
 			return (
 				<Box
 					key={item.id}
 					className={`regionItem ${isSelected ? 'selected' : ''}`}
 					onClick={() => {
-						let newControl = topSearchBarForm.get('regionId');
-						newControl.value = item.id;
+						let newControl = topSearchBarForm.get('regionIds');
+						newControl.value = [item.id];
 						setTopSearchBarForm(topSearchBarForm.clone().update(newControl));
+						onApplyClick();
 						setTimeout(() => {
 							boxRef.current!.style.display = 'none';
 						}, 50);
-						onApplyClick();
 					}}
 					display={'flex'}
 					alignItems={'center'}
@@ -128,6 +128,9 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 				priceRangeMin: number;
 				experienceIds: number[];
 				amenityIds: number[];
+				regionIds: number[];
+				startDate: string;
+				endDate: string;
 				sortOrder: 'ASC' | 'DESC';
 			} = topSearchBarForm.toModel();
 			return { ...prev, ...form };
@@ -137,11 +140,12 @@ const TopSearchBarMobile: React.FC<TopSearchBarMobileProps> = (props) => {
 	return (
 		<div className={'rsTopSearchBarMobile'}>
 			<Label
-				variant={'custom1'}
+				className={'locationTitle'}
+				variant={'body1'}
 				textOverflow={'ellipsis'}
 				whiteSpace={'nowrap'}
 				overflow={'hidden'}
-				width={'12ch'}
+				width={'9ch'}
 				onClick={() => {
 					boxRef.current!.style.display = 'block';
 				}}

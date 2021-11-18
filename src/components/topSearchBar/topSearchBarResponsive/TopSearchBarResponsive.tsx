@@ -100,7 +100,6 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 					key={item.id}
 					className={`regionItem ${isSelected ? 'selected' : ''}`}
 					onClick={() => {
-						console.log('clicked');
 						let newControl = topSearchBarForm.get('regionIds');
 						newControl.value = [item.id];
 						setTopSearchBarForm(topSearchBarForm.clone().update(newControl));
