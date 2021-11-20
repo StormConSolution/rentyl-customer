@@ -79,8 +79,8 @@ class GlobalState {
 		this.reservationFilters = atom<Misc.ReservationFilters>({
 			key: GlobalStateKeys.RESERVATION_FILTERS,
 			default: {
-				startDate: moment(new Date().getTime()).format('YYYY-MM-DD'),
-				endDate: moment(new Date()).add(2, 'days').format('YYYY-MM-DD'),
+				startDate: moment(new Date()).add(14, 'days').format('YYYY-MM-DD'),
+				endDate: moment(new Date()).add(19, 'days').format('YYYY-MM-DD'),
 				adultCount: 1,
 				childCount: 0,
 				redeemPoints: false,

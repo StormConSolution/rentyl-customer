@@ -39,6 +39,30 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 
 	useEffect(() => {
+		WebUtils.updateUrlParams(reservationFilters);
+		async function getReservations() {
+			try {
+				popupController.open(SpinningLoaderPopup);
+				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
+				let key: keyof Misc.ReservationFilters;
+				for (key in searchQueryObj) {
+					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
+				}
+				searchQueryObj.pagination = { page, perPage };
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
+				setDestinations(res.data);
+				setAvailabilityTotal(res.total || 0);
+				popupController.close(SpinningLoaderPopup);
+			} catch (e) {
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
+				popupController.close(SpinningLoaderPopup);
+			}
+		}
+
+		getReservations().catch(console.error);
+	}, [reservationFilters]);
+
+	useEffect(() => {
 		async function getReservations() {
 			try {
 				popupController.open(SpinningLoaderPopup);
@@ -69,7 +93,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 
 		getReservations().catch(console.error);
-	}, [reservationFilters, page]);
+	}, [page]);
 
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
@@ -85,7 +109,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<DestinationSearchResultCard
 					key={destination.id}
 					destinationId={destination.id}
-					unfilteredAccommodations={destination.accommodations}
+					minPoints={destination.minAccommodationPoints}
+					minPrice={destination.minAccommodationPrice}
 					destinationDescription={destination.description}
 					destinationName={destination.name}
 					destinationExperiences={destination.experiences}
