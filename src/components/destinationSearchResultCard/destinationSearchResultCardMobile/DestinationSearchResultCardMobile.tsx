@@ -20,60 +20,29 @@ interface DestinationSearchResultCardMobileProps {
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
-	getLowestAccommodationPrice: () => {
-		priceCents: number;
-		pricePoints: number;
-		quantityAvailable: number;
-		rateCode: string;
-	} | null;
+	minPrice: number;
+	minPoints: number;
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
-	const [lowestPrice, setLowestPrice] = useState<{
-		priceCents: number;
-		pricePoints: number;
-		quantityAvailable: number;
-		rateCode: string;
-	} | null>();
-
-	useEffect(() => {
-		setLowestPrice(props.getLowestAccommodationPrice());
-	}, []);
 
 	function renderPricePerNight() {
-		if (reservationFilters.redeemPoints && lowestPrice) {
+		if (reservationFilters.redeemPoints) {
 			return (
 				<Box display={'flex'}>
 					<Label variant={'boldCaption1'} className={'yellowText'}>
-						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}pts
+						{StringUtils.addCommasToNumber(props.minPoints)}pts
 					</Label>
 					<Label variant={'caption1'}>/</Label>
 					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
-		} else if (!reservationFilters.redeemPoints && lowestPrice) {
-			return (
-				<Box display={'flex'}>
-					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(lowestPrice.priceCents)}/</Label>
-					<Label variant={'caption1'}>night</Label>
-				</Box>
-			);
 		} else {
 			return (
-				<Box>
-					<LabelButton
-						look={'containedPrimary'}
-						className={'yellow'}
-						variant={'button'}
-						label={'Contact Us'}
-						onClick={(event) => {
-							event.stopPropagation();
-						}}
-					/>
-					<Label variant={'subtitle3'} paddingTop={'5px'}>
-						to inquire about booking
-					</Label>
+				<Box display={'flex'}>
+					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(props.minPrice)}/</Label>
+					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
 		}

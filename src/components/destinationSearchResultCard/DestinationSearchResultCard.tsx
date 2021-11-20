@@ -16,7 +16,8 @@ export interface DestinationSearchResultCardProps {
 	className?: string;
 	destinationId: number;
 	destinationName: string;
-	unfilteredAccommodations: Api.Destination.Res.Accommodation[];
+	minPrice: number;
+	minPoints: number;
 	destinationDescription: string;
 	destinationExperiences: {
 		id: number;
@@ -35,23 +36,6 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
-	function getLowestAccommodationPrice() {
-		let arrayOfPrices: PriceObject[] | undefined = props.unfilteredAccommodations.map(
-			(accommodation: Api.Destination.Res.Accommodation) => {
-				return getLowestAccommodation(accommodation.prices);
-			}
-		);
-		arrayOfPrices.sort((price1, price2) => price1.priceCents - price2.priceCents);
-		return arrayOfPrices[0];
-	}
-
-	function getLowestAccommodation(rateCodes: PriceObject[]) {
-		rateCodes.sort((code1, code2) => {
-			return code1.priceCents - code2.priceCents;
-		});
-		return rateCodes[0];
-	}
-
 	return size === 'small' ? (
 		<DestinationSearchResultCardMobile
 			destinationId={props.destinationId}
@@ -60,7 +44,8 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			picturePaths={props.picturePaths}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
-			getLowestAccommodationPrice={getLowestAccommodationPrice}
+			minPrice={props.minPrice}
+			minPoints={props.minPoints}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
@@ -72,7 +57,8 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			picturePaths={props.picturePaths}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
-			getLowestAccommodationPrice={getLowestAccommodationPrice}
+			minPrice={props.minPrice}
+			minPoints={props.minPoints}
 		/>
 	);
 };

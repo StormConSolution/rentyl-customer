@@ -27,75 +27,37 @@ interface DestinationSearchResultCardResponsiveProps {
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
-	getLowestAccommodationPrice: () => {
-		priceCents: number;
-		pricePoints: number;
-		quantityAvailable: number;
-		rateCode: string;
-	} | null;
+	minPrice: number;
+	minPoints: number;
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
-	const [accommodationList, setAccommodationList] = useState<Api.Destination.Res.Accommodation[]>([]);
-	const [lowestPrice, setLowestPrice] = useState<PriceObject | null>();
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
 
-	useEffect(() => {
-		props.summaryTabs.map((accommodationList) => {
-			if (ObjectUtils.isArrayWithData(accommodationList.content.accommodations)) {
-				setAccommodationList(accommodationList.content.accommodations);
-			}
-		});
-	}, [props.summaryTabs]);
-
-	useEffect(() => {
-		setLowestPrice(props.getLowestAccommodationPrice());
-	}, [accommodationList]);
-
 	function renderPricePerNight() {
-		if (reservationFilters.redeemPoints && lowestPrice) {
+		if (reservationFilters.redeemPoints) {
 			return (
 				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
 					<Label variant={'subtitle3'} className={'fromText'}>
 						from
 					</Label>
 					<Label variant={'h2'} className={'yellowText'}>
-						{StringUtils.addCommasToNumber(lowestPrice.pricePoints)}
+						{StringUtils.addCommasToNumber(props.minPoints)}
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
 				</Box>
 			);
-		} else if (!reservationFilters.redeemPoints && lowestPrice) {
+		} else {
 			return (
 				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
 					<Label variant={'subtitle3'} className={'fromText'}>
 						from
 					</Label>
-					<Label variant={'h2'}>${StringUtils.formatMoney(lowestPrice.priceCents)}</Label>
+					<Label variant={'h2'}>${StringUtils.formatMoney(props.minPrice)}</Label>
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
-				</Box>
-			);
-		} else {
-			return (
-				<Box
-					display={'flex'}
-					alignItems={'flex-end'}
-					justifyContent={'flex-end'}
-					flexDirection={'column'}
-					textAlign={'center'}
-				>
-					<LabelButton
-						look={'containedPrimary'}
-						className={'yellow'}
-						variant={'button'}
-						label={'Contact Us'}
-					/>
-					<Label variant={'subtitle3'} paddingTop={'16px'}>
-						to inquire about booking
-					</Label>
 				</Box>
 			);
 		}

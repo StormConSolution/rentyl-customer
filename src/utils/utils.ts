@@ -159,6 +159,8 @@ class WebUtils extends BaseWebUtils {
 			stringBuilder.push(`experienceIds=${JSON.stringify(reservationFilters.experienceIds)}`);
 		if (reservationFilters.sortOrder) stringBuilder.push(`sortOrder=${reservationFilters.sortOrder}`);
 		if (reservationFilters.adultCount) stringBuilder.push(`adultCount=${reservationFilters.adultCount}`);
+		if (reservationFilters.priceRangeMin) stringBuilder.push(`priceRangeMin=${reservationFilters.priceRangeMin}`);
+		if (reservationFilters.priceRangeMax) stringBuilder.push(`priceRangeMax=${reservationFilters.priceRangeMax}`);
 		if (reservationFilters.propertyTypeIds)
 			stringBuilder.push(`propertyTypeIds=${JSON.stringify(reservationFilters.propertyTypeIds)}`);
 
