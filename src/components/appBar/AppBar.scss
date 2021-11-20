@@ -2,7 +2,7 @@
 
 .rsAppBar {
 	position: fixed;
-	top: 0;
+	top: 40px;
 	left: 0;
 	right: 0;
 	margin-left: auto;
@@ -12,7 +12,7 @@
 	align-items: center;
 	justify-content: space-between;
 	box-sizing: border-box;
-	height: 80px;
+	height: 0;
 	width: clamp(335px, 100%, 1920px);
 	transition: top 300ms;
 	&.hide {

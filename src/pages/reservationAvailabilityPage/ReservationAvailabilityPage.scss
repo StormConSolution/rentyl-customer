@@ -14,10 +14,11 @@
 		.moreFiltersLink {
 			display: none;
 		}
-
-		.bottomBorderDiv {
-			padding-top: 20px;
-			border-bottom: 1px solid theme-var($greyLineColor);
+		.rsFilterBarDropDown {
+			.dropdownContent {
+				padding: 24px;
+				width: clamp(200px, 40vw, 397px);
+			}
 		}
 	}
 

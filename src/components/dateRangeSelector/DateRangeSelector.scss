@@ -78,6 +78,11 @@
 			border-collapse: separate;
 		}
 
+		.DayPicker_weekHeader_ul {
+			display: grid;
+			grid-template-columns: repeat(7, 39px);
+		}
+
 		.CalendarDay__selected {
 			border: none;
 		}

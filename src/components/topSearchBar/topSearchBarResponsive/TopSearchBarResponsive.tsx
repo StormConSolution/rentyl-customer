@@ -154,13 +154,14 @@ const TopSearchBarResponsive: React.FC<DatePickerCardProps> = (props) => {
 			<hr />
 			<TitleLabel
 				title={'Guests'}
-				label={'Add guests'}
+				label={`Add guests (${reservationFilters.adultCount})`}
 				popoutBoxContent={
 					<Counter
 						title={'Guests'}
 						control={topSearchBarForm.get('adultCount')}
 						updateControl={updateTopSearchBarForm}
 						minCount={1}
+						maxCount={28}
 						labelMarginRight={84}
 					/>
 				}
