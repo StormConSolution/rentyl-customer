@@ -121,4 +121,24 @@ html {
 		font-weight: $medium;
 		color: theme-var($errorColor);
 	}
+	&.customOne {
+		font-size: 22px;
+		line-height: 31px;
+		font-weight: $semiBold;
+	}
+	&.customTwo {
+		font-size: 22px;
+		line-height: 31px;
+		font-weight: $regular;
+	}
+	&.customThree {
+		font-size: 16px;
+		line-height: 19px;
+		font-weight: $regular;
+	}
+	&.customFour {
+		font-size: 16px;
+		line-height: 19px;
+		font-weight: $semiBold;
+	}
 }

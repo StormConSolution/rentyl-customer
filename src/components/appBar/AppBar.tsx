@@ -6,6 +6,7 @@ import NavDrawer from '../../popups/navDrawer/NavDrawer';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import router from '../../utils/router';
 
 const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
@@ -19,17 +20,24 @@ const AppBar: React.FC = () => {
 				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} className={'logo'} />
 			</Link>
 
-			<Box
-				display={'flex'}
-				alignItems={'center'}
-				className={'menuContainer'}
-				onClick={() => {
-					document.getElementsByTagName('body')[0].style.overflow = 'hidden';
-					setShowSlideOutMenu(true);
-				}}
-			>
-				<Icon iconImg={'icon-hamburger-menu'} size={16} color={'#767676'} />
-				<Icon iconImg={'icon-account-icon'} size={29} color={'#00000029'} />
+			<Box display={'flex'} alignItems={'center'} className={'menuContainer'}>
+				<Icon
+					iconImg={'icon-hamburger-menu'}
+					size={16}
+					color={'#767676'}
+					onClick={() => {
+						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
+						setShowSlideOutMenu(true);
+					}}
+				/>
+				<Icon
+					iconImg={'icon-account-icon'}
+					size={29}
+					color={'#00000029'}
+					onClick={() => {
+						router.navigate('/account').catch(console.error);
+					}}
+				/>
 			</Box>
 
 			<NavDrawer
