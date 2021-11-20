@@ -13,10 +13,8 @@ export interface PaginationViewMoreProps {
 	variant?: Misc.Variant;
 }
 const PaginationViewMore: React.FC<PaginationViewMoreProps> = (props) => {
-	const { selectedRowsPerPage, total, viewMore, currentPageNumber } = props;
-
 	function hasMore() {
-		return currentPageNumber * selectedRowsPerPage < total;
+		return props.currentPageNumber * props.selectedRowsPerPage < props.total;
 	}
 	return (
 		<Box className={`rsPaginationViewMore ${props.className || ''}`}>
@@ -24,7 +22,7 @@ const PaginationViewMore: React.FC<PaginationViewMoreProps> = (props) => {
 				<Label
 					variant={props.variant || 'body1'}
 					onClick={() => {
-						viewMore(currentPageNumber + 1);
+						props.viewMore(props.currentPageNumber + 1);
 					}}
 				>
 					{props.text || 'Load More'}
