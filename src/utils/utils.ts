@@ -101,21 +101,21 @@ class WebUtils extends BaseWebUtils {
 			: moment(new Date()).add(14, 'days').format('YYYY-MM-DD');
 		let endDate = urlParams.get('endDate')
 			? urlParams.get('endDate')!
-			: moment(startDate).add(2, 'days').format('YYYY-MM-DD');
+			: moment(startDate).add(5, 'days').format('YYYY-MM-DD');
 
 		let sortOrder = urlParams.get('sortOrder') ? urlParams.get('sortOrder')! : 'ASC';
 
 		let reservationFilter: Misc.ReservationFilters = {
 			accommodationId: urlParams.get('ai') ? parseInt(urlParams.get('ai')!) : undefined,
 			adultCount: urlParams.get('adultCount') ? parseInt(urlParams.get('adultCount')!) : 1,
-			bathroomCount: urlParams.get('bathroomCount') ? parseInt(urlParams.get('bathroomCount')!) : 1,
-			bedroomCount: urlParams.get('bedroomCount') ? parseInt(urlParams.get('bedroomCount')!) : 1,
+			bathroomCount: urlParams.get('bathroomCount') ? parseInt(urlParams.get('bathroomCount')!) : 0,
+			bedroomCount: urlParams.get('bedroomCount') ? parseInt(urlParams.get('bedroomCount')!) : 0,
 			childCount: 0,
 			destinationId: urlParams.get('di') ? parseInt(urlParams.get('di')!) : undefined,
 			amenityIds: urlParams.get('amenityIds') ? JSON.parse(urlParams.get('amenityIds')!) : undefined,
 			pagination: { page: 1, perPage: 10 },
 			priceRangeMax: urlParams.get('priceRangeMax') ? parseInt(urlParams.get('priceRangeMax')!) : 1000,
-			priceRangeMin: urlParams.get('priceRangeMin') ? parseInt(urlParams.get('priceRangeMin')!) : 1,
+			priceRangeMin: urlParams.get('priceRangeMin') ? parseInt(urlParams.get('priceRangeMin')!) : 10,
 			propertyTypeIds: urlParams.get('propertyTypeIds')
 				? JSON.parse(urlParams.get('propertyTypeIds')!)
 				: undefined,
@@ -126,6 +126,11 @@ class WebUtils extends BaseWebUtils {
 			endDate,
 			sortOrder: sortOrder === 'ASC' || sortOrder === 'DESC' ? sortOrder : 'ASC'
 		};
+
+		let key: keyof Misc.ReservationFilters;
+		for (key in reservationFilter) {
+			if (reservationFilter[key] === undefined) delete reservationFilter[key];
+		}
 		return reservationFilter;
 	}
 
