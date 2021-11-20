@@ -49,7 +49,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'subtitle3'}>points per night</Label>
 				</Box>
 			);
-		} else if (!reservationFilters.redeemPoints) {
+		} else {
 			return (
 				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
 					<Label variant={'subtitle3'} className={'fromText'}>
@@ -58,26 +58,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'h2'}>${StringUtils.formatMoney(props.minPrice)}</Label>
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
-				</Box>
-			);
-		} else {
-			return (
-				<Box
-					display={'flex'}
-					alignItems={'flex-end'}
-					justifyContent={'flex-end'}
-					flexDirection={'column'}
-					textAlign={'center'}
-				>
-					<LabelButton
-						look={'containedPrimary'}
-						className={'yellow'}
-						variant={'button'}
-						label={'Contact Us'}
-					/>
-					<Label variant={'subtitle3'} paddingTop={'16px'}>
-						to inquire about booking
-					</Label>
 				</Box>
 			);
 		}

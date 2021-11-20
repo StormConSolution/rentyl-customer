@@ -38,28 +38,11 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
-		} else if (!reservationFilters.redeemPoints) {
+		} else {
 			return (
 				<Box display={'flex'}>
 					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(props.minPrice)}/</Label>
 					<Label variant={'caption1'}>night</Label>
-				</Box>
-			);
-		} else {
-			return (
-				<Box>
-					<LabelButton
-						look={'containedPrimary'}
-						className={'yellow'}
-						variant={'button'}
-						label={'Contact Us'}
-						onClick={(event) => {
-							event.stopPropagation();
-						}}
-					/>
-					<Label variant={'subtitle3'} paddingTop={'5px'}>
-						to inquire about booking
-					</Label>
 				</Box>
 			);
 		}
