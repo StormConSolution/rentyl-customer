@@ -30,11 +30,10 @@ import ComparisonService from '../../services/comparison/comparison.service';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
-import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
-import moment from 'moment';
+import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -52,6 +51,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
+	const perPage = 10;
 	const [comparisonId, setComparisonId] = useState<number>(1);
 
 	useEffect(() => {
@@ -85,9 +85,21 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				for (key in searchQueryObj) {
 					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
 				}
+				searchQueryObj.pagination = { page, perPage };
+				if (searchQueryObj.priceRangeMin) searchQueryObj.priceRangeMin *= 100;
+				if (searchQueryObj.priceRangeMax) searchQueryObj.priceRangeMax *= 100;
 				let result = await accommodationService.availability(reservationFilters.destinationId, searchQueryObj);
 				setTotalResults(result.total || 0);
-				setAvailabilityStayList(result.data);
+				setAvailabilityStayList((prev) => {
+					return [
+						...prev.filter((accommodation) => {
+							return !result.data
+								.map((newList: Api.Accommodation.Res.Availability) => newList.id)
+								.includes(accommodation.id);
+						}),
+						...result.data
+					];
+				});
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				popupController.close(SpinningLoaderPopup);
@@ -98,7 +110,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			}
 		}
 		getAvailableStays().catch(console.error);
-	}, [reservationFilters]);
+	}, [reservationFilters, page]);
 
 	function popupSearch(adultCount: number, priceRangeMin: string, priceRangeMax: string, propertyTypeIds: number[]) {
 		setReservationFilters((prev) => {
@@ -387,19 +399,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								renderAccommodations()
 							)}
 						</div>
-						<PaginationButtons
-							selectedRowsPerPage={5}
+						<PaginationViewMore
+							selectedRowsPerPage={perPage}
 							total={totalResults}
-							setSelectedPage={(newPage) => {
-								setPage(newPage);
-								setReservationFilters({
-									...reservationFilters,
-									pagination: { page: newPage, perPage: 5 }
-								});
-								let availableStaysSection = availableStaysRef.current!.offsetTop;
-								window.scrollTo({ top: availableStaysSection, behavior: 'smooth' });
-							}}
 							currentPageNumber={page}
+							viewMore={(page) => setPage(page)}
 						/>
 					</div>
 				)}

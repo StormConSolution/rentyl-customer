@@ -1,0 +1,12 @@
+.rsPaginationViewMore {
+	text-align: center;
+	width: -moz-fit-content;
+	width: fit-content;
+	.rsLabel {
+		width: -moz-fit-content;
+		width: fit-content;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}

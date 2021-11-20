@@ -24,6 +24,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
+import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -32,7 +33,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
-	const perPage = 5;
+	const perPage = 10;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
@@ -46,8 +47,19 @@ const ReservationAvailabilityPage: React.FC = () => {
 				for (key in searchQueryObj) {
 					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
 				}
+				searchQueryObj.pagination = { page, perPage };
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
-				setDestinations(res.data);
+				setDestinations((prev) => {
+					let newList = [
+						...prev.filter((destination) => {
+							return !res.data
+								.map((newDestination: Api.Destination.Res.Availability) => newDestination.id)
+								.includes(destination.id);
+						}),
+						...res.data
+					];
+					return newList;
+				});
 				setAvailabilityTotal(res.total || 0);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
@@ -57,7 +69,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		}
 
 		getReservations().catch(console.error);
-	}, [reservationFilters]);
+	}, [reservationFilters, page]);
 
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
@@ -209,6 +221,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 						renderDestinationSearchResultCards()
 					)}
 				</Box>
+				<PaginationViewMore
+					selectedRowsPerPage={perPage}
+					total={availabilityTotal}
+					currentPageNumber={page}
+					viewMore={(page) => {
+						setPage(page);
+					}}
+				/>
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>

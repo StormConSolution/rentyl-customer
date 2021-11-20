@@ -28,23 +28,7 @@ interface LabelInputProps {
 	iconImage?: string;
 	iconSize?: number;
 	className?: string;
-	labelVariant?:
-		| 'h1'
-		| 'h2'
-		| 'h3'
-		| 'h4'
-		| 'h5'
-		| 'h6'
-		| 'link1'
-		| 'link2'
-		| 'subtitle1'
-		| 'subtitle2'
-		| 'body1'
-		| 'body2'
-		| 'caption'
-		| 'button'
-		| 'overline'
-		| string;
+	labelVariant?: Misc.Variant;
 }
 
 const LabelInput: React.FC<LabelInputProps> = (props) => {
