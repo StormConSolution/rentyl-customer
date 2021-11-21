@@ -21,9 +21,11 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import Paper from '../../components/paper/Paper';
+import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 
 let isDefault: 1 | 0 = 0;
 
@@ -176,7 +178,14 @@ const AccountAddressPage: React.FC = () => {
 	}
 
 	async function updateNewAddressObj(control: RsFormControl) {
-		if (control.key === 'zip') control.value = +control.value;
+		if (control.key === 'zip') {
+			let newValue: string = StringUtils.removeAllExceptNumbers(control.value.toString());
+			if (newValue.length <= 0) {
+				control.value = '';
+			} else {
+				control.value = parseInt(newValue);
+			}
+		}
 		newAddressObj.update(control);
 		setIsValidForm(isFormFilledOut());
 		setNewAddressObj(newAddressObj.clone());
@@ -233,101 +242,96 @@ const AccountAddressPage: React.FC = () => {
 		<LoadingPage />
 	) : (
 		<Page className={'rsAccountAddressPage'}>
-			<div className={'rs-page-content-wrapper'}>
-				<AccountHeader selected={'ADDRESSES'} />
-				<Box
-					maxWidth={'920px'}
-					margin={'60px auto 120px'}
-					display={'flex'}
-					justifyContent={'space-evenly'}
-					flexDirection={size === 'small' ? 'column' : 'row'}
-				>
-					<Box className={'addressList'}>
-						<Label variant={'h2'}>Addresses</Label>
-						{renderPrimaryAddress()}
-						{size !== 'small' && renderAddresses()}
-					</Box>
-					<Box className={'newAddress'}>
-						<Label variant={'h2'}>Add new address</Label>
-						<LabelInput
-							className={'inputStretched'}
-							title={'Full Name'}
-							inputType={'text'}
-							control={newAddressObj.get('full_name')}
-							updateControl={updateNewAddressObj}
-						/>
-						<LabelInput
-							className={'inputStretched'}
-							title={'Address Line 1'}
-							inputType={'text'}
-							control={newAddressObj.get('address1')}
-							updateControl={updateNewAddressObj}
-						/>
-						<LabelInput
-							className={'inputStretched'}
-							title={'Address Line 2'}
-							inputType={'text'}
-							control={newAddressObj.get('address2')}
-							updateControl={updateNewAddressObj}
-						/>
-						<Box display={'flex'} justifyContent={'space-between'} gap={20}>
-							<LabelInput
-								title={'City'}
-								inputType={'text'}
-								control={newAddressObj.get('city')}
-								updateControl={updateNewAddressObj}
-							/>
-							<LabelInput
-								title={'Zip Code'}
-								inputType={'number'}
-								control={newAddressObj.get('zip')}
-								updateControl={updateNewAddressObj}
-							/>
-						</Box>
-						<Box display={'flex'} justifyContent={'space-between'} gap={20}>
-							<LabelSelect
-								title={'State'}
-								updateControl={updateNewAddressObj}
-								options={stateList}
-								control={newAddressObj.get('state')}
-							/>
-							<LabelSelect
-								title={'Country'}
-								updateControl={updateNewAddressObj}
-								options={countryList}
-								control={newAddressObj.get('country')}
-							/>
-						</Box>
-						<LabelCheckbox
-							value={'isDefault'}
-							text={'Set as primary'}
-							isChecked={false}
-							onSelect={() => {
-								isDefault = 1;
-							}}
-							onDeselect={() => {
-								isDefault = 0;
-							}}
-						/>
-						<LabelButton
-							look={isValidForm ? 'containedPrimary' : 'containedSecondary'}
-							variant={'button'}
-							label={'Add New Address'}
-							disabled={!isValidForm}
-							onClick={() => {
-								save();
-							}}
-						/>
-					</Box>
-					{size === 'small' && (
-						<Box>
-							<hr />
-							{renderAddresses()}
-						</Box>
-					)}
+			<SubNavMenu title={'Addresses'} />
+			<Paper boxShadow borderRadius={'20px'}>
+				<Box className={'addressList'}>
+					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 30}>
+						Addresses
+					</Label>
+					{renderPrimaryAddress()}
+					{size !== 'small' && renderAddresses()}
 				</Box>
-				<Footer links={FooterLinks} />
-			</div>
+				<hr />
+				<Box className={'newAddress'}>
+					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 30}>
+						Add new address
+					</Label>
+					<LabelInput
+						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+						className={'inputStretched'}
+						title={'Full Name'}
+						inputType={'text'}
+						control={newAddressObj.get('full_name')}
+						updateControl={updateNewAddressObj}
+					/>
+					<LabelInput
+						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+						className={'inputStretched'}
+						title={'Address Line 1'}
+						inputType={'text'}
+						control={newAddressObj.get('address1')}
+						updateControl={updateNewAddressObj}
+					/>
+					<LabelInput
+						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+						className={'inputStretched'}
+						title={'Address Line 2'}
+						inputType={'text'}
+						control={newAddressObj.get('address2')}
+						updateControl={updateNewAddressObj}
+					/>
+					<Box display={'flex'} justifyContent={'space-between'}>
+						<LabelInput
+							labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+							title={'City'}
+							inputType={'text'}
+							control={newAddressObj.get('city')}
+							updateControl={updateNewAddressObj}
+						/>
+						<LabelInput
+							labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+							title={'Zip Code'}
+							inputType={'number'}
+							control={newAddressObj.get('zip')}
+							updateControl={updateNewAddressObj}
+						/>
+					</Box>
+					<Box display={'flex'} justifyContent={'space-between'} mb={25}>
+						<LabelSelect
+							title={'State'}
+							updateControl={updateNewAddressObj}
+							options={stateList}
+							control={newAddressObj.get('state')}
+						/>
+						<LabelSelect
+							title={'Country'}
+							updateControl={updateNewAddressObj}
+							options={countryList}
+							control={newAddressObj.get('country')}
+						/>
+					</Box>
+					<LabelCheckbox
+						value={'isDefault'}
+						text={'Set as primary'}
+						isChecked={false}
+						onSelect={() => {
+							isDefault = 1;
+						}}
+						onDeselect={() => {
+							isDefault = 0;
+						}}
+					/>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'button'}
+						label={'Add New Address'}
+						disabled={!isValidForm}
+						onClick={() => {
+							save();
+						}}
+					/>
+				</Box>
+			</Paper>
 		</Page>
 	);
 };

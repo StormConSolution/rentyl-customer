@@ -199,6 +199,14 @@ export const routes: RouteDetails[] = [
 		}
 	},
 	{
+		path: '/account/personal-info',
+		page: AccountPersonalInfoPage,
+		routeGuard: verifyRoute,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
 		path: '/account/address',
 		page: AccountAddressPage,
 		routeGuard: verifyRoute,

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import './AccountAddressTile.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelButton from '../labelButton/LabelButton';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
-import Paper from '../paper/Paper';
 import { Box } from '@bit/redsky.framework.rs.996';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface AddressTileProps {
 	id: number;
@@ -22,9 +21,10 @@ interface AddressTileProps {
 
 const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 	return (
-		<Paper className={'rsAccountAddressTile'}>
+		<div className={'rsAccountAddressTile'}>
 			{!props.isPrimary ? (
 				<LabelRadioButton
+					labelSize={'customFifteen'}
 					radioName={'primaryAddress'}
 					value={props.id}
 					checked={false}
@@ -34,7 +34,7 @@ const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 					}}
 				/>
 			) : (
-				<Label variant={'h4'}>Primary</Label>
+				<Label variant={'customSeventeen'}>Primary</Label>
 			)}
 			<Box>
 				<Label variant={'body1'}>{props.name}</Label>
@@ -44,9 +44,11 @@ const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 				<Label variant={'body1'}>
 					{props.state} {props.zipCode} {props.country}
 				</Label>
-				<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
 			</Box>
-		</Paper>
+			{!props.isPrimary && (
+				<Icon iconImg={'icon-close'} color={'#797979'} onClick={props.onDelete} cursorPointer />
+			)}
+		</div>
 	);
 };
 

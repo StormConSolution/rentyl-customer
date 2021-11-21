@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './AppBar.scss';
 import { Box, Link } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -12,10 +12,33 @@ const AppBar: React.FC = () => {
 	const appBarRef = useRef<HTMLElement>(null);
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
+	const [addWhiteBackground, setAddWhiteBackground] = useState<boolean>(false);
 	let scrollDirection = useWindowScrollChange();
+	const addWhiteBackgroundPagesUrl: string[] = ['/account'];
+
+	useEffect(() => {
+		let id = router.subscribeToAfterRouterNavigate(() => {
+			let url = window.location.href;
+			for (let i in addWhiteBackgroundPagesUrl) {
+				if (url.includes(addWhiteBackgroundPagesUrl[i])) {
+					setAddWhiteBackground(true);
+					break;
+				} else {
+					setAddWhiteBackground(false);
+				}
+			}
+		});
+
+		return () => {
+			router.unsubscribeFromAfterRouterNavigate(id);
+		};
+	}, []);
 
 	return (
-		<div ref={appBarRef} className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'}`}>
+		<div
+			ref={appBarRef}
+			className={`rsAppBar ${scrollDirection === 'DOWN' && 'hide'} ${addWhiteBackground ? 'white' : ''}`}
+		>
 			<Link path={'/'} className={'logoContainer'}>
 				<img src={company.wideLogoUrl} alt={company.name} width={'166px'} className={'logo'} />
 			</Link>

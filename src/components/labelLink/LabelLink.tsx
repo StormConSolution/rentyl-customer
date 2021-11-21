@@ -23,7 +23,8 @@ interface LabelLinkProps {
 		| 'button'
 		| 'overline'
 		| 'srOnly'
-		| 'inherit';
+		| 'inherit'
+		| string;
 	iconLeft?: string;
 	iconRight?: string;
 	iconSize?: number;

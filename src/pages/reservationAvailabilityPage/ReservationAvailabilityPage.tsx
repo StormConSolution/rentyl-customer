@@ -24,6 +24,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
+import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -209,7 +210,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						renderDestinationSearchResultCards()
 					)}
 				</Box>
-				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { StringUtils } from '../../utils/utils';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface LabelInputProps {
 	title: string;
@@ -48,6 +49,7 @@ interface LabelInputProps {
 }
 
 const LabelInput: React.FC<LabelInputProps> = (props) => {
+	const size = useWindowResizeChange();
 	const [isValid, setIsValid] = useState<boolean>(true);
 	const form = new RsFormGroup([
 		new RsFormControl(
@@ -84,7 +86,9 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 
 	return (
 		<div className={`rsLabelInput ${props.className || ''}`}>
-			<Label variant={props.labelVariant || 'caption'}>{props.title}</Label>
+			<Label variant={props.labelVariant || 'caption'} mb={size === 'small' ? 6 : 9}>
+				{props.title}
+			</Label>
 			{!!props.iconImage && (
 				<div className="iconHolder">
 					<Icon iconImg={props.iconImage} size={props.iconSize} />
