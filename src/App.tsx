@@ -53,6 +53,7 @@ function App() {
 	}, [loginStatus, isCompanyLoaded]);
 
 	function renderViewsBasedOnLoginStatus() {
+		if (!isCompanyLoaded) return null;
 		switch (loginStatus) {
 			case LoginStatus.UNKNOWN:
 				return null;
