@@ -397,7 +397,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						setFilterForm(copyForm);
 					}}
 					title={
-						(filterForm.get('bedroomCount').value || filterForm.get('bedroomCount').value)! > 0
+						(filterForm.get('bathroomCount').value || filterForm.get('bedroomCount').value)! > 0
 							? `Bedrooms( ${
 									(filterForm.get('bedroomCount').value as number) +
 									(filterForm.get('bathroomCount').value as number)
