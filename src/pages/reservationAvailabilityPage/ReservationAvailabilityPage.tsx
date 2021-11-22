@@ -24,7 +24,8 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
-import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
+import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -33,32 +34,61 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
-	const perPage = 5;
+	const perPage = 10;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
 
 	useEffect(() => {
+		WebUtils.updateUrlParams(reservationFilters);
 		async function getReservations() {
-			try {
-				popupController.open(SpinningLoaderPopup);
-				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
-				let key: keyof Misc.ReservationFilters;
-				for (key in searchQueryObj) {
-					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
-				}
-				let res = await destinationService.searchAvailableReservations(searchQueryObj);
-				setDestinations(res.data);
-				setAvailabilityTotal(res.total || 0);
-				popupController.close(SpinningLoaderPopup);
-			} catch (e) {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
-				popupController.close(SpinningLoaderPopup);
-			}
+			let res = await getPagedReservations();
+			setDestinations(res.data);
+			setAvailabilityTotal(res.total || 0);
+			popupController.close(SpinningLoaderPopup);
 		}
 
 		getReservations().catch(console.error);
 	}, [reservationFilters]);
+
+	useEffect(() => {
+		async function getReservations() {
+			let res = await getPagedReservations();
+			setDestinations((prev) => {
+				let newList = [
+					...prev.filter((destination) => {
+						return !res.data
+							.map((newDestination: Api.Destination.Res.Availability) => newDestination.id)
+							.includes(destination.id);
+					}),
+					...res.data
+				];
+				return newList;
+			});
+			setAvailabilityTotal(res.total || 0);
+			popupController.close(SpinningLoaderPopup);
+		}
+
+		getReservations().catch(console.error);
+	}, [page]);
+
+	async function getPagedReservations(): Promise<RsPagedResponseData<Api.Destination.Res.Availability[]>> {
+		try {
+			popupController.open(SpinningLoaderPopup);
+			const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
+			let key: keyof Misc.ReservationFilters;
+			for (key in searchQueryObj) {
+				if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
+			}
+			searchQueryObj.pagination = { page, perPage };
+			let res = await destinationService.searchAvailableReservations(searchQueryObj);
+			return res;
+		} catch (e) {
+			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
+			popupController.close(SpinningLoaderPopup);
+			return { data: [], total: 0 };
+		}
+	}
 
 	function renderDestinationSearchResultCards() {
 		if (!destinations) return;
@@ -74,7 +104,8 @@ const ReservationAvailabilityPage: React.FC = () => {
 				<DestinationSearchResultCard
 					key={destination.id}
 					destinationId={destination.id}
-					unfilteredAccommodations={destination.accommodations}
+					minPoints={destination.minAccommodationPoints}
+					minPrice={destination.minAccommodationPrice}
 					destinationDescription={destination.description}
 					destinationName={destination.name}
 					destinationExperiences={destination.experiences}
@@ -193,15 +224,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 				/>
 				<Box
 					className={'filterResultsWrapper'}
-					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 20px 60px 20px'}
+					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 20px 20px 20px'}
 				>
 					{size !== 'small' && (
 						<>
 							<FilterBarV2 />
 						</>
 					)}
-
-					<div className={'bottomBorderDiv'} />
 				</Box>
 				<Box className={'searchResultsWrapper'}>
 					{destinations.length <= 0 ? (
@@ -210,6 +239,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 						renderDestinationSearchResultCards()
 					)}
 				</Box>
+				<PaginationViewMore
+					selectedRowsPerPage={perPage}
+					total={availabilityTotal}
+					currentPageNumber={page}
+					viewMore={(page) => {
+						setPage(page);
+					}}
+				/>
+				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

@@ -1,4 +1,25 @@
 declare namespace Misc {
+	export type Variant =
+		| 'h1'
+		| 'h2'
+		| 'h3'
+		| 'h4'
+		| 'h5'
+		| 'h6'
+		| 'sectionHeader'
+		| 'title'
+		| 'subtitle1'
+		| 'subtitle2'
+		| 'body1'
+		| 'body2'
+		| 'caption'
+		| 'button'
+		| 'overline'
+		| 'srOnly'
+		| 'inherit'
+		| 'error'
+		| string;
+
 	export interface FeaturedCategory {
 		categoryId: number;
 		imagePath: string;

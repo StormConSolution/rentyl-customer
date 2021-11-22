@@ -55,7 +55,7 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				</Box>
 			</Box>
 			{toggleContent && (
-				<Box boxRef={modalRef} className={`DropdownContent ${props.dropdownContentClassName || ''}`}>
+				<Box boxRef={modalRef} className={`dropdownContent ${props.dropdownContentClassName || ''}`}>
 					{props.children}
 					{!props.isSortField && (
 						<Box className="dropdownFooter">

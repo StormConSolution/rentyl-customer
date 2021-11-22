@@ -36,7 +36,6 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	const [propertyTypes, setPropertyTypes] = useState<Model.PropertyType[]>([]);
 	const [experienceOptions, setExperienceOptions] = useState<Misc.OptionType[]>([]);
 	const [amenityOptions, setAmenityOptions] = useState<Misc.OptionType[]>([]);
-	const [toggleSort, setToggleSort] = useState<string>('ASC');
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			//propertyTypeIds are the text accommodationType on the front end.
@@ -60,22 +59,19 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 	);
 
 	useEffect(() => {
-		/**
-		 * This useEffect grabs the current url params on first page load and sets the search Query Object.
-		 */
-		//get all filterForm controls to update
-		let propertyTypeControl = filterForm.get('propertyTypeIds');
-		let adultCountControl = filterForm.get('adultCount');
-		let bedroomCountControl = filterForm.get('bedroomCount');
-		let bathroomCountControl = filterForm.get('bathroomCount');
-		let priceRangeMinControl = filterForm.get('priceRangeMin');
-		let priceRangeMaxControl = filterForm.get('priceRangeMax');
-		let experienceIdsControl = filterForm.get('experienceIds');
-		let amenityIdsControl = filterForm.get('amenityIds');
-		let sortOrderControl = filterForm.get('sortOrder');
 		const filters = WebUtils.parseURLParamsToFilters();
+		let {
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		} = getAllControls();
 
-		//set values from the url params
 		propertyTypeControl.value = filters.propertyTypeIds || [];
 		adultCountControl.value = filters.adultCount;
 		bedroomCountControl.value = filters.bedroomCount || 0;
@@ -85,19 +81,20 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		experienceIdsControl.value = filters.experienceIds || [];
 		amenityIdsControl.value = filters.amenityIds || [];
 		sortOrderControl.value = filters.sortOrder;
-		const formClone = filterForm.clone();
 
+		updateAllControls([
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		]);
 		//update all controls
-		formClone.update(propertyTypeControl);
-		formClone.update(adultCountControl);
-		formClone.update(bedroomCountControl);
-		formClone.update(bathroomCountControl);
-		formClone.update(priceRangeMinControl);
-		formClone.update(priceRangeMaxControl);
-		formClone.update(experienceIdsControl);
-		formClone.update(amenityIdsControl);
-		formClone.update(sortOrderControl);
-		setFilterForm(formClone);
+
 		setReservationFilters(filters);
 	}, []);
 
@@ -125,6 +122,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 				);
 			}
 		}
+
 		getAllFiltersOptions().catch(console.error);
 	}, []);
 
@@ -135,10 +133,77 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		WebUtils.updateUrlParams(reservationFilters);
 	}, [reservationFilters]);
 
+	function getAllControls(): { [key: string]: RsFormControl } {
+		let propertyTypeControl = filterForm.get('propertyTypeIds');
+		let adultCountControl = filterForm.get('adultCount');
+		let bedroomCountControl = filterForm.get('bedroomCount');
+		let bathroomCountControl = filterForm.get('bathroomCount');
+		let priceRangeMinControl = filterForm.get('priceRangeMin');
+		let priceRangeMaxControl = filterForm.get('priceRangeMax');
+		let experienceIdsControl = filterForm.get('experienceIds');
+		let amenityIdsControl = filterForm.get('amenityIds');
+		let sortOrderControl = filterForm.get('sortOrder');
+		return {
+			propertyTypeControl,
+			adultCountControl,
+			bedroomCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		};
+	}
+
+	function updateAllControls(controls: RsFormControl[]) {
+		let formClone = filterForm.clone();
+		controls.forEach((control) => {
+			formClone.update(control);
+		});
+		setFilterForm(formClone);
+	}
+
 	function updateFilterForm(control: RsFormControl | undefined) {
 		if (!control) return;
 		filterForm.update(control);
 		setFilterForm(filterForm.clone());
+	}
+
+	function clearAll() {
+		let {
+			propertyTypeControl,
+			bedroomCountControl,
+			adultCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		} = getAllControls();
+
+		propertyTypeControl.value = [];
+		adultCountControl.value = 1;
+		bedroomCountControl.value = 0;
+		bathroomCountControl.value = 0;
+		priceRangeMinControl.value = 10;
+		priceRangeMaxControl.value = 1000;
+		experienceIdsControl.value = [];
+		amenityIdsControl.value = [];
+		sortOrderControl.value = 'ASC';
+
+		updateAllControls([
+			propertyTypeControl,
+			bedroomCountControl,
+			adultCountControl,
+			bathroomCountControl,
+			priceRangeMinControl,
+			priceRangeMaxControl,
+			experienceIdsControl,
+			amenityIdsControl,
+			sortOrderControl
+		]);
 	}
 
 	function saveFilter() {
@@ -255,10 +320,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							<LabelRadioButton
 								radioName="highestRadioBtn"
 								value="sortHigh"
-								checked={toggleSort === 'DESC'}
+								checked={filterForm.get('sortOrder').value === 'DESC'}
 								text="Highest Price"
 								onSelect={() => {
-									setToggleSort('DESC');
 									let tempControl = filterForm.get('sortOrder');
 									tempControl.value = 'DESC';
 									updateFilterForm(tempControl);
@@ -269,10 +333,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							<LabelRadioButton
 								radioName="lowestRadioBtn"
 								value="sortLow"
-								checked={toggleSort === 'ASC'}
+								checked={filterForm.get('sortOrder').value === 'ASC'}
 								text="Lowest Price"
 								onSelect={() => {
-									setToggleSort('ASC');
 									let tempControl = filterForm.get('sortOrder');
 									tempControl.value = 'ASC';
 									updateFilterForm(tempControl);
@@ -288,6 +351,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={1}
+								maxCount={28}
 								labelMarginRight={5}
 							/>
 							<Counter
@@ -296,6 +360,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={0}
+								maxCount={15}
 								labelMarginRight={5}
 							/>
 							<Counter
@@ -304,6 +369,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								updateControl={updateFilterForm}
 								className={'filterCounter'}
 								minCount={0}
+								maxCount={15}
 								labelMarginRight={5}
 							/>
 						</div>
@@ -384,8 +450,8 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							className={'cancelButton'}
 							look={'containedSecondary'}
 							variant={'button'}
-							label={'Cancel'}
-							onClick={() => popupController.close(FilterReservationPopup)}
+							label={'Clear'}
+							onClick={clearAll}
 						/>
 						<LabelButton
 							className={'applyButton'}

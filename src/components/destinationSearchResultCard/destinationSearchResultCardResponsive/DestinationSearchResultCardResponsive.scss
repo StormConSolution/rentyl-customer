@@ -5,6 +5,9 @@
 	max-width: 1844px;
 	width: 100%;
 	justify-content: space-between;
+	&:hover {
+		cursor: pointer;
+	}
 	.featureIcons {
 		display: flex;
 		gap: 34px;

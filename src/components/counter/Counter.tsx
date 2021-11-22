@@ -7,6 +7,7 @@ import { RsFormControl } from '@bit/redsky.framework.rs.form';
 
 export interface GuestCounterProps {
 	minCount?: number;
+	maxCount?: number;
 	title: string;
 	control: RsFormControl;
 	updateControl: (control: RsFormControl) => void;
@@ -25,7 +26,7 @@ const Counter: React.FC<GuestCounterProps> = (props) => {
 					iconImg={'icon-minus'}
 					onClick={() => {
 						let newValue: number = (props.control.value as number) - 1;
-						if (props.minCount && newValue < props.minCount) return;
+						if (props.minCount !== undefined && newValue < props.minCount) return;
 						let tempControl = props.control;
 						tempControl.value = newValue;
 						props.updateControl(tempControl);
@@ -36,6 +37,7 @@ const Counter: React.FC<GuestCounterProps> = (props) => {
 					iconImg={'icon-plus'}
 					onClick={() => {
 						let newValue: number = (props.control.value as number) + 1;
+						if (props.maxCount !== undefined && newValue > props.maxCount) return;
 						let tempControl = props.control;
 						tempControl.value = newValue;
 						props.updateControl(tempControl);
