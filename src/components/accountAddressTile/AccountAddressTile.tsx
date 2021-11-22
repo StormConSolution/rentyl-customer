@@ -21,6 +21,7 @@ interface AddressTileProps {
 }
 
 const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
+	const size = useWindowResizeChange();
 	return (
 		<div className={'rsAccountAddressTile'}>
 			{!props.isPrimary ? (
@@ -37,17 +38,29 @@ const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 			) : (
 				<Label variant={'customSeventeen'}>Primary</Label>
 			)}
-			<Box>
-				<Label variant={'body1'}>{props.name}</Label>
-				<Label variant={'body1'}>{props.addressLine1}</Label>
-				{!!props.addressLine2 && <Label variant={'body1'}>{props.addressLine2}</Label>}
-				<Label variant={'body1'}>{props.city},</Label>
-				<Label variant={'body1'}>
-					{props.state} {props.zipCode} {props.country}
-				</Label>
+			<Box display={size === 'small' ? 'flex' : ''} alignItems={size === 'small' ? 'center' : ''}>
+				<div>
+					<Label variant={'body1'}>{props.name}</Label>
+					<Label variant={'body1'}>{props.addressLine1}</Label>
+					{!!props.addressLine2 && <Label variant={'body1'}>{props.addressLine2}</Label>}
+					<Label variant={'body1'}>{props.city},</Label>
+					<Label variant={'body1'}>
+						{props.state} {props.zipCode} {props.country}
+					</Label>
+				</div>
+				{!props.isPrimary && size === 'small' && (
+					<Icon
+						className={'marginLeft'}
+						iconImg={'icon-trash'}
+						color={'#000000'}
+						onClick={props.onDelete}
+						cursorPointer
+						size={21}
+					/>
+				)}
 			</Box>
-			{!props.isPrimary && (
-				<Icon iconImg={'icon-close'} color={'#797979'} onClick={props.onDelete} cursorPointer />
+			{!props.isPrimary && size !== 'small' && (
+				<Icon iconImg={'icon-trash'} color={'#000000'} onClick={props.onDelete} cursorPointer size={21} />
 			)}
 		</div>
 	);

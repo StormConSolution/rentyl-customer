@@ -41,7 +41,7 @@ const OtherPaymentCard: React.FC<OtherPaymentCardProps> = (props) => {
 			) : (
 				<Label variant={'customSeventeen'}>Primary</Label>
 			)}
-			<Box display={size === 'small' ? 'flex' : ''}>
+			<Box display={size === 'small' ? 'flex' : ''} alignItems={size === 'small' ? 'center' : ''}>
 				<div>
 					<Label variant={'body1'}>{props.name}</Label>
 					<Label variant={'body1'}>{`${props.cardType} ending in ${props.last4}`}</Label>
@@ -49,15 +49,16 @@ const OtherPaymentCard: React.FC<OtherPaymentCardProps> = (props) => {
 				{!props.isPrimary && size === 'small' && (
 					<Icon
 						className={'marginLeft'}
-						iconImg={'icon-close'}
-						color={'#797979'}
+						iconImg={'icon-trash'}
+						color={'#000000'}
 						onClick={props.onDelete}
 						cursorPointer
+						size={21}
 					/>
 				)}
 			</Box>
 			{!props.isPrimary && size !== 'small' && (
-				<Icon iconImg={'icon-close'} color={'#797979'} onClick={props.onDelete} cursorPointer />
+				<Icon iconImg={'icon-trash'} color={'#000000'} onClick={props.onDelete} cursorPointer size={21} />
 			)}
 		</Box>
 	);

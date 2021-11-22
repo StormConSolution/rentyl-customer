@@ -8,7 +8,15 @@
 }
 .small {
 	.rsAccountAddressTile {
-		grid-template-columns: 170px 109px 16px;
+		display: block;
 		gap: 0;
+		border-bottom: 1px solid #7070706e;
+		.marginLeft {
+			margin-left: 32px;
+		}
+		.rsLabelRadioButton,
+		.rsLabel.customSeventeen {
+			margin-bottom: 20px;
+		}
 	}
 }
