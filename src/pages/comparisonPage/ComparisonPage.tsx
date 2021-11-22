@@ -20,7 +20,7 @@ import ComparisonTable from '../../components/comparisonTable/ComparisonTable';
 const ComparisonPage: React.FC = () => {
 	const size = useWindowResizeChange();
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
 	const [comparisonItems, setComparisonItems] = recoilComparisonState;
 	const [accommodationDetailList, setAccommodationDetailList] = useState<Api.Accommodation.Res.Details[]>([]);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);

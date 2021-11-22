@@ -9,8 +9,6 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { StringUtils } from '../../../utils/utils';
-import LabelButton from '../../labelButton/LabelButton';
-import { useEffect, useState } from 'react';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './ComparisonDrawer.scss';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ResortComparisonCard from '../../components/resortComparisonCard/ResortComparisonCard';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
@@ -8,9 +9,11 @@ import { ObjectUtils } from '../../utils/utils';
 import { Box } from '@bit/redsky.framework.rs.996';
 import LinkButton from '../../components/linkButton/LinkButton';
 import { useEffect, useState } from 'react';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 const ComparisonDrawer: React.FC = () => {
-	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonCardInfo[]>(
+	const size = useWindowResizeChange();
+	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonState>(
 		globalState.destinationComparison
 	);
 	const [comparisonItems, setComparisonItems] = useState<Misc.ComparisonCardInfo[]>(recoilComparisonState);
@@ -20,6 +23,7 @@ const ComparisonDrawer: React.FC = () => {
 	}, [recoilComparisonState]);
 
 	function renderComparisonCard() {
+		if (size === 'small') return;
 		if (!ObjectUtils.isArrayWithData(comparisonItems) || comparisonItems.length > 3) return;
 		return comparisonItems.map((item) => {
 			return <ResortComparisonCard key={item.comparisonId} destinationDetails={item} />;
@@ -27,20 +31,20 @@ const ComparisonDrawer: React.FC = () => {
 	}
 
 	return (
-		<Box
-			className={`rsComparisonDrawer ${recoilComparisonState.length !== 0 ? 'show' : ''}`}
-			display={'flex'}
-			alignItems={'center'}
-		>
+		<Box className={`rsComparisonDrawer ${recoilComparisonState.length !== 0 || size === 'small' ? 'show' : ''}`}>
 			{!!recoilComparisonState && <Box display={'flex'}>{renderComparisonCard()}</Box>}
-			<Box marginLeft={'auto'} display={'flex'} flexDirection={'column'} alignItems={'center'}>
-				<LinkButton look={'containedPrimary'} label={'Compare Properties'} path={'/compare'} />
-				<LabelButton
-					look={'none'}
-					variant={'button'}
-					label={'Clear All'}
-					onClick={() => setRecoilComparisonState([])}
-				/>
+			<Box className={'comparisonButtons'}>
+				<LinkButton look={'containedPrimary'} label={'Compare'} path={'/compare'}>
+					<Icon iconImg={'icon-plus'} />
+				</LinkButton>
+				{comparisonItems.length > 0 && (
+					<LabelButton
+						look={'none'}
+						variant={'button'}
+						label={'Clear All'}
+						onClick={() => setRecoilComparisonState([])}
+					/>
+				)}
 			</Box>
 		</Box>
 	);

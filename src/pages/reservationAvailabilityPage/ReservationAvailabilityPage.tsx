@@ -4,6 +4,7 @@ import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import serviceFactory from '../../services/serviceFactory';
 import router from '../../utils/router';
+import ComparisonDrawer from '../../popups/comparisonDrawer/ComparisonDrawer';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -33,7 +34,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
 	const perPage = 10;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
@@ -247,6 +248,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						setPage(page);
 					}}
 				/>
+				<ComparisonDrawer />
 				<Footer links={FooterLinks} />
 			</div>
 		</Page>

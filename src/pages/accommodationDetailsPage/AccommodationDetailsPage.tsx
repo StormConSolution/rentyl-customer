@@ -39,7 +39,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
+	const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ accommodationId: number; startDate?: string; endDate?: string }>([
 		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' },

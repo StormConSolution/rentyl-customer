@@ -90,13 +90,17 @@ declare namespace Misc {
 		isSignedIn: boolean;
 	}
 
-	export interface ComparisonCardInfo {
-		comparisonId?: number;
-		destinationId: number;
-		logo: string;
-		title: string;
-		roomTypes: { value: number | string; label: number | string }[];
-		selectedRoom: number;
+	// export interface ComparisonCardInfo {
+	// 	comparisonId?: number;
+	// 	destinationId: number;
+	// 	logo: string;
+	// 	title: string;
+	// 	roomTypes: { value: number | string; label: number | string }[];
+	// 	selectedRoom: number;
+	// }
+	export interface ComparisonState {
+		destinationIds: number[];
+		showCompareButton: boolean;
 	}
 
 	export interface FilterFormPopupOptions {

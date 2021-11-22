@@ -13,6 +13,7 @@ interface CarouselV2Props {
 	imgPaths: string[];
 	onAddCompareClick: () => void;
 	onGalleryClick: () => void;
+	showCompareButton?: boolean;
 }
 
 const CarouselV2: React.FC<CarouselV2Props> = (props) => {
@@ -86,21 +87,23 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 			>
 				<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
 			</Button>
-			<Button
-				className={'addToCompareButton'}
-				look={'none'}
-				disableRipple
-				onClick={(event) => {
-					event.stopPropagation();
-					props.onAddCompareClick();
-				}}
-			>
-				<Icon iconImg={'icon-plus'} color={'#ffffff'} size={12} />
-				<div className={'compareToolTip'}>
-					<div className={'toolTipTriangle'} />
-					<Label className={'caption'}>Compare</Label>
-				</div>
-			</Button>
+			{props.showCompareButton && (
+				<Button
+					className={'addToCompareButton'}
+					look={'none'}
+					disableRipple
+					onClick={(event) => {
+						event.stopPropagation();
+						props.onAddCompareClick();
+					}}
+				>
+					<Icon iconImg={'icon-plus'} color={'#ffffff'} size={12} />
+					<div className={'compareToolTip'}>
+						<div className={'toolTipTriangle'} />
+						<Label className={'caption'}>Compare</Label>
+					</div>
+				</Button>
+			)}
 			<Button
 				look={'none'}
 				className={'imageCountContainer'}

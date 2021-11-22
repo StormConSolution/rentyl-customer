@@ -23,7 +23,7 @@ enum GlobalStateKeys {
 const KEY_PREFIX = 'spireCust-';
 
 class GlobalState {
-	destinationComparison: RecoilState<Misc.ComparisonCardInfo[]>;
+	destinationComparison: RecoilState<Misc.ComparisonState>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
@@ -34,9 +34,12 @@ class GlobalState {
 	saveToStorageList: string[] = [];
 
 	constructor() {
-		this.destinationComparison = atom<Misc.ComparisonCardInfo[]>({
+		this.destinationComparison = atom<Misc.ComparisonState>({
 			key: GlobalStateKeys.COMPARISON_CARD,
-			default: this.loadFromLocalStorage<Misc.ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
+			default: this.loadFromLocalStorage<Misc.ComparisonState>(GlobalStateKeys.COMPARISON_CARD, {
+				comparisonCardInfo: [],
+				showCompareButton: false
+			})
 		});
 
 		this.user = atom<Api.User.Res.Detail | undefined>({
