@@ -247,7 +247,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						setPage(page);
 					}}
 				/>
-				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);
