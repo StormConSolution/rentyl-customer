@@ -18,6 +18,9 @@ import useCompanyInfo from './customHooks/useCompanyInfo';
 import { useSetCustomToast } from './customHooks/useSetCustomToast';
 import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
 import { ToastContainer } from '@bit/redsky.framework.rs.toastify';
+import Footer from './components/footer/Footer';
+import { FooterLinks } from './components/footer/FooterLinks';
+import globalState, { setRecoilExternalValue } from './state/globalState';
 
 function App() {
 	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
@@ -32,6 +35,16 @@ function App() {
 		AOS.init({
 			duration: 1000
 		});
+	}, []);
+
+	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate(() => {
+			let urlPath = window.location.pathname + window.location.search;
+			setRecoilExternalValue<string>(globalState.lastNavigationPath, urlPath);
+		});
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -66,6 +79,7 @@ function App() {
 								setShowAccountOverview(false);
 							}}
 						/>
+						<Footer links={FooterLinks} />
 						<ComparisonDrawer />
 					</>
 				);

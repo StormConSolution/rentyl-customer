@@ -24,7 +24,8 @@ interface LabelButtonProps {
 		| 'overline'
 		| 'srOnly'
 		| 'inherit'
-		| 'error';
+		| 'error'
+		| string;
 	label: string;
 	className?: string;
 	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;

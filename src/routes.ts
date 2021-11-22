@@ -32,6 +32,7 @@ import DestinationReviewPage from './pages/destinationReviewPage/DestinationRevi
 import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
 import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
+import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -184,6 +185,14 @@ export const routes: RouteDetails[] = [
 	{
 		path: '/destination/reviews',
 		page: DestinationReviewPage,
+		routeGuard: verifyRoute,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
+		path: '/account',
+		page: AccountLandingPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'

@@ -129,13 +129,14 @@ const ReservationSummaryCard: React.FC<ReservationSummaryCardProps> = (props) =>
 					<Label variant={'h4'} mb={10}>
 						Payment Method
 					</Label>
-					{props.paymentMethod && (
-						<OtherPaymentCard
-							name={props.paymentMethod.nameOnCard}
-							cardNumber={props.paymentMethod.cardNumber}
-							expDate={`${props.paymentMethod?.expirationMonth}/${props.paymentMethod?.expirationYear}`}
-						/>
-					)}
+					{/*THIS CODE IS GOING TO END END CHANGING SO I AM JUST COMMENTING IT OUT FOR NOW SO IT DOESNT BREAK*/}
+					{/*{props.paymentMethod && (*/}
+					{/*	<OtherPaymentCard*/}
+					{/*		name={props.paymentMethod.nameOnCard}*/}
+					{/*		cardNumber={props.paymentMethod.cardNumber}*/}
+					{/*		expDate={`${props.paymentMethod?.expirationMonth}/${props.paymentMethod?.expirationYear}`}*/}
+					{/*	/>*/}
+					{/*)}*/}
 				</Box>
 				{!ObjectUtils.isEmptyObject(props.billingAddress) && (
 					<Box>
