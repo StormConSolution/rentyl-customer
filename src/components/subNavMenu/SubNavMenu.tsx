@@ -7,7 +7,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 
 interface SubNavMenuProps {

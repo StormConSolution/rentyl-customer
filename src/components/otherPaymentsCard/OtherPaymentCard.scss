@@ -1,10 +1,21 @@
 @import '../../themes/themes';
 
 .rsOtherPaymentCard {
-	width: 200px;
-	.rsLabelButton {
-		.rsLabel {
-			color: theme-var($buttonLinkColor);
+	display: grid;
+	grid-template-columns: 200px 191px 16px;
+	gap: 20px;
+	padding: 10px 0;
+}
+.small {
+	.rsOtherPaymentCard {
+		display: block;
+		gap: 0;
+		.marginLeft {
+			margin-left: 32px;
+		}
+		.rsLabelRadioButton,
+		.rsLabel.customSeventeen {
+			margin-bottom: 20px;
 		}
 	}
 }

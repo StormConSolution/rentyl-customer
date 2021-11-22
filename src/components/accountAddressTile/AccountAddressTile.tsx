@@ -4,6 +4,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface AddressTileProps {
 	id: number;

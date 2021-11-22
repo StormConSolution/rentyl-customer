@@ -6,3 +6,9 @@
 	gap: 20px;
 	padding: 10px 0;
 }
+.small {
+	.rsAccountAddressTile {
+		grid-template-columns: 170px 109px 16px;
+		gap: 0;
+	}
+}

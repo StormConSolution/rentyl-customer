@@ -43,7 +43,11 @@ const AccountLandingPage: React.FC<MyAccountPageProps> = (props) => {
 						title={'Personal Information'}
 					/>
 					<AccountNavigationTile imgSrc={'house'} route={'/account/address'} title={'My Addresses'} />
-					<AccountNavigationTile imgSrc={'credit'} route={'/'} title={'Payment Methods'} />
+					<AccountNavigationTile
+						imgSrc={'credit'}
+						route={'/account/payment-methods'}
+						title={'Payment Methods'}
+					/>
 					<AccountNavigationTile imgSrc={'medal'} route={'/'} title={'Manage Points'} />
 				</Box>
 			</div>

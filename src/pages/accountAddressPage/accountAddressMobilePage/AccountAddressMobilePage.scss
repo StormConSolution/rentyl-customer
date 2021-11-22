@@ -1,17 +1,13 @@
-@import '../../themes/themes';
-
-.rsAccountAddressPage {
-	display: grid;
-	place-items: center;
-	padding: 230px 95px 100px;
+@import '../../../themes/themes';
+.rsAccountAddressMobilePage {
+	padding: 140px 17px 50px;
 	box-sizing: border-box;
 	background: #f8f8f8 !important;
 	.rsPaper {
-		width: 1120px;
-		padding: 60px;
+		width: 100%;
+		padding: 30px;
 		background: #ffffff;
-		display: grid;
-		grid-template-columns: 438px auto 438px;
+		margin-bottom: 25px;
 	}
 
 	.inputStretched {
@@ -27,8 +23,9 @@
 	}
 
 	.rsLabelSelect {
+		margin-bottom: 25px;
 		.rsSelect {
-			min-width: 200px;
+			min-width: 100%;
 		}
 	}
 	.rsLabelButton {
@@ -46,6 +43,13 @@
 					background-color: #ffa022;
 				}
 			}
+		}
+	}
+
+	.addressList {
+		padding: 30px 15px;
+		.rsAccountAddressTile {
+			margin-bottom: 30px;
 		}
 	}
 
