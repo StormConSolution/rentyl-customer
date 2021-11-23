@@ -367,7 +367,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							tabs: renderFeatureCarousel()
 						});
 					}}
-				></Button>
+				>
+					Click to open Popup
+				</Button>
 				{renderSectionTwo()}
 				{renderSectionThree()}
 				{renderSectionFour()}
