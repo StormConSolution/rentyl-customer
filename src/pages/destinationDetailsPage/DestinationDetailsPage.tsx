@@ -34,6 +34,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -336,6 +337,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<SubNavMenu
+					pageRefs={{
+						galleryRef: availableStaysRef,
+						overviewRef: availableStaysRef,
+						experiencesRef: availableStaysRef,
+						availableStaysRef: availableStaysRef
+					}}
+				/>
 				<Box className={'sectionOne'}>
 					<HeroImage image={destinationDetails.heroUrl} height={'420px'} mobileHeight={'420px'} />
 					<Box className={'headerWrapper'}>

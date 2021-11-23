@@ -72,7 +72,7 @@
 		&.contained {
 			&.primary {
 				height: 57px;
-				background-color: #ffa022;
+				background-color: theme-var($yellowTextColor);
 				padding: 16px 46px;
 				box-sizing: border-box;
 
@@ -81,7 +81,7 @@
 				}
 
 				&:hover {
-					background-color: #ffa022;
+					background-color: theme-var($yellowTextColor);
 				}
 			}
 		}

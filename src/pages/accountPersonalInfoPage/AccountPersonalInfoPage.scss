@@ -40,14 +40,14 @@
 			margin-left: auto;
 			&.contained {
 				&.primary {
-					background-color: #ffa022;
+					background-color: theme-var($yellowTextColor);
 					padding: 16px 46px;
 					box-sizing: border-box;
 					.rsLabel {
 						color: #2c3c60;
 					}
 					&:hover {
-						background-color: #ffa022;
+						background-color: theme-var($yellowTextColor);
 					}
 				}
 			}
