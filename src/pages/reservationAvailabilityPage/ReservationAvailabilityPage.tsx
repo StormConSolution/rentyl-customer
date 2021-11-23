@@ -171,16 +171,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						} else {
 							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
-					},
-					onAddCompareClick: (accommodationId: ReactText) => {
-						let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
-						// comparisonService.addToComparison(recoilComparisonState, {
-						// 	destinationId: destination.id,
-						// 	logo: destination.logoUrl,
-						// 	title: destination.name,
-						// 	roomTypes: roomTypes,
-						// 	selectedRoom: accommodationId as number
-						// });
 					}
 				}
 			};
