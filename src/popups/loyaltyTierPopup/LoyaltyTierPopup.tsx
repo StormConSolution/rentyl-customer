@@ -6,26 +6,27 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import TierDescriptionCard from '../../components/tierDescriptionCard/TierDescriptionCard';
 import Paper from '../../components/paper/Paper';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface LoyaltyTierPopupProps extends PopupProps {}
 
 const LoyaltyTierPopup: React.FC<LoyaltyTierPopupProps> = (props) => {
+	const size = useWindowResizeChange();
 	return (
 		<Popup opened={props.opened} className={'rsLoyaltyTierPopup'}>
 			<Paper className={'tierPopupContainer'}>
 				<Icon
 					className={'closeIcon'}
 					iconImg={'icon-close'}
+					size={size === 'small' ? 16 : 29}
+					color="#797979"
 					onClick={() => {
 						popupController.close(LoyaltyTierPopup);
 					}}
 				/>
 				<Box className={'popupHeader'}>
-					<Label variant={'h1'} className={'headerText'}>
-						Membership
-					</Label>
-					<Label variant={'h1'} className={'coloredText headerText'}>
-						Tiers & Benefits
+					<Label variant={size === 'small' ? 'customTwenty' : 'customTwentyTwo'} className="headerText">
+						Membership Tiers and Benefits
 					</Label>
 				</Box>
 				<Box className={'tierCardContainer'}>
