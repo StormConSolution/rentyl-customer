@@ -375,7 +375,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						tempControl.value = [];
 						updateFilterForm(tempControl);
 					}}
-					title="Accommodation"
+					title={
+						!ObjectUtils.isArrayWithData(filterForm.get('propertyTypeIds').value)
+							? 'Accommodations'
+							: `Accommodations( ${(filterForm.get('propertyTypeIds').value as number[]).length} )`
+					}
 					dropdownContentClassName="destinationFilterDropdown"
 				>
 					{renderAccommodationList()}
@@ -392,7 +396,14 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						copyForm.update(bathroom);
 						setFilterForm(copyForm);
 					}}
-					title="Bedrooms"
+					title={
+						(filterForm.get('bathroomCount').value || filterForm.get('bedroomCount').value)! > 0
+							? `Bedrooms( ${
+									(filterForm.get('bedroomCount').value as number) +
+									(filterForm.get('bathroomCount').value as number)
+							  } )`
+							: 'Bedrooms'
+					}
 					dropdownContentClassName="destinationFilterDropdown"
 				>
 					<Counter
@@ -421,7 +432,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						tempControl.value = [];
 						updateFilterForm(tempControl);
 					}}
-					title="Resort Experiences"
+					title={
+						!ObjectUtils.isArrayWithData(filterForm.get('experienceIds').value)
+							? 'Resort Experiences'
+							: `Resort Experiences( ${(filterForm.get('experienceIds').value as number[]).length} )`
+					}
 					dropdownContentClassName="destinationFilterDropdown"
 				>
 					{renderResortExperiencesOptionsList()}
@@ -433,7 +448,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 						tempControl.value = [];
 						updateFilterForm(tempControl);
 					}}
-					title="Other Filters"
+					title={
+						!ObjectUtils.isArrayWithData(filterForm.get('amenityIds').value)
+							? 'Other Filters'
+							: `Other Filters( ${(filterForm.get('amenityIds').value as number[]).length} )`
+					}
 					dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
 				>
 					<Label variant="body1" paddingTop={10} paddingLeft={10}>
