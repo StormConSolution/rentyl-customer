@@ -67,7 +67,7 @@ const TabbedCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 		<Popup opened={props.opened}>
 			<div className={'rsTabbedCarouselPopup'}>
 				<div className={'tabContainer'}>{renderTabs()}</div>
-				<div class={'imageCarouselWrapper'}>{renderImages()}</div>
+				<div className={'imageCarouselWrapper'}>{renderImages()}</div>
 			</div>
 		</Popup>
 	);
