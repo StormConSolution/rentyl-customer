@@ -74,30 +74,30 @@ const ComparisonDrawer: React.FC = () => {
 							<Label variant={'caption1'}>{recoilComparisonState.destinationDetails.length}</Label>
 						)}
 					</LabelButton>
-					{ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) &&
-						recoilComparisonState.destinationDetails.length > 1 && (
-							<Button
-								className={'clearButton'}
-								look={'none'}
-								onClick={() => {
-									setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
-								}}
-							>
-								<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
-							</Button>
-						)}
+					<Button
+						className={'clearButton'}
+						look={'none'}
+						onClick={() => {
+							setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
+						}}
+						disabled={
+							!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ||
+							recoilComparisonState.destinationDetails.length < 2
+						}
+					>
+						<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
+					</Button>
 				</Box>
 			) : (
-				recoilComparisonState.destinationDetails.length > 1 && (
-					<Button
-						look={'containedSecondary'}
-						onClick={() => {
-							router.navigate('/compare').catch(console.error);
-						}}
-					>
-						Compare resorts
-					</Button>
-				)
+				<Button
+					look={'containedSecondary'}
+					onClick={() => {
+						router.navigate('/compare').catch(console.error);
+					}}
+					disabled={recoilComparisonState.destinationDetails.length < 2}
+				>
+					Compare resorts
+				</Button>
 			)}
 		</Box>
 	);
