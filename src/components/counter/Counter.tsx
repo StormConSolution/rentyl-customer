@@ -18,12 +18,12 @@ export interface GuestCounterProps {
 const Counter: React.FC<GuestCounterProps> = (props) => {
 	function isAtMinValue(): boolean {
 		if (props.minCount === undefined) return false;
-		return (props.control.value as number) === props.minCount;
+		return (props.control.value as number) <= props.minCount;
 	}
 
 	function isAtMaxValue(): boolean {
 		if (props.maxCount === undefined) return false;
-		return (props.control.value as number) === props.maxCount;
+		return (props.control.value as number) >= props.maxCount;
 	}
 	return (
 		<Box className={`rsCounter${props.className ? ` ${props.className}` : ''}`}>
