@@ -2,6 +2,7 @@
 
 .rsReservationAvailabilityPage {
 	.rs-page-content-wrapper {
+		//padding-top: 136px;
 		height: 100%;
 		min-height: 1000px;
 	}
@@ -30,6 +31,14 @@
 	.rsDestinationSearchResultCardMobile {
 		margin-bottom: 42px;
 	}
+	//KEEP FOR NOW
+	//.rsTopSearchBarResponsive {
+	//	position: fixed;
+	//	z-index: 100;
+	//	top:0;
+	//	left: 0;
+	//	right: 0;
+	//}
 
 	.toggleCode:hover {
 		cursor: pointer;
@@ -56,11 +65,14 @@
 
 .small {
 	.rsReservationAvailabilityPage {
-		.searchResultsWrapper {
-			padding: 30px;
-		}
-		.filterResultsWrapper {
-			display: none;
+		.rs-page-content-wrapper {
+			.searchResultsWrapper {
+				padding: 30px;
+			}
+
+			.filterResultsWrapper {
+				display: none;
+			}
 		}
 	}
 }

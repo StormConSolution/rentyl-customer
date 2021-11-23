@@ -1,0 +1,24 @@
+@import '../../themes/themes';
+.rsAccountLandingPage {
+	padding: 230px 95px 100px;
+	box-sizing: border-box;
+	background: #f8f8f8 !important;
+	.accountNavigationTileWrapper {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(356px, 379px));
+		justify-content: space-between;
+		row-gap: 30px;
+	}
+}
+
+.small {
+	.rsAccountLandingPage {
+		padding: 145px 17px 100px;
+		.accountNavigationTileWrapper {
+			display: grid;
+			grid-template-columns: 100%;
+			justify-content: center;
+			row-gap: 30px;
+		}
+	}
+}

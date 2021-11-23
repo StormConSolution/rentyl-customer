@@ -1,9 +1,9 @@
 @font-face {
 	font-family: 'icomoon';
-	src: url('fonts/icomoon.eot?lluu0w');
-	src: url('fonts/icomoon.eot?lluu0w#iefix') format('embedded-opentype'),
-		url('fonts/icomoon.woff2?lluu0w') format('woff2'), url('fonts/icomoon.ttf?lluu0w') format('truetype'),
-		url('fonts/icomoon.woff?lluu0w') format('woff'), url('fonts/icomoon.svg?lluu0w#icomoon') format('svg');
+	src: url('fonts/icomoon.eot?bqnpy7');
+	src: url('fonts/icomoon.eot?bqnpy7#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff2?bqnpy7') format('woff2'), url('fonts/icomoon.ttf?bqnpy7') format('truetype'),
+		url('fonts/icomoon.woff?bqnpy7') format('woff'), url('fonts/icomoon.svg?bqnpy7#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -25,6 +25,411 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-medal .path1:before {
+	content: '\e93d';
+	color: rgb(249, 164, 21);
+}
+.icon-medal .path2:before {
+	content: '\e93e';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-medal .path3:before {
+	content: '\e93f';
+	margin-left: -1em;
+	color: rgb(249, 71, 85);
+}
+.icon-medal .path4:before {
+	content: '\e940';
+	margin-left: -1em;
+	color: rgb(249, 71, 85);
+}
+.icon-medal .path5:before {
+	content: '\e941';
+	margin-left: -1em;
+	color: rgb(1, 1, 0);
+}
+.icon-medal .path6:before {
+	content: '\e942';
+	margin-left: -1em;
+	color: rgb(244, 233, 93);
+}
+.icon-medal .path7:before {
+	content: '\e943';
+	margin-left: -1em;
+	color: rgb(243, 232, 94);
+}
+.icon-medal .path8:before {
+	content: '\e944';
+	margin-left: -1em;
+	color: rgb(252, 100, 110);
+}
+.icon-medal .path9:before {
+	content: '\e945';
+	margin-left: -1em;
+	color: rgb(252, 100, 110);
+}
+.icon-medal .path10:before {
+	content: '\e946';
+	margin-left: -1em;
+	color: rgb(237, 68, 81);
+}
+.icon-medal .path11:before {
+	content: '\e947';
+	margin-left: -1em;
+	color: rgb(244, 70, 84);
+}
+.icon-medal .path12:before {
+	content: '\e948';
+	margin-left: -1em;
+	color: rgb(243, 232, 92);
+}
+.icon-medal .path13:before {
+	content: '\e949';
+	margin-left: -1em;
+	color: rgb(241, 229, 93);
+}
+.icon-medal .path14:before {
+	content: '\e94a';
+	margin-left: -1em;
+	color: rgb(243, 232, 94);
+}
+.icon-medal .path15:before {
+	content: '\e94b';
+	margin-left: -1em;
+	color: rgb(243, 232, 94);
+}
+.icon-medal .path16:before {
+	content: '\e94c';
+	margin-left: -1em;
+	color: rgb(243, 232, 92);
+}
+.icon-medal .path17:before {
+	content: '\e94d';
+	margin-left: -1em;
+	color: rgb(241, 229, 93);
+}
+.icon-medal .path18:before {
+	content: '\e94e';
+	margin-left: -1em;
+	color: rgb(235, 221, 88);
+}
+.icon-medal .path19:before {
+	content: '\e94f';
+	margin-left: -1em;
+	color: rgb(243, 232, 92);
+}
+.icon-medal .path20:before {
+	content: '\e950';
+	margin-left: -1em;
+	color: rgb(235, 221, 88);
+}
+.icon-medal .path21:before {
+	content: '\e951';
+	margin-left: -1em;
+	color: rgb(235, 221, 88);
+}
+.icon-medal .path22:before {
+	content: '\e952';
+	margin-left: -1em;
+	color: rgb(241, 229, 93);
+}
+.icon-medal .path23:before {
+	content: '\e953';
+	margin-left: -1em;
+	color: rgb(249, 209, 7);
+}
+.icon-medal .path24:before {
+	content: '\e954';
+	margin-left: -1em;
+	color: rgb(249, 165, 22);
+}
+.icon-medal .path25:before {
+	content: '\e955';
+	margin-left: -1em;
+	color: rgb(249, 179, 32);
+}
+.icon-medal .path26:before {
+	content: '\e956';
+	margin-left: -1em;
+	color: rgb(243, 232, 92);
+}
+.icon-medal .path27:before {
+	content: '\e957';
+	margin-left: -1em;
+	color: rgb(243, 232, 92);
+}
+.icon-medal .path28:before {
+	content: '\e958';
+	margin-left: -1em;
+	color: rgb(243, 232, 92);
+}
+.icon-medal .path29:before {
+	content: '\e959';
+	margin-left: -1em;
+	color: rgb(1, 1, 0);
+}
+.icon-medal .path30:before {
+	content: '\e95a';
+	margin-left: -1em;
+	color: rgb(248, 164, 21);
+}
+.icon-credit .path1:before {
+	content: '\e95b';
+	color: rgb(140, 186, 250);
+}
+.icon-credit .path2:before {
+	content: '\e95c';
+	margin-left: -1em;
+	color: rgb(86, 146, 216);
+}
+.icon-credit .path3:before {
+	content: '\e95d';
+	margin-left: -1em;
+	color: rgb(255, 205, 52);
+}
+.icon-credit .path4:before {
+	content: '\e95e';
+	margin-left: -1em;
+	color: rgb(255, 205, 52);
+}
+.icon-credit .path5:before {
+	content: '\e95f';
+	margin-left: -1em;
+	color: rgb(230, 144, 18);
+}
+.icon-credit .path6:before {
+	content: '\e960';
+	margin-left: -1em;
+	color: rgb(87, 91, 122);
+}
+.icon-credit .path7:before {
+	content: '\e961';
+	margin-left: -1em;
+	color: rgb(37, 45, 76);
+}
+.icon-credit .path8:before {
+	content: '\e962';
+	margin-left: -1em;
+	color: rgb(233, 233, 234);
+}
+.icon-credit .path9:before {
+	content: '\e963';
+	margin-left: -1em;
+	color: rgb(233, 233, 234);
+}
+.icon-credit .path10:before {
+	content: '\e964';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-credit .path11:before {
+	content: '\e965';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-credit .path12:before {
+	content: '\e966';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-credit .path13:before {
+	content: '\e967';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-credit .path14:before {
+	content: '\e968';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-credit .path15:before {
+	content: '\e969';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-credit .path16:before {
+	content: '\e96a';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-house .path1:before {
+	content: '\e96b';
+	color: rgb(255, 213, 179);
+}
+.icon-house .path2:before {
+	content: '\e96c';
+	margin-left: -1em;
+	color: rgb(255, 213, 179);
+}
+.icon-house .path3:before {
+	content: '\e96d';
+	margin-left: -1em;
+	color: rgb(198, 160, 125);
+}
+.icon-house .path4:before {
+	content: '\e96e';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path5:before {
+	content: '\e96f';
+	margin-left: -1em;
+	color: rgb(54, 140, 14);
+}
+.icon-house .path6:before {
+	content: '\e970';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path7:before {
+	content: '\e971';
+	margin-left: -1em;
+	color: rgb(93, 198, 71);
+}
+.icon-house .path8:before {
+	content: '\e972';
+	margin-left: -1em;
+	color: rgb(119, 84, 54);
+}
+.icon-house .path9:before {
+	content: '\e973';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path10:before {
+	content: '\e974';
+	margin-left: -1em;
+	color: rgb(198, 160, 125);
+}
+.icon-house .path11:before {
+	content: '\e975';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path12:before {
+	content: '\e976';
+	margin-left: -1em;
+	color: rgb(119, 84, 54);
+}
+.icon-house .path13:before {
+	content: '\e977';
+	margin-left: -1em;
+	color: rgb(255, 255, 255);
+}
+.icon-house .path14:before {
+	content: '\e978';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path15:before {
+	content: '\e979';
+	margin-left: -1em;
+	color: rgb(119, 84, 54);
+}
+.icon-house .path16:before {
+	content: '\e97a';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path17:before {
+	content: '\e97b';
+	margin-left: -1em;
+	color: rgb(100, 203, 255);
+}
+.icon-house .path18:before {
+	content: '\e97c';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path19:before {
+	content: '\e97d';
+	margin-left: -1em;
+	color: rgb(100, 203, 255);
+}
+.icon-house .path20:before {
+	content: '\e97e';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path21:before {
+	content: '\e97f';
+	margin-left: -1em;
+	color: rgb(255, 197, 2);
+}
+.icon-house .path22:before {
+	content: '\e980';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+	opacity: 0.1;
+}
+.icon-house .path23:before {
+	content: '\e981';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-house .path24:before {
+	content: '\e982';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-house .path25:before {
+	content: '\e983';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-house .path26:before {
+	content: '\e984';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-house .path27:before {
+	content: '\e985';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-id .path1:before {
+	content: '\e986';
+	color: rgb(181, 173, 182);
+}
+.icon-id .path2:before {
+	content: '\e987';
+	margin-left: -1em;
+	color: rgb(255, 255, 255);
+}
+.icon-id .path3:before {
+	content: '\e988';
+	margin-left: -1em;
+	color: rgb(215, 136, 120);
+}
+.icon-id .path4:before {
+	content: '\e989';
+	margin-left: -1em;
+	color: rgb(253, 148, 104);
+}
+.icon-id .path5:before {
+	content: '\e98a';
+	margin-left: -1em;
+	color: rgb(167, 155, 167);
+}
+.icon-id .path6:before {
+	content: '\e98b';
+	margin-left: -1em;
+	color: rgb(152, 213, 185);
+}
+.icon-id .path7:before {
+	content: '\e98c';
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
 .icon-chevron-thin-down:before {
 	content: '\e93b';
 }

@@ -34,7 +34,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
-	// const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
 	const perPage = 10;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
@@ -250,7 +249,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 					}}
 				/>
 				<ComparisonDrawer />
-				<Footer links={FooterLinks} />
 			</div>
 		</Page>
 	);

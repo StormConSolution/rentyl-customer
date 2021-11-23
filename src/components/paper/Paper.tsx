@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './Paper.scss';
+import { MouseEvent } from 'react';
 
 interface PaperProps {
 	backgroundColor?: string;
@@ -10,6 +11,7 @@ interface PaperProps {
 	height?: string;
 	position?: 'static' | 'relative' | 'absolute' | 'sticky' | 'fixed';
 	className?: string;
+	onClick?: (event: MouseEvent) => void;
 }
 
 const Paper: React.FC<PaperProps> = (props) => {
@@ -26,7 +28,11 @@ const Paper: React.FC<PaperProps> = (props) => {
 	}
 
 	return (
-		<div className={!!props.className ? `${props.className} rsPaper` : 'rsPaper'} style={renderStyles()}>
+		<div
+			className={!!props.className ? `${props.className} rsPaper` : 'rsPaper'}
+			style={renderStyles()}
+			onClick={props.onClick}
+		>
 			{props.children}
 		</div>
 	);

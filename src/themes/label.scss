@@ -121,4 +121,90 @@ html {
 		font-weight: $medium;
 		color: theme-var($errorColor);
 	}
+	&.customOne {
+		font-size: 22px;
+		line-height: 31px;
+		font-weight: $semiBold;
+	}
+	&.customTwo {
+		font-size: 22px;
+		line-height: 31px;
+		font-weight: $regular;
+	}
+	&.customThree {
+		font-size: 16px;
+		line-height: 19px;
+		font-weight: $regular;
+	}
+	&.customFour {
+		font-size: 16px;
+		line-height: 19px;
+		font-weight: $semiBold;
+	}
+	&.customFive {
+		font-size: 20px;
+		line-height: 24px;
+		font-weight: $regular;
+	}
+	&.customSix {
+		font-size: 35px;
+		line-height: 43px;
+		font-weight: $bold;
+	}
+	&.customSeven {
+		font-size: 24px;
+		line-height: 29px;
+		font-weight: $regular;
+	}
+	&.customEight {
+		font-size: 12px;
+		line-height: 15px;
+		font-weight: $regular;
+	}
+	&.customNine {
+		font-size: 24px;
+		line-height: 13px;
+		font-weight: $semiBold;
+	}
+	&.customTen {
+		font-size: 21px;
+		line-height: 13px;
+		font-weight: $semiBold;
+	}
+	&.customEleven {
+		font-size: 21px;
+		line-height: 32px;
+		font-weight: $semiBold;
+	}
+	&.customTwelve {
+		font-size: 20px;
+		line-height: 30px;
+		font-weight: $regular;
+	}
+
+	&.customThirteen {
+		font-size: 18px;
+		line-height: 17px;
+		font-weight: $light;
+	}
+	&.customFourteen {
+		font-size: 10px;
+		line-height: 26px;
+		font-weight: $regular;
+	}
+	&.customFifteen {
+		font-size: 18px;
+		line-height: 32px;
+		font-weight: $regular;
+	}
+	&.customSixteen {
+		font-size: 12px;
+		line-height: 13px;
+		font-weight: $regular;
+	}
+	&.customSeventeen {
+		font-size: 20px;
+		line-height: 32px;
+		font-weight: $regular;
+	}
 }
