@@ -9,8 +9,6 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { StringUtils } from '../../../utils/utils';
-import LabelButton from '../../labelButton/LabelButton';
-import { useEffect, useState } from 'react';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -20,6 +18,7 @@ interface DestinationSearchResultCardMobileProps {
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	onRemoveCompareClick?: () => void;
 	minPrice: number;
 	minPoints: number;
 }
@@ -56,9 +55,13 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				onAddCompareClick={() => {
 					if (props.onAddCompareClick) props.onAddCompareClick();
 				}}
+				onRemoveCompareClick={() => {
+					if (props.onRemoveCompareClick) props.onRemoveCompareClick();
+				}}
 				onGalleryClick={() => {
 					console.log('');
 				}}
+				destinationId={props.destinationId}
 			/>
 			<Box className={'mobileCardInfo'}>
 				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>
