@@ -22,7 +22,9 @@ import LabelButton from '../labelButton/LabelButton';
 
 interface FilterBarV2Props {}
 
-const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
+const TIMEOUT_INTERVAL = 500;
+
+const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
@@ -57,6 +59,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
 		])
 	);
+	let timeout: number;
 
 	useEffect(() => {
 		/**
@@ -83,7 +86,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		priceRangeMaxControl.value = filters.priceRangeMax || 1000;
 		experienceIdsControl.value = filters.experienceIds || [];
 		amenityIdsControl.value = filters.amenityIds || [];
-		sortOrderControl.value = filters.sortOrder;
+		sortOrderControl.value = filters.sortOrder || 'ASC';
 
 		updateAllControls([
 			propertyTypeControl,
@@ -97,6 +100,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		]);
 
 		setReservationFilters(filters);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -125,6 +129,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 			}
 		}
 		getFilterBarOptions().catch(console.error);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -133,6 +138,11 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		 */
 		WebUtils.updateUrlParams(reservationFilters);
 	}, [reservationFilters]);
+
+	function updateFilterFormWithTimeout(control: RsFormControl | undefined) {
+		if (timeout) window.clearTimeout(timeout);
+		timeout = window.setTimeout(() => updateFilterForm(control), TIMEOUT_INTERVAL);
+	}
 
 	function updateFilterForm(control: RsFormControl | undefined) {
 		if (!control) return;
@@ -181,8 +191,8 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 		if (ObjectUtils.isArrayWithData(amenityIdsControl.value as number[])) {
 			return true;
 		}
-		if (sortOrderControl.value !== 'ASC') return true;
-		return false;
+
+		return sortOrderControl?.value !== 'ASC';
 	}
 
 	function clearAll() {
@@ -356,15 +366,17 @@ const FilterBarV2: React.FC<FilterBarV2Props> = (props) => {
 							inputType="text"
 							title="min price"
 							control={filterForm.get('priceRangeMin')}
-							updateControl={updateFilterForm}
+							updateControl={updateFilterFormWithTimeout}
 						/>
 						<hr className="divider" />
 						<LabelInputV2
-							className="priceMax"
+							className={`priceMax ${
+								Number(filterForm.get('priceRangeMax').value) >= 1000 ? 'andGreater' : ''
+							}`}
 							inputType="text"
 							title="max price"
 							control={filterForm.get('priceRangeMax')}
-							updateControl={updateFilterForm}
+							updateControl={updateFilterFormWithTimeout}
 						/>
 					</div>
 				</FilterBarDropDown>

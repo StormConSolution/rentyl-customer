@@ -27,6 +27,8 @@ export interface FilterReservationPopupProps extends PopupProps {
 	className?: string;
 }
 
+const TIMEOUT_INTERVAL = 500;
+
 const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
@@ -57,6 +59,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
 		])
 	);
+	let timeout: number;
 
 	useEffect(() => {
 		const filters = WebUtils.parseURLParamsToFilters();
@@ -96,6 +99,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		//update all controls
 
 		setReservationFilters(filters);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -124,6 +128,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 		}
 
 		getAllFiltersOptions().catch(console.error);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -162,6 +167,11 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			formClone.update(control);
 		});
 		setFilterForm(formClone);
+	}
+
+	function updateFilterFormWithTimeout(control: RsFormControl | undefined) {
+		if (timeout) window.clearTimeout(timeout);
+		timeout = window.setTimeout(() => updateFilterForm(control), TIMEOUT_INTERVAL);
 	}
 
 	function updateFilterForm(control: RsFormControl | undefined) {
@@ -414,15 +424,17 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									inputType="text"
 									title="min price"
 									control={filterForm.get('priceRangeMin')}
-									updateControl={updateFilterForm}
+									updateControl={updateFilterFormWithTimeout}
 								/>
 								<hr className="divider" />
 								<LabelInputV2
-									className="priceMax"
+									className={`priceMax ${
+										Number(filterForm.get('priceRangeMax').value) >= 1000 ? 'andGreater' : ''
+									}`}
 									inputType="text"
 									title="max price"
 									control={filterForm.get('priceRangeMax')}
-									updateControl={updateFilterForm}
+									updateControl={updateFilterFormWithTimeout}
 								/>
 							</div>
 						</div>

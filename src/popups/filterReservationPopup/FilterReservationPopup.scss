@@ -89,11 +89,11 @@
 				}
 
 				.rsInput.priceMin {
-					width: 115px;
+					width: 105px;
 				}
 
 				.rsInput.priceMax {
-					width: 115px;
+					width: 105px;
 				}
 			}
 		}
@@ -153,6 +153,29 @@
 				-webkit-transform: translateX(50px);
 				-ms-transform: translateX(50px);
 				transform: translateX(50px);
+			}
+		}
+	}
+
+	.priceMax,
+	.priceMin {
+		.inputWrapper {
+			display: flex;
+			align-items: center;
+
+			&:before {
+				content: '$';
+			}
+		}
+
+		&.andGreater .inputWrapper {
+			position: relative;
+
+			&:after {
+				content: '+';
+				position: absolute;
+				top: 20%;
+				left: 40%;
 			}
 		}
 	}
