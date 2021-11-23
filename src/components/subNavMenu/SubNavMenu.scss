@@ -4,6 +4,8 @@
 	left: 0;
 	right: 0;
 	margin: 0 auto;
+	padding-right: 16px;
+	box-sizing: border-box;
 	height: 85px;
 	width: 100%;
 	max-width: 1920px;
@@ -17,10 +19,41 @@
 		top: 0 !important;
 	}
 
-	.rsButton {
+	.destinationPageRefsWrapper {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.refButton {
+			height: 100%;
+			padding-left: 44px;
+			padding-right: 44px;
+			&.selected {
+				border-bottom: 2px solid theme-var($yellowTextColor);
+			}
+		}
+	}
+
+	.backButton {
 		width: 85px;
 		height: 100%;
 		border-right: 1px solid #7070706e;
+	}
+	.rsLabelButton {
+		&.contained {
+			&.primary {
+				background-color: theme-var($yellowTextColor);
+				padding: 16px 46px;
+				box-sizing: border-box;
+				.rsLabel {
+					color: #2c3c60;
+				}
+				&:hover {
+					background-color: theme-var($yellowTextColor);
+				}
+			}
+		}
 	}
 }
 
