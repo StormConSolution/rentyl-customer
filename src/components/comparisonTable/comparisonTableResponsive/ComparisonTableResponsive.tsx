@@ -5,24 +5,24 @@ import ComparisonAccommodationCardResponsive from '../../comparisonAccommodation
 import Label from '@bit/redsky.framework.rs.label';
 
 interface ComparisonTableResponsiveProps {
-	comparisonItems: Misc.ComparisonCardInfo[];
-	accommodationDetailList: Api.Accommodation.Res.Details[];
+	comparisonState: Misc.ComparisonState;
+	destinationDetailList: Api.Destination.Res.Get[];
 }
 
 const ComparisonTableResponsive: React.FC<ComparisonTableResponsiveProps> = (props) => {
 	function renderTableItems() {
-		return props.comparisonItems.map((destination, index) => {
-			let accommodationDetails = props.accommodationDetailList.find((details) => {
-				if (details.id === destination.selectedRoom) {
-					return details;
-				}
+		return props.comparisonState.destinationDetails.map((destination, index) => {
+			let accommodationDetails = props.destinationDetailList.find((details) => {
+				// if (details.destinationId === destination.destinationId) {
+				// 	return details;
+				// }
 			});
 			return (
-				<Box key={destination.comparisonId}>
-					<ComparisonAccommodationCardResponsive
-						accommodationDetails={accommodationDetails || props.accommodationDetailList[0]}
-						destinationDetails={destination}
-					/>
+				<Box key={destination.destinationId}>
+					{/*<ComparisonAccommodationCardResponsive*/}
+					{/*	accommodationDetails={accommodationDetails || props.accommodationDetailList[0]}*/}
+					{/*	destinationDetails={destination}*/}
+					{/*/>*/}
 				</Box>
 			);
 		});
