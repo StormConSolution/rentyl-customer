@@ -43,10 +43,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
-	// const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [totalResults, setTotalResults] = useState<number>(0);
@@ -228,26 +226,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								? `&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
 								: '';
 						router.navigate(`/accommodation/details?ai=${item.id}${dates}`).catch(console.error);
-					}}
-					onCompareClick={() => {
-						if (!destinationDetails) return;
-						let selectedRoom = destinationDetails.accommodations.filter((value) => value.id === item.id);
-						setComparisonId(comparisonId + 1);
-						// comparisonService.addToComparison(recoilComparisonState, {
-						// 	comparisonId: comparisonId,
-						// 	destinationId: Date.now(),
-						// 	logo: destinationDetails.logoUrl,
-						// 	title: destinationDetails.name,
-						// 	roomTypes: destinationDetails.accommodations
-						// 		.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-						// 		.map((value) => {
-						// 			return {
-						// 				value: value.id,
-						// 				label: value.name
-						// 			};
-						// 		}),
-						// 	selectedRoom: selectedRoom[0].id || destinationDetails.accommodations[0].id
-						// });
 					}}
 					roomStats={[
 						{

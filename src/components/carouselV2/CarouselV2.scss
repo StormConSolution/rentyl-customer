@@ -127,11 +127,6 @@
 		right: 15px;
 		.rsIcon {
 			margin-right: 11px;
-			.selected::before {
-				&:before {
-					content: '';
-				}
-			}
 		}
 		.rsLabel {
 			color: #ffffff;

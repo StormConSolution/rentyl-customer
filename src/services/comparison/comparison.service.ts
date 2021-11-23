@@ -30,32 +30,4 @@ export default class ComparisonService extends Service {
 		}
 		setRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison, comparisonItems);
 	}
-
-	setSelectedAccommodation(
-		comparisonId: number,
-		selectedAccommodation: number,
-		comparisonItems: number[]
-	): Misc.ComparisonState {
-		let modifiedComparisonItems = [...comparisonItems];
-		return { destinationDetails: [], showCompareButton: false };
-		// return modifiedComparisonItems.map((element) => {
-		// 	if (element.comparisonId === comparisonId) {
-		// 		return {
-		// 			comparisonId: element.comparisonId,
-		// 			destinationId: element.destinationId,
-		// 			logo: element.logo,
-		// 			roomTypes: element.roomTypes,
-		// 			title: element.title,
-		// 			selectedRoom: selectedAccommodation
-		// 		};
-		// 	} else {
-		// 		return element;
-		// }
-		// });
-	}
-
-	resortComparisonCardOnClose(item: number, comparisonItems: Misc.ComparisonState) {
-		let newRecoilState = [...comparisonItems.destinationDetails];
-		return newRecoilState.filter((remove) => remove.destinationId !== item);
-	}
 }
