@@ -27,6 +27,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	onRemoveCompareClick?: () => void;
 	minPrice: number;
 	minPoints: number;
 }
@@ -126,9 +127,13 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					onAddCompareClick={() => {
 						if (props.onAddCompareClick) props.onAddCompareClick();
 					}}
+					onRemoveCompareClick={() => {
+						if (props.onRemoveCompareClick) props.onRemoveCompareClick();
+					}}
 					onGalleryClick={() => {
 						console.log('Show LightboxV2 images...');
 					}}
+					destinationId={props.destinationId}
 				/>
 				<Box
 					display={'flex'}

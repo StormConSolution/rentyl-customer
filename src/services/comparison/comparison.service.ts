@@ -1,51 +1,33 @@
 import { Service } from '../Service';
 import rsToasts from '@bit/redsky.framework.toast';
 import { ObjectUtils } from '../../utils/utils';
+import globalState, { getRecoilExternalValue, setRecoilExternalValue } from '../../state/globalState';
 
 export default class ComparisonService extends Service {
-	async addToComparison(recoilState: any, compareItem: Misc.ComparisonCardInfo) {
-		const [comparisonItems, setComparisonItems] = recoilState;
+	addToComparison(destination: Misc.ComparisonCardInfo) {
+		let comparisonItems = getRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison);
+		if (
+			ObjectUtils.isArrayWithData(comparisonItems.destinationDetails) &&
+			comparisonItems.destinationDetails.length === 3
+		)
+			throw rsToasts.info('You can only compare three at a time!');
+		comparisonItems = {
+			destinationDetails: [...(comparisonItems.destinationDetails || []), destination],
+			showCompareButton: comparisonItems.showCompareButton
+		};
+		setRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison, comparisonItems);
+	}
 
-		if (comparisonItems.length === 3) throw rsToasts.info('You can only compare three at a time!');
-		let newComparisonItem: Misc.ComparisonCardInfo = compareItem;
-		if (await !ObjectUtils.isArrayWithData(comparisonItems)) {
-			newComparisonItem.comparisonId = 1;
-		} else {
-			const comparisonIds = comparisonItems.map((item: Misc.ComparisonCardInfo) => {
-				return item.comparisonId;
-			});
-			const lastId = Math.max(...comparisonIds);
-			console.log(lastId);
-			newComparisonItem.comparisonId = lastId + 1;
+	removeFromComparison(destinationId: number) {
+		let comparisonItems = getRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison);
+		if (ObjectUtils.isArrayWithData(comparisonItems.destinationDetails)) {
+			comparisonItems = {
+				destinationDetails: comparisonItems.destinationDetails.filter(
+					(destinationDetail) => destinationDetail.destinationId !== destinationId
+				),
+				showCompareButton: comparisonItems.showCompareButton
+			};
 		}
-		let newArray: Misc.ComparisonCardInfo[] = [...comparisonItems, newComparisonItem];
-		setComparisonItems(newArray);
-	}
-
-	setSelectedAccommodation(
-		comparisonId: number,
-		selectedAccommodation: number,
-		comparisonItems: Misc.ComparisonCardInfo[]
-	): Misc.ComparisonCardInfo[] {
-		let modifiedComparisonItems = [...comparisonItems];
-		return modifiedComparisonItems.map((element) => {
-			if (element.comparisonId === comparisonId) {
-				return {
-					comparisonId: element.comparisonId,
-					destinationId: element.destinationId,
-					logo: element.logo,
-					roomTypes: element.roomTypes,
-					title: element.title,
-					selectedRoom: selectedAccommodation
-				};
-			} else {
-				return element;
-			}
-		});
-	}
-
-	resortComparisonCardOnClose(item: Misc.ComparisonCardInfo, comparisonItems: Misc.ComparisonCardInfo[]) {
-		let newRecoilState = [...comparisonItems];
-		return newRecoilState.filter((remove) => remove !== item);
+		setRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison, comparisonItems);
 	}
 }
