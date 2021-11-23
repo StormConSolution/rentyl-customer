@@ -33,6 +33,7 @@ import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
 import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
 import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
+import TestPage from './pages/testPage/TestPage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -249,6 +250,10 @@ export const routes: RouteDetails[] = [
 		path: '/features-and-benefits',
 		page: FeaturesAndBenefitsPage,
 		routeGuard: verifyRoute
+	},
+	{
+		path: '/test',
+		page: TestPage
 	},
 	{
 		path: '*',
