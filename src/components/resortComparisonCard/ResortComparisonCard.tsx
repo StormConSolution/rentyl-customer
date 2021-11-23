@@ -20,19 +20,10 @@ interface ResortComparisonCardProps {
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
-	const size = useWindowResizeChange();
-	let waitToLoad = false;
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
-	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonState>(
-		globalState.destinationComparison
-	);
 
 	function handleOnClose() {
-		// let newComparisonItems = comparisonService.resortComparisonCardOnClose(
-		// 	props.destinationDetails,
-		// 	recoilComparisonState
-		// );
-		// setRecoilComparisonState(newComparisonItems);
+		comparisonService.removeFromComparison(props.destinationDetails.destinationId);
 	}
 
 	return (
@@ -40,14 +31,7 @@ const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
 			<div className={'imageContainer'}>
 				<Img src={props.destinationDetails.logo} alt={'resort logo'} width={'178px'} height={'auto'} />
 			</div>
-			<Icon
-				className={'close'}
-				iconImg={'icon-close'}
-				onClick={handleOnClose}
-				size={14}
-				color={'#004b98'}
-				cursorPointer
-			/>
+			<Icon className={'close'} iconImg={'icon-close'} onClick={handleOnClose} size={20} cursorPointer />
 		</div>
 	);
 };

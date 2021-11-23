@@ -8,7 +8,6 @@ import globalState from '../../state/globalState';
 import { useRecoilState } from 'recoil';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import serviceFactory from '../../services/serviceFactory';
-import AccommodationService from '../../services/accommodation/accommodation.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
@@ -16,13 +15,15 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import { ObjectUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import ComparisonTable from '../../components/comparisonTable/ComparisonTable';
+import DestinationService from '../../services/destination/destination.service';
 
 const ComparisonPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	// const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
-	// const [comparisonItems, setComparisonItems] = recoilComparisonState;
-	const [accommodationDetailList, setAccommodationDetailList] = useState<Api.Accommodation.Res.Details[]>([]);
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonState>(
+		globalState.destinationComparison
+	);
+	const [destinationList, setDestinationList] = useState<Api.Destination.Res.Get[]>([]);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -31,40 +32,31 @@ const ComparisonPage: React.FC = () => {
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 	}, []);
 
-	// useEffect(() => {
-	// 	// let id = router.subscribeToBeforeRouterNavigate(() => {
-	// 	// 	if (!ObjectUtils.isArrayWithData(comparisonItems))
-	// 	// 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
-	// 	// 	else document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
-	// 	// });
-	// 	return () => {
-	// 		router.unsubscribeFromBeforeRouterNavigate(id);
-	// 	};
-	// }, [comparisonItems]);
+	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate(() => {
+			if (!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails))
+				document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
+			else document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
+		});
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
+	}, [recoilComparisonState.destinationDetails]);
 
-	// useEffect(() => {
-	// 	async function getAccommodation() {
-	// 		try {
-	// 			// const accommodationIds = comparisonItems.map((accommodation, index) => {
-	// 			// 	if (accommodation.selectedRoom === 0) {
-	// 			// 		return accommodation.roomTypes[0].value as number;
-	// 			// 	}
-	// 			// 	return accommodation.selectedRoom;
-	// 			// });
-	// 			// if (accommodationIds) {
-	// 			// 	let res = await accommodationService.getManyAccommodationDetails(accommodationIds);
-	// 			// 	setAccommodationDetailList(res);
-	// 			// }
-	// 		} catch (e) {
-	// 			rsToastify.error(
-	// 				WebUtils.getRsErrorMessage(e, 'Unable to get details for these locations'),
-	// 				'Server Error'
-	// 			);
-	// 		}
-	// 	}
-	// 	getAccommodation().catch(console.error);
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [comparisonItems]);
+	useEffect(() => {
+		async function getDestinations() {
+			try {
+				destinationService;
+			} catch (e) {
+				rsToastify.error(
+					WebUtils.getRsErrorMessage(e, 'Unable to get details for these locations'),
+					'Server Error'
+				);
+			}
+		}
+		getDestinations().catch(console.error);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [recoilComparisonState.destinationDetails]);
 
 	// function renderComparisonTable() {
 	// 	// return <ComparisonTable comparisonItems={comparisonItems} accommodationDetailList={accommodationDetailList} />;

@@ -57,6 +57,12 @@
 			}
 		}
 	}
+	.rsButton.contained.secondary {
+		background: theme-var($yellowTextColor);
+		color: theme-var($secondaryTextColor);
+		font-size: 30px;
+		padding: 16px 20px;
+	}
 	.rsResortComparisonCard {
 		margin-right: 16px;
 	}

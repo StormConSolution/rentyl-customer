@@ -4,62 +4,11 @@
 	height: 82px;
 	margin: 0 20px;
 	display: flex;
-
-	.title {
-		width: 135px;
-		align-self: flex-end;
-		font-size: 16px;
-		line-height: 16px;
-	}
+	align-items: center;
+	gap: 48px;
 
 	.imageContainer {
 		max-width: 178px;
 		max-height: 59px;
-		display: flex;
-		justify-content: center;
-	}
-
-	.bottomContent {
-		justify-content: flex-end;
-
-		.rsSelect {
-			width: 100%;
-			max-width: 180px;
-			height: 30px;
-			margin-top: 15px;
-			[class*='menu'] {
-				max-height: 200px;
-			}
-			.css-4ljt47-MenuList {
-				max-height: 200px;
-			}
-			.primaryTextColor {
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-			}
-		}
-
-		.rsLabel.body2 {
-			overflow: hidden;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-		}
-	}
-}
-
-.small {
-	.rsResortComparisonCard {
-		display: flex;
-		justify-content: center;
-		width: 100%;
-		max-width: 130px;
-		.topContent {
-			max-width: 125px;
-		}
-		.title {
-			margin-top: 14px;
-		}
-		padding-bottom: 7px;
 	}
 }

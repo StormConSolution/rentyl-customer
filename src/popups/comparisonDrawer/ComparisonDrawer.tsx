@@ -10,6 +10,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import router from '../../utils/router';
 
 const ComparisonDrawer: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -43,40 +44,59 @@ const ComparisonDrawer: React.FC = () => {
 			}`}
 		>
 			{!!recoilComparisonState && <Box display={'flex'}>{renderComparisonCard()}</Box>}
-			<Box className={'comparisonButtons'}>
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'body1'}
-					label={'Compare'}
-					onClick={() => {
-						setRecoilComparisonState((prev) => {
-							return {
-								destinationDetails: prev.destinationDetails,
-								showCompareButton: true
-							};
-						});
-					}}
-				>
-					{!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ? (
-						<div className={'plusCompareIcon'}>
-							<Icon iconImg={'icon-plus'} size={13} color={'#ffffff'} />
-						</div>
-					) : (
-						<Label variant={'caption1'}>{recoilComparisonState.destinationDetails.length}</Label>
-					)}
-				</LabelButton>
-				{ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) && size === 'small' && (
-					<Button
-						className={'clearButton'}
-						look={'none'}
+			{size === 'small' ? (
+				<Box className={'comparisonButtons'}>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'body1'}
+						label={'Compare'}
 						onClick={() => {
-							setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
+							if (
+								ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) &&
+								recoilComparisonState.destinationDetails.length > 1
+							) {
+								router.navigate('/compare').catch(console.error);
+							} else {
+								setRecoilComparisonState((prev) => {
+									return {
+										destinationDetails: prev.destinationDetails,
+										showCompareButton: true
+									};
+								});
+							}
 						}}
 					>
-						<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
-					</Button>
-				)}
-			</Box>
+						{!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ? (
+							<div className={'plusCompareIcon'}>
+								<Icon iconImg={'icon-plus'} size={13} color={'#ffffff'} />
+							</div>
+						) : (
+							<Label variant={'caption1'}>{recoilComparisonState.destinationDetails.length}</Label>
+						)}
+					</LabelButton>
+					{ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) &&
+						recoilComparisonState.destinationDetails.length > 1 && (
+							<Button
+								className={'clearButton'}
+								look={'none'}
+								onClick={() => {
+									setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
+								}}
+							>
+								<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
+							</Button>
+						)}
+				</Box>
+			) : (
+				<Button
+					look={'containedSecondary'}
+					onClick={() => {
+						router.navigate('/compare').catch(console.error);
+					}}
+				>
+					Compare resorts
+				</Button>
+			)}
 		</Box>
 	);
 };
