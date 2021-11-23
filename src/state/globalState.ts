@@ -37,7 +37,7 @@ class GlobalState {
 		this.destinationComparison = atom<Misc.ComparisonState>({
 			key: GlobalStateKeys.COMPARISON_CARD,
 			default: this.loadFromLocalStorage<Misc.ComparisonState>(GlobalStateKeys.COMPARISON_CARD, {
-				comparisonCardInfo: [],
+				destinationDetails: [],
 				showCompareButton: false
 			})
 		});

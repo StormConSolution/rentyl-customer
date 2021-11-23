@@ -7,17 +7,22 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
 import Label from '@bit/redsky.framework.rs.label';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
+import { ObjectUtils } from '../../utils/utils';
 
 interface CarouselV2Props {
 	path: string | (() => void);
 	imgPaths: string[];
 	onAddCompareClick: () => void;
+	onRemoveCompareClick: () => void;
 	onGalleryClick: () => void;
-	showCompareButton?: boolean;
+	destinationId?: number;
 }
 
 const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 	const size = useWindowResizeChange();
+	const comparisonState = useRecoilValue<Misc.ComparisonState>(globalState.destinationComparison);
 	const parentRef = useRef<HTMLDivElement>(null);
 	const totalChildren = props.imgPaths.length;
 	const [imageViewIndex, setImageViewIndex] = useState<number>(1);
@@ -60,7 +65,6 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 				onClick={(event) => {
 					event.stopPropagation();
 					let val = parentRef.current!.scrollLeft - parentRef.current!.offsetWidth;
-
 					setImageViewIndex(imageViewIndex - 1);
 					if (imageViewIndex <= 1) {
 						val = parentRef.current!.offsetWidth * totalChildren;
@@ -87,17 +91,47 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 			>
 				<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
 			</Button>
-			{props.showCompareButton && (
+			{comparisonState.showCompareButton && (
 				<Button
 					className={'addToCompareButton'}
 					look={'none'}
 					disableRipple
 					onClick={(event) => {
 						event.stopPropagation();
-						props.onAddCompareClick();
+						if (
+							props.destinationId !== undefined &&
+							ObjectUtils.isArrayWithData(comparisonState.destinationDetails) &&
+							comparisonState.destinationDetails
+								.map((details) => details.destinationId)
+								.includes(props.destinationId)
+						) {
+							props.onRemoveCompareClick();
+						} else {
+							props.onAddCompareClick();
+						}
 					}}
 				>
-					<Icon iconImg={'icon-plus'} color={'#ffffff'} size={12} />
+					<Icon
+						iconImg={
+							props.destinationId !== undefined &&
+							ObjectUtils.isArrayWithData(comparisonState.destinationDetails) &&
+							comparisonState.destinationDetails
+								.map((details) => details.destinationId)
+								.includes(props.destinationId)
+								? 'icon-solid-check'
+								: 'icon-plus'
+						}
+						color={'#ffffff'}
+						size={
+							props.destinationId !== undefined &&
+							ObjectUtils.isArrayWithData(comparisonState.destinationDetails) &&
+							comparisonState.destinationDetails
+								.map((details) => details.destinationId)
+								.includes(props.destinationId)
+								? 16
+								: 12
+						}
+					/>
 					<div className={'compareToolTip'}>
 						<div className={'toolTipTriangle'} />
 						<Label className={'caption'}>Compare</Label>

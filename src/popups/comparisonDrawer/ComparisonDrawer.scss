@@ -2,12 +2,11 @@
 .rsComparisonDrawer {
 	position: fixed;
 	width: 100%;
-	margin: 0 auto;
-	padding: 20px 140px;
+	padding: 0 20px;
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -21,30 +20,40 @@
 	}
 
 	.comparisonButtons {
-		width: -moz-fit-content;
-		width: fit-content;
 		display: flex;
+		align-items: center;
 		justify-content: center;
-		.rsButton {
+		.rsButton.contained.primary {
+			color: #fff;
 			display: flex;
+			height: 42px;
 			gap: 13px;
 			padding: 15px;
+			border-radius: 5px 0 0 5px;
+			.rsLabel:first-child {
+				display: grid;
+				place-items: center;
+				border-radius: 50%;
+				border: 1px solid #fff;
+				height: 24px;
+				width: 24px;
+			}
 		}
 
-		.rsIcon {
-			position: relative;
-			color: #fff;
+		.clearButton {
+			background-color: theme-var($yellowTextColor);
+			width: 42px;
+			height: 42px;
+			border-radius: 0 5px 5px 0;
+		}
+		.plusCompareIcon {
+			display: grid;
+			place-items: center;
+			border: 1px solid #fff;
 			width: 24px;
 			height: 24px;
-			border: 1px solid #fff;
 			border-radius: 50%;
-
-			&:before {
-				position: absolute;
-				top: 4px;
-				left: 0;
-				right: 0;
-				bottom: 0;
+			.icon-plus {
 			}
 		}
 	}
@@ -58,16 +67,12 @@
 			top: auto;
 		}
 	}
-
-	.rsLabelButton {
-		&.contained {
-			margin-bottom: 8px;
-		}
-	}
 }
 
 .small {
 	.rsComparisonDrawer {
+		justify-content: center;
+		margin: 0;
 		overflow-x: auto;
 		padding: 9px;
 		transform: translateY(150px);

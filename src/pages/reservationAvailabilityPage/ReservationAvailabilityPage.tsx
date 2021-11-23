@@ -34,7 +34,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
-	const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
+	// const recoilComparisonState = useRecoilState<Misc.ComparisonState>(globalState.destinationComparison);
 	const perPage = 10;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
@@ -114,13 +114,14 @@ const ReservationAvailabilityPage: React.FC = () => {
 					picturePaths={urls}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
-						comparisonService.addToComparison(recoilComparisonState, {
+						comparisonService.addToComparison({
 							destinationId: destination.id,
-							logo: destination.logoUrl,
 							title: destination.name,
-							roomTypes: roomTypes,
-							selectedRoom: destination.accommodations[0].id
+							logo: destination.logoUrl
 						});
+					}}
+					onRemoveCompareClick={() => {
+						comparisonService.removeFromComparison(destination.id);
 					}}
 				/>
 			);
@@ -174,13 +175,13 @@ const ReservationAvailabilityPage: React.FC = () => {
 					},
 					onAddCompareClick: (accommodationId: ReactText) => {
 						let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
-						comparisonService.addToComparison(recoilComparisonState, {
-							destinationId: destination.id,
-							logo: destination.logoUrl,
-							title: destination.name,
-							roomTypes: roomTypes,
-							selectedRoom: accommodationId as number
-						});
+						// comparisonService.addToComparison(recoilComparisonState, {
+						// 	destinationId: destination.id,
+						// 	logo: destination.logoUrl,
+						// 	title: destination.name,
+						// 	roomTypes: roomTypes,
+						// 	selectedRoom: accommodationId as number
+						// });
 					}
 				}
 			};

@@ -7,43 +7,74 @@ import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import { ObjectUtils } from '../../utils/utils';
 import { Box } from '@bit/redsky.framework.rs.996';
-import LinkButton from '../../components/linkButton/LinkButton';
-import { useEffect, useState } from 'react';
 import Icon from '@bit/redsky.framework.rs.icon';
+import Button from '@bit/redsky.framework.rs.button';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 const ComparisonDrawer: React.FC = () => {
 	const size = useWindowResizeChange();
 	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonState>(
 		globalState.destinationComparison
 	);
-	const [comparisonItems, setComparisonItems] = useState<Misc.ComparisonCardInfo[]>(recoilComparisonState);
-
-	useEffect(() => {
-		setComparisonItems(recoilComparisonState);
-	}, [recoilComparisonState]);
 
 	function renderComparisonCard() {
 		if (size === 'small') return;
-		if (!ObjectUtils.isArrayWithData(comparisonItems) || comparisonItems.length > 3) return;
-		return comparisonItems.map((item) => {
-			return <ResortComparisonCard key={item.comparisonId} destinationDetails={item} />;
+		if (
+			!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ||
+			recoilComparisonState.destinationDetails.length > 3
+		)
+			return;
+		return recoilComparisonState.destinationDetails.map((item) => {
+			return (
+				<ResortComparisonCard
+					key={item.destinationId}
+					destinationDetails={item}
+					handlePinToFirst={(pinToFirst: boolean, comparisonId: number) => {}}
+				/>
+			);
 		});
+		return;
 	}
 
 	return (
-		<Box className={`rsComparisonDrawer ${recoilComparisonState.length !== 0 || size === 'small' ? 'show' : ''}`}>
+		<Box
+			className={`rsComparisonDrawer ${
+				size === 'small' || ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ? 'show' : ''
+			}`}
+		>
 			{!!recoilComparisonState && <Box display={'flex'}>{renderComparisonCard()}</Box>}
 			<Box className={'comparisonButtons'}>
-				<LinkButton look={'containedPrimary'} label={'Compare'} path={'/compare'}>
-					<Icon iconImg={'icon-plus'} />
-				</LinkButton>
-				{comparisonItems.length > 0 && (
-					<LabelButton
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'body1'}
+					label={'Compare'}
+					onClick={() => {
+						setRecoilComparisonState((prev) => {
+							return {
+								destinationDetails: prev.destinationDetails,
+								showCompareButton: true
+							};
+						});
+					}}
+				>
+					{!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ? (
+						<div className={'plusCompareIcon'}>
+							<Icon iconImg={'icon-plus'} size={13} color={'#ffffff'} />
+						</div>
+					) : (
+						<Label variant={'caption1'}>{recoilComparisonState.destinationDetails.length}</Label>
+					)}
+				</LabelButton>
+				{ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) && size === 'small' && (
+					<Button
+						className={'clearButton'}
 						look={'none'}
-						variant={'button'}
-						label={'Clear All'}
-						onClick={() => setRecoilComparisonState([])}
-					/>
+						onClick={() => {
+							setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
+						}}
+					>
+						<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
+					</Button>
 				)}
 			</Box>
 		</Box>

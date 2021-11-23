@@ -2,24 +2,21 @@
 
 .rsResortComparisonCard {
 	height: 82px;
-	width: 278px;
+	margin: 0 20px;
+	display: flex;
 
-	.topContent {
-		justify-content: space-between;
+	.title {
+		width: 135px;
+		align-self: flex-end;
+		font-size: 16px;
+		line-height: 16px;
+	}
 
-		.title {
-			width: 135px;
-			align-self: flex-end;
-			font-size: 16px;
-			line-height: 16px;
-		}
-
-		.imageContainer {
-			max-width: 82px;
-			max-height: 40px;
-			display: flex;
-			justify-content: center;
-		}
+	.imageContainer {
+		max-width: 178px;
+		max-height: 59px;
+		display: flex;
+		justify-content: center;
 	}
 
 	.bottomContent {
