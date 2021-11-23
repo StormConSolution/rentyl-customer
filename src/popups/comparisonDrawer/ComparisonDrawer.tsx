@@ -88,14 +88,16 @@ const ComparisonDrawer: React.FC = () => {
 						)}
 				</Box>
 			) : (
-				<Button
-					look={'containedSecondary'}
-					onClick={() => {
-						router.navigate('/compare').catch(console.error);
-					}}
-				>
-					Compare resorts
-				</Button>
+				recoilComparisonState.destinationDetails.length > 1 && (
+					<Button
+						look={'containedSecondary'}
+						onClick={() => {
+							router.navigate('/compare').catch(console.error);
+						}}
+					>
+						Compare resorts
+					</Button>
+				)
 			)}
 		</Box>
 	);
