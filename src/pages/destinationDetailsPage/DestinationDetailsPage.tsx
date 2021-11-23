@@ -34,6 +34,8 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import Button from '@bit/redsky.framework.rs.button';
+import TabbedCarouselPopup, { TabbedCarouselPopupProps } from '../../popups/tabbedCarouselPopup/TabbedCarouselPopup';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -177,7 +179,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				otherMedia: item.media
 			});
 		}
-		return <TabbedImageCarousel tabs={carouselItems} />;
+		return carouselItems;
 	}
 
 	function renderMapSource() {
@@ -291,7 +293,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		if (!destinationDetails?.experiences) return null;
 		return (
 			<Box className={'sectionThree'} marginBottom={'190px'}>
-				{renderFeatureCarousel()}
+				{/*{renderFeatureCarousel()}*/}
 				{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
 			</Box>
 		);
@@ -358,6 +360,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						</Box>
 					</Box>
 				</Box>
+				<Button
+					look={'containedPrimary'}
+					onClick={() => {
+						popupController.open<TabbedCarouselPopupProps>(TabbedCarouselPopup, {
+							tabs: renderFeatureCarousel()
+						});
+					}}
+				></Button>
 				{renderSectionTwo()}
 				{renderSectionThree()}
 				{renderSectionFour()}

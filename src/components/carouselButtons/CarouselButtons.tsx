@@ -25,13 +25,12 @@ const CarouselButtons: React.FC<CarouselButtonsProps> = (props) => {
 	}
 
 	return (
-		<div display={'flex'} className={'rsCarouselButtons'} style={renderStyle()}>
+		<div className={'rsCarouselButtons'} style={renderStyle()}>
 			<Button look={'none'} onClick={props.onClickLeft}>
-				<Icon iconImg={'icon-chevron-left'} color={'#001933'} size={8} />
+				<Icon iconImg={'icon-chevron-left'} color={'#ffffff'} size={20} />
 			</Button>
-			<hr />
 			<Button look={'none'} onClick={props.onClickRight}>
-				<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
+				<Icon iconImg={'icon-chevron-right'} color={'#ffffff'} size={20} />
 			</Button>
 		</div>
 	);

@@ -207,4 +207,14 @@ html {
 		line-height: 32px;
 		font-weight: $regular;
 	}
+	&.customEighteen {
+		font-size: 41px;
+		line-height: 18px;
+		font-weight: $regular;
+	}
+	&.customNineteen {
+		font-size: 25px;
+		line-height: 39px;
+		font-weight: $light;
+	}
 }
