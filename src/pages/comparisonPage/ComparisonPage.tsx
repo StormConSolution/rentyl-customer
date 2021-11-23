@@ -27,7 +27,6 @@ const ComparisonPage: React.FC = () => {
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
 	useEffect(() => {
-		// setComparisonItems(recoilComparisonState[0]);
 		setWaitToLoad(false);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 	}, []);
@@ -46,7 +45,10 @@ const ComparisonPage: React.FC = () => {
 	useEffect(() => {
 		async function getDestinations() {
 			try {
-				destinationService;
+				const destinationResults = await destinationService.getDestinationByIds({
+					ids: recoilComparisonState.destinationDetails.map((destination) => destination.destinationId)
+				});
+				setDestinationList(destinationResults);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Unable to get details for these locations'),
@@ -58,9 +60,9 @@ const ComparisonPage: React.FC = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [recoilComparisonState.destinationDetails]);
 
-	// function renderComparisonTable() {
-	// 	// return <ComparisonTable comparisonItems={comparisonItems} accommodationDetailList={accommodationDetailList} />;
-	// }
+	function renderComparisonTable() {
+		return <ComparisonTable comparisonState={recoilComparisonState} destinationDetailList={destinationList} />;
+	}
 
 	return waitToLoad ? (
 		<LoadingPage />
@@ -83,7 +85,7 @@ const ComparisonPage: React.FC = () => {
 					<Label variant={'caption'} onClick={() => router.back()} className={'backNavigation'}>
 						{'<'} back to previous page
 					</Label>
-					{/*{renderComparisonTable()}*/}
+					{renderComparisonTable()}
 				</Paper>
 				<Footer links={FooterLinks} />
 			</div>

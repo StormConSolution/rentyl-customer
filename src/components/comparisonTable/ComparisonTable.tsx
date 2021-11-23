@@ -4,30 +4,27 @@ import ComparisonTableMobile from './comparisonTableMobile/ComparisonTableMobile
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface ComparisonTableProps {
-	comparisonItems: Misc.ComparisonState;
-	accommodationDetailList: Api.Accommodation.Res.Details[];
+	comparisonState: Misc.ComparisonState;
+	destinationDetailList: Api.Destination.Res.Get[];
 	handlePinToFirst?: (pinToFirst: boolean, comparisonId: number) => {};
 }
 
 const ComparisonTable: React.FC<ComparisonTableProps> = (props) => {
 	const size = useWindowResizeChange();
 	return (
-		<div className={'rsComparisonTable'} />
-		// <div className={'rsComparisonTable'}>
-		// 	{size !== 'small' ? (
-		// 		<></>
-		// 	) : (
-		// 		// <ComparisonTableResponsive
-		// 		// 	comparisonItems={props.comparisonItems}
-		// 		// 	accommodationDetailList={props.accommodationDetailList}
-		// 		// />
-		// 		<></>
-		// 		// <ComparisonTableMobile
-		// 		// 	comparisonItems={props.comparisonItems}
-		// 		// 	accommodationDetailList={props.accommodationDetailList}
-		// 		// />
-		// 	)}
-		// </div>
+		<div className={'rsComparisonTable'}>
+			{size !== 'small' ? (
+				<ComparisonTableResponsive
+					comparisonState={props.comparisonState}
+					destinationDetailList={props.destinationDetailList}
+				/>
+			) : (
+				<ComparisonTableMobile
+					comparisonState={props.comparisonState}
+					destinationDetailList={props.destinationDetailList}
+				/>
+			)}
+		</div>
 	);
 };
 

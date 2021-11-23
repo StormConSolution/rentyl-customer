@@ -13,7 +13,7 @@ export default class DestinationService extends Service {
 		return response.data.data;
 	}
 
-	async getDestinationByIds(ids: Api.Destination.Req.Get[]): Promise<Api.Destination.Res.Get[]> {
+	async getDestinationByIds({ ids }: Api.Destination.Req.Get): Promise<Api.Destination.Res.Get[]> {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
 		return response.data.data;
 	}
