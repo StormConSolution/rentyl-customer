@@ -139,6 +139,12 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 		WebUtils.updateUrlParams(reservationFilters);
 	}, [reservationFilters]);
 
+	function sanitizePriceFieldsAndUpdate(control: RsFormControl) {
+		if (!control) return;
+		control.value = control.value.toString().replaceAll(/[^0-9]/g, '');
+		updateFilterFormWithTimeout(control);
+	}
+
 	function updateFilterFormWithTimeout(control: RsFormControl | undefined) {
 		if (timeout) window.clearTimeout(timeout);
 		timeout = window.setTimeout(() => updateFilterForm(control), TIMEOUT_INTERVAL);
@@ -362,11 +368,13 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 					/>
 					<div className="minMaxDiv">
 						<LabelInputV2
-							className="priceMin"
+							className={`priceMin ${
+								Number(filterForm.get('priceRangeMin').value) >= 1000 ? 'andGreater' : ''
+							}`}
 							inputType="text"
 							title="min price"
 							control={filterForm.get('priceRangeMin')}
-							updateControl={updateFilterFormWithTimeout}
+							updateControl={sanitizePriceFieldsAndUpdate}
 						/>
 						<hr className="divider" />
 						<LabelInputV2
@@ -376,7 +384,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 							inputType="text"
 							title="max price"
 							control={filterForm.get('priceRangeMax')}
-							updateControl={updateFilterFormWithTimeout}
+							updateControl={sanitizePriceFieldsAndUpdate}
 						/>
 					</div>
 				</FilterBarDropDown>
