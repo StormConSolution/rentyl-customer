@@ -1,22 +1,28 @@
 @import '../../themes/themes';
 .rsBookingFlowAddPackagePage {
-	.rs-page-content-wrapper {
-		max-width: 1160px !important;
-		padding-top: 120px;
-		hr {
-			height: 1px;
-			width: 100%;
-			background: theme-var($greyLineColor);
-			border: none;
-			margin: 20px 0;
-		}
+	padding-top: 120px;
 
-		.rsButton {
-			margin: 20px auto;
-		}
+	display: flex;
+	flex-wrap: nowrap;
 
-		.rsDestinationPackageTile {
-			margin-bottom: 50px;
-		}
+	.packageSection {
+		width: 63%;
+		padding-left: 93px;
+	}
+
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 20px 0;
+	}
+
+	.rsButton {
+		margin: 20px auto;
+	}
+
+	.rsDestinationPackageTile {
+		margin-bottom: 50px;
 	}
 }

@@ -19,6 +19,7 @@ interface DestinationPackageTileProps {
 	imgPaths: string[];
 	onAddPackage?: () => void;
 	text?: string;
+	isAdded?: boolean;
 }
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {
@@ -29,56 +30,48 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 		if (props.imgPaths.length <= 1) setShowControls(false);
 	}, [props.imgPaths]);
 
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box className={'imageWrapper'}>
-					<Img src={path} alt={''} width={500} height={600} />
-				</Box>
-			);
-		});
-	}
-
 	return (
-		<Paper
-			className={'rsDestinationPackageTile'}
-			borderRadius={'4px'}
-			boxShadow
-			padding={'16px'}
-			position={'relative'}
-		>
-			<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
-			<div>
-				<Label variant={'h2'}>{props.title}</Label>
-				<Accordion
-					backgroundColor={'#f0f0f0'}
-					hideHoverEffect
-					titleReact={<Label variant={'h4'}>View Details</Label>}
+		<Paper className={'rsDestinationPackageTile'} borderRadius={'4px'} position={'relative'}>
+			<Box className={'imageWrapper'}>
+				<Img src={props.imgPaths[0]} alt={''} width={500} height={600} />
+			</Box>
+			<Box width={550} paddingLeft={44}>
+				<Label variant={'customTwentyFour'} color="#001933" marginBottom={16}>
+					{props.title}
+				</Label>
+				<Label
+					variant={'customFive'}
+					marginBottom={13}
+					showMoreText={
+						<Label variant={'customTwentyFour'} color="#001933">
+							View More
+						</Label>
+					}
+					lineClamp={3}
+					showMoreButton
+					showLessText={
+						<Label variant={'customTwentyFour'} color="#001933">
+							View Less
+						</Label>
+					}
 				>
-					<Label variant={'body1'} margin={'0 10px'}>
-						{props.description}
-					</Label>
-				</Accordion>
-			</div>
+					{props.description}
+				</Label>
+			</Box>
 			<Box marginLeft={'auto'} textAlign={'right'}>
 				{company.allowCashBooking && (
-					<Label variant={'h2'}>
-						${StringUtils.formatMoney(props.prices.amountAfterTax)} {company.allowPointBooking && ' or '}
+					<Label variant={'customTwentyThree'} marginBottom={9}>
+						${StringUtils.formatMoney(props.prices.amountAfterTax)}
 					</Label>
 				)}
-				{company.allowPointBooking && (
-					<Label variant={company.allowCashBooking ? 'h4' : 'h2'}>
-						{StringUtils.addCommasToNumber(props.prices.amountPoints)} points
-					</Label>
-				)}
-				<Label variant={'body2'}>Per Stay</Label>
-				{company.allowCashBooking && <Label variant={'body2'}>Including Taxes and Fees</Label>}
+				<Label variant="customThree">Per Stay</Label>
 			</Box>
 
 			<LabelButton
 				look={'containedPrimary'}
 				variant={'button'}
-				label={props.text || 'Add Package'}
+				label={props.text || 'Add to my stay'}
+				className={`addButton${props.isAdded && ' packageAdded'}`}
 				onClick={props.onAddPackage}
 			/>
 		</Paper>

@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './BookingFlowAddPackagePage.scss';
 import { Box, Page } from '@bit/redsky.framework.rs.996';
-import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import router from '../../utils/router';
 import DestinationPackageTile from '../../components/destinationPackageTile/DestinationPackageTile';
 import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { FooterLinks } from '../../components/footer/FooterLinks';
-import Footer from '../../components/footer/Footer';
+
 import PackageService from '../../services/package/package.service';
-import PaginationButtons from '../../components/paginationButtons/PaginationButtons';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
 const BookingFlowAddPackagePage = () => {
@@ -106,7 +103,8 @@ const BookingFlowAddPackagePage = () => {
 						let newPackages = addedPackages.filter((addedPackage) => addedPackage.id !== item.id);
 						setAddedPackages(newPackages);
 					}}
-					text={'Remove Package'}
+					text={'Added to stay'}
+					isAdded
 				/>
 			);
 		});
@@ -131,7 +129,7 @@ const BookingFlowAddPackagePage = () => {
 						let available = availablePackages.filter((availablePackage) => availablePackage.id !== item.id);
 						setAvailablePackages(available);
 					}}
-					text={'Add Package'}
+					text={'Add to my stay'}
 				/>
 			);
 		});
@@ -141,24 +139,14 @@ const BookingFlowAddPackagePage = () => {
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowAddPackagePage'}>
-			<div className={'rs-page-content-wrapper'}>
-				{addedPackages.length > 0 && (
-					<Box className={'addedPackages'}>
-						<Label variant={'h2'}>Added Packages</Label>
-						<hr />
-						{renderPackages()}
-					</Box>
-				)}
+			<Box className="packageSection">
+				{addedPackages.length > 0 && <Box className={'addedPackages'}>{renderPackages()}</Box>}
 				<div ref={filterRef} />
-				<Box className={'availablePackages'}>
-					<Label variant={'h2'}>Available Packages</Label>
-					<hr />
-					{renderAvailablePackages()}
-				</Box>
+				<Box className={'availablePackages'}>{renderAvailablePackages()}</Box>
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'caption'}
-					label={'Continue To Checkout'}
+					label={'Continue To book'}
 					onClick={() => {
 						if (!params.data.newRoom) return;
 						let newStay: Misc.StayParams = params.data.newRoom;
@@ -173,18 +161,7 @@ const BookingFlowAddPackagePage = () => {
 						router.navigate(`/booking/checkout?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 					}}
 				/>
-			</div>
-			<PaginationButtons
-				selectedRowsPerPage={perPage}
-				currentPageNumber={page}
-				setSelectedPage={(newPage) => {
-					setPage(newPage);
-					let filterSection = filterRef.current!.offsetTop;
-					window.scrollTo({ top: filterSection, behavior: 'smooth' });
-				}}
-				total={total}
-			/>
-			<Footer links={FooterLinks} />
+			</Box>
 		</Page>
 	);
 };

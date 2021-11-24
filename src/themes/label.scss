@@ -232,4 +232,14 @@ html {
 		line-height: 19px;
 		font-weight: $regular;
 	}
+	&.customTwentyThree {
+		font-size: 32px;
+		line-height: 20px;
+		font-weight: $extraBold;
+	}
+	&.customTwentyFour {
+		font-size: 20px;
+		line-height: 28px;
+		font-weight: $bold;
+	}
 }
