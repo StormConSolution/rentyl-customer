@@ -4,7 +4,6 @@ import debounce from 'lodash.debounce';
 import Label from '@bit/redsky.framework.rs.label';
 import Input from '@bit/redsky.framework.rs.input';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
-import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -89,23 +88,27 @@ const LabelInputV2: React.FC<LabelInputV2Props> = (props) => {
 			</Label>
 
 			{!props.isPhoneInput ? (
-				<Input
-					className={renderClassNames()}
-					placeholder={props.placeholder}
-					type={props.inputType}
-					look={'none'}
-					color={'#858585'}
-					control={props.control || form.get('value')}
-					updateControl={
-						props.updateControl ? props.updateControl : (updateControl) => searchDebounced(updateControl)
-					}
-					disabled={props.disabled}
-					minLength={props.minLength}
-					maxLength={props.maxLength}
-					rows={props.textareaRows}
-					cols={props.textareaCols}
-					unStyled
-				/>
+				<div className={'inputWrapper'}>
+					<Input
+						className={renderClassNames()}
+						placeholder={props.placeholder}
+						type={props.inputType}
+						look={'none'}
+						color={'#858585'}
+						control={props.control || form.get('value')}
+						updateControl={
+							props.updateControl
+								? props.updateControl
+								: (updateControl) => searchDebounced(updateControl)
+						}
+						disabled={props.disabled}
+						minLength={props.minLength}
+						maxLength={props.maxLength}
+						rows={props.textareaRows}
+						cols={props.textareaCols}
+						unStyled
+					/>
+				</div>
 			) : (
 				<PhoneInput
 					inputClass={'phoneInput'}

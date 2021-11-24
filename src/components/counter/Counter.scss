@@ -16,9 +16,19 @@
 			border: 1px solid black;
 			border-radius: 50%;
 			text-align: center;
+			&:hover {
+				cursor: pointer;
+			}
 			&:before {
 				position: relative;
 				top: 15%;
+			}
+			&.disable {
+				border-color: #707070;
+				color: #707070;
+				&:hover {
+					cursor: default;
+				}
 			}
 		}
 	}
