@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import './CheckOutInfoCard.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -12,15 +12,14 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import CountryService from '../../services/country/country.service';
-import Button from '@bit/redsky.framework.rs.button';
 import LabelButton from '../labelButton/LabelButton';
 
 export interface CheckOutInfoCardProps {}
+
 const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const [stateList, setStateList] = useState<Misc.OptionType[]>([]);
-	const [countryList, setCountryList] = useState<Misc.OptionType[]>([]);
 	const [infoForm, setInfoForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('firstName', user?.firstName || '', [
@@ -39,29 +38,14 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 			new RsFormControl('address2', '', []),
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
 			new RsFormControl('zip', '', [new RsValidator(RsValidatorEnum.REQ, 'Zip is required')]),
-			new RsFormControl('state', '', [new RsValidator(RsValidatorEnum.REQ, 'State is required')]),
-			new RsFormControl('country', 'US', [new RsValidator(RsValidatorEnum.REQ, 'Country is required')])
+			new RsFormControl('state', '', [new RsValidator(RsValidatorEnum.REQ, 'State is required')])
 		])
 	);
 
 	useEffect(() => {
-		async function getCountries() {
-			try {
-				let countries = await countryService.getAllCountries();
-				setCountryList(formatStateOrCountryListForSelect(countries.countries));
-			} catch (e) {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to get a list of countries.'), 'Server Error');
-			}
-		}
-		getCountries().catch(console.error);
-	}, []);
-
-	useEffect(() => {
 		async function getStates() {
-			let selectedCountry = infoForm.get('country');
-			if (!selectedCountry) return;
 			try {
-				let response = await countryService.getStates(`${selectedCountry.value}`);
+				let response = await countryService.getStates(`US`);
 				if (response.states) {
 					setStateList(formatStateOrCountryListForSelect(response.states));
 				}
@@ -75,8 +59,9 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 				);
 			}
 		}
+
 		getStates().catch(console.error);
-	}, [infoForm.get('country').value]);
+	}, []);
 
 	function formatStateOrCountryListForSelect(statesOrCountries: any[]) {
 		return statesOrCountries.map((item) => {
@@ -87,6 +72,9 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 	function updateForm(control: RsFormControl) {
 		setInfoForm(infoForm.clone().update(control));
 	}
+
+	function submitInfo(event: FormEvent<HTMLFormElement>) {}
+
 	return (
 		<Box className={'rsCheckOutInfoCard'}>
 			<Box className={'message'}>
@@ -96,36 +84,21 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 					rate but you also are getting the flexibility you want.
 				</p>
 			</Box>
-			<form>
-				<LabelInput
-					title={'First Name'}
-					inputType={'text'}
-					control={infoForm.get('firstName')}
-					updateControl={updateForm}
-				/>
-				<LabelInput
-					title={'Last Name'}
-					inputType={'text'}
-					control={infoForm.get('lastName')}
-					updateControl={updateForm}
-				/>
-				<LabelInput
-					title={'Email'}
-					inputType={'text'}
-					control={infoForm.get('email')}
-					updateControl={updateForm}
-				/>
-				<LabelInput
-					inputType={'tel'}
-					title={'Phone'}
-					isPhoneInput
-					onChange={(value) => {
-						let updatedPhone = infoForm.getClone('phone');
-						updatedPhone.value = value;
-						updateForm(updatedPhone);
-					}}
-					initialValue={user?.phone}
-				/>
+			<form onSubmit={submitInfo}>
+				<Box className={'fieldGroup'}>
+					<LabelInput
+						title={'First Name'}
+						inputType={'text'}
+						control={infoForm.get('firstName')}
+						updateControl={updateForm}
+					/>
+					<LabelInput
+						title={'Last Name'}
+						inputType={'text'}
+						control={infoForm.get('lastName')}
+						updateControl={updateForm}
+					/>
+				</Box>
 				<LabelInput
 					className={'stretchedInput'}
 					title={'Address Line 1'}
@@ -140,26 +113,48 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 					control={infoForm.get('address2')}
 					updateControl={updateForm}
 				/>
-				<LabelInput
-					title={'City'}
-					inputType={'text'}
-					control={infoForm.get('city')}
-					updateControl={updateForm}
-				/>
-				<LabelSelect
-					title={'State'}
-					options={stateList}
-					control={infoForm.get('state')}
-					updateControl={updateForm}
-				/>
-				<LabelInput title={'Zip'} inputType={'text'} control={infoForm.get('zip')} updateControl={updateForm} />
-				<LabelSelect
-					title={'Country'}
-					options={countryList}
-					control={infoForm.get('country')}
-					updateControl={updateForm}
-				/>
-				<LabelButton look={'containedPrimary'} variant={'body1'} label={'Continue'} onClick={() => {}} />
+				<Box className={'fieldGroup'}>
+					<LabelInput
+						title={'Postal/Zip code'}
+						inputType={'text'}
+						control={infoForm.get('zip')}
+						updateControl={updateForm}
+					/>
+				</Box>
+				<Box className={'fieldGroup'}>
+					<LabelInput
+						title={'City'}
+						inputType={'text'}
+						control={infoForm.get('city')}
+						updateControl={updateForm}
+					/>
+					<LabelSelect
+						title={'State'}
+						options={stateList}
+						control={infoForm.get('state')}
+						updateControl={updateForm}
+					/>
+				</Box>
+				<Box className={'fieldGroup'}>
+					<LabelInput
+						title={'Email'}
+						inputType={'text'}
+						control={infoForm.get('email')}
+						updateControl={updateForm}
+					/>
+					<LabelInput
+						inputType={'tel'}
+						title={'Phone'}
+						isPhoneInput
+						onChange={(value) => {
+							let updatedPhone = infoForm.getClone('phone');
+							updatedPhone.value = value;
+							updateForm(updatedPhone);
+						}}
+						initialValue={user?.phone}
+					/>
+				</Box>
+				<LabelButton look={'containedPrimary'} variant={'body1'} label={'Continue'} buttonType={'submit'} />
 			</form>
 		</Box>
 	);
