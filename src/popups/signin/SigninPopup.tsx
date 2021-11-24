@@ -35,8 +35,8 @@ const SigninPopup: React.FC<SigninPopupProps> = (props) => {
 		}
 	}
 
-	async function signIn(event?: FormEvent<HTMLFormElement>) {
-		if (event) event.preventDefault();
+	async function signIn(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		if (!(await signinForm.isValid())) {
 			setSigninForm(signinForm.clone());
 			setErrorMessage('Missing information');

@@ -67,8 +67,8 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 		}
 	}
 
-	async function signUp(event?: FormEvent<HTMLFormElement>) {
-		if (event) event.preventDefault();
+	async function signUp(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		if (!(await signUpForm.isValid())) {
 			setSignUpForm(signUpForm.clone());
 			setErrorMessage('Missing information');
