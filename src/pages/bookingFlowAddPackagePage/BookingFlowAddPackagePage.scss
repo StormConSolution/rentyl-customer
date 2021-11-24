@@ -25,3 +25,15 @@
 		margin-bottom: 50px;
 	}
 }
+
+.small {
+	.rsBookingFlowAddPackagePage {
+		.packageSection {
+			width: 100%;
+			padding-left: 0;
+		}
+	}
+	.rsButton {
+		margin: unset;
+	}
+}
