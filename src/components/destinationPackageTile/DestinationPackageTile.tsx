@@ -11,6 +11,7 @@ import globalState from '../../state/globalState';
 import Carousel from '../carousel/Carousel';
 import { useEffect, useState } from 'react';
 import Img from '@bit/redsky.framework.rs.img';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface DestinationPackageTileProps {
 	title: string;
@@ -45,6 +46,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					showMoreText={
 						<Label variant={'customTwentyFour'} color="#001933">
 							View More
+							<Icon iconImg="icon-chevron-down" className="viewTextIcon" />
 						</Label>
 					}
 					lineClamp={3}
@@ -52,6 +54,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					showLessText={
 						<Label variant={'customTwentyFour'} color="#001933">
 							View Less
+							<Icon iconImg="icon-chevron-up" className="viewTextIcon" />
 						</Label>
 					}
 				>
@@ -68,10 +71,24 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			</Box>
 
 			<LabelButton
-				look={'containedPrimary'}
+				look={'none'}
 				variant={'button'}
-				label={props.text || 'Add to my stay'}
-				className={`addButton${props.isAdded && ' packageAdded'}`}
+				label={
+					props.text ? (
+						<Label display="flex" className="addPackButtonText" variant="customThree" color="#fff">
+							<Icon
+								iconImg={!props.isAdded ? 'icon-plus' : 'icon-solid-check'}
+								size={20}
+								color="#fff"
+								className="addPackageButtonIcon"
+							/>
+							{props.text}
+						</Label>
+					) : (
+						'Add to my stay'
+					)
+				}
+				className={`addButton${props.isAdded ? ' packageAdded' : ''}`}
 				onClick={props.onAddPackage}
 			/>
 		</Paper>

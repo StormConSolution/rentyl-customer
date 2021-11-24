@@ -6,20 +6,19 @@
 	flex-wrap: nowrap;
 
 	.packageSection {
-		width: 63%;
+		width: 65%;
 		padding-left: 93px;
-	}
 
-	hr {
-		height: 1px;
-		width: 100%;
-		background: theme-var($greyLineColor);
-		border: none;
-		margin: 20px 0;
+		.continueButton {
+			height: 57px;
+			width: clamp(200px, 50%, 285px);
+			background: theme-var($secondaryButtonLinkColor);
+			border-radius: 5px;
+		}
 	}
 
 	.rsButton {
-		margin: 20px auto;
+		margin: 20px 0 20px auto;
 	}
 
 	.rsDestinationPackageTile {

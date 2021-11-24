@@ -144,8 +144,9 @@ const BookingFlowAddPackagePage = () => {
 				<div ref={filterRef} />
 				<Box className={'availablePackages'}>{renderAvailablePackages()}</Box>
 				<LabelButton
-					look={'containedPrimary'}
-					variant={'caption'}
+					className="continueButton"
+					look={'none'}
+					variant={'customTwelve'}
 					label={'Continue To book'}
 					onClick={() => {
 						if (!params.data.newRoom) return;
