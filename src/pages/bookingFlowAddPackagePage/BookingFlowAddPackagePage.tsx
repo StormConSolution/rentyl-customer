@@ -7,7 +7,6 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import serviceFactory from '../../services/serviceFactory';
 import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
-
 import PackageService from '../../services/package/package.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 
