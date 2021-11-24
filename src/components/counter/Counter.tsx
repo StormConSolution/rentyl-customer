@@ -16,6 +16,15 @@ export interface GuestCounterProps {
 }
 
 const Counter: React.FC<GuestCounterProps> = (props) => {
+	function isAtMinValue(): boolean {
+		if (props.minCount === undefined) return false;
+		return (props.control.value as number) <= props.minCount;
+	}
+
+	function isAtMaxValue(): boolean {
+		if (props.maxCount === undefined) return false;
+		return (props.control.value as number) >= props.maxCount;
+	}
 	return (
 		<Box className={`rsCounter${props.className ? ` ${props.className}` : ''}`}>
 			<Label variant={'subtitle1'} mr={props.labelMarginRight}>
@@ -24,6 +33,7 @@ const Counter: React.FC<GuestCounterProps> = (props) => {
 			<Box className={'valueChanger'}>
 				<Icon
 					iconImg={'icon-minus'}
+					className={isAtMinValue() ? 'disable' : ''}
 					onClick={() => {
 						let newValue: number = (props.control.value as number) - 1;
 						if (props.minCount !== undefined && newValue < props.minCount) return;
@@ -35,6 +45,7 @@ const Counter: React.FC<GuestCounterProps> = (props) => {
 				<Label variant={'body1'}>{props.control.value as number}</Label>
 				<Icon
 					iconImg={'icon-plus'}
+					className={isAtMaxValue() ? 'disable' : ''}
 					onClick={() => {
 						let newValue: number = (props.control.value as number) + 1;
 						if (props.maxCount !== undefined && newValue > props.maxCount) return;

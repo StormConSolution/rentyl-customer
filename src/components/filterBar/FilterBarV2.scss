@@ -34,11 +34,11 @@
 		}
 
 		.rsInput.priceMin {
-			width: 115px;
+			width: 105px;
 		}
 
 		.rsInput.priceMax {
-			width: 115px;
+			width: 105px;
 		}
 	}
 
@@ -63,6 +63,40 @@
 		display: flex;
 		flex-wrap: wrap;
 		flex-direction: column;
+	}
+	.priceMax,
+	.priceMin {
+		.inputWrapper {
+			display: flex;
+			align-items: center;
+
+			&:before {
+				content: '$';
+				font-family: 'MrsEavesXL', sans-serif;
+			}
+		}
+
+		&.andGreater .inputWrapper {
+			position: relative;
+
+			&:not(:focus-within) {
+				input {
+					opacity: 0;
+				}
+
+				&:after {
+					content: '1,000 +';
+					display: flex;
+					align-items: center;
+					position: absolute;
+					left: 10px;
+					width: 105px;
+					height: 30px;
+					font-family: 'MrsEavesXL', sans-serif;
+					font-size: 16px;
+				}
+			}
+		}
 	}
 }
 .smallCol {
