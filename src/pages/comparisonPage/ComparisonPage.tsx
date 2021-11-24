@@ -26,10 +26,10 @@ const ComparisonPage: React.FC = () => {
 	const [destinationList, setDestinationList] = useState<Api.Destination.Res.Get[]>([]);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
-	useEffect(() => {
-		setWaitToLoad(false);
-		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
-	}, []);
+	// useEffect(() => {
+	// 	setWaitToLoad(false);
+	// 	document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
+	// }, []);
 
 	useEffect(() => {
 		let id = router.subscribeToBeforeRouterNavigate(() => {
@@ -45,10 +45,14 @@ const ComparisonPage: React.FC = () => {
 	useEffect(() => {
 		async function getDestinations() {
 			try {
-				const destinationResults = await destinationService.getDestinationByIds({
-					ids: recoilComparisonState.destinationDetails.map((destination) => destination.destinationId)
-				});
-				setDestinationList(destinationResults);
+				// for (let destination of recoilComparisonState.destinationDetails) {
+				// 	const result = await destinationService.getDestinationDetails(destination.destinationId);
+				// 	setDestinationList((prev) => [...prev, result]);
+				// }
+				// const destinations = await destinationService.getDestinationByIds({
+				// 	ids: recoilComparisonState.destinationDetails.map((destination) => destination.destinationId)
+				// });
+				// setDestinationList(destinations);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Unable to get details for these locations'),
