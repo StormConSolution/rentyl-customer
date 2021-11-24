@@ -1,0 +1,30 @@
+@import '../../themes/themes';
+
+.rsCheckOutInfoCard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	form {
+		width: 95vw;
+		.rsLabelInput {
+			.rsInput {
+				max-width: 95vw;
+			}
+		}
+		.phoneInput {
+			max-width: 95vw;
+			width: 100%;
+			padding-left: 10px;
+		}
+		.flag-dropdown {
+			display: none;
+		}
+		.rsSelect {
+			max-width: 95vw;
+			width: 100%;
+			span {
+				display: none;
+			}
+		}
+	}
+}
