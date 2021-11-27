@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import './SignupPopup.scss';
 import { Box, Link, Popup, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -67,7 +67,8 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 		}
 	}
 
-	async function signup() {
+	async function signUp(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		if (!(await signUpForm.isValid())) {
 			setSignUpForm(signUpForm.clone());
 			setErrorMessage('Missing information');
@@ -94,84 +95,86 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 	return (
 		<Popup opened={props.opened} preventCloseByBackgroundClick>
 			<Paper className={'rsSignupPopup'} position={'relative'}>
-				<Icon
-					iconImg={'icon-close'}
-					onClick={() => {
-						popupController.close(SignupPopup);
-					}}
-					size={14}
-					cursorPointer
-				/>
-				<Label variant={'body1'}>Sign up</Label>
-				<hr className={'linethrough'} />
-				<Box
-					display={'flex'}
-					flexDirection={size === 'small' ? 'column' : 'row'}
-					gap={size === 'small' ? 0 : 36}
-					paddingTop={'30px'}
-				>
+				<form onSubmit={signUp}>
+					<Icon
+						iconImg={'icon-close'}
+						onClick={() => {
+							popupController.close(SignupPopup);
+						}}
+						size={14}
+						cursorPointer
+					/>
+					<Label variant={'body1'}>Sign up</Label>
+					<hr className={'linethrough'} />
+					<Box
+						display={'flex'}
+						flexDirection={size === 'small' ? 'column' : 'row'}
+						gap={size === 'small' ? 0 : 36}
+						paddingTop={'30px'}
+					>
+						<LabelInput
+							title={'First name'}
+							inputType={'text'}
+							control={signUpForm.get('firstName')}
+							updateControl={updateForm}
+						/>
+						<LabelInput
+							title={'Last name'}
+							inputType={'text'}
+							control={signUpForm.get('lastName')}
+							updateControl={updateForm}
+						/>
+					</Box>
 					<LabelInput
-						title={'First name'}
-						inputType={'text'}
-						control={signUpForm.get('firstName')}
+						title={'Email Address'}
+						inputType={'email'}
+						control={signUpForm.get('primaryEmail')}
 						updateControl={updateForm}
 					/>
-					<LabelInput
-						title={'Last name'}
-						inputType={'text'}
-						control={signUpForm.get('lastName')}
-						updateControl={updateForm}
+					<Box
+						display={'flex'}
+						flexDirection={size === 'small' ? 'column' : 'row'}
+						gap={size === 'small' ? 0 : 36}
+					>
+						<LabelInput
+							title={'Create new password'}
+							inputType={'password'}
+							control={signUpForm.get('password')}
+							updateControl={updateForm}
+						/>
+						<LabelInput
+							title={'Confirm new password'}
+							inputType={'password'}
+							control={signUpForm.get('confirmPassword')}
+							updateControl={updateForm}
+						/>
+					</Box>
+					<LabelCheckbox
+						value={1}
+						text={
+							<>
+								I agree to the{' '}
+								<Link path={`/legal/terms-and-conditions`} external target={'blank'}>
+									<span>terms and conditions</span>.
+								</Link>
+							</>
+						}
+						onSelect={() => {
+							setHasAgreedToTerms(true);
+						}}
+						onDeselect={() => {
+							setHasAgreedToTerms(false);
+						}}
+						isChecked={hasAgreedToTerms}
 					/>
-				</Box>
-				<LabelInput
-					title={'Email Address'}
-					inputType={'email'}
-					control={signUpForm.get('primaryEmail')}
-					updateControl={updateForm}
-				/>
-				<Box
-					display={'flex'}
-					flexDirection={size === 'small' ? 'column' : 'row'}
-					gap={size === 'small' ? 0 : 36}
-				>
-					<LabelInput
-						title={'Create new password'}
-						inputType={'password'}
-						control={signUpForm.get('password')}
-						updateControl={updateForm}
+					<LabelButton
+						look={hasAgreedToTerms ? 'containedPrimary' : 'containedSecondary'}
+						disabled={!hasAgreedToTerms}
+						label={'Sign up'}
+						variant={'button'}
+						buttonType={'submit'}
 					/>
-					<LabelInput
-						title={'Confirm new password'}
-						inputType={'password'}
-						control={signUpForm.get('confirmPassword')}
-						updateControl={updateForm}
-					/>
-				</Box>
-				<LabelCheckbox
-					value={1}
-					text={
-						<>
-							I agree to the{' '}
-							<Link path={`/legal/terms-and-conditions`} external target={'blank'}>
-								<span>terms and conditions</span>.
-							</Link>
-						</>
-					}
-					onSelect={() => {
-						setHasAgreedToTerms(true);
-					}}
-					onDeselect={() => {
-						setHasAgreedToTerms(false);
-					}}
-					isChecked={hasAgreedToTerms}
-				/>
-				<LabelButton
-					look={hasAgreedToTerms ? 'containedPrimary' : 'containedSecondary'}
-					disabled={!hasAgreedToTerms}
-					onClick={signup}
-					label={'Sign up'}
-					variant={'button'}
-				/>
+				</form>
 				<Label variant={'body2'} color={'red'}>
 					{errorMessage}
 				</Label>

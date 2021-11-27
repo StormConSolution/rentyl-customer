@@ -8,7 +8,6 @@ import globalState from '../../state/globalState';
 import { useRecoilState } from 'recoil';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import serviceFactory from '../../services/serviceFactory';
-import AccommodationService from '../../services/accommodation/accommodation.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import router from '../../utils/router';
 import Footer from '../../components/footer/Footer';
@@ -16,45 +15,40 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import { ObjectUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import ComparisonTable from '../../components/comparisonTable/ComparisonTable';
+import DestinationService from '../../services/destination/destination.service';
 
 const ComparisonPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
-	const [comparisonItems, setComparisonItems] = recoilComparisonState;
-	const [accommodationDetailList, setAccommodationDetailList] = useState<Api.Accommodation.Res.Details[]>([]);
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonState>(
+		globalState.destinationComparison
+	);
+	const [destinationList, setDestinationList] = useState<Api.Destination.Res.Get[]>([]);
 	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
 
 	useEffect(() => {
-		setComparisonItems(recoilComparisonState[0]);
 		setWaitToLoad(false);
 		document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 	}, []);
 
 	useEffect(() => {
 		let id = router.subscribeToBeforeRouterNavigate(() => {
-			if (!ObjectUtils.isArrayWithData(comparisonItems))
+			if (!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails))
 				document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.remove('show');
 			else document.querySelector<HTMLElement>('.rsComparisonDrawer')!.classList.add('show');
 		});
 		return () => {
 			router.unsubscribeFromBeforeRouterNavigate(id);
 		};
-	}, [comparisonItems]);
+	}, [recoilComparisonState.destinationDetails]);
 
 	useEffect(() => {
-		async function getAccommodation() {
+		async function getDestinations() {
 			try {
-				const accommodationIds = comparisonItems.map((accommodation, index) => {
-					if (accommodation.selectedRoom === 0) {
-						return accommodation.roomTypes[0].value as number;
-					}
-					return accommodation.selectedRoom;
+				const destinationResults = await destinationService.getDestinationByIds({
+					ids: recoilComparisonState.destinationDetails.map((destination) => destination.destinationId)
 				});
-				if (accommodationIds) {
-					let res = await accommodationService.getManyAccommodationDetails(accommodationIds);
-					setAccommodationDetailList(res);
-				}
+				setDestinationList(destinationResults);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Unable to get details for these locations'),
@@ -62,12 +56,12 @@ const ComparisonPage: React.FC = () => {
 				);
 			}
 		}
-		getAccommodation().catch(console.error);
+		getDestinations().catch(console.error);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [comparisonItems]);
+	}, [recoilComparisonState.destinationDetails]);
 
 	function renderComparisonTable() {
-		return <ComparisonTable comparisonItems={comparisonItems} accommodationDetailList={accommodationDetailList} />;
+		return <ComparisonTable comparisonState={recoilComparisonState} destinationDetailList={destinationList} />;
 	}
 
 	return waitToLoad ? (

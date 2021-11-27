@@ -13,7 +13,6 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelImage from '../../components/labelImage/LabelImage';
-import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
@@ -26,7 +25,6 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import ComparisonService from '../../services/comparison/comparison.service';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -37,6 +35,7 @@ import PaginationViewMore from '../../components/paginationViewMore/PaginationVi
 import Button from '@bit/redsky.framework.rs.button';
 import TabbedCarouselPopup, { TabbedCarouselPopupProps } from '../../popups/tabbedCarouselPopup/TabbedCarouselPopup';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -46,10 +45,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [totalResults, setTotalResults] = useState<number>(0);
@@ -232,26 +229,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								: '';
 						router.navigate(`/accommodation/details?ai=${item.id}${dates}`).catch(console.error);
 					}}
-					onCompareClick={() => {
-						if (!destinationDetails) return;
-						let selectedRoom = destinationDetails.accommodations.filter((value) => value.id === item.id);
-						setComparisonId(comparisonId + 1);
-						comparisonService.addToComparison(recoilComparisonState, {
-							comparisonId: comparisonId,
-							destinationId: Date.now(),
-							logo: destinationDetails.logoUrl,
-							title: destinationDetails.name,
-							roomTypes: destinationDetails.accommodations
-								.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-								.map((value) => {
-									return {
-										value: value.id,
-										label: value.name
-									};
-								}),
-							selectedRoom: selectedRoom[0].id || destinationDetails.accommodations[0].id
-						});
-					}}
 					roomStats={[
 						{
 							label: 'Sleeps',
@@ -294,7 +271,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		if (!destinationDetails?.experiences) return null;
 		return (
 			<Box className={'sectionThree'} marginBottom={'190px'}>
-				{/*{renderFeatureCarousel()}*/}
 				{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
 			</Box>
 		);
@@ -339,6 +315,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<SubNavMenu
+					pageRefs={{
+						galleryRef: availableStaysRef,
+						overviewRef: availableStaysRef,
+						experiencesRef: availableStaysRef,
+						availableStaysRef: availableStaysRef
+					}}
+				/>
 				<Box className={'sectionOne'}>
 					<HeroImage image={destinationDetails.heroUrl} height={'420px'} mobileHeight={'420px'} />
 					<Box className={'headerWrapper'}>

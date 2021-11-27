@@ -21,6 +21,7 @@ interface DestinationSearchResultCardMobileProps {
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 	onGalleryClick: () => void;
+	onRemoveCompareClick?: () => void;
 	minPrice: number;
 	minPoints: number;
 }
@@ -58,6 +59,10 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					if (props.onAddCompareClick) props.onAddCompareClick();
 				}}
 				onGalleryClick={props.onGalleryClick}
+				onRemoveCompareClick={() => {
+					if (props.onRemoveCompareClick) props.onRemoveCompareClick();
+				}}
+				destinationId={props.destinationId}
 			/>
 			<Box className={'mobileCardInfo'}>
 				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>

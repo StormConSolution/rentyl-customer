@@ -23,17 +23,12 @@
 		top: -110px;
 	}
 
-	.logoContainer {
-		//margin: 42px 0 0 34px;
-	}
-
 	.menuContainer {
 		background-color: white;
 		border: 1px solid theme-var($greyLineColor);
 		border-radius: 10px;
 		max-width: 76px;
 		max-height: 39px;
-		//margin: 42px 34px 12px 12px;
 		cursor: pointer;
 		.rsIcon {
 			&.icon-account-icon {

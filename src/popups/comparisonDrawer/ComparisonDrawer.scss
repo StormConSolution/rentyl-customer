@@ -1,11 +1,12 @@
 @import '../../themes/themes';
 .rsComparisonDrawer {
 	position: fixed;
-	height: 120px;
-	width: 1440px;
-	margin: 0 auto;
-	padding: 20px 140px;
+	width: 100%;
+	padding: 0 20px;
 	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -18,6 +19,50 @@
 		transform: translateY(0);
 	}
 
+	.comparisonButtons {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.rsButton.contained.primary {
+			color: #fff;
+			display: flex;
+			height: 42px;
+			gap: 13px;
+			padding: 15px;
+			border-radius: 5px 0 0 5px;
+			.rsLabel:first-child {
+				display: grid;
+				place-items: center;
+				border-radius: 50%;
+				border: 1px solid #fff;
+				height: 24px;
+				width: 24px;
+			}
+		}
+
+		.clearButton {
+			background-color: theme-var($yellowTextColor);
+			width: 42px;
+			height: 42px;
+			border-radius: 0 5px 5px 0;
+		}
+		.plusCompareIcon {
+			display: grid;
+			place-items: center;
+			border: 1px solid #fff;
+			width: 24px;
+			height: 24px;
+			border-radius: 50%;
+			.icon-plus {
+			}
+		}
+	}
+	.rsButton.contained.secondary {
+		background: theme-var($yellowTextColor);
+		color: theme-var($secondaryTextColor);
+		font-size: 30px;
+		padding: 16px 20px;
+	}
 	.rsResortComparisonCard {
 		margin-right: 16px;
 	}
@@ -28,20 +73,14 @@
 			top: auto;
 		}
 	}
-
-	.rsLabelButton {
-		&.contained {
-			margin-bottom: 8px;
-		}
-	}
 }
 
 .small {
 	.rsComparisonDrawer {
-		width: 100vw;
+		justify-content: center;
+		margin: 0;
 		overflow-x: auto;
-		padding: 20px;
-		height: 150px;
+		padding: 9px;
 		transform: translateY(150px);
 		&.show {
 			transform: translateY(0);

@@ -208,11 +208,36 @@ html {
 		font-weight: $regular;
 	}
 	&.customEighteen {
+		font-size: 18px;
+		line-height: 15px;
+		font-weight: $semiBold;
+	}
+	&.customNineteen {
+		font-size: 14px;
+		line-height: 24px;
+		font-weight: $regular;
+	}
+	&.customTwenty {
+		font-size: 17px;
+		line-height: 9px;
+		font-weight: $regular;
+	}
+	&.customTwentyOne {
+		font-size: 25px;
+		line-height: 19px;
+		font-weight: $semiBold;
+	}
+	&.customTwentyTwo {
+		font-size: 35px;
+		line-height: 19px;
+		font-weight: $regular;
+	}
+	&.customEighteenAlex {
 		font-size: 41px;
 		line-height: 18px;
 		font-weight: $regular;
 	}
-	&.customNineteen {
+	&.customNineteenAlex {
 		font-size: 25px;
 		line-height: 39px;
 		font-weight: $light;
