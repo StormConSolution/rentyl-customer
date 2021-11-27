@@ -36,6 +36,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import Button from '@bit/redsky.framework.rs.button';
 import TabbedCarouselPopup, { TabbedCarouselPopupProps } from '../../popups/tabbedCarouselPopup/TabbedCarouselPopup';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -369,6 +370,16 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					}}
 				>
 					Click to open Popup
+				</Button>
+				<Button
+					look={'containedPrimary'}
+					onClick={() => {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							featureData: renderFeatureCarousel()
+						});
+					}}
+				>
+					Click to open Mobile
 				</Button>
 				{renderSectionTwo()}
 				{renderSectionThree()}

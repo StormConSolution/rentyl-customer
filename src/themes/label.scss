@@ -217,4 +217,19 @@ html {
 		line-height: 39px;
 		font-weight: $light;
 	}
+	&.mobileLightBoxCustomOne {
+		font-size: 17px;
+		line-height: 29px;
+		font-weight: $regular;
+	}
+	&.mobileLightBoxCustomTwo {
+		font-size: 16px;
+		line-height: 31px;
+		font-weight: $regular;
+	}
+	&.mobileLightBoxCustomThree {
+		font-size: 14px;
+		line-height: 41px;
+		font-weight: $regular;
+	}
 }

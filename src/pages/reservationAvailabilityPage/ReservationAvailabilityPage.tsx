@@ -18,13 +18,12 @@ import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
-import Footer from '../../components/footer/Footer';
-import { FooterLinks } from '../../components/footer/FooterLinks';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
@@ -119,6 +118,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 							title: destination.name,
 							roomTypes: roomTypes,
 							selectedRoom: destination.accommodations[0].id
+						});
+					}}
+					onGalleryClick={() => {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							imageData: destination.media
 						});
 					}}
 				/>

@@ -11,6 +11,8 @@ interface CarouselButtonsProps {
 	left?: string;
 	onClickRight: () => void;
 	onClickLeft: () => void;
+	carouselButtonRef?: React.RefObject<HTMLDivElement>;
+	className?: string;
 }
 
 const CarouselButtons: React.FC<CarouselButtonsProps> = (props) => {
@@ -25,7 +27,11 @@ const CarouselButtons: React.FC<CarouselButtonsProps> = (props) => {
 	}
 
 	return (
-		<div className={'rsCarouselButtons'} style={renderStyle()}>
+		<div
+			className={`rsCarouselButtons ${props.className || ''}`}
+			style={renderStyle()}
+			ref={props.carouselButtonRef}
+		>
 			<Button look={'none'} onClick={props.onClickLeft}>
 				<Icon iconImg={'icon-chevron-left'} color={'#ffffff'} size={20} />
 			</Button>
