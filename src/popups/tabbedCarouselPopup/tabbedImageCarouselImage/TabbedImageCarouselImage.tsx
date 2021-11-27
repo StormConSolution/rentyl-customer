@@ -20,10 +20,12 @@ const TabbedImageCarouselImage: React.FC<TabbedImageCarouselImageProps> = (props
 			style={{ backgroundImage: `url(${props.tabData.otherMedia[imageIndex].urls.imageKit})` }}
 		>
 			<Paper boxShadow borderRadius={'5px'}>
-				<Label variant={'customEighteen'} mb={12}>
+				<Label variant={'tabbedImageCarouselCustomOne'} mb={12}>
 					{props.tabData.otherMedia[imageIndex].title}
 				</Label>
-				<Label variant={'customNineteen'}>{props.tabData.otherMedia[imageIndex].description}</Label>
+				<Label variant={'tabbedImageCarouselCustomTwo'}>
+					{props.tabData.otherMedia[imageIndex].description}
+				</Label>
 				<CarouselButtons
 					position={'absolute'}
 					top={'-75px'}
