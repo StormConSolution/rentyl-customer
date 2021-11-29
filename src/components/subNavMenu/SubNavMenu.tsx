@@ -38,7 +38,10 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 	}
 
 	return (
-		<div className={`rsSubNavMenu ${scrollDirection === 'DOWN' && 'moveUp'}`} style={{ top: getAppBarHeight() }}>
+		<div
+			className={`rsSubNavMenu ${scrollDirection === 'DOWN' ? 'moveUp' : ''}`}
+			style={{ top: getAppBarHeight() }}
+		>
 			<Button
 				className={'backButton'}
 				look={'none'}

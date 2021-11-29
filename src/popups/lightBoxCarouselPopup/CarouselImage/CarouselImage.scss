@@ -1,11 +1,12 @@
 @import '../../../themes/themes';
-.rsTabbedImageCarouselImage {
+.rsCarouselImage {
 	position: relative;
 	display: grid;
 	place-items: end;
 	padding: 30px;
+	background-repeat: no-repeat;
+	background-position: center;
 	box-sizing: border-box;
-	height: calc(100vh - 80px);
 	transition: all 500ms;
 	.rsPaper {
 		position: relative;
