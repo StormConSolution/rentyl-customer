@@ -69,7 +69,7 @@ const AccountPointsPage: React.FC = () => {
 									? 'pinkChip pointTypeLabel'
 									: 'blueChip pointTypeLabel'
 							}
-							variant={'customTwentyFive'}
+							variant={'pointsPageCustomThree'}
 						>
 							{StringUtils.capitalizeFirst(point.pointType.toLowerCase())}
 						</Label>
@@ -84,20 +84,20 @@ const AccountPointsPage: React.FC = () => {
 			) : (
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
 					<div className={'pendingPointMobile'}>
-						<Label variant={'customTwentySeven'}>Transaction Type</Label>
-						<Label className={'pendingPointRight'} variant={'customTwentyEight'}>
+						<Label variant={'pointsPageCustomFive'}>Transaction Type</Label>
+						<Label className={'pendingPointRight'} variant={'pointsPageCustomSix'}>
 							{StringUtils.capitalizeFirst(point.title)}
 						</Label>
 					</div>
 					<div className={'pendingPointMobile'}>
-						<Label variant={'customTwentySeven'}>Date</Label>
-						<Label className={'pendingPointRight'} variant={'customTwentyEight'}>
+						<Label variant={'pointsPageCustomFive'}>Date</Label>
+						<Label className={'pendingPointRight'} variant={'pointsPageCustomSix'}>
 							{DateUtils.formatDate(new Date(point.createdOn), 'MM-DD-YY')}
 						</Label>
 					</div>
 					<div className={'pendingPointMobile'}>
-						<Label variant={'customTwentySeven'}>Point amount</Label>
-						<Label className={'pendingPointRight'} variant={'customTwentyEight'}>
+						<Label variant={'pointsPageCustomFive'}>Point amount</Label>
+						<Label className={'pendingPointRight'} variant={'pointsPageCustomSix'}>
 							{getPointAmount(point)}
 						</Label>
 					</div>
@@ -108,7 +108,7 @@ const AccountPointsPage: React.FC = () => {
 									? 'pinkChip pointTypeLabel'
 									: 'blueChip pointTypeLabel'
 							}
-							variant={'customTwentyFive'}
+							variant={'pointsPageCustomThree'}
 						>
 							{StringUtils.capitalizeFirst(point.pointType.toLowerCase())}
 						</Label>
@@ -141,19 +141,19 @@ const AccountPointsPage: React.FC = () => {
 					<div className={'pendingPointsContainer'}>
 						<Label
 							className={'pendingPointsLabel'}
-							variant={size === 'small' ? 'customTwentySix' : 'customTwentyThree'}
+							variant={size === 'small' ? 'pointsPageCustomFour' : 'pointsPageCustomOne'}
 						>
 							Pending Points
 						</Label>
 						{size === 'small' && <hr className={'mobilePendingPointsHr'} />}
 						<Box className={'pending pointTableHeader'}>
-							<Label className={'transactionType'} variant={'customTwentyFour'}>
+							<Label className={'transactionType'} variant={'pointsPageCustomTwo'}>
 								Transaction type
 							</Label>
-							<Label className={'dateReceived'} variant={'customTwentyFour'}>
+							<Label className={'dateReceived'} variant={'pointsPageCustomTwo'}>
 								Date
 							</Label>
-							<Label className={'pointAmount'} variant={'customTwentyFour'}>
+							<Label className={'pointAmount'} variant={'pointsPageCustomTwo'}>
 								Point amount
 							</Label>
 						</Box>

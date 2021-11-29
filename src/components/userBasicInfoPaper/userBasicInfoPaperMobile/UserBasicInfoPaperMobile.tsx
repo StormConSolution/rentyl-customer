@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './UserBasicInfoPaperMobile.scss';
 import Paper from '../../paper/Paper';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../../utils/utils';
 
@@ -44,13 +44,13 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 			<Label variant={'customFive'} mb={8}>
 				Pending Points
 			</Label>
-			<Label variant={'customTwentyNine'} mb={25}>
+			<Label variant={'userBasicInfoCustomOne'} mb={25}>
 				{StringUtils.addCommasToNumber(props.userData.pendingPoints)}
 			</Label>
 			<Label variant={'customFive'} mb={8}>
 				Lifetime Points
 			</Label>
-			<Label variant={'customTwentyNine'} mb={25}>
+			<Label variant={'userBasicInfoCustomOne'} mb={25}>
 				{StringUtils.addCommasToNumber(props.userData.lifeTimePoints)}
 			</Label>
 			<Label variant={'customEight'} mb={6}>

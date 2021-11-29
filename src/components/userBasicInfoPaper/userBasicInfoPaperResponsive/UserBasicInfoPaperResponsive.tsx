@@ -73,7 +73,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					<Label variant={'customFive'} mb={8}>
 						Points Pending
 					</Label>
-					<Label variant={'customTwentyNine'}>
+					<Label variant={'userBasicInfoCustomOne'}>
 						{StringUtils.addCommasToNumber(props.userData.pendingPoints)}
 					</Label>
 				</div>
@@ -81,7 +81,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					<Label variant={'customFive'} mb={8}>
 						Lifetime Points
 					</Label>
-					<Label variant={'customTwentyNine'}>
+					<Label variant={'userBasicInfoCustomOne'}>
 						{StringUtils.addCommasToNumber(props.userData.lifeTimePoints)}
 					</Label>
 				</div>
