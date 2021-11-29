@@ -27,7 +27,8 @@ interface IconLabelProps {
 		| 'overline'
 		| 'srOnly'
 		| 'inherit'
-		| 'error';
+		| 'error'
+		| string;
 	className?: string;
 	color?: string;
 	onClick?: () => void;

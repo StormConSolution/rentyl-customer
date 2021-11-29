@@ -1,0 +1,45 @@
+@import '../../themes/themes';
+.rsDestinationImageGallery {
+	display: grid;
+	grid-template-areas:
+		'a a b'
+		'a a c';
+	gap: 30px;
+	grid-template-rows: repeat(2, 300px);
+	padding: 0 30px;
+	.rsImg {
+		border-radius: 20px;
+		width: 100%;
+		height: 100%;
+		cursor: pointer;
+	}
+	.imageOne {
+		max-width: 1177px;
+		max-height: 655px;
+		grid-area: a;
+	}
+	.imageTwo {
+		grid-area: b;
+	}
+	.imageThree {
+		position: relative;
+		grid-area: c;
+		.imageCountContainer {
+			position: absolute;
+			display: flex;
+			align-items: center;
+			background: rgba(0, 0, 0, 0.53);
+			padding: 5px 16px;
+			box-sizing: border-box;
+			border-radius: 5px;
+			bottom: 15px;
+			right: 15px;
+			.rsIcon {
+				margin-right: 11px;
+			}
+			.rsLabel {
+				color: #ffffff;
+			}
+		}
+	}
+}
