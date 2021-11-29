@@ -23,6 +23,7 @@ import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoader
 import { StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
+import ReservationDetailsPaper from '../../components/reservationDetailsPaper/ReservationDetailsPaper';
 
 const ReservationDetailsPage: React.FC = () => {
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
@@ -80,25 +81,7 @@ const ReservationDetailsPage: React.FC = () => {
 	) : (
 		<Page className={'rsReservationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<HeroImage
-					image={require('../../images/itineraryDetailsPage/heroImg.jpg')}
-					height={'464px'}
-					mobileHeight={'400px'}
-				>
-					<ItineraryInfoCard
-						backButton={{
-							link: '/reservations/itinerary/details?ii=' + reservation.itineraryId,
-							label: '< Back to itinerary Details'
-						}}
-						logoImgUrl={reservation.destination.logoUrl}
-						name={reservation.accommodation.name}
-						description={reservation.accommodation.longDescription}
-						callToActionButton={{
-							link: `/accommodation/details?ai=${reservation.accommodation.id}`,
-							label: 'View Accommodation'
-						}}
-					/>
-				</HeroImage>
+				<ReservationDetailsPaper reservationData={reservation} />
 				<div className={'contentWrapper'}>
 					<div className={'reservationsWrapper'}>
 						<Label variant={'h1'} mb={40}>

@@ -257,4 +257,24 @@ html {
 		line-height: 41px;
 		font-weight: $regular;
 	}
+	&.reservationDetailsPaperCustomOne {
+		font-size: 25px;
+		line-height: 30px;
+		font-weight: $semiBold;
+	}
+	&.reservationDetailsPaperCustomTwo {
+		font-size: 21px;
+		line-height: 29px;
+		font-weight: $medium;
+	}
+	&.reservationDetailsPaperCustomThree {
+		font-size: 13px;
+		line-height: 16px;
+		font-weight: $regular;
+	}
+	&.reservationDetailsPaperCustomFour {
+		font-size: 17px;
+		line-height: 23px;
+		font-weight: $light;
+	}
 }
