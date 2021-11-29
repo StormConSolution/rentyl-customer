@@ -36,9 +36,21 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 				</Box>
 			</Box>
 			<Label variant={'customFive'} mb={8}>
-				Points Earned
+				Points Available
 			</Label>
 			<Label variant={'customSix'} color={'#FFA022'} mb={25}>
+				{StringUtils.addCommasToNumber(props.userData.availablePoints)}
+			</Label>
+			<Label variant={'customFive'} mb={8}>
+				Pending Points
+			</Label>
+			<Label variant={'customTwentyNine'} mb={25}>
+				{StringUtils.addCommasToNumber(props.userData.pendingPoints)}
+			</Label>
+			<Label variant={'customFive'} mb={8}>
+				Lifetime Points
+			</Label>
+			<Label variant={'customTwentyNine'} mb={25}>
 				{StringUtils.addCommasToNumber(props.userData.lifeTimePoints)}
 			</Label>
 			<Label variant={'customEight'} mb={6}>

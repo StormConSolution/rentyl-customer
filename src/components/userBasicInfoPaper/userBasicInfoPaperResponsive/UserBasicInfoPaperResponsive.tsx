@@ -60,23 +60,41 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					</div>
 				</Box>
 			</Box>
-			<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+			<Box className={'pointsContainer'}>
 				<div>
 					<Label variant={'customFive'} mb={8}>
-						Points Earned
+						Points Available
 					</Label>
 					<Label variant={'customSix'} color={'#FFA022'}>
+						{StringUtils.addCommasToNumber(props.userData.availablePoints)}
+					</Label>
+				</div>
+				<div>
+					<Label variant={'customFive'} mb={8}>
+						Points Pending
+					</Label>
+					<Label variant={'customTwentyNine'}>
+						{StringUtils.addCommasToNumber(props.userData.pendingPoints)}
+					</Label>
+				</div>
+				<div>
+					<Label variant={'customFive'} mb={8}>
+						Lifetime Points
+					</Label>
+					<Label variant={'customTwentyNine'}>
 						{StringUtils.addCommasToNumber(props.userData.lifeTimePoints)}
 					</Label>
 				</div>
-				<LabelButton
-					look={'containedPrimary'}
-					variant={'customTwelve'}
-					label={'See Loyalty Tiers'}
-					onClick={() => {
-						popupController.open(LoyaltyTierPopup);
-					}}
-				/>
+				<div className={'loyaltyTierButtonContainer'}>
+					<LabelButton
+						look={'containedPrimary'}
+						variant={'customTwelve'}
+						label={'See Loyalty Tiers'}
+						onClick={() => {
+							popupController.open(LoyaltyTierPopup);
+						}}
+					/>
+				</div>
 			</Box>
 		</Paper>
 	);
