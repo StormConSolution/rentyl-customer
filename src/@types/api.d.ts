@@ -770,7 +770,11 @@ declare namespace Api {
 				experienceId: number;
 				description: string;
 				isHighlighted: 0 | 1;
-				mediaIds: MediaDetails[];
+				media: Omit<Api.Media, 'urls' | 'companyId' | 'uploaderId' | 'type'>[];
+			}
+
+			export interface UpdateDestinationExperience extends CreateDestinationExperience {
+				destinationExperienceId: number;
 			}
 
 			export interface Update extends Partial<Create> {

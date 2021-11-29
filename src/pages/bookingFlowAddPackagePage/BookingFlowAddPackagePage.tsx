@@ -9,9 +9,12 @@ import { ObjectUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
 import PackageService from '../../services/package/package.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
+	const size = useWindowResizeChange();
+	const smallSize = size === 'small';
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
@@ -134,33 +137,40 @@ const BookingFlowAddPackagePage = () => {
 		});
 	}
 
+	function renderContinueBtn() {
+		return (
+			<LabelButton
+				className="continueButton"
+				look={'none'}
+				variant={'customTwelve'}
+				label={'Continue To book'}
+				onClick={() => {
+					if (!params.data.newRoom) return;
+					let newStay: Misc.StayParams = params.data.newRoom;
+					newStay.packages = addedPackages.map((item) => item.id);
+					let stays: Misc.StayParams[] = params.data.stays || [];
+					stays.push(newStay);
+
+					let bookingParams: Misc.BookingParams = {
+						destinationId: params.data.destinationId,
+						stays
+					};
+					router.navigate(`/booking/checkout?data=${JSON.stringify(bookingParams)}`).catch(console.error);
+				}}
+			/>
+		);
+	}
+
 	return !ObjectUtils.isArrayWithData(availablePackages) && !ObjectUtils.isArrayWithData(addedPackages) ? (
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowAddPackagePage'}>
 			<Box className="packageSection">
+				{smallSize ? renderContinueBtn() : null}
 				{addedPackages.length > 0 && <Box className={'addedPackages'}>{renderPackages()}</Box>}
 				<div ref={filterRef} />
 				<Box className={'availablePackages'}>{renderAvailablePackages()}</Box>
-				<LabelButton
-					className="continueButton"
-					look={'none'}
-					variant={'customTwelve'}
-					label={'Continue To book'}
-					onClick={() => {
-						if (!params.data.newRoom) return;
-						let newStay: Misc.StayParams = params.data.newRoom;
-						newStay.packages = addedPackages.map((item) => item.id);
-						let stays: Misc.StayParams[] = params.data.stays || [];
-						stays.push(newStay);
-
-						let bookingParams: Misc.BookingParams = {
-							destinationId: params.data.destinationId,
-							stays
-						};
-						router.navigate(`/booking/checkout?data=${JSON.stringify(bookingParams)}`).catch(console.error);
-					}}
-				/>
+				{renderContinueBtn()}
 			</Box>
 		</Page>
 	);

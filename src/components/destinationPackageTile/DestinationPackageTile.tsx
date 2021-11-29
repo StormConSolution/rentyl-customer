@@ -10,6 +10,10 @@ import globalState from '../../state/globalState';
 import Img from '@bit/redsky.framework.rs.img';
 import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { popupController } from '@bit/redsky.framework.rs.996';
+import MobilePackageDescriptionPopup, {
+	MobilePackageDescriptionPopupProps
+} from '../../popups/mobilePackageDescriptionPopup/MobilePackageDescriptionPopup';
 
 interface DestinationPackageTileProps {
 	title: string;
@@ -36,9 +40,32 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					height={smallSize ? 219 : 600}
 				/>
 			</Box>
-			<Box width={smallSize ? 327 : 550} paddingLeft={smallSize ? 0 : 44}>
-				<Label variant={size} color="#001933" marginBottom={16}>
+			<Box width={smallSize ? '100%' : 550} paddingLeft={smallSize ? 0 : 44}>
+				<Label
+					className="titleAndIcon"
+					variant={smallSize ? 'customFour' : 'customTwentyFour'}
+					color="#001933"
+					marginY={10}
+				>
 					{props.title}
+					{smallSize ? (
+						<Icon
+							iconImg={'icon-info-outline'}
+							size={23}
+							color="#000"
+							onClick={() => {
+								popupController.open<MobilePackageDescriptionPopupProps>(
+									MobilePackageDescriptionPopup,
+									{
+										packageImage: props.imgPaths[0],
+										description: props.description,
+										addPackage: props.onAddPackage!,
+										isAdded: props.isAdded!
+									}
+								);
+							}}
+						/>
+					) : null}
 				</Label>
 				{smallSize ? null : (
 					<Label
@@ -63,14 +90,15 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					</Label>
 				)}
 			</Box>
-			<Box className="mobilePriceAndButtonContainer" width={smallSize ? 327 : 'auto'}>
+			<Box className="priceAndButtonContainer" width={smallSize ? '100%' : 'auto'}>
 				<Box className="priceAndTextLabelContainer">
 					{company.allowCashBooking && (
-						<Label variant={'customTwentyThree'} marginBottom={9}>
-							${StringUtils.formatMoney(props.prices.amountAfterTax)}
+						<Label variant={smallSize ? 'customTwentyFive' : 'customTwentyThree'} marginBottom={9}>
+							<span className="priceFont">${StringUtils.formatMoney(props.prices.amountAfterTax)}</span>{' '}
+							{smallSize ? '/ stay' : null}
 						</Label>
 					)}
-					<Label variant="customThree">Per Stay</Label>
+					{!smallSize ? <Label variant="customThree">Per Stay</Label> : null}
 				</Box>
 				<LabelButton
 					look={'none'}
