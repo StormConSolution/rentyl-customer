@@ -18,7 +18,7 @@ export interface ImageTabProp {
 	imagePath: string;
 	description: string;
 	buttonLabel?: string;
-	otherMedia?: Api.Media[];
+	otherMedia: Api.Media[];
 }
 
 export interface TabbedImageCarouselProps {
