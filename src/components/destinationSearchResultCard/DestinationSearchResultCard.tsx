@@ -3,7 +3,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { DestinationSummaryTab } from '../tabbedDestinationSummary/TabbedDestinationSummary';
 import DestinationSearchResultCardMobile from './destinationSearchResultCardMobile/DestinationSearchResultCardMobile';
 import DestinationSearchResultCardResponsive from './destinationSearchResultCardResponsive/DestinationSearchResultCardResponsive';
-import Media = Api.Media;
+import DestinationExperience = Api.Destination.Res.DestinationExperience;
 
 export interface PriceObject {
 	priceCents: number;
@@ -19,14 +19,7 @@ export interface DestinationSearchResultCardProps {
 	minPrice: number;
 	minPoints: number;
 	destinationDescription: string;
-	destinationExperiences: {
-		id: number;
-		title: string;
-		icon: string;
-		description: string;
-		isHighlighted: 0 | 1;
-		media: Media[];
-	}[];
+	destinationExperiences: DestinationExperience[];
 	address: string;
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];

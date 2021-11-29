@@ -142,7 +142,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 	}
 
-	function renderFeatures() {
+	function renderExperiences() {
 		if (!destinationDetails || !destinationDetails.experiences) return;
 		let featureArray: any = [];
 		destinationDetails.experiences.forEach((item) => {
@@ -260,7 +260,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			<Box className={'sectionTwo'} marginBottom={'120px'}>
 				<Label variant={'h1'}>Features</Label>
 				<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
-					{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
+					{size === 'small' ? <Carousel children={renderExperiences()} /> : renderExperiences()}
 				</Box>
 			</Box>
 		);
