@@ -1,8 +1,7 @@
 @import '../../../themes/themes';
 .rsItineraryCardResponsive {
-	display: grid;
-	grid-template-columns: 278px 685px 204px;
-	justify-content: center;
+	display: flex;
+
 	.columnOne {
 		height: 230px;
 		margin-right: 16px;

@@ -189,15 +189,14 @@ const ExistingItineraryPage: React.FC = () => {
 		</Page>
 	) : (
 		<Page className={'rsExistingItineraryPage'}>
-			<div className={'rs-page-content-wrapper'}>
-				<Box m={'140px auto'} maxWidth={1160}>
-					<h1>Your Upcoming Reservations</h1>
-					{renderUpcomingReservations()?.reverse()}
-					<h1 className={'pastStays'}>Past Stays</h1>
-					{renderPrevReservations()}
-				</Box>
-				<Footer links={FooterLinks} />
-			</div>
+			<Box className="staysCard">
+				<h1>Your Upcoming Reservations</h1>
+				{renderUpcomingReservations()?.reverse()}
+			</Box>
+			<Box className="staysCard">
+				<h1 className={'pastStays'}>Past Stays</h1>
+				{renderPrevReservations()}
+			</Box>
 		</Page>
 	);
 };
