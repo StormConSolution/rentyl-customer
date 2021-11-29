@@ -11,20 +11,16 @@ interface ComparisonTableProps {
 
 const ComparisonTable: React.FC<ComparisonTableProps> = (props) => {
 	const size = useWindowResizeChange();
-	return (
-		<div className={'rsComparisonTable'}>
-			{size !== 'small' ? (
-				<ComparisonTableResponsive
-					comparisonState={props.comparisonState}
-					destinationDetailList={props.destinationDetailList}
-				/>
-			) : (
-				<ComparisonTableMobile
-					comparisonState={props.comparisonState}
-					destinationDetailList={props.destinationDetailList}
-				/>
-			)}
-		</div>
+	return size !== 'small' ? (
+		<ComparisonTableResponsive
+			comparisonState={props.comparisonState}
+			destinationDetailList={props.destinationDetailList}
+		/>
+	) : (
+		<ComparisonTableMobile
+			comparisonState={props.comparisonState}
+			destinationDetailList={props.destinationDetailList}
+		/>
 	);
 };
 

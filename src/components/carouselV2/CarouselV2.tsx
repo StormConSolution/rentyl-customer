@@ -14,10 +14,11 @@ import { ObjectUtils } from '../../utils/utils';
 interface CarouselV2Props {
 	path: string | (() => void);
 	imgPaths: string[];
-	onAddCompareClick: () => void;
-	onRemoveCompareClick: () => void;
+	onAddCompareClick?: () => void;
+	onRemoveCompareClick?: () => void;
 	onGalleryClick: () => void;
 	destinationId?: number;
+	hideCompareButton?: boolean;
 }
 
 const CarouselV2: React.FC<CarouselV2Props> = (props) => {
@@ -91,7 +92,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 			>
 				<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
 			</Button>
-			{(comparisonState.showCompareButton || size !== 'small') && (
+			{(comparisonState.showCompareButton || size !== 'small') && !props.hideCompareButton && (
 				<Button
 					className={'addToCompareButton'}
 					look={'none'}
@@ -105,9 +106,9 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 								.map((details) => details.destinationId)
 								.includes(props.destinationId)
 						) {
-							props.onRemoveCompareClick();
+							if (props.onRemoveCompareClick) props.onRemoveCompareClick();
 						} else {
-							props.onAddCompareClick();
+							if (props.onAddCompareClick) props.onAddCompareClick();
 						}
 					}}
 				>

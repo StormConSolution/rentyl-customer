@@ -24,7 +24,7 @@ const ComparisonPage: React.FC = () => {
 		globalState.destinationComparison
 	);
 	const [destinationList, setDestinationList] = useState<Api.Destination.Res.Get[]>([]);
-	const [waitToLoad, setWaitToLoad] = useState<boolean>(true);
+	const [waitToLoad, setWaitToLoad] = useState<boolean>(false);
 
 	// useEffect(() => {
 	// 	setWaitToLoad(false);

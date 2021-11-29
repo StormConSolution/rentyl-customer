@@ -2,14 +2,14 @@
 
 .rsComparisonTableResponsive {
 	display: grid;
-	grid-template-columns: 150px 1fr 1fr 1fr;
-	gap: 20px;
+	grid-template-columns: 283px 1fr 1fr 1fr;
+	gap: 46px;
 	padding-top: 60px;
 	padding-bottom: 20px;
 	.rowTitles {
 		display: grid;
 		gap: 20px;
-		grid-template-rows: 100px 18.5px 16px 16px 16px 35px 1fr;
+		grid-template-rows: repeat(auto-fit, 1fr);
 		.oddCell {
 			background-color: #fcfbf8;
 		}

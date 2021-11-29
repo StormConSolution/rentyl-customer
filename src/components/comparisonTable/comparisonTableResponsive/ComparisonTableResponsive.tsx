@@ -32,17 +32,17 @@ const ComparisonTableResponsive: React.FC<ComparisonTableResponsiveProps> = (pro
 		<Box className={'rsComparisonTableResponsive'}>
 			<Box className={'rowTitles'}>
 				<Box height={'100px'}></Box>
-				<Label variant={'h4'}>Property Type</Label>
-				<Label variant={'h4'} className={'oddCell'}>
+				<Label variant={'custom17'}>Property Type</Label>
+				<Label variant={'custom17'} className={'oddCell'}>
 					Guest Limit
 				</Label>
-				<Label variant={'h4'}>Extra Bedding</Label>
-				<Label variant={'h4'} className={'oddCell'}>
+				<Label variant={'custom17'}>Extra Bedding</Label>
+				<Label variant={'custom17'} className={'oddCell'}>
 					Accessible
 				</Label>
-				<Label variant={'h4'}>Features</Label>
-				<Label variant={'h4'} className={'oddCell'}>
-					Description
+				<Label variant={'custom17'}>Features</Label>
+				<Label variant={'custom17'} className={'oddCell'}>
+					Overview
 				</Label>
 			</Box>
 			{renderTableItems()}

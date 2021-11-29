@@ -6,11 +6,11 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import { ObjectUtils } from '../../utils/utils';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import router from '../../utils/router';
+import ComparisonPopup, { ComparisonPopupProps } from '../comparisonPopup/ComparisonPopup';
 
 const ComparisonDrawer: React.FC = () => {
 	const size = useWindowResizeChange();
@@ -55,7 +55,7 @@ const ComparisonDrawer: React.FC = () => {
 								ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) &&
 								recoilComparisonState.destinationDetails.length > 1
 							) {
-								router.navigate('/compare').catch(console.error);
+								popupController.open<ComparisonPopupProps>(ComparisonPopup, {});
 							} else {
 								setRecoilComparisonState((prev) => {
 									return {
@@ -92,7 +92,7 @@ const ComparisonDrawer: React.FC = () => {
 				<Button
 					look={'containedSecondary'}
 					onClick={() => {
-						router.navigate('/compare').catch(console.error);
+						popupController.open<ComparisonPopupProps>(ComparisonPopup, {});
 					}}
 					disabled={recoilComparisonState.destinationDetails.length < 2}
 				>
