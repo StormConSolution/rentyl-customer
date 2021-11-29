@@ -24,6 +24,10 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import LightBoxCarouselPopup, {
+	TabbedCarouselPopupProps
+} from '../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
 import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
@@ -119,6 +123,17 @@ const ReservationAvailabilityPage: React.FC = () => {
 					}}
 					onRemoveCompareClick={() => {
 						comparisonService.removeFromComparison(destination.id);
+					}}
+					onGalleryClick={() => {
+						if (size === 'small') {
+							popupController.open<MobileLightBoxProps>(MobileLightBox, {
+								imageData: destination.media
+							});
+						} else {
+							popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
+								imageData: destination.media
+							});
+						}
 					}}
 				/>
 			);

@@ -232,4 +232,29 @@ html {
 		line-height: 19px;
 		font-weight: $regular;
 	}
+	&.tabbedImageCarouselCustomOne {
+		font-size: 41px;
+		line-height: 18px;
+		font-weight: $regular;
+	}
+	&.tabbedImageCarouselCustomTwo {
+		font-size: 25px;
+		line-height: 39px;
+		font-weight: $light;
+	}
+	&.mobileLightBoxCustomOne {
+		font-size: 17px;
+		line-height: 29px;
+		font-weight: $regular;
+	}
+	&.mobileLightBoxCustomTwo {
+		font-size: 16px;
+		line-height: 31px;
+		font-weight: $regular;
+	}
+	&.mobileLightBoxCustomThree {
+		font-size: 14px;
+		line-height: 41px;
+		font-weight: $regular;
+	}
 }
