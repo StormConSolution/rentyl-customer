@@ -24,6 +24,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
@@ -119,6 +120,11 @@ const ReservationAvailabilityPage: React.FC = () => {
 					}}
 					onRemoveCompareClick={() => {
 						comparisonService.removeFromComparison(destination.id);
+					}}
+					onGalleryClick={() => {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							imageData: destination.media
+						});
 					}}
 				/>
 			);

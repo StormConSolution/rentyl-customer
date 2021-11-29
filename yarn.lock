@@ -1098,10 +1098,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bit/redsky.framework.rs.996@0.0.40":
-  version "0.0.40"
-  resolved "https://node.bit.dev/redsky.framework.rs.996/-/redsky.framework.rs.996-0.0.40.tgz#1f6bc3717a3dedd82bd8f866f3ff319bf16039de"
-  integrity sha1-H2vDcXo97dgr2Phm8/8xm/FgOd4=
+"@bit/redsky.framework.rs.996@0.0.41":
+  version "0.0.41"
+  resolved "https://node.bit.dev/redsky.framework.rs.996/-/redsky.framework.rs.996-0.0.41.tgz#f4536cf2f6666775ec46424c8296bfe3acb08117"
+  integrity sha1-9FNs8vZmZ3XsRkJMgpa/46ywgRc=
   dependencies:
     react "^17.0.2"
 
@@ -1191,10 +1191,10 @@
     lodash.clone "4.5.0"
     react "^17.0.2"
 
-"@bit/redsky.framework.rs.label@0.0.18":
-  version "0.0.18"
-  resolved "https://node.bit.dev/redsky.framework.rs.label/-/redsky.framework.rs.label-0.0.18.tgz#c3d3068868df70f8619266f0d011c91470d30a3e"
-  integrity sha1-w9MGiGjfcPhhkmbw0BHJFHDTCj4=
+"@bit/redsky.framework.rs.label@0.0.19":
+  version "0.0.19"
+  resolved "https://node.bit.dev/redsky.framework.rs.label/-/redsky.framework.rs.label-0.0.19.tgz#fc4ca14c9005f9f06bb23fba6843e195ac672bf9"
+  integrity sha1-/EyhTJAF+fBrsj+6aEPhlaxnK/k=
   dependencies:
     react "^17.0.2"
 
@@ -1205,12 +1205,12 @@
   dependencies:
     react "^17.0.2"
 
-"@bit/redsky.framework.rs.select@0.0.25":
-  version "0.0.25"
-  resolved "https://node.bit.dev/redsky.framework.rs.select/-/redsky.framework.rs.select-0.0.25.tgz#0956987ae1c8195a85ac0a4ec8a7c803d74d774e"
-  integrity sha1-CVaYeuHIGVqFrApOyKfIA9dNd04=
+"@bit/redsky.framework.rs.select@0.0.26":
+  version "0.0.26"
+  resolved "https://node.bit.dev/redsky.framework.rs.select/-/redsky.framework.rs.select-0.0.26.tgz#089e6502ae7290dd0271c3c8eeaaaa7271d2c3f0"
+  integrity sha1-CJ5lAq5ykN0CccPI7qqqcnHSw/A=
   dependencies:
-    "@bit/redsky.framework.rs.996" "0.0.40"
+    "@bit/redsky.framework.rs.996" "0.0.41"
     "@bit/redsky.framework.rs.form" "0.0.16"
     "@emotion/serialize" "0.11.16"
     "@types/react-select" "^4.0.17"
@@ -1218,7 +1218,7 @@
     react "^17.0.2"
     react-select "^4.3.1"
 
-"@bit/redsky.framework.rs.slider@^0.0.1":
+"@bit/redsky.framework.rs.slider@0.0.1":
   version "0.0.1"
   resolved "https://node.bit.dev/redsky.framework.rs.slider/-/redsky.framework.rs.slider-0.0.1.tgz#121369214871152f0392683286ce7b32298a57cb"
   integrity sha1-EhNpIUhxFS8Dkmgyhs57MimKV8s=
@@ -1235,14 +1235,14 @@
   dependencies:
     react "^17.0.2"
 
-"@bit/redsky.framework.rs.toastify@0.0.14":
-  version "0.0.14"
-  resolved "https://node.bit.dev/redsky.framework.rs.toastify/-/redsky.framework.rs.toastify-0.0.14.tgz#83aa87e8fd0ad1abbb4b08d8dfaaad855bc62206"
-  integrity sha1-g6qH6P0K0au7SwjY36qthVvGIgY=
+"@bit/redsky.framework.rs.toastify@0.0.16":
+  version "0.0.16"
+  resolved "https://node.bit.dev/redsky.framework.rs.toastify/-/redsky.framework.rs.toastify-0.0.16.tgz#999128c25c418691172605cc2aaf0b33f0e8a458"
+  integrity sha1-mZEowlxBhpEXJgXMKq8LM/DopFg=
   dependencies:
-    "@bit/redsky.framework.rs.996" "0.0.40"
+    "@bit/redsky.framework.rs.996" "0.0.41"
     "@bit/redsky.framework.rs.icon" "0.0.39"
-    "@bit/redsky.framework.rs.label" "0.0.18"
+    "@bit/redsky.framework.rs.label" "0.0.19"
     react "^17.0.2"
     react-toastify "^7.0.4"
 

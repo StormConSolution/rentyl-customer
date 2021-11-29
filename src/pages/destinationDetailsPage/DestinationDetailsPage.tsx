@@ -13,7 +13,6 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
 import LabelImage from '../../components/labelImage/LabelImage';
-import TabbedImageCarousel from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Carousel from '../../components/carousel/Carousel';
@@ -26,7 +25,6 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import ComparisonService from '../../services/comparison/comparison.service';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
@@ -34,6 +32,9 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import Button from '@bit/redsky.framework.rs.button';
+import TabbedCarouselPopup, { TabbedCarouselPopupProps } from '../../popups/tabbedCarouselPopup/TabbedCarouselPopup';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 interface DestinationDetailsPageProps {}
 
@@ -176,7 +177,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				otherMedia: item.media
 			});
 		}
-		return <TabbedImageCarousel tabs={carouselItems} />;
+		return carouselItems;
 	}
 
 	function renderMapSource() {
@@ -270,7 +271,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		if (!destinationDetails?.experiences) return null;
 		return (
 			<Box className={'sectionThree'} marginBottom={'190px'}>
-				{renderFeatureCarousel()}
 				{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
 			</Box>
 		);
@@ -345,6 +345,26 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						</Box>
 					</Box>
 				</Box>
+				<Button
+					look={'containedPrimary'}
+					onClick={() => {
+						popupController.open<TabbedCarouselPopupProps>(TabbedCarouselPopup, {
+							tabs: renderFeatureCarousel()
+						});
+					}}
+				>
+					Click to open Popup
+				</Button>
+				<Button
+					look={'containedPrimary'}
+					onClick={() => {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							featureData: renderFeatureCarousel()
+						});
+					}}
+				>
+					Click to open Mobile
+				</Button>
 				{renderSectionTwo()}
 				{renderSectionThree()}
 				{renderSectionFour()}
