@@ -1,21 +1,15 @@
 import * as React from 'react';
 import './DestinationDetailsPage.scss';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
-import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import DestinationInfoCard from '../../components/destinationInfoCard/DestinationInfoCard';
-import { FooterLinks } from '../../components/footer/FooterLinks';
-import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
-import LabelImage from '../../components/labelImage/LabelImage';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import Carousel from '../../components/carousel/Carousel';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -25,11 +19,7 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import FilterReservationPopup, {
-	FilterReservationPopupProps
-} from '../../popups/filterReservationPopup/FilterReservationPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
@@ -367,28 +357,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					</div>
 				) : (
 					<div className={'sectionFive'} ref={availableStaysRef}>
-						<Label variant={'h1'} mb={20}>
-							Available Stays
+						<hr />
+						<Label variant={'h1'} className={'chooseYourAccommodation'}>
+							Choose your accommodation
 						</Label>
-						{size !== 'small' ? (
-							<>
-								<FilterBar destinationId={destinationDetails.id} />
-							</>
-						) : (
-							<IconLabel
-								className={'moreFiltersLink'}
-								labelName={'More Filters'}
-								iconImg={'icon-chevron-right'}
-								iconPosition={'right'}
-								iconSize={8}
-								labelVariant={'caption'}
-								onClick={() => {
-									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-										className: 'filterPopup'
-									});
-								}}
-							/>
-						)}
+						<FilterBar destinationId={destinationDetails.id} isMobile={size === 'small'} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
 							{availabilityStayList.length <= 0 ? (
