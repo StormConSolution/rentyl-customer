@@ -84,6 +84,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderButtons() {
+		console.log(props.summaryTabs);
 		return props.summaryTabs.map((button) => {
 			if (ObjectUtils.isArrayWithData(props.summaryTabs)) {
 				if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
@@ -102,19 +103,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						/>
 					);
 				}
-			} else {
-				return (
-					<LabelButton
-						key={button.label}
-						look={'containedPrimary'}
-						variant={'button'}
-						label={'Accommodations'}
-						onClick={(event) => {
-							popupController.open<AccommodationsPopupProps>(AccommodationsPopup);
-							event.stopPropagation();
-						}}
-					/>
-				);
 			}
 		});
 	}

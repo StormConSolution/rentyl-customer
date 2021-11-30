@@ -45,6 +45,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 		WebUtils.updateUrlParams(reservationFilters);
 		async function getReservations() {
 			let res = await getPagedReservations();
+			console.log('destination', res.data);
 			setDestinations(res.data);
 			setAvailabilityTotal(res.total || 0);
 			popupController.close(SpinningLoaderPopup);
@@ -150,7 +151,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	}
 
 	function getSummaryTabs(destination: Api.Destination.Res.Availability): DestinationSummaryTab[] {
-		let propertyTypes = destination.propertyTypes;
+		let propertyTypes = [{ name: 'All Available', id: 0 }, ...destination.propertyTypes];
 		const summaryTabs = propertyTypes.reduce((acc: DestinationSummaryTab[], propertyType) => {
 			let accommodationList = handleAccommodationList(destination.accommodations, propertyType);
 			let destinationSummaryTab: DestinationSummaryTab = {

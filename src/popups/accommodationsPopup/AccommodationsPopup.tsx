@@ -18,16 +18,20 @@ const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
 	}, []);
 
 	function renderAccommodations() {
-		return props.content.content.accommodations.map((accommodation) => {
-			return <AccommodationSearchCardV2 key={accommodation.id} accommodation={accommodation} />;
-		});
+		return (
+			<Box className={'accommodationCards'}>
+				{props.content.content.accommodations.map((accommodation) => {
+					return <AccommodationSearchCardV2 key={accommodation.id} accommodation={accommodation} />;
+				})}
+			</Box>
+		);
 	}
 
 	return (
 		<Popup opened={props.opened} className={'rsAccommodationsPopup'}>
 			<Paper className={'accommodationCardsContainer'}>
 				<Box className={'titleContainer'}>
-					<Label variant={'customEighteen'}>
+					<Label variant={'accommodationModalCustomOne'}>
 						{props.content.content.destinationName} - {props.content.label}
 					</Label>
 					<Icon

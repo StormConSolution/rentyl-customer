@@ -39,6 +39,12 @@ html {
 		line-height: 22px;
 		font-weight: $medium;
 	}
+	&.buttonTwo {
+		color: #1e180b;
+		font-size: 16px;
+		line-height: 27px;
+		font-weight: $regular;
+	}
 	&.buttonBoldText {
 		color: #1e180b;
 		font-size: 19px;
@@ -301,5 +307,38 @@ html {
 		font-size: 20px;
 		font-weight: $medium;
 		line-height: 21px;
+	}
+	&.accommodationModalCustomThree {
+		font-size: 20px;
+		font-weight: $light;
+		line-height: 23px;
+	}
+	&.accommodationModalCustomFour {
+		font-family: 'Gothic', sans-serif;
+		font-size: 16px;
+		line-height: 26px;
+		font-weight: $regular;
+	}
+	&.accommodationModalCustomFive {
+		font-family: 'Gothic', sans-serif;
+		font-size: 16px;
+		line-height: 28px;
+		font-weight: $regular;
+	}
+	&.accommodationModalCustomSix {
+		font-family: 'Gothic', sans-serif;
+		font-size: 16px;
+		line-height: 32px;
+		font-weight: $bold;
+	}
+	&.accommodationModalCustomSeven {
+		font-size: 20px;
+		font-weight: $medium;
+		line-height: 19px;
+	}
+	&.accommodationModalCustomEight {
+		font-size: 18px;
+		line-height: 18px;
+		font-weight: $regular;
 	}
 }

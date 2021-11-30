@@ -1,19 +1,72 @@
 @import 'src/themes/themes';
 
 .rsAccommodationSearchCardV2 {
+	display: flex;
 	padding: 20px 42px;
+	width: 100%;
 	.accommodationContainer {
+		width: 100%;
 		display: flex;
-		justify-content: space-between;
+		flex-direction: column;
+		padding-left: 42px;
+		padding-right: 85px;
 		.accommodationDetails {
-			padding-left: 42px;
-			padding-right: 85px;
-			display: grid;
-			gap: 18px;
-			height: fit-content;
-			.detailsTextContainer {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			padding-bottom: 24px;
+			.priceBox {
 				display: flex;
+				justify-content: flex-end;
+				align-items: flex-end;
+				.pointsContainer {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-end;
+					justify-content: flex-end;
+				}
+				.priceContainer {
+					display: flex;
+					flex-direction: column;
+					align-items: flex-end;
+					justify-content: flex-end;
+				}
+			}
+			.accommodationDescription {
+				width: 100%;
+				display: grid;
+				gap: 18px;
+				height: fit-content;
+				.detailsTextContainer {
+					display: flex;
+				}
 			}
 		}
+	}
+	.accommodationContainer {
+		.pointsContainer {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+			justify-content: flex-end;
+		}
+		.priceContainer {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+			justify-content: flex-end;
+		}
+		.rsAccordion {
+			border-top: solid 1px theme-var($greyLineColor);
+			.hoverEffect:hover {
+				filter: none;
+			}
+			.articleItemHeader {
+				padding: 0;
+			}
+		}
+	}
+	.yellowText {
+		color: theme-var($yellowTextColor);
 	}
 }
