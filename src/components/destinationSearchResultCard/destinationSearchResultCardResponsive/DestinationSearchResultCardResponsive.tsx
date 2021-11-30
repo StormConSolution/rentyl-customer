@@ -9,24 +9,20 @@ import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
-import { useEffect, useState } from 'react';
-import { PriceObject } from '../DestinationSearchResultCard';
 import router from '../../../utils/router';
+import DestinationExperience = Api.Destination.Res.DestinationExperience;
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
 	destinationId: number;
 	destinationName: string;
 	destinationDescription: string;
-	destinationExperiences: {
-		id: number;
-		title: string;
-		icon: string;
-	}[];
+	destinationExperiences: Pick<DestinationExperience, 'id' | 'title' | 'icon'>[];
 	address: string;
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	onGalleryClick: () => void;
 	onRemoveCompareClick?: () => void;
 	minPrice: number;
 	minPoints: number;
@@ -64,7 +60,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		}
 	}
 
-	function renderFeatures() {
+	function renderExperiences() {
 		return props.destinationExperiences.map((experience) => {
 			return (
 				<Box
@@ -127,11 +123,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					onAddCompareClick={() => {
 						if (props.onAddCompareClick) props.onAddCompareClick();
 					}}
+					onGalleryClick={props.onGalleryClick}
 					onRemoveCompareClick={() => {
 						if (props.onRemoveCompareClick) props.onRemoveCompareClick();
-					}}
-					onGalleryClick={() => {
-						console.log('Show LightboxV2 images...');
 					}}
 					destinationId={props.destinationId}
 				/>
@@ -164,7 +158,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						</Label>
 					</Box>
 					<Box className={'featureIcons'} paddingBottom={'30px'}>
-						{renderFeatures()}
+						{renderExperiences()}
 					</Box>
 					<Box display={'flex'} gap={'24px'}>
 						{renderButtons()}

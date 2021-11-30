@@ -61,6 +61,7 @@ function App() {
 					<>
 						<AppBar />
 						<View key="landingPage" id="landingPage" default initialPath="/" />
+						<Footer links={FooterLinks} />
 					</>
 				);
 			case LoginStatus.LOGGED_IN:
