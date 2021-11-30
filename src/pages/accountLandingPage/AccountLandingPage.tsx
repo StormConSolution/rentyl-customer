@@ -14,7 +14,7 @@ import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 
 interface MyAccountPageProps {}
 
-const AccountLandingPage: React.FC<MyAccountPageProps> = (props) => {
+const AccountLandingPage: React.FC<MyAccountPageProps> = () => {
 	const userService = serviceFactory.get<UserService>('UserService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 
@@ -48,7 +48,7 @@ const AccountLandingPage: React.FC<MyAccountPageProps> = (props) => {
 						route={'/account/payment-methods'}
 						title={'Payment Methods'}
 					/>
-					<AccountNavigationTile imgSrc={'medal'} route={'/'} title={'Manage Points'} />
+					<AccountNavigationTile imgSrc={'medal'} route={'/account/points'} title={'Manage Points'} />
 				</Box>
 			</div>
 		</Page>
