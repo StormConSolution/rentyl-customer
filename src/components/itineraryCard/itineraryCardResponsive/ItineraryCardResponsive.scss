@@ -1,69 +1,47 @@
 @import '../../../themes/themes';
 .rsItineraryCardResponsive {
 	display: flex;
+	width: 100%;
 
 	.columnOne {
-		height: 230px;
+		width: 24%;
+		height: auto;
 		margin-right: 16px;
-		img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-		.rsCarousel {
-			margin-right: 16px;
-			height: 230px;
-			width: 262px;
-			min-width: 262px;
-			.carouselParent {
-				overflow-x: hidden;
-			}
-			.imageWrapper {
-				width: 262px;
-				height: 230px;
-				img {
-					width: 100%;
-					height: 100%;
-					object-fit: cover;
-				}
-			}
+		.rsCarouselV2 {
+			width: 315px;
+			height: 240px;
 		}
 	}
 
 	.columnTwo {
+		width: 61%;
+		height: auto;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		cursor: pointer;
 		.rowOne {
-			img {
-				width: 100px;
-				height: 50px;
-				object-fit: contain;
-				margin-right: 25px;
+			.locationIcon {
+				margin-right: 7px;
 			}
 		}
-		.rsReservationInfoCard {
-			margin-left: auto;
+		.rowThree {
+			margin-top: auto;
+			.experienceWrapper {
+				display: flex;
+			}
 		}
 	}
 
 	.columnThree {
+		width: 15%;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: space-between;
-		text-align: center;
-		div {
-			height: 50%;
-			display: flex;
-			//align-items: flex-end;
-			justify-content: flex-end;
-			flex-direction: column;
-		}
+		text-align: right;
+		margin-top: auto;
+		cursor: pointer;
 		.rsLabelLink {
-			.rsLabel {
-				color: theme-var($buttonLinkColor);
-			}
+			width: unset;
+			justify-content: end;
 		}
 	}
 }

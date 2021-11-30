@@ -5,21 +5,17 @@
 	padding-top: 100px;
 
 	.staysCard {
-		width: 1440px;
+		width: clamp(1342px, 34vw, 1440px);
 		margin: 50px auto;
 		background-color: #fff;
 		border-radius: 20px;
-		padding: 38px 48px;
+		padding: 38px;
 		box-shadow: 0 0 8px #00000029;
 	}
 
 	&.noAvailable {
 		margin-top: 80px;
 		text-align: center;
-	}
-
-	.pastStays {
-		margin-top: 100px;
 	}
 
 	.rsItineraryCardResponsive {

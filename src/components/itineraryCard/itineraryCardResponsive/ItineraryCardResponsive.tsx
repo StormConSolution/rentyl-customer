@@ -1,20 +1,25 @@
 import * as React from 'react';
 import './ItineraryCardResponsive.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { useEffect, useState } from 'react';
-import Carousel from '../../carousel/Carousel';
 import Label from '@bit/redsky.framework.rs.label';
 import ReservationInfoCard from '../../reservationInfoCard/ReservationInfoCard';
-import Paper from '../../paper/Paper';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
 import LabelLink from '../../labelLink/LabelLink';
+import Icon from '@bit/redsky.framework.rs.icon';
+import IconLabel from '../../iconLabel/IconLabel';
+import CarouselV2 from '../../carouselV2/CarouselV2';
+import router from '../../../utils/router';
 
 interface ItineraryCardResponsiveProps {
 	imgPaths: string[];
-	logo: string;
 	title: string;
 	address: string;
 	reservationDates: { startDate: string | Date; endDate: string | Date };
+	destinationExperiences: {
+		id: number;
+		title: string;
+		icon: string;
+	}[];
 	propertyType: string;
 	itineraryId: string;
 	maxOccupancy: number;
@@ -27,61 +32,89 @@ interface ItineraryCardResponsiveProps {
 }
 
 const ItineraryCardResponsive: React.FC<ItineraryCardResponsiveProps> = (props) => {
-	const [showControls, setShowControls] = useState<boolean>(true);
-
-	useEffect(() => {
-		if (props.imgPaths.length <= 1) setShowControls(false);
-	}, [props.imgPaths]);
-
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
+	function renderFeatures() {
+		return props.destinationExperiences.map((experience) => {
 			return (
-				<Box className={'imageWrapper'}>
-					<img src={path} alt="Reservation Card Image" />
+				<Box
+					display={'flex'}
+					flexDirection={'column'}
+					alignItems={'center'}
+					textAlign={'center'}
+					key={experience.id}
+					marginRight={30}
+				>
+					<IconLabel
+						labelName={experience.title}
+						iconImg={experience.icon}
+						iconPosition={'top'}
+						iconSize={45}
+						labelVariant={'subtitle1'}
+					/>
 				</Box>
 			);
 		});
 	}
 	return (
 		<Box className={'rsItineraryCardResponsive'}>
-			<div className={'columnOne'}>
-				<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
-			</div>
-			<Box className={'columnTwo'} position={'relative'}>
-				<Box className={'rowOne'} display={'flex'} alignItems={'center'}>
-					{props.logo && props.logo !== '' && <img src={props.logo} alt={''} />}
-					<div>
-						<Label variant={'h1'}>{props.title}</Label>
-						<Label variant={'caption'}>{props.address}</Label>
-					</div>
-				</Box>
-				<ReservationInfoCard
-					reservationDates={props.reservationDates}
-					propertyType={props.propertyType}
-					itineraryId={props.itineraryId}
-					maxOccupancy={props.maxOccupancy}
-					amenities={props.amenities}
-					cancelPermitted={props.cancelPermitted}
-				/>
+			<Box className={'columnOne'}>
+				<CarouselV2 path={props.linkPath} imgPaths={props.imgPaths} />
 			</Box>
-			<Paper className={'columnThree'} boxShadow padding={'25px 40px'}>
+			<Box
+				className={'columnTwo'}
+				onClick={() => {
+					router.navigate(`${props.linkPath}`).catch((err) => console.error(err));
+				}}
+			>
+				<Box className={'rowOne'} display={'flex'} alignItems={'center'} marginBottom={24}>
+					<Label variant={'customTwo'} marginRight={24}>
+						{props.title}
+					</Label>
+					<Label variant={'caption1'}>
+						<Icon iconImg="icon-pin" color={'#D2555F'} size={17} className="locationIcon" />
+						{props.address}
+					</Label>
+				</Box>
+				<Box className={'rowTwo'}>
+					<ReservationInfoCard
+						reservationDates={props.reservationDates}
+						propertyType={props.propertyType}
+						itineraryId={props.itineraryId}
+						maxOccupancy={props.maxOccupancy}
+						cancelPermitted={props.cancelPermitted}
+					/>
+				</Box>
+				<Box className={'rowThree'}>
+					<Label marginBottom={15}>Amenities</Label>
+					<Box className={'experienceWrapper'}>{renderFeatures()}</Box>
+				</Box>
+			</Box>
+			<Box
+				className={'columnThree'}
+				onClick={() => {
+					router.navigate(`${props.linkPath}`).catch((err) => console.error(err));
+				}}
+			>
 				{!props.paidWithPoints ? (
 					<div>
-						<Label variant={'caption'} mb={5}>
-							Total Price
+						<Label variant={'caption'} marginBottom={18}>
+							Trip Total
 						</Label>
-						<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
+						<Label variant={'customTwentyThree'} marginBottom={18}>
+							${StringUtils.formatMoney(props.itineraryTotal)}
+						</Label>
 					</div>
 				) : (
 					<div>
-						<Label variant={'caption'} mb={5}>
+						<Label variant={'caption'} marginBottom={18}>
 							Points Paid
 						</Label>
-						<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.totalPoints)}</Label>
+						<Label variant={'customTwentyThree'} marginBottom={18}>
+							{StringUtils.addCommasToNumber(props.totalPoints)}
+						</Label>
 					</div>
 				)}
 				<LabelLink path={props.linkPath} label={'view details'} variant={'caption'} />
-			</Paper>
+			</Box>
 		</Box>
 	);
 };
