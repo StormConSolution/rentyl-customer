@@ -4,9 +4,10 @@ import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import serviceFactory from '../../services/serviceFactory';
 import router from '../../utils/router';
+import ComparisonDrawer from '../../popups/comparisonDrawer/ComparisonDrawer';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
@@ -18,13 +19,15 @@ import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary
 import LoginOrCreateAccountPopup, {
 	LoginOrCreateAccountPopupProps
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
-import Footer from '../../components/footer/Footer';
-import { FooterLinks } from '../../components/footer/FooterLinks';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
 import FilterBarV2 from '../../components/filterBar/FilterBarV2';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import LightBoxCarouselPopup, {
+	TabbedCarouselPopupProps
+} from '../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
 import RsPagedResponseData = RedSky.RsPagedResponseData;
 
 const ReservationAvailabilityPage: React.FC = () => {
@@ -33,7 +36,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const perPage = 10;
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
@@ -113,13 +115,25 @@ const ReservationAvailabilityPage: React.FC = () => {
 					picturePaths={urls}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
-						comparisonService.addToComparison(recoilComparisonState, {
+						comparisonService.addToComparison({
 							destinationId: destination.id,
-							logo: destination.logoUrl,
 							title: destination.name,
-							roomTypes: roomTypes,
-							selectedRoom: destination.accommodations[0].id
+							logo: destination.logoUrl
 						});
+					}}
+					onRemoveCompareClick={() => {
+						comparisonService.removeFromComparison(destination.id);
+					}}
+					onGalleryClick={() => {
+						if (size === 'small') {
+							popupController.open<MobileLightBoxProps>(MobileLightBox, {
+								imageData: destination.media
+							});
+						} else {
+							popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
+								imageData: destination.media
+							});
+						}
 					}}
 				/>
 			);
@@ -171,16 +185,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 						} else {
 							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 						}
-					},
-					onAddCompareClick: (accommodationId: ReactText) => {
-						let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
-						comparisonService.addToComparison(recoilComparisonState, {
-							destinationId: destination.id,
-							logo: destination.logoUrl,
-							title: destination.name,
-							roomTypes: roomTypes,
-							selectedRoom: accommodationId as number
-						});
 					}
 				}
 			};
@@ -248,7 +252,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 						setPage(page);
 					}}
 				/>
-				<Footer links={FooterLinks} />
+				<ComparisonDrawer />
 			</div>
 		</Page>
 	);

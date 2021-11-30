@@ -6,32 +6,28 @@ import ComparisonAccommodationCardMobile from '../../comparisonAccommodationCard
 import { useEffect, useState } from 'react';
 
 interface ComparisonTableMobileProps {
-	comparisonItems: Misc.ComparisonCardInfo[];
-	accommodationDetailList: Api.Accommodation.Res.Details[];
+	comparisonState: Misc.ComparisonState;
+	destinationDetailList: Api.Destination.Res.Get[];
 }
 
 const ComparisonTableMobile: React.FC<ComparisonTableMobileProps> = (props) => {
-	const [pinnedAccommodationId, setPinnedAccommodationId] = useState<number>(0);
+	const [pinnedDestinationId, setPinnedDestinationId] = useState<number>(0);
 
 	useEffect(() => {
-		setPinnedAccommodationId(props.comparisonItems[0].comparisonId as number);
+		setPinnedDestinationId(props.comparisonState.destinationDetails[0].destinationId);
 	}, []);
 
-	function handlePinToFirst(pinToFirst: boolean, comparisonId: number) {
+	function handlePinToFirst(pinToFirst: boolean, destinationId: number) {
 		if (!pinToFirst) return;
-		setPinnedAccommodationId(comparisonId);
+		setPinnedDestinationId(destinationId);
 	}
 
 	function renderPinnedAccommodation() {
-		const pinnedItem = props.comparisonItems.find((item) => item.comparisonId === pinnedAccommodationId);
+		const pinnedItem = props.destinationDetailList.find((item) => item.id === pinnedDestinationId);
 		if (!pinnedItem) return;
-		const pinnedAccommodationInfo = props.accommodationDetailList.find(
-			(accommodation) => accommodation.id === pinnedItem.selectedRoom
-		);
 		return (
-			<Box key={pinnedItem.comparisonId} className={'pinnedAccommodation'}>
+			<Box key={pinnedItem.id} className={'pinnedAccommodation'}>
 				<ComparisonAccommodationCardMobile
-					accommodationDetails={pinnedAccommodationInfo || props.accommodationDetailList[0]}
 					destinationDetails={pinnedItem}
 					handlePinToFirst={handlePinToFirst}
 				/>
@@ -40,16 +36,12 @@ const ComparisonTableMobile: React.FC<ComparisonTableMobileProps> = (props) => {
 	}
 
 	function renderUnpinnedAccommodations() {
-		return props.comparisonItems
-			.filter((item) => item.comparisonId !== pinnedAccommodationId)
+		return props.destinationDetailList
+			.filter((item) => item.id !== pinnedDestinationId)
 			.map((item) => {
-				const accommodationInfo = props.accommodationDetailList.find(
-					(accommodation) => accommodation.id === item.selectedRoom
-				);
 				return (
 					<Box className={'unpinnedAccommodation'}>
 						<ComparisonAccommodationCardMobile
-							accommodationDetails={accommodationInfo || props.accommodationDetailList[0]}
 							destinationDetails={item}
 							handlePinToFirst={handlePinToFirst}
 						/>

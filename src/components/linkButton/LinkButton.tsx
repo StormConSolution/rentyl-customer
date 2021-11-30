@@ -16,6 +16,7 @@ const LinkButton: React.FC<LinkButtonProps> = (props) => {
 	return (
 		<Link path={props.path} className={`rsLinkButton ${props.className || ''}`}>
 			<Button look={props.look} className={`${props.yellow ? 'yellow' : ''}`}>
+				{props.children}
 				<Label variant={'button'}>{props.label}</Label>
 			</Button>
 		</Link>

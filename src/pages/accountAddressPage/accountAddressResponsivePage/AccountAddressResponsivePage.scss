@@ -1,0 +1,58 @@
+@import '../../../themes/themes';
+.rsAccountAddressResponsivePage {
+	display: grid;
+	place-items: center;
+	padding: 230px 95px 100px;
+	box-sizing: border-box;
+	background: #f8f8f8 !important;
+	.rsPaper {
+		width: 1120px;
+		padding: 60px;
+		background: #ffffff;
+		display: grid;
+		grid-template-columns: 438px auto 438px;
+	}
+
+	.inputStretched {
+		&.rsLabelInput {
+			.rsInput {
+				max-width: 100%;
+				min-width: 100%;
+			}
+		}
+	}
+	.rsLabelInput {
+		margin-bottom: 25px;
+	}
+
+	.rsLabelSelect {
+		.rsSelect {
+			min-width: 200px;
+		}
+	}
+	.rsLabelButton {
+		margin-top: 25px;
+		margin-left: auto;
+		&.contained {
+			&.primary {
+				background-color: theme-var($yellowTextColor);
+				padding: 16px 46px;
+				box-sizing: border-box;
+				.rsLabel {
+					color: #2c3c60;
+				}
+				&:hover {
+					background-color: theme-var($yellowTextColor);
+				}
+			}
+		}
+	}
+
+	hr {
+		height: 100%;
+		width: 1px;
+		background: #7070706e;
+		margin: 0 60px;
+		border: none;
+	}
+}

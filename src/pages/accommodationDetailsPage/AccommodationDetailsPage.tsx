@@ -37,9 +37,7 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
-	const recoilComparisonState = useRecoilState<Misc.ComparisonCardInfo[]>(globalState.destinationComparison);
 	const size = useWindowResizeChange();
 	const params = router.getPageUrlParams<{ accommodationId: number; startDate?: string; endDate?: string }>([
 		{ key: 'ai', default: 0, type: 'integer', alias: 'accommodationId' },
@@ -240,22 +238,6 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 								setAvailable(true);
 							}}
 							guestValue={availabilityObj.adults}
-							compareOnClick={() => {
-								comparisonService.addToComparison(recoilComparisonState, {
-									destinationId: destinationDetails.id,
-									logo: destinationDetails.logoUrl,
-									title: destinationDetails.name,
-									roomTypes: destinationDetails.accommodations
-										.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-										.map((item) => {
-											return {
-												value: item.id,
-												label: item.name
-											};
-										}),
-									selectedRoom: accommodationDetails.id
-								});
-							}}
 							bookNowOnClick={() => {
 								bookNow().catch(console.error);
 							}}

@@ -1,0 +1,92 @@
+@import '../../../themes/themes';
+.rsAccountPaymentMethodsMobilePage {
+	padding: 140px 17px 50px;
+	box-sizing: border-box;
+	background: #f8f8f8 !important;
+	.rsPaper {
+		width: 100%;
+		padding: 30px;
+		background: #ffffff;
+	}
+
+	.rsLabelInput,
+	.rsLabelSelect,
+	.rsLabelCheckbox {
+		margin-bottom: 25px;
+		input {
+			min-width: 100%;
+			max-width: 100%;
+		}
+	}
+
+	#payment-form {
+		#spreedly-number,
+		#spreedly-cvv {
+			margin-bottom: 25px;
+		}
+
+		.creditCardExpInput {
+			input {
+				text-align: center;
+			}
+		}
+
+		iframe {
+			height: 40px;
+		}
+	}
+
+	.rsLabelCheckbox {
+		height: auto;
+		align-items: flex-start;
+		margin-top: 10px;
+
+		a {
+			span {
+				color: theme-var($buttonLinkColor);
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.creditCardExpInput {
+		input {
+			text-align: center;
+		}
+	}
+
+	hr {
+		height: 100%;
+		width: 1px;
+		background: #7070706e;
+		margin: 0 60px;
+		border: none;
+	}
+	.rsLabelButton {
+		margin-top: 25px;
+		margin-left: auto;
+		&.contained {
+			&.primary {
+				height: 57px;
+				background-color: theme-var($yellowTextColor);
+				padding: 16px 46px;
+				box-sizing: border-box;
+
+				.rsLabel {
+					color: #2c3c60;
+				}
+
+				&:hover {
+					background-color: theme-var($yellowTextColor);
+				}
+			}
+		}
+	}
+
+	.paymentMethods {
+		margin-bottom: 30px;
+		.rsOtherPaymentCard {
+			margin-bottom: 15px;
+		}
+	}
+}

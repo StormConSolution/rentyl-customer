@@ -2,7 +2,21 @@
 
 .rsAccountAddressTile {
 	display: grid;
-	grid-template-columns: 150px auto;
+	grid-template-columns: 230px 137px 16px;
 	gap: 20px;
 	padding: 10px 0;
+}
+.small {
+	.rsAccountAddressTile {
+		display: block;
+		gap: 0;
+		border-bottom: 1px solid #7070706e;
+		.marginLeft {
+			margin-left: 32px;
+		}
+		.rsLabelRadioButton,
+		.rsLabel.customSeventeen {
+			margin-bottom: 20px;
+		}
+	}
 }

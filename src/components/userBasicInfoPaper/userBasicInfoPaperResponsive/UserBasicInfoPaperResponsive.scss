@@ -1,0 +1,42 @@
+@import '../../../themes/themes';
+.rsUserBasicInfoPaperResponsive {
+	padding: 24px 26px;
+	.loadingBarContainer {
+		height: 35px;
+		border-radius: 20px;
+		width: 446px;
+		background: #f7f9fd;
+		overflow: hidden;
+		.loadingBar {
+			height: 100%;
+			background: #2c3c60;
+		}
+	}
+
+	.rsLabelButton {
+		&.contained {
+			&.primary {
+				background-color: theme-var($yellowTextColor);
+				padding: 16px 46px;
+				box-sizing: border-box;
+				.rsLabel {
+					color: #2c3c60;
+				}
+				&:hover {
+					background-color: theme-var($yellowTextColor);
+				}
+			}
+		}
+	}
+
+	.pointsContainer {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr) 3fr;
+		align-items: center;
+
+		.loyaltyTierButtonContainer {
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+}

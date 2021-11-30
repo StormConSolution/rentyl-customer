@@ -16,27 +16,32 @@ enum GlobalStateKeys {
 	COMPANY = 'Company',
 	VERIFIED_ACCOMMODATIONS = 'VerifiedAccommodations',
 	USER_RATE_CODE = 'UserRateCode',
-	RESERVATION_FILTERS = 'ReservationFilter'
+	RESERVATION_FILTERS = 'ReservationFilter',
+	LAST_NAVIGATION_PATH = 'LastNavigationPath'
 }
 
 // Change based on project so we don't have classing when developing on localhost (va = Volcanic Admin)
 const KEY_PREFIX = 'spireCust-';
 
 class GlobalState {
-	destinationComparison: RecoilState<Misc.ComparisonCardInfo[]>;
+	destinationComparison: RecoilState<Misc.ComparisonState>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 	verifiedAccommodations: RecoilState<{ [uuid: number]: Api.Reservation.Res.Verification }>;
 	userRateCode: RecoilState<string>;
 	reservationFilters: RecoilState<Misc.ReservationFilters>;
+	lastNavigationPath: RecoilState<string>;
 
 	saveToStorageList: string[] = [];
 
 	constructor() {
-		this.destinationComparison = atom<Misc.ComparisonCardInfo[]>({
+		this.destinationComparison = atom<Misc.ComparisonState>({
 			key: GlobalStateKeys.COMPARISON_CARD,
-			default: this.loadFromLocalStorage<Misc.ComparisonCardInfo[]>(GlobalStateKeys.COMPARISON_CARD, [])
+			default: this.loadFromLocalStorage<Misc.ComparisonState>(GlobalStateKeys.COMPARISON_CARD, {
+				destinationDetails: [],
+				showCompareButton: false
+			})
 		});
 
 		this.user = atom<Api.User.Res.Detail | undefined>({
@@ -87,6 +92,11 @@ class GlobalState {
 				sortOrder: 'ASC',
 				pagination: { page: 1, perPage: 10 }
 			}
+		});
+
+		this.lastNavigationPath = atom<string>({
+			key: GlobalStateKeys.LAST_NAVIGATION_PATH,
+			default: ''
 		});
 	}
 

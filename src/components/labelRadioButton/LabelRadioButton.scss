@@ -7,8 +7,8 @@
 		position: relative;
 
 		input {
-			width: 18px;
-			height: 18px;
+			width: 27px;
+			height: 27px;
 			padding: 2px;
 			box-sizing: border-box;
 			opacity: 0;
@@ -29,11 +29,11 @@
 		position: absolute;
 		top: 4px;
 		left: 0;
-		width: 18px;
-		height: 18px;
+		width: 27px;
+		height: 27px;
 		border-radius: 50%;
 		cursor: pointer;
-		border: 1px solid theme-var($greyLineColor);
+		border: 1px solid #dddddd;
 		padding: 2px;
 		box-sizing: border-box;
 		.rsBox {

@@ -24,7 +24,8 @@ interface LabelButtonProps {
 		| 'overline'
 		| 'srOnly'
 		| 'inherit'
-		| 'error';
+		| 'error'
+		| string;
 	label: string;
 	className?: string;
 	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -45,6 +46,7 @@ const LabelButton: React.FC<LabelButtonProps> = (props) => {
 			buttonRef={props.buttonRef}
 			disableRipple={props.disableRipple}
 		>
+			{props.children}
 			<Label variant={props.variant}>{props.label}</Label>
 		</Button>
 	);

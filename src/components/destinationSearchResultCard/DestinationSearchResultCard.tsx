@@ -31,6 +31,8 @@ export interface DestinationSearchResultCardProps {
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
+	onRemoveCompareClick?: () => void;
+	onGalleryClick: () => void;
 }
 
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
@@ -44,8 +46,10 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			picturePaths={props.picturePaths}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			onRemoveCompareClick={props.onRemoveCompareClick}
 			minPrice={props.minPrice}
 			minPoints={props.minPoints}
+			onGalleryClick={props.onGalleryClick}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
@@ -57,8 +61,10 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			picturePaths={props.picturePaths}
 			summaryTabs={props.summaryTabs}
 			onAddCompareClick={props.onAddCompareClick}
+			onRemoveCompareClick={props.onRemoveCompareClick}
 			minPrice={props.minPrice}
 			minPoints={props.minPoints}
+			onGalleryClick={props.onGalleryClick}
 		/>
 	);
 };

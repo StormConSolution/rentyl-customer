@@ -56,11 +56,14 @@
 
 .small {
 	.rsReservationAvailabilityPage {
-		.searchResultsWrapper {
-			padding: 30px;
-		}
-		.filterResultsWrapper {
-			display: none;
+		.rs-page-content-wrapper {
+			.searchResultsWrapper {
+				padding: 30px;
+			}
+
+			.filterResultsWrapper {
+				display: none;
+			}
 		}
 	}
 }

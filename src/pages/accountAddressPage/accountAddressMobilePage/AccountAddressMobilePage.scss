@@ -1,0 +1,63 @@
+@import '../../../themes/themes';
+.rsAccountAddressMobilePage {
+	padding: 140px 17px 50px;
+	box-sizing: border-box;
+	background: #f8f8f8 !important;
+	.rsPaper {
+		width: 100%;
+		padding: 30px;
+		background: #ffffff;
+		margin-bottom: 25px;
+	}
+
+	.inputStretched {
+		&.rsLabelInput {
+			.rsInput {
+				max-width: 100%;
+				min-width: 100%;
+			}
+		}
+	}
+	.rsLabelInput {
+		margin-bottom: 25px;
+	}
+
+	.rsLabelSelect {
+		margin-bottom: 25px;
+		.rsSelect {
+			min-width: 100%;
+		}
+	}
+	.rsLabelButton {
+		margin-top: 25px;
+		margin-left: auto;
+		&.contained {
+			&.primary {
+				background-color: theme-var($yellowTextColor);
+				padding: 16px 46px;
+				box-sizing: border-box;
+				.rsLabel {
+					color: #2c3c60;
+				}
+				&:hover {
+					background-color: theme-var($yellowTextColor);
+				}
+			}
+		}
+	}
+
+	.addressList {
+		padding: 30px 15px;
+		.rsAccountAddressTile {
+			margin-bottom: 15px;
+		}
+	}
+
+	hr {
+		height: 100%;
+		width: 1px;
+		background: #7070706e;
+		margin: 0 60px;
+		border: none;
+	}
+}

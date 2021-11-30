@@ -28,6 +28,7 @@ interface AccommodationSearchResultCardResponsiveProps {
 	amenityIconNames: string[];
 	onBookNowClick: () => void;
 	onCompareClick?: () => void;
+	onRemoveCompareClick?: () => void;
 	disableCompare?: boolean;
 	onViewDetailsClick?: () => void;
 	hideButtons?: boolean;
@@ -53,6 +54,9 @@ const AccommodationSearchResultCardResponsive: React.FC<AccommodationSearchResul
 				imgPaths={renderCarouselImages(props.carouselImagePaths)}
 				onAddCompareClick={() => {
 					if (props.onCompareClick) props.onCompareClick();
+				}}
+				onRemoveCompareClick={() => {
+					if (props.onRemoveCompareClick) props.onRemoveCompareClick();
 				}}
 				onGalleryClick={() => {
 					console.log('Show LightboxV2 images...');

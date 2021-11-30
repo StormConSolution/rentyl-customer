@@ -1,10 +1,10 @@
 import * as React from 'react';
 import './AccountAddressTile.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import LabelButton from '../labelButton/LabelButton';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
-import Paper from '../paper/Paper';
 import { Box } from '@bit/redsky.framework.rs.996';
+import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface AddressTileProps {
 	id: number;
@@ -21,10 +21,12 @@ interface AddressTileProps {
 }
 
 const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
+	const size = useWindowResizeChange();
 	return (
-		<Paper className={'rsAccountAddressTile'}>
+		<div className={'rsAccountAddressTile'}>
 			{!props.isPrimary ? (
 				<LabelRadioButton
+					labelSize={'customFifteen'}
 					radioName={'primaryAddress'}
 					value={props.id}
 					checked={false}
@@ -34,19 +36,33 @@ const AccountAddressTile: React.FC<AddressTileProps> = (props) => {
 					}}
 				/>
 			) : (
-				<Label variant={'h4'}>Primary</Label>
+				<Label variant={'customSeventeen'}>Primary</Label>
 			)}
-			<Box>
-				<Label variant={'body1'}>{props.name}</Label>
-				<Label variant={'body1'}>{props.addressLine1}</Label>
-				{!!props.addressLine2 && <Label variant={'body1'}>{props.addressLine2}</Label>}
-				<Label variant={'body1'}>{props.city},</Label>
-				<Label variant={'body1'}>
-					{props.state} {props.zipCode} {props.country}
-				</Label>
-				<LabelButton look={'none'} variant={'button'} label={'Delete'} onClick={props.onDelete} />
+			<Box display={size === 'small' ? 'flex' : ''} alignItems={size === 'small' ? 'center' : ''}>
+				<div>
+					<Label variant={'body1'}>{props.name}</Label>
+					<Label variant={'body1'}>{props.addressLine1}</Label>
+					{!!props.addressLine2 && <Label variant={'body1'}>{props.addressLine2}</Label>}
+					<Label variant={'body1'}>{props.city},</Label>
+					<Label variant={'body1'}>
+						{props.state} {props.zipCode} {props.country}
+					</Label>
+				</div>
+				{!props.isPrimary && size === 'small' && (
+					<Icon
+						className={'marginLeft'}
+						iconImg={'icon-trash'}
+						color={'#000000'}
+						onClick={props.onDelete}
+						cursorPointer
+						size={21}
+					/>
+				)}
 			</Box>
-		</Paper>
+			{!props.isPrimary && size !== 'small' && (
+				<Icon iconImg={'icon-trash'} color={'#000000'} onClick={props.onDelete} cursorPointer size={21} />
+			)}
+		</div>
 	);
 };
 

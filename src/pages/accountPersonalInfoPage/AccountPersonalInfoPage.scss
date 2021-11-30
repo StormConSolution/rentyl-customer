@@ -1,115 +1,91 @@
 @import '../../themes/themes';
 .rsAccountPersonalInfoPage {
-	.personalInfoHeader {
-		position: relative;
-		padding: 45px 280px 0;
-		box-sizing: border-box;
-		background-color: theme-var($secondaryBackgroundColor);
-		height: 230px;
-		width: 100%;
-		margin-bottom: 205px;
-		.fakeImg {
+	display: grid;
+	place-items: center;
+	padding: 230px 95px 100px;
+	box-sizing: border-box;
+	background: #f8f8f8 !important;
+	.rsPaper {
+		width: 700px;
+		padding: 63px 70px 41px;
+		background: #ffffff;
+
+		.fakeEmailInput {
+			border-radius: 5px;
+			height: 40px;
+			background: #dedede;
+			padding: 8px 10px;
+			box-sizing: border-box;
+			margin-bottom: 9px;
 			display: flex;
 			align-items: center;
-			justify-content: center;
-			margin-right: 20px;
-			border-radius: 50px;
-			width: 46px;
-			height: 46px;
-			background: linear-gradient(180deg, #775334 0%, #361a0f 100%);
-
-			img {
-				width: 60%;
-				height: 60%;
-				object-fit: contain;
+			.rsLabel {
+				color: #1e180b6e;
 			}
 		}
 
 		.rsLabel {
-			&.h1 {
-				font-size: 40px;
-				line-height: 45px;
+			&.customFourteen {
+				text-align: end;
 			}
 		}
-		.rsUserPointStatusBarResponsive {
-			position: absolute;
-			margin: 0 auto;
-			left: 0;
-			right: 0;
-			bottom: -140px;
-		}
-	}
-
-	.passwordCheck {
-		gap: 10px;
-		margin: 3px;
-	}
-
-	.editSection {
-		display: grid;
-		grid-template-columns: 420px 420px;
-		column-gap: 20px;
-		row-gap: 40px;
-		justify-content: center;
-		margin-bottom: 130px;
 
 		.rsLabelInput {
-			margin-top: 20px;
-			.react-tel-input {
-				input {
-					max-width: 200px;
+			.rsInput {
+				max-width: 280px;
+			}
+		}
+
+		.rsLabelButton {
+			margin-left: auto;
+			&.contained {
+				&.primary {
+					background-color: theme-var($yellowTextColor);
+					padding: 16px 46px;
+					box-sizing: border-box;
+					.rsLabel {
+						color: #2c3c60;
+					}
+					&:hover {
+						background-color: theme-var($yellowTextColor);
+					}
 				}
 			}
 		}
-		.rsLabelCheckbox {
-			margin-top: 20px;
-			padding: 0;
+		.phoneInput {
+			margin-bottom: 12px;
+			.react-tel-input {
+				input {
+					width: 100%;
+				}
+			}
 		}
 
-		.saveBtn {
-			margin-top: 50px;
-			width: fit-content;
-			width: -moz-fit-content;
+		.rsLabelLink {
+			margin-left: auto;
+			margin-bottom: 32px;
 		}
 	}
 }
 
 .small {
 	.rsAccountPersonalInfoPage {
-		.personalInfoHeader {
-			padding: 30px 20px 30px;
-			margin-bottom: 150px;
-			height: auto;
-			.h1 {
-				padding: 0;
+		padding: 145px 17px 38px;
+		.rsPaper {
+			width: 100%;
+			padding: 30px 35px;
+			.rsLabelButton {
+				margin: 0 auto;
+				width: 100%;
 			}
-			.rsUserPointStatusBarMobile {
-				position: absolute;
-				margin: 0 20px;
-				left: 0;
-				right: 0;
-				bottom: -140px;
-			}
-		}
-		.editSection {
-			grid-template-columns: auto;
-			justify-items: center;
-			margin: 0 20px;
-			.rsLabelInput {
-				.rsInput {
-					max-width: 400px;
-					width: 100%;
-				}
-				.react-tel-input {
-					max-width: 400px;
-					.phoneInput {
-						max-width: 400px;
-						width: 100%;
+			.rsBox {
+				.rsLabelInput {
+					margin-bottom: 25px;
+					.rsInput {
+						max-width: 100%;
+						min-width: 100%;
 					}
 				}
-			}
-			.rsButton {
-				left: 25%;
 			}
 		}
 	}
