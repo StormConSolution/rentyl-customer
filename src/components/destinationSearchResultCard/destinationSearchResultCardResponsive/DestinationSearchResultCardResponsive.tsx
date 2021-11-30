@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './DestinationSearchResultCardResponsive.scss';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 import LabelButton from '../../labelButton/LabelButton';
@@ -9,9 +9,8 @@ import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
-import { useEffect, useState } from 'react';
-import { PriceObject } from '../DestinationSearchResultCard';
 import router from '../../../utils/router';
+import AccommodationsPopup, { AccommodationsPopupProps } from '../../../popups/accommodationsPopup/AccommodationsPopup';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -96,6 +95,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 							variant={'button'}
 							label={button.label}
 							onClick={(event) => {
+								popupController.open<AccommodationsPopupProps>(AccommodationsPopup, {
+									content: button
+								});
 								event.stopPropagation();
 							}}
 						/>
@@ -109,6 +111,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						variant={'button'}
 						label={'Accommodations'}
 						onClick={(event) => {
+							popupController.open<AccommodationsPopupProps>(AccommodationsPopup);
 							event.stopPropagation();
 						}}
 					/>

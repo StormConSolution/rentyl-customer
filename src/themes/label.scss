@@ -121,4 +121,14 @@ html {
 		font-weight: $medium;
 		color: theme-var($errorColor);
 	}
+	&.customEighteen {
+		font-size: 35px;
+		font-weight: $regular;
+		line-height: 36px;
+	}
+	&.customNineteen {
+		font-size: 20px;
+		font-weight: $medium;
+		line-height: 21px;
+	}
 }

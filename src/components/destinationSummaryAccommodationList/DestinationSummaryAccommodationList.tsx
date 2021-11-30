@@ -9,6 +9,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../labelButton/LabelButton';
 
 export interface DestinationSummaryAccommodationListProps {
+	destinationName: string;
 	accommodationType: string;
 	accommodations: AccommodationListRowProp[];
 	onDetailsClick: (accommodationId: number | string) => void;

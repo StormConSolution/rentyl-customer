@@ -1,0 +1,19 @@
+@import 'src/themes/themes';
+
+.rsAccommodationSearchCardV2 {
+	padding: 20px 42px;
+	.accommodationContainer {
+		display: flex;
+		justify-content: space-between;
+		.accommodationDetails {
+			padding-left: 42px;
+			padding-right: 85px;
+			display: grid;
+			gap: 18px;
+			height: fit-content;
+			.detailsTextContainer {
+				display: flex;
+			}
+		}
+	}
+}
