@@ -40,6 +40,7 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -346,6 +347,16 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							}}
 						/>
 					)}
+				</Box>
+				<Box className={'minMaxContainer'}>
+					<MinMaxDestinationDetailsBar
+						minBed={destinationDetails.minBedroom}
+						maxBed={destinationDetails.maxBedroom}
+						minBath={destinationDetails.minBathroom}
+						maxBath={destinationDetails.maxBathroom}
+						minArea={0}
+						maxArea={0}
+					/>
 				</Box>
 				<Box className={'overviewSection'}></Box>
 				<Box className={'experienceSection'}></Box>
