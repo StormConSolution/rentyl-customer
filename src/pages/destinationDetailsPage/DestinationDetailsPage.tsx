@@ -309,14 +309,16 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<SubNavMenu
-					pageRefs={{
-						galleryRef: galleryRef,
-						overviewRef: overviewRef,
-						experiencesRef: experiencesRef,
-						availableStaysRef: availableStaysRef
-					}}
-				/>
+				{size !== 'small' && (
+					<SubNavMenu
+						pageRefs={{
+							galleryRef: galleryRef,
+							overviewRef: overviewRef,
+							experiencesRef: experiencesRef,
+							availableStaysRef: availableStaysRef
+						}}
+					/>
+				)}
 				<Box boxRef={galleryRef} className={'gallerySection'}>
 					{size === 'small' ? (
 						<CarouselV2
