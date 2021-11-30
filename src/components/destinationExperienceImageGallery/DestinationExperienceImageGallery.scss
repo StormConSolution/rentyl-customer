@@ -1,0 +1,49 @@
+@import 'src/themes/themes';
+.rsDestinationExperienceImageGallery {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	border-radius: 20px;
+
+	.experienceImage:nth-child(1) {
+		border-radius: 20px 0 0 0;
+	}
+
+	.experienceImage:nth-child(3) {
+		border-radius: 0 20px 0 0;
+	}
+
+	.experienceImage:nth-child(4) {
+		border-radius: 0 0 0 20px;
+	}
+
+	.experienceImage:nth-child(6) {
+		border-radius: 0 0 20px 0;
+	}
+
+	.experienceImage {
+		height: 415px;
+		width: 100%;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		.labelImageText {
+			color: #ffffff;
+			margin: 0 0 10px 28px;
+		}
+		.expandIcon {
+			margin: 0 24px 17px 0;
+		}
+	}
+}
+
+.small {
+	.rsDestinationExperienceImageGallery {
+		.experienceImage {
+			height: 244px;
+			border-radius: 20px;
+		}
+	}
+}

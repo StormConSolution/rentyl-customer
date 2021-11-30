@@ -40,6 +40,8 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
+
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
@@ -121,22 +123,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	 * ALL COMMENTED OUT CODE WILL STAY FOR NOW ON THIS PAGE
 	 * ############
 	 */
-
-	// function renderFeatures() {
-	// 	if (!destinationDetails || !destinationDetails.experiences) return;
-	// 	let featureArray: any = [];
-	// 	destinationDetails.experiences.forEach((item) => {
-	// 		let primaryMedia: any = '';
-	// 		for (let value of item.media) {
-	// 			if (!value.isPrimary) continue;
-	// 			primaryMedia = value.urls.imageKit;
-	// 			break;
-	// 		}
-	// 		if (primaryMedia === '') return false;
-	// 		featureArray.push(<LabelImage key={item.id} mainImg={primaryMedia} textOnImg={item.title} />);
-	// 	});
-	// 	return featureArray;
-	// }
 
 	function renderFeatureCarousel() {
 		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.experiences)) return;
@@ -245,15 +231,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	// 		</Box>
 	// 	);
 	// }
-	//
-	// function renderSectionThree() {
-	// 	if (!destinationDetails?.experiences) return null;
-	// 	return (
-	// 		<Box className={'sectionThree'} marginBottom={'190px'}>
-	// 			{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
-	// 		</Box>
-	// 	);
-	// }
+
+	function renderExperiencesSection() {
+		if (!destinationDetails?.experiences) return null;
+		if (!ObjectUtils.isArrayWithData(destinationDetails.experiences) || destinationDetails.experiences.length < 6)
+			return <></>;
+		return <DestinationExperienceImageGallery experiences={destinationDetails.experiences} />;
+	}
 
 	function renderSectionFour() {
 		if (!destinationDetails) return null;
@@ -348,7 +332,17 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					)}
 				</Box>
 				<Box className={'overviewSection'}></Box>
-				<Box className={'experienceSection'}></Box>
+				<Box
+					className={'experienceSection'}
+					margin={size === 'small' ? '58px 25px 34px 25px' : '60px 65px 190px 65px'}
+				>
+					<Label variant={size === 'small' ? 'destinationDetailsCustomOne' : 'tabbedImageCarouselCustomOne'}>
+						Experiences
+					</Label>
+					<Box className={'experienceImageContainer'} mt={50} mb={63}>
+						{renderExperiencesSection()}
+					</Box>
+				</Box>
 				{/*<Button*/}
 				{/*	look={'containedPrimary'}*/}
 				{/*	onClick={() => {*/}
