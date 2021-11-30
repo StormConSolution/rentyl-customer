@@ -25,7 +25,7 @@
 		.rowTitles {
 			display: grid;
 			grid-template-columns: 283px;
-			grid-template-rows: 365px 85px 85px 85px 85px 85px 85px 85px;
+			grid-template-rows: 365px repeat(7, minmax(61px, auto));
 			.borderRadiusTop {
 				border-radius: 20px 0 0 0;
 			}
@@ -41,7 +41,6 @@
 				box-sizing: border-box;
 				background-color: #f8f8f8;
 				border-right: 1px solid theme-var($greyLineColor);
-
 				&:not(:last-child) {
 					border-bottom: 1px solid theme-var($greyLineColor);
 				}
@@ -50,10 +49,10 @@
 		.comparisonColumnWrapper {
 			overflow-x: auto;
 			display: grid;
-			grid-template-columns: 455px;
-			grid-template-rows: 365px 85px 85px 85px 85px 85px 85px 85px;
-
+			grid-template-columns: repeat(3, 455px);
 			.comparisonColumn {
+				display: grid;
+				grid-template-rows: 365px repeat(7, minmax(61px, auto));
 				> .rsLabel,
 				.rsSelect {
 					width: 100%;
@@ -73,72 +72,8 @@
 				}
 			}
 		}
-		//display: grid;
-		//grid-template-columns: max(283px) max(455px) max(455px) max(455px);
-		//padding: 25px;
-		//
-		//.rowTitles {
-		//	display: grid;
-		//	grid-template-rows: 361px 1fr 1fr 1fr 1fr 1fr 1fr;
-		//	//grid-template-areas:
-		//	//				'a'
-		//	//				'b'
-		//	//				'c'
-		//	//				'd'
-		//	//				'e';
-		//	//.secondRowColumnOne {
-		//	//	area: b;
-		//	//	border-radius: 20px 0 0 0;
-		//	//}
-		//	.rsLabel {
-		//		display: grid;
-		//		place-items: center;
-		//		padding: 31px 121px 31px 23px;
-		//		background: #f8f8f8;
-		//		border-right: 1px solid theme-var($greyLineColor);
-		//		&:not(:last-child) {
-		//			border-bottom: 1px solid theme-var($greyLineColor);
-		//		}
-		//		&:first-of-type {
-		//			border-radius: 20px 0 0 0;
-		//		}
-		//	}
-		//}
-		//.column {
-		//	display: grid;
-		//	grid-template-rows: 361px 1fr 1fr 1fr 1fr 1fr 1fr;
-		//	place-items: center;
-		//  > .rsLabel, .rsSelect {
-		//    width: 100%;
-		//    height: 100%;
-		//    display: grid;
-		//    align-items: center;
-		//    padding: 0 24px;
-		//    box-sizing: border-box;
-		//    //align-self: center;
-		//    border-right: 1px solid theme-var($greyLineColor);
-		//    border-bottom: 1px solid theme-var($greyLineColor);
-		//  }
-		//	//> .rsBox {
-		//	//  height: 100%;
-		//	//  width: 100%;
-		//	//  display: grid;
-		//	//  align-items: center;
-		//	//  border-right: 1px solid theme-var($greyLineColor);
-		//	//  &:not(:last-child) {
-		//	//    border-bottom: 1px solid theme-var($greyLineColor);
-		//	//  }
-		//	//  > .rsBox, .rsLabel {
-		//	//    position: relative;
-		//	//    display: grid;
-		//	//    align-items: center;
-		//	//    padding: 0 24px;
-		//	//  }
-		//	//}
-		//	//}
-		//}
 		ul {
-			padding: 0 10px;
+			padding: 0 16px;
 		}
 	}
 }
@@ -147,9 +82,15 @@
 	.rsComparisonPopup {
 		.comparisonTable {
 			display: flex;
+			.imageCarouselContainer {
+				height: 150px;
+				.rsCarouselV2 {
+					width: 100%;
+					height: 100%;
+				}
+			}
 			.rowTitles {
-				display: grid;
-				grid-template-columns: 80px;
+				grid-template-columns: minmax(80px, auto);
 				grid-template-rows: 150px 50px 50px 50px 50px 50px 1fr 1fr;
 				.rsLabel {
 					width: 100%;
@@ -167,14 +108,11 @@
 			}
 			.comparisonColumnWrapper {
 				grid-template-columns: repeat(3, 130px);
-				grid-template-rows:
-					150px minmax(50px, auto) minmax(50px, auto) minmax(50px, auto) minmax(50px, auto)
-					minmax(50px, auto) minmax(50px, auto) minmax(50px, auto);
+
 				.comparisonColumn {
-					> .rsLabel,
+					grid-template-rows: 220px repeat(7, minmax(50px, 1fr));
 					.rsSelect {
-					}
-					.carouselWrapper {
+						padding: 0 10px;
 					}
 				}
 			}
