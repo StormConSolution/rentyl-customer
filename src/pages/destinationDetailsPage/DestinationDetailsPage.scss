@@ -1,5 +1,15 @@
 @import '../../themes/themes';
 .rsDestinationDetailsPage {
+	.rs-page-content-wrapper {
+		padding-top: 200px;
+		.gallerySection {
+		}
+		.overviewSection {
+		}
+		.experienceSection {
+		}
+	}
+
 	.rsAccordion {
 		width: fit-content;
 		width: -moz-fit-content;
