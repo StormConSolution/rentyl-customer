@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './TitleDescription.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import { ReactNodeArray } from 'react';
+import { ReactNode, ReactNodeArray } from 'react';
 
 interface AccordionTitleDescriptionProps {
 	title: string;
-	description: string | number | ReactNodeArray;
+	description: string | number | ReactNodeArray | ReactNode;
 	className?: string;
 }
 

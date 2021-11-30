@@ -1,20 +1,9 @@
 @import '../../themes/themes';
 .rsReservationDetailsPage {
-	.rsHeroImage {
-		position: relative;
-		margin-bottom: 95px;
-		.rsItineraryInfoCard {
-			position: absolute;
-			bottom: -55px;
-			left: 95px;
-		}
-	}
-	hr {
-		height: 1px;
-		width: 100%;
-		background: theme-var($greyLineColor);
-		border: none;
-		margin: 16px 0;
+	padding: 230px 95px 100px;
+	box-sizing: border-box;
+	background: #f8f8f8 !important;
+	.rs-page-content-wrapper {
 	}
 
 	.contentWrapper {
@@ -35,6 +24,7 @@
 
 .small {
 	.rsReservationDetailsPage {
+		padding: 145px 17px 100px;
 		.rsHeroImage {
 			padding: 0 16px;
 			box-sizing: border-box;

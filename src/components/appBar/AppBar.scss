@@ -1,6 +1,7 @@
 @import '../../themes/themes';
 
 .rsAppBar {
+	pointer-events: none;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -22,8 +23,12 @@
 	&.hide {
 		top: -110px;
 	}
+	.logo {
+		pointer-events: all;
+	}
 
 	.menuContainer {
+		pointer-events: all;
 		background-color: white;
 		border: 1px solid theme-var($greyLineColor);
 		border-radius: 10px;

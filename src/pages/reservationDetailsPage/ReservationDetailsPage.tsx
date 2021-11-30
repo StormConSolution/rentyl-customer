@@ -2,30 +2,23 @@ import * as React from 'react';
 import './ReservationDetailsPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import router from '../../utils/router';
-import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Footer from '../../components/footer/Footer';
-import { FooterLinks } from '../../components/footer/FooterLinks';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import { useRecoilValue } from 'recoil';
-import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
-import ReservationDetailsAccordion from '../../components/reservationDetailsAccordion/ReservationDetailsAccordion';
-import ReservationDetailsCostSummaryCard from '../../components/reservationDetailsCostSummaryCard/ReservationDetailsCostSummaryCard';
 import Paper from '../../components/paper/Paper';
-import ConfirmRemovePopup, { ConfirmRemovePopupProps } from '../../popups/confirmRemovePopup/ConfirmRemovePopup';
-import EditReservationDetailsPopup, {
-	EditReservationDetailsPopupProps
-} from '../../popups/editReservationDetailsPopup/EditReservationDetailsPopup';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import globalState from '../../state/globalState';
 import ReservationDetailsPaper from '../../components/reservationDetailsPaper/ReservationDetailsPaper';
+import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const ReservationDetailsPage: React.FC = () => {
+	const size = useWindowResizeChange();
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
@@ -81,175 +74,39 @@ const ReservationDetailsPage: React.FC = () => {
 	) : (
 		<Page className={'rsReservationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
+				<SubNavMenu
+					title={size === 'small' ? 'Your Itinerary' : `Your itinerary at ${reservation.destination.name}`}
+				/>
 				<ReservationDetailsPaper reservationData={reservation} />
-				<div className={'contentWrapper'}>
-					<div className={'reservationsWrapper'}>
-						<Label variant={'h1'} mb={40}>
-							Reservation Details
-						</Label>
-						<ReservationDetailsAccordion
-							reservationId={reservation.id}
-							accommodationName={reservation.accommodation.name}
-							arrivalDate={reservation.arrivalDate}
-							departureDate={reservation.departureDate}
-							externalConfirmationId={reservation.externalConfirmationId}
-							maxOccupantCount={reservation.accommodation.maxOccupantCount}
-							maxSleeps={reservation.accommodation.maxSleeps}
-							adultCount={reservation.adultCount}
-							childCount={reservation.childCount}
-							adaCompliant={reservation.accommodation.adaCompliant}
-							extraBed={reservation.accommodation.extraBed}
-							floorCount={reservation.accommodation.floorCount}
-							featureIcons={reservation.accommodation.featureIcons}
-							contactInfo={`${reservation.guest.firstName} ${reservation.guest.lastName}`}
-							email={reservation.guest.email}
-							phone={reservation.guest.phone}
-							additionalDetails={reservation.additionalDetails}
-							isCancelable={!!reservation.cancellationPermitted}
-							upsellPackages={reservation.upsellPackages}
-							onEditService={() => {
-								if (!reservation) return;
-								router.navigate(`/reservations/edit-services?ri=${reservation.id}`);
-							}}
-							onSave={(data) => {
-								let guestNameSplit = data.contactInfo.split(' ').filter((item) => item.length > 0);
-								let guest = {
-									firstName: guestNameSplit[0],
-									lastName: guestNameSplit[1],
-									email: data.email,
-									phone: data.phone
-								};
-								updateReservation({
-									id: reservation.id,
-									guest,
-									additionalDetails: data.additionalDetails
-								}).catch(console.error);
-							}}
-							onRemove={() => {
-								popupController.open<ConfirmRemovePopupProps>(ConfirmRemovePopup, {
-									onRemove: async () => {
-										popupController.open(SpinningLoaderPopup);
-										try {
-											let res = await reservationsService.cancel(reservation.id);
-											if (res) {
-												popupController.closeAll();
-												rsToastify.success(
-													`Successfully cancelled ${reservation?.externalConfirmationId}`,
-													'Success!'
-												);
-												router.navigate('/reservations').catch(console.error);
-											}
-										} catch (e) {
-											rsToastify.error(
-												WebUtils.getRsErrorMessage(e, 'An unexpected error has occurred'),
-												'Error!'
-											);
-											console.error(e.message);
-											popupController.close(SpinningLoaderPopup);
-										}
-									}
-								});
-							}}
-							onEditDetails={() => {
-								if (!reservation) return;
-								popupController.open<EditReservationDetailsPopupProps>(EditReservationDetailsPopup, {
-									accommodationId: reservation.accommodation.id,
-									destinationId: reservation.destination.id,
-									adultCount: reservation.adultCount,
-									childCount: reservation.childCount,
-									arrivalDate: reservation.arrivalDate,
-									departureDate: reservation.departureDate,
-									onApplyChanges: (data) => {
-										let newData: Api.Reservation.Req.Update = {
-											id: reservation.id,
-											adultCount: data.adultCount,
-											childCount: data.childCount,
-											arrivalDate: data.arrivalDate,
-											departureDate: data.departureDate,
-											rateCode: reservation.rateCode,
-											paymentMethodId: reservation.paymentMethod?.id,
-											guest: reservation.guest,
-											accommodationId: reservation.accommodation.id,
-											numberOfAccommodations: 1
-										};
-										updateReservation(newData).catch(console.error);
-									}
-								});
-							}}
-							onChangeRoom={() => {
-								if (!reservation) return;
-								router
-									.navigate(
-										`/reservations/edit-room?ri=${reservation.id}&di=${reservation.destination.id}`
-									)
-									.catch(console.error);
-							}}
-							isEdit
-							isPastReservation={new Date(reservation.arrivalDate).getTime() < Date.now()}
-							isOpen
-							destinationHasPackages={reservation.destination.packages.length > 0}
-						/>
-					</div>
-					<div>
-						<Label variant={'h1'} mb={40}>
-							Reservation Cost Summary
-						</Label>
-						<Box position={'sticky'} top={20}>
-							<ReservationDetailsCostSummaryCard
-								accommodationName={reservation.accommodation.name}
-								checkInTime={getPoliciesValue('CheckIn')}
-								checkOutTime={getPoliciesValue('CheckOut')}
-								arrivalDate={reservation.arrivalDate}
-								departureDate={reservation.departureDate}
-								adultCount={reservation.adultCount}
-								childCount={reservation.childCount}
-								taxAndFeeTotalsInCents={[
-									...reservation.priceDetail.feeTotalsInCents,
-									...reservation.priceDetail.taxTotalsInCents
-								]}
-								upsellPackages={reservation.upsellPackages}
-								costPerNight={reservation.priceDetail.accommodationDailyCostsInCents}
-								accommodationTotalCents={reservation.priceDetail.accommodationTotalInCents}
-								grandTotalCents={reservation.priceDetail.grandTotalCents}
-								subtotalPoints={reservation.priceDetail.subtotalPoints}
-								paidWithPoints={!reservation.paymentMethod}
-							/>
-							<Label variant={'h1'} mb={40}>
-								Policies
+				<Paper boxShadow padding={'24px 28px'}>
+					<Box display={'flex'} mb={24}>
+						<Box marginRight={56}>
+							<Label variant={'h3'} mb={8}>
+								CHECK-IN
 							</Label>
-							<Paper boxShadow padding={'24px 28px'}>
-								<Box display={'flex'} mb={24}>
-									<Box marginRight={56}>
-										<Label variant={'h3'} mb={8}>
-											CHECK-IN
-										</Label>
-										<Label variant={'body1'}>
-											{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
-										</Label>
-									</Box>
-									<div>
-										<Label variant={'h3'} mb={8}>
-											CHECK-OUT
-										</Label>
-										<Label variant={'body1'}>
-											{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
-										</Label>
-									</div>
-								</Box>
-								<Label variant={'h3'} mb={24}>
-									{reservation.destination.name}
-								</Label>
-								<div>
-									<Label variant={'h3'} mb={8}>
-										Cancellation
-									</Label>
-									<Label variant={'body1'}>{getPoliciesValue('Cancellation')}</Label>
-								</div>
-							</Paper>
+							<Label variant={'body1'}>
+								{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
+							</Label>
 						</Box>
+						<div>
+							<Label variant={'h3'} mb={8}>
+								CHECK-OUT
+							</Label>
+							<Label variant={'body1'}>
+								{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
+							</Label>
+						</div>
+					</Box>
+					<Label variant={'h3'} mb={24}>
+						{reservation.destination.name}
+					</Label>
+					<div>
+						<Label variant={'h3'} mb={8}>
+							Cancellation
+						</Label>
+						<Label variant={'body1'}>{getPoliciesValue('Cancellation')}</Label>
 					</div>
-				</div>
-				<Footer links={FooterLinks} />
+				</Paper>
 			</div>
 		</Page>
 	);

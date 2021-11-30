@@ -5,7 +5,6 @@
 	place-items: center;
 	align-content: center;
 	gap: 38px;
-	margin: 0 20px 117px 20px;
 	background: url('https://image.redskytech.io/AboutSpireSignUp/resort-slide_FDIu1DISy.png?tr=w-1920');
 	background-size: cover;
 	border-radius: 20px;
@@ -32,15 +31,16 @@
 
 .small {
 	.rsSignupBanner {
-		margin: 20px 10px;
+		margin: 20px 0;
 		height: 150px;
 		position: sticky;
 		gap: 15px;
 		bottom: 10px;
 		background: url('https://image.redskytech.io/AboutSpireSignUp/resort-slide_FDIu1DISy.png?th=h-200');
 		background-size: cover;
+		text-align: center;
 		.textTag {
-			font-size: 20px;
+			font-size: 18px;
 			color: #ffffff;
 		}
 	}

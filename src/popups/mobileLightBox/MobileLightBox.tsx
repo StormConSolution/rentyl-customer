@@ -135,14 +135,13 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 						dataindex={index}
 						className={'lightBoxImage'}
 						src={image.urls.imageKit}
-						alt={''}
+						alt={image.title}
 						width={'100%'}
 						height={'auto'}
 					/>
 				);
 			});
-		}
-		if (!!props.imageData) {
+		} else if (!!props.imageData) {
 			return props.imageData.map((image, index) => {
 				return (
 					<img
@@ -151,12 +150,14 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 						dataindex={index}
 						className={'lightBoxImage'}
 						src={image.urls.imageKit}
-						alt={''}
+						alt={image.title}
 						width={'100%'}
 						height={'auto'}
 					/>
 				);
 			});
+		} else {
+			return '';
 		}
 	}
 

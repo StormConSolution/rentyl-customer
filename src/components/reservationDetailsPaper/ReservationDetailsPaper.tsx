@@ -64,15 +64,29 @@ const ReservationDetailsPaper: React.FC<ReservationDetailsPaperProps> = (props) 
 	}
 
 	function renderAmenities() {
-		let amenities = props.reservationData.destination;
-		return '';
+		let amenities = props.reservationData.destination.experiences;
+		return amenities.map((item, index) => {
+			return (
+				<IconLabel
+					className={'amenitiesIcons'}
+					key={item.id}
+					labelName={item.title}
+					iconImg={item.icon}
+					iconPosition={'top'}
+					iconSize={37}
+					labelVariant={'reservationDetailsPaperCustomFive'}
+				/>
+			);
+		});
 	}
 
 	return (
 		<Paper borderRadius={'20px'} boxShadow className={'rsReservationDetailsPaper'}>
-			<Label variant={'reservationDetailsPaperCustomOne'}>Itinerary Details</Label>
+			<Label variant={'reservationDetailsPaperCustomOne'} mb={40}>
+				Itinerary Details
+			</Label>
 			<Img src={props.reservationData.destination.heroUrl} alt={'Destination Hero'} width={980} height={470} />
-			<Box display={'flex'} alignItems={'center'} mb={40} mt={25}>
+			<Box display={'flex'} alignItems={'center'} mb={40} mt={25} flexWrap={'wrap'}>
 				<Label variant={'reservationDetailsPaperCustomTwo'} mr={30}>
 					{props.reservationData.destination.name}
 				</Label>
@@ -84,12 +98,19 @@ const ReservationDetailsPaper: React.FC<ReservationDetailsPaperProps> = (props) 
 					iconSize={13}
 				/>
 			</Box>
-			<div className={'infoSection'}>
+			<Box className={'infoSection'} mb={40}>
 				{renderGuestInfo()}
 				{renderReservationDetails()}
 				{renderAccommodationDetails()}
-				<TitleDescription title={'Amenities'} description={renderAmenities()} />
-			</div>
+			</Box>
+			<TitleDescription
+				title={'Amenities'}
+				description={
+					<Box display={'flex'} flexWrap={'wrap'}>
+						{renderAmenities()}
+					</Box>
+				}
+			/>
 		</Paper>
 	);
 };

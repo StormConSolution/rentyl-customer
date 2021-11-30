@@ -26,12 +26,27 @@
 		column-gap: 100px;
 		row-gap: 40px;
 	}
+
+	.amenitiesIcons {
+		margin-right: 30px;
+	}
 }
 
 .small {
 	.rsReservationDetailsPaper {
+		padding: 27px 23px 44px;
 		.rsImg {
 			min-height: 208px;
+		}
+
+		.infoSection {
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			column-gap: 24px;
+			row-gap: 24px;
+		}
+
+		.amenitiesIcons {
+			margin-bottom: 30px;
 		}
 	}
 }
