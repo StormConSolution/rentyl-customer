@@ -29,8 +29,8 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(reservationFilters.endDate));
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('guests', reservationFilters.adultCount || 2, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Guests Required'),
+			new RsFormControl('adultCount', reservationFilters.adultCount || 2, [
+				new RsValidator(RsValidatorEnum.REQ, '# of Guests Required'),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Required', (control) => {
 					return control.value !== 0;
 				})
@@ -41,7 +41,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	const labelInputRef = useRef<HTMLElement>(null);
 
 	async function updateFilterForm(control: RsFormControl) {
-		if (control.key === 'guests' || control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
+		if (control.key === 'adultCount' || control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
 			let newValue: string | number = '';
 			if (control.value.toString().length > 0) {
 				let value = StringUtils.removeAllExceptNumbers(control.value.toString());
@@ -51,7 +51,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				control.value = newValue;
 			}
 		}
-		if (control.key === 'guests' && labelInputRef.current) {
+		if (control.key === 'adultCount' && labelInputRef.current) {
 			labelInputRef.current.setAttribute('data-guest-count', `${control.value} guests`);
 		}
 		filterForm.update(control);
@@ -64,16 +64,16 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	}
 
 	function isFormFilledOut(): boolean {
-		return !!filterForm.get('guests').value.toString().length;
+		return !!filterForm.get('adultCount').value.toString().length;
 	}
 
 	function updateSearchQueryObj(key: string, value: any) {
-		if (key === 'guests' && value === 0) {
+		if (key === 'adultCount' && value === 0) {
 			//this should never evaluate to true with current implementations.
-			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
+			throw rsToastify.error('Must have at least 1 guest', 'Missing or Incorrect Information');
 		}
-		if (key === 'guests' && isNaN(value)) {
-			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
+		if (key === 'gueadultCountsts' && isNaN(value)) {
+			throw rsToastify.error('# of guests must be a number', 'Missing or Incorrect Information');
 		}
 		setReservationFilters((prev) => {
 			let createSearchQueryObj: any = { ...prev };
@@ -124,7 +124,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
 			{renderDateRangeSelector()}
 			<LabelInput
-				control={filterForm.get('guests')}
+				control={filterForm.get('adultCount')}
 				updateControl={updateFilterForm}
 				className="guestsInput"
 				inputType="number"
