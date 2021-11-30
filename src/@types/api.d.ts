@@ -633,6 +633,10 @@ declare namespace Api {
 
 			export interface DestinationRegion extends Model.Region {}
 
+			export interface DestinationExperience extends Model.Experience, Model.DestinationExperience {
+				media: Media[];
+			}
+
 			export interface Details {
 				id: number;
 				externalId: string;
@@ -660,15 +664,7 @@ declare namespace Api {
 				maxBathroom: number;
 				propertyTypes: PropertyType[];
 				media: Media[];
-				experiences: {
-					id: number;
-					experienceId: number;
-					title: string;
-					icon: string;
-					description: string;
-					isHighlighted: 0 | 1;
-					media: Media[];
-				}[];
+				experiences: DestinationExperience[];
 				packages: UpsellPackage.Details[];
 				accommodations: {
 					id: number;
@@ -737,14 +733,7 @@ declare namespace Api {
 				media: Media[];
 				minAccommodationPrice: number;
 				minAccommodationPoints: number;
-				experiences: {
-					id: number;
-					title: string;
-					icon: string;
-					description: string;
-					isHighlighted: 0 | 1;
-					media: Media[];
-				}[];
+				experiences: DestinationExperience[];
 				accommodationTypes: {
 					id: number;
 					name: string;
@@ -1125,6 +1114,7 @@ declare namespace Api {
 			heroUrl: string;
 			policies: { type: Model.DestinationPolicyType; value: string }[];
 			packages: UpsellPackage.Details[];
+			experiences: Destination.Res.DestinationExperience[];
 			media: Media[];
 		}
 
