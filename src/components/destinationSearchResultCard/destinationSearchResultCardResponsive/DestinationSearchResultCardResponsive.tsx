@@ -11,17 +11,14 @@ import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
 import router from '../../../utils/router';
 import AccommodationsPopup, { AccommodationsPopupProps } from '../../../popups/accommodationsPopup/AccommodationsPopup';
+import DestinationExperience = Api.Destination.Res.DestinationExperience;
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
 	destinationId: number;
 	destinationName: string;
 	destinationDescription: string;
-	destinationExperiences: {
-		id: number;
-		title: string;
-		icon: string;
-	}[];
+	destinationExperiences: Pick<DestinationExperience, 'id' | 'title' | 'icon'>[];
 	address: string;
 	picturePaths: string[];
 	summaryTabs: DestinationSummaryTab[];
@@ -64,7 +61,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		}
 	}
 
-	function renderFeatures() {
+	function renderExperiences() {
 		return props.destinationExperiences.map((experience) => {
 			return (
 				<Box
@@ -166,7 +163,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						</Label>
 					</Box>
 					<Box className={'featureIcons'} paddingBottom={'30px'}>
-						{renderFeatures()}
+						{renderExperiences()}
 					</Box>
 					<Box display={'flex'} gap={'24px'}>
 						{renderButtons()}
