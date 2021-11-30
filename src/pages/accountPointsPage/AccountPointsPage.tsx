@@ -7,38 +7,22 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import router from '../../utils/router';
 import LoadingPage from '../loadingPage/LoadingPage';
-import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
 import Paper from '../../components/paper/Paper';
-import { FooterLinks } from '../../components/footer/FooterLinks';
-import Footer from '../../components/footer/Footer';
 import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
-import HeroImage from '../../components/heroImage/HeroImage';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import LinkButton from '../../components/linkButton/LinkButton';
-import Select, { OptionType } from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
-import Chip from '@bit/redsky.framework.rs.chip';
+import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
+import UserBasicInfoPaper from '../../components/userBasicInfoPaper/UserBasicInfoPaper';
+import UserService from '../../services/user/user.service';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
-	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const userService = serviceFactory.get<UserService>('UserService');
+	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const userPointService = serviceFactory.get<UserPointService>('UserPointService');
-	const [allPointHistory, setAllPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
 	const [pointHistory, setPointHistory] = useState<Api.UserPoint.Res.Verbose[]>();
-	const [filterBy, setFilterBy] = useState<RsFormGroup>(new RsFormGroup([new RsFormControl('filter', '', [])]));
-	const pointTypeFilters: OptionType[] = [
-		{ value: 'ACTION', label: 'Action' },
-		{ value: 'CAMPAIGN', label: 'Campaign' },
-		{ value: 'ADMIN', label: 'Admin' },
-		{ value: 'ORDER', label: 'Order' },
-		{ value: 'BOOKING', label: 'Booking' },
-		{ value: 'RENTAL', label: 'Rental' },
-		{ value: 'VACATION', label: 'Vacation' },
-		{ value: 'VOUCHER', label: 'Voucher' }
-	];
 
 	useEffect(() => {
 		if (!user) router.navigate('/signup').catch(console.error);
@@ -46,7 +30,6 @@ const AccountPointsPage: React.FC = () => {
 			try {
 				if (user) {
 					let res = await userPointService.getPointTransactionsByUserId();
-					setAllPointHistory(res);
 					setPointHistory(res);
 				}
 			} catch (e) {
@@ -56,27 +39,6 @@ const AccountPointsPage: React.FC = () => {
 		getUserPoints().catch(console.error);
 	}, [user]);
 
-	useEffect(() => {
-		function renderPointsWithFilter() {
-			if (!allPointHistory) return;
-			let filter = filterBy.get('filter').value as string[];
-			if (filter.length > 0) {
-				setPointHistory(allPointHistory.filter((point) => filter.includes(point.pointType)));
-			} else {
-				setPointHistory(allPointHistory);
-			}
-		}
-		renderPointsWithFilter();
-	}, [filterBy]);
-
-	function getMedia(point: Api.UserPoint.Res.Verbose) {
-		if (!point.media) return '';
-		if (point.media.length === 1) return point.media[0].urls.imageKit;
-		for (let i in point.media) {
-			if (point.media[i].isPrimary === 1) return point.media[i].urls.imageKit;
-		}
-		return point.media[0].urls.imageKit;
-	}
 	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
 		if (point.status === 'PENDING' || point.status === 'RECEIVED' || point.status === 'REFUNDED') {
 			return StringUtils.addCommasToNumber(point.pointAmount);
@@ -99,33 +61,58 @@ const AccountPointsPage: React.FC = () => {
 			if (type === 'completed' && point.status === 'PENDING') return false;
 			return size !== 'small' ? (
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
-					<img className={'pointImage'} src={getMedia(point)} alt={''} />
 					<Box className={'pendingPointsDetailsContainer'}>
-						<Label variant={'h3'}>{StringUtils.capitalizeFirst(point.title)}</Label>
-						<Chip label={point.pointType} look={'standard'} />
+						<Label variant={'subtitle1'}>{StringUtils.capitalizeFirst(point.title.toLowerCase())}</Label>
+						<Label
+							className={
+								point.pointType.toLowerCase() === 'admin'
+									? 'pinkChip pointTypeLabel'
+									: 'blueChip pointTypeLabel'
+							}
+							variant={'pointsPageCustomThree'}
+						>
+							{StringUtils.capitalizeFirst(point.pointType.toLowerCase())}
+						</Label>
 					</Box>
-					<Label className={'date'} variant={'h2'}>
-						{DateUtils.displayUserDate(point.createdOn)}
+					<Label className={'date'} variant={'subtitle1'}>
+						{DateUtils.formatDate(new Date(point.createdOn), 'MM-DD-YY')}
 					</Label>
-					<Label className={'points'} variant={'h2'}>
+					<Label className={'points'} variant={'subtitle1'}>
 						{getPointAmount(point)}
 					</Label>
 				</Box>
 			) : (
 				<Box key={index} className={'pointItemContainer pendingPointItemContainer'}>
-					<Label variant={'caption'}>Transaction Type</Label>
-					<Box className={'pendingPointsDetailsContainer'} display={'flex'}>
-						<Label variant={'h3'}>{StringUtils.capitalizeFirst(point.title)}</Label>
-						<Chip label={point.pointType} look={'standard'} />
-					</Box>
-					<Label variant={'caption'}>Date</Label>
-					<Label className={'date'} variant={'h3'} mb={5}>
-						{DateUtils.displayUserDate(point.createdOn)}
-					</Label>
-					<Label variant={'caption'}>Point Amount</Label>
-					<Label className={'points'} variant={'h3'}>
-						{getPointAmount(point)}
-					</Label>
+					<div className={'pendingPointMobile'}>
+						<Label variant={'pointsPageCustomFive'}>Transaction Type</Label>
+						<Label className={'pendingPointRight'} variant={'pointsPageCustomSix'}>
+							{StringUtils.capitalizeFirst(point.title)}
+						</Label>
+					</div>
+					<div className={'pendingPointMobile'}>
+						<Label variant={'pointsPageCustomFive'}>Date</Label>
+						<Label className={'pendingPointRight'} variant={'pointsPageCustomSix'}>
+							{DateUtils.formatDate(new Date(point.createdOn), 'MM-DD-YY')}
+						</Label>
+					</div>
+					<div className={'pendingPointMobile'}>
+						<Label variant={'pointsPageCustomFive'}>Point amount</Label>
+						<Label className={'pendingPointRight'} variant={'pointsPageCustomSix'}>
+							{getPointAmount(point)}
+						</Label>
+					</div>
+					<div>
+						<Label
+							className={
+								point.pointType.toLowerCase() === 'admin'
+									? 'pinkChip pointTypeLabel'
+									: 'blueChip pointTypeLabel'
+							}
+							variant={'pointsPageCustomThree'}
+						>
+							{StringUtils.capitalizeFirst(point.pointType.toLowerCase())}
+						</Label>
+					</div>
 				</Box>
 			);
 		});
@@ -136,86 +123,66 @@ const AccountPointsPage: React.FC = () => {
 	) : (
 		<Page className={'rsAccountPointsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<HeroImage
-					image={'../../images/pointsPage/PointsPageHero2x.jpg'}
-					height={'300px'}
-					mobileHeight={'200px'}
-					backgroundPosition={'center 78%'}
-					position={'relative'}
-				>
-					<h1>Redeem Your Points</h1>
-					<UserPointStatusBar />
-				</HeroImage>
+				<SubNavMenu title={'Account'} />
+				<UserBasicInfoPaper
+					userData={user}
+					onLogOut={() => {
+						userService.logout();
+						router.navigate('/');
+					}}
+				/>
 
-				<div className={'heroImgTitle'}>
-					<Box
-						className={'pointButtonsContainer'}
-						display={'flex'}
-						justifyContent={'center'}
-						marginTop={'40px'}
-					>
-						<LinkButton
-							look={'containedSecondary'}
-							label={'Learn About Points'}
-							path={'/about-spire-points'}
-						/>
-					</Box>
-					<Box
-						className={'headerAndFilterContainer'}
-						display={'flex'}
-						justifyContent={'space-between'}
-						padding={size === 'small' ? '0 20px' : '0 140px'}
-					>
-						<Label variant={'h1'}>Your Point History</Label>
-						<Select
-							isMulti
-							control={filterBy.get('filter')}
-							updateControl={(control) => setFilterBy(filterBy.clone().update(control))}
-							options={pointTypeFilters}
-							placeholder={'Search by'}
-						/>
-					</Box>
-					<Paper
-						className={'pointHistoryContainer'}
-						backgroundColor={'#fbfcf8'}
-						padding={size === 'small' ? '10px' : '40px'}
-						boxShadow
-					>
-						<div className={'pendingPointsContainer'}>
-							<Label variant={'h2'}>Pending Points</Label>
-							{size === 'small' && <hr />}
-							<Box className={'pending pointTableHeader'}>
-								<Label className={'transactionType'} variant={'body1'}>
-									Transaction type
-								</Label>
-								<Label className={'dateReceived'} variant={'body1'}>
-									Date
-								</Label>
-								<Label className={'pointAmount'} variant={'body1'}>
-									Point Amount
-								</Label>
-							</Box>
-							<div className={'pending pointTableContainer'}>{renderPoints('pending')}</div>
-						</div>
-						<div className={'completedTransactionsContainer'}>
-							<Label variant={'h2'}>Completed Transactions</Label>
-							{size === 'small' && <hr />}
-							<Box className={'completed pointTableHeader'}>
-								<Label className={'transactionType'} variant={'body1'}>
-									Transaction type
-								</Label>
-								<Label className={'dateReceived'} variant={'body1'}>
-									Date
-								</Label>
-								<Label className={'pointAmount'} variant={'body1'}>
-									Point Amount
-								</Label>
-							</Box>
-							<div className={'completed pointTableContainer'}>{renderPoints('completed')}</div>
-						</div>
-					</Paper>
-					<Footer links={FooterLinks} />
-				</div>
+				<Paper
+					className={'pointHistoryContainer'}
+					backgroundColor={'#ffffff'}
+					padding={size === 'small' ? '20px' : '40px'}
+					boxShadow
+				>
+					<div className={'pendingPointsContainer'}>
+						<Label
+							className={'pendingPointsLabel'}
+							variant={size === 'small' ? 'pointsPageCustomFour' : 'pointsPageCustomOne'}
+						>
+							Pending Points
+						</Label>
+						{size === 'small' && <hr className={'mobilePendingPointsHr'} />}
+						<Box className={'pending pointTableHeader'}>
+							<Label className={'transactionType'} variant={'pointsPageCustomTwo'}>
+								Transaction type
+							</Label>
+							<Label className={'dateReceived'} variant={'pointsPageCustomTwo'}>
+								Date
+							</Label>
+							<Label className={'pointAmount'} variant={'pointsPageCustomTwo'}>
+								Point amount
+							</Label>
+						</Box>
+						<div className={'pending pointTableContainer'}>{renderPoints('pending')}</div>
+					</div>
+				</Paper>
+				<Paper
+					className={'pointHistoryContainer'}
+					backgroundColor={'#ffffff'}
+					padding={size === 'small' ? '10px' : '40px'}
+					boxShadow
+				>
+					<div className={'completedTransactionsContainer'}>
+						<Label variant={'h2'}>Completed Transactions</Label>
+						{size === 'small' && <hr />}
+						<Box className={'completed pointTableHeader'}>
+							<Label className={'transactionType'} variant={'body1'}>
+								Transaction type
+							</Label>
+							<Label className={'dateReceived'} variant={'body1'}>
+								Date
+							</Label>
+							<Label className={'pointAmount'} variant={'body1'}>
+								Point amount
+							</Label>
+						</Box>
+						<div className={'completed pointTableContainer'}>{renderPoints('completed')}</div>
+					</div>
+				</Paper>
 			</div>
 		</Page>
 	);

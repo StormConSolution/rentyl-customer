@@ -23,7 +23,7 @@
 			border-bottom: 1px solid theme-var($greyLineColor);
 			display: flex;
 			.headerText {
-				padding: 35px 0 30px 80px;
+				padding: 35px 0 30px 38px;
 			}
 			.coloredText {
 				color: theme-var($iconAndHighlightTextColor);
@@ -35,7 +35,7 @@
 			padding: 44px 66px;
 			column-gap: 150px;
 			row-gap: 70px;
-			width: 95%;
+			width: 88%;
 			grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
 			overflow: auto;
 		}
