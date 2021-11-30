@@ -26,9 +26,9 @@
 
 .small {
 	.rsExistingItineraryPage {
-		padding: 0 16px;
-		.rsItineraryCardMobile {
-			margin: 0 auto 50px;
+		.staysCard {
+			width: clamp(290px, 85vw, 356px);
+			padding: clamp(12px, 60vw, 16px);
 		}
 	}
 }

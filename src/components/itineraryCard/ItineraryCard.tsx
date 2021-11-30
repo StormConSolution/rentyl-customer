@@ -28,6 +28,8 @@ interface ReservationCardProps {
 	cancelPermitted: 0 | 1;
 	itineraryTotal: number;
 	paidWithPoints: boolean;
+	city: string;
+	state: string;
 }
 
 const ItineraryCard: React.FC<ReservationCardProps> = (props) => {
@@ -37,7 +39,6 @@ const ItineraryCard: React.FC<ReservationCardProps> = (props) => {
 			imgPaths={props.imgPaths}
 			logo={props.logo}
 			title={props.title}
-			address={props.address}
 			reservationDates={props.reservationDates}
 			propertyType={props.propertyType}
 			itineraryId={props.itineraryId}
@@ -48,6 +49,8 @@ const ItineraryCard: React.FC<ReservationCardProps> = (props) => {
 			cancelPermitted={props.cancelPermitted}
 			itineraryTotal={props.itineraryTotal}
 			paidWithPoints={props.paidWithPoints}
+			city={props.city}
+			state={props.state}
 		/>
 	) : (
 		<ItineraryCardResponsive
