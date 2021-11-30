@@ -216,16 +216,25 @@ class DateUtils extends BaseDateUtils {
 	}
 
 	static formatDate(date: Date, formatType?: string): string {
-		if (formatType === 'MM/DD/YYYY') {
-			return (
-				('0' + (date.getMonth() + 1)).slice(-2) +
-				'/' +
-				('0' + date.getDate()).slice(-2) +
-				'/' +
-				date.getFullYear()
-			);
-		} else {
-			return date.toDateString();
+		switch (formatType) {
+			case 'MM/DD/YYYY':
+				return (
+					('0' + (date.getMonth() + 1)).slice(-2) +
+					'/' +
+					('0' + date.getDate()).slice(-2) +
+					'/' +
+					date.getFullYear()
+				);
+			case 'MM-DD-YY':
+				return (
+					('0' + (date.getMonth() + 1)).slice(-2) +
+					'-' +
+					('0' + date.getDate()).slice(-2) +
+					'-' +
+					date.getFullYear().toString().slice(2)
+				);
+			default:
+				return date.toDateString();
 		}
 	}
 }
