@@ -200,20 +200,23 @@ const ExistingItineraryPage: React.FC = () => {
 	) : (
 		<Page className={'rsExistingItineraryPage'}>
 			<Box className="staysCard">
-				<Label variant={size === 'small' ? 'customFour' : 'customTwentyOne'} marginBottom={40}>
+				<Label
+					variant={size === 'small' ? 'customFour' : 'customTwentyOne'}
+					marginBottom={size === 'small' ? 20 : 40}
+				>
 					Your upcoming reservations
 				</Label>
-				{renderUpcomingReservations()?.reverse()}
+				<div className={'wrapper'}>{renderUpcomingReservations()?.reverse()}</div>
 			</Box>
 			<Box className="staysCard">
 				<Label
 					variant={size === 'small' ? 'customFour' : 'customTwentyOne'}
-					marginBottom={40}
+					marginBottom={size === 'small' ? 20 : 40}
 					className={'pastStays'}
 				>
 					Past reservations
 				</Label>
-				{renderPrevReservations()}
+				<div className={'wrapper'}>{renderPrevReservations()}</div>
 			</Box>
 		</Page>
 	);
