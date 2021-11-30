@@ -142,6 +142,7 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							<Icon
 								iconImg={hideTaxesAndFees ? 'icon-chevron-up' : 'icon-chevron-down'}
 								onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
+								className={'taxIcon'}
 							/>
 						</Box>
 						<Label variant={'customThree'} className={'totalTax'}>
@@ -150,8 +151,10 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 					</Box>
 					{hideTaxesAndFees ? <></> : renderTaxesAndFees()}
 					<Box display={'flex'} justifyContent={'space-between'}>
-						<Label variant={'customFour'}>Total</Label>
-						<Label variant={'customThree'}>
+						<Label variant={'customFour'} marginTop={20}>
+							Total
+						</Label>
+						<Label variant={'customThree'} marginTop={20}>
 							${(props.bookingData.prices.grandTotalCents / 100).toFixed(2)}
 						</Label>
 					</Box>
