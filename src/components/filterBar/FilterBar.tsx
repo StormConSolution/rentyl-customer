@@ -72,7 +72,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			//this should never evaluate to true with current implementations.
 			throw rsToastify.error('Must have at least 1 guest', 'Missing or Incorrect Information');
 		}
-		if (key === 'gueadultCountsts' && isNaN(value)) {
+		if (key === 'adultCount' && isNaN(value)) {
 			throw rsToastify.error('# of guests must be a number', 'Missing or Incorrect Information');
 		}
 		setReservationFilters((prev) => {
