@@ -1,0 +1,37 @@
+.rsPersonalInformation {
+	position: relative;
+	display: flex;
+	width: 100%;
+	border: 0.5px solid #7070706e;
+	padding: 34px 34px 43px;
+	box-sizing: border-box;
+	border-radius: 20px;
+	margin-bottom: 40px;
+
+	.personalInformationWrapper,
+	.billingAddressWrapper {
+		font-size: 17px;
+		color: #001933;
+		font-weight: 400;
+		line-height: 25px;
+
+		.sectionTitle {
+			font-size: 20px;
+			font-weight: 700;
+			padding-bottom: 32px;
+		}
+		.name {
+			padding-bottom: 12px;
+		}
+	}
+	.billingAddressWrapper {
+		padding-left: 140px;
+	}
+
+	.editIcon {
+		position: absolute;
+		top: 18px;
+		right: 26px;
+		cursor: pointer;
+	}
+}
