@@ -58,6 +58,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 10;
+	console.log('destinationD', destinationDetails);
 
 	useEffect(() => {
 		const filtersFromUrl = WebUtils.parseURLParamsToFilters();
@@ -270,12 +271,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				className={'sectionFour'}
 				marginBottom={'124px'}
 				display={'flex'}
-				justifyContent={'center'}
-				alignItems={'center'}
+				// justifyContent={'center'}
+				// alignItems={'center'}
 				flexWrap={'wrap'}
 			>
 				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-					<Label variant={'h1'}>Location</Label>
 					{destinationDetails.locationDescription ? (
 						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
 					) : (
@@ -348,17 +348,36 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box className={'minMaxContainer'}>
-					<MinMaxDestinationDetailsBar
-						minBed={destinationDetails.minBedroom}
-						maxBed={destinationDetails.maxBedroom}
-						minBath={destinationDetails.minBathroom}
-						maxBath={destinationDetails.maxBathroom}
-						minArea={0}
-						maxArea={0}
-					/>
+				<Box className={'overviewSection'}>
+					<Box className={'titleAndPriceContainer'}>
+						<Box className={'logoNameContainer'}>
+							<img
+								className="destinationLogo"
+								src={destinationDetails.logoUrl}
+								alt={destinationDetails.name + ' logo'}
+							/>
+							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
+						</Box>
+						<Box className={'destinationPricingContainer'}>
+							<Label variant={'destinationDetailsCustomFour'}>from</Label>
+							<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+								$300
+							</Label>
+							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+						</Box>
+					</Box>
+					<Box className={'minMaxContainer'}>
+						<MinMaxDestinationDetailsBar
+							minBed={destinationDetails.minBedroom}
+							maxBed={destinationDetails.maxBedroom}
+							minBath={destinationDetails.minBathroom}
+							maxBath={destinationDetails.maxBathroom}
+							minArea={0}
+							maxArea={0}
+						/>
+					</Box>
+					<Box>{renderSectionFour()}</Box>
 				</Box>
-				<Box className={'overviewSection'}></Box>
 				<Box className={'experienceSection'}></Box>
 				{/*<Button*/}
 				{/*	look={'containedPrimary'}*/}

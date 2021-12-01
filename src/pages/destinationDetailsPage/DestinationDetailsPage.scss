@@ -8,6 +8,36 @@
 			margin: 51px 0 37px 25px;
 		}
 		.overviewSection {
+			margin-top: 46px;
+
+			.titleAndPriceContainer {
+				display: grid;
+				grid-template-columns: repeat(2, fit-content(100%));
+				justify-content: space-between;
+
+				.logoNameContainer {
+					display: grid;
+					grid-template-columns: repeat(2, fit-content(100%));
+					align-items: center;
+
+					.destinationLogo {
+						margin-right: 50px;
+						margin-left: 26px;
+						height: 61px;
+						width: auto;
+					}
+				}
+
+				.destinationPricingContainer {
+					display: grid;
+					justify-items: end;
+					margin-right: 40px;
+
+					.price {
+						color: theme-var($yellowTextColor);
+					}
+				}
+			}
 		}
 		.experienceSection {
 		}
