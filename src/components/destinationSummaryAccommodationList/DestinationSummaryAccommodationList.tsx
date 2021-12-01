@@ -14,7 +14,6 @@ export interface DestinationSummaryAccommodationListProps {
 	accommodationType: string;
 	accommodations: AccommodationListRowProp[];
 	onDetailsClick: (accommodationId: number | string) => void;
-	onBookNowClick: (accommodationId: number) => void;
 	onAddCompareClick?: (accommodationId: number | string) => void;
 }
 
@@ -74,7 +73,6 @@ const DestinationSummaryAccommodationList: React.FC<DestinationSummaryAccommodat
 						label="Book Now"
 						onClick={(e) => {
 							e.stopPropagation();
-							props.onBookNowClick(accommodation.id);
 						}}
 					/>
 				</div>

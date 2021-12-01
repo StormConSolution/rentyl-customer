@@ -127,6 +127,7 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 							{accommodationPrices.map((priceObj) => {
 								return (
 									<RateCodeCard
+										key={priceObj.rateCode}
 										priceObj={priceObj}
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}

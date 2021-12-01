@@ -33,6 +33,7 @@ export default class DestinationService extends Service {
 			'destination/availability',
 			data
 		);
+		console.log('response', response, 'data', data);
 		return response.data;
 	}
 

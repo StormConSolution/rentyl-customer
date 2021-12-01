@@ -59,7 +59,6 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 				accommodationType={listProps.accommodationType}
 				accommodations={listProps.accommodations}
 				onAddCompareClick={listProps.onAddCompareClick}
-				onBookNowClick={listProps.onBookNowClick}
 				onDetailsClick={listProps.onDetailsClick}
 			/>
 		);
