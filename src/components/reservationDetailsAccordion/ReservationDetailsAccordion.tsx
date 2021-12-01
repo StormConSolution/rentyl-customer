@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import './ReservationDetailsAccordion.scss';
-import AccordionTitleDescription from '../accordionTitleDescription/AccordionTitleDescription';
+
 import { Box } from '@bit/redsky.framework.rs.996';
 import LabelButton from '../labelButton/LabelButton';
 import Accordion from '@bit/redsky.framework.rs.accordion';
@@ -11,6 +11,7 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import router from '../../utils/router';
 import { DateUtils, ObjectUtils, StringUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import TitleDescription from '../titleDescription/TitleDescription';
 
 interface ReservationDetailsAccordionProps {
 	reservationId: number;
@@ -111,16 +112,16 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 			return (
 				<>
 					<div className={'accordionReservationGrid'}>
-						<AccordionTitleDescription title={'Contact Info'} description={props.contactInfo} />
-						<AccordionTitleDescription title={'Email'} description={props.email} />
-						<AccordionTitleDescription
+						<TitleDescription title={'Contact Info'} description={props.contactInfo} />
+						<TitleDescription title={'Email'} description={props.email} />
+						<TitleDescription
 							title={'Phone'}
 							description={StringUtils.formatCountryCodePhoneNumber(props.phone) || ''}
 						/>
 					</div>
 					<hr />
 					{props.additionalDetails && (
-						<AccordionTitleDescription title={'Additional Details'} description={props.additionalDetails} />
+						<TitleDescription title={'Additional Details'} description={props.additionalDetails} />
 					)}
 				</>
 			);
@@ -215,7 +216,7 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 		return props.upsellPackages.map((item, index) => {
 			return (
 				<Box key={index} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-					<AccordionTitleDescription title={'Package'} description={item.title} />
+					<TitleDescription title={'Package'} description={item.title} />
 					<Label maxWidth={'60%'} variant={'body2'}>
 						{item.description}
 					</Label>
@@ -252,28 +253,28 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 			hideHoverEffect
 			titleReact={
 				<div className={'accordionReservationGrid'}>
-					<AccordionTitleDescription title={'Reservation Name'} description={props.accommodationName} />
-					<AccordionTitleDescription
+					<TitleDescription title={'Reservation Name'} description={props.accommodationName} />
+					<TitleDescription
 						title={'Reservation Date'}
 						description={`${DateUtils.displayUserDate(props.arrivalDate)} - ${DateUtils.displayUserDate(
 							props.departureDate
 						)}`}
 					/>
-					<AccordionTitleDescription title={'Confirmation code'} description={props.externalConfirmationId} />
+					<TitleDescription title={'Confirmation code'} description={props.externalConfirmationId} />
 				</div>
 			}
 		>
 			<Box padding={'0 16px 1px'}>
 				<div className={'accordionReservationGrid'}>
-					<AccordionTitleDescription title={'Max Occupancy'} description={props.maxOccupantCount} />
-					<AccordionTitleDescription title={'sleeps'} description={props.maxSleeps} />
-					<AccordionTitleDescription title={'Property Type'} description={'VIP SUITE'} />
-					<AccordionTitleDescription title={'Adults'} description={props.adultCount} />
-					<AccordionTitleDescription title={'Children'} description={props.childCount} />
-					<AccordionTitleDescription title={'Accessible'} description={props.adaCompliant ? 'Yes' : 'No'} />
-					<AccordionTitleDescription title={'Extra Bed'} description={props.extraBed ? 'Yes' : 'No'} />
-					<AccordionTitleDescription title={'Floor Count'} description={props.floorCount} />
-					<AccordionTitleDescription title={'Amenities'} description={renderAmenities(props.featureIcons)} />
+					<TitleDescription title={'Max Occupancy'} description={props.maxOccupantCount} />
+					<TitleDescription title={'sleeps'} description={props.maxSleeps} />
+					<TitleDescription title={'Property Type'} description={'VIP SUITE'} />
+					<TitleDescription title={'Adults'} description={props.adultCount} />
+					<TitleDescription title={'Children'} description={props.childCount} />
+					<TitleDescription title={'Accessible'} description={props.adaCompliant ? 'Yes' : 'No'} />
+					<TitleDescription title={'Extra Bed'} description={props.extraBed ? 'Yes' : 'No'} />
+					<TitleDescription title={'Floor Count'} description={props.floorCount} />
+					<TitleDescription title={'Amenities'} description={renderAmenities(props.featureIcons)} />
 				</div>
 				<hr />
 				{renderUpsellPackages()}

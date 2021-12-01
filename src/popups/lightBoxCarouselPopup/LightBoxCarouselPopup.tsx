@@ -15,6 +15,7 @@ export interface TabbedCarouselPopupProps extends PopupProps {
 	tabs?: ImageTabProp[];
 	imageData?: Api.Media[];
 	imageIndex?: number;
+	activeTabName?: string;
 }
 
 const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
@@ -22,21 +23,22 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 
 	useEffect(() => {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
-			setActiveTabName(props.tabs[0].name);
+			if (props.activeTabName) setActiveTabName(props.activeTabName);
+			else setActiveTabName(props.tabs[0].name);
 		}
-	}, []);
+	}, [props.activeTabName]);
 
 	function renderTabs() {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
 			let tabsArray = props.tabs.map((item, index) => {
 				return (
 					<Button
+						key={item.name}
 						look={'none'}
 						className={'tab' + (activeTabName === item.name ? ' selected' : '')}
 						onClick={() => {
 							setActiveTabName(item.name);
 						}}
-						key={item.name}
 					>
 						<Label variant="customTen">{item.name}</Label>
 					</Button>
@@ -45,7 +47,7 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 
 			let newTabs = [
 				...tabsArray,
-				<Button look={'none'} className={'closeButtonTabs'}>
+				<Button key={'none'} look={'none'} className={'closeButtonTabs'}>
 					<Icon
 						iconImg={'icon-close'}
 						size={30}

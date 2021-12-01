@@ -1,21 +1,15 @@
 import * as React from 'react';
 import './DestinationDetailsPage.scss';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
-import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import DestinationInfoCard from '../../components/destinationInfoCard/DestinationInfoCard';
-import { FooterLinks } from '../../components/footer/FooterLinks';
-import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
-import LabelImage from '../../components/labelImage/LabelImage';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import Carousel from '../../components/carousel/Carousel';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
@@ -25,11 +19,7 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import FilterReservationPopup, {
-	FilterReservationPopupProps
-} from '../../popups/filterReservationPopup/FilterReservationPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
@@ -40,9 +30,15 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
+
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
+	const galleryRef = useRef<HTMLElement>(null);
+	const overviewRef = useRef<HTMLElement>(null);
+	const experiencesRef = useRef<HTMLElement>(null);
+	const availableStaysRef = useRef<HTMLElement>(null);
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
@@ -50,7 +46,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
@@ -245,15 +240,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	// 		</Box>
 	// 	);
 	// }
-	//
-	// function renderSectionThree() {
-	// 	if (!destinationDetails?.experiences) return null;
-	// 	return (
-	// 		<Box className={'sectionThree'} marginBottom={'190px'}>
-	// 			{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
-	// 		</Box>
-	// 	);
-	// }
+
+	function renderExperiencesSection() {
+		if (!destinationDetails?.experiences) return null;
+		if (!ObjectUtils.isArrayWithData(destinationDetails.experiences) || destinationDetails.experiences.length < 6)
+			return <></>;
+		return <DestinationExperienceImageGallery experiences={destinationDetails.experiences} />;
+	}
 
 	function renderSectionFour() {
 		if (!destinationDetails) return null;
@@ -306,25 +299,23 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<SubNavMenu
-					pageRefs={{
-						galleryRef: availableStaysRef,
-						overviewRef: availableStaysRef,
-						experiencesRef: availableStaysRef,
-						availableStaysRef: availableStaysRef
-					}}
-				/>
-				<Box className={'gallerySection'}>
+				{size !== 'small' && (
+					<SubNavMenu
+						pageRefs={{
+							galleryRef: galleryRef,
+							overviewRef: overviewRef,
+							experiencesRef: experiencesRef,
+							availableStaysRef: availableStaysRef
+						}}
+					/>
+				)}
+				<Box boxRef={galleryRef} className={'gallerySection'}>
 					{size === 'small' ? (
 						<CarouselV2
 							path={window.location.href}
 							imgPaths={getImageUrls(destinationDetails)}
 							onAddCompareClick={() => {
-								comparisonService.addToComparison({
-									destinationId: destinationDetails.id,
-									title: destinationDetails.name,
-									logo: destinationDetails.logoUrl
-								});
+								comparisonService.addToComparison(destinationDetails.id).catch(console.error);
 							}}
 							onRemoveCompareClick={() => {
 								comparisonService.removeFromComparison(destinationDetails.id);
@@ -347,18 +338,18 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box className={'overviewSection'}></Box>
-				<Box className={'experienceSection'}></Box>
-				{/*<Button*/}
-				{/*	look={'containedPrimary'}*/}
-				{/*	onClick={() => {*/}
-				{/*		popupController.open<MobileLightBoxProps>(MobileLightBox, {*/}
-				{/*			featureData: renderFeatureCarousel()*/}
-				{/*		});*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	Click to open Mobile*/}
-				{/*</Button>*/}
+				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
+				<hr />
+				<Box boxRef={experiencesRef} className={'experienceSection'} mb={63}>
+					<Label
+						variant={size === 'small' ? 'destinationDetailsCustomOne' : 'tabbedImageCarouselCustomOne'}
+						mb={size === 'small' ? 25 : 50}
+					>
+						Experiences
+					</Label>
+					{renderExperiencesSection()}
+				</Box>
+
 				{!destinationDetails.isActive ? (
 					<div ref={availableStaysRef}>
 						<Label variant={'h2'} color={'red'} className={'noDestinations'}>
@@ -367,28 +358,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					</div>
 				) : (
 					<div className={'sectionFive'} ref={availableStaysRef}>
-						<Label variant={'h1'} mb={20}>
-							Available Stays
+						<hr />
+						<Label variant={'h1'} className={'chooseYourAccommodation'}>
+							Choose your accommodation
 						</Label>
-						{size !== 'small' ? (
-							<>
-								<FilterBar destinationId={destinationDetails.id} />
-							</>
-						) : (
-							<IconLabel
-								className={'moreFiltersLink'}
-								labelName={'More Filters'}
-								iconImg={'icon-chevron-right'}
-								iconPosition={'right'}
-								iconSize={8}
-								labelVariant={'caption'}
-								onClick={() => {
-									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-										className: 'filterPopup'
-									});
-								}}
-							/>
-						)}
+						<FilterBar destinationId={destinationDetails.id} isMobile={size === 'small'} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
 							{availabilityStayList.length <= 0 ? (

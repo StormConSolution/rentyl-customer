@@ -30,6 +30,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 
 	useEffect(() => {
 		setTimeout(() => {
+			if (!parentRef.current) return;
 			parentRef.current!.scrollTo({ top: 0, left: 0 });
 		}, 50);
 	}, []);
