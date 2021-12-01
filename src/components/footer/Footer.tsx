@@ -70,8 +70,8 @@ const Footer: React.FC<FooterProps> = (props) => {
 
 	return (
 		<Fragment>
-			{!user && <SignupBanner />}
 			<Box className={'rsFooter'}>
+				{!user && <SignupBanner />}
 				<Box className={'footerNavigation'}>
 					<Box className={'companyFooterLogo'}>
 						<Link path={`https://rentylresorts.com/`} external target={'blank'}>

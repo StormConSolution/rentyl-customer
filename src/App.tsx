@@ -12,7 +12,6 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
-import AccountOverview from './popups/accountOverview/AccountOverview';
 import useCompanyInfo from './customHooks/useCompanyInfo';
 import { useSetCustomToast } from './customHooks/useSetCustomToast';
 import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
@@ -69,15 +68,6 @@ function App() {
 					<>
 						<AppBar />
 						<View key="landingPage" id="landingPage" default initialPath="/" />
-						<AccountOverview
-							isOpen={showAccountOverview}
-							onToggle={() => {
-								setShowAccountOverview(!showAccountOverview);
-							}}
-							onClose={() => {
-								setShowAccountOverview(false);
-							}}
-						/>
 						<Footer links={FooterLinks} />
 					</>
 				);
