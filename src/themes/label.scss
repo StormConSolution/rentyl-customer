@@ -238,6 +238,21 @@ html {
 		line-height: 19px;
 		font-weight: $regular;
 	}
+	&.packagesCustomOne {
+		font-size: 32px;
+		line-height: 20px;
+		font-weight: $extraBold;
+	}
+	&.packagesCustomTwo {
+		font-size: 20px;
+		line-height: 28px;
+		font-weight: $bold;
+	}
+	&.packagesCustomThree {
+		font-size: 14px;
+		line-height: 30px;
+		font-weight: $regular;
+	}
 	&.tabbedImageCarouselCustomOne {
 		font-size: 41px;
 		line-height: 50px;

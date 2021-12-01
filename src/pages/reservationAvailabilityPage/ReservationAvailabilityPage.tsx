@@ -3,18 +3,15 @@ import './ReservationAvailabilityPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import serviceFactory from '../../services/serviceFactory';
-import router from '../../utils/router';
 import ComparisonDrawer from '../../popups/comparisonDrawer/ComparisonDrawer';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import globalState from '../../state/globalState';
 import { useRecoilValue } from 'recoil';
-import { ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
+import { ObjectUtils, WebUtils } from '../../utils/utils';
 import FilterReservationPopup, {
 	FilterReservationPopupProps
 } from '../../popups/filterReservationPopup/FilterReservationPopup';
-import DestinationSearchResultCard, {
-	PropertyTypeObject
-} from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
+import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import DestinationService from '../../services/destination/destination.service';
 import ComparisonService from '../../services/comparison/comparison.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
@@ -72,11 +69,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					destinationObj={destination}
 					picturePaths={urls}
 					onAddCompareClick={() => {
-						comparisonService.addToComparison({
-							destinationId: destination.id,
-							title: destination.name,
-							logo: destination.logoUrl
-						});
+						comparisonService.addToComparison(destination.id).catch(console.error);
 					}}
 					onRemoveCompareClick={() => {
 						comparisonService.removeFromComparison(destination.id);

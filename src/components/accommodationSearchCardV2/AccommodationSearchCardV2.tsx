@@ -28,7 +28,6 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 		async function getAccommodationDetails() {
 			try {
 				const res = await accommodationService.getAccommodationDetails(props.accommodation.id);
-				console.log('accommodationDetails', res, props.accommodation);
 				setAccommodationDetails(res);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'No accommodation found'), 'Error!');

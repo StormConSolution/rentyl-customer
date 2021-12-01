@@ -2,15 +2,18 @@
 
 .rsFilterBar {
 	display: grid;
-	grid-template-columns: repeat(7, auto);
-	gap: 20px;
-	justify-content: start;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-auto-rows: 1fr;
+	gap: 35px;
+	align-items: end;
+
 	.rsSelect {
 		max-width: 100%;
 		[class*='control'] {
 			background-color: white;
 		}
 	}
+
 	div {
 		margin: 0;
 	}
@@ -19,37 +22,127 @@
 		display: none;
 	}
 
-	.rsLabelInput {
-		width: fit-content;
-		width: -moz-fit-content;
-	}
-	.rsLabelInput input {
-		width: 100px;
-		height: 40px;
-		padding: 0 10px;
+	.contained.primary.updateButton {
+		color: white;
 	}
 
-	.moreFiltersLink {
-		.rsLabel.caption {
-			color: theme-var($buttonLinkColor);
-		}
-		.rsIcon {
-			color: theme-var($buttonLinkColor);
+	.guestsInput {
+		.rsInput {
+			border: none;
+			padding-left: 0;
+			font-size: 21px;
+			font-weight: 500;
+			border-radius: 0;
+			color: #767676 !important;
 		}
 	}
-	.rsLabelSelect {
-		width: 200px;
+
+	.rsDateRangeSelector {
+		.startEndLabels {
+			grid-template-columns: initial;
+			width: max-content;
+			padding-top: 0;
+		}
 	}
 }
 
-.small {
-	.rsFilterBar {
-		.rsDateRangeSelector,
-		.numberOfAdults,
-		.numberOfChildren,
-		.priceMax,
-		.priceMin {
-			display: none;
+.rsFilterBar:not(.small) {
+	grid-template-columns: 2fr 1fr 1fr;
+	grid-auto-rows: 1fr;
+	gap: 20px;
+	align-items: center;
+
+	.guestsInput {
+		border: none;
+		border-radius: 20px;
+		padding: initial;
+		color: #1e180b;
+	}
+
+	.rsMaskedDateRangeSelector {
+		align-items: center;
+
+		.endDateBox {
+			margin-left: 20px;
 		}
+
+		.startDateBox,
+		.endDateBox {
+			border: 1px solid #707070;
+			border-radius: 20px;
+			opacity: 1;
+			padding: 18px 36px;
+
+			.rsButton {
+				padding: 9px 0 0;
+				height: 30px;
+				font-size: 21px;
+				line-height: 21px;
+				color: #1e180b;
+			}
+		}
+
+		.rsLabel {
+			font-size: 20px;
+			font-weight: 600;
+		}
+	}
+
+	.guestsInput {
+		border: 1px solid #707070;
+		border-radius: 20px;
+		padding: 18px 36px;
+		position: relative;
+		color: #1e180b;
+
+		&:not(:focus-within) {
+			&[data-guest-count] {
+				&:after {
+					content: attr(data-guest-count);
+				}
+			}
+			&:after {
+				content: '1 guest';
+				position: absolute;
+				bottom: 19px;
+				left: 36px;
+				font-size: 21px;
+				line-height: 21px;
+				color: #1e180b;
+				font-weight: 500;
+				font-family: 'MrsEavesXL', sans-serif;
+			}
+			.rsInput {
+				opacity: 0;
+			}
+		}
+
+		.rsInput {
+			border: none;
+			padding: 0;
+			height: 21px;
+			font-size: 21px;
+			line-height: 21px;
+			font-weight: 500;
+			background: #ffffff00;
+			position: relative;
+			z-index: 1;
+			border-radius: 0;
+		}
+
+		.rsLabel {
+			font-size: 20px;
+			font-weight: 600;
+		}
+	}
+
+	.contained.primary.updateButton {
+		width: min-content;
+		font-size: 30px;
+		background: #001933;
+		padding: 29px 57px;
+		line-height: 39px;
+		height: 100%;
+		border-radius: 20px;
 	}
 }

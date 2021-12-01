@@ -6,10 +6,8 @@ import { StringUtils } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import LoginOrCreateAccountPopup, {
-	LoginOrCreateAccountPopupProps
-} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import router from '../../utils/router';
+import AccommodationsPopup from '../../popups/accommodationsPopup/AccommodationsPopup';
 
 interface PointsOrCentsBoxProps {
 	priceObj: Misc.Pricing;
@@ -18,7 +16,6 @@ interface PointsOrCentsBoxProps {
 }
 
 const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
-	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 
 	function onBookNow() {
@@ -34,14 +31,8 @@ const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
 			rateCode: props.priceObj.rateCode
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
-		popupController.closeAll();
-		if (!user) {
-			popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
-				query: data
-			});
-		} else {
-			router.navigate(`/booking/packages?data=${data}`).catch(console.error);
-		}
+		popupController.close(AccommodationsPopup);
+		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 	}
 
 	function renderPriceOrPoints() {
