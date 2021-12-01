@@ -1,0 +1,39 @@
+@import '../../themes/themes';
+
+.rsCheckoutFlowPage {
+	display: flex;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 100px 84px 0;
+
+	.leftColumnWrapper {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.bookingSummary {
+		width: 497px;
+		min-width: 497px;
+		max-width: 497px;
+		margin-left: 94px;
+
+		.printConfirmButton.yellow {
+			width: 100%;
+			background-color: theme-var($secondaryButtonLinkColor);
+			font-family: Montserrat, serif;
+			height: 57px;
+			min-height: 57px;
+			max-height: 57px;
+			font-size: 20px;
+			color: #2c3c60;
+			box-shadow: none;
+			font-weight: 500;
+			margin-bottom: 36px;
+
+			&:hover {
+				background-color: theme-var($secondaryButtonLinkColor);
+			}
+		}
+	}
+}
