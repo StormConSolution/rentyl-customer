@@ -315,11 +315,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							path={window.location.href}
 							imgPaths={getImageUrls(destinationDetails)}
 							onAddCompareClick={() => {
-								comparisonService.addToComparison({
-									destinationId: destinationDetails.id,
-									title: destinationDetails.name,
-									logo: destinationDetails.logoUrl
-								});
+								comparisonService.addToComparison(destinationDetails.id).catch(console.error);
 							}}
 							onRemoveCompareClick={() => {
 								comparisonService.removeFromComparison(destinationDetails.id);
