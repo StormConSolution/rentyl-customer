@@ -43,7 +43,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			<Box width={smallSize ? '100%' : 550} paddingLeft={smallSize ? 0 : 44}>
 				<Label
 					className="titleAndIcon"
-					variant={smallSize ? 'customFour' : 'customTwentyFour'}
+					variant={smallSize ? 'customFour' : 'packagesCustomTwo'}
 					color="#001933"
 					marginY={10}
 				>
@@ -72,7 +72,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 						variant={'customFive'}
 						marginBottom={13}
 						showMoreText={
-							<Label variant={'customTwentyFour'} color="#001933">
+							<Label variant={'packagesCustomTwo'} color="#001933">
 								View More
 								<Icon iconImg="icon-chevron-down" className="viewTextIcon" />
 							</Label>
@@ -80,7 +80,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 						lineClamp={3}
 						showMoreButton
 						showLessText={
-							<Label variant={'customTwentyFour'} color="#001933">
+							<Label variant={'packagesCustomTwo'} color="#001933">
 								View Less
 								<Icon iconImg="icon-chevron-up" className="viewTextIcon" />
 							</Label>
@@ -93,7 +93,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 			<Box className="priceAndButtonContainer" width={smallSize ? '100%' : 'auto'}>
 				<Box className="priceAndTextLabelContainer">
 					{company.allowCashBooking && (
-						<Label variant={smallSize ? 'customTwentyFive' : 'customTwentyThree'} marginBottom={9}>
+						<Label variant={smallSize ? 'packagesCustomThree' : 'packagesCustomOne'} marginBottom={9}>
 							<span className="priceFont">${StringUtils.formatMoney(props.prices.amountAfterTax)}</span>{' '}
 							{smallSize && '/ stay'}
 						</Label>
