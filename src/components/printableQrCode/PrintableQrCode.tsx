@@ -18,7 +18,7 @@ const PrintableQrCode: React.FC<PrintableQrCodeProps> = (props) => {
 				When signing up for Spire Loyalty by Rentyl Resorts you are able to view your reservation, get exclusive
 				deal and earn points for your stay!
 			</Label>
-			<img className={'qrCode'} src={props.qrCode} />
+			<img className={'qrCode'} src={props.qrCode} alt={'qr code'} />
 			<div className={'scanMeWrapper'}>
 				<div className={'phoneIcon'} />
 				<Label className={'scanMeText'} color={'white'}>

@@ -14,10 +14,14 @@ const FONT_COLOR = '#001933';
 const OrderSummaryCard: React.FC<OrderSummaryCardProps> = (props) => {
 	return (
 		<div className={'rsOrderSummaryCard'}>
-			<img className={'cardImage'} src={props.image} />
+			<img className={'cardImage'} src={props.image} alt={'order card image'} />
 			<div className={'infoWrapper'}>
 				<div className={'resortWrapper'}>
-					<img className={'resortLogo'} src={'../../images/checkoutPage/encore-reunion-logo-color.png'} />
+					<img
+						className={'resortLogo'}
+						src={'../../images/checkoutPage/encore-reunion-logo-color.png'}
+						alt={'encore resort'}
+					/>
 					<Label className={'resortName'} color={FONT_COLOR}>
 						Encore Resort
 					</Label>
