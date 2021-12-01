@@ -6,7 +6,7 @@ import './MaskedDateRangeSelector.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import Button from '@bit/redsky.framework.rs.button';
-import Label from '@bit/redsky.framework.rs.label';
+import Label, { LabelProps } from '@bit/redsky.framework.rs.label';
 
 export interface MaskedDateRangeSelectorProps {
 	onDatesChange: (startDate: moment.Moment | null, endDate: moment.Moment | null) => void;
@@ -18,23 +18,7 @@ export interface MaskedDateRangeSelectorProps {
 	className?: string;
 	startDateLabel?: string;
 	endDateLabel?: string;
-	labelVariant?:
-		| 'h1'
-		| 'h2'
-		| 'h3'
-		| 'h4'
-		| 'h5'
-		| 'h6'
-		| 'link1'
-		| 'link2'
-		| 'subtitle1'
-		| 'subtitle2'
-		| 'body1'
-		| 'body2'
-		| 'caption'
-		| 'button'
-		| 'overline'
-		| string;
+	labelVariant?: LabelProps['variant'];
 	isMobile?: boolean;
 }
 

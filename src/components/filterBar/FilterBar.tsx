@@ -40,8 +40,18 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 
 	const labelInputRef = useRef<HTMLElement>(null);
 
+	async function updateSearchQuery() {
+		let isFormValid = await filterForm.isValid();
+		let _isFormFilledOut = isFormFilledOut();
+		if (!(await (isFormValid && _isFormFilledOut))) return;
+
+		updateSearchQueryObj('startDate', formatFilterDateForServer(startDateControl, 'start'));
+		updateSearchQueryObj('endDate', formatFilterDateForServer(endDateControl, 'end'));
+		updateSearchQueryObj('adultCount', filterForm.get('adultCount').value);
+	}
+
 	async function updateFilterForm(control: RsFormControl) {
-		if (control.key === 'adultCount' || control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
+		if (control.key === 'adultCount') {
 			let newValue: string | number = '';
 			if (control.value.toString().length > 0) {
 				let value = StringUtils.removeAllExceptNumbers(control.value.toString());
@@ -52,15 +62,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 			}
 		}
 		if (control.key === 'adultCount' && labelInputRef.current) {
-			labelInputRef.current.setAttribute('data-guest-count', `${control.value} guests`);
+			const dataGuestCount = !!control.value ? `${control.value} guests` : '';
+			labelInputRef.current.setAttribute('data-guest-count', dataGuestCount);
 		}
 		filterForm.update(control);
-		let isFormValid = await filterForm.isValid();
-		let _isFormFilledOut = isFormFilledOut();
+		await filterForm.isValid();
 		setFilterForm(filterForm.clone());
-		if (await (isFormValid && _isFormFilledOut)) {
-			updateSearchQueryObj(control.key, control.value);
-		}
 	}
 
 	function isFormFilledOut(): boolean {
@@ -89,8 +96,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setStartDateControl(startDate);
 		setEndDateControl(endDate);
-		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
-		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
 	function renderDateRangeSelector() {
@@ -131,7 +136,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				title="Guests"
 				labelInputRef={labelInputRef}
 			/>
-			<Button look={'containedPrimary'} className={'updateButton'}>
+			<Button look={'containedPrimary'} className={'updateButton'} onClick={updateSearchQuery}>
 				Update
 			</Button>
 		</Box>
