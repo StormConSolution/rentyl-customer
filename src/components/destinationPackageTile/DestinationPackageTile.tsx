@@ -48,7 +48,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					marginY={10}
 				>
 					{props.title}
-					{smallSize ? (
+					{smallSize && (
 						<Icon
 							iconImg={'icon-info-outline'}
 							size={23}
@@ -65,9 +65,9 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 								);
 							}}
 						/>
-					) : null}
+					)}
 				</Label>
-				{smallSize ? null : (
+				{smallSize && (
 					<Label
 						variant={'customFive'}
 						marginBottom={13}
@@ -98,7 +98,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 							{smallSize ? '/ stay' : null}
 						</Label>
 					)}
-					{!smallSize ? <Label variant="customThree">Per Stay</Label> : null}
+					{!smallSize && <Label variant="customThree">Per Stay</Label>}
 				</Box>
 				<LabelButton
 					look={'none'}
@@ -112,13 +112,13 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 									color="#fff"
 									className="addPackageButtonIcon"
 								/>
-								{smallSize ? '' : props.text}
+								{!smallSize && props.text}
 							</Label>
 						) : (
 							'Add to my stay'
 						)
 					}
-					className={`addButton${props.isAdded ? ' packageAdded' : ''}`}
+					className={`addButton${props.isAdded && ' packageAdded'}`}
 					onClick={props.onAddPackage}
 				/>
 			</Box>
