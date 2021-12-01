@@ -1,7 +1,7 @@
 @import '../../themes/themes';
 .rsDestinationDetailsPage {
 	.rs-page-content-wrapper {
-		padding-top: 200px;
+		padding: 200px 26px 0;
 		.gallerySection {
 		}
 		.minMaxContainer {
@@ -41,6 +41,14 @@
 		}
 		.experienceSection {
 		}
+	}
+
+	hr {
+		background: #7070706e;
+		height: 1px;
+		width: 100%;
+		border: none;
+		margin: 60px 0;
 	}
 
 	.rsAccordion {
@@ -91,23 +99,7 @@
 			margin: 0 8px 16px;
 		}
 	}
-	.sectionThree {
-		position: relative;
-		.rsTabbedImageCarousel {
-			position: relative;
-			z-index: 10;
-			height: 570px;
-		}
-		.yellowSquare {
-			width: 532px;
-			height: 80px;
-			position: absolute;
-			background: #f7f1db;
-			bottom: -80px;
-			left: 0;
-			z-index: 9;
-		}
-	}
+
 	.sectionFour {
 		iframe {
 			box-shadow: theme-var($primaryBoxShadowColor);
@@ -159,6 +151,19 @@
 }
 .small {
 	.rsDestinationDetailsPage {
+		.rs-page-content-wrapper {
+			padding-top: 84px;
+			.gallerySection {
+				.rsCarouselV2 {
+					margin: 0 auto;
+				}
+			}
+			.overviewSection {
+			}
+			.experienceSection {
+			}
+		}
+
 		.sectionOne {
 			margin-bottom: 425px;
 			.headerWrapper {
@@ -187,11 +192,6 @@
 						}
 					}
 				}
-			}
-		}
-		.sectionThree {
-			.yellowSquare {
-				width: 100vw;
 			}
 		}
 

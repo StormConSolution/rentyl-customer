@@ -1,0 +1,109 @@
+@import 'src/themes/themes';
+.rsDestinationExperienceImageGallery {
+	position: relative;
+	display: grid;
+	grid-template-columns: auto auto auto;
+	border-radius: 20px;
+	overflow: hidden;
+
+	.experienceImage:nth-child(1) {
+		border-radius: 20px 0 0 0;
+	}
+
+	.experienceImage:nth-child(3) {
+		border-radius: 0 20px 0 0;
+	}
+
+	.experienceImage:nth-child(4) {
+		border-radius: 0 0 0 20px;
+	}
+
+	.experienceImage:nth-child(6) {
+		border-radius: 0 0 20px 0;
+	}
+
+	.experienceImage {
+		height: 415px;
+		width: 100%;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		position: relative;
+		&::before {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			z-index: 1;
+			height: 92px;
+			background: transparent linear-gradient(0deg, #1e180b 0%, #0101007b 75%, #00000002 100%);
+		}
+
+		.textAndLogoWrapper {
+			position: absolute;
+			display: flex;
+			align-items: center;
+			box-sizing: border-box;
+			justify-content: space-between;
+			z-index: 2;
+			padding: 0 24px;
+			bottom: 16px;
+			width: 100%;
+
+			.rsLabel {
+				color: #ffffff;
+			}
+		}
+	}
+}
+
+.small {
+	.rsDestinationExperienceImageGallery {
+		display: flex;
+		.imageWrapper {
+			width: 100%;
+			height: 244px;
+			display: flex;
+			overflow-x: hidden;
+			-webkit-overflow-scrolling: touch;
+			-webkit-scroll-snap-type: mandatory;
+			scroll-snap-type: x mandatory;
+			-webkit-scroll-snap-points-x: repeat(100%);
+			scroll-snap-points-x: repeat(100%);
+			.experienceImage {
+				min-width: 100%;
+				max-width: 100%;
+				height: 244px;
+				scroll-snap-align: center;
+			}
+		}
+
+		.clickLeft {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 16px;
+			margin: auto;
+			background-color: #fcfbf8;
+			box-shadow: theme-var($primaryBoxShadowColor);
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+		}
+		.clickRight {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			right: 16px;
+			margin: auto;
+			background-color: #fcfbf8;
+			box-shadow: theme-var($primaryBoxShadowColor);
+			width: 36px;
+			height: 36px;
+			border-radius: 50%;
+		}
+	}
+}

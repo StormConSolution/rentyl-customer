@@ -13,7 +13,6 @@ import Footer from '../../components/footer/Footer';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import { ObjectUtils, WebUtils } from '../../utils/utils';
 import LoadingPage from '../loadingPage/LoadingPage';
-import AccordionTitleDescription from '../../components/accordionTitleDescription/AccordionTitleDescription';
 import ItineraryInfoCard from '../../components/itineraryInfoCard/ItineraryInfoCard';
 import ItineraryCostSummaryCard from '../../components/itineraryCostSummaryCard/ItineraryCostSummaryCard';
 import { useRecoilValue } from 'recoil';
@@ -24,6 +23,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import Select, { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import globalState from '../../state/globalState';
+import TitleDescription from '../../components/titleDescription/TitleDescription';
 
 const ItineraryDetailsPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -291,19 +291,19 @@ const ItineraryDetailsPage: React.FC = () => {
 							{!!itinerary.paymentMethod && (
 								<Paper className={'paymentInfoCard'} boxShadow padding={'24px 28px'}>
 									<div className={'currentCardWrapper'}>
-										<AccordionTitleDescription
+										<TitleDescription
 											title={'Name on card'}
 											description={itinerary.paymentMethod.nameOnCard}
 										/>
-										<AccordionTitleDescription
+										<TitleDescription
 											title={'Card Number'}
 											description={itinerary.paymentMethod.cardNumber}
 										/>
-										<AccordionTitleDescription
+										<TitleDescription
 											title={'Expiration Date'}
 											description={`${itinerary.paymentMethod.expirationMonth}/${itinerary.paymentMethod.expirationYear}`}
 										/>
-										<AccordionTitleDescription
+										<TitleDescription
 											title={'Card Type'}
 											description={itinerary.paymentMethod.type}
 										/>
@@ -332,15 +332,15 @@ const ItineraryDetailsPage: React.FC = () => {
 														options={renderSelectOptions()}
 													/>
 												</div>
-												<AccordionTitleDescription
+												<TitleDescription
 													title={'Name on card'}
 													description={newPaymentMethod?.nameOnCard || ''}
 												/>
-												<AccordionTitleDescription
+												<TitleDescription
 													title={'Card Number'}
 													description={newPaymentMethod?.cardNumber || ''}
 												/>
-												<AccordionTitleDescription
+												<TitleDescription
 													title={'Expiration Date'}
 													description={
 														!!newPaymentMethod
