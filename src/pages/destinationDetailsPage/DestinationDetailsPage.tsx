@@ -353,7 +353,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					)}
 				</Box>
 				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
-				<Box boxRef={experiencesRef} className={'experienceSection'} mt={50} mb={63}>
+				<hr />
+				<Box boxRef={experiencesRef} className={'experienceSection'} mb={63}>
+					<Label
+						variant={size === 'small' ? 'destinationDetailsCustomOne' : 'tabbedImageCarouselCustomOne'}
+						mb={size === 'small' ? 25 : 50}
+					>
+						Experiences
+					</Label>
 					{renderExperiencesSection()}
 				</Box>
 

@@ -1,13 +1,21 @@
 @import '../../themes/themes';
 .rsDestinationDetailsPage {
 	.rs-page-content-wrapper {
-		padding-top: 200px;
+		padding: 200px 26px 0;
 		.gallerySection {
 		}
 		.overviewSection {
 		}
 		.experienceSection {
 		}
+	}
+
+	hr {
+		background: #7070706e;
+		height: 1px;
+		width: 100%;
+		border: none;
+		margin: 60px 0;
 	}
 
 	.rsAccordion {
