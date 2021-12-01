@@ -99,7 +99,7 @@ const ItineraryCardResponsive: React.FC<ItineraryCardResponsiveProps> = (props) 
 						<Label variant={'caption'} marginBottom={18}>
 							Trip Total
 						</Label>
-						<Label variant={'customTwentyThree'} marginBottom={18}>
+						<Label variant={'reservationCustomOne'} marginBottom={18}>
 							${StringUtils.formatMoney(props.itineraryTotal)}
 						</Label>
 					</div>
@@ -108,7 +108,7 @@ const ItineraryCardResponsive: React.FC<ItineraryCardResponsiveProps> = (props) 
 						<Label variant={'caption'} marginBottom={18}>
 							Points Paid
 						</Label>
-						<Label variant={'customTwentyThree'} marginBottom={18}>
+						<Label variant={'reservationCustomOne'} marginBottom={18}>
 							{StringUtils.addCommasToNumber(props.totalPoints)}
 						</Label>
 					</div>
