@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import LabelButton from '../labelButton/LabelButton';
 import { Box } from '@bit/redsky.framework.rs.996';
+import { StringUtils } from '../../utils/utils';
 
 type PageRefs = {
 	galleryRef: React.RefObject<HTMLElement>;
@@ -30,6 +31,7 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 	const size = useWindowResizeChange();
 	const lastUrlPath = useRecoilValue<string>(globalState.lastNavigationPath);
 	const [selected, setSelected] = useState<'gallery' | 'overview' | 'experiences' | 'availableStays'>('gallery');
+	const subNavBarHeight = parseInt(StringUtils.removeAllExceptNumbers(getAppBarHeight()));
 
 	function getAppBarHeight() {
 		let appBar = document.querySelector('.rsAppBar');
@@ -63,10 +65,7 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 						variant={'customTen'}
 						label={'Gallery'}
 						onClick={() => {
-							if (!props.pageRefs) return;
-							let ref = props.pageRefs.galleryRef.current;
-							if (!ref) return;
-							window.scrollTo({ top: ref.offsetTop, behavior: 'smooth' });
+							window.scrollTo({ top: 0, behavior: 'smooth' });
 							setSelected('gallery');
 						}}
 					/>
@@ -79,7 +78,7 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 							if (!props.pageRefs) return;
 							let ref = props.pageRefs.overviewRef.current;
 							if (!ref) return;
-							window.scrollTo({ top: ref.offsetTop, behavior: 'smooth' });
+							window.scrollTo({ top: ref.offsetTop - subNavBarHeight, behavior: 'smooth' });
 							setSelected('overview');
 						}}
 					/>
@@ -92,7 +91,7 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 							if (!props.pageRefs) return;
 							let ref = props.pageRefs.experiencesRef.current;
 							if (!ref) return;
-							window.scrollTo({ top: ref.offsetTop, behavior: 'smooth' });
+							window.scrollTo({ top: ref.offsetTop - subNavBarHeight, behavior: 'smooth' });
 							setSelected('experiences');
 						}}
 					/>
@@ -105,7 +104,7 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 							if (!props.pageRefs) return;
 							let ref = props.pageRefs.availableStaysRef.current;
 							if (!ref) return;
-							window.scrollTo({ top: ref.offsetTop, behavior: 'smooth' });
+							window.scrollTo({ top: ref.offsetTop - subNavBarHeight, behavior: 'smooth' });
 							setSelected('availableStays');
 						}}
 					/>
