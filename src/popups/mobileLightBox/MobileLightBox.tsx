@@ -18,6 +18,7 @@ interface ObserverAttributes extends NamedNodeMap {
 export interface MobileLightBoxProps extends PopupProps {
 	imageData?: Api.Media[];
 	featureData?: ImageTabProp[];
+	activeTabName?: string;
 }
 
 const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
@@ -39,12 +40,24 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 		if (!popup) return;
 		popup!.style.backgroundColor = 'rgba(0,0,0,.8)';
 		document.body.style.overflow = 'hidden';
+		document.body.style.position = 'fixed';
+		document.body.style.top = '0';
 
 		return () => {
 			popup!.style.backgroundColor = 'rgba(0,0,0,.18)';
 			document.body.style.overflow = 'unset';
+			document.body.style.position = 'unset';
+			document.body.style.top = 'unset';
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!props.activeTabName || !props.featureData) return;
+		let newActiveTab = props.featureData.find((item) => item.title === props.activeTabName);
+		if (!newActiveTab) return;
+
+		setActiveTab(newActiveTab);
+	}, [props.activeTabName]);
 
 	useEffect(() => {
 		setTimeout(() => {
@@ -160,6 +173,31 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 		}
 	}
 
+	function renderCarouselButtons() {
+		if (document.querySelectorAll('.lightBoxImage').length <= 1) return;
+		return (
+			<CarouselButtons
+				carouselButtonRef={carouselButtonRef}
+				onClickLeft={() => {
+					let val = imageContainerRef.current!.scrollLeft - imageContainerRef.current!.offsetWidth;
+
+					if (imageIndex <= 1) {
+						val = imageContainerRef.current!.offsetWidth * totalChildren;
+						setImageIndex(totalChildren);
+					}
+					imageContainerRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+				}}
+				onClickRight={() => {
+					let val = imageContainerRef.current!.offsetWidth + imageContainerRef.current!.scrollLeft;
+					if (imageIndex >= totalChildren) {
+						val = 0;
+					}
+					imageContainerRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
+				}}
+			/>
+		);
+	}
+
 	function renderDescriptionPaper() {
 		if (!titleDescription || !titleDescription.description) return;
 
@@ -213,25 +251,7 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 				</Box>
 
 				<Box className={'bottomContent'}>
-					<CarouselButtons
-						carouselButtonRef={carouselButtonRef}
-						onClickLeft={() => {
-							let val = imageContainerRef.current!.scrollLeft - imageContainerRef.current!.offsetWidth;
-
-							if (imageIndex <= 1) {
-								val = imageContainerRef.current!.offsetWidth * totalChildren;
-								setImageIndex(totalChildren);
-							}
-							imageContainerRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-						}}
-						onClickRight={() => {
-							let val = imageContainerRef.current!.offsetWidth + imageContainerRef.current!.scrollLeft;
-							if (imageIndex >= totalChildren) {
-								val = 0;
-							}
-							imageContainerRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-						}}
-					/>
+					{renderCarouselButtons()}
 					{renderDescriptionPaper()}
 				</Box>
 				<Label className={'imageCount'} variant={'body1'} color={'#ffffff'}>{`${imageIndex + 1}/${
