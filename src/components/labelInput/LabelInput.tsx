@@ -5,7 +5,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import Input from '@bit/redsky.framework.rs.input';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { StringUtils } from '../../utils/utils';
@@ -30,6 +30,7 @@ interface LabelInputProps {
 	iconSize?: number;
 	className?: string;
 	labelVariant?: Misc.Variant;
+	labelInputRef?: RefObject<any> | undefined;
 }
 
 const LabelInput: React.FC<LabelInputProps> = (props) => {
@@ -69,7 +70,7 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 	}
 
 	return (
-		<div className={`rsLabelInput ${props.className || ''}`}>
+		<div className={`rsLabelInput ${props.className || ''}`} ref={props.labelInputRef}>
 			<Label variant={props.labelVariant || 'caption'} mb={size === 'small' ? 6 : 9}>
 				{props.title}
 			</Label>

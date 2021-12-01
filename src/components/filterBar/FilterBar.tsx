@@ -1,79 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import moment from 'moment';
-import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
-import LabelSelect from '../labelSelect/LabelSelect';
-import { OptionType } from '@bit/redsky.framework.rs.select';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
-import serviceFactory from '../../services/serviceFactory';
-import RegionService from '../../services/region/region.service';
-import DestinationService from '../../services/destination/destination.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
+import MaskedDateRangeSelector from '../maskedDateRangeSelector/MaskedDateRangeSelector';
+import Button from '@bit/redsky.framework.rs.button';
+import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
 
 export interface FilterBarProps {
 	destinationId?: number;
 	hide?: boolean;
+	isMobile?: boolean;
 }
 
 const FilterBar: React.FC<FilterBarProps> = (props) => {
-	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
-	const regionService = serviceFactory.get<RegionService>('RegionService');
+	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const [regionOptions, setRegionOptions] = useState<OptionType[]>([]);
-	const [propertyTypeOptions, setPropertyTypeOptions] = useState<OptionType[]>([]);
 	const [startDateControl, setStartDateControl] = useState<moment.Moment | null>(
 		moment(reservationFilters.startDate)
 	);
 	const [endDateControl, setEndDateControl] = useState<moment.Moment | null>(moment(reservationFilters.endDate));
-	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
-	const [errorMessage, setErrorMessage] = useState<string>('');
 	const [filterForm, setFilterForm] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('regionIds', reservationFilters.regionIds || [], []),
-			new RsFormControl('propertyTypeIds', reservationFilters.propertyTypeIds || [], []),
 			new RsFormControl('adultCount', reservationFilters.adultCount || 2, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Adults Required'),
+				new RsValidator(RsValidatorEnum.REQ, '# of Guests Required'),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Required', (control) => {
 					return control.value !== 0;
 				})
-			]),
-			new RsFormControl('childCount', reservationFilters.childCount || 0, [
-				new RsValidator(RsValidatorEnum.REQ, '# Of Children Required')
-			]),
-			new RsFormControl('priceRangeMax', reservationFilters.priceRangeMax || 0, []),
-			new RsFormControl('priceRangeMin', reservationFilters.priceRangeMin || 0, [])
+			])
 		])
 	);
 
-	useEffect(() => {
-		async function getDropdownOptions() {
-			let regions: Api.Region.Res.Get[] = await regionService.getAllRegions();
-			setRegionOptions(
-				regions.map((region) => {
-					return { value: region.id, label: region.name };
-				})
-			);
-			if (props.destinationId) {
-				let propertyTypes = await destinationService.getAllPropertyTypes();
-				setPropertyTypeOptions(
-					propertyTypes.map((propertyType) => {
-						return { value: propertyType.id, label: propertyType.name };
-					})
-				);
-			}
-		}
-		getDropdownOptions().catch(console.error);
-	}, []);
+	const labelInputRef = useRef<HTMLElement>(null);
+
+	async function updateSearchQuery() {
+		let isFormValid = await filterForm.isValid();
+		let _isFormFilledOut = isFormFilledOut();
+		if (!(await (isFormValid && _isFormFilledOut))) return;
+
+		updateSearchQueryObj('startDate', formatFilterDateForServer(startDateControl, 'start'));
+		updateSearchQueryObj('endDate', formatFilterDateForServer(endDateControl, 'end'));
+		updateSearchQueryObj('adultCount', filterForm.get('adultCount').value);
+	}
 
 	async function updateFilterForm(control: RsFormControl) {
-		if (control.key === 'adultCount' || control.key === 'priceRangeMax' || control.key === 'priceRangeMin') {
+		if (control.key === 'adultCount') {
 			let newValue: string | number = '';
 			if (control.value.toString().length > 0) {
 				let value = StringUtils.removeAllExceptNumbers(control.value.toString());
@@ -83,13 +61,13 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				control.value = newValue;
 			}
 		}
-		filterForm.update(control);
-		let isFormValid = await filterForm.isValid();
-		let _isFormFilledOut = isFormFilledOut();
-		setFilterForm(filterForm.clone());
-		if (await (isFormValid && _isFormFilledOut)) {
-			updateSearchQueryObj(control.key, control.value);
+		if (control.key === 'adultCount' && labelInputRef.current) {
+			const dataGuestCount = !!control.value ? `${control.value} guests` : '';
+			labelInputRef.current.setAttribute('data-guest-count', dataGuestCount);
 		}
+		filterForm.update(control);
+		await filterForm.isValid();
+		setFilterForm(filterForm.clone());
 	}
 
 	function isFormFilledOut(): boolean {
@@ -99,31 +77,10 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	function updateSearchQueryObj(key: string, value: any) {
 		if (key === 'adultCount' && value === 0) {
 			//this should never evaluate to true with current implementations.
-			throw rsToastify.error('Must have at least 1 adult', 'Missing or Incorrect Information');
+			throw rsToastify.error('Must have at least 1 guest', 'Missing or Incorrect Information');
 		}
 		if (key === 'adultCount' && isNaN(value)) {
-			throw rsToastify.error('# of adults must be a number', 'Missing or Incorrect Information');
-		}
-		if (key === 'priceRangeMin' && isNaN(parseInt(value))) {
-			throw rsToastify.error('Price min must be a number', 'Missing or Incorrect Information');
-		}
-		if (key === 'priceRangeMax' && isNaN(parseInt(value))) {
-			throw rsToastify.error('Price max must be a number', 'Missing or Incorrect Information');
-		}
-		if (
-			key === 'priceRangeMin' &&
-			reservationFilters['priceRangeMax'] &&
-			value > reservationFilters['priceRangeMax']
-		) {
-			setErrorMessage('Price min must be lower than the max');
-		} else if (
-			key === 'priceRangeMax' &&
-			reservationFilters['priceRangeMin'] &&
-			value < reservationFilters['priceRangeMin']
-		) {
-			setErrorMessage('Price max must be greater than the min');
-		} else {
-			setErrorMessage('');
+			throw rsToastify.error('# of guests must be a number', 'Missing or Incorrect Information');
 		}
 		setReservationFilters((prev) => {
 			let createSearchQueryObj: any = { ...prev };
@@ -139,60 +96,49 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	function onDatesChange(startDate: moment.Moment | null, endDate: moment.Moment | null): void {
 		setStartDateControl(startDate);
 		setEndDateControl(endDate);
-		updateSearchQueryObj('startDate', formatFilterDateForServer(startDate, 'start'));
-		updateSearchQueryObj('endDate', formatFilterDateForServer(endDate, 'end'));
 	}
 
-	return (
-		<Box className={`rsFilterBar`}>
-			{!props.destinationId && (
-				<LabelSelect
-					title={'Regions'}
-					updateControl={updateFilterForm}
-					options={regionOptions}
-					control={filterForm.get('regionIds')}
-					isMulti
-					isSearchable
+	function renderDateRangeSelector() {
+		if (props.isMobile) {
+			return (
+				<DateRangeSelector
+					startDate={startDateControl}
+					endDate={endDateControl}
+					onDatesChange={onDatesChange}
+					monthsToShow={1}
+					startDateLabel={'Selected dates'}
+					focusedInput={focusedInput}
+					onFocusChange={(input) => setFocusedInput(input)}
 				/>
-			)}
-			<DateRangeSelector
+			);
+		}
+
+		return (
+			<MaskedDateRangeSelector
 				startDate={startDateControl}
 				endDate={endDateControl}
 				onDatesChange={onDatesChange}
 				monthsToShow={2}
-				focusedInput={focusedInput}
-				onFocusChange={(newFocusedInput) => setFocusedInput(newFocusedInput)}
-				startDateLabel={'check in'}
-				endDateLabel={'check out'}
+				startDateLabel={'Check in'}
+				endDateLabel={'Check out'}
 			/>
+		);
+	}
+
+	return (
+		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
+			{renderDateRangeSelector()}
 			<LabelInput
 				control={filterForm.get('adultCount')}
 				updateControl={updateFilterForm}
-				className="numberOfAdults"
+				className="guestsInput"
 				inputType="number"
-				title="# of Adults"
+				title="Guests"
+				labelInputRef={labelInputRef}
 			/>
-			<LabelInput
-				control={filterForm.get('priceRangeMin')}
-				updateControl={updateFilterForm}
-				className="priceMin"
-				inputType="number"
-				title="Price Min"
-			/>
-			<LabelInput
-				control={filterForm.get('priceRangeMax')}
-				updateControl={updateFilterForm}
-				className="priceMax"
-				inputType="number"
-				title="Price Max"
-			/>
-			<LabelSelect
-				title="Property Type"
-				control={filterForm.get('propertyTypeIds')}
-				updateControl={updateFilterForm}
-				options={propertyTypeOptions}
-				isMulti={true}
-			/>
+			<Button look={'containedPrimary'} className={'updateButton'} onClick={updateSearchQuery}>
+				Update
+			</Button>
 		</Box>
 	);
 };
