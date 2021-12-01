@@ -45,4 +45,19 @@ export default class ComparisonService extends Service {
 		}
 		setRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison, comparisonItems);
 	}
+
+	changeAccommodation(accommodationId: number, destinationId: number) {
+		let comparisonItems = getRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison);
+		if (ObjectUtils.isArrayWithData(comparisonItems.destinationDetails)) {
+			comparisonItems = ObjectUtils.clone(comparisonItems);
+			let destinationDetails = comparisonItems.destinationDetails;
+			let indexToChange = destinationDetails.findIndex(
+				(destination) => destination.destinationId === destinationId
+			);
+			if (indexToChange < 0) return;
+			destinationDetails[indexToChange].selectedAccommodationId = accommodationId;
+			comparisonItems.destinationDetails = destinationDetails;
+		}
+		setRecoilExternalValue<Misc.ComparisonState>(globalState.destinationComparison, comparisonItems);
+	}
 }

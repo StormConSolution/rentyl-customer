@@ -135,7 +135,9 @@
 }
 .small {
 	.rsCarouselV2 {
+		min-width: 150px;
 		width: 327px;
+		min-height: 150px;
 		height: 220px;
 		.clickRight,
 		.clickLeft,

@@ -82,7 +82,7 @@ const ComparisonDrawer: React.FC = () => {
 						}}
 						disabled={
 							!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ||
-							recoilComparisonState.destinationDetails.length < 2
+							recoilComparisonState.destinationDetails.length < 1
 						}
 					>
 						<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
