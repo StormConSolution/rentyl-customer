@@ -39,7 +39,7 @@ export const FooterLinks: FooterSection[] = [
 				path: 'https://rentylresorts.com/privacy-policy/'
 			},
 			{
-				text: 'Terms of use',
+				text: 'Terms and conditions',
 				path: 'https://rentylresorts.com/terms-conditions/'
 			}
 		]

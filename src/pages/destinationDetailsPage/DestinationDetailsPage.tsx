@@ -10,7 +10,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -19,11 +19,7 @@ import LoginOrCreateAccountPopup, {
 } from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import FilterReservationPopup, {
-	FilterReservationPopupProps
-} from '../../popups/filterReservationPopup/FilterReservationPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import IconLabel from '../../components/iconLabel/IconLabel';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
@@ -326,11 +322,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							path={window.location.href}
 							imgPaths={getImageUrls(destinationDetails)}
 							onAddCompareClick={() => {
-								comparisonService.addToComparison({
-									destinationId: destinationDetails.id,
-									title: destinationDetails.name,
-									logo: destinationDetails.logoUrl
-								});
+								comparisonService.addToComparison(destinationDetails.id).catch(console.error);
 							}}
 							onRemoveCompareClick={() => {
 								comparisonService.removeFromComparison(destinationDetails.id);
@@ -391,28 +383,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					</div>
 				) : (
 					<div className={'sectionFive'} ref={availableStaysRef}>
-						<Label variant={'h1'} mb={20}>
-							Available Stays
+						<hr />
+						<Label variant={'h1'} className={'chooseYourAccommodation'}>
+							Choose your accommodation
 						</Label>
-						{size !== 'small' ? (
-							<>
-								<FilterBar destinationId={destinationDetails.id} />
-							</>
-						) : (
-							<IconLabel
-								className={'moreFiltersLink'}
-								labelName={'More Filters'}
-								iconImg={'icon-chevron-right'}
-								iconPosition={'right'}
-								iconSize={8}
-								labelVariant={'caption'}
-								onClick={() => {
-									popupController.open<FilterReservationPopupProps>(FilterReservationPopup, {
-										className: 'filterPopup'
-									});
-								}}
-							/>
-						)}
+						<FilterBar destinationId={destinationDetails.id} isMobile={size === 'small'} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
 							{availabilityStayList.length <= 0 ? (
