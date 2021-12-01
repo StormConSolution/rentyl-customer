@@ -87,7 +87,9 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 						<Label variant={'accommodationModalCustomTwo'}>{props.accommodation.name}</Label>
 						<Box className={'detailsTextContainer'}>
 							{props.accommodation.maxOccupantCount && (
-								<Label variant={'customThree'}>Sleeps {props.accommodation.maxOccupantCount}</Label>
+								<Label paddingRight={5} variant={'customThree'}>
+									Sleeps {props.accommodation.maxOccupantCount}
+								</Label>
 							)}
 							{props.accommodation.bedDetails && (
 								<Label variant={'customThree'}>
@@ -95,7 +97,7 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 								</Label>
 							)}
 							{props.accommodation.maxSquareFt && props.accommodation.minSquareFt && (
-								<Label variant={'customThree'}>
+								<Label variant={'customThree'} paddingLeft={5}>
 									{props.accommodation.minSquareFt} to {props.accommodation.maxSquareFt} ft
 								</Label>
 							)}

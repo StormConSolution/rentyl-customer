@@ -62,7 +62,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 		if (!ObjectUtils.isArrayWithData(destinations)) return;
 		return destinations.map((destination) => {
 			let urls: string[] = getImageUrls(destination);
-			let roomTypes: Misc.OptionType[] = formatCompareRoomTypes(destination);
 			return (
 				<DestinationSearchResultCard
 					key={destination.id}
@@ -88,15 +87,6 @@ const ReservationAvailabilityPage: React.FC = () => {
 				/>
 			);
 		});
-	}
-
-	function formatCompareRoomTypes(destination: Api.Destination.Res.Availability): Misc.OptionType[] {
-		if (!destination.accommodationTypes) return [];
-		return destination.accommodations
-			.sort((room1, room2) => room2.maxOccupantCount - room1.maxOccupantCount)
-			.map((room) => {
-				return { value: room.id, label: room.name };
-			});
 	}
 
 	function getImageUrls(destination: Api.Destination.Res.Availability): string[] {
