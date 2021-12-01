@@ -43,6 +43,10 @@ import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
+	const galleryRef = useRef<HTMLElement>(null);
+	const overviewRef = useRef<HTMLElement>(null);
+	const experiencesRef = useRef<HTMLElement>(null);
+	const availableStaysRef = useRef<HTMLElement>(null);
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
@@ -50,7 +54,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
@@ -306,15 +309,17 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<SubNavMenu
-					pageRefs={{
-						galleryRef: availableStaysRef,
-						overviewRef: availableStaysRef,
-						experiencesRef: availableStaysRef,
-						availableStaysRef: availableStaysRef
-					}}
-				/>
-				<Box className={'gallerySection'}>
+				{size !== 'small' && (
+					<SubNavMenu
+						pageRefs={{
+							galleryRef: galleryRef,
+							overviewRef: overviewRef,
+							experiencesRef: experiencesRef,
+							availableStaysRef: availableStaysRef
+						}}
+					/>
+				)}
+				<Box boxRef={galleryRef} className={'gallerySection'}>
 					{size === 'small' ? (
 						<CarouselV2
 							path={window.location.href}
@@ -347,18 +352,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box className={'overviewSection'}></Box>
-				<Box className={'experienceSection'}></Box>
-				{/*<Button*/}
-				{/*	look={'containedPrimary'}*/}
-				{/*	onClick={() => {*/}
-				{/*		popupController.open<MobileLightBoxProps>(MobileLightBox, {*/}
-				{/*			featureData: renderFeatureCarousel()*/}
-				{/*		});*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	Click to open Mobile*/}
-				{/*</Button>*/}
+				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
+				<Box boxRef={experiencesRef} className={'experienceSection'}></Box>
+
 				{!destinationDetails.isActive ? (
 					<div ref={availableStaysRef}>
 						<Label variant={'h2'} color={'red'} className={'noDestinations'}>
