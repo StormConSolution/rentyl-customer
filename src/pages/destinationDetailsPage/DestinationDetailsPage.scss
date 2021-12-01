@@ -27,19 +27,18 @@
 				}
 
 				.destinationPricingContainer {
-					display: grid;
-					justify-items: end;
-					margin-right: 40px;
+					text-align: end;
 
 					.price {
 						color: theme-var($yellowTextColor);
 					}
 				}
 			}
-			.sectionFour {
+			.destinationDetailsWrapper {
 				display: grid;
 				grid-template-columns: repeat(2, fit-content(100%));
 				margin-top: 34px;
+				margin-bottom: 124px;
 
 				.minMaxContainer {
 					display: grid;
@@ -62,12 +61,8 @@
 				.minMaxDescription {
 					margin: 0 100px 0 65px;
 				}
-
-				iframe {
-					box-shadow: theme-var($primaryBoxShadowColor);
-					height: 100%;
-					width: 100%;
-					border: 0;
+				#GoogleMap {
+					border-radius: 20px;
 				}
 			}
 		}

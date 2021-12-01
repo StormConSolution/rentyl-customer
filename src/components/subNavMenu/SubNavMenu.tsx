@@ -23,7 +23,6 @@ type PageRefs = {
 interface SubNavMenuProps {
 	title?: string;
 	pageRefs?: PageRefs;
-	onReserveStayClick?: () => void;
 }
 
 const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
@@ -112,7 +111,12 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 						look={'containedPrimary'}
 						variant={'customTwelve'}
 						label={'Reserve Stay'}
-						onClick={props.onReserveStayClick}
+						onClick={() => {
+							if (!props.pageRefs) return;
+							let ref = props.pageRefs.availableStaysRef.current;
+							if (!ref) return;
+							window.scrollTo({ top: ref.offsetTop - subNavBarHeight, behavior: 'smooth' });
+						}}
 					/>
 				</Box>
 			)}

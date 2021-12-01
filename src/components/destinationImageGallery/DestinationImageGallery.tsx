@@ -17,7 +17,7 @@ interface DestinationImageGalleryProps {
 
 const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) => {
 	const [primaryImage, setPrimaryImage] = useState<Api.Media>();
-	const [nonPrimaryImages, setNonPrimaryImages] = useState<Api.Media[]>();
+	const [nonPrimaryImages, setNonPrimaryImages] = useState<Api.Media[]>([]);
 
 	useEffect(() => {
 		let primaryImg = props.imageData.find((item) => item.isPrimary);
@@ -39,7 +39,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 				height={'auto'}
 				onClick={() => {
 					popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
-						imageData: props.imageData
+						imageData: [primaryImage, ...nonPrimaryImages]
 					});
 				}}
 			/>
@@ -47,7 +47,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 	}
 
 	function renderNonPrimaryImages() {
-		if (!nonPrimaryImages) return;
+		if (!nonPrimaryImages || !primaryImage) return;
 		return (
 			<React.Fragment>
 				<Img
@@ -58,8 +58,8 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 					height={'auto'}
 					onClick={() => {
 						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
-							imageData: props.imageData,
-							imageIndex: 1
+							imageData: [primaryImage, ...nonPrimaryImages],
+							defaultImageIndex: 1
 						});
 					}}
 				/>
@@ -71,8 +71,8 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 						height={'auto'}
 						onClick={() => {
 							popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
-								imageData: props.imageData,
-								imageIndex: 2
+								imageData: [primaryImage, ...nonPrimaryImages],
+								defaultImageIndex: 2
 							});
 						}}
 					/>
