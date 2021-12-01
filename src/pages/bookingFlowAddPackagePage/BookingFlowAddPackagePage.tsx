@@ -11,16 +11,24 @@ import PackageService from '../../services/package/package.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import BookingSummaryCard from '../../components/bookingSummaryCard/BookingSummaryCard';
+import { useRecoilState } from 'recoil';
+import globalState from '../../state/globalState';
+import ReservationsService from '../../services/reservations/reservations.service';
 
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
 	const smallSize = size === 'small';
+	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
 	]);
 	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
+	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
+		Api.Reservation.Res.Verification | undefined
+	>(globalState.verifiedAccommodation);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
@@ -34,21 +42,54 @@ const BookingFlowAddPackagePage = () => {
 			return;
 		}
 
-		if (!ObjectUtils.isArrayWithData(params.data?.newRoom?.packages)) {
+		if (!ObjectUtils.isArrayWithData(params.data.newRoom.packages)) {
 			setAddedPackages([]);
 			return;
 		}
+
 		async function getAddedPackages() {
 			if (!params.data.newRoom) return;
-			const addedPackages = await packageService.getPackagesByIds({
-				destinationId: params.data.destinationId,
-				packageIds: params.data.newRoom.packages,
-				startDate: params.data.newRoom.arrivalDate,
-				endDate: params.data.newRoom.departureDate
-			});
-			setAddedPackages(addedPackages.data);
+			try {
+				const addedPackages = await packageService.getPackagesByIds({
+					destinationId: params.data.destinationId,
+					packageIds: params.data.newRoom.packages,
+					startDate: params.data.newRoom.arrivalDate,
+					endDate: params.data.newRoom.departureDate
+				});
+				setAddedPackages(addedPackages.data);
+			} catch (err) {
+				rsToastify.error("Couldn't get added packages", 'Service Call Error');
+			}
 		}
 		getAddedPackages().catch(console.error);
+	}, []);
+
+	useEffect(() => {
+		async function verifyAvailability() {
+			if (!params.data.newRoom) return;
+			try {
+				let verifyData: Api.Reservation.Req.Verification = {
+					accommodationId: params.data.newRoom.accommodationId,
+					destinationId: params.data.destinationId,
+					adultCount: params.data.newRoom.adults,
+					childCount: params.data.newRoom.children,
+					arrivalDate: params.data.newRoom.arrivalDate,
+					departureDate: params.data.newRoom.departureDate,
+					numberOfAccommodations: 1
+				};
+				if (params.data.newRoom.rateCode) verifyData.rateCode = params.data.newRoom.rateCode;
+
+				let response = await reservationService.verifyAvailability(verifyData);
+				setVerifiedAccommodation(response);
+			} catch (e) {
+				rsToastify.error(
+					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
+					'No Longer Available'
+				);
+				setVerifiedAccommodation(undefined);
+			}
+		}
+		verifyAvailability().catch(console.error);
 	}, []);
 
 	useEffect(() => {
@@ -150,17 +191,27 @@ const BookingFlowAddPackagePage = () => {
 			<Box className="packageSection">
 				{smallSize ? renderContinueBtn() : null}
 				<div ref={filterRef} />
-				<Box className={'availablePackages'}>{renderAvailablePackages()}</Box>
+				{renderAvailablePackages()}
 				{renderContinueBtn()}
+				<PaginationViewMore
+					selectedRowsPerPage={perPage}
+					total={total}
+					currentPageNumber={page}
+					viewMore={(num) => {
+						setPage(num);
+					}}
+				/>
 			</Box>
-			<PaginationViewMore
-				selectedRowsPerPage={perPage}
-				total={total}
-				currentPageNumber={page}
-				viewMore={(num) => {
-					setPage(num);
-				}}
-			/>
+			<Box className="bookingSummarySection">
+				{verifiedAccommodation ? (
+					<Box className="bookingCardWrapper">
+						{renderContinueBtn()}
+						<BookingSummaryCard bookingData={verifiedAccommodation} canHide={smallSize} />
+					</Box>
+				) : (
+					<div className={'loader'} />
+				)}
+			</Box>
 		</Page>
 	);
 };
