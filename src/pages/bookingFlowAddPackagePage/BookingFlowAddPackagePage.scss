@@ -1,22 +1,125 @@
 @import '../../themes/themes';
 .rsBookingFlowAddPackagePage {
-	.rs-page-content-wrapper {
-		max-width: 1160px !important;
-		padding-top: 120px;
-		hr {
-			height: 1px;
+	padding-top: 120px;
+
+	display: flex;
+	flex-wrap: nowrap;
+
+	.packageSection {
+		width: 65%;
+		padding-left: 50px;
+	}
+	.bookingSummarySection {
+		width: 35%;
+		padding: 0 20px;
+		.bookingCardWrapper {
+			margin: 0 auto;
+			position: sticky;
+			top: 30px;
+
+			.continueButton {
+				width: 100%;
+				margin-bottom: 20px;
+			}
+		}
+	}
+
+	.rsButton {
+		margin: 20px 0 20px auto;
+	}
+
+	.continueButton {
+		height: 57px;
+		width: clamp(200px, 50%, 285px);
+		background: theme-var($secondaryButtonLinkColor);
+		border-radius: 5px;
+	}
+
+	.rsDestinationPackageTile {
+		margin-bottom: 50px;
+	}
+
+	.loader {
+		display: block;
+		width: 75px;
+		height: 75px;
+		margin: 0 auto;
+		border-radius: 50%;
+		border: 3px solid transparent;
+		border-top-color: #004b98;
+		-webkit-animation: spin 2s linear infinite;
+		animation: spin 2s linear infinite;
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 5px;
+			left: 5px;
+			right: 5px;
+			bottom: 5px;
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: white;
+			-webkit-animation: spin 3s linear infinite;
+			animation: spin 3s linear infinite;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 15px;
+			left: 15px;
+			right: 15px;
+			bottom: 15px;
+			border-radius: 50%;
+			border: 3px solid transparent;
+			border-top-color: #cc9e0d;
+			-webkit-animation: spin 1.5s linear infinite;
+			animation: spin 1.5s linear infinite;
+		}
+	}
+	@media screen and (max-width: 1440px) {
+		.packageSection {
+			width: 60%;
+			padding-left: 30px;
+		}
+		.bookingSummarySection {
+			width: 40%;
+			padding: 0 30px;
+		}
+	}
+	@media screen and (max-width: 1024px) {
+		.packageSection {
+			width: 55%;
+			padding-left: 20px;
+		}
+		.bookingSummarySection {
+			width: 45%;
+			padding: 0 50px;
+		}
+	}
+}
+
+.small {
+	.rsBookingFlowAddPackagePage {
+		flex-wrap: wrap;
+		.packageSection {
 			width: 100%;
-			background: theme-var($greyLineColor);
-			border: none;
-			margin: 20px 0;
+			padding-left: 0;
+			.continueButton {
+				width: 278px;
+				margin: 0 auto;
+				display: none;
+			}
+			order: 1;
 		}
-
-		.rsButton {
-			margin: 20px auto;
+		.bookingSummarySection {
+			width: 100%;
+			order: 0;
+			padding: 0 10px;
 		}
-
-		.rsDestinationPackageTile {
-			margin-bottom: 50px;
-		}
+	}
+	.rsButton {
+		margin: unset;
 	}
 }

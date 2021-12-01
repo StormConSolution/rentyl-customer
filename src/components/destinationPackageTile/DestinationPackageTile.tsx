@@ -4,13 +4,16 @@ import Paper from '../paper/Paper';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import Accordion from '@bit/redsky.framework.rs.accordion';
 import LabelButton from '../labelButton/LabelButton';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
-import Carousel from '../carousel/Carousel';
-import { useEffect, useState } from 'react';
 import Img from '@bit/redsky.framework.rs.img';
+import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { popupController } from '@bit/redsky.framework.rs.996';
+import MobilePackageDescriptionPopup, {
+	MobilePackageDescriptionPopupProps
+} from '../../popups/mobilePackageDescriptionPopup/MobilePackageDescriptionPopup';
 
 interface DestinationPackageTileProps {
 	title: string;
@@ -19,68 +22,104 @@ interface DestinationPackageTileProps {
 	imgPaths: string[];
 	onAddPackage?: () => void;
 	text?: string;
+	isAdded?: boolean;
 }
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
-	const [showControls, setShowControls] = useState<boolean>(true);
-
-	useEffect(() => {
-		if (props.imgPaths.length <= 1) setShowControls(false);
-	}, [props.imgPaths]);
-
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box className={'imageWrapper'}>
-					<Img src={path} alt={''} width={500} height={600} />
-				</Box>
-			);
-		});
-	}
+	const size = useWindowResizeChange();
+	const smallSize = size === 'small';
 
 	return (
-		<Paper
-			className={'rsDestinationPackageTile'}
-			borderRadius={'4px'}
-			boxShadow
-			padding={'16px'}
-			position={'relative'}
-		>
-			<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
-			<div>
-				<Label variant={'h2'}>{props.title}</Label>
-				<Accordion
-					backgroundColor={'#f0f0f0'}
-					hideHoverEffect
-					titleReact={<Label variant={'h4'}>View Details</Label>}
+		<Paper className={'rsDestinationPackageTile'} borderRadius={'4px'} position={'relative'}>
+			<Box className={'imageWrapper'}>
+				<Img
+					src={props.imgPaths[0]}
+					alt={`package-${props.title}`}
+					width={smallSize ? 327 : 500}
+					height={smallSize ? 219 : 600}
+				/>
+			</Box>
+			<Box width={smallSize ? '100%' : 550} paddingLeft={smallSize ? 0 : 44}>
+				<Label
+					className="titleAndIcon"
+					variant={smallSize ? 'customFour' : 'packagesCustomTwo'}
+					color="#001933"
+					marginY={10}
 				>
-					<Label variant={'body1'} margin={'0 10px'}>
+					{props.title}
+					{smallSize && (
+						<Icon
+							iconImg={'icon-info-outline'}
+							size={23}
+							color="#000"
+							onClick={() => {
+								popupController.open<MobilePackageDescriptionPopupProps>(
+									MobilePackageDescriptionPopup,
+									{
+										packageImage: props.imgPaths[0],
+										description: props.description,
+										addPackage: props.onAddPackage!,
+										isAdded: props.isAdded!
+									}
+								);
+							}}
+						/>
+					)}
+				</Label>
+				{!smallSize && (
+					<Label
+						variant={'customFive'}
+						marginBottom={13}
+						showMoreText={
+							<Label variant={'packagesCustomTwo'} color="#001933">
+								View More
+								<Icon iconImg="icon-chevron-down" className="viewTextIcon" />
+							</Label>
+						}
+						lineClamp={3}
+						showMoreButton
+						showLessText={
+							<Label variant={'packagesCustomTwo'} color="#001933">
+								View Less
+								<Icon iconImg="icon-chevron-up" className="viewTextIcon" />
+							</Label>
+						}
+					>
 						{props.description}
 					</Label>
-				</Accordion>
-			</div>
-			<Box marginLeft={'auto'} textAlign={'right'}>
-				{company.allowCashBooking && (
-					<Label variant={'h2'}>
-						${StringUtils.formatMoney(props.prices.amountAfterTax)} {company.allowPointBooking && ' or '}
-					</Label>
 				)}
-				{company.allowPointBooking && (
-					<Label variant={company.allowCashBooking ? 'h4' : 'h2'}>
-						{StringUtils.addCommasToNumber(props.prices.amountPoints)} points
-					</Label>
-				)}
-				<Label variant={'body2'}>Per Stay</Label>
-				{company.allowCashBooking && <Label variant={'body2'}>Including Taxes and Fees</Label>}
 			</Box>
-
-			<LabelButton
-				look={'containedPrimary'}
-				variant={'button'}
-				label={props.text || 'Add Package'}
-				onClick={props.onAddPackage}
-			/>
+			<Box className="priceAndButtonContainer" width={smallSize ? '100%' : 'auto'}>
+				<Box className="priceAndTextLabelContainer">
+					{company.allowCashBooking && (
+						<Label variant={smallSize ? 'packagesCustomThree' : 'packagesCustomOne'} marginBottom={9}>
+							<span className="priceFont">${StringUtils.formatMoney(props.prices.amountAfterTax)}</span>{' '}
+							{smallSize && '/ stay'}
+						</Label>
+					)}
+					{!smallSize && <Label variant="customThree">Per Stay</Label>}
+				</Box>
+				<LabelButton
+					look={'none'}
+					variant={'button'}
+					label={
+						props.text && (
+							<Label display="flex" className="addPackButtonText" variant="customThree" color="#fff">
+								<Icon
+									iconImg={!props.isAdded ? 'icon-plus' : 'icon-solid-check'}
+									size={20}
+									color="#fff"
+									className="addPackageButtonIcon"
+								/>
+								{!smallSize && props.text}
+							</Label>
+						)
+					}
+					className={`addButton${props.isAdded ? ' packageAdded' : ''}`}
+					onClick={props.onAddPackage}
+				/>
+			</Box>
 		</Paper>
 	);
 };
