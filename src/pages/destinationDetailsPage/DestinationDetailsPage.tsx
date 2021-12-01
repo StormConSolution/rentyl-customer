@@ -45,6 +45,10 @@ import DestinationExperienceImageGallery from '../../components/destinationExper
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
+	const galleryRef = useRef<HTMLElement>(null);
+	const overviewRef = useRef<HTMLElement>(null);
+	const experiencesRef = useRef<HTMLElement>(null);
+	const availableStaysRef = useRef<HTMLElement>(null);
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
@@ -52,7 +56,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
@@ -123,6 +126,22 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	 * ALL COMMENTED OUT CODE WILL STAY FOR NOW ON THIS PAGE
 	 * ############
 	 */
+
+	// function renderFeatures() {
+	// 	if (!destinationDetails || !destinationDetails.experiences) return;
+	// 	let featureArray: any = [];
+	// 	destinationDetails.experiences.forEach((item) => {
+	// 		let primaryMedia: any = '';
+	// 		for (let value of item.media) {
+	// 			if (!value.isPrimary) continue;
+	// 			primaryMedia = value.urls.imageKit;
+	// 			break;
+	// 		}
+	// 		if (primaryMedia === '') return false;
+	// 		featureArray.push(<LabelImage key={item.id} mainImg={primaryMedia} textOnImg={item.title} />);
+	// 	});
+	// 	return featureArray;
+	// }
 
 	function renderFeatureCarousel() {
 		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.experiences)) return;
@@ -290,15 +309,17 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<SubNavMenu
-					pageRefs={{
-						galleryRef: availableStaysRef,
-						overviewRef: availableStaysRef,
-						experiencesRef: availableStaysRef,
-						availableStaysRef: availableStaysRef
-					}}
-				/>
-				<Box className={'gallerySection'}>
+				{size !== 'small' && (
+					<SubNavMenu
+						pageRefs={{
+							galleryRef: galleryRef,
+							overviewRef: overviewRef,
+							experiencesRef: experiencesRef,
+							availableStaysRef: availableStaysRef
+						}}
+					/>
+				)}
+				<Box boxRef={galleryRef} className={'gallerySection'}>
 					{size === 'small' ? (
 						<CarouselV2
 							path={window.location.href}
@@ -331,28 +352,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box className={'overviewSection'}></Box>
-				<Box
-					className={'experienceSection'}
-					margin={size === 'small' ? '58px 25px 34px 25px' : '60px 65px 190px 65px'}
-				>
-					<Label variant={size === 'small' ? 'destinationDetailsCustomOne' : 'tabbedImageCarouselCustomOne'}>
-						Experiences
-					</Label>
-					<Box className={'experienceImageContainer'} mt={50} mb={63}>
-						{renderExperiencesSection()}
-					</Box>
+				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
+				<Box boxRef={experiencesRef} className={'experienceSection'} mt={50} mb={63}>
+					{renderExperiencesSection()}
 				</Box>
-				{/*<Button*/}
-				{/*	look={'containedPrimary'}*/}
-				{/*	onClick={() => {*/}
-				{/*		popupController.open<MobileLightBoxProps>(MobileLightBox, {*/}
-				{/*			featureData: renderFeatureCarousel()*/}
-				{/*		});*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	Click to open Mobile*/}
-				{/*</Button>*/}
+
 				{!destinationDetails.isActive ? (
 					<div ref={availableStaysRef}>
 						<Label variant={'h2'} color={'red'} className={'noDestinations'}>

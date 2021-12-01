@@ -110,6 +110,19 @@
 }
 .small {
 	.rsDestinationDetailsPage {
+		.rs-page-content-wrapper {
+			padding-top: 84px;
+			.gallerySection {
+				.rsCarouselV2 {
+					margin: 0 auto;
+				}
+			}
+			.overviewSection {
+			}
+			.experienceSection {
+			}
+		}
+
 		.sectionOne {
 			margin-bottom: 425px;
 			.headerWrapper {
