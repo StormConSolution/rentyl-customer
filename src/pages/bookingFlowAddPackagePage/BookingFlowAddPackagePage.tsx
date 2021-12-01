@@ -10,6 +10,7 @@ import LoadingPage from '../loadingPage/LoadingPage';
 import PackageService from '../../services/package/package.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -69,7 +70,9 @@ const BookingFlowAddPackagePage = () => {
 				if (response.data.length < 1 && addedPackages.length < 1) {
 					throw new Error('No Packages to edit');
 				}
-				setAvailablePackages(response.data);
+				setAvailablePackages((prevState) => {
+					return [...prevState, ...response.data];
+				});
 				setTotal(response.total || 0);
 			} catch (e) {
 				if (!params.data.newRoom) return;
@@ -87,32 +90,10 @@ const BookingFlowAddPackagePage = () => {
 			}
 		}
 		getPackages().catch(console.error);
-	}, [page, perPage, addedPackages]);
-
-	function renderPackages() {
-		return addedPackages.map((item) => {
-			return (
-				<DestinationPackageTile
-					key={item.id}
-					title={item.title || item.externalTitle}
-					description={item.description}
-					prices={item.priceDetail}
-					imgPaths={item.media.map((item) => {
-						return item.urls.imageKit;
-					})}
-					onAddPackage={() => {
-						setAvailablePackages([...availablePackages, item]);
-						let newPackages = addedPackages.filter((addedPackage) => addedPackage.id !== item.id);
-						setAddedPackages(newPackages);
-					}}
-					text={'Added to stay'}
-					isAdded
-				/>
-			);
-		});
-	}
+	}, [page]);
 
 	function renderAvailablePackages() {
+		const packageIds = addedPackages.map((item) => item.id);
 		return availablePackages.map((item) => {
 			let isAdded = addedPackages.find((value) => value.id === item.id);
 			if (isAdded) return false;
@@ -131,7 +112,8 @@ const BookingFlowAddPackagePage = () => {
 						let available = availablePackages.filter((availablePackage) => availablePackage.id !== item.id);
 						setAvailablePackages(available);
 					}}
-					text={'Add to my stay'}
+					text={packageIds.includes(item.id) ? 'added to my stay' : 'Add to my stay'}
+					isAdded={packageIds.includes(item.id)}
 				/>
 			);
 		});
@@ -167,11 +149,18 @@ const BookingFlowAddPackagePage = () => {
 		<Page className={'rsBookingFlowAddPackagePage'}>
 			<Box className="packageSection">
 				{smallSize ? renderContinueBtn() : null}
-				{addedPackages.length > 0 && <Box className={'addedPackages'}>{renderPackages()}</Box>}
 				<div ref={filterRef} />
 				<Box className={'availablePackages'}>{renderAvailablePackages()}</Box>
 				{renderContinueBtn()}
 			</Box>
+			<PaginationViewMore
+				selectedRowsPerPage={perPage}
+				total={total}
+				currentPageNumber={page}
+				viewMore={(num) => {
+					setPage(num);
+				}}
+			/>
 		</Page>
 	);
 };

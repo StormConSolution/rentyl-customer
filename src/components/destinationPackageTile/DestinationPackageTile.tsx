@@ -67,7 +67,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 						/>
 					)}
 				</Label>
-				{smallSize && (
+				{!smallSize && (
 					<Label
 						variant={'customFive'}
 						marginBottom={13}
@@ -104,7 +104,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					look={'none'}
 					variant={'button'}
 					label={
-						props.text ? (
+						props.text && (
 							<Label display="flex" className="addPackButtonText" variant="customThree" color="#fff">
 								<Icon
 									iconImg={!props.isAdded ? 'icon-plus' : 'icon-solid-check'}
@@ -114,11 +114,9 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 								/>
 								{!smallSize && props.text}
 							</Label>
-						) : (
-							'Add to my stay'
 						)
 					}
-					className={`addButton${props.isAdded && ' packageAdded'}`}
+					className={`addButton${props.isAdded ? ' packageAdded' : ''}`}
 					onClick={props.onAddPackage}
 				/>
 			</Box>
