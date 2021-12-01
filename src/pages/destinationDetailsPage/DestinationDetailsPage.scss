@@ -91,53 +91,9 @@
 		}
 	}
 
-	.sectionOne {
-		position: relative;
-		margin-bottom: 386px;
-
-		.headerWrapper {
-			position: absolute;
-			display: flex;
-			align-items: flex-end;
-			bottom: -270px;
-			left: 80px;
-			width: 1359px;
-			.destinationInfoCardWrapper {
-				position: relative;
-				margin-right: 60px;
-				.rsDestinationInfoCard {
-				}
-			}
-		}
-		.featureSlider {
-			display: flex;
-			transition: transform 300ms;
-		}
-	}
-
-	.sectionTwo {
-		.rsLabel {
-			&.h1 {
-				text-align: center;
-				margin-bottom: 32px;
-			}
-		}
-		.rsLabelImage {
-			margin: 0 8px 16px;
-		}
-	}
-
-	.sectionFive {
-		width: 1160px;
+	.availableStays {
+		//width: 1160px;
 		margin: 0 auto;
-		hr {
-			height: 1px;
-			width: 100%;
-			background: theme-var($greyLineColor);
-			border: none;
-			margin: 20px 0;
-		}
-
 		.accommodationCardWrapper {
 			box-sizing: border-box;
 			.rsAccommodationSearchResultCardMobile,

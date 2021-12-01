@@ -415,7 +415,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						</Label>
 					</div>
 				) : (
-					<div className={'sectionFive'} ref={availableStaysRef}>
+					<div className={'availableStays'} ref={availableStaysRef}>
 						<hr />
 						<Label variant={'h1'} className={'chooseYourAccommodation'}>
 							Choose your accommodation
