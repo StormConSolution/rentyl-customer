@@ -33,6 +33,7 @@ import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
 import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
 import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
+import CheckoutFlowPage from './pages/checkoutFlowPage/CheckoutFlowPage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -138,7 +139,7 @@ export const routes: RouteDetails[] = [
 	},
 	{
 		path: '/booking/checkout',
-		page: BookingFlowCheckoutPage,
+		page: CheckoutFlowPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'

@@ -1,0 +1,76 @@
+.rsCheckoutBreadcrumbs {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 79px;
+	min-height: 79px;
+	max-height: 79px;
+	width: 100%;
+	border-bottom: 0.5px solid #7070706e;
+	margin-bottom: 35px;
+	box-shadow: inset 0 9px 6px -6px #00000029;
+	padding-right: 84px;
+	box-sizing: border-box;
+
+	.breadcrumbs {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		max-width: 928px;
+		height: 100%;
+
+		.info,
+		.payment,
+		.reviewAndBook,
+		.confirmation {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			font-size: 20px;
+			color: #1e180b;
+			font-weight: 400;
+			padding: 3px 16px 0;
+			border-bottom: 3px solid transparent;
+			box-sizing: border-box;
+
+			&.active {
+				color: #ffa022;
+				border-bottom: 3px solid #ffa022;
+			}
+		}
+
+		.divider {
+			height: 0.5px;
+			min-height: 0.5px;
+			max-height: 0.5px;
+			background-color: #7070706e;
+			width: 80px;
+		}
+	}
+
+	.backButtonWrapper {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 84px;
+		min-width: 84px;
+		max-width: 84px;
+		border-right: 0.5px solid #7070706e;
+		box-sizing: border-box;
+		padding-right: 10px;
+		padding-bottom: 3px;
+		margin-top: 3px;
+		cursor: pointer;
+
+		.backButton {
+			transform: rotate(90deg);
+		}
+	}
+}
