@@ -19,6 +19,7 @@ import DestinationService from '../../services/destination/destination.service';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LabelButton from '../labelButton/LabelButton';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface FilterBarV2Props {}
 
@@ -497,7 +498,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 							radioName="highestRadioBtn"
 							value="sortHigh"
 							checked={reservationFilters.sortOrder === 'DESC'}
-							text="Highest Prices"
+							text={`Highest Prices`}
 							onSelect={() => {
 								setReservationFilters({
 									...reservationFilters,

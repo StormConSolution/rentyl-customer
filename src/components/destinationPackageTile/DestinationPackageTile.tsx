@@ -95,7 +95,7 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 					{company.allowCashBooking && (
 						<Label variant={smallSize ? 'customTwentyFive' : 'customTwentyThree'} marginBottom={9}>
 							<span className="priceFont">${StringUtils.formatMoney(props.prices.amountAfterTax)}</span>{' '}
-							{smallSize ? '/ stay' : null}
+							{smallSize && '/ stay'}
 						</Label>
 					)}
 					{!smallSize && <Label variant="customThree">Per Stay</Label>}
