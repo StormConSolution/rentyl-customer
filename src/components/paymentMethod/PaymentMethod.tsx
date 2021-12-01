@@ -11,25 +11,17 @@ interface PaymentMethodProps {
 	onEditClickCallback?: () => void;
 }
 
-const FONT_COLOR = '#001933';
-
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
 	return (
 		<div className={'rsPaymentMethod'}>
-			<Label className={'sectionTitle'} color={FONT_COLOR}>
-				Payment Method
-			</Label>
+			<Label className={'sectionTitle'}>Payment Method</Label>
 			<Box display={'flex'} alignItems={'center'}>
 				<div className={'creditCardImage'}>Card</div>
 				<div className={'paymentInfoWrapper'}>
-					<Label className={'fullName'} color={FONT_COLOR}>
-						{props.cardHolderName}
-					</Label>
+					<Label className={'fullName'}>{props.cardHolderName}</Label>
 					<div className={'cardInfoWrapper'}>
-						<Label color={'#001933'}>{props.cardBrand} ending in</Label>
-						<Label className={'lastFourDigits'} color={FONT_COLOR}>
-							{props.lastFourDigits}
-						</Label>
+						<Label>{props.cardBrand} ending in</Label>
+						<Label className={'lastFourDigits'}>{props.lastFourDigits}</Label>
 					</div>
 				</div>
 			</Box>

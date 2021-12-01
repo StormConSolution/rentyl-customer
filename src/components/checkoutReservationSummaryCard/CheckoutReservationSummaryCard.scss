@@ -1,6 +1,12 @@
-.rsOrderSummaryCard {
+@import '../../themes/themes';
+
+.rsCheckoutReservationSummaryCard {
 	display: flex;
 	margin-bottom: 76px;
+
+	& .rsLabel {
+		color: theme-var($primaryTextColor);
+	}
 
 	.cardImage {
 		width: 384px;

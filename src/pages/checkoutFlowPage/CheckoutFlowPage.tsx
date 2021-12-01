@@ -7,7 +7,7 @@ import ThankYouCard from '../../components/thankYouCard/ThankYouCard';
 import PersonalInformation from '../../components/personalInformation/PersonalInformation';
 import PaymentMethod from '../../components/paymentMethod/PaymentMethod';
 import Policies from '../../components/policies/Policies';
-import OrderSummary from '../../components/orderSummary/OrderSummary';
+import CheckoutReservationSummary from '../../components/checkoutReservationSummary/CheckoutReservationSummary';
 import CheckoutBreadcrumbs from '../../components/checkoutBreadcrumbs/CheckoutBreadcrumbs';
 import PrintableQrCode from '../../components/printableQrCode/PrintableQrCode';
 import BookingSummaryCard from '../../components/bookingSummaryCard/BookingSummaryCard';
@@ -115,7 +115,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = (props) => {
 					}
 				/>
 				{params.stage > 2 && (
-					<OrderSummary
+					<CheckoutReservationSummary
 						orders={[
 							{
 								image: '../../images/featureAndBenefits/house.png',
@@ -142,9 +142,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = (props) => {
 				<CheckoutBreadcrumbs activeStage={params.stage} onBackButtonClick={handleBackButtonClick} />
 			)}
 			<div className={'printableContentWrapper'} ref={printRef}>
-				<div className={'leftColumn'} onClick={() => handlePrint && handlePrint()}>
-					{renderViewsByStage()}
-				</div>
+				<div className={'leftColumn'}>{renderViewsByStage()}</div>
 				<div className={'bookingSummaryColumn'}>
 					{params.stage > 3 ? (
 						<PrintableQrCode qrCode={'../../images/checkoutPage/rentylResortsQR.jpg'} />

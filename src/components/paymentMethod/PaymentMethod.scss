@@ -1,12 +1,18 @@
+@import '../../themes/themes';
+
 .rsPaymentMethod {
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	border: 0.5px solid #7070706e;
+	border: 0.5px solid theme-var($thinGreyLineColor);
 	padding: 34px 34px 43px;
 	box-sizing: border-box;
 	border-radius: 20px;
+
+	& .rsLabel {
+		color: theme-var($primaryTextColor);
+	}
 
 	.sectionTitle {
 		font-size: 20px;
@@ -17,7 +23,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 0.5px solid #7070706e;
+		border: 0.5px solid theme-var($thinGreyLineColor);
 		width: 115px;
 		height: 64px;
 		box-sizing: border-box;

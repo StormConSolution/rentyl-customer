@@ -1,3 +1,5 @@
+@import '../../themes/themes';
+
 .rsCheckoutBreadcrumbs {
 	position: relative;
 	display: flex;
@@ -7,7 +9,7 @@
 	min-height: 79px;
 	max-height: 79px;
 	width: 100%;
-	border-bottom: 0.5px solid #7070706e;
+	border: 0.5px solid theme-var($thinGreyLineColor);
 	margin-bottom: 35px;
 	box-shadow: inset 0 9px 6px -6px #00000029;
 	padding-right: 84px;
@@ -30,7 +32,7 @@
 			justify-content: center;
 			height: 100%;
 			font-size: 20px;
-			color: #1e180b;
+			color: theme-var($secondaryTextColor);
 			font-weight: 400;
 			padding: 3px 16px 0;
 			border-bottom: 3px solid transparent;
@@ -38,7 +40,7 @@
 
 			&.active {
 				color: #ffa022;
-				border-bottom: 3px solid #ffa022;
+				border-bottom: 3px solid theme-var($yellowTextColor);
 			}
 		}
 
@@ -46,7 +48,7 @@
 			height: 0.5px;
 			min-height: 0.5px;
 			max-height: 0.5px;
-			background-color: #7070706e;
+			background-color: theme-var($thinGreyLineColor);
 			width: 80px;
 		}
 	}
@@ -62,7 +64,7 @@
 		width: 84px;
 		min-width: 84px;
 		max-width: 84px;
-		border-right: 0.5px solid #7070706e;
+		border-right: 0.5px solid theme-var($thinGreyLineColor);
 		box-sizing: border-box;
 		padding-right: 10px;
 		padding-bottom: 3px;

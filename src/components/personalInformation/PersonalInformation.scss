@@ -1,16 +1,21 @@
+@import '../../themes/themes';
+
 .rsPersonalInformation {
 	position: relative;
 	display: flex;
 	width: 100%;
-	border: 0.5px solid #7070706e;
+	border: 0.5px solid theme-var($thinGreyLineColor);
 	padding: 34px 34px 43px;
 	box-sizing: border-box;
 	border-radius: 20px;
 
+	& .rsLabel {
+		color: theme-var($primaryTextColor);
+	}
+
 	.personalInformationWrapper,
 	.billingAddressWrapper {
 		font-size: 17px;
-		color: #001933;
 		font-weight: 400;
 		line-height: 25px;
 

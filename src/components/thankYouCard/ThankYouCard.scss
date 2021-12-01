@@ -1,13 +1,18 @@
+@import '../../themes/themes';
+
 .rsThankYouCard {
 	width: 100%;
-	border: 0.5px solid #7070706e;
+	border: 0.5px solid theme-var($thinGreyLineColor);
 	padding: 34px 34px 43px;
 	box-sizing: border-box;
 	border-radius: 20px;
 	font-size: 17px;
-	color: #001933;
 	font-weight: 400;
 	line-height: 28px;
+
+	& .rsLabel {
+		color: theme-var($primaryTextColor);
+	}
 
 	.sectionTitle {
 		font-size: 22px;

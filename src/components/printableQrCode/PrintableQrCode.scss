@@ -1,8 +1,10 @@
+@import '../../themes/themes';
+
 .rsPrintableQrCode {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	border: 0.5px solid #7070706e;
+	border: 0.5px solid theme-var($thinGreyLineColor);
 	padding: 34px 34px 43px;
 	box-sizing: border-box;
 	border-radius: 20px;
@@ -12,6 +14,10 @@
 		line-height: 21px;
 		font-weight: 600;
 		padding-bottom: 20px;
+
+		&.rsLabel {
+			color: theme-var($primaryTextColor);
+		}
 	}
 
 	.description {
@@ -60,6 +66,10 @@
 			padding-left: 18px;
 			font-size: 56px;
 			font-weight: 500;
+
+			&.rsLabel {
+				color: white;
+			}
 		}
 	}
 }
