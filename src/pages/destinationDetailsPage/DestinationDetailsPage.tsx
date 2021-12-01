@@ -58,7 +58,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 10;
-	console.log('destinationD', destinationDetails);
 
 	useEffect(() => {
 		const filtersFromUrl = WebUtils.parseURLParamsToFilters();
@@ -384,16 +383,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					</Label>
 					{renderExperiencesSection()}
 				</Box>
-				{/*<Button*/}
-				{/*	look={'containedPrimary'}*/}
-				{/*	onClick={() => {*/}
-				{/*		popupController.open<MobileLightBoxProps>(MobileLightBox, {*/}
-				{/*			featureData: renderFeatureCarousel()*/}
-				{/*		});*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	Click to open Mobile*/}
-				{/*</Button>*/}
 				{!destinationDetails.isActive ? (
 					<div ref={availableStaysRef}>
 						<Label variant={'h2'} color={'red'} className={'noDestinations'}>
