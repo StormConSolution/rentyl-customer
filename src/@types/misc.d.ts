@@ -92,6 +92,8 @@ declare namespace Misc {
 
 	export interface ComparisonCardInfo {
 		destinationId: number;
+		accommodationOptions: Misc.OptionType[];
+		selectedAccommodationId: number;
 		logo: string;
 		title: string;
 	}

@@ -3,7 +3,6 @@ import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage';
-import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
@@ -121,11 +120,6 @@ export const routes: RouteDetails[] = [
 	{
 		path: '/reservations/itinerary/reservation/details',
 		page: ReservationDetailsPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/compare',
-		page: ComparisonPage,
 		routeGuard: verifyRoute
 	},
 	{
