@@ -12,7 +12,7 @@
 		padding-right: 85px;
 		.accommodationDetails {
 			width: 100%;
-			height: 100%;
+			height: 265px;
 			display: flex;
 			padding-bottom: 24px;
 			.priceBox {
@@ -57,9 +57,14 @@
 			justify-content: flex-end;
 		}
 		.rsAccordion {
+			color: #2c3c60;
+			font-family: Montserrat;
+			font-weight: $bold;
+			font-size: 20px;
+			line-height: 19px;
 			border-top: solid 1px theme-var($greyLineColor);
 			.hoverEffect:hover {
-				filter: none;
+				filter: none !important;
 			}
 			.articleItemHeader {
 				padding: 0;

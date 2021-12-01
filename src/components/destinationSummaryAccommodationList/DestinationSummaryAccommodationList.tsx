@@ -10,6 +10,7 @@ import LabelButton from '../labelButton/LabelButton';
 
 export interface DestinationSummaryAccommodationListProps {
 	destinationName: string;
+	destinationId: number;
 	accommodationType: string;
 	accommodations: AccommodationListRowProp[];
 	onDetailsClick: (accommodationId: number | string) => void;

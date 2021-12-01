@@ -55,6 +55,7 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 		return (
 			<DestinationSummaryAccommodationList
 				destinationName={listProps.destinationName}
+				destinationId={listProps.destinationId}
 				accommodationType={listProps.accommodationType}
 				accommodations={listProps.accommodations}
 				onAddCompareClick={listProps.onAddCompareClick}

@@ -158,6 +158,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				label: propertyType.name,
 				content: {
 					destinationName: destination.name,
+					destinationId: destination.id,
 					accommodationType: 'Available',
 					accommodations: accommodationList,
 					onDetailsClick: (accommodationId: ReactText) => {

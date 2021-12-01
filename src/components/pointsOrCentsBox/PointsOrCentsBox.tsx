@@ -1,18 +1,48 @@
 import * as React from 'react';
 import './PointsOrCentsBox.scss';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import LoginOrCreateAccountPopup, {
+	LoginOrCreateAccountPopupProps
+} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
+import router from '../../utils/router';
 
 interface PointsOrCentsBoxProps {
 	priceObj: Misc.Pricing;
+	accommodationId: number;
+	destinationId: number;
 }
 
 const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
+	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
+
+	function onBookNow() {
+		let data: any = { ...reservationFilters };
+		let newRoom: Misc.StayParams = {
+			uuid: Date.now(),
+			adults: data.adultCount,
+			children: data.childCount || 0,
+			accommodationId: props.accommodationId,
+			arrivalDate: data.startDate,
+			departureDate: data.endDate,
+			packages: [],
+			rateCode: props.priceObj.rateCode
+		};
+		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
+		popupController.closeAll();
+		if (!user) {
+			popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
+				query: data
+			});
+		} else {
+			router.navigate(`/booking/packages?data=${data}`).catch(console.error);
+		}
+	}
 
 	function renderPriceOrPoints() {
 		if (reservationFilters.redeemPoints) {
@@ -28,6 +58,7 @@ const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
 						variant={'buttonTwo'}
 						label={'Book Now'}
 						className={'yellow'}
+						onClick={onBookNow}
 					/>
 				</Box>
 			);
@@ -44,6 +75,7 @@ const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
 						variant={'buttonTwo'}
 						label={'Book Now'}
 						className={'yellow'}
+						onClick={onBookNow}
 					/>
 				</Box>
 			);

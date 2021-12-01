@@ -3,7 +3,6 @@ import './AccommodationsPopup.scss';
 import { Box, Popup, popupController, PopupProps } from '@bit/redsky.framework.rs.996';
 import Paper from '../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { useEffect } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 import { DestinationSummaryTab } from '../../components/tabbedDestinationSummary/TabbedDestinationSummary';
 import AccommodationSearchCardV2 from '../../components/accommodationSearchCardV2/AccommodationSearchCardV2';
@@ -13,15 +12,17 @@ export interface AccommodationsPopupProps extends PopupProps {
 }
 
 const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
-	useEffect(() => {
-		console.log(props.content);
-	}, []);
-
 	function renderAccommodations() {
 		return (
 			<Box className={'accommodationCards'}>
 				{props.content.content.accommodations.map((accommodation) => {
-					return <AccommodationSearchCardV2 key={accommodation.id} accommodation={accommodation} />;
+					return (
+						<AccommodationSearchCardV2
+							key={accommodation.id}
+							accommodation={accommodation}
+							destinationId={props.content.content.destinationId}
+						/>
+					);
 				})}
 			</Box>
 		);

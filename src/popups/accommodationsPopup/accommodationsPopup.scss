@@ -1,26 +1,19 @@
 @import 'src/themes/themes';
 
 .rsAccommodationsPopup {
-	background-color: theme-var($primaryBackgroundColor);
-	border-radius: 5px;
-	width: clamp(250px, 95%, 1920px);
-	height: fit-content;
-	margin: 2.5%;
 	.accommodationCardsContainer {
-		width: 100%;
-		height: 90vh;
+		border-radius: 20px;
+		background-color: theme-var($primaryBackgroundColor);
+		width: clamp(250px, 95%, 1920px);
+		max-height: 90vh;
 		overflow-y: auto;
 		overflow-x: hidden;
 		.titleContainer {
 			padding: 28px 38px 20px 38px;
-			width: 100%;
 			display: flex;
 			justify-content: space-between;
 			border-bottom: 1px solid theme-var($greyLineColor);
 			.closeIcon {
-				position: absolute;
-				right: 10px;
-				top: 10px;
 				cursor: pointer;
 			}
 		}

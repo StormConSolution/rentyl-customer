@@ -84,7 +84,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderButtons() {
-		console.log(props.summaryTabs);
 		return props.summaryTabs.map((button) => {
 			if (ObjectUtils.isArrayWithData(props.summaryTabs)) {
 				if (ObjectUtils.isArrayWithData(button.content.accommodations)) {
@@ -105,6 +104,24 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 				}
 			}
 		});
+	}
+
+	function renderBedrooms() {
+		let accommodationBedrooms = props.summaryTabs[0].content.accommodations;
+		accommodationBedrooms.sort(function (a, b) {
+			return a.bedroomCount - b.bedroomCount;
+		});
+		const minBedCount = accommodationBedrooms.shift();
+		const maxBedCount = accommodationBedrooms.pop();
+		if (minBedCount && maxBedCount) {
+			return (
+				<Label variant={'subtitle1'} paddingRight={'74px'}>
+					{minBedCount.bedroomCount} - {maxBedCount.bedroomCount} Bedrooms
+				</Label>
+			);
+		} else {
+			return '';
+		}
 	}
 
 	return (
@@ -140,9 +157,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						{props.destinationName}
 					</Label>
 					<Box display={'flex'} paddingBottom={'16px'}>
-						<Label variant={'subtitle1'} paddingRight={'74px'}>
-							Bedrooms
-						</Label>
+						{renderBedrooms()}
 						<Label variant={'subtitle1'}>{props.address}</Label>
 					</Box>
 					<Box display={'flex'} paddingBottom={'18px'}>

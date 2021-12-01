@@ -15,6 +15,7 @@ import PointsOrCentsBox from '../pointsOrCentsBox/PointsOrCentsBox';
 
 interface AccommodationSearchCardV2Props {
 	accommodation: Api.Destination.Res.Accommodation;
+	destinationId: number;
 }
 
 const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (props) => {
@@ -94,6 +95,11 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 									| {props.accommodation.bedDetails.length} Various Bed Types |
 								</Label>
 							)}
+							{props.accommodation.maxSquareFt && props.accommodation.minSquareFt && (
+								<Label variant={'customThree'}>
+									{props.accommodation.minSquareFt} to {props.accommodation.maxSquareFt} ft
+								</Label>
+							)}
 						</Box>
 						<Label lineClamp={3} variant={'accommodationModalCustomThree'}>
 							{accommodationDetails?.longDescription}
@@ -106,14 +112,26 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 						</Label>
 					</Box>
 					<Box className={'priceBox'}>
-						{displayLowestPrice && <PointsOrCentsBox priceObj={displayLowestPrice} />}
+						{displayLowestPrice && (
+							<PointsOrCentsBox
+								priceObj={displayLowestPrice}
+								accommodationId={props.accommodation.id}
+								destinationId={props.destinationId}
+							/>
+						)}
 					</Box>
 				</Box>
 				<Box className={'accordionContainer'}>
 					{ObjectUtils.isArrayWithData(accommodationPrices) && (
 						<Accordion title={'View more rates'}>
 							{accommodationPrices.map((priceObj) => {
-								return <RateCodeCard priceObj={priceObj} />;
+								return (
+									<RateCodeCard
+										priceObj={priceObj}
+										destinationId={props.destinationId}
+										accommodationId={props.accommodation.id}
+									/>
+								);
 							})}
 						</Accordion>
 					)}

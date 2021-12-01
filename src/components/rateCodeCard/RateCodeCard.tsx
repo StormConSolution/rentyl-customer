@@ -6,6 +6,8 @@ import PointsOrCentsBox from '../pointsOrCentsBox/PointsOrCentsBox';
 
 interface RateCodeCardProps {
 	priceObj: Misc.Pricing;
+	accommodationId: number;
+	destinationId: number;
 }
 
 const RateCodeCard: React.FC<RateCodeCardProps> = (props) => {
@@ -15,7 +17,11 @@ const RateCodeCard: React.FC<RateCodeCardProps> = (props) => {
 				<Label variant={'accommodationModalCustomSeven'}>{props.priceObj.title}</Label>
 				<Label variant={'accommodationModalCustomEight'}>{props.priceObj.description}</Label>
 			</Box>
-			<PointsOrCentsBox priceObj={props.priceObj} />
+			<PointsOrCentsBox
+				priceObj={props.priceObj}
+				accommodationId={props.accommodationId}
+				destinationId={props.destinationId}
+			/>
 		</Box>
 	);
 };
