@@ -17,7 +17,7 @@ interface TabbedImageCarouselImageProps {
 const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 	const [imageIndex, setImageIndex] = useState<number>(props.imageIndex || 0);
 	const media = renderMedia();
-	const maxImage = media.length - 1;
+	const maxImageCount = media.length - 1; //So it matches the index count for the images.
 
 	useEffect(() => {
 		if (props.imageIndex) setImageIndex(props.imageIndex);
@@ -54,7 +54,7 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 					top={'-75px'}
 					right={'0'}
 					onClickRight={() => {
-						if (imageIndex === maxImage) {
+						if (imageIndex === maxImageCount) {
 							setImageIndex(0);
 							return;
 						}
@@ -62,7 +62,7 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 					}}
 					onClickLeft={() => {
 						if (imageIndex === 0) {
-							setImageIndex(maxImage);
+							setImageIndex(maxImageCount);
 							return;
 						}
 						setImageIndex(imageIndex - 1);
