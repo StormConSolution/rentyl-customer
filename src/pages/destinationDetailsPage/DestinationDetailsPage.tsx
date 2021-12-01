@@ -1,22 +1,16 @@
 import * as React from 'react';
 import './DestinationDetailsPage.scss';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
-import HeroImage from '../../components/heroImage/HeroImage';
 import { useEffect, useRef, useState } from 'react';
 import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
-import DestinationInfoCard from '../../components/destinationInfoCard/DestinationInfoCard';
-import { FooterLinks } from '../../components/footer/FooterLinks';
-import Footer from '../../components/footer/Footer';
 import Label from '@bit/redsky.framework.rs.label';
-import LabelImage from '../../components/labelImage/LabelImage';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import Carousel from '../../components/carousel/Carousel';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -42,6 +36,7 @@ import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface DestinationDetailsPageProps {}
 
@@ -262,31 +257,37 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	function renderSectionFour() {
 		if (!destinationDetails) return null;
-		const addressData = {
-			address1: destinationDetails.address1,
-			address2: destinationDetails.address2,
-			city: destinationDetails.city,
-			state: destinationDetails.state,
-			zip: destinationDetails.zip
-		};
 		return (
-			<Box
-				className={'sectionFour'}
-				marginBottom={'124px'}
-				display={'flex'}
-				// justifyContent={'center'}
-				// alignItems={'center'}
-				flexWrap={'wrap'}
-			>
-				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-					{destinationDetails.locationDescription ? (
-						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
+			<Box className={'sectionFour'} marginBottom={'124px'}>
+				<Box className={'minMaxDescription'}>
+					<Box className={'minMaxContainer'}>
+						<MinMaxDestinationDetailsBar
+							minBed={destinationDetails.minBedroom}
+							maxBed={destinationDetails.maxBedroom}
+							minBath={destinationDetails.minBathroom}
+							maxBath={destinationDetails.maxBathroom}
+							minArea={0}
+							maxArea={0}
+						/>
+						<Box className={'cityStateContainer'}>
+							<Icon className={'locationIcon'} iconImg={'icon-location'} size={25} color={'#FF6469'} />
+							<Label variant={'destinationDetailsCustomTwo'}>
+								{destinationDetails.city},{' '}
+								{destinationDetails.state === '' ? destinationDetails.zip : destinationDetails.state}
+							</Label>
+						</Box>
+					</Box>
+					{destinationDetails.description ? (
+						<Label variant={'body2'}>{destinationDetails.description}</Label>
 					) : (
-						<div></div>
+						<div />
 					)}
-					<Label variant={'caption'}>{StringUtils.buildAddressString(addressData)}</Label>
 				</Box>
-				<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
+				<Box
+					width={size === 'small' ? '300px' : '570px'}
+					height={size === 'small' ? '300px' : '450px'}
+					mr={size === 'small' ? 8 : 40}
+				>
 					<iframe frameBorder="0" src={renderMapSource()} />
 				</Box>
 			</Box>
@@ -353,7 +354,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box className={'overviewSection'}>
+				<Box boxRef={overviewRef} className={'overviewSection'}>
 					<Box className={'titleAndPriceContainer'}>
 						<Box className={'logoNameContainer'}>
 							<img
@@ -371,19 +372,18 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
 						</Box>
 					</Box>
-					<Box className={'minMaxContainer'}>
-						<MinMaxDestinationDetailsBar
-							minBed={destinationDetails.minBedroom}
-							maxBed={destinationDetails.maxBedroom}
-							minBath={destinationDetails.minBathroom}
-							maxBath={destinationDetails.maxBathroom}
-							minArea={0}
-							maxArea={0}
-						/>
-					</Box>
 					<Box>{renderSectionFour()}</Box>
 				</Box>
-				<Box className={'experienceSection'}></Box>
+				<hr />
+				<Box boxRef={experiencesRef} className={'experienceSection'} mb={63}>
+					<Label
+						variant={size === 'small' ? 'destinationDetailsCustomOne' : 'tabbedImageCarouselCustomOne'}
+						mb={size === 'small' ? 25 : 50}
+					>
+						Experiences
+					</Label>
+					{renderExperiencesSection()}
+				</Box>
 				{/*<Button*/}
 				{/*	look={'containedPrimary'}*/}
 				{/*	onClick={() => {*/}

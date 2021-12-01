@@ -4,9 +4,7 @@
 		padding: 200px 26px 0;
 		.gallerySection {
 		}
-		.minMaxContainer {
-			margin: 51px 0 37px 25px;
-		}
+
 		.overviewSection {
 			margin-top: 46px;
 
@@ -36,6 +34,40 @@
 					.price {
 						color: theme-var($yellowTextColor);
 					}
+				}
+			}
+			.sectionFour {
+				display: grid;
+				grid-template-columns: repeat(2, fit-content(100%));
+				margin-top: 34px;
+
+				.minMaxContainer {
+					display: grid;
+					grid-template-columns: repeat(2, auto);
+					margin: 0 0 37px 0;
+
+					.cityStateContainer {
+						display: grid;
+						grid-template-columns: repeat(2, auto);
+						justify-content: flex-end;
+						align-items: center;
+
+						.locationIcon {
+							margin-right: 10px;
+							cursor: default;
+						}
+					}
+				}
+
+				.minMaxDescription {
+					margin: 0 100px 0 65px;
+				}
+
+				iframe {
+					box-shadow: theme-var($primaryBoxShadowColor);
+					height: 100%;
+					width: 100%;
+					border: 0;
 				}
 			}
 		}
@@ -97,27 +129,6 @@
 		}
 		.rsLabelImage {
 			margin: 0 8px 16px;
-		}
-	}
-
-	.sectionFour {
-		iframe {
-			box-shadow: theme-var($primaryBoxShadowColor);
-			height: 100%;
-			width: 100%;
-			border: 0;
-		}
-
-		.rsLabel {
-			&.h1 {
-				margin-bottom: 22px;
-			}
-			&.body2 {
-				margin-bottom: 30px;
-			}
-			.rsIcon {
-				margin-right: 14px;
-			}
 		}
 	}
 
@@ -192,6 +203,13 @@
 						}
 					}
 				}
+			}
+		}
+
+		.sectionFour {
+			.minMaxDescription {
+				margin: 0;
+				width: 300px;
 			}
 		}
 
