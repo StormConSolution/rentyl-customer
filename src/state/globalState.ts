@@ -14,7 +14,7 @@ enum GlobalStateKeys {
 	USER_TOKEN = 'UserToken',
 	USER = 'User',
 	COMPANY = 'Company',
-	VERIFIED_ACCOMMODATIONS = 'VerifiedAccommodations',
+	VERIFIED_ACCOMMODATION = 'VerifiedAccommodation',
 	USER_RATE_CODE = 'UserRateCode',
 	RESERVATION_FILTERS = 'ReservationFilter',
 	LAST_NAVIGATION_PATH = 'LastNavigationPath'
@@ -28,7 +28,7 @@ class GlobalState {
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
-	verifiedAccommodations: RecoilState<{ [uuid: number]: Api.Reservation.Res.Verification }>;
+	verifiedAccommodation: RecoilState<Api.Reservation.Res.Verification | undefined>;
 	userRateCode: RecoilState<string>;
 	reservationFilters: RecoilState<Misc.ReservationFilters>;
 	lastNavigationPath: RecoilState<string>;
@@ -68,9 +68,9 @@ class GlobalState {
 			}
 		});
 
-		this.verifiedAccommodations = atom<{ [uuid: number]: Api.Reservation.Res.Verification }>({
-			key: GlobalStateKeys.VERIFIED_ACCOMMODATIONS,
-			default: {}
+		this.verifiedAccommodation = atom<Api.Reservation.Res.Verification | undefined>({
+			key: GlobalStateKeys.VERIFIED_ACCOMMODATION,
+			default: undefined
 		});
 
 		// The following is stored in local storage automatically

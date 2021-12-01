@@ -185,7 +185,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							children: 0,
 							arrivalDate: reservationFilters.startDate.toString(),
 							departureDate: reservationFilters.endDate.toString(),
-							packages: []
+							packages: [],
+							rateCode: ''
 						};
 						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
