@@ -48,6 +48,7 @@ declare namespace Model {
 	export type PaymentSystemProviders = 'adyen' | 'mock';
 	export type OffsiteLoyaltySystemProviders = 'fidel';
 	export type VaultSystemProviders = 'spreedly';
+	export type EmailSystems = 'mailgun' | 'mailhog';
 	export type UpsellPackagePricingType = 'PerGuest' | 'PerStay' | 'PerNight' | 'PerGuestPerNight';
 	export type CurrencyCode = 'USD'; // Add more if/when we add multicurrency support
 	export type ReviewStatus = 'APPROVED' | 'REJECTED' | 'FLAGGED' | 'PENDING';

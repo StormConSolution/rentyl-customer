@@ -40,9 +40,15 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
+
 interface DestinationDetailsPageProps {}
 
 const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
+	const galleryRef = useRef<HTMLElement>(null);
+	const overviewRef = useRef<HTMLElement>(null);
+	const experiencesRef = useRef<HTMLElement>(null);
+	const availableStaysRef = useRef<HTMLElement>(null);
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
@@ -50,7 +56,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const availableStaysRef = useRef<HTMLElement>(null);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
@@ -245,15 +250,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	// 		</Box>
 	// 	);
 	// }
-	//
-	// function renderSectionThree() {
-	// 	if (!destinationDetails?.experiences) return null;
-	// 	return (
-	// 		<Box className={'sectionThree'} marginBottom={'190px'}>
-	// 			{ObjectUtils.isArrayWithData(destinationDetails.experiences) && <div className={'yellowSquare'} />}
-	// 		</Box>
-	// 	);
-	// }
+
+	function renderExperiencesSection() {
+		if (!destinationDetails?.experiences) return null;
+		if (!ObjectUtils.isArrayWithData(destinationDetails.experiences) || destinationDetails.experiences.length < 6)
+			return <></>;
+		return <DestinationExperienceImageGallery experiences={destinationDetails.experiences} />;
+	}
 
 	function renderSectionFour() {
 		if (!destinationDetails) return null;
@@ -306,15 +309,17 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	) : (
 		<Page className={'rsDestinationDetailsPage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<SubNavMenu
-					pageRefs={{
-						galleryRef: availableStaysRef,
-						overviewRef: availableStaysRef,
-						experiencesRef: availableStaysRef,
-						availableStaysRef: availableStaysRef
-					}}
-				/>
-				<Box className={'gallerySection'}>
+				{size !== 'small' && (
+					<SubNavMenu
+						pageRefs={{
+							galleryRef: galleryRef,
+							overviewRef: overviewRef,
+							experiencesRef: experiencesRef,
+							availableStaysRef: availableStaysRef
+						}}
+					/>
+				)}
+				<Box boxRef={galleryRef} className={'gallerySection'}>
 					{size === 'small' ? (
 						<CarouselV2
 							path={window.location.href}
@@ -343,18 +348,18 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box className={'overviewSection'}></Box>
-				<Box className={'experienceSection'}></Box>
-				{/*<Button*/}
-				{/*	look={'containedPrimary'}*/}
-				{/*	onClick={() => {*/}
-				{/*		popupController.open<MobileLightBoxProps>(MobileLightBox, {*/}
-				{/*			featureData: renderFeatureCarousel()*/}
-				{/*		});*/}
-				{/*	}}*/}
-				{/*>*/}
-				{/*	Click to open Mobile*/}
-				{/*</Button>*/}
+				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
+				<hr />
+				<Box boxRef={experiencesRef} className={'experienceSection'} mb={63}>
+					<Label
+						variant={size === 'small' ? 'destinationDetailsCustomOne' : 'tabbedImageCarouselCustomOne'}
+						mb={size === 'small' ? 25 : 50}
+					>
+						Experiences
+					</Label>
+					{renderExperiencesSection()}
+				</Box>
+
 				{!destinationDetails.isActive ? (
 					<div ref={availableStaysRef}>
 						<Label variant={'h2'} color={'red'} className={'noDestinations'}>

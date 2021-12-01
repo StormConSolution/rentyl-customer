@@ -234,7 +234,7 @@ html {
 	}
 	&.tabbedImageCarouselCustomOne {
 		font-size: 41px;
-		line-height: 18px;
+		line-height: 50px;
 		font-weight: $regular;
 	}
 	&.tabbedImageCarouselCustomTwo {
@@ -256,6 +256,31 @@ html {
 		font-size: 14px;
 		line-height: 41px;
 		font-weight: $regular;
+	}
+	&.reservationDetailsPaperCustomOne {
+		font-size: 25px;
+		line-height: 30px;
+		font-weight: $semiBold;
+	}
+	&.reservationDetailsPaperCustomTwo {
+		font-size: 21px;
+		line-height: 29px;
+		font-weight: $medium;
+	}
+	&.reservationDetailsPaperCustomThree {
+		font-size: 13px;
+		line-height: 16px;
+		font-weight: $regular;
+	}
+	&.reservationDetailsPaperCustomFour {
+		font-size: 17px;
+		line-height: 23px;
+		font-weight: $light;
+	}
+	&.reservationDetailsPaperCustomFive {
+		font-size: 13px;
+		line-height: 25px;
+		font-weight: $light;
 	}
 	&.pointsPageCustomOne {
 		font-size: 25px;
@@ -290,6 +315,36 @@ html {
 	&.userBasicInfoCustomOne {
 		font-size: 35px;
 		line-height: 43px;
+		font-weight: $regular;
+	}
+	&.bookingSummaryCustomOne {
+		font-size: 12px;
+		line-height: 14px;
+		font-weight: $medium;
+	}
+	&.bookingSummaryCustomTwo {
+		font-size: 12px;
+		line-height: 13px;
+		font-weight: $light;
+	}
+	&.bookingSummaryCustomThree {
+		font-size: 16px;
+		line-height: 20px;
+		font-weight: $light;
+	}
+	&.bookingSummaryCustomFour {
+		font-size: 14px;
+		line-height: 21px;
+		font-weight: $light;
+	}
+	&.experienceImageCustomOne {
+		font-size: 30px;
+		line-height: 39px;
+		font-weight: $medium;
+	}
+	&.destinationDetailsCustomOne {
+		font-size: 18px;
+		line-height: 13px;
 		font-weight: $regular;
 	}
 }
