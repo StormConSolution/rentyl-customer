@@ -1,0 +1,37 @@
+@import '../../themes/themes';
+
+.rsMobilePackageDescriptionPopup {
+	border-radius: 20px;
+	background: #fff;
+	height: auto;
+	min-width: 310px;
+	max-width: 356px;
+	margin: 0 5px;
+
+	.popupHeader {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 14px 18px;
+		border-bottom: 1px solid theme-var($greyLineColor);
+	}
+	.popupBody {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 24px 25px;
+		.packageImage {
+			object-fit: cover;
+			border-radius: 20px;
+		}
+		.addPackageButton {
+			margin-top: 25px;
+			width: 301px;
+			height: 36px;
+			border-radius: 5px;
+			background-color: theme-var($secondaryButtonLinkColor);
+			color: theme-var($buttonLinkColor);
+			font-weight: $semiBold;
+		}
+	}
+}

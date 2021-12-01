@@ -1,0 +1,13 @@
+@import '../../themes/themes.scss';
+
+.rsMaskedDateRangeSelector {
+	display: grid;
+	grid-template-columns: 0fr 1fr 1fr;
+
+	.rsDateRangeSelector {
+		.startEndLabels,
+		.DateInput {
+			display: none;
+		}
+	}
+}
