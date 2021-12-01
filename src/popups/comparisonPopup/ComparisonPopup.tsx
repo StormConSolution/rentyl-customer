@@ -24,6 +24,16 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 	const [accommodations, setAccommodations] = useState<Api.Accommodation.Res.Details[]>([]);
 
 	useEffect(() => {
+		document.body.style.overflow = 'hidden';
+		document.body.style.position = 'fixed';
+		document.body.style.top = '0';
+		return () => {
+			document.body.style.overflow = 'unset';
+			document.body.style.position = 'unset';
+			document.body.style.top = 'unset';
+		};
+	}, []);
+	useEffect(() => {
 		async function getAccommodations() {
 			const result = await accommodationService.getManyAccommodationDetails(
 				comparisonState.destinationDetails.map((item) => item.selectedAccommodationId)
@@ -34,9 +44,8 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 	}, [comparisonState]);
 
 	function renderImageRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(<div />);
-		row.push(
+		let row: React.ReactNodeArray = [
+			<div />,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<div className={'carouselWrapper'} key={accommodation.id}>
@@ -55,18 +64,15 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 					</div>
 				);
 			})
-		);
+		];
 		return <Box className={'row images'}>{row}</Box>;
 	}
 
 	function renderPropertyTypeRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(
+		let row: React.ReactNodeArray = [
 			<Label className={'title'} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
 				Property type
-			</Label>
-		);
-		row.push(
+			</Label>,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<Select
@@ -78,27 +84,19 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 								control.value as number,
 								comparisonState.destinationDetails[index].destinationId
 							);
-							// setComparisonState((prev) => {
-							// 	let destinationDetails = prev.destinationDetails;
-							// 	destinationDetails[index].selectedAccommodationId = control.value as number;
-							// 	return { destinationDetails, showCompareButton: prev.showCompareButton };
-							// });
 						}}
 					/>
 				);
 			})
-		);
+		];
 		return <Box className={'row propertyType'}>{row}</Box>;
 	}
 
 	function renderGuestLimitRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(
+		let row: React.ReactNodeArray = [
 			<Label className={'title'} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
 				Guest limit
-			</Label>
-		);
-		row.push(
+			</Label>,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<Label key={index} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
@@ -106,18 +104,15 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 					</Label>
 				);
 			})
-		);
+		];
 		return <Box className={'row guestLimit'}>{row}</Box>;
 	}
 
 	function renderExtraBeddingRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(
+		let row: React.ReactNodeArray = [
 			<Label className={'title'} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
 				Extra bedding
-			</Label>
-		);
-		row.push(
+			</Label>,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<Label key={index} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
@@ -125,18 +120,15 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 					</Label>
 				);
 			})
-		);
+		];
 		return <Box className={'row extraBedding'}>{row}</Box>;
 	}
 
 	function renderAccessibilityRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(
+		let row: React.ReactNodeArray = [
 			<Label className={'title'} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
 				Accessible
-			</Label>
-		);
-		row.push(
+			</Label>,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<Label key={index} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
@@ -144,18 +136,15 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 					</Label>
 				);
 			})
-		);
+		];
 		return <Box className={'row accessibility'}>{row}</Box>;
 	}
 
 	function renderFeaturesRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(
+		let row: React.ReactNodeArray = [
 			<Label className={'title'} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
 				Features
-			</Label>
-		);
-		row.push(
+			</Label>,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<Label variant={size === 'small' ? 'customEight' : 'customSeventeen'} key={index}>
@@ -167,18 +156,15 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 					</Label>
 				);
 			})
-		);
+		];
 		return <Box className={'row features'}>{row}</Box>;
 	}
 
 	function renderOverviewRow() {
-		let row: React.ReactNodeArray = [];
-		row.push(
+		let row: React.ReactNodeArray = [
 			<Label className={'title'} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
 				Overview
-			</Label>
-		);
-		row.push(
+			</Label>,
 			...accommodations.map((accommodation, index) => {
 				return (
 					<Label key={index} variant={size === 'small' ? 'customEight' : 'customSeventeen'}>
@@ -186,7 +172,7 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 					</Label>
 				);
 			})
-		);
+		];
 		return <Box className={'row overview'}>{row}</Box>;
 	}
 

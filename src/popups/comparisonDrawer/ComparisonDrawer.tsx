@@ -23,16 +23,11 @@ const ComparisonDrawer: React.FC = () => {
 		if (
 			!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ||
 			recoilComparisonState.destinationDetails.length > 3
-		)
+		) {
 			return;
+		}
 		return recoilComparisonState.destinationDetails.map((item) => {
-			return (
-				<ResortComparisonCard
-					key={item.destinationId}
-					destinationDetails={item}
-					handlePinToFirst={(pinToFirst: boolean, comparisonId: number) => {}}
-				/>
-			);
+			return <ResortComparisonCard key={item.destinationId} destinationDetails={item} />;
 		});
 		return;
 	}
