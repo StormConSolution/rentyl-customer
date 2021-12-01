@@ -30,7 +30,7 @@ const ItineraryCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 		<Box className={'rsItineraryCardMobile'}>
 			<CarouselV2 path={props.linkPath} imgPaths={props.imgPaths} />
 			<Box className="titleAndButton" marginTop={10} marginBottom={16}>
-				<Label variant={'customTwentyFour'}>{props.title}</Label>
+				<Label variant={'itineraryCustomOne'}>{props.title}</Label>
 				<Icon
 					iconImg="icon-info-outline"
 					color={'#000'}
