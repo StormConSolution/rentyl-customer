@@ -26,7 +26,7 @@ interface LabelButtonProps {
 		| 'inherit'
 		| 'error'
 		| string;
-	label: string;
+	label: string | React.ReactNode;
 	className?: string;
 	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 	disabled?: boolean;

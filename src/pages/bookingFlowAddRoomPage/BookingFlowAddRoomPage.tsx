@@ -85,7 +85,8 @@ const BookingFlowAddRoomPage = () => {
 			children: 0,
 			arrivalDate: reservationFilters.startDate as string,
 			departureDate: reservationFilters.endDate as string,
-			packages: editStayDetails?.packages || []
+			packages: editStayDetails?.packages || [],
+			rateCode: editStayDetails?.rateCode || ''
 		};
 		let bookingParams: Misc.BookingParams = {
 			destinationId: params.data.destinationId,

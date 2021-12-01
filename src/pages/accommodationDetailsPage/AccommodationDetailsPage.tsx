@@ -169,7 +169,8 @@ const AccommodationDetailsPage: React.FC<AccommodationDetailsPageProps> = () => 
 			accommodationId: accommodationDetails.id,
 			arrivalDate: availabilityObj.arrivalDate,
 			departureDate: availabilityObj.departureDate,
-			packages: []
+			packages: [],
+			rateCode: ''
 		};
 		if (availabilityObj.rateCode) data.rateCode = availabilityObj.rateCode;
 		const stringedParams: string = JSON.stringify({

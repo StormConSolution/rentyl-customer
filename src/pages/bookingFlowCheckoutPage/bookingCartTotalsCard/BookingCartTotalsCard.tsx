@@ -38,10 +38,10 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	const whiteBox = useRef<HTMLElement>(null);
 	const [showOptions, setShowOptions] = useState<boolean>(false);
 	const [verifyStatus, setVerifyStatus] = useState<'verifying' | 'available' | 'notAvailable'>('verifying');
-	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<{
-		[uuid: number]: Api.Reservation.Res.Verification;
-	}>(globalState.verifiedAccommodations);
-	const localAccommodation = verifiedAccommodation[props.uuid];
+	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
+		Api.Reservation.Res.Verification | undefined
+	>(globalState.verifiedAccommodation);
+	const localAccommodation = verifiedAccommodation;
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
@@ -82,9 +82,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 				}
 
 				let response = await reservationService.verifyAvailability(verifyData);
-				setVerifiedAccommodation((prev) => {
-					return { ...prev, [props.uuid]: response };
-				});
+				setVerifiedAccommodation(response);
 				setVerifyStatus('available');
 			} catch (e) {
 				setVerifyStatus('notAvailable');
@@ -92,9 +90,7 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'
 				);
-				let updatedVerifiedAccommodation = { ...verifiedAccommodation };
-				delete updatedVerifiedAccommodation[props.uuid];
-				setVerifiedAccommodation(updatedVerifiedAccommodation);
+				setVerifiedAccommodation(undefined);
 				props.removeAccommodation(false);
 			}
 		}
@@ -156,8 +152,8 @@ const BookingCartTotalsCard: React.FC<BookingCartTotalsCardProps> = (props) => {
 	function renderItemizedCostPerNight() {
 		if (!localAccommodation && !props.usePoints) return;
 		let itemizedCostPerNight: React.ReactNodeArray = [];
-		Object.keys(localAccommodation.prices.accommodationDailyCostsInCents).forEach((night, index) => {
-			const costPerNight = localAccommodation.prices.accommodationDailyCostsInCents;
+		Object.keys(localAccommodation!.prices.accommodationDailyCostsInCents).forEach((night, index) => {
+			const costPerNight = localAccommodation!.prices.accommodationDailyCostsInCents;
 			itemizedCostPerNight.push(
 				<Box display={'flex'} alignItems={'center'} key={night} justifyContent={'space-between'}>
 					<Label variant={'body2'} width={'170px'}>
