@@ -53,7 +53,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 				<Img
 					className={'imageTwo'}
 					src={nonPrimaryImages![0].urls.imageKit}
-					alt={''}
+					alt={'Destination Image'}
 					width={'1920px'}
 					height={'auto'}
 					onClick={() => {
@@ -66,7 +66,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 				<div className={'imageThree'}>
 					<Img
 						src={nonPrimaryImages![1].urls.imageKit}
-						alt={''}
+						alt={'Destination Image'}
 						width={'1920px'}
 						height={'auto'}
 						onClick={() => {

@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './ResortComparisonCard.scss';
-import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
-import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import ComparisonCardPopup, { ComparisonCardPopupProps } from '../../popups/comparisonCardPopup/ComparisonCardPopup';
-import Select from '@bit/redsky.framework.rs.select';
-import { RsFormControl, RsFormGroup } from '@bit/redsky.framework.rs.form';
 import Img from '@bit/redsky.framework.rs.img';
-import { useRecoilState } from 'recoil';
-import globalState from '../../state/globalState';
 import serviceFactory from '../../services/serviceFactory';
 import ComparisonService from '../../services/comparison/comparison.service';
-import LoadingPage from '../../pages/loadingPage/LoadingPage';
 
 interface ResortComparisonCardProps {
 	destinationDetails: Misc.ComparisonCardInfo;
-	handlePinToFirst?: (pinToFirst: boolean, comparisonId: number) => void;
 }
 
 const ResortComparisonCard: React.FC<ResortComparisonCardProps> = (props) => {
