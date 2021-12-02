@@ -1,6 +1,6 @@
-@import 'src/themes/themes';
+@import '../../../themes/themes';
 
-.rsAccommodationSearchCardV2 {
+.rsAccommodationSearchCardResponsive {
 	display: flex;
 	padding: 20px 42px;
 	width: 100%;
@@ -54,7 +54,11 @@
 			align-items: flex-end;
 			justify-content: flex-end;
 		}
+		.accordionContainer {
+			width: 100%;
+		}
 		.rsAccordion {
+			width: 100%;
 			color: #2c3c60;
 			font-family: Montserrat;
 			font-weight: $bold;
@@ -67,6 +71,11 @@
 			.articleItemHeader {
 				padding: 0;
 			}
+		}
+		.rateDescriptionContainer {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
 		}
 	}
 	.yellowText {

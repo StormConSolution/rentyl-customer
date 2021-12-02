@@ -702,8 +702,6 @@ declare namespace Api {
 				bedroomCount: number;
 				bathroomCount: number;
 				bedDetails: any;
-				maxSquareFt: number;
-				minSquareFt: number;
 				priceCents: number;
 				maxOccupantCount: number;
 				prices: {
