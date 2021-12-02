@@ -9,25 +9,25 @@ import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLig
 import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 
 export interface MobileAccommodationOverviewPopupProps extends PopupProps {
-	accommodationDetails?: Api.Accommodation.Res.Details;
+	accommodationDetails: Api.Accommodation.Res.Details;
 }
 
 const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopupProps> = (props) => {
 	function getAccommodationImages() {
 		let images: string[] = [];
-		props.accommodationDetails?.media.forEach((value) => {
-			images.push(value.urls.small);
+		props.accommodationDetails.media.forEach((value) => {
+			images.push(value.urls.imageKit);
 		});
 		return images;
 	}
 
 	function handleFloorPlanExpand() {
 		let featureData: ImageTabProp[] = [];
-		props.accommodationDetails?.layout.forEach((value) => {
+		props.accommodationDetails.layout.forEach((value) => {
 			featureData.push({
 				name: value.title,
 				title: value.media.title,
-				imagePath: value.media.urls.small,
+				imagePath: value.media.urls.imageKit,
 				description: value.media.description,
 				buttonLabel: value.media.title,
 				otherMedia: [value.media]
@@ -48,7 +48,6 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 	}
 
 	function renderAmenities() {
-		if (!props.accommodationDetails) return <></>;
 		return props.accommodationDetails.amenities.map((amenity) => {
 			return (
 				<div className={'amenityItem'} key={`amenity-${amenity.id}`}>
@@ -61,7 +60,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 
 	function renderAccommodationSize() {
 		let size = '';
-		let sizeObj = props.accommodationDetails?.size;
+		let sizeObj = props.accommodationDetails.size;
 		if (sizeObj) {
 			size = `${sizeObj.min} to ${sizeObj.max} ${sizeObj.units === 'SquareFeet' ? `ft` : sizeObj.units}`;
 		}
@@ -80,7 +79,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 		<Popup opened={props.opened}>
 			<Paper className={'rsMobileAccommodationOverviewPopup'}>
 				<div className={'popupHeader'}>
-					<Label variant={'customThirteen'}>{props.accommodationDetails?.name}</Label>
+					<Label variant={'customThirteen'}>{props.accommodationDetails.name}</Label>
 					<Icon
 						iconImg={'icon-close'}
 						color={'#797979'}
@@ -91,37 +90,31 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 				</div>
 
 				<div className={'popupContent'}>
-					<CarouselV2
-						path={() => {}}
-						imgPaths={getAccommodationImages()}
-						onAddCompareClick={() => {}}
-						onRemoveCompareClick={() => {}}
-						onGalleryClick={() => {}}
-					/>
+					<CarouselV2 path={() => {}} imgPaths={getAccommodationImages()} />
 
 					<Box
 						display={'flex'}
-						justifyContent={props.accommodationDetails?.size ? 'space-between' : 'flex-start'}
+						justifyContent={props.accommodationDetails.size ? 'space-between' : 'flex-start'}
 						marginTop={16}
 					>
 						<div className={'accommodationCounts'}>
 							<Icon iconImg={'cms-icon-0425'} size={30} />
-							<Label variant={'subtitle1'}>{props.accommodationDetails?.bathroomCount}</Label>
+							<Label variant={'subtitle1'}>{props.accommodationDetails.bathroomCount}</Label>
 						</div>
 						<div className={'accommodationCounts'}>
 							<Icon iconImg={'cms-icon-0412'} size={30} />
-							<Label variant={'subtitle1'}>{props.accommodationDetails?.bedroomCount}</Label>
+							<Label variant={'subtitle1'}>{props.accommodationDetails.bedroomCount}</Label>
 						</div>
-						{props.accommodationDetails?.size ? renderAccommodationSize() : <></>}
+						{props.accommodationDetails.size ? renderAccommodationSize() : <></>}
 					</Box>
 
 					<Label variant={'accommodationOverviewCustomOne'} margin={'24px auto'}>
-						{props.accommodationDetails?.shortDescription
+						{props.accommodationDetails.shortDescription
 							? props.accommodationDetails.shortDescription
-							: props.accommodationDetails?.longDescription}
+							: props.accommodationDetails.longDescription}
 					</Label>
 
-					{props.accommodationDetails?.amenities.length !== 0 ? (
+					{props.accommodationDetails.amenities.length !== 0 ? (
 						<div className={'amenitiesList'}>
 							<Label variant={'customFifteen'} marginTop={20}>
 								Amenities
@@ -134,7 +127,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 						<></>
 					)}
 
-					{props.accommodationDetails?.layout.length !== 0 ? (
+					{props.accommodationDetails.layout.length !== 0 ? (
 						<>
 							<Label variant={'customFifteen'} margin={'20px auto'}>
 								Floor Plan
@@ -142,11 +135,11 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 							<Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
 								<img
 									className={'floorPlanImg'}
-									src={props.accommodationDetails?.layout[0].media.urls.small}
+									src={props.accommodationDetails.layout[0].media.urls.imageKit}
 								/>
 							</Box>
 
-							{props.accommodationDetails?.layout && props.accommodationDetails.layout.length > 1 ? (
+							{props.accommodationDetails.layout.length > 1 ? (
 								<div className={'expandFloorPlanDiv'} onClick={handleFloorPlanExpand}>
 									<Label>Expand floor plans</Label>
 									<Icon iconImg={'cms-icon-0055'} size={22} />

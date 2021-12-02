@@ -81,7 +81,5 @@
 }
 
 .small .rsMobileAccommodationOverviewPopup .rsCarouselV2 {
-	max-width: 368px;
-	width: 100%;
-	min-width: 168px;
+	width: clamp(168px, 100%, 368px);
 }
