@@ -1,8 +1,12 @@
 @import 'src/themes/themes';
 .rsMinMaxDestinationDetailsBar {
 	display: grid;
-	grid-template-columns: 25% 9% 25% 9% 25%;
+	grid-template-columns: repeat(5, auto);
 	max-width: 483px;
+
+	.minMaxLabel {
+		white-space: nowrap;
+	}
 
 	.separator {
 		border-left: 1px solid theme-var($primaryTextColor);
