@@ -30,7 +30,9 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface DestinationDetailsPageProps {}
 
@@ -251,32 +253,37 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	function renderSectionFour() {
 		if (!destinationDetails) return null;
-		const addressData = {
-			address1: destinationDetails.address1,
-			address2: destinationDetails.address2,
-			city: destinationDetails.city,
-			state: destinationDetails.state,
-			zip: destinationDetails.zip
-		};
 		return (
-			<Box
-				className={'sectionFour'}
-				marginBottom={'124px'}
-				display={'flex'}
-				justifyContent={'center'}
-				alignItems={'center'}
-				flexWrap={'wrap'}
-			>
-				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-					<Label variant={'h1'}>Location</Label>
-					{destinationDetails.locationDescription ? (
-						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
+			<Box className={'sectionFour'} marginBottom={'124px'}>
+				<Box className={'minMaxDescription'}>
+					<Box className={'minMaxContainer'}>
+						<MinMaxDestinationDetailsBar
+							minBed={destinationDetails.minBedroom}
+							maxBed={destinationDetails.maxBedroom}
+							minBath={destinationDetails.minBathroom}
+							maxBath={destinationDetails.maxBathroom}
+							minArea={0}
+							maxArea={0}
+						/>
+						<Box className={'cityStateContainer'}>
+							<Icon className={'locationIcon'} iconImg={'icon-location'} size={25} color={'#FF6469'} />
+							<Label variant={'destinationDetailsCustomTwo'}>
+								{destinationDetails.city},{' '}
+								{destinationDetails.state === '' ? destinationDetails.zip : destinationDetails.state}
+							</Label>
+						</Box>
+					</Box>
+					{destinationDetails.description ? (
+						<Label variant={'body2'}>{destinationDetails.description}</Label>
 					) : (
-						<div></div>
+						<div />
 					)}
-					<Label variant={'caption'}>{StringUtils.buildAddressString(addressData)}</Label>
 				</Box>
-				<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
+				<Box
+					width={size === 'small' ? '300px' : '570px'}
+					height={size === 'small' ? '300px' : '450px'}
+					mr={size === 'small' ? 8 : 40}
+				>
 					<iframe frameBorder="0" src={renderMapSource()} />
 				</Box>
 			</Box>
@@ -339,7 +346,26 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
+				<Box boxRef={overviewRef} className={'overviewSection'}>
+					<Box className={'titleAndPriceContainer'}>
+						<Box className={'logoNameContainer'}>
+							<img
+								className="destinationLogo"
+								src={destinationDetails.logoUrl}
+								alt={destinationDetails.name + ' logo'}
+							/>
+							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
+						</Box>
+						<Box className={'destinationPricingContainer'}>
+							<Label variant={'destinationDetailsCustomFour'}>from</Label>
+							<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+								$300
+							</Label>
+							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+						</Box>
+					</Box>
+					<Box>{renderSectionFour()}</Box>
+				</Box>
 				<hr />
 				<Box boxRef={experiencesRef} className={'experienceSection'} mb={63}>
 					<Label
@@ -350,7 +376,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					</Label>
 					{renderExperiencesSection()}
 				</Box>
-
 				{!destinationDetails.isActive ? (
 					<div ref={availableStaysRef}>
 						<Label variant={'h2'} color={'red'} className={'noDestinations'}>
