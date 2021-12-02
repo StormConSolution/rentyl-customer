@@ -10,6 +10,7 @@ interface AccommodationSearchCardProps {
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
 	onClickInfoIcon?: () => void;
+	pointsEarnable: number;
 }
 
 const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) => {
@@ -24,6 +25,7 @@ const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) 
 					openAccordion={props.openAccordion}
 					showInfoIcon={props.showInfoIcon}
 					onClickInfoIcon={props.onClickInfoIcon}
+					pointsEarnable={props.pointsEarnable}
 				/>
 			) : (
 				<AccommodationSearchCardResponsive
@@ -32,6 +34,7 @@ const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) 
 					openAccordion={props.openAccordion}
 					showInfoIcon={props.showInfoIcon}
 					onClickInfoIcon={props.onClickInfoIcon}
+					pointsEarnable={props.pointsEarnable}
 				/>
 			)}
 		</Box>

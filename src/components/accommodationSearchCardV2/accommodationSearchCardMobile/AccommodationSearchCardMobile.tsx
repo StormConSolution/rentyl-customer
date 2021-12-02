@@ -28,6 +28,7 @@ interface AccommodationSearchCardMobileProps {
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
 	onClickInfoIcon?: () => void;
+	pointsEarnable: number;
 }
 
 const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps> = (props) => {
@@ -171,7 +172,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 				</Label>
 				{renderPointsOrCash()}
 				<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
-					You will earn points for this stay
+					You will earn {props.pointsEarnable} points for this stay
 				</Label>
 				<Box className={'buttonContainer'}>
 					<LabelButton
@@ -193,6 +194,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 									priceObj={priceObj}
 									destinationId={props.destinationId}
 									accommodationId={props.accommodation.id}
+									pointsEarnable={props.pointsEarnable}
 								/>
 							);
 						})}

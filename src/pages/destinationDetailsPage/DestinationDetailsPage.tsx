@@ -244,6 +244,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						key={accommodationAvailability.id}
 						accommodation={destinationAccommodation}
 						destinationId={reservationFilters.destinationId}
+						pointsEarnable={accommodationAvailability.pointsEarned}
 					/>
 				);
 			}

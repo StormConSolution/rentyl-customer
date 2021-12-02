@@ -100,6 +100,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						label={button.name}
 						onClick={(event) => {
 							popupController.open<AccommodationsPopupProps>(AccommodationsPopup, {
+								availabilityStayList: props.availabilityStayList,
 								propertyTypeName: button.name,
 								destinationId: props.destinationObj.id,
 								destinationName: props.destinationObj.name,
@@ -132,7 +133,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					display={'flex'}
 					flexDirection={'column'}
 					maxWidth={'1020px'}
-					padding={'5px 45px'}
+					padding={'5px 5px 5px 45px'}
 					onClick={() => {
 						router
 							.navigate(
