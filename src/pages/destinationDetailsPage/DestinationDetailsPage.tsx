@@ -10,7 +10,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { WebUtils } from '../../utils/utils';
+import { StringUtils, WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -113,8 +113,17 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	useEffect(() => {
 		if (!reservationFilters.destinationId) return;
 		async function getDestinationDetails(id: number) {
+			let dest;
 			try {
-				let dest = await destinationService.getDestinationDetails(id);
+				if (!reservationFilters.startDate || !reservationFilters.endDate) {
+					dest = await destinationService.getDestinationDetails(id);
+				} else {
+					dest = await destinationService.getDestinationDetails(
+						id,
+						reservationFilters.startDate,
+						reservationFilters.endDate
+					);
+				}
 				setDestinationDetails(dest);
 			} catch (e) {
 				rsToastify.error(
@@ -296,6 +305,24 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		return [];
 	}
+
+	function getMinMaxSqFtFromAccommodations(): { minSquareFt: number; maxSquareFt: number } {
+		let minSquareFt = 0;
+		let maxSquareFt = 0;
+		if (!ObjectUtils.isArrayWithData(destinationDetails?.accommodations))
+			return { minSquareFt: minSquareFt, maxSquareFt: maxSquareFt };
+		destinationDetails?.accommodations.forEach((item) => {
+			if (item.maxSquareFt) {
+				if (item.maxSquareFt > maxSquareFt) maxSquareFt = item.maxSquareFt;
+			}
+			if (item.minSquareFt) {
+				if (minSquareFt === 0) minSquareFt = item.minSquareFt;
+				if (item.minSquareFt < minSquareFt) minSquareFt = item.minSquareFt;
+			}
+		});
+		return { minSquareFt: minSquareFt, maxSquareFt: maxSquareFt };
+	}
+
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -350,13 +377,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							/>
 							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
 						</Box>
-						<Box className={'destinationPricingContainer'}>
-							<Label variant={'destinationDetailsCustomFour'}>from</Label>
-							<Label className={'price'} variant={'destinationDetailsCustomFive'}>
-								$300
-							</Label>
-							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
-						</Box>
+						{destinationDetails.lowestPriceInCents && (
+							<Box className={'destinationPricingContainer'}>
+								<Label variant={'destinationDetailsCustomFour'}>from</Label>
+								<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+									${StringUtils.formatMoney(destinationDetails.lowestPriceInCents)}
+								</Label>
+								<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+							</Box>
+						)}
 					</Box>
 					<Box className={'destinationDetailsWrapper'}>
 						<Box className={'minMaxDescription'}>
@@ -366,8 +395,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 									maxBed={destinationDetails.maxBedroom}
 									minBath={destinationDetails.minBathroom}
 									maxBath={destinationDetails.maxBathroom}
-									minArea={0}
-									maxArea={0}
+									squareFt={getMinMaxSqFtFromAccommodations()}
 								/>
 								<Box className={'cityStateContainer'}>
 									<Icon

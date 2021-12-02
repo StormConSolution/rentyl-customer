@@ -7,13 +7,15 @@ interface MinMaxDestinationDetailsBarProps {
 	maxBed: number;
 	minBath: number;
 	maxBath: number;
-	minArea: number;
-	maxArea: number;
+	squareFt: {
+		minSquareFt: number;
+		maxSquareFt: number;
+	};
 	className?: string;
 }
 
 const MinMaxDestinationDetailsBar: React.FC<MinMaxDestinationDetailsBarProps> = (props) => {
-	const { minBed, maxBed, minBath, maxBath, minArea, maxArea } = props;
+	const { minBed, maxBed, minBath, maxBath, squareFt } = props;
 
 	function renderMinMaxLabels(min: number, max: number) {
 		if (min === max) return min;
@@ -23,11 +25,17 @@ const MinMaxDestinationDetailsBar: React.FC<MinMaxDestinationDetailsBarProps> = 
 
 	return (
 		<div className={`rsMinMaxDestinationDetailsBar ${props.className || ''}`}>
-			<Label variant={'destinationDetailsCustomTwo'}>{renderMinMaxLabels(minBed, maxBed)} Bed</Label>
+			<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+				{renderMinMaxLabels(minBed, maxBed)} Bed
+			</Label>
 			<div className={'separator'} />
-			<Label variant={'destinationDetailsCustomTwo'}>{renderMinMaxLabels(minBath, maxBath)} Bath</Label>
+			<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+				{renderMinMaxLabels(minBath, maxBath)} Bath
+			</Label>
 			<div className={'separator'} />
-			<Label variant={'destinationDetailsCustomTwo'}>{renderMinMaxLabels(minArea, maxArea)} ft&sup2;</Label>
+			<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+				{renderMinMaxLabels(squareFt.minSquareFt, squareFt.maxSquareFt)} ft&sup2;
+			</Label>
 		</div>
 	);
 };
