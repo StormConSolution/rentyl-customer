@@ -1,70 +1,52 @@
 @import '../../themes/themes';
 .rsNavDrawer {
 	position: absolute;
-	top: 0;
-	right: 0;
-	height: 100vh;
-	width: 0;
-	background-color: theme-var($primaryTextColor);
+	top: 74px;
+	right: 90px;
+	background-color: #ffffff;
 	transition: width 300ms;
 	transform: translateX(78px);
-	box-shadow: theme-var($primaryBoxShadowColor);
-	overflow: hidden;
+	width: 0;
+	box-shadow: 0 0 8px #00000029;
+	border-radius: 20px;
 	z-index: 99;
+
 	&.opened {
-		width: 350px;
+		width: 262px;
 	}
 
-	.signOutBtn {
-		position: absolute;
-		top: 19px;
-		left: 25px;
-		transition: filter 300ms;
-		&:hover {
-			filter: brightness(1.2);
-		}
-	}
-
-	.rsIcon {
-		&.icon-close {
-			position: absolute;
-			top: 25px;
-			right: 25px;
-		}
-	}
-
-	.signInUpBtn {
-		height: 100px;
-		margin-top: auto;
-		border-top: 1px solid theme-var($greyLineColor);
-		display: flex;
-		align-items: center;
-		padding: 0 50px;
+	.welcomeLabel {
+		padding-bottom: 16px;
 	}
 
 	.rsLabelLink {
-		margin-bottom: 15px;
+		padding-bottom: 16px;
 		.rsLabel {
-			color: #ffffff;
+			color: theme-var($secondaryTextColor);
 			&.h4 {
 				text-indent: 40px;
 			}
 		}
 	}
+
+	hr {
+		height: 1px;
+		width: 100%;
+		background: theme-var($greyLineColor);
+		border: none;
+		margin: 0;
+	}
 }
 .transparentOverlay {
 	transition: opacity 200ms;
 	position: absolute;
-	background-color: rgba(89, 96, 95, 0.8);
-	width: 1440px;
-	height: 0;
 	right: -77px;
 	top: 0;
 	opacity: 0;
 	z-index: 1;
 	&.opened {
 		opacity: 1;
-		height: 100vh;
+		height: 100%;
 	}
 }
 
