@@ -1,0 +1,21 @@
+@import 'src/themes/themes';
+
+.rsAccommodationsPopup {
+	.accommodationCardsContainer {
+		border-radius: 20px;
+		background-color: theme-var($primaryBackgroundColor);
+		width: clamp(250px, 95%, 1920px);
+		max-height: 90vh;
+		overflow-y: auto;
+		overflow-x: hidden;
+		.titleContainer {
+			padding: 28px 38px 20px 38px;
+			display: flex;
+			justify-content: space-between;
+			border-bottom: 1px solid theme-var($greyLineColor);
+			.closeIcon {
+				cursor: pointer;
+			}
+		}
+	}
+}
