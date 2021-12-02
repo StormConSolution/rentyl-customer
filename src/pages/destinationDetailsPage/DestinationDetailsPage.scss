@@ -28,7 +28,6 @@
 
 				.destinationPricingContainer {
 					text-align: end;
-
 					.price {
 						color: theme-var($yellowTextColor);
 					}
@@ -36,13 +35,13 @@
 			}
 			.destinationDetailsWrapper {
 				display: grid;
-				grid-template-columns: repeat(2, fit-content(100%));
+				grid-auto-flow: column;
 				margin-top: 34px;
 				margin-bottom: 124px;
 
 				.minMaxContainer {
 					display: grid;
-					grid-template-columns: repeat(2, auto);
+					grid-auto-flow: column;
 					margin: 0 0 37px 0;
 
 					.cityStateContainer {
@@ -50,6 +49,10 @@
 						grid-template-columns: repeat(2, auto);
 						justify-content: flex-end;
 						align-items: center;
+
+						.rsLabel {
+							white-space: nowrap;
+						}
 
 						.locationIcon {
 							margin-right: 10px;
@@ -59,7 +62,8 @@
 				}
 
 				.minMaxDescription {
-					margin: 0 100px 0 65px;
+					margin: 0 50px 0 65px;
+					width: clamp(300px, 418px, 750px);
 				}
 				#GoogleMap {
 					border-radius: 20px;
