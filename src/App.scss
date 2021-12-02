@@ -18,6 +18,9 @@ body {
 }
 .App {
 	@include spread-map($defaultTheme);
+	.yellowText {
+		color: theme-var($yellowTextColor);
+	}
 }
 
 .rs-view {
