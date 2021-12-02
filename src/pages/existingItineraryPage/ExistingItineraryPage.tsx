@@ -16,9 +16,11 @@ import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const ExistingItineraryPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const size = useWindowResizeChange();
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const [loading, setLoading] = useState<boolean>(true);
 	const [itineraries, setItineraries] = useState<Api.Reservation.Res.Itinerary.Get[]>([]);
@@ -141,6 +143,8 @@ const ExistingItineraryPage: React.FC = () => {
 					cancelPermitted={itinerary.stays[0].cancellationPermitted}
 					itineraryTotal={cashTotal}
 					paidWithPoints={!itinerary.paymentMethod}
+					city={itinerary.destination.city}
+					state={itinerary.destination.state}
 				/>
 			);
 		});
@@ -178,6 +182,8 @@ const ExistingItineraryPage: React.FC = () => {
 					cancelPermitted={0}
 					itineraryTotal={cashTotal}
 					paidWithPoints={!itinerary.paymentMethod}
+					city={itinerary.destination.city}
+					state={itinerary.destination.state}
 				/>
 			);
 		});
@@ -194,16 +200,23 @@ const ExistingItineraryPage: React.FC = () => {
 	) : (
 		<Page className={'rsExistingItineraryPage'}>
 			<Box className="staysCard">
-				<Label variant={'customTwentyOne'} marginBottom={40}>
-					Your Upcoming Reservations
+				<Label
+					variant={size === 'small' ? 'customFour' : 'customTwentyOne'}
+					marginBottom={size === 'small' ? 20 : 40}
+				>
+					Your upcoming reservations
 				</Label>
-				{renderUpcomingReservations()?.reverse()}
+				<div className={'wrapper'}>{renderUpcomingReservations()?.reverse()}</div>
 			</Box>
 			<Box className="staysCard">
-				<Label variant={'customTwentyOne'} marginBottom={40} className={'pastStays'}>
-					Past Stays
+				<Label
+					variant={size === 'small' ? 'customFour' : 'customTwentyOne'}
+					marginBottom={size === 'small' ? 20 : 40}
+					className={'pastStays'}
+				>
+					Past reservations
 				</Label>
-				{renderPrevReservations()}
+				<div className={'wrapper'}>{renderPrevReservations()}</div>
 			</Box>
 		</Page>
 	);
