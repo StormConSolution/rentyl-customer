@@ -128,9 +128,7 @@ declare namespace Misc {
 		priceCents: number;
 		pricePoints: number;
 		quantityAvailable: number;
-		rateCode: string;
+		rate: Api.Destination.Res.Rate;
 		minStay: number;
-		title: string;
-		description: string;
 	}
 }

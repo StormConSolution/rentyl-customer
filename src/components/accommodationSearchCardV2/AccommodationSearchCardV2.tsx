@@ -119,10 +119,10 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 							{accommodationDetails?.longDescription}
 						</Label>
 						<Label variant={'accommodationModalCustomSeven'}>
-							{displayLowestPrice ? displayLowestPrice.title : ''}
+							{displayLowestPrice ? displayLowestPrice.rate.name : ''}
 						</Label>
 						<Label variant={'accommodationModalCustomEight'}>
-							{displayLowestPrice ? displayLowestPrice.description : ''}
+							{displayLowestPrice ? displayLowestPrice.rate.description : ''}
 						</Label>
 					</Box>
 					<Box className={'priceBox'}>
@@ -141,7 +141,7 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 							{accommodationPrices.map((priceObj) => {
 								return (
 									<RateCodeCard
-										key={priceObj.rateCode}
+										key={priceObj.rate.code}
 										priceObj={priceObj}
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}

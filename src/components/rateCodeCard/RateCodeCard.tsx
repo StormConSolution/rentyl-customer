@@ -14,8 +14,8 @@ const RateCodeCard: React.FC<RateCodeCardProps> = (props) => {
 	return (
 		<Box className={'rsRateCodeCard'}>
 			<Box>
-				<Label variant={'accommodationModalCustomSeven'}>{props.priceObj.title}</Label>
-				<Label variant={'accommodationModalCustomEight'}>{props.priceObj.description}</Label>
+				<Label variant={'accommodationModalCustomSeven'}>{props.priceObj.rate.name}</Label>
+				<Label variant={'accommodationModalCustomEight'}>{props.priceObj.rate.description}</Label>
 			</Box>
 			<PointsOrCentsBox
 				priceObj={props.priceObj}
