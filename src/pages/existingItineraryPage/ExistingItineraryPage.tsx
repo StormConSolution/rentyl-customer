@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ExistingItineraryPage.scss';
-import { Box, Link, Page } from '@bit/redsky.framework.rs.996';
+import { Box, Link, Page, popupController } from '@bit/redsky.framework.rs.996';
 import ItineraryCard from '../../components/itineraryCard/ItineraryCard';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
@@ -14,6 +14,8 @@ import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
+import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
+import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 
 const ExistingItineraryPage: React.FC = () => {
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
@@ -121,8 +123,9 @@ const ExistingItineraryPage: React.FC = () => {
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
-					itineraryId={itinerary.itineraryId}
+					destinationExperiences={itinerary.destination.experiences}
 					imgPaths={destinationImages}
+					itineraryId={itinerary.itineraryId}
 					logo={itinerary.destination.logoUrl}
 					title={itinerary.destination.name}
 					address={StringUtils.buildAddressString(itinerary.destination) || ''}
@@ -157,6 +160,7 @@ const ExistingItineraryPage: React.FC = () => {
 			return (
 				<ItineraryCard
 					key={itinerary.stays[0].reservationId}
+					destinationExperiences={itinerary.destination.experiences}
 					itineraryId={itinerary.itineraryId}
 					imgPaths={destinationImages}
 					logo={itinerary.destination.logoUrl}
@@ -189,15 +193,18 @@ const ExistingItineraryPage: React.FC = () => {
 		</Page>
 	) : (
 		<Page className={'rsExistingItineraryPage'}>
-			<div className={'rs-page-content-wrapper'}>
-				<Box m={'140px auto'} maxWidth={1160}>
-					<h1>Your Upcoming Reservations</h1>
-					{renderUpcomingReservations()?.reverse()}
-					<h1 className={'pastStays'}>Past Stays</h1>
-					{renderPrevReservations()}
-				</Box>
-				<Footer links={FooterLinks} />
-			</div>
+			<Box className="staysCard">
+				<Label variant={'customTwentyOne'} marginBottom={40}>
+					Your Upcoming Reservations
+				</Label>
+				{renderUpcomingReservations()?.reverse()}
+			</Box>
+			<Box className="staysCard">
+				<Label variant={'customTwentyOne'} marginBottom={40} className={'pastStays'}>
+					Past Stays
+				</Label>
+				{renderPrevReservations()}
+			</Box>
 		</Page>
 	);
 };

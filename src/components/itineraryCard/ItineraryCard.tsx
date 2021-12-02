@@ -3,6 +3,7 @@ import './ItineraryCard.scss';
 import ItineraryCardResponsive from './itineraryCardResponsive/ItineraryCardResponsive';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import ItineraryCardMobile from './itineraryCardMobile/ItineraryCardMobile';
+import Media = Api.Media;
 
 interface ReservationCardProps {
 	imgPaths: string[];
@@ -10,6 +11,14 @@ interface ReservationCardProps {
 	title: string;
 	address: string;
 	reservationDates: { startDate: string | Date; endDate: string | Date };
+	destinationExperiences: {
+		id: number;
+		title: string;
+		icon: string;
+		description: string;
+		isHighlighted: 0 | 1;
+		media: Media[];
+	}[];
 	propertyType: string;
 	itineraryId: string;
 	maxOccupancy: number;
@@ -43,9 +52,9 @@ const ItineraryCard: React.FC<ReservationCardProps> = (props) => {
 	) : (
 		<ItineraryCardResponsive
 			imgPaths={props.imgPaths}
-			logo={props.logo}
 			title={props.title}
 			address={props.address}
+			destinationExperiences={props.destinationExperiences}
 			reservationDates={props.reservationDates}
 			propertyType={props.propertyType}
 			itineraryId={props.itineraryId}

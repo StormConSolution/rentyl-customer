@@ -78,7 +78,6 @@ const ItineraryCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
 				propertyType={props.propertyType}
 				itineraryId={props.itineraryId}
 				maxOccupancy={props.maxOccupancy}
-				amenities={props.amenities}
 				cancelPermitted={props.cancelPermitted}
 			/>
 		</Box>
