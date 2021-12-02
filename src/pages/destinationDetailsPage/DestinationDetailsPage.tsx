@@ -55,7 +55,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 10;
-	console.log('destinationDetails', destinationDetails);
 
 	useEffect(() => {
 		const filtersFromUrl = WebUtils.parseURLParamsToFilters();
