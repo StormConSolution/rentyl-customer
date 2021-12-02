@@ -4,6 +4,46 @@
 	box-sizing: border-box;
 	background: #f8f8f8 !important;
 	.rs-page-content-wrapper {
+		.policyCard {
+			margin-top: 30px;
+			background: #ffffff 0 0 no-repeat padding-box;
+			box-shadow: 0 0 8px #00000029;
+			border-radius: 20px;
+			padding: 25px;
+		}
+		.bookingCard {
+			background-color: white;
+			border-radius: 20px;
+			margin-bottom: 30px;
+			.rsBookingSummaryCard {
+				border: unset;
+				box-shadow: 0 0 8px #00000029;
+			}
+		}
+
+		@media screen and (min-width: 1439px) {
+			#desktopView {
+				display: flex;
+				flex-wrap: wrap;
+				.reservationDetails {
+					order: 0;
+					width: 65%;
+					margin-right: 60px;
+				}
+				.bookingCard {
+					order: 1;
+					height: fit-content;
+					width: 30%;
+				}
+				.policyCard {
+					order: 2;
+					width: 61%;
+				}
+			}
+		}
+		#checkInContainer {
+			margin-right: 156px;
+		}
 	}
 
 	.contentWrapper {

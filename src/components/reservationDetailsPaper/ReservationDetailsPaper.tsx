@@ -10,6 +10,7 @@ import { DateUtils, ObjectUtils, StringUtils } from '../../utils/utils';
 
 interface ReservationDetailsPaperProps {
 	reservationData: Api.Reservation.Res.Get;
+	id?: string;
 }
 
 const ReservationDetailsPaper: React.FC<ReservationDetailsPaperProps> = (props) => {
@@ -81,7 +82,7 @@ const ReservationDetailsPaper: React.FC<ReservationDetailsPaperProps> = (props) 
 	}
 
 	return (
-		<Paper borderRadius={'20px'} boxShadow className={'rsReservationDetailsPaper'}>
+		<Paper borderRadius={'20px'} boxShadow className={`rsReservationDetailsPaper${props.id ? ` ${props.id}` : ''}`}>
 			<Label variant={'reservationDetailsPaperCustomOne'} mb={40}>
 				Itinerary Details
 			</Label>
