@@ -14,12 +14,13 @@ import CarouselImage from './CarouselImage/CarouselImage';
 export interface TabbedCarouselPopupProps extends PopupProps {
 	tabs?: ImageTabProp[];
 	imageData?: Api.Media[];
-	imageIndex?: number;
+	defaultImageIndex?: number;
 	activeTabName?: string;
 }
 
 const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 	const [activeTabName, setActiveTabName] = useState<string>('');
+	const [imageIndex, setImageIndex] = useState<number>(props.defaultImageIndex || 0);
 
 	useEffect(() => {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
@@ -27,6 +28,11 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 			else setActiveTabName(props.tabs[0].name);
 		}
 	}, [props.activeTabName]);
+
+	useEffect(() => {
+		if (!props.defaultImageIndex) return;
+		setImageIndex(props.defaultImageIndex);
+	}, [props.defaultImageIndex]);
 
 	function renderTabs() {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
@@ -37,6 +43,7 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 						look={'none'}
 						className={'tab' + (activeTabName === item.name ? ' selected' : '')}
 						onClick={() => {
+							setImageIndex(0);
 							setActiveTabName(item.name);
 						}}
 					>
@@ -62,15 +69,14 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 			return <div className={'tabContainer'}>{newTabs}</div>;
 		} else {
 			return (
-				<Button look={'none'} className={'closeButton'}>
-					<Icon
-						iconImg={'icon-close'}
-						size={35}
-						color={'#ffffff'}
-						onClick={() => {
-							popupController.close(LightBoxCarouselPopup);
-						}}
-					/>{' '}
+				<Button
+					look={'none'}
+					className={'closeButton'}
+					onClick={() => {
+						popupController.close(LightBoxCarouselPopup);
+					}}
+				>
+					<Icon iconImg={'icon-close'} size={35} color={'#ffffff'} />{' '}
 				</Button>
 			);
 		}
@@ -80,9 +86,9 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 		if (activeTabName && props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
 			let activeTab: ImageTabProp | undefined = props.tabs.find((item) => item.name === activeTabName);
 			if (!activeTab) return;
-			return <CarouselImage tabData={activeTab} imageIndex={props.imageIndex} />;
+			return <CarouselImage tabData={activeTab} defaultImageIndex={imageIndex} />;
 		} else if (props.imageData) {
-			return <CarouselImage imageData={props.imageData} imageIndex={props.imageIndex} />;
+			return <CarouselImage imageData={props.imageData} defaultImageIndex={imageIndex} />;
 		}
 	}
 

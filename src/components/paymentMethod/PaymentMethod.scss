@@ -1,0 +1,58 @@
+@import '../../themes/themes';
+
+.rsPaymentMethod {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	border: 0.5px solid theme-var($thinGreyLineColor);
+	padding: 34px 34px 43px;
+	box-sizing: border-box;
+	border-radius: 20px;
+
+	& .rsLabel {
+		color: theme-var($primaryTextColor);
+	}
+
+	.sectionTitle {
+		font-size: 20px;
+		font-weight: 700;
+		padding-bottom: 16px;
+	}
+	.creditCardImage {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 0.5px solid theme-var($thinGreyLineColor);
+		width: 115px;
+		height: 64px;
+		box-sizing: border-box;
+		border-radius: 10px;
+	}
+	.paymentInfoWrapper {
+		display: flex;
+		flex-direction: column;
+		padding-left: 22px;
+		font-size: 18px;
+		font-weight: 400;
+
+		.fullName {
+			padding-bottom: 12px;
+		}
+		.cardInfoWrapper {
+			display: flex;
+
+			.lastFourDigits {
+				padding-left: 8px;
+				font-weight: 500;
+			}
+		}
+	}
+
+	.editIcon {
+		position: absolute;
+		top: 18px;
+		right: 26px;
+		cursor: pointer;
+	}
+}
