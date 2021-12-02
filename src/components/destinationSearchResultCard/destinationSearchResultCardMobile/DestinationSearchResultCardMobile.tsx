@@ -31,8 +31,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Label variant={'boldCaption1'} className={'yellowText'}>
 						{StringUtils.addCommasToNumber(props.destinationObj.minAccommodationPoints)}pts
 					</Label>
-					<Label variant={'caption1'}>/</Label>
-					<Label variant={'caption1'}>night</Label>
+					<Label variant={'caption1'}>/night</Label>
 				</Box>
 			);
 		} else {

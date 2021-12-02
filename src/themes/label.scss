@@ -121,6 +121,12 @@ html {
 		font-weight: $semiBold;
 		font-style: italic;
 	}
+	&.italicBoldTwo {
+		font-size: 17px;
+		line-height: 34px;
+		font-weight: $semiBold;
+		font-style: italic;
+	}
 	&.error {
 		font-size: 19px;
 		line-height: 22px;

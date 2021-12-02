@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './AccommodationSearchCardV2.scss';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { useEffect, useState } from 'react';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -12,6 +12,11 @@ import CarouselV2 from '../carouselV2/CarouselV2';
 import Accordion from '@bit/redsky.framework.rs.accordion';
 import RateCodeCard from '../rateCodeCard/RateCodeCard';
 import PointsOrCentsBox from '../pointsOrCentsBox/PointsOrCentsBox';
+import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import LightBoxCarouselPopup, {
+	TabbedCarouselPopupProps
+} from '../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface AccommodationSearchCardV2Props {
 	accommodation: Api.Destination.Res.Accommodation;
@@ -20,6 +25,7 @@ interface AccommodationSearchCardV2Props {
 
 const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const size = useWindowResizeChange();
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [displayLowestPrice, setDisplayLowestPrice] = useState<Misc.Pricing>();
 	const [accommodationPrices, setAccommodationPrices] = useState<Misc.Pricing[]>([]);
@@ -65,13 +71,20 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 		const urls = getImageUrls();
 		return (
 			<CarouselV2
-				path={''}
+				path={() => {}}
 				imgPaths={urls}
-				onAddCompareClick={() => {}}
+				hideCompareButton={true}
 				onGalleryClick={() => {
-					console.log('Show LightboxV2 images...');
+					if (size === 'small') {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							imageData: accommodationDetails?.media
+						});
+					} else {
+						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
+							imageData: accommodationDetails?.media
+						});
+					}
 				}}
-				onRemoveCompareClick={() => {}}
 			/>
 		);
 	}
