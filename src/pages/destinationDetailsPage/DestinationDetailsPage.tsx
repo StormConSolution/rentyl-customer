@@ -10,7 +10,7 @@ import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
-import { StringUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
 import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -30,7 +30,10 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
+import Icon from '@bit/redsky.framework.rs.icon';
+import { Loader, LoaderOptions } from 'google-maps';
 
 interface DestinationDetailsPageProps {}
 
@@ -57,6 +60,55 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		const filtersFromUrl = WebUtils.parseURLParamsToFilters();
 		setReservationFilters(filtersFromUrl);
 	}, []);
+
+	useEffect(() => {
+		(async () => {
+			if (!destinationDetails) return;
+
+			const poiToHide: google.maps.MapTypeStyle[] = [
+				{
+					featureType: 'poi',
+					stylers: [{ visibility: 'off' }]
+				}
+			];
+
+			const loader = new Loader('AIzaSyAU3SZ6DiPSbxHck1AKgG8nRDarltdep7g');
+			const google = await loader.load();
+			let mapElement: HTMLElement | null = document.getElementById('GoogleMap');
+			if (!mapElement) return;
+
+			let destinationLocation = { lat: 28.289728, lng: -81.594499 }; // this needs to be dynamic.
+
+			//Render Map
+			let googleMap = new google.maps.Map(mapElement, {
+				center: destinationLocation,
+				zoom: 16
+			});
+
+			let infoWindowContent = renderInfoWindowContent();
+			//Hide All POI
+			googleMap.setOptions({ styles: poiToHide });
+
+			//Info Window
+			const infoWindow: any = new google.maps.InfoWindow({
+				content: infoWindowContent
+			});
+
+			//Place Marker;
+			const marker = new google.maps.Marker({
+				position: destinationLocation,
+				map: googleMap,
+				title: destinationDetails.name
+			});
+
+			marker.addListener('click', () => {
+				infoWindow.open({
+					anchor: marker,
+					googleMap
+				});
+			});
+		})();
+	}, [destinationDetails]);
 
 	useEffect(() => {
 		if (!reservationFilters.destinationId) return;
@@ -111,27 +163,21 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		getAvailableStays().catch(console.error);
 	}, [reservationFilters, page]);
 
-	/**
-	 * ############
-	 * ALL COMMENTED OUT CODE WILL STAY FOR NOW ON THIS PAGE
-	 * ############
-	 */
-
-	// function renderFeatures() {
-	// 	if (!destinationDetails || !destinationDetails.experiences) return;
-	// 	let featureArray: any = [];
-	// 	destinationDetails.experiences.forEach((item) => {
-	// 		let primaryMedia: any = '';
-	// 		for (let value of item.media) {
-	// 			if (!value.isPrimary) continue;
-	// 			primaryMedia = value.urls.imageKit;
-	// 			break;
-	// 		}
-	// 		if (primaryMedia === '') return false;
-	// 		featureArray.push(<LabelImage key={item.id} mainImg={primaryMedia} textOnImg={item.title} />);
-	// 	});
-	// 	return featureArray;
-	// }
+	function renderInfoWindowContent() {
+		if (!destinationDetails) return;
+		return `
+				<h3 style="color: #333333; margin-bottom: 10px">${destinationDetails.name}</h3>
+				<div>
+				${destinationDetails.address1} ${destinationDetails.address2 || ''}
+				<br />
+				${destinationDetails.city}, ${destinationDetails.state} ${destinationDetails.zip}
+				</div>
+				<div class="view-link">
+					<a style='color: #427fed; text-decoration: none'
+					 href="${renderMapSource()}" target="_blank">View on Google Maps</a>
+				</div>
+				`;
+	}
 
 	function renderFeatureCarousel() {
 		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.experiences)) return;
@@ -158,7 +204,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		if (!destinationDetails) return;
 		let address = `${destinationDetails.address1} ${destinationDetails.city} ${destinationDetails.state} ${destinationDetails.zip}`;
 		address = address.replace(/ /g, '+');
-		return `https://www.google.com/maps/embed/v1/place?q=${address}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`;
+		return encodeURI(`https://www.google.com/maps/dir/?api=1&destination=${address}`);
 	}
 
 	function renderAccommodations() {
@@ -185,7 +231,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							children: 0,
 							arrivalDate: reservationFilters.startDate.toString(),
 							departureDate: reservationFilters.endDate.toString(),
-							packages: []
+							packages: [],
+							rateCode: ''
 						};
 						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
 						if (!user) {
@@ -230,56 +277,11 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		});
 	}
 
-	// function renderSectionTwo() {
-	// 	return (
-	// 		<Box className={'sectionTwo'} marginBottom={'120px'}>
-	// 			<Label variant={'h1'}>Features</Label>
-	// 			<Box display={'flex'} justifyContent={'center'} width={'100%'} flexWrap={'wrap'}>
-	// 				{size === 'small' ? <Carousel children={renderFeatures()} /> : renderFeatures()}
-	// 			</Box>
-	// 		</Box>
-	// 	);
-	// }
-
 	function renderExperiencesSection() {
 		if (!destinationDetails?.experiences) return null;
 		if (!ObjectUtils.isArrayWithData(destinationDetails.experiences) || destinationDetails.experiences.length < 6)
 			return <></>;
 		return <DestinationExperienceImageGallery experiences={destinationDetails.experiences} />;
-	}
-
-	function renderSectionFour() {
-		if (!destinationDetails) return null;
-		const addressData = {
-			address1: destinationDetails.address1,
-			address2: destinationDetails.address2,
-			city: destinationDetails.city,
-			state: destinationDetails.state,
-			zip: destinationDetails.zip
-		};
-		return (
-			<Box
-				className={'sectionFour'}
-				marginBottom={'124px'}
-				display={'flex'}
-				justifyContent={'center'}
-				alignItems={'center'}
-				flexWrap={'wrap'}
-			>
-				<Box width={size === 'small' ? '300px' : '420px'} marginRight={size === 'small' ? '0px' : '100px'}>
-					<Label variant={'h1'}>Location</Label>
-					{destinationDetails.locationDescription ? (
-						<Label variant={'body2'}>{destinationDetails.locationDescription}</Label>
-					) : (
-						<div></div>
-					)}
-					<Label variant={'caption'}>{StringUtils.buildAddressString(addressData)}</Label>
-				</Box>
-				<Box width={size === 'small' ? '300px' : '570px'} height={size === 'small' ? '300px' : '450px'}>
-					<iframe frameBorder="0" src={renderMapSource()} />
-				</Box>
-			</Box>
-		);
 	}
 
 	function getImageUrls(destination: Api.Destination.Res.Details): string[] {
@@ -338,7 +340,63 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						/>
 					)}
 				</Box>
-				<Box boxRef={overviewRef} className={'overviewSection'}></Box>
+				<Box boxRef={overviewRef} className={'overviewSection'}>
+					<Box className={'titleAndPriceContainer'}>
+						<Box className={'logoNameContainer'}>
+							<img
+								className="destinationLogo"
+								src={destinationDetails.logoUrl}
+								alt={destinationDetails.name + ' logo'}
+							/>
+							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
+						</Box>
+						<Box className={'destinationPricingContainer'}>
+							<Label variant={'destinationDetailsCustomFour'}>from</Label>
+							<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+								$300
+							</Label>
+							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+						</Box>
+					</Box>
+					<Box className={'destinationDetailsWrapper'}>
+						<Box className={'minMaxDescription'}>
+							<Box className={'minMaxContainer'}>
+								<MinMaxDestinationDetailsBar
+									minBed={destinationDetails.minBedroom}
+									maxBed={destinationDetails.maxBedroom}
+									minBath={destinationDetails.minBathroom}
+									maxBath={destinationDetails.maxBathroom}
+									minArea={0}
+									maxArea={0}
+								/>
+								<Box className={'cityStateContainer'}>
+									<Icon
+										className={'locationIcon'}
+										iconImg={'icon-location'}
+										size={25}
+										color={'#FF6469'}
+									/>
+									<Label variant={'destinationDetailsCustomTwo'}>
+										{destinationDetails.city},{' '}
+										{destinationDetails.state === ''
+											? destinationDetails.zip
+											: destinationDetails.state}
+									</Label>
+								</Box>
+							</Box>
+							{destinationDetails.description ? (
+								<Label variant={'body2'}>{destinationDetails.description}</Label>
+							) : (
+								<div />
+							)}
+						</Box>
+						<Box
+							width={size === 'small' ? '300px' : '766px'}
+							height={size === 'small' ? '300px' : '430px'}
+							id={'GoogleMap'}
+						></Box>
+					</Box>
+				</Box>
 				<hr />
 				<Box boxRef={experiencesRef} className={'experienceSection'} mb={63}>
 					<Label
@@ -357,7 +415,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						</Label>
 					</div>
 				) : (
-					<div className={'sectionFive'} ref={availableStaysRef}>
+					<div className={'availableStays'} ref={availableStaysRef}>
 						<hr />
 						<Label variant={'h1'} className={'chooseYourAccommodation'}>
 							Choose your accommodation

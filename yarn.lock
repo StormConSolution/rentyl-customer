@@ -1621,6 +1621,23 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/google-maps@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@types/google-maps/-/google-maps-3.2.3.tgz#ea99526e40d3b58a2c07f0b3d5f3b8e0750119c3"
+  integrity sha512-+GR/7sMvo2bENS26H4t2QqoCqE4FE5qhsG8aaDM9mJAlsorkLyaFdTQra8VkmS1RNE09fx9c1kac+GKG0RtA2A==
+  dependencies:
+    "@types/google.maps" "*"
+
+"@types/google.maps@*":
+  version "3.47.0"
+  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.47.0.tgz#0e5d11339fbef30becbb4e9016be94c4aad6fbab"
+  integrity sha512-/Auj3324mp/E/T5QXAQnXcxtSUgsC1AH//Zt3COYqcwNCmVZNSwytl15jzyjxLcYA0ZDBE1ZBWTawEJPxZqR/w==
+
+"@types/googlemaps@^3.39.1":
+  version "3.43.3"
+  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.43.3.tgz#70cf962154a160fe78bcd69d6ccc296dd9175b1f"
+  integrity sha512-ZWNoz/O8MPEpiajvj7QiqCY8tTLFNqNZ/a+s+zTV58wFVNAvvqV4bdGfnsjTb5Cs4V6wEsLrX8XRhmnyYJ2Tdg==
+
 "@types/html-minifier-terser@^5.0.0":
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/@types/html-minifier-terser/-/html-minifier-terser-5.1.1.tgz#3c9ee980f1a10d6021ae6632ca3e79ca2ec4fb50"
@@ -5194,6 +5211,13 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
+google-maps@^4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/google-maps/-/google-maps-4.3.3.tgz#b8026723534e04713303f80853c32a1f1f6ed3cd"
+  integrity sha512-MQbEgBNQbGyV7mfS2tlFgW4EoGKLia24BvAl4a+kgsYWt4283kyPpaay/yKIsScQLr7nSUONaLNfOdMsCuJDEw==
+  dependencies:
+    "@types/googlemaps" "^3.39.1"
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
@@ -8118,6 +8142,13 @@ react-test-renderer@^16.0.0-0, react-test-renderer@^16.13.1:
     prop-types "^15.6.2"
     react-is "^16.8.6"
     scheduler "^0.19.1"
+
+react-to-print@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.14.1.tgz#b6c74e9ed37520092a0863386ceb9b5525065941"
+  integrity sha512-2PWKhONAYHpWELAiclcGbyN3xG0Li37hnMVdNtSwGyOT3O6BpB+GiqaT4pqnvuDTPFTZdfjL4fmvY6HxcdQ6sw==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-toastify@^7.0.4:
   version "7.0.4"

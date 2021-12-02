@@ -75,7 +75,7 @@ declare namespace Misc {
 		arrivalDate: string;
 		departureDate: string;
 		packages: number[];
-		rateCode?: string;
+		rateCode: string;
 	}
 
 	export interface DateRange {

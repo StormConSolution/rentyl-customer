@@ -56,9 +56,9 @@ const BookingFlowCheckoutPage = () => {
 	>();
 	const [grandTotal, setGrandTotal] = useState<number>(0);
 
-	const [verifiedAccommodations, setVerifiedAccommodations] = useRecoilState<{
-		[uuid: number]: Api.Reservation.Res.Verification;
-	}>(globalState.verifiedAccommodations);
+	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
+		Api.Reservation.Res.Verification | undefined
+	>(globalState.verifiedAccommodation);
 
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [guestInfo, setGuestInfo] = useState<Api.Reservation.Guest>({
@@ -78,7 +78,7 @@ const BookingFlowCheckoutPage = () => {
 	const [_, setRefreshPage] = useState<number>(0);
 
 	useEffect(() => {
-		setVerifiedAccommodations([]);
+		setVerifiedAccommodation(undefined);
 	}, []);
 
 	useEffect(() => {
@@ -100,24 +100,26 @@ const BookingFlowCheckoutPage = () => {
 	}, []);
 
 	useEffect(() => {
-		let value = Object.values(verifiedAccommodations).reduce((total, accommodation) => {
+		if (!verifiedAccommodation) return;
+		let value = Object.values(verifiedAccommodation).reduce((total, accommodation) => {
 			if (usePoints) return total + accommodation.prices.grandTotalPoints;
 			return total + accommodation.prices.grandTotalCents;
 		}, 0);
 		setGrandTotal(value);
-		if (Object.keys(verifiedAccommodations).length === stayParams.length) {
+		if (Object.keys(verifiedAccommodation).length === stayParams.length) {
 			setAccommodationsVerified(true);
 		} else {
 			setAccommodationsVerified(false);
 		}
-	}, [verifiedAccommodations, usePoints]);
+	}, [verifiedAccommodation, usePoints]);
 
 	useEffect(() => {
+		if (!verifiedAccommodation) return;
 		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
 				let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
-				Object.values(verifiedAccommodations).forEach((verification) => {
+				Object.values(verifiedAccommodation).forEach((verification) => {
 					let accommodation = {
 						accommodationId: verification.accommodationId,
 						numberOfAccommodations: 1,
@@ -192,9 +194,7 @@ const BookingFlowCheckoutPage = () => {
 			return;
 		}
 
-		let updatedVerifiedAccommodation = { ...verifiedAccommodations };
-		delete updatedVerifiedAccommodation[uuid];
-		setVerifiedAccommodations(updatedVerifiedAccommodation);
+		setVerifiedAccommodation(undefined);
 
 		let bookingParams: Misc.BookingParams = {
 			destinationId,
@@ -251,6 +251,7 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	async function completeBooking() {
+		if (!verifiedAccommodation) return;
 		popupController.open(SpinningLoaderPopup);
 		if (!existingCardId && creditCardForm && !usePoints) {
 			let paymentObj = {
@@ -267,7 +268,7 @@ const BookingFlowCheckoutPage = () => {
 				}
 			}
 			let stays: Api.Reservation.Req.Itinerary.Stay[] = [];
-			Object.values(verifiedAccommodations).forEach((verification) => {
+			Object.values(verifiedAccommodation).forEach((verification) => {
 				let accommodation: Api.Reservation.Req.Itinerary.Stay = {
 					accommodationId: verification.accommodationId,
 					numberOfAccommodations: 1,
@@ -330,6 +331,7 @@ const BookingFlowCheckoutPage = () => {
 	}
 
 	function renderAccommodationCards() {
+		if (!verifiedAccommodation) return;
 		return (
 			stayParams &&
 			stayParams.map((accommodation) => {
@@ -385,7 +387,7 @@ const BookingFlowCheckoutPage = () => {
 								rateCode: accommodation.rateCode,
 								startDate: accommodation.arrivalDate,
 								endDate: accommodation.departureDate,
-								maxOccupancy: verifiedAccommodations[accommodation.uuid].maxOccupantCount,
+								maxOccupancy: verifiedAccommodation.maxOccupantCount,
 								onApplyChanges(
 									uuid: number,
 									adults: number,

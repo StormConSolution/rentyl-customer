@@ -16,7 +16,7 @@ interface CarouselV2Props {
 	imgPaths: string[];
 	onAddCompareClick?: () => void;
 	onRemoveCompareClick?: () => void;
-	onGalleryClick: () => void;
+	onGalleryClick?: () => void;
 	destinationId?: number;
 	hideCompareButton?: boolean;
 }
@@ -93,7 +93,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 			>
 				<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
 			</Button>
-			{(comparisonState.showCompareButton || size !== 'small') && !props.hideCompareButton && (
+			{comparisonState.showCompareButton && !props.hideCompareButton && (
 				<Button
 					className={'addToCompareButton'}
 					look={'none'}
@@ -107,9 +107,9 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 								.map((details) => details.destinationId)
 								.includes(props.destinationId)
 						) {
-							if (props.onRemoveCompareClick) props.onRemoveCompareClick();
-						} else {
 							if (props.onAddCompareClick) props.onAddCompareClick();
+						} else {
+							if (props.onRemoveCompareClick) props.onRemoveCompareClick();
 						}
 					}}
 				>
@@ -145,7 +145,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 				className={'imageCountContainer'}
 				onClick={(event) => {
 					event.stopPropagation();
-					props.onGalleryClick();
+					if (props.onGalleryClick) props.onGalleryClick();
 				}}
 			>
 				<Icon iconImg={'icon-gallery'} color={'#ffffff'} size={18} />

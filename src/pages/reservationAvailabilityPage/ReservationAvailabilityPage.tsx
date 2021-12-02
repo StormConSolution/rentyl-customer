@@ -170,6 +170,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							accommodationId: accommodationId,
 							arrivalDate: data.startDate,
 							departureDate: data.endDate,
+							rateCode: data.rateCode,
 							packages: []
 						};
 						data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });
