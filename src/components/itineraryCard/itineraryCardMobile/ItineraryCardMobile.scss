@@ -1,18 +1,23 @@
 @import '../../../themes/themes';
 
 .rsItineraryCardMobile {
-	width: 345px;
-	.rsCarousel {
-		margin: 0 auto 16px;
-		height: 290px;
-		width: 345px;
-		min-width: 345px;
+	width: 310px;
+	margin-bottom: 45px;
+	display: flex;
+	flex-direction: column;
+	.titleAndButton {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.rsCarouselV2 {
 		.carouselParent {
 			overflow-x: hidden;
 		}
 		.imageWrapper {
-			width: 345px;
-			height: 290px;
+			width: 262px;
+			height: 230px;
 			img {
 				width: 100%;
 				height: 100%;
@@ -20,8 +25,14 @@
 			}
 		}
 	}
+	.bottomRow {
+		display: flex;
+		justify-content: space-between;
+	}
+}
 
-	.logoImg {
-		max-width: 100px;
+.small {
+	.rsCarouselV2 {
+		width: 310px;
 	}
 }
