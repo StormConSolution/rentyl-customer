@@ -19,6 +19,7 @@ export interface MobileLightBoxProps extends PopupProps {
 	imageData?: Api.Media[];
 	featureData?: ImageTabProp[];
 	activeTabName?: string;
+	customOnBack?: () => void;
 }
 
 const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
@@ -242,7 +243,8 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 						iconPosition={'left'}
 						iconSize={12}
 						onClick={() => {
-							popupController.close(MobileLightBox);
+							if (props.customOnBack) props.customOnBack();
+							else popupController.close(MobileLightBox);
 						}}
 					/>
 				</div>

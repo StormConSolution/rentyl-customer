@@ -27,32 +27,27 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 	}
 
 	function handleFloorPlanExpand() {
-		// let images: { title: string; description: string; imagePath: string }[] = [];
-		// props.accommodationDetails?.layout.forEach((value) => {
-		// 	images.push({
-		// 		title: value.media.title,
-		// 		description: value.media.description,
-		// 		imagePath: value.media.urls.imagekit
-		// 	});
-		// });
-
-		let images: Api.Media[] = [];
 		let featureData: ImageTabProp[] = [];
 		props.accommodationDetails?.layout.forEach((value) => {
-			images.push(value.media);
 			featureData.push({
 				name: value.title,
 				title: value.media.title,
 				imagePath: value.media.urls.small,
 				description: value.media.description,
 				buttonLabel: value.media.title,
-				otherMedia: []
+				otherMedia: [value.media]
 			});
 		});
 
+		popupController.close(MobileAccommodationOverviewPopup);
 		popupController.open<MobileLightBoxProps>(MobileLightBox, {
-			imageData: images,
-			featureData: featureData
+			featureData: featureData,
+			customOnBack: () => {
+				popupController.close(MobileLightBox);
+				popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
+					accommodationDetails: props.accommodationDetails
+				});
+			}
 		});
 	}
 
@@ -99,7 +94,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 					/>
 				</div>
 
-				<Box padding={16}>
+				<div className={'popupContent'}>
 					<CarouselV2
 						path={() => {}}
 						imgPaths={getAccommodationImages()}
@@ -144,10 +139,12 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 							<Label variant={'customFifteen'} margin={'20px auto'}>
 								Floor Plan
 							</Label>
-							<img
-								className={'floorPlanImg'}
-								src={props.accommodationDetails?.layout[0].media.urls.small}
-							/>
+							<Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+								<img
+									className={'floorPlanImg'}
+									src={props.accommodationDetails?.layout[0].media.urls.small}
+								/>
+							</Box>
 
 							<div className={'expandFloorPlanDiv'} onClick={handleFloorPlanExpand}>
 								<Label>Expand floor plans</Label>
@@ -157,7 +154,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 					) : (
 						<></>
 					)}
-				</Box>
+				</div>
 			</Paper>
 		</Popup>
 	);
