@@ -11,17 +11,20 @@ import { ObjectUtils } from '../../../utils/utils';
 interface TabbedImageCarouselImageProps {
 	tabData?: ImageTabProp;
 	imageData?: Api.Media[];
-	imageIndex?: number;
+	defaultImageIndex?: number;
 }
 
 const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
-	const [imageIndex, setImageIndex] = useState<number>(props.imageIndex || 0);
+	const [imageIndex, setImageIndex] = useState<number>(props.defaultImageIndex || 0);
 	const media = renderMedia();
-	const maxImageCount = media.length - 1; //So it matches the index count for the images.
+	const largestImageIndex = media.length - 1; //So it matches the index count for the images.
 
 	useEffect(() => {
-		if (props.imageIndex) setImageIndex(props.imageIndex);
-	}, [props.imageIndex]);
+		const media = renderMedia();
+		if (imageIndex >= media.length) {
+			setImageIndex(0);
+		}
+	}, [props.tabData, props.imageData]);
 
 	function renderMedia() {
 		if (props.tabData) {
@@ -42,7 +45,9 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 		}
 		return styles;
 	}
-	return (
+	return imageIndex > largestImageIndex || media.length === 0 ? (
+		<div />
+	) : (
 		<div className={'rsCarouselImage'} style={renderStyles()}>
 			<Paper boxShadow borderRadius={'5px'}>
 				<Label variant={'tabbedImageCarouselCustomOne'} mb={12}>
@@ -54,7 +59,7 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 					top={'-75px'}
 					right={'0'}
 					onClickRight={() => {
-						if (imageIndex === maxImageCount) {
+						if (imageIndex === largestImageIndex) {
 							setImageIndex(0);
 							return;
 						}
@@ -62,7 +67,7 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 					}}
 					onClickLeft={() => {
 						if (imageIndex === 0) {
-							setImageIndex(maxImageCount);
+							setImageIndex(largestImageIndex);
 							return;
 						}
 						setImageIndex(imageIndex - 1);
