@@ -1,0 +1,9 @@
+@import 'src/themes/themes';
+
+.rsRateCodeCard {
+	padding: 28px 0;
+	display: flex;
+	justify-content: space-between;
+	height: fit-content;
+	border-bottom: solid 1px theme-var($greyLineColor);
+}

@@ -54,10 +54,11 @@ const TabbedDestinationSummary: React.FC<TabbedDestinationSummaryProps> = (props
 	function renderAccommodationList(listProps: DestinationSummaryAccommodationListProps): JSX.Element {
 		return (
 			<DestinationSummaryAccommodationList
+				destinationName={listProps.destinationName}
+				destinationId={listProps.destinationId}
 				accommodationType={listProps.accommodationType}
 				accommodations={listProps.accommodations}
 				onAddCompareClick={listProps.onAddCompareClick}
-				onBookNowClick={listProps.onBookNowClick}
 				onDetailsClick={listProps.onDetailsClick}
 			/>
 		);

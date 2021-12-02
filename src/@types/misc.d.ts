@@ -123,4 +123,14 @@ declare namespace Misc {
 		destinationId?: number;
 		accommodationId?: number;
 	}
+
+	export interface Pricing {
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rateCode: string;
+		minStay: number;
+		title: string;
+		description: string;
+	}
 }

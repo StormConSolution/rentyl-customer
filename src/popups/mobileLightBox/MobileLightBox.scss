@@ -85,4 +85,14 @@
 		bottom: 14px;
 		right: 14px;
 	}
+
+	&.floorPlan {
+		.imageContainer {
+			justify-content: center;
+			img {
+				max-height: 300px;
+				width: auto;
+			}
+		}
+	}
 }
