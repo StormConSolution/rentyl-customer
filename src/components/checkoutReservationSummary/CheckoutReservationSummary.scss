@@ -1,0 +1,47 @@
+@import 'src/themes/themes';
+
+.rsCheckoutReservationSummary {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	box-sizing: border-box;
+
+	.titleBorderWrapper {
+		display: flex;
+		align-items: flex-end;
+		margin-bottom: 42px;
+
+		.sectionTitleWrapper {
+			display: flex;
+
+			.sectionTitle {
+				display: flex;
+				padding-bottom: 14px;
+				font-size: 35px;
+				font-weight: 600;
+				border-bottom: 4px solid theme-var($secondaryButtonLinkColor);
+				min-width: 300px;
+
+				& .rsLabel {
+					color: theme-var($primaryTextColor);
+				}
+			}
+		}
+
+		.yellowDivider {
+			height: 4px;
+			min-height: 4px;
+			max-height: 4px;
+			background-color: theme-var($secondaryButtonLinkColor);
+		}
+
+		.divider {
+			height: 1px;
+			min-height: 1px;
+			max-height: 1px;
+			width: 100%;
+			background-color: theme-var($thinGreyLineColor);
+			margin-bottom: 1px;
+		}
+	}
+}
