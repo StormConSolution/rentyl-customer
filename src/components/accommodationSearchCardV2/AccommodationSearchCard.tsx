@@ -4,7 +4,7 @@ import AccommodationSearchCardMobile from './accommodationSearchCardMobile/Accom
 import AccommodationSearchCardResponsive from './accommodationSearchCardResponsive/AccommodationSearchCardResponsive';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
-interface AccommodationSearchResultCardProps {
+interface AccommodationSearchCardProps {
 	accommodation: Api.Destination.Res.Accommodation;
 	destinationId: number;
 	openAccordion?: boolean;
@@ -12,17 +12,17 @@ interface AccommodationSearchResultCardProps {
 	onClickInfoIcon?: () => void;
 }
 
-const AccommodationSearchCard: React.FC<AccommodationSearchResultCardProps> = (props) => {
+const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) => {
 	const size = useWindowResizeChange();
 
 	return (
-		<Box className={'rsAccommodationSearchResultCard'}>
+		<Box className={'rsAccommodationSearchCard'}>
 			{size === 'small' ? (
 				<AccommodationSearchCardMobile
 					accommodation={props.accommodation}
 					destinationId={props.destinationId}
 					openAccordion={props.openAccordion}
-					showInfoIcon={true}
+					showInfoIcon={props.showInfoIcon}
 					onClickInfoIcon={props.onClickInfoIcon}
 				/>
 			) : (

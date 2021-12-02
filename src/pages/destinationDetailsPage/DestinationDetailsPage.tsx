@@ -2,7 +2,6 @@ import * as React from 'react';
 import './DestinationDetailsPage.scss';
 import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import { useEffect, useRef, useState } from 'react';
-import router from '../../utils/router';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import LoadingPage from '../loadingPage/LoadingPage';
@@ -12,12 +11,8 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { WebUtils } from '../../utils/utils';
 import FilterBar from '../../components/filterBar/FilterBar';
-import AccommodationSearchResultCard from '../../components/accommodationSearchResultCard/AccommodationSearchResultCard';
 import AccommodationService from '../../services/accommodation/accommodation.service';
-import LoginOrCreateAccountPopup, {
-	LoginOrCreateAccountPopupProps
-} from '../../popups/loginOrCreateAccountPopup/LoginOrCreateAccountPopup';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
@@ -33,7 +28,8 @@ import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox
 import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
 import Icon from '@bit/redsky.framework.rs.icon';
-import { Loader, LoaderOptions } from 'google-maps';
+import { Loader } from 'google-maps';
+import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
 
 interface DestinationDetailsPageProps {}
 
@@ -49,9 +45,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const size = useWindowResizeChange();
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
+	const [destinationAvailability, setDestinationAvailability] = useState<Api.Destination.Res.Availability>();
 	const [totalResults, setTotalResults] = useState<number>(0);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 10;
@@ -125,6 +121,33 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		}
 		getDestinationDetails(reservationFilters.destinationId).catch(console.error);
 	}, [reservationFilters.destinationId]);
+
+	useEffect(() => {
+		async function getReservations() {
+			try {
+				popupController.open(SpinningLoaderPopup);
+				const searchQueryObj: Misc.ReservationFilters = { ...reservationFilters };
+				let key: keyof Misc.ReservationFilters;
+				for (key in searchQueryObj) {
+					if (searchQueryObj[key] === undefined) delete searchQueryObj[key];
+				}
+				searchQueryObj.pagination = { page, perPage };
+				let res = await destinationService.searchAvailableReservations(searchQueryObj);
+				setDestinationAvailability(
+					res.data.find(
+						(destination: Api.Destination.Res.Availability) =>
+							destination.id === reservationFilters.destinationId
+					)
+				);
+				popupController.close(SpinningLoaderPopup);
+			} catch (e) {
+				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
+				popupController.close(SpinningLoaderPopup);
+			}
+		}
+
+		getReservations().catch(console.error);
+	}, [reservationFilters]);
 
 	useEffect(() => {
 		async function getAvailableStays() {
@@ -208,72 +231,22 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}
 
 	function renderAccommodations() {
-		if (!ObjectUtils.isArrayWithData(availabilityStayList)) return;
-		return availabilityStayList.map((item) => {
-			return (
-				<AccommodationSearchResultCard
-					key={item.id}
-					id={item.id}
-					name={item.name}
-					accommodationType="Suite"
-					description={item.longDescription}
-					pointsRatePerNight={item.pointsPerNight}
-					pointsEarnable={item.pointsEarned}
-					ratePerNightInCents={item.costPerNightCents}
-					squareFeet={item.size ? item.size.max : null}
-					maxSleeps={item.maxSleeps}
-					onBookNowClick={() => {
-						if (!destinationDetails) return;
-						const newRoom: Misc.StayParams = {
-							uuid: Date.now(),
-							accommodationId: item.id,
-							adults: reservationFilters.adultCount,
-							children: 0,
-							arrivalDate: reservationFilters.startDate.toString(),
-							departureDate: reservationFilters.endDate.toString(),
-							packages: [],
-							rateCode: ''
-						};
-						const data = JSON.stringify({ destinationId: destinationDetails.id, newRoom });
-						if (!user) {
-							popupController.open<LoginOrCreateAccountPopupProps>(LoginOrCreateAccountPopup, {
-								query: data
-							});
-						} else {
-							router.navigate(`/booking/packages?data=${data}`).catch(console.error);
-						}
-					}}
-					onViewDetailsClick={() => {
-						const dates =
-							!!reservationFilters.startDate && !!reservationFilters.endDate
-								? `&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
-								: '';
-						router.navigate(`/accommodation/details?ai=${item.id}${dates}`).catch(console.error);
-					}}
-					roomStats={[
-						{
-							label: 'Sleeps',
-							datum: item.maxSleeps
-						},
-						{
-							label: 'Max Occupancy',
-							datum: item.maxOccupantCount
-						},
-						{
-							label: 'Accessible',
-							datum: item.adaCompliant ? 'Yes' : 'No'
-						},
-						{
-							label: 'Extra Bed',
-							datum: item.extraBeds ? 'Yes' : 'No'
-						}
-					]}
-					amenityIconNames={item.amenities.map((amenity) => {
-						return amenity.icon;
-					})}
-					carouselImagePaths={item.media}
-				/>
+		if (!ObjectUtils.isArrayWithData(availabilityStayList) && destinationAvailability) return;
+		return availabilityStayList.map((accommodationAvailability) => {
+			const destinationAccommodation:
+				| Api.Destination.Res.Accommodation
+				| undefined = destinationAvailability?.accommodations.find(
+				(accommodation) => accommodation.id === accommodationAvailability.id
 			);
+			if (reservationFilters.destinationId && destinationAccommodation) {
+				return (
+					<AccommodationSearchCard
+						key={accommodationAvailability.id}
+						accommodation={destinationAccommodation}
+						destinationId={reservationFilters.destinationId}
+					/>
+				);
+			}
 		});
 	}
 

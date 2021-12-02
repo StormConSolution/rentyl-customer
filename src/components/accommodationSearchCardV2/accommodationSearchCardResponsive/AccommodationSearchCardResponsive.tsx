@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './AccommodationSearchCardResponsive.scss';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { useEffect, useState } from 'react';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -10,8 +10,13 @@ import AccommodationService from '../../../services/accommodation/accommodation.
 import LoadingPage from '../../../pages/loadingPage/LoadingPage';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import PointsOrCentsBox from '../../pointsOrCentsBox/PointsOrCentsBox';
 import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
+import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
+import LightBoxCarouselPopup, {
+	TabbedCarouselPopupProps
+} from '../../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
+import PointsOrCentsBox from '../../pointsOrCentsBox/PointsOrCentsBox';
 import RateCodeCard from '../../rateCodeCard/RateCodeCard';
 
 interface AccommodationSearchCardResponsiveProps {
@@ -24,6 +29,7 @@ interface AccommodationSearchCardResponsiveProps {
 
 const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardResponsiveProps> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const size = useWindowResizeChange();
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [displayLowestPrice, setDisplayLowestPrice] = useState<Misc.Pricing>();
 	const [accommodationPrices, setAccommodationPrices] = useState<Misc.Pricing[]>([]);
@@ -69,13 +75,20 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 		const urls = getImageUrls();
 		return (
 			<CarouselV2
-				path={''}
+				path={() => {}}
 				imgPaths={urls}
-				onAddCompareClick={() => {}}
+				hideCompareButton={true}
 				onGalleryClick={() => {
-					console.log('Show LightboxV2 images...');
+					if (size === 'small') {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							imageData: accommodationDetails?.media
+						});
+					} else {
+						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
+							imageData: accommodationDetails?.media
+						});
+					}
 				}}
-				onRemoveCompareClick={() => {}}
 			/>
 		);
 	}
@@ -109,7 +122,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 							)}
 							{props.accommodation.maxSquareFt && props.accommodation.minSquareFt && (
 								<Label variant={'customThree'} paddingLeft={5}>
-									{props.accommodation.minSquareFt} to {props.accommodation.maxSquareFt} ft
+									{props.accommodation.minSquareFt} to {props.accommodation.maxSquareFt} ft&sup2;
 								</Label>
 							)}
 						</Box>

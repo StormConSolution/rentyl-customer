@@ -42,8 +42,6 @@
 				}
 			}
 		}
-	}
-	.accommodationContainer {
 		.pointsContainer {
 			display: flex;
 			flex-direction: column;
@@ -56,7 +54,11 @@
 			align-items: flex-end;
 			justify-content: flex-end;
 		}
+		.accordionContainer {
+			width: 100%;
+		}
 		.rsAccordion {
+			width: 100%;
 			color: #2c3c60;
 			font-family: Montserrat;
 			font-weight: $bold;

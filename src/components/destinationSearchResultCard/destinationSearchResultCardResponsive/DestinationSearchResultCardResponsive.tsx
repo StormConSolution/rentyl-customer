@@ -18,6 +18,8 @@ interface DestinationSearchResultCardResponsiveProps {
 	onAddCompareClick?: () => void;
 	onGalleryClick: () => void;
 	onRemoveCompareClick?: () => void;
+	pointsEarnable: number;
+	availabilityStayList: Api.Accommodation.Res.Availability[];
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
@@ -42,6 +44,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						{StringUtils.addCommasToNumber(props.destinationObj.minAccommodationPoints)}
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
+					<Label variant={'italicBoldTwo'} className={'yellowText'}>
+						You could earn {props.pointsEarnable} points for this stay
+					</Label>
 				</Box>
 			);
 		} else {
@@ -53,6 +58,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'h2'}>${StringUtils.formatMoney(props.destinationObj.minAccommodationPrice)}</Label>
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
+					<Label variant={'italicBoldTwo'} className={'yellowText'}>
+						You could earn {props.pointsEarnable} points for this stay
+					</Label>
 				</Box>
 			);
 		}
@@ -105,24 +113,6 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 		});
 	}
 
-	function renderBedrooms() {
-		let accommodationBedrooms = props.destinationObj.accommodations;
-		accommodationBedrooms.sort(function (a, b) {
-			return a.bedroomCount - b.bedroomCount;
-		});
-		const minBedCount = accommodationBedrooms.shift();
-		const maxBedCount = accommodationBedrooms.pop();
-		if (minBedCount && maxBedCount) {
-			return (
-				<Label variant={'subtitle1'} paddingRight={'74px'}>
-					{minBedCount.bedroomCount} - {maxBedCount.bedroomCount} Bedrooms
-				</Label>
-			);
-		} else {
-			return '';
-		}
-	}
-
 	return (
 		<Box className={`rsDestinationSearchResultCardResponsive ${props.className || ''}`}>
 			<Box display={'flex'}>
@@ -156,7 +146,9 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						{props.destinationObj.name}
 					</Label>
 					<Box display={'flex'} paddingBottom={'16px'}>
-						{renderBedrooms()}
+						<Label variant={'subtitle1'} paddingRight={'74px'}>
+							{props.destinationObj.minBedroom} - {props.destinationObj.maxBedroom} Bedrooms
+						</Label>
 						<Label variant={'subtitle1'}>
 							{StringUtils.buildAddressString({
 								city: props.destinationObj.city,

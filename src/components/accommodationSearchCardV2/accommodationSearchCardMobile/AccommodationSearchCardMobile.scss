@@ -2,10 +2,11 @@
 
 .rsAccommodationSearchCardMobile {
 	width: 100%;
+	height: fit-content;
 	min-width: 328px;
-	padding: 20px;
 	.accommodationDetailsContainer {
 		width: 100%;
+		max-width: 314px;
 		padding: 10px 0 24px 0;
 		border-bottom: 1px solid theme-var($greyLineColor);
 		.accommodationTitle {
@@ -37,6 +38,20 @@
 		.buttonContainer {
 			display: flex;
 			justify-content: flex-end;
+		}
+	}
+	.accordionContainer {
+		width: 100%;
+	}
+}
+.App {
+	.rsDestinationDetailsPage {
+		.rsAccommodationSearchCardMobile {
+			.rsAccordion {
+				width: 100%;
+				border-bottom: 2px solid theme-var($greyLineColor);
+				margin-bottom: 24px;
+			}
 		}
 	}
 }

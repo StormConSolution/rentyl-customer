@@ -211,9 +211,9 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 					showMoreButton
 					showLessText={'View Less'}
 					showMoreText={'View More'}
-					// onShowMoreTextClick={() => {
-					// 	hideShowCarouselButtons();
-					// }}
+					onShowMoreTextClick={() => {
+						hideShowCarouselButtons();
+					}}
 				>
 					{titleDescription ? titleDescription.description : ''}
 				</Label>

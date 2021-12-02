@@ -19,6 +19,8 @@ interface DestinationSearchResultCardMobileProps {
 	onAddCompareClick?: () => void;
 	onGalleryClick: () => void;
 	onRemoveCompareClick?: () => void;
+	pointsEarnable: number;
+	availabilityStayList: Api.Accommodation.Res.Availability[];
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
@@ -31,8 +33,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Label variant={'boldCaption1'} className={'yellowText'}>
 						{StringUtils.addCommasToNumber(props.destinationObj.minAccommodationPoints)}pts
 					</Label>
-					<Label variant={'caption1'}>/</Label>
-					<Label variant={'caption1'}>night</Label>
+					<Label variant={'caption1'}>/night</Label>
 				</Box>
 			);
 		} else {
@@ -87,7 +88,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				</Box>
 				<Box display={'flex'} justifyContent={'flex-end'}>
 					<Label className={'earnText'} variant={'italicBold'}>
-						You could earn from points for this stay
+						You could earn from {props.pointsEarnable} points for this stay
 					</Label>
 				</Box>
 			</Box>

@@ -16,6 +16,11 @@ import AccommodationsPopup from '../../../popups/accommodationsPopup/Accommodati
 import router from '../../../utils/router';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
+import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
+import LightBoxCarouselPopup, {
+	TabbedCarouselPopupProps
+} from '../../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
+import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 
 interface AccommodationSearchCardMobileProps {
 	accommodation: Api.Destination.Res.Accommodation;
@@ -26,6 +31,7 @@ interface AccommodationSearchCardMobileProps {
 }
 
 const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps> = (props) => {
+	const size = useWindowResizeChange();
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
@@ -80,7 +86,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 				return b.isPrimary - a.isPrimary;
 			});
 			return images.map((urlObj) => {
-				return urlObj.urls.imageKit?.toString() || urlObj.urls.thumb;
+				return urlObj.urls.imageKit?.toString();
 			});
 		}
 		return [];
@@ -90,11 +96,20 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 		const urls = getImageUrls();
 		return (
 			<CarouselV2
-				path={``}
+				path={() => {}}
 				imgPaths={urls}
-				onAddCompareClick={() => {}}
-				onGalleryClick={() => {}}
-				onRemoveCompareClick={() => {}}
+				hideCompareButton={true}
+				onGalleryClick={() => {
+					if (size === 'small') {
+						popupController.open<MobileLightBoxProps>(MobileLightBox, {
+							imageData: accommodationDetails?.media
+						});
+					} else {
+						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
+							imageData: accommodationDetails?.media
+						});
+					}
+				}}
 			/>
 		);
 	}
