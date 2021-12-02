@@ -1,0 +1,57 @@
+@import '../../themes/themes';
+
+.rsCheckoutReservationSummaryCard {
+	display: flex;
+	margin-bottom: 76px;
+
+	& .rsLabel {
+		color: theme-var($primaryTextColor);
+	}
+
+	.cardImage {
+		width: 384px;
+		height: 304px;
+		border-radius: 20px;
+	}
+
+	.infoWrapper {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 24px 28px 28px;
+
+		.resortWrapper {
+			display: flex;
+			align-items: center;
+
+			.resortLogo {
+				width: 118px;
+			}
+
+			.resortName {
+				font-size: 24px;
+				line-height: 34px;
+				font-weight: 500;
+				padding-left: 23px;
+			}
+		}
+
+		.orderTitle {
+			font-size: 38px;
+			line-height: 48px;
+			font-weight: 500;
+		}
+
+		.price {
+			font-size: 28px;
+			line-height: 53px;
+			font-weight: 400;
+		}
+
+		.dateBooked {
+			font-size: 22px;
+			line-height: 41px;
+			font-weight: 500;
+		}
+	}
+}
