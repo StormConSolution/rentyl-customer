@@ -596,6 +596,9 @@ declare namespace Api {
 
 			export interface Details {
 				destinationId: number;
+				// These are required to get a lowest price back
+				startDate?: Date | string;
+				endDate?: Date | string;
 			}
 
 			export interface GetByPage {
@@ -637,6 +640,21 @@ declare namespace Api {
 				media: Media[];
 			}
 
+			export interface DetailsAccommodation {
+				id: number;
+				name: string;
+				propertyTypeId: number;
+				amenities: Model.Amenity[];
+				roomCount: number;
+				bedDetails: { [key: string]: string };
+				shortDescription: string;
+				longDescription: string;
+				priceCents: string;
+				maxOccupantCount: number;
+				maxSquareFt?: number;
+				minSquareFt?: number;
+			}
+
 			export interface Details {
 				id: number;
 				externalId: string;
@@ -662,22 +680,12 @@ declare namespace Api {
 				maxBedroom: number;
 				minBathroom: number;
 				maxBathroom: number;
+				lowestPriceInCents?: number;
 				propertyTypes: PropertyType[];
 				media: Media[];
 				experiences: DestinationExperience[];
 				packages: UpsellPackage.Details[];
-				accommodations: {
-					id: number;
-					name: string;
-					propertyTypeId: number;
-					amenities: Model.Amenity[];
-					roomCount: number;
-					bedDetails: { [key: string]: string };
-					shortDescription: string;
-					longDescription: string;
-					priceCents: string;
-					maxOccupantCount: number;
-				}[];
+				accommodations: DetailsAccommodation[];
 				accommodationTypes: {
 					id: number;
 					name: string;
@@ -694,8 +702,6 @@ declare namespace Api {
 				bedroomCount: number;
 				bathroomCount: number;
 				bedDetails: any;
-				maxSquareFt: number;
-				minSquareFt: number;
 				priceCents: number;
 				maxOccupantCount: number;
 				prices: {

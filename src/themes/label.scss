@@ -396,6 +396,33 @@ html {
 		line-height: 18px;
 		font-weight: $regular;
 	}
+	&.accommodationModalCustomNine {
+		font-size: 16px;
+		line-height: 30px;
+		font-weight: $regular;
+	}
+	&.accommodationModalCustomTen {
+		font-size: 11px;
+		font-weight: $regular;
+		line-height: 13px;
+	}
+	&.accommodationModalCustomEleven {
+		font-size: 14px;
+		font-weight: $bold;
+		line-height: 30px;
+	}
+	&.accommodationModalCustomTwelve {
+		font-size: 14px;
+		font-weight: $semiBold;
+		font-style: italic;
+		line-height: 18px;
+		color: #2c3c60;
+	}
+	&.accommodationModalCustomThirteen {
+		font-size: 16px;
+		font-weight: $medium;
+		line-height: 20px;
+	}
 	&.bookingSummaryCustomOne {
 		font-size: 12px;
 		line-height: 14px;
@@ -420,6 +447,21 @@ html {
 		font-size: 18px;
 		line-height: 13px;
 		font-weight: $regular;
+	}
+	&.navDrawerCustomOne {
+		font-size: 14px;
+		line-height: 13px;
+		font-weight: $regular;
+	}
+	&.navDrawerCustomTwo {
+		font-size: 14px;
+		line-height: 13px;
+		font-weight: $medium;
+	}
+	&.accommodationOverviewCustomOne {
+		font-size: 16px;
+		line-height: 30px;
+		font-weight: $light;
 	}
 	&.destinationDetailsCustomTwo {
 		font-size: 22px;

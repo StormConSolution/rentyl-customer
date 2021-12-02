@@ -1,0 +1,20 @@
+@import 'src/themes/themes';
+
+.rsRateCodeCardMobile {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 24px 0;
+	border-bottom: 1px solid theme-var($greyLineColor);
+	.pricePerNight {
+		display: flex;
+	}
+	.yellowText {
+		color: theme-var($yellowTextColor);
+	}
+	.buttonContainer {
+		display: flex;
+		justify-content: flex-end;
+		padding-top: 8px;
+	}
+}

@@ -18,6 +18,8 @@ interface DestinationSearchResultCardResponsiveProps {
 	onAddCompareClick?: () => void;
 	onGalleryClick: () => void;
 	onRemoveCompareClick?: () => void;
+	pointsEarnable: number;
+	availabilityStayList: Api.Accommodation.Res.Availability[];
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
@@ -43,7 +45,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
 					<Label variant={'italicBoldTwo'} className={'yellowText'}>
-						You could earn points for this stay
+						You could earn {props.pointsEarnable} points for this stay
 					</Label>
 				</Box>
 			);
@@ -57,7 +59,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
 					<Label variant={'italicBoldTwo'} className={'yellowText'}>
-						You could earn points for this stay
+						You could earn {props.pointsEarnable} points for this stay
 					</Label>
 				</Box>
 			);
