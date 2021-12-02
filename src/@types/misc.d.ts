@@ -83,13 +83,6 @@ declare namespace Misc {
 		endDate: string;
 	}
 
-	export interface INavData {
-		title: string;
-		route: string;
-		isSectionHeader: boolean;
-		isSignedIn: boolean;
-	}
-
 	export interface ComparisonCardInfo {
 		destinationId: number;
 		accommodationOptions: Misc.OptionType[];
