@@ -1,14 +1,10 @@
 @import '../../themes/themes';
 
 .rsReservationInfoCard {
-	display: grid;
-	grid-template-columns: 240px auto 150px;
-	column-gap: 45px;
-	row-gap: 25px;
-	.rsLabel {
-		&.caption {
-			margin-bottom: 5px;
-		}
+	display: flex;
+
+	.contentFont {
+		font-weight: $semiBold;
 	}
 
 	.rsButton {
@@ -24,7 +20,4 @@
 }
 
 .small {
-	.rsReservationInfoCard {
-		grid-template-columns: 240px;
-	}
 }

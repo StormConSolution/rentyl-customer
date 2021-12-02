@@ -712,6 +712,8 @@ declare namespace Api {
 					title: string;
 					icon: string;
 				}[];
+				maxSquareFt?: number;
+				minSquareFt?: number;
 			}
 
 			export interface Availability {
