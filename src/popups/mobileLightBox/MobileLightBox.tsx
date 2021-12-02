@@ -20,6 +20,7 @@ export interface MobileLightBoxProps extends PopupProps {
 	featureData?: ImageTabProp[];
 	activeTabName?: string;
 	customOnBack?: () => void;
+	floorPlanClass?: boolean;
 }
 
 const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
@@ -234,7 +235,7 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 
 	return (
 		<Popup opened={props.opened}>
-			<div className={'rsMobileLightBox'}>
+			<div className={`rsMobileLightBox ${props.floorPlanClass ? 'floorPlan' : ''}`}>
 				<div className={'topNav'}>
 					<IconLabel
 						labelVariant={'mobileLightBoxCustomOne'}

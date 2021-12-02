@@ -5,19 +5,14 @@ import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
-import { useEffect } from 'react';
-import MobileLightBoxTwoPopup, { MobileLightBoxTwoPopupProps } from '../mobileLightBoxTwoPopup/MobileLightBoxTwoPopup';
 import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLightBox';
 import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 
 export interface MobileAccommodationOverviewPopupProps extends PopupProps {
-	accommodationDetails: Api.Accommodation.Res.Details | undefined;
+	accommodationDetails?: Api.Accommodation.Res.Details;
 }
 
 const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopupProps> = (props) => {
-	useEffect(() => {
-		console.log(props.accommodationDetails);
-	}, []);
 	function getAccommodationImages() {
 		let images: string[] = [];
 		props.accommodationDetails?.media.forEach((value) => {
@@ -47,7 +42,8 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 				popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
 					accommodationDetails: props.accommodationDetails
 				});
-			}
+			},
+			floorPlanClass: true
 		});
 	}
 
@@ -103,7 +99,11 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 						onGalleryClick={() => {}}
 					/>
 
-					<Box display={'flex'} justifyContent={'space-between'} marginTop={16}>
+					<Box
+						display={'flex'}
+						justifyContent={props.accommodationDetails?.size ? 'space-between' : 'flex-start'}
+						marginTop={16}
+					>
 						<div className={'accommodationCounts'}>
 							<Icon iconImg={'cms-icon-0425'} size={30} />
 							<Label variant={'subtitle1'}>{props.accommodationDetails?.bathroomCount}</Label>
@@ -146,13 +146,17 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 								/>
 							</Box>
 
-							<div className={'expandFloorPlanDiv'} onClick={handleFloorPlanExpand}>
-								<Label>Expand floor plans</Label>
-								<Icon iconImg={'cms-icon-0055'} size={22} />
-							</div>
+							{props.accommodationDetails?.layout && props.accommodationDetails.layout.length > 1 ? (
+								<div className={'expandFloorPlanDiv'} onClick={handleFloorPlanExpand}>
+									<Label>Expand floor plans</Label>
+									<Icon iconImg={'cms-icon-0055'} size={22} />
+								</div>
+							) : (
+								<Box margin={40} />
+							)}
 						</>
 					) : (
-						<></>
+						<Box margin={40} />
 					)}
 				</div>
 			</Paper>
