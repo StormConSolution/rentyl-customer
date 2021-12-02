@@ -29,7 +29,7 @@ export default class DestinationService extends Service {
 	): Promise<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>> {
 		if (data.priceRangeMin) data.priceRangeMin = NumberUtils.dollarsToCents(data.priceRangeMin);
 		if (data.priceRangeMax) data.priceRangeMax = NumberUtils.dollarsToCents(data.priceRangeMax);
-		let response = await http.get<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>>(
+		const response = await http.get<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>>(
 			'destination/availability',
 			data
 		);
