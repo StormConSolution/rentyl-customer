@@ -1,19 +1,18 @@
 import * as React from 'react';
 import './ItineraryCardMobile.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
-import Carousel from '../../carousel/Carousel';
-import { useEffect, useState } from 'react';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import Paper from '../../paper/Paper';
-import LabelLink from '../../labelLink/LabelLink';
 import { StringUtils } from '@bit/redsky.framework.rs.utils';
-import ReservationInfoCard from '../../reservationInfoCard/ReservationInfoCard';
+import Icon from '@bit/redsky.framework.rs.icon';
+import router from '../../../utils/router';
 
 interface ReservationCardMobileProps {
 	imgPaths: string[];
 	logo: string;
 	title: string;
-	address: string;
+	city: string;
+	state: string;
 	reservationDates: { startDate: string | Date; endDate: string | Date };
 	propertyType: string;
 	itineraryId: string;
@@ -27,60 +26,42 @@ interface ReservationCardMobileProps {
 }
 
 const ItineraryCardMobile: React.FC<ReservationCardMobileProps> = (props) => {
-	const [showControls, setShowControls] = useState<boolean>(true);
-
-	useEffect(() => {
-		if (props.imgPaths.length <= 1) setShowControls(false);
-	}, [props.imgPaths]);
-
-	function renderPictures(picturePaths: string[]): JSX.Element[] {
-		return picturePaths.map((path: string) => {
-			return (
-				<Box className={'imageWrapper'}>
-					<img src={path} alt="Reservation Card Image" />
-				</Box>
-			);
-		});
-	}
 	return (
 		<Box className={'rsItineraryCardMobile'}>
-			<Carousel showControls={showControls} children={renderPictures(props.imgPaths)} />
-			{props.logo && props.logo !== '' && <img className={'logoImg'} src={props.logo} alt={''} />}
-			<Label variant={'h1'} mb={8}>
-				{props.title}
-			</Label>
-			<Label variant={'body1'} mb={32}>
-				{props.address}
-			</Label>
-			<Paper boxShadow padding={'16px'}>
-				<Box display={'flex'} justifyContent={'space-between'}>
-					<Label variant={'body1'}>TOTAL PRICE</Label>
-					<LabelLink path={props.linkPath} label={'VIEW DETAILS'} variant={'body1'} />
-				</Box>
+			<CarouselV2 path={props.linkPath} imgPaths={props.imgPaths} />
+			<Box className="titleAndButton" marginTop={10} marginBottom={16}>
+				<Label variant={'itineraryCustomOne'}>{props.title}</Label>
+				<Icon
+					iconImg="icon-info-outline"
+					color={'#000'}
+					size={20}
+					className="locationIcon"
+					onClick={() => {
+						router.navigate(`${props.linkPath}`).catch((err) => console.error(err));
+					}}
+				/>
+			</Box>
+			<Box className={'bottomRow'}>
 				{!props.paidWithPoints ? (
-					<div>
-						<Label variant={'caption'} mb={5}>
-							Total Price
+					<Box display="flex">
+						<Label variant={'boldCaption1'} marginRight={5}>
+							${StringUtils.formatMoney(props.itineraryTotal)}
 						</Label>
-						<Label variant={'h2'}>${StringUtils.formatMoney(props.itineraryTotal)}</Label>
-					</div>
+						<Label variant={'caption1'}>trip total</Label>
+					</Box>
 				) : (
-					<div>
-						<Label variant={'caption'} mb={5}>
-							Points Paid
+					<Box display="flex">
+						<Label variant={'boldCaption1'} marginRight={5}>
+							{StringUtils.addCommasToNumber(props.totalPoints)}
 						</Label>
-						<Label variant={'h2'}>{StringUtils.addCommasToNumber(props.totalPoints)}</Label>
-					</div>
+						<Label variant={'caption1'}>points paid</Label>
+					</Box>
 				)}
-			</Paper>
-			<ReservationInfoCard
-				reservationDates={props.reservationDates}
-				propertyType={props.propertyType}
-				itineraryId={props.itineraryId}
-				maxOccupancy={props.maxOccupancy}
-				amenities={props.amenities}
-				cancelPermitted={props.cancelPermitted}
-			/>
+				<Label variant={'caption1'}>
+					<Icon iconImg="icon-pin" color={'#D2555F'} size={17} className="locationIcon" />
+					{props.city}, {props.state}
+				</Label>
+			</Box>
 		</Box>
 	);
 };
