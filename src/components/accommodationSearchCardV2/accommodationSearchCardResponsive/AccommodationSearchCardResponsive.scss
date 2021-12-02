@@ -1,6 +1,6 @@
-@import 'src/themes/themes';
+@import '../../../themes/themes';
 
-.rsAccommodationSearchCardV2 {
+.rsAccommodationSearchCardResponsive {
 	display: flex;
 	padding: 20px 42px;
 	width: 100%;
@@ -69,6 +69,11 @@
 			.articleItemHeader {
 				padding: 0;
 			}
+		}
+		.rateDescriptionContainer {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
 		}
 	}
 	.yellowText {

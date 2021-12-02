@@ -4,7 +4,7 @@ import { Box, Popup, popupController, PopupProps } from '@bit/redsky.framework.r
 import Paper from '../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
-import AccommodationSearchCardV2 from '../../components/accommodationSearchCardV2/AccommodationSearchCardV2';
+import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
 
 export interface AccommodationsPopupProps extends PopupProps {
 	propertyTypeName: string;
@@ -19,7 +19,7 @@ const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
 			<Box className={'accommodationCards'}>
 				{props.accommodations.map((accommodation) => {
 					return (
-						<AccommodationSearchCardV2
+						<AccommodationSearchCard
 							key={accommodation.id}
 							accommodation={accommodation}
 							destinationId={props.destinationId}
