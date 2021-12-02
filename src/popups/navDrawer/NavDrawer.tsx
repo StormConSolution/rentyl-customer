@@ -112,8 +112,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 						label={'Help'}
 						variant={'navDrawerCustomOne'}
 						onClick={() => {
-							props.onClose();
-							// popupController.open<SignupPopupProps>(SignupPopup, {});
+							window.open('https://rentylresorts.com/', '_blank');
 						}}
 					/>
 				</Box>

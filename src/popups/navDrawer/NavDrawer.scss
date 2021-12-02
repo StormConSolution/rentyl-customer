@@ -3,7 +3,7 @@
 	position: absolute;
 	top: 74px;
 	right: 90px;
-	background-color: #ffffff;
+	background-color: theme-var($white);
 	transition: width 300ms;
 	transform: translateX(78px);
 	width: 0;
