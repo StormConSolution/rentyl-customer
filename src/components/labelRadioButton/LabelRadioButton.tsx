@@ -7,7 +7,7 @@ interface LabelRadioButtonProps {
 	radioName: string;
 	value: string | number;
 	checked: boolean;
-	text: string;
+	text: string | React.ReactNode;
 	onSelect: (value: string | number) => void;
 	labelSize?:
 		| 'h1'

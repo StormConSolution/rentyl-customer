@@ -115,11 +115,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					picturePaths={urls}
 					summaryTabs={summaryTabs}
 					onAddCompareClick={() => {
-						comparisonService.addToComparison({
-							destinationId: destination.id,
-							title: destination.name,
-							logo: destination.logoUrl
-						});
+						comparisonService.addToComparison(destination.id).catch(console.error);
 					}}
 					onRemoveCompareClick={() => {
 						comparisonService.removeFromComparison(destination.id);
@@ -174,6 +170,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 							accommodationId: accommodationId,
 							arrivalDate: data.startDate,
 							departureDate: data.endDate,
+							rateCode: data.rateCode,
 							packages: []
 						};
 						data = StringUtils.setAddPackagesParams({ destinationId: destination.id, newRoom });

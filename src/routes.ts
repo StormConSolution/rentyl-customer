@@ -3,7 +3,6 @@ import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import LandingPage from './pages/landingPage/LandingPage';
 import SignInPage from './pages/signInPage/SignInPage';
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage';
-import ComparisonPage from './pages/comparisonPage/ComparisonPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
@@ -34,6 +33,7 @@ import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndCondi
 import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
 import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
 import TestPage from './pages/testPage/TestPage';
+import CheckoutFlowPage from './pages/checkoutFlowPage/CheckoutFlowPage';
 
 export const routes: RouteDetails[] = [
 	{
@@ -125,11 +125,6 @@ export const routes: RouteDetails[] = [
 		routeGuard: verifyRoute
 	},
 	{
-		path: '/compare',
-		page: ComparisonPage,
-		routeGuard: verifyRoute
-	},
-	{
 		path: '/booking',
 		page: BookingFlowCheckoutPage,
 		routeGuard: verifyRoute,
@@ -139,7 +134,7 @@ export const routes: RouteDetails[] = [
 	},
 	{
 		path: '/booking/checkout',
-		page: BookingFlowCheckoutPage,
+		page: CheckoutFlowPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'

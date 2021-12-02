@@ -1,0 +1,156 @@
+@import '../../themes/themes';
+
+.rsComparisonPopup {
+	position: relative;
+	height: clamp(500px, 80vh, 1533px);
+	width: clamp(390px, 95vw, 1758px);
+	background: theme-var($primaryBackgroundColor);
+	box-shadow: theme-var($primaryBoxShadowColor);
+	z-index: 99;
+	border-radius: 20px;
+	overflow: hidden;
+
+	.popupTitle {
+		position: absolute;
+		top: 0;
+		z-index: 100;
+		background: #f8f8f8;
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		padding: 25px;
+		box-sizing: border-box;
+		border-bottom: 1px solid theme-var($greyLineColor);
+	}
+
+	.comparisonTable {
+		display: grid;
+		grid-template-areas:
+			'a a a a'
+			'b b b b'
+			'c c c c'
+			'd d d d'
+			'e e e e'
+			'f f f f'
+			'g g g g';
+		overflow-x: auto;
+		scrollbar-width: none;
+		height: calc(100% - 100px);
+		margin: 97px 10px 20px;
+	}
+	.images {
+		grid-area: a;
+	}
+	.propertyType {
+		grid-area: b;
+	}
+	.guestLimit {
+		grid-area: c;
+	}
+	.extraBedding {
+		grid-area: d;
+	}
+	.accessibility {
+		grid-area: e;
+	}
+	.features {
+		grid-area: f;
+	}
+	.overview {
+		grid-area: g;
+		margin-bottom: 10px;
+	}
+
+	.row {
+		width: 100%;
+		box-sizing: border-box;
+		display: grid;
+		padding: 0 10px;
+		grid-template-columns: 150px repeat(3, minmax(150px, 1fr));
+		> .rsLabel,
+		.rsSelect {
+			width: 100%;
+			box-sizing: border-box;
+			padding: 20px 5px;
+			&:not(:last-child) {
+				border-right: 1px solid theme-var($greyLineColor);
+			}
+		}
+		.rsSelect [class*='container'] {
+			border-radius: 5px;
+			min-width: 80px;
+			[class*='control'] {
+				border-radius: 5px;
+			}
+			[class*='indicatorSeparator'] {
+				width: 0;
+			}
+		}
+		&:not(:last-child) {
+			border-bottom: 1px solid theme-var($greyLineColor);
+		}
+		&.images {
+			border-bottom: none;
+			margin: 20px 0;
+			.carouselWrapper {
+				display: grid;
+				place-items: center;
+				gap: 10px;
+				.rsLabel {
+					place-self: start;
+					padding: 0 5px;
+				}
+			}
+			.carouselWrapper,
+			.rsLabel {
+				border-right: none;
+			}
+			.rsImg {
+				padding: 10px;
+				border-radius: 20px;
+				width: clamp(130px, 90%, 408px);
+				height: clamp(130px, 100%, 323px);
+			}
+		}
+		ul {
+			padding: 0 20px;
+		}
+		&.propertyType {
+			border-radius: 20px 20px 0 0;
+			.title {
+				border-radius: 20px 0 0 0;
+			}
+		}
+		&.overview {
+			border-radius: 0 0 20px 20px;
+			.title {
+				border-radius: 0 0 0 20px;
+			}
+		}
+	}
+	.title {
+		box-sizing: border-box;
+		background: #f8f8f8;
+	}
+}
+
+.small {
+	.rsComparisonPopup {
+		.comparisonTable {
+			.row {
+				grid-template-columns: 80px repeat(3, 150px);
+				&.guestLimit,
+				&.accessibility,
+				&.overview {
+					background: #f8f8f8;
+				}
+
+				//&:nth-child(2n + 1) {
+				//	&:not(.images) {
+				//
+				//	}
+				//}
+			}
+		}
+	}
+}
