@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './AccommodationsPopup.scss';
+import './accommodationsPopup.scss';
 import { Box, Popup, popupController, PopupProps } from '@bit/redsky.framework.rs.996';
 import Paper from '../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
