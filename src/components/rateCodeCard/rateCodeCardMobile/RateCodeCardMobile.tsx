@@ -13,6 +13,7 @@ interface RateCodeCardMobileProps {
 	priceObj: Misc.Pricing;
 	accommodationId: number;
 	destinationId: number;
+	pointsEarnable: number;
 }
 
 const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
@@ -64,7 +65,7 @@ const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
 				<Label variant={'bookingSummaryCustomThree'}>{props.priceObj.description || 'Promotional Rate'}</Label>
 				{renderPointsOrCash()}
 				<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
-					You will earn points for this stay
+					You will earn {props.pointsEarnable} points for this stay
 				</Label>
 			</Box>
 			<Box className={'buttonContainer'}>
