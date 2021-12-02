@@ -8,6 +8,7 @@ interface RateCodeCardProps {
 	priceObj: Misc.Pricing;
 	accommodationId: number;
 	destinationId: number;
+	pointsEarnable: number;
 }
 
 const RateCodeCard: React.FC<RateCodeCardProps> = (props) => {
@@ -19,6 +20,7 @@ const RateCodeCard: React.FC<RateCodeCardProps> = (props) => {
 					priceObj={props.priceObj}
 					accommodationId={props.accommodationId}
 					destinationId={props.destinationId}
+					pointsEarnable={props.pointsEarnable}
 				/>
 			) : (
 				<RateCodeCardResponsive

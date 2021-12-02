@@ -25,6 +25,7 @@ interface AccommodationSearchCardResponsiveProps {
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
 	onClickInfoIcon?: () => void;
+	pointsEarnable: number;
 }
 
 const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardResponsiveProps> = (props) => {
@@ -158,6 +159,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 										priceObj={priceObj}
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}
+										pointsEarnable={props.pointsEarnable}
 									/>
 								);
 							})}

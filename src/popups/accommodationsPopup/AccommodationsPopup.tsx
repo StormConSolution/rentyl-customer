@@ -11,6 +11,7 @@ export interface AccommodationsPopupProps extends PopupProps {
 	destinationId: number;
 	destinationName: string;
 	accommodations: Api.Destination.Res.Accommodation[];
+	availabilityStayList: Api.Accommodation.Res.Availability[];
 }
 
 const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
@@ -18,11 +19,16 @@ const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
 		return (
 			<Box className={'accommodationCards'}>
 				{props.accommodations.map((accommodation) => {
+					let accommodationAvailability = props.availabilityStayList.find(
+						(accommodationAvail) => accommodationAvail.id === accommodation.id
+					);
+					const pointsEarnable = accommodationAvailability ? accommodationAvailability.pointsEarned : 0;
 					return (
 						<AccommodationSearchCard
 							key={accommodation.id}
 							accommodation={accommodation}
 							destinationId={props.destinationId}
+							pointsEarnable={pointsEarnable}
 						/>
 					);
 				})}
