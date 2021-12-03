@@ -37,7 +37,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 
 	return (
 		<>
-			<div ref={popupRef} className={props.isOpened ? `rsNavDrawer opened` : 'rsNavDrawer'}>
+			<div ref={popupRef} className={props.isOpened ? `rsNavDrawer opened` : 'rsNavDrawer closed'}>
 				<Box padding={'24px 24px 10px'}>
 					{!user ? (
 						<>
