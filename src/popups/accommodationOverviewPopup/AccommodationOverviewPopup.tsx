@@ -13,6 +13,7 @@ import { StringUtils } from '../../utils/utils';
 import AccommodationsPopup from '../accommodationsPopup/AccommodationsPopup';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import ImageLabel from '../../components/imageLabel/ImageLabel';
 
 export interface AccommodationOverviewPopupProps extends PopupProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
@@ -46,13 +47,10 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 			size = `${sizeObj.min} to ${sizeObj.max} ${sizeObj.units === 'SquareFeet' ? `ft` : sizeObj.units}`;
 		}
 		return (
-			<div className={'accommodationCounts'}>
-				<Icon iconImg={'cms-icon-0503'} size={45} />
-				<Label variant={'accommodationOverviewCustomTwo'}>
-					{size}
-					{sizeObj?.units === 'SquareFeet' ? <span className={'superScript'}>2</span> : ''}
-				</Label>
-			</div>
+			<Label variant={'subtitle1'} className={'label'}>
+				{size}
+				{sizeObj?.units === 'SquareFeet' ? <span className={'superScript'}>2</span> : ''}
+			</Label>
 		);
 	}
 
@@ -116,19 +114,30 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 							marginTop={16}
 							minWidth={500}
 						>
-							<div className={'accommodationCounts'}>
-								<Icon iconImg={'cms-icon-0425'} size={45} />
-								<Label variant={'accommodationOverviewCustomTwo'}>
-									{props.accommodationDetails.bathroomCount}
-								</Label>
-							</div>
-							<div className={'accommodationCounts'}>
-								<Icon iconImg={'cms-icon-0412'} size={45} />
-								<Label variant={'accommodationOverviewCustomTwo'}>
-									{props.accommodationDetails.bedroomCount}
-								</Label>
-							</div>
-							{props.accommodationDetails.size ? renderAccommodationSize() : <></>}
+							<ImageLabel
+								labelName={props.accommodationDetails.bedroomCount.toString()}
+								imgSrc={'sleep.png'}
+								imgWidth={'40px'}
+								imgHeight={'40px'}
+								iconPosition={'left'}
+								labelVariant={'subtitle1'}
+							/>
+							<ImageLabel
+								labelName={props.accommodationDetails.bathroomCount.toString()}
+								imgSrc={'shower.png'}
+								imgWidth={'40px'}
+								imgHeight={'40px'}
+								iconPosition={'left'}
+								labelVariant={'subtitle1'}
+							/>
+							<ImageLabel
+								labelName={renderAccommodationSize()}
+								imgSrc={'square-foot.png'}
+								imgWidth={'40px'}
+								imgHeight={'40px'}
+								iconPosition={'left'}
+								labelVariant={'subtitle1'}
+							/>
 						</Box>
 						<LabelButton
 							look={'containedPrimary'}

@@ -5,7 +5,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Img from '@bit/redsky.framework.rs.img';
 
 interface ImageLabelProps {
-	labelName: string;
+	labelName: string | React.ReactNode;
 	imgSrc:
 		| 'alcohol.png'
 		| 'beach-chair.png'
@@ -66,9 +66,13 @@ const ImageLabel: React.FC<ImageLabelProps> = (props) => {
 	return (
 		<Box className={`rsImageLabel ${props.className || ''} ${props.iconPosition}`} onClick={props.onClick}>
 			<Img src={buildImageSrc()} alt={'Image Label'} width={props.imgWidth} height={props.imgHeight} />
-			<Label variant={props.labelVariant} className={'label'} color={props.color} lineClamp={1}>
-				{props.labelName}
-			</Label>
+			{typeof props.labelName === 'string' ? (
+				<Label variant={props.labelVariant} className={'label'} color={props.color} lineClamp={1}>
+					{props.labelName}
+				</Label>
+			) : (
+				props.labelName
+			)}
 		</Box>
 	);
 };

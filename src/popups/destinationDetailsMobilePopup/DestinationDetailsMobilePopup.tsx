@@ -22,6 +22,10 @@ import ImageLabel from '../../components/imageLabel/ImageLabel';
 import { Loader } from 'google-maps';
 import FilterBar from '../../components/filterBar/FilterBar';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
+import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
+import MobileAccommodationOverviewPopup, {
+	MobileAccommodationOverviewPopupProps
+} from '../mobileAccommodationOverviewPopup/MobileAccommodationOverviewPopup';
 
 export interface DestinationDetailsMobilePopupProps extends PopupProps {}
 
@@ -75,7 +79,10 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 			let mapElement: HTMLElement | null = document.getElementById('GoogleMap');
 			if (!mapElement) return;
 
-			let destinationLocation = { lat: 28.289728, lng: -81.594499 }; // this needs to be dynamic.
+			let destinationLocation = {
+				lat: destinationDetails.latitude || 28.289728,
+				lng: destinationDetails.longitude || -81.594499
+			}; // this needs to be dynamic.
 
 			//Render Map
 			let googleMap = new google.maps.Map(mapElement, {
@@ -88,6 +95,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 			//Hide All POI
 			googleMap.setOptions({ styles: poiToHide });
 
+			//Get lat and lon based on the physical address.
 			if (geocoder) {
 				geocoder.geocode({ address: address }, function (results, status) {
 					if (status === google.maps.GeocoderStatus.OK) {
@@ -243,11 +251,10 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList) && destinationAvailability) return;
 		return availabilityStayList.map((accommodationAvailability) => {
-			const destinationAccommodation:
-				| Api.Destination.Res.Accommodation
-				| undefined = destinationAvailability?.accommodations.find(
-				(accommodation) => accommodation.id === accommodationAvailability.id
-			);
+			const destinationAccommodation: Api.Destination.Res.Accommodation | undefined =
+				destinationAvailability?.accommodations.find(
+					(accommodation) => accommodation.id === accommodationAvailability.id
+				);
 			if (reservationFilters.destinationId && destinationAccommodation) {
 				return (
 					<AccommodationSearchCard
@@ -268,6 +275,30 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 		popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
 			accommodationDetails: accommodationDetails
 		});
+	}
+
+	function renderDestinationSize() {
+		/**
+		 * We need to add the same sizeObj to the destination that there is for the accommodation
+		 */
+		// let size = '';
+		// 	let sizeObj = destinationDetails.size;
+		// 	if (sizeObj) {
+		// 		size = `${sizeObj.min} to ${sizeObj.max} ${sizeObj.units === 'SquareFeet' ? `ft` : sizeObj.units}`;
+		// 	}
+		// 	return (
+		// 		<Label variant={'subtitle1'} className={'label'}>
+		// 			{size}
+		// 			{sizeObj?.units === 'SquareFeet' ? <span className={'superScript'}>2</span> : ''}
+		// 		</Label>
+		// 	);
+		// }
+
+		return (
+			<Label variant={'subtitle1'} className={'label'}>
+				100 to 3200 ft <span className={'superScript'}>2</span>
+			</Label>
+		);
 	}
 
 	return !destinationDetails ? (
@@ -318,7 +349,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 						iconPosition={'left'}
 					/>
 					<ImageLabel
-						labelName={'SQUARE FOOT'}
+						labelName={renderDestinationSize()}
 						imgSrc={'square-foot.png'}
 						imgWidth={'30px'}
 						imgHeight={'20px'}
@@ -349,10 +380,6 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 					</div>
 				) : (
 					<div className={'availableStays'}>
-						<hr />
-						<Label variant={'h1'} className={'chooseYourAccommodation'}>
-							Choose your accommodation
-						</Label>
 						<FilterBar destinationId={destinationDetails.id} isMobile={true} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
