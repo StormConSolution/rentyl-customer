@@ -52,7 +52,7 @@ const AppBar: React.FC = () => {
 					color={'#767676'}
 					onClick={() => {
 						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
-						setShowSlideOutMenu(true);
+						setShowSlideOutMenu(!showSlideOutMenu);
 					}}
 				/>
 				<Icon

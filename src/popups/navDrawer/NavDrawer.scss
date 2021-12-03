@@ -15,6 +15,10 @@
 		width: 262px;
 	}
 
+	&.closed {
+		display: none;
+	}
+
 	.welcomeLabel {
 		padding-bottom: 16px;
 	}
@@ -54,6 +58,7 @@
 	.rsNavDrawer {
 		position: fixed;
 		transform: translateX(0);
-		height: 100%;
+		height: fit-content;
+		right: 10px;
 	}
 }
