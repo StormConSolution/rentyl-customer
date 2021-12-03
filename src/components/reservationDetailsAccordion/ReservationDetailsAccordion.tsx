@@ -289,7 +289,8 @@ const ReservationDetailsAccordion: React.FC<ReservationDetailsAccordionProps> = 
 						disabled={!isValid}
 						onClick={() => {
 							if (!isValid) return;
-							let newReservationDetails: Misc.ReservationContactInfoDetails = reservationDetails.toModel();
+							let newReservationDetails: Misc.ReservationContactInfoDetails =
+								reservationDetails.toModel();
 							if (props.onSave) props.onSave(newReservationDetails);
 							reservationDetails.updateInitialValues();
 							setIsModified(false);
