@@ -17,7 +17,6 @@ import globalState from '../../state/globalState';
 export interface AccommodationOverviewPopupProps extends PopupProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
 	destinationName: string;
-	destinationId: number;
 }
 
 const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (props) => {
@@ -35,8 +34,8 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 			packages: [],
 			rateCode: ''
 		};
-		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
-		popupController.close(AccommodationsPopup);
+		data = StringUtils.setAddPackagesParams({ destinationId: props.accommodationDetails.destinationId, newRoom });
+		popupController.close(AccommodationOverviewPopup);
 		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 	}
 
