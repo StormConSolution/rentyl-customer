@@ -261,11 +261,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList) && destinationAvailability) return;
 		return availabilityStayList.map((accommodationAvailability) => {
-			const destinationAccommodation:
-				| Api.Destination.Res.Accommodation
-				| undefined = destinationAvailability?.accommodations.find(
-				(accommodation) => accommodation.id === accommodationAvailability.id
-			);
+			const destinationAccommodation: Api.Destination.Res.Accommodation | undefined =
+				destinationAvailability?.accommodations.find(
+					(accommodation) => accommodation.id === accommodationAvailability.id
+				);
 			if (reservationFilters.destinationId && destinationAccommodation) {
 				return (
 					<AccommodationSearchCard

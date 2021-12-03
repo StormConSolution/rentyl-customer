@@ -1,0 +1,75 @@
+@import '../../themes/themes';
+
+.rsCheckOutPaymentCard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	&.hidden {
+		display: none;
+	}
+
+	form {
+		width: 100%;
+
+		.fieldGroup {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 34px;
+			margin-top: 36px;
+
+			&.stretchedInput {
+				grid-template-columns: 1fr;
+			}
+
+			&.rightSide {
+				display: flex;
+				justify-content: flex-end;
+			}
+
+			&.leftSide {
+				display: flex;
+				justify-content: flex-start;
+			}
+		}
+		.rsLabelInput {
+			.rsInput {
+				max-width: 100%;
+			}
+		}
+		.phoneInput {
+			max-width: 100%;
+			width: 100%;
+			padding-left: 10px;
+		}
+		.flag-dropdown {
+			display: none;
+		}
+		.rsSelect {
+			max-width: 100%;
+			width: 100%;
+			span {
+				display: none;
+			}
+		}
+		.rsButton {
+			padding: 17px 63px;
+		}
+	}
+
+	.message {
+		border: 1px solid theme-var($greyLineColor);
+		border-radius: 20px;
+		padding: 20px;
+	}
+}
+
+.small {
+	.rsCheckOutInfoCard {
+		form {
+			.fieldGroup {
+				grid-template-columns: 1fr;
+			}
+		}
+	}
+}

@@ -25,7 +25,7 @@ const BookingFlowAddPackagePage = () => {
 	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
 	]);
-	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
+	params.data = ObjectUtils.smartParse(params.data as unknown as string);
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);

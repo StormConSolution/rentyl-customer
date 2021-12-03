@@ -12,7 +12,7 @@ import { StringUtils } from '../../utils/utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface LabelInputProps {
-	title: string;
+	title: any;
 	onChange?: (value: any) => void;
 	control?: RsFormControl;
 	updateControl?: (updateControl: RsFormControl) => void;

@@ -13,6 +13,7 @@ enum GlobalStateKeys {
 	COMPARISON_CARD = 'DestinationComparison',
 	USER_TOKEN = 'UserToken',
 	USER = 'User',
+	CHECKOUT_USER = 'CheckoutUser',
 	COMPANY = 'Company',
 	VERIFIED_ACCOMMODATION = 'VerifiedAccommodation',
 	USER_RATE_CODE = 'UserRateCode',
@@ -21,12 +22,13 @@ enum GlobalStateKeys {
 }
 
 // Change based on project so we don't have classing when developing on localhost (va = Volcanic Admin)
-const KEY_PREFIX = 'spireCust-';
+export const KEY_PREFIX = 'spireCust-';
 
 class GlobalState {
 	destinationComparison: RecoilState<Misc.ComparisonState>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
+	checkoutUser: RecoilState<Api.User.Req.Checkout | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 	verifiedAccommodation: RecoilState<Api.Reservation.Res.Verification | undefined>;
 	userRateCode: RecoilState<string>;
@@ -47,6 +49,14 @@ class GlobalState {
 		this.user = atom<Api.User.Res.Detail | undefined>({
 			key: GlobalStateKeys.USER,
 			default: undefined
+		});
+
+		this.checkoutUser = atom<Api.User.Req.Checkout | undefined>({
+			key: GlobalStateKeys.CHECKOUT_USER,
+			default: this.loadFromLocalStorage<Api.User.Req.Checkout | undefined>(
+				GlobalStateKeys.CHECKOUT_USER,
+				undefined
+			)
 		});
 
 		this.userToken = atom<string>({
@@ -74,7 +84,11 @@ class GlobalState {
 		});
 
 		// The following is stored in local storage automatically
-		this.saveToStorageList = [GlobalStateKeys.USER_TOKEN, GlobalStateKeys.COMPARISON_CARD];
+		this.saveToStorageList = [
+			GlobalStateKeys.USER_TOKEN,
+			GlobalStateKeys.COMPARISON_CARD,
+			GlobalStateKeys.CHECKOUT_USER
+		];
 
 		this.userRateCode = atom<string>({
 			key: GlobalStateKeys.USER_RATE_CODE,
