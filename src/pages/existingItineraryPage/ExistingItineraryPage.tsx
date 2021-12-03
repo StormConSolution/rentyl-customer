@@ -139,7 +139,7 @@ const ExistingItineraryPage: React.FC = () => {
 					maxOccupancy={itinerary.stays[0].accommodation.maxOccupantCount}
 					amenities={itinerary.stays[0].accommodation.featureIcons}
 					totalPoints={pointTotal}
-					linkPath={'/reservations/itinerary/details?ii=' + itinerary.itineraryId}
+					linkPath={'/reservations/itinerary/reservation/details?ri=' + itinerary.stays[0].reservationId}
 					cancelPermitted={itinerary.stays[0].cancellationPermitted}
 					itineraryTotal={cashTotal}
 					paidWithPoints={!itinerary.paymentMethod}
