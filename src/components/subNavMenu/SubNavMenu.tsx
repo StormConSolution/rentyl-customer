@@ -34,8 +34,14 @@ const SubNavMenu: React.FC<SubNavMenuProps> = (props) => {
 
 	function getAppBarHeight() {
 		let appBar = document.querySelector('.rsAppBar');
+		let height;
+		if (size === 'small') {
+			height = 64;
+		} else {
+			height = 100;
+		}
 		if (!appBar) return '0px';
-		else return appBar.scrollHeight + 'px';
+		else return height + 'px';
 	}
 
 	return (

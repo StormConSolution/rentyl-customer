@@ -25,11 +25,16 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
-import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Loader } from 'google-maps';
 import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
+import MobileAccommodationOverviewPopup, {
+	MobileAccommodationOverviewPopupProps
+} from '../../popups/mobileAccommodationOverviewPopup/MobileAccommodationOverviewPopup';
+import AccommodationOverviewPopup, {
+	AccommodationOverviewPopupProps
+} from '../../popups/accommodationOverviewPopup/AccommodationOverviewPopup';
 
 interface DestinationDetailsPageProps {}
 
@@ -195,6 +200,20 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		getAvailableStays().catch(console.error);
 	}, [reservationFilters, page]);
 
+	async function handleOnInfoClick(accommodationId: number) {
+		let accommodationDetails = await accommodationService.getAccommodationDetails(accommodationId);
+		if (size === 'small') {
+			popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
+				accommodationDetails: accommodationDetails
+			});
+		} else {
+			popupController.open<AccommodationOverviewPopupProps>(AccommodationOverviewPopup, {
+				accommodationDetails: accommodationDetails,
+				destinationName: destinationDetails?.name || ''
+			});
+		}
+	}
+
 	function renderInfoWindowContent() {
 		if (!destinationDetails) return;
 		return `
@@ -253,6 +272,8 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						accommodation={destinationAccommodation}
 						destinationId={reservationFilters.destinationId}
 						pointsEarnable={accommodationAvailability.pointsEarned}
+						onClickInfoIcon={handleOnInfoClick}
+						showInfoIcon
 					/>
 				);
 			}
@@ -277,6 +298,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			});
 		}
 		return [];
+	}
+
+	function renderMinMaxLabels(min: number, max: number) {
+		if (min === max) return min;
+		if (min === 0) return `1-${max}`;
+		return `${min}-${max}`;
 	}
 
 	function getMinMaxSqFtFromAccommodations(): { minSquareFt: number; maxSquareFt: number } {
@@ -363,13 +390,21 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					<Box className={'destinationDetailsWrapper'}>
 						<Box className={'minMaxDescription'}>
 							<Box className={'minMaxContainer'}>
-								<MinMaxDestinationDetailsBar
-									minBed={destinationDetails.minBedroom}
-									maxBed={destinationDetails.maxBedroom}
-									minBath={destinationDetails.minBathroom}
-									maxBath={destinationDetails.maxBathroom}
-									squareFt={getMinMaxSqFtFromAccommodations()}
-								/>
+								<Box className={'minMaxLabels'}>
+									<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+										{destinationDetails.minBedroom}-{destinationDetails.maxBedroom} Bed
+									</Label>
+									<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+										{destinationDetails.minBathroom}-{destinationDetails.maxBathroom} Bath
+									</Label>
+									<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+										{renderMinMaxLabels(
+											getMinMaxSqFtFromAccommodations().minSquareFt,
+											getMinMaxSqFtFromAccommodations().maxSquareFt
+										)}{' '}
+										ft&sup2;
+									</Label>
+								</Box>
 								<Box className={'cityStateContainer'}>
 									<Icon
 										className={'locationIcon'}
@@ -386,13 +421,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								</Box>
 							</Box>
 							{destinationDetails.description ? (
-								<Label variant={'body2'}>{destinationDetails.description}</Label>
+								<Label variant={'body2'} className={'locationDescription'}>
+									{destinationDetails.description}
+								</Label>
 							) : (
 								<div />
 							)}
 						</Box>
 						<Box
-							width={size === 'small' ? '300px' : '766px'}
+							width={'clamp(300px, 100%, 766px)'}
 							height={size === 'small' ? '300px' : '430px'}
 							id={'GoogleMap'}
 						></Box>

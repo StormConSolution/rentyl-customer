@@ -9,7 +9,7 @@ interface AccommodationSearchCardProps {
 	destinationId: number;
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
-	onClickInfoIcon?: () => void;
+	onClickInfoIcon?: (accommodationId: number) => void;
 	pointsEarnable: number;
 }
 
