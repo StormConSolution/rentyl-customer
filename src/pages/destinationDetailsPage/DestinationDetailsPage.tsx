@@ -25,7 +25,6 @@ import LightBoxCarouselPopup, {
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
-import MinMaxDestinationDetailsBar from '../../components/minMaxDestinationDetailsBar/MinMaxDestinationDetailsBar';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Loader } from 'google-maps';
@@ -302,6 +301,12 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		return [];
 	}
 
+	function renderMinMaxLabels(min: number, max: number) {
+		if (min === max) return min;
+		if (min === 0) return `1-${max}`;
+		return `${min}-${max}`;
+	}
+
 	function getMinMaxSqFtFromAccommodations(): { minSquareFt: number; maxSquareFt: number } {
 		let minSquareFt = 0;
 		let maxSquareFt = 0;
@@ -386,13 +391,21 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					<Box className={'destinationDetailsWrapper'}>
 						<Box className={'minMaxDescription'}>
 							<Box className={'minMaxContainer'}>
-								<MinMaxDestinationDetailsBar
-									minBed={destinationDetails.minBedroom}
-									maxBed={destinationDetails.maxBedroom}
-									minBath={destinationDetails.minBathroom}
-									maxBath={destinationDetails.maxBathroom}
-									squareFt={getMinMaxSqFtFromAccommodations()}
-								/>
+								<Box className={'minMaxLabels'}>
+									<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+										{destinationDetails.minBedroom}-{destinationDetails.maxBedroom} Bed
+									</Label>
+									<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+										{destinationDetails.minBathroom}-{destinationDetails.maxBathroom} Bath
+									</Label>
+									<Label className={'minMaxLabel'} variant={'destinationDetailsCustomTwo'}>
+										{renderMinMaxLabels(
+											getMinMaxSqFtFromAccommodations().minSquareFt,
+											getMinMaxSqFtFromAccommodations().maxSquareFt
+										)}{' '}
+										ft&sup2;
+									</Label>
+								</Box>
 								<Box className={'cityStateContainer'}>
 									<Icon
 										className={'locationIcon'}
@@ -409,13 +422,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								</Box>
 							</Box>
 							{destinationDetails.description ? (
-								<Label variant={'body2'}>{destinationDetails.description}</Label>
+								<Label variant={'body2'} className={'locationDescription'}>
+									{destinationDetails.description}
+								</Label>
 							) : (
 								<div />
 							)}
 						</Box>
 						<Box
-							width={size === 'small' ? '300px' : '766px'}
+							width={'clamp(300px, 100%, 766px)'}
 							height={size === 'small' ? '300px' : '430px'}
 							id={'GoogleMap'}
 						></Box>
