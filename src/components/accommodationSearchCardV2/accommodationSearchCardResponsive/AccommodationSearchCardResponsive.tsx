@@ -1,29 +1,34 @@
 import * as React from 'react';
-import './AccommodationSearchCardV2.scss';
+import './AccommodationSearchCardResponsive.scss';
 import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { useEffect, useState } from 'react';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { ObjectUtils, WebUtils } from '../../utils/utils';
-import serviceFactory from '../../services/serviceFactory';
-import AccommodationService from '../../services/accommodation/accommodation.service';
-import LoadingPage from '../../pages/loadingPage/LoadingPage';
-import CarouselV2 from '../carouselV2/CarouselV2';
+import { ObjectUtils, WebUtils } from '../../../utils/utils';
+import serviceFactory from '../../../services/serviceFactory';
+import AccommodationService from '../../../services/accommodation/accommodation.service';
+import LoadingPage from '../../../pages/loadingPage/LoadingPage';
+import CarouselV2 from '../../carouselV2/CarouselV2';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import RateCodeCard from '../rateCodeCard/RateCodeCard';
-import PointsOrCentsBox from '../pointsOrCentsBox/PointsOrCentsBox';
-import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
+import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
+import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
 import LightBoxCarouselPopup, {
 	TabbedCarouselPopupProps
-} from '../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
-import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+} from '../../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
+import PointsOrCentsBox from '../../pointsOrCentsBox/PointsOrCentsBox';
+import RateCodeCard from '../../rateCodeCard/RateCodeCard';
 
-interface AccommodationSearchCardV2Props {
+interface AccommodationSearchCardResponsiveProps {
 	accommodation: Api.Destination.Res.Accommodation;
 	destinationId: number;
+	openAccordion?: boolean;
+	showInfoIcon?: boolean;
+	onClickInfoIcon?: () => void;
+	pointsEarnable: number;
 }
 
-const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (props) => {
+const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardResponsiveProps> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const size = useWindowResizeChange();
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
@@ -92,12 +97,19 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 	return !props.accommodation ? (
 		<LoadingPage />
 	) : (
-		<Box className={'rsAccommodationSearchCardV2'}>
+		<Box className={'rsAccommodationSearchCardResponsive'}>
 			{renderImageCarousel()}
 			<Box className={'accommodationContainer'}>
 				<Box className={'accommodationDetails'}>
 					<Box className={'accommodationDescription'}>
-						<Label variant={'accommodationModalCustomTwo'}>{props.accommodation.name}</Label>
+						<Box display={'flex'} paddingBottom={17}>
+							<Label variant={'accommodationModalCustomTwo'} paddingRight={20}>
+								{props.accommodation.name}
+							</Label>
+							{props.showInfoIcon && (
+								<Icon iconImg={'icon-info-outline'} onClick={props.onClickInfoIcon} size={22} />
+							)}
+						</Box>
 						<Box className={'detailsTextContainer'}>
 							{props.accommodation.maxOccupantCount && (
 								<Label paddingRight={5} variant={'customThree'}>
@@ -111,19 +123,21 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 							)}
 							{props.accommodation.maxSquareFt && props.accommodation.minSquareFt && (
 								<Label variant={'customThree'} paddingLeft={5}>
-									{props.accommodation.minSquareFt} to {props.accommodation.maxSquareFt} ft
+									{props.accommodation.minSquareFt} to {props.accommodation.maxSquareFt} ft&sup2;
 								</Label>
 							)}
 						</Box>
-						<Label lineClamp={3} variant={'accommodationModalCustomThree'}>
+						<Label lineClamp={3} variant={'accommodationModalCustomThree'} marginBottom={29}>
 							{accommodationDetails?.longDescription}
 						</Label>
-						<Label variant={'accommodationModalCustomSeven'}>
-							{displayLowestPrice ? displayLowestPrice.rate.name : ''}
-						</Label>
-						<Label variant={'accommodationModalCustomEight'}>
-							{displayLowestPrice ? displayLowestPrice.rate.description : ''}
-						</Label>
+						<Box className={'rateDescriptionContainer'}>
+							<Label variant={'accommodationModalCustomSeven'} paddingBottom={13}>
+								{displayLowestPrice?.title ? displayLowestPrice.title : 'Promotional Rate'}
+							</Label>
+							<Label variant={'accommodationModalCustomEight'}>
+								{displayLowestPrice?.description ? displayLowestPrice.description : 'Promotional Rate'}
+							</Label>
+						</Box>
 					</Box>
 					<Box className={'priceBox'}>
 						{displayLowestPrice && (
@@ -137,7 +151,7 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 				</Box>
 				<Box className={'accordionContainer'}>
 					{ObjectUtils.isArrayWithData(accommodationPrices) && (
-						<Accordion title={'View more rates'}>
+						<Accordion title={'View more rates'} isOpen={props.openAccordion}>
 							{accommodationPrices.map((priceObj) => {
 								return (
 									<RateCodeCard
@@ -145,6 +159,7 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 										priceObj={priceObj}
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}
+										pointsEarnable={props.pointsEarnable}
 									/>
 								);
 							})}
@@ -156,4 +171,4 @@ const AccommodationSearchCardV2: React.FC<AccommodationSearchCardV2Props> = (pro
 	);
 };
 
-export default AccommodationSearchCardV2;
+export default AccommodationSearchCardResponsive;

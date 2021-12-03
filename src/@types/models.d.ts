@@ -107,7 +107,7 @@ declare namespace Model {
 		extraBedPriceCents: number;
 		adaCompliant: 0 | 1;
 		heroUrl: string;
-		size: string; // of type {max: number; min: number; units: string}
+		size: { max: number; min: number; units: string };
 	}
 
 	export interface AccommodationAmenity {

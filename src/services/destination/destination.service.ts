@@ -17,9 +17,15 @@ export default class DestinationService extends Service {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
 		return response.data.data;
 	}
-	async getDestinationDetails(destinationId: number): Promise<Api.Destination.Res.Details> {
+	async getDestinationDetails(
+		destinationId: number,
+		startDate?: Date | string,
+		endDate?: Date | string
+	): Promise<Api.Destination.Res.Details> {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Details>>('destination/details', {
-			destinationId
+			destinationId,
+			startDate,
+			endDate
 		});
 		return response.data.data;
 	}

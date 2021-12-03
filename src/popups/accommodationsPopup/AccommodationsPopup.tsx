@@ -4,13 +4,14 @@ import { Box, Popup, popupController, PopupProps } from '@bit/redsky.framework.r
 import Paper from '../../components/paper/Paper';
 import Icon from '@bit/redsky.framework.rs.icon';
 import Label from '@bit/redsky.framework.rs.label';
-import AccommodationSearchCardV2 from '../../components/accommodationSearchCardV2/AccommodationSearchCardV2';
+import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
 
 export interface AccommodationsPopupProps extends PopupProps {
 	propertyTypeName: string;
 	destinationId: number;
 	destinationName: string;
 	accommodations: Api.Destination.Res.Accommodation[];
+	availabilityStayList: Api.Accommodation.Res.Availability[];
 }
 
 const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
@@ -18,11 +19,16 @@ const AccommodationsPopup: React.FC<AccommodationsPopupProps> = (props) => {
 		return (
 			<Box className={'accommodationCards'}>
 				{props.accommodations.map((accommodation) => {
+					let accommodationAvailability = props.availabilityStayList.find(
+						(accommodationAvail) => accommodationAvail.id === accommodation.id
+					);
+					const pointsEarnable = accommodationAvailability ? accommodationAvailability.pointsEarned : 0;
 					return (
-						<AccommodationSearchCardV2
+						<AccommodationSearchCard
 							key={accommodation.id}
 							accommodation={accommodation}
 							destinationId={props.destinationId}
+							pointsEarnable={pointsEarnable}
 						/>
 					);
 				})}
