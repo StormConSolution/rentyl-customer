@@ -24,7 +24,7 @@ interface AccommodationSearchCardResponsiveProps {
 	destinationId: number;
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
-	onClickInfoIcon?: () => void;
+	onClickInfoIcon?: (accommodationId: number) => void;
 	pointsEarnable: number;
 }
 
@@ -107,7 +107,13 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 								{props.accommodation.name}
 							</Label>
 							{props.showInfoIcon && (
-								<Icon iconImg={'icon-info-outline'} onClick={props.onClickInfoIcon} size={22} />
+								<Icon
+									iconImg={'icon-info-outline'}
+									onClick={() => {
+										if (props.onClickInfoIcon) props.onClickInfoIcon(props.accommodation.id);
+									}}
+									size={22}
+								/>
 							)}
 						</Box>
 						<Box className={'detailsTextContainer'}>
