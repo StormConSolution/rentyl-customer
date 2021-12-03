@@ -24,6 +24,10 @@
 		img {
 			overflow: visible;
 			scroll-snap-align: center;
+			width: 100%;
+			min-width: 100%;
+			max-width: 100%;
+			object-fit: cover;
 		}
 	}
 	&:hover {

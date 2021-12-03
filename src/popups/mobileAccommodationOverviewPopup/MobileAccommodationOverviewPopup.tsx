@@ -88,7 +88,15 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 				</div>
 
 				<div className={'popupContent'}>
-					<CarouselV2 path={() => {}} imgPaths={getAccommodationImages()} />
+					<CarouselV2
+						path={() => {}}
+						imgPaths={getAccommodationImages()}
+						onGalleryClick={() => {
+							popupController.open<MobileLightBoxProps>(MobileLightBox, {
+								imageData: props.accommodationDetails.media
+							});
+						}}
+					/>
 
 					<Box
 						display={'flex'}

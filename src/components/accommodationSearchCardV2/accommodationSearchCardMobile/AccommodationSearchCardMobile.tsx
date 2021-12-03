@@ -101,15 +101,9 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 				imgPaths={urls}
 				hideCompareButton={true}
 				onGalleryClick={() => {
-					if (size === 'small') {
-						popupController.open<MobileLightBoxProps>(MobileLightBox, {
-							imageData: accommodationDetails?.media
-						});
-					} else {
-						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
-							imageData: accommodationDetails?.media
-						});
-					}
+					popupController.open<MobileLightBoxProps>(MobileLightBox, {
+						imageData: accommodationDetails?.media
+					});
 				}}
 			/>
 		);
