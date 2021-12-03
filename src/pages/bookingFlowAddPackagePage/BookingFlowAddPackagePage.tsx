@@ -180,6 +180,10 @@ const BookingFlowAddPackagePage = () => {
 						destinationId: params.data.destinationId,
 						stays
 					};
+					setVerifiedAccommodation((prev) => {
+						if (!prev) return;
+						return { ...prev, upsellPackages: addedPackages };
+					});
 					router.navigate(`/booking/checkout?data=${JSON.stringify(bookingParams)}`).catch(console.error);
 				}}
 			/>
