@@ -12,6 +12,7 @@ interface LabelCheckboxV2Props {
 	className?: string;
 	lineClamp?: number;
 	isDisabled?: boolean;
+	textColor?: string;
 }
 
 const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
@@ -38,7 +39,7 @@ const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
 					disabled={props.isDisabled}
 				/>
 			</label>
-			<Label variant={'body1'} lineClamp={props.lineClamp || 2} className="titleLabel">
+			<Label variant={'body1'} color={props.textColor} lineClamp={props.lineClamp || 2} className="titleLabel">
 				{props.text}
 			</Label>
 		</div>

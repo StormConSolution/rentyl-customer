@@ -8,13 +8,15 @@ import LabelButton from '../labelButton/LabelButton';
 import useOnClickOutsideRef from '../../customHooks/useOnClickOutsideRef';
 
 interface FilterBarDropDownProps {
-	title?: string;
+	title?: string | React.ReactNode;
 	placeholder?: string;
 	onChangeCallBack: () => void;
 	onClearCallback: () => void;
 	isSortField?: boolean;
+	removeFilterByLabel?: boolean;
 	className?: string;
 	dropdownContentClassName?: string;
+	icon?: string;
 }
 
 const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
@@ -39,16 +41,19 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 				justifyContent="start"
 				alignItems="center"
 				onClick={() => setToggleContent((prevState) => !prevState)}
+				height={props.removeFilterByLabel ? '62%' : 'auto'}
 			>
 				<Box id="labelContainer">
-					<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
-						{props.isSortField ? 'Sort By' : 'Filter By'}
-					</Label>
+					{!props.removeFilterByLabel && (
+						<Label variant="caption2" className="filterByLabel" paddingBottom={4}>
+							{props.isSortField ? 'Sort By' : 'Filter By'}
+						</Label>
+					)}
 					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>
 				<Box id="chevronIcon" className="chevronIcon">
 					<Icon
-						iconImg={`icon-chevron-thin-${toggleContent ? 'down' : 'up'}`}
+						iconImg={props.icon ? props.icon : `icon-chevron-thin-${toggleContent ? 'down' : 'up'}`}
 						size={25}
 						color={'#000000BD'}
 					/>
