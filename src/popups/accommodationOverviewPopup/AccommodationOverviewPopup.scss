@@ -1,0 +1,98 @@
+@import 'src/themes/themes';
+
+.rsAccommodationOverviewPopup {
+	background-color: #ffffff;
+	border-radius: 20px;
+	width: 90%;
+	height: 90%;
+	overflow: scroll;
+
+	.popupHeader {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 38px;
+		border-bottom: 1px solid #00000029;
+	}
+
+	.rsDestinationImageGallery {
+		grid-template-rows: repeat(2, 278px);
+		grid-gap: 24px;
+		max-width: 1644px;
+		margin: auto;
+		.imageOne {
+			max-width: 1042px;
+			max-height: 580px;
+		}
+		.imageTwo,
+		.imageThree {
+			max-width: 578px;
+			max-height: 278px;
+		}
+	}
+
+	.accommodationCounts {
+		display: flex;
+		align-items: center;
+		.rsLabel {
+			margin: 0 16px;
+		}
+		.superScript {
+			vertical-align: super;
+			font-size: 12px;
+		}
+	}
+
+	.rsLabelButton {
+		margin-top: 24px;
+	}
+
+	.overview,
+	.amenitiesList {
+		border-bottom: 1px solid #00000029;
+	}
+
+	.amenitiesList {
+		.amenityItem {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin: 20px;
+			&:first-child {
+				margin-left: 0;
+			}
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+
+	.rsCarousel {
+		margin: 0 auto 60px;
+		width: 640px;
+		&.imageContainer {
+			width: 640px;
+			.carouselChild {
+				margin: 0 15px;
+				.imageTile {
+					width: 640px;
+					display: flex;
+					justify-content: center;
+					img {
+						width: 560px;
+						height: auto;
+					}
+				}
+			}
+		}
+		.clickLeft,
+		.clickRight {
+			top: calc(50% - 40px);
+			background-color: #ffa022;
+			.rsIcon {
+				color: white;
+			}
+		}
+	}
+}
