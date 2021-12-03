@@ -5,8 +5,8 @@ import { NumberUtils } from '../../utils/utils';
 
 export default class DestinationService extends Service {
 	async getDestinations(): Promise<Api.Destination.Res.Details[]> {
-		let response = await http.get<Api.Destination.Res.GetByPage>('destination/paged');
-		return response.data.data;
+		let response = await http.get<Api.Destination.Res.Details[]>('destination/paged');
+		return response.data;
 	}
 	async getDestinationById(id: Api.Destination.Req.Get): Promise<Api.Destination.Res.Get> {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Get>>('destination', id);
@@ -17,9 +17,15 @@ export default class DestinationService extends Service {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Get[]>>('destination', ids);
 		return response.data.data;
 	}
-	async getDestinationDetails(destinationId: number): Promise<Api.Destination.Res.Details> {
+	async getDestinationDetails(
+		destinationId: number,
+		startDate?: Date | string,
+		endDate?: Date | string
+	): Promise<Api.Destination.Res.Details> {
 		let response = await http.get<RsResponseData<Api.Destination.Res.Details>>('destination/details', {
-			destinationId
+			destinationId,
+			startDate,
+			endDate
 		});
 		return response.data.data;
 	}
@@ -29,7 +35,7 @@ export default class DestinationService extends Service {
 	): Promise<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>> {
 		if (data.priceRangeMin) data.priceRangeMin = NumberUtils.dollarsToCents(data.priceRangeMin);
 		if (data.priceRangeMax) data.priceRangeMax = NumberUtils.dollarsToCents(data.priceRangeMax);
-		let response = await http.get<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>>(
+		const response = await http.get<RedSky.RsPagedResponseData<Api.Destination.Res.Availability[]>>(
 			'destination/availability',
 			data
 		);

@@ -28,7 +28,7 @@
 	}
 
 	.amenitiesIcons {
-		margin-right: 30px;
+		margin-right: 60px;
 	}
 }
 
@@ -41,11 +41,12 @@
 
 		.infoSection {
 			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-			column-gap: 24px;
+			column-gap: 50px;
 			row-gap: 24px;
 		}
 
 		.amenitiesIcons {
+			margin-right: 20px;
 			margin-bottom: 30px;
 		}
 	}

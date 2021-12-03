@@ -28,28 +28,56 @@
 
 				.destinationPricingContainer {
 					text-align: end;
-
 					.price {
 						color: theme-var($yellowTextColor);
 					}
 				}
 			}
 			.destinationDetailsWrapper {
-				display: grid;
-				grid-template-columns: repeat(2, fit-content(100%));
+				display: flex;
+				justify-content: space-between;
 				margin-top: 34px;
 				margin-bottom: 124px;
 
+				.minMaxDescription {
+					max-width: 949px;
+					padding: 0 0 0 80px;
+					.locationDescription {
+						line-height: 40px;
+					}
+				}
 				.minMaxContainer {
-					display: grid;
-					grid-template-columns: repeat(2, auto);
-					margin: 0 0 37px 0;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 42px;
 
+					.minMaxLabels {
+						display: flex;
+						> .rsLabel {
+							box-sizing: border-box;
+							&:first-child {
+								padding-right: 26px;
+							}
+							&:not(:first-child) {
+								padding: 0 26px;
+							}
+							&:not(:last-child) {
+								border-right: 1px solid theme-var($greyLineColor);
+							}
+						}
+					}
 					.cityStateContainer {
+						justify-self: end;
 						display: grid;
 						grid-template-columns: repeat(2, auto);
 						justify-content: flex-end;
 						align-items: center;
+
+						.rsLabel {
+							white-space: nowrap;
+						}
 
 						.locationIcon {
 							margin-right: 10px;
@@ -57,11 +85,9 @@
 						}
 					}
 				}
-
-				.minMaxDescription {
-					margin: 0 100px 0 65px;
-				}
 				#GoogleMap {
+					width: clamp(300px, 100%, 766px);
+					height: clamp(300px, 100%, 430px);
 					border-radius: 20px;
 				}
 			}

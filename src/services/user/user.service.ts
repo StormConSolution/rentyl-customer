@@ -5,6 +5,7 @@ import { Service } from '../Service';
 import globalState, {
 	clearPersistentState,
 	getRecoilExternalValue,
+	KEY_PREFIX,
 	setRecoilExternalValue
 } from '../../state/globalState';
 import router from '../../utils/router';
@@ -76,6 +77,16 @@ export default class UserService extends Service {
 		data.new = SparkMD5.hash(data.new);
 		let response = await http.put<RsResponseData<boolean>>('user/password', data);
 		return response.data.data;
+	}
+
+	async setCheckoutUserInLocalStorage(checkoutUser: Api.User.Req.Checkout) {
+		setRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser, checkoutUser);
+	}
+
+	async clearCheckoutUserFromLocalStorage() {
+		if (!!getRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser)) {
+			localStorage.removeItem(KEY_PREFIX + globalState.checkoutUser.key);
+		}
 	}
 
 	private async onAfterLogin(user: Api.User.Res.Detail) {

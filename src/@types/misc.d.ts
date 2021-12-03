@@ -83,13 +83,6 @@ declare namespace Misc {
 		endDate: string;
 	}
 
-	export interface INavData {
-		title: string;
-		route: string;
-		isSectionHeader: boolean;
-		isSignedIn: boolean;
-	}
-
 	export interface ComparisonCardInfo {
 		destinationId: number;
 		accommodationOptions: Misc.OptionType[];
@@ -122,5 +115,13 @@ declare namespace Misc {
 		regionIds?: number[];
 		destinationId?: number;
 		accommodationId?: number;
+	}
+
+	export interface Pricing {
+		priceCents: number;
+		pricePoints: number;
+		quantityAvailable: number;
+		rate: Api.Destination.Res.Rate;
+		minStay: number;
 	}
 }

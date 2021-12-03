@@ -239,7 +239,15 @@ class DateUtils extends BaseDateUtils {
 	}
 }
 
-class NumberUtils extends BaseNumberUtils {}
+class NumberUtils extends BaseNumberUtils {
+	/**
+	 * Tests if the candidate passed in is a number
+	 * @param candidate
+	 */
+	static isANumber(candidate: any): boolean {
+		return !isNaN(Number(candidate));
+	}
+}
 
 export { StringUtils, ObjectUtils, RegionUtils, WebUtils, DateUtils, NumberUtils };
 

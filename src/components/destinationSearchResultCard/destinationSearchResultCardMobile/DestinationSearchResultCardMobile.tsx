@@ -15,16 +15,13 @@ import DestinationDetailsMobilePopup, {
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
-	destinationId: number;
-	destinationName: string;
-	address: string;
+	destinationObj: Api.Destination.Res.Availability;
 	picturePaths: string[];
-	summaryTabs: DestinationSummaryTab[];
 	onAddCompareClick?: () => void;
 	onGalleryClick: () => void;
 	onRemoveCompareClick?: () => void;
-	minPrice: number;
-	minPoints: number;
+	pointsEarnable: number;
+	availabilityStayList: Api.Accommodation.Res.Availability[];
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
@@ -35,16 +32,17 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 			return (
 				<Box display={'flex'}>
 					<Label variant={'boldCaption1'} className={'yellowText'}>
-						{StringUtils.addCommasToNumber(props.minPoints)}pts
+						{StringUtils.addCommasToNumber(props.destinationObj.minAccommodationPoints)}pts
 					</Label>
-					<Label variant={'caption1'}>/</Label>
-					<Label variant={'caption1'}>night</Label>
+					<Label variant={'caption1'}>/night</Label>
 				</Box>
 			);
 		} else {
 			return (
 				<Box display={'flex'}>
-					<Label variant={'boldCaption1'}>${StringUtils.formatMoney(props.minPrice)}/</Label>
+					<Label variant={'boldCaption1'}>
+						${StringUtils.formatMoney(props.destinationObj.minAccommodationPrice)}/
+					</Label>
 					<Label variant={'caption1'}>night</Label>
 				</Box>
 			);
@@ -56,7 +54,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 			<CarouselV2
 				path={() => {
 					router.updateUrlParams({
-						di: props.destinationId,
+						di: props.destinationObj.id,
 						startDate: reservationFilters.startDate as string,
 						endDate: reservationFilters.endDate as string
 					});
@@ -70,17 +68,17 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				onRemoveCompareClick={() => {
 					if (props.onRemoveCompareClick) props.onRemoveCompareClick();
 				}}
-				destinationId={props.destinationId}
+				destinationId={props.destinationObj.id}
 			/>
 			<Box className={'mobileCardInfo'}>
 				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>
-					<Label variant={'subtitle1'}>{props.destinationName}</Label>
+					<Label variant={'subtitle1'}>{props.destinationObj.name}</Label>
 					<Icon
 						iconImg={'icon-info-outline'}
 						onClick={() => {
 							router
 								.navigate(
-									`/destination/details?di=${props.destinationId}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+									`/destination/details?di=${props.destinationObj.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
 								)
 								.catch(console.error);
 						}}
@@ -90,12 +88,15 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				<Box display={'flex'} justifyContent={'space-between'} paddingBottom={'16px'}>
 					{renderPricePerNight()}
 					<Label variant={'caption1'} className={'addressLabel'}>
-						{props.address}
+						{StringUtils.buildAddressString({
+							city: props.destinationObj.city,
+							state: props.destinationObj.state
+						})}
 					</Label>
 				</Box>
 				<Box display={'flex'} justifyContent={'flex-end'}>
 					<Label className={'earnText'} variant={'italicBold'}>
-						You could earn from points for this stay
+						You could earn from {props.pointsEarnable} points for this stay
 					</Label>
 				</Box>
 			</Box>

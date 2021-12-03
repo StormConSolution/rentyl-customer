@@ -1,16 +1,14 @@
 import * as React from 'react';
 import './ReservationInfoCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
-import Paper from '../paper/Paper';
-import Icon from '@bit/redsky.framework.rs.icon';
-import { DateUtils, ObjectUtils } from '../../utils/utils';
+import { DateUtils } from '../../utils/utils';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface ReservationInfoCardProps {
 	reservationDates: { startDate: string | Date; endDate: string | Date };
 	propertyType: string;
 	itineraryId: string;
 	maxOccupancy: number;
-	amenities: string[];
 	misc?: { title: string; data: string | number }[];
 	cancelPermitted: 0 | 1;
 }
@@ -22,51 +20,33 @@ const ReservationInfoCard: React.FC<ReservationInfoCardProps> = (props) => {
 		)}`;
 	}
 
-	function renderAmenityIcons() {
-		return props.amenities.map((item, index) => {
-			return <Icon key={index} iconImg={item} size={22} />;
-		});
-	}
-
-	function renderMiscData() {
-		if (!props.misc) return;
-
-		return props.misc.map((item, index) => {
-			return (
-				<div key={index}>
-					<Label variant={'caption'}>{item.title}</Label>
-					<Label variant={'body1'}>{item.data}</Label>
-				</div>
-			);
-		});
-	}
-
 	return (
-		<Paper className={'rsReservationInfoCard'} padding={'15px 25px'} backgroundColor={'#f7f1db'}>
-			<div>
-				<Label variant={'caption'}>Reservation Date</Label>
-				<Label variant={'body1'}>{renderReservationDates()}</Label>
-			</div>
-			<div>
-				<Label variant={'caption'}>Itinerary #</Label>
-				<Label color={'#004b98'} variant={'body1'}>
+		<Box className={'rsReservationInfoCard'}>
+			<Box paddingRight={50}>
+				<Label variant={'customThree'}>Reservation date</Label>
+				<Label variant={'customFour'} className={'contentFont'}>
+					{renderReservationDates()}
+				</Label>
+			</Box>
+			<Box paddingRight={50}>
+				<Label variant={'customThree'}>Itinerary number</Label>
+				<Label variant={'customFour'} className={'contentFont'}>
 					{props.itineraryId}
 				</Label>
-			</div>
-			<div className={'amenities'}>
-				{ObjectUtils.isArrayWithData(props.amenities) && <Label variant={'caption'}>Amenities</Label>}
-				<Label variant={'body1'}>{renderAmenityIcons()}</Label>
-			</div>
-			<div>
-				<Label variant={'caption'}>Property Type</Label>
-				<Label variant={'body1'}>{props.propertyType}</Label>
-			</div>
-			<div>
-				<Label variant={'caption'}>Max Occupancy</Label>
-				<Label variant={'body1'}>{props.maxOccupancy}</Label>
-			</div>
-			{!!props.misc && renderMiscData()}
-		</Paper>
+			</Box>
+			<Box paddingRight={50}>
+				<Label variant={'customThree'}>Property type</Label>
+				<Label variant={'customFour'} className={'contentFont'}>
+					{props.propertyType}
+				</Label>
+			</Box>
+			<Box>
+				<Label variant={'customThree'}>Max occupancy</Label>
+				<Label variant={'customFour'} className={'contentFont'}>
+					{props.maxOccupancy}
+				</Label>
+			</Box>
+		</Box>
 	);
 };
 

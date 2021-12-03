@@ -55,6 +55,17 @@ const LoginOrCreateAccountPopup: React.FC<LoginOrCreateAccountPopupProps> = (pro
 						}}
 					/>
 				</Box>
+				<Box display={'flex'} justifyContent={'space-evenly'} width={'100%'}>
+					<LabelButton
+						look={'containedSecondary'}
+						variant={'button'}
+						label={'Continue as Guest'}
+						onClick={() => {
+							router.navigate(`/booking/packages?data=${props.query}`);
+							popupController.close(LoginOrCreateAccountPopup);
+						}}
+					/>
+				</Box>
 			</Paper>
 		</Popup>
 	);
