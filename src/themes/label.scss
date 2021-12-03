@@ -383,4 +383,19 @@ html {
 		line-height: 39px;
 		font-weight: $medium;
 	}
+	&.destinationDetailsMobileCustomOne {
+		font-size: 18px;
+		line-height: 30px;
+		font-weight: $light;
+	}
+	&.destinationDetailsMobileCustomTwo {
+		font-size: 20px;
+		line-height: 30px;
+		font-weight: $medium;
+	}
+	&.destinationDetailsMobileCustomThree {
+		font-size: 16px;
+		line-height: 30px;
+		font-weight: $light;
+	}
 }

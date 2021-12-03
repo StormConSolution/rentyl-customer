@@ -1,0 +1,38 @@
+@import '../../themes/themes';
+.rsDestinationDetailsMobilePopup {
+	position: absolute;
+	top: 0;
+	width: 100vw;
+	height: 100%;
+	background: #ffffff;
+	padding: 0 15px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	.topNav {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		box-shadow: theme-var($primaryBoxShadowColor);
+		padding: 0 16px;
+		box-sizing: border-box;
+		height: 50px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.rsCarouselV2 {
+		margin: 78px auto 25px;
+	}
+	hr {
+		background: #7070706e;
+		height: 1px;
+		width: 100%;
+		border: none;
+		margin: 25px 0;
+	}
+
+	#GoogleMap {
+		border-radius: 20px;
+	}
+}
