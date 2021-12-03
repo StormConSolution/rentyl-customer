@@ -19,15 +19,15 @@ import { ToastContainer } from '@bit/redsky.framework.rs.toastify';
 import Footer from './components/footer/Footer';
 import { FooterLinks } from './components/footer/FooterLinks';
 import globalState, { setRecoilExternalValue } from './state/globalState';
+import useAfterRouterNavigateSubscription from './customHooks/useAfterRouterNavigateSubscription';
 
 function App() {
-	const [showAccountOverview, setShowAccountOverview] = useState<boolean>(false);
-
 	useSetCustomToast();
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
 	const isCompanyLoaded = useCompanyInfo();
 	useUpdateExistingPages();
+	useAfterRouterNavigateSubscription();
 
 	useEffect(() => {
 		AOS.init({

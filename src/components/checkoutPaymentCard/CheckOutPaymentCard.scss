@@ -1,12 +1,37 @@
 @import '../../themes/themes';
 
-.rsCheckOutInfoCard {
+.rsCheckOutPaymentCard {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 
+	&.hidden {
+		display: none;
+	}
+
 	form {
 		width: 100%;
+
+		.fieldGroup {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 34px;
+			margin-top: 36px;
+
+			&.stretchedInput {
+				grid-template-columns: 1fr;
+			}
+
+			&.rightSide {
+				display: flex;
+				justify-content: flex-end;
+			}
+
+			&.leftSide {
+				display: flex;
+				justify-content: flex-start;
+			}
+		}
 		.rsLabelInput {
 			.rsInput {
 				max-width: 100%;
@@ -29,22 +54,6 @@
 		}
 		.rsButton {
 			padding: 17px 63px;
-		}
-	}
-
-	.fieldGroup {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 34px;
-		margin-top: 36px;
-
-		&.stretchedInput {
-			grid-template-columns: 1fr;
-		}
-
-		&.rightSide {
-			display: flex;
-			justify-content: flex-end;
 		}
 	}
 

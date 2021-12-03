@@ -42,9 +42,8 @@
 				margin-bottom: 40px;
 			}
 
-			.printConfirmButton.yellow {
+			.printConfirmButton {
 				width: 100%;
-				background-color: theme-var($secondaryButtonLinkColor);
 				font-family: Montserrat, serif;
 				height: 57px;
 				min-height: 57px;
@@ -55,8 +54,12 @@
 				font-weight: 500;
 				margin-bottom: 36px;
 
-				&:hover {
+				&.yellow {
 					background-color: theme-var($secondaryButtonLinkColor);
+
+					&:hover {
+						background-color: theme-var($secondaryButtonLinkColor);
+					}
 				}
 
 				&.blue {
@@ -67,6 +70,10 @@
 						background-color: theme-var($buttonLinkColor);
 						color: theme-var($primaryBackgroundColor);
 					}
+				}
+
+				&.none {
+					display: none;
 				}
 			}
 		}

@@ -1,0 +1,42 @@
+@import '../../themes/themes';
+
+.rsCardInfoCard {
+	border: 1px solid theme-var($greyLineColor);
+	border-radius: 20px;
+	background-color: #f8f8f8;
+	margin-top: 40px;
+
+	.title {
+		display: flex;
+		padding: 28px 24px;
+		background: #ffffff;
+		border-radius: 20px 20px 0 0;
+	}
+
+	.cardBody {
+		padding: 36px 24px;
+
+		.cardInfoGroup {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 34px;
+
+			& ~ .cardInfoGroup {
+				margin-top: 36px;
+			}
+
+			&.stretchedInput {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.helpIcon {
+			cursor: help;
+		}
+
+		#spreedly-number iframe,
+		#spreedly-cvv iframe {
+			height: 38px;
+		}
+	}
+}

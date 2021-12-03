@@ -5,25 +5,33 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 
 interface PaymentMethodProps {
-	cardHolderName: string;
-	cardBrand: string;
-	lastFourDigits: number;
+	userCheckout: Api.User.Req.Checkout;
+	userPrimaryPaymentMethod: Api.User.PaymentMethod | undefined;
 	onEditClickCallback?: () => void;
 }
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
+	function renderPaymentType() {
+		if (props.userCheckout.paymentInfo) return 'New Card';
+		if (props.userCheckout.usePoints) return 'Points';
+		return 'Card';
+	}
 	return (
 		<div className={'rsPaymentMethod'}>
 			<Label className={'sectionTitle'}>Payment Method</Label>
 			<Box display={'flex'} alignItems={'center'}>
-				<div className={'creditCardImage'}>Card</div>
-				<div className={'paymentInfoWrapper'}>
-					<Label className={'fullName'}>{props.cardHolderName}</Label>
-					<div className={'cardInfoWrapper'}>
-						<Label>{props.cardBrand} ending in</Label>
-						<Label className={'lastFourDigits'}>{props.lastFourDigits}</Label>
+				<div className={'creditCardImage'}>{renderPaymentType()}</div>
+				{!!props.userCheckout.paymentInfo && (
+					<div className={'paymentInfoWrapper'}>
+						<Label className={'fullName'}>Card</Label>
+						{props.userCheckout.useExistingPaymentMethod && props.userPrimaryPaymentMethod && (
+							<div className={'cardInfoWrapper'}>
+								<Label>Ending in</Label>
+								<Label className={'lastFourDigits'}>{props.userPrimaryPaymentMethod.last4}</Label>
+							</div>
+						)}
 					</div>
-				</div>
+				)}
 			</Box>
 			{!!props.onEditClickCallback && (
 				<Icon

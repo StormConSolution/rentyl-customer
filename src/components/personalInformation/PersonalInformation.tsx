@@ -2,18 +2,11 @@ import * as React from 'react';
 import './PersonalInformation.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
-
-interface CustomerInfo {
-	fullName: string;
-	street: string;
-	city: string;
-	state: string;
-	zipcode: string;
-}
+import UserCheckoutInfo = Api.User.Req.UserCheckoutInfo;
 
 interface PersonalInformationProps {
-	personalInfo: CustomerInfo;
-	billingInfo: CustomerInfo;
+	personalInfo: UserCheckoutInfo;
+	billingInfo: UserCheckoutInfo;
 	onEditClickCallback?: () => void;
 }
 
@@ -22,19 +15,27 @@ const PersonalInformation: React.FC<PersonalInformationProps> = (props) => {
 		<div className={'rsPersonalInformation'}>
 			<div className={'personalInformationWrapper'}>
 				<Label className={'sectionTitle'}>Personal Information</Label>
-				<Label className={'name'}>{props.personalInfo.fullName}</Label>
-				<Label className={'street'}>{props.personalInfo.street}</Label>
+				<Label className={'name'}>
+					{props.personalInfo.firstName} {props.personalInfo.lastName}
+				</Label>
+				<Label className={'street'}>
+					{props.personalInfo.address1} {props.personalInfo.address2}
+				</Label>
 				<Label className={'city'}>{props.personalInfo.city}</Label>
 				<Label className={'state'}>{props.personalInfo.state}</Label>
-				<Label className={'zipcode'}>{props.personalInfo.zipcode}</Label>
+				<Label className={'zipcode'}>{props.personalInfo.zip}</Label>
 			</div>
 			<div className={'billingAddressWrapper'}>
 				<Label className={'sectionTitle'}>Billing Address</Label>
-				<Label className={'name'}>{props.billingInfo.fullName}</Label>
-				<Label className={'street'}>{props.billingInfo.street}</Label>
+				<Label className={'name'}>
+					{props.billingInfo.firstName} {props.billingInfo.lastName}
+				</Label>
+				<Label className={'street'}>
+					{props.billingInfo.address1} {props.billingInfo.address2}
+				</Label>
 				<Label className={'city'}>{props.billingInfo.city}</Label>
 				<Label className={'state'}>{props.billingInfo.state}</Label>
-				<Label className={'zipcode'}>{props.billingInfo.zipcode}</Label>
+				<Label className={'zipcode'}>{props.billingInfo.zip}</Label>
 			</div>
 			{!!props.onEditClickCallback && (
 				<Icon
