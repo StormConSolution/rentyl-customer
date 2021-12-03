@@ -10,6 +10,7 @@ import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
 import router from '../../../utils/router';
 import AccommodationsPopup, { AccommodationsPopupProps } from '../../../popups/accommodationsPopup/AccommodationsPopup';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -100,6 +101,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						label={button.name}
 						onClick={(event) => {
 							popupController.open<AccommodationsPopupProps>(AccommodationsPopup, {
+								availabilityStayList: props.availabilityStayList,
 								propertyTypeName: button.name,
 								destinationId: props.destinationObj.id,
 								destinationName: props.destinationObj.name,
@@ -132,7 +134,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					display={'flex'}
 					flexDirection={'column'}
 					maxWidth={'1020px'}
-					padding={'5px 45px'}
+					padding={'5px 5px 5px 45px'}
 					onClick={() => {
 						router
 							.navigate(
@@ -150,6 +152,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 							{props.destinationObj.minBedroom} - {props.destinationObj.maxBedroom} Bedrooms
 						</Label>
 						<Label variant={'subtitle1'}>
+							<Icon iconImg="icon-pin" size={15} color="#FF6469" className="locationIcon" />
 							{StringUtils.buildAddressString({
 								city: props.destinationObj.city,
 								state: props.destinationObj.state

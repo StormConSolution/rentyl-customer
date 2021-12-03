@@ -27,7 +27,8 @@ interface AccommodationSearchCardMobileProps {
 	destinationId: number;
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
-	onClickInfoIcon?: () => void;
+	onClickInfoIcon?: (accommodationId: number) => void;
+	pointsEarnable: number;
 }
 
 const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps> = (props) => {
@@ -72,7 +73,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			arrivalDate: data.startDate,
 			departureDate: data.endDate,
 			packages: [],
-			rateCode: displayLowestPrice?.rateCode || ''
+			rateCode: displayLowestPrice?.rate.code || ''
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
 		popupController.close(AccommodationsPopup);
@@ -143,7 +144,13 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 				<Box className={'accommodationTitle'}>
 					<Label variant={'accommodationModalCustomNine'}>{props.accommodation.name}</Label>
 					{props.showInfoIcon && (
-						<Icon iconImg={'icon-info-outline'} onClick={props.onClickInfoIcon} size={22} />
+						<Icon
+							iconImg={'icon-info-outline'}
+							onClick={() => {
+								if (props.onClickInfoIcon) props.onClickInfoIcon(props.accommodation.id);
+							}}
+							size={22}
+						/>
 					)}
 				</Box>
 				<Box className={'detailsTextContainer'}>
@@ -164,14 +171,14 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 					)}
 				</Box>
 				<Label variant={'pointsPageCustomThree'} className={'rateCodeTitle'}>
-					{displayLowestPrice?.title ? displayLowestPrice.title : 'Promotional Rate'}
+					{displayLowestPrice?.rate.name ? displayLowestPrice.rate.name : 'Promotional Rate'}
 				</Label>
 				<Label variant={'bookingSummaryCustomThree'} className={'rateCodeDescription'}>
-					{displayLowestPrice?.description ? displayLowestPrice.description : 'Promotional Rate'}
+					{displayLowestPrice?.rate.description ? displayLowestPrice.rate.description : 'Promotional Rate'}
 				</Label>
 				{renderPointsOrCash()}
 				<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
-					You will earn points for this stay
+					You will earn {props.pointsEarnable} points for this stay
 				</Label>
 				<Box className={'buttonContainer'}>
 					<LabelButton
@@ -189,10 +196,11 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 						{accommodationPrices.map((priceObj) => {
 							return (
 								<RateCodeCard
-									key={priceObj.rateCode}
+									key={priceObj.rate.code}
 									priceObj={priceObj}
 									destinationId={props.destinationId}
 									accommodationId={props.accommodation.id}
+									pointsEarnable={props.pointsEarnable}
 								/>
 							);
 						})}

@@ -24,7 +24,8 @@ interface AccommodationSearchCardResponsiveProps {
 	destinationId: number;
 	openAccordion?: boolean;
 	showInfoIcon?: boolean;
-	onClickInfoIcon?: () => void;
+	onClickInfoIcon?: (accommodationId: number) => void;
+	pointsEarnable: number;
 }
 
 const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardResponsiveProps> = (props) => {
@@ -106,7 +107,13 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 								{props.accommodation.name}
 							</Label>
 							{props.showInfoIcon && (
-								<Icon iconImg={'icon-info-outline'} onClick={props.onClickInfoIcon} size={22} />
+								<Icon
+									iconImg={'icon-info-outline'}
+									onClick={() => {
+										if (props.onClickInfoIcon) props.onClickInfoIcon(props.accommodation.id);
+									}}
+									size={22}
+								/>
 							)}
 						</Box>
 						<Box className={'detailsTextContainer'}>
@@ -131,10 +138,12 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 						</Label>
 						<Box className={'rateDescriptionContainer'}>
 							<Label variant={'accommodationModalCustomSeven'} paddingBottom={13}>
-								{displayLowestPrice?.title ? displayLowestPrice.title : 'Promotional Rate'}
+								{displayLowestPrice?.rate.name ? displayLowestPrice.rate.name : 'Promotional Rate'}
 							</Label>
 							<Label variant={'accommodationModalCustomEight'}>
-								{displayLowestPrice?.description ? displayLowestPrice.description : 'Promotional Rate'}
+								{displayLowestPrice?.rate.description
+									? displayLowestPrice.rate.description
+									: 'Promotional Rate'}
 							</Label>
 						</Box>
 					</Box>
@@ -154,10 +163,11 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 							{accommodationPrices.map((priceObj) => {
 								return (
 									<RateCodeCard
-										key={priceObj.rateCode}
+										key={priceObj.rate.code}
 										priceObj={priceObj}
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}
+										pointsEarnable={props.pointsEarnable}
 									/>
 								);
 							})}

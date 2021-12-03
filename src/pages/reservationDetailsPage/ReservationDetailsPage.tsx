@@ -7,8 +7,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import LoadingPage from '../loadingPage/LoadingPage';
-import { useRecoilValue } from 'recoil';
-import Paper from '../../components/paper/Paper';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -16,11 +15,17 @@ import globalState from '../../state/globalState';
 import ReservationDetailsPaper from '../../components/reservationDetailsPaper/ReservationDetailsPaper';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import BookingSummaryCard from '../../components/bookingSummaryCard/BookingSummaryCard';
+import moment from 'moment';
 
 const ReservationDetailsPage: React.FC = () => {
 	const size = useWindowResizeChange();
+	const smallSize = size === 'small';
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
+	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
+		Api.Reservation.Res.Verification | undefined
+	>(globalState.verifiedAccommodation);
 	const params = router.getPageUrlParams<{ reservationId: number }>([
 		{ key: 'ri', default: 0, type: 'integer', alias: 'reservationId' }
 	]);
@@ -40,6 +45,27 @@ const ReservationDetailsPage: React.FC = () => {
 		}
 		getReservationData(params.reservationId).catch(console.error);
 	}, []);
+
+	useEffect(() => {
+		if (!reservation) return;
+		let mockReservation: Api.Reservation.Res.Verification = {
+			accommodationId: reservation.accommodation.id,
+			accommodationName: reservation.accommodation.name,
+			adultCount: reservation.adultCount,
+			arrivalDate: moment(reservation.arrivalDate).format('MM-DD-YYYY'),
+			checkInTime: StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn')),
+			checkOutTime: StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut')),
+			childCount: reservation.childCount,
+			departureDate: moment(reservation.departureDate).format('MM-DD-YYYY'),
+			destinationName: reservation.destination.name,
+			maxOccupantCount: reservation.accommodation.maxOccupantCount,
+			policies: reservation.destination.policies,
+			prices: reservation.priceDetail,
+			rateCode: reservation.rateCode,
+			upsellPackages: reservation.upsellPackages
+		};
+		setVerifiedAccommodation(mockReservation);
+	}, [reservation]);
 
 	function getPoliciesValue(option: 'CheckIn' | 'CheckOut' | 'Cancellation') {
 		if (!reservation) return '';
@@ -77,36 +103,65 @@ const ReservationDetailsPage: React.FC = () => {
 				<SubNavMenu
 					title={size === 'small' ? 'Your Itinerary' : `Your itinerary at ${reservation.destination.name}`}
 				/>
-				<ReservationDetailsPaper reservationData={reservation} />
-				<Paper boxShadow padding={'24px 28px'}>
-					<Box display={'flex'} mb={24}>
-						<Box marginRight={56}>
-							<Label variant={'h3'} mb={8}>
-								CHECK-IN
-							</Label>
-							<Label variant={'body1'}>
-								{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
-							</Label>
+				<div id="desktopView">
+					{verifiedAccommodation && (
+						<Box className={'bookingCard'}>
+							<BookingSummaryCard bookingData={verifiedAccommodation} canHide={smallSize} />
 						</Box>
+					)}
+					<ReservationDetailsPaper reservationData={reservation} id="reservationDetails" />
+					<Box className="policyCard">
+						<Label variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}>
+							Policies
+						</Label>
+						<Box display={'flex'} justifyContent={smallSize ? 'space-between' : 'block'} mb={24}>
+							<Box id="checkInContainer">
+								<Label
+									variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}
+									mb={8}
+								>
+									CHECK-IN
+								</Label>
+								<Label
+									variant={smallSize ? 'reservationDetailsCustomTwo' : 'reservationDetailsCustomTwo'}
+								>
+									{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
+								</Label>
+							</Box>
+							<Box id="checkOutContainer">
+								<Label
+									variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}
+									mb={8}
+								>
+									CHECK-OUT
+								</Label>
+								<Label
+									variant={smallSize ? 'reservationDetailsCustomTwo' : 'reservationDetailsCustomTwo'}
+								>
+									{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
+								</Label>
+							</Box>
+						</Box>
+						<Label
+							variant={smallSize ? 'reservationDetailsCustomTwo' : 'reservationDetailsCustomTwo'}
+							mb={24}
+						>
+							{reservation.accommodation.name.toUpperCase()}
+						</Label>
+
 						<div>
-							<Label variant={'h3'} mb={8}>
-								CHECK-OUT
+							<Label
+								variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}
+								mb={8}
+							>
+								Cancellation Policy
 							</Label>
-							<Label variant={'body1'}>
-								{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
+							<Label variant={smallSize ? 'reservationDetailsCustomTwo' : 'reservationDetailsCustomTwo'}>
+								{getPoliciesValue('Cancellation')}
 							</Label>
 						</div>
 					</Box>
-					<Label variant={'h3'} mb={24}>
-						{reservation.destination.name}
-					</Label>
-					<div>
-						<Label variant={'h3'} mb={8}>
-							Cancellation
-						</Label>
-						<Label variant={'body1'}>{getPoliciesValue('Cancellation')}</Label>
-					</div>
-				</Paper>
+				</div>
 			</div>
 		</Page>
 	);

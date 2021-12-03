@@ -30,6 +30,12 @@ import DestinationExperienceImageGallery from '../../components/destinationExper
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Loader } from 'google-maps';
 import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
+import MobileAccommodationOverviewPopup, {
+	MobileAccommodationOverviewPopupProps
+} from '../../popups/mobileAccommodationOverviewPopup/MobileAccommodationOverviewPopup';
+import AccommodationOverviewPopup, {
+	AccommodationOverviewPopupProps
+} from '../../popups/accommodationOverviewPopup/AccommodationOverviewPopup';
 
 interface DestinationDetailsPageProps {}
 
@@ -195,6 +201,20 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		getAvailableStays().catch(console.error);
 	}, [reservationFilters, page]);
 
+	async function handleOnInfoClick(accommodationId: number) {
+		let accommodationDetails = await accommodationService.getAccommodationDetails(accommodationId);
+		if (size === 'small') {
+			popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
+				accommodationDetails: accommodationDetails
+			});
+		} else {
+			popupController.open<AccommodationOverviewPopupProps>(AccommodationOverviewPopup, {
+				accommodationDetails: accommodationDetails,
+				destinationName: destinationDetails?.name || ''
+			});
+		}
+	}
+
 	function renderInfoWindowContent() {
 		if (!destinationDetails) return;
 		return `
@@ -253,6 +273,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						key={accommodationAvailability.id}
 						accommodation={destinationAccommodation}
 						destinationId={reservationFilters.destinationId}
+						pointsEarnable={accommodationAvailability.pointsEarned}
+						onClickInfoIcon={handleOnInfoClick}
+						showInfoIcon
 					/>
 				);
 			}
