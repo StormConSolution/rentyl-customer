@@ -14,9 +14,11 @@ export default function useWindowScrollChange() {
 
 	let scrollDebounce = debounce(async () => {
 		let currentScrollPos = window.pageYOffset;
-		if (currentScrollPos < SCROLL_FROM_TOP_BUFFER) {
+		if (prevScrollPosition > currentScrollPos) {
 			setScreenScrollDirection('UP');
-		} else if (prevScrollPosition + 5 < currentScrollPos) {
+		} else if (currentScrollPos < SCROLL_FROM_TOP_BUFFER) {
+			setScreenScrollDirection('UP');
+		} else if (prevScrollPosition + 20 < currentScrollPos) {
 			setScreenScrollDirection('DOWN');
 		}
 		prevScrollPosition = currentScrollPos;

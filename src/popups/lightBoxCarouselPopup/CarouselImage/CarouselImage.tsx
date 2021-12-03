@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import Img from '@bit/redsky.framework.rs.img';
 import CarouselButtons from '../../../components/carouselButtons/CarouselButtons';
 import { ObjectUtils } from '../../../utils/utils';
+import { Box } from '@bit/redsky.framework.rs.996';
 
 interface TabbedImageCarouselImageProps {
 	tabData?: ImageTabProp;
@@ -36,24 +37,28 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 		}
 	}
 
-	function renderStyles() {
-		let styles: any = { backgroundImage: `url(${media[imageIndex].urls.imageKit})` };
-		if (!!props.tabData) {
-			styles.height = `calc(100vh - 80px)`;
-		} else {
-			styles.height = '100vh';
-		}
-		return styles;
+	// function renderStyles() {
+	// 	let styles: any = { backgroundImage: `url(${media[imageIndex].urls.imageKit})` };
+	// 	if (!!props.tabData) {
+	// 		styles.height = `calc(100vh - 80px)`;
+	// 	} else {
+	// 		styles.height = '100vh';
+	// 	}
+	// 	return styles;
+	// }
+
+	function renderImages() {
+		return media.map((item, index) => {
+			return <Img key={item.id} src={item.urls.imageKit} alt={item.type} width={'1920px'} height={'auto'} />;
+		});
 	}
+
 	return imageIndex > largestImageIndex || media.length === 0 ? (
 		<div />
 	) : (
-		<div className={'rsCarouselImage'} style={renderStyles()}>
-			<Paper boxShadow borderRadius={'5px'}>
-				<Label variant={'tabbedImageCarouselCustomOne'} mb={12}>
-					{media[imageIndex].title}
-				</Label>
-				<Label variant={'tabbedImageCarouselCustomTwo'}>{media[imageIndex].description}</Label>
+		<div className={'rsCarouselImage'}>
+			<Box className={'imageWrapper'}>{renderImages()}</Box>
+			<Box className={'buttonAndPaperWrapper'}>
 				<CarouselButtons
 					position={'absolute'}
 					top={'-75px'}
@@ -64,6 +69,14 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 							return;
 						}
 						setImageIndex(imageIndex + 1);
+
+						// let val = parentRef.current!.offsetWidth + parentRef.current!.scrollLeft;
+						// setImageViewIndex(imageViewIndex + 1);
+						// if (imageViewIndex >= totalChildren) {
+						// 	val = 0;
+						// 	setImageViewIndex(1);
+						// }
+						// parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 					}}
 					onClickLeft={() => {
 						if (imageIndex === 0) {
@@ -71,9 +84,23 @@ const CarouselImage: React.FC<TabbedImageCarouselImageProps> = (props) => {
 							return;
 						}
 						setImageIndex(imageIndex - 1);
+						//
+						// let val = parentRef.current!.scrollLeft - parentRef.current!.offsetWidth;
+						// setImageViewIndex(imageViewIndex - 1);
+						// if (imageViewIndex <= 1) {
+						// 	val = parentRef.current!.offsetWidth * totalChildren;
+						// 	setImageViewIndex(totalChildren);
+						// }
+						// parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 					}}
 				/>
-			</Paper>
+				<Paper boxShadow borderRadius={'5px'}>
+					<Label variant={'tabbedImageCarouselCustomOne'} mb={12}>
+						{media[imageIndex].title}
+					</Label>
+					<Label variant={'tabbedImageCarouselCustomTwo'}>{media[imageIndex].description}</Label>
+				</Paper>
+			</Box>
 		</div>
 	);
 };
