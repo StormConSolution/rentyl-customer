@@ -29,7 +29,7 @@ const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
 			arrivalDate: data.startDate,
 			departureDate: data.endDate,
 			packages: [],
-			rateCode: props.priceObj.rateCode
+			rateCode: props.priceObj.rate.code
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
 		popupController.close(AccommodationsPopup);
@@ -61,8 +61,12 @@ const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
 	return (
 		<Box className={'rsRateCodeCardMobile'}>
 			<Box>
-				<Label variant={'accommodationModalCustomThirteen'}>{props.priceObj.title || 'Promotional Rate'}</Label>
-				<Label variant={'bookingSummaryCustomThree'}>{props.priceObj.description || 'Promotional Rate'}</Label>
+				<Label variant={'accommodationModalCustomThirteen'}>
+					{props.priceObj.rate.name || 'Promotional Rate'}
+				</Label>
+				<Label variant={'bookingSummaryCustomThree'}>
+					{props.priceObj.rate.description || 'Promotional Rate'}
+				</Label>
 				{renderPointsOrCash()}
 				<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
 					You will earn {props.pointsEarnable} points for this stay

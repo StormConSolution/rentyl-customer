@@ -73,7 +73,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			arrivalDate: data.startDate,
 			departureDate: data.endDate,
 			packages: [],
-			rateCode: displayLowestPrice?.rateCode || ''
+			rateCode: displayLowestPrice?.rate.code || ''
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
 		popupController.close(AccommodationsPopup);
@@ -165,10 +165,10 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 					)}
 				</Box>
 				<Label variant={'pointsPageCustomThree'} className={'rateCodeTitle'}>
-					{displayLowestPrice?.title ? displayLowestPrice.title : 'Promotional Rate'}
+					{displayLowestPrice?.rate.name ? displayLowestPrice.rate.name : 'Promotional Rate'}
 				</Label>
 				<Label variant={'bookingSummaryCustomThree'} className={'rateCodeDescription'}>
-					{displayLowestPrice?.description ? displayLowestPrice.description : 'Promotional Rate'}
+					{displayLowestPrice?.rate.description ? displayLowestPrice.rate.description : 'Promotional Rate'}
 				</Label>
 				{renderPointsOrCash()}
 				<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
@@ -190,7 +190,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 						{accommodationPrices.map((priceObj) => {
 							return (
 								<RateCodeCard
-									key={priceObj.rateCode}
+									key={priceObj.rate.code}
 									priceObj={priceObj}
 									destinationId={props.destinationId}
 									accommodationId={props.accommodation.id}
