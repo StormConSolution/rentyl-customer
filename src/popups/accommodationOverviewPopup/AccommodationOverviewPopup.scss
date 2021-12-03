@@ -96,6 +96,14 @@
 		}
 	}
 
+	.carouselParent {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	.carouselParent::-webkit-scrollbar {
+		display: none;
+	}
+
 	.singleLayoutImg {
 		margin-bottom: 60px;
 		display: flex;
