@@ -319,6 +319,8 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
+		latitude: number | null;
+		longitude: number | null;
 		logoUrl: string;
 		heroUrl: string;
 		metaData: string;
@@ -517,6 +519,14 @@ declare namespace Model {
 	export interface PropertyType {
 		id: number;
 		name: string;
+	}
+
+	export interface Rate {
+		id: number;
+		destinationId: number;
+		code: string;
+		name: string;
+		description: string;
 	}
 
 	export interface Region {

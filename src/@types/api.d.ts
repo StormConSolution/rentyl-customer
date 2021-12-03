@@ -606,28 +606,32 @@ declare namespace Api {
 				sort: string;
 				filter: string;
 			}
-
 			export interface Availability extends AvailabilityFilter {
 				regionIds?: number[];
 			}
 		}
 		export namespace Res {
-			export interface Get {
-				id: number;
-				companyId: number;
-				name: string;
-				description: string;
-				code: string;
-				status: string;
-				address1: string;
-				address2: string;
-				city: string;
-				state: string;
-				zip: string;
-				country: string;
-				logoUrl: string;
-				heroUrl: string;
+			export interface Get
+				extends Pick<
+					Model.Destination,
+					| 'id'
+					| 'companyId'
+					| 'name'
+					| 'description'
+					| 'code'
+					| 'status'
+					| 'address1'
+					| 'address2'
+					| 'city'
+					| 'state'
+					| 'zip'
+					| 'country'
+					| 'logoUrl'
+					| 'heroUrl'
+				> {
 				media: Media[];
+				latitude?: number;
+				longitude?: number;
 			}
 
 			export interface Update extends Details {}
@@ -655,27 +659,15 @@ declare namespace Api {
 				minSquareFt?: number;
 			}
 
-			export interface Details {
-				id: number;
+			export interface Details
+				extends Omit<
+					Model.Destination,
+					'metaData' | 'externalSystemId' | 'modifiedOn' | 'chainId' | 'latitude' | 'longitude'
+				> {
 				externalId: string;
-				companyId: number;
-				name: string;
-				description: string;
-				locationDescription: string;
-				code: string;
-				status: string;
-				address1: string;
-				address2: string;
-				city: string;
-				state: string;
-				zip: string;
-				country: string;
-				isActive: 0 | 1;
+				latitude?: number;
+				longitude?: number;
 				regions: DestinationRegion[];
-				logoUrl: string;
-				heroUrl: string;
-				reviewRating: number;
-				reviewCount: number;
 				minBedroom: number;
 				maxBedroom: number;
 				minBathroom: number;
@@ -686,12 +678,7 @@ declare namespace Api {
 				experiences: DestinationExperience[];
 				packages: UpsellPackage.Details[];
 				accommodations: DetailsAccommodation[];
-				accommodationTypes: {
-					id: number;
-					name: string;
-					description: string;
-					code: string;
-				}[];
+				accommodationTypes: Pick<AccommodationType, 'id' | 'name' | 'description' | 'code'>[];
 				policies: { type: Model.DestinationPolicyType; value: string }[];
 			}
 
@@ -705,12 +692,10 @@ declare namespace Api {
 				priceCents: number;
 				maxOccupantCount: number;
 				prices: {
-					title: string;
-					description: string;
 					priceCents: number;
 					pricePoints: number;
 					quantityAvailable: number;
-					rateCode: string;
+					rate: Rate;
 					minStay: number;
 				}[];
 				amenities: {
@@ -753,12 +738,9 @@ declare namespace Api {
 				accommodations: Accommodation[];
 			}
 
-			export interface AccommodationType extends Model.AccommodationType {}
+			export interface Rate extends Omit<Model.Rate, 'id' | 'destinationId'> {}
 
-			export interface GetByPage {
-				data: Details[];
-				total: number;
-			}
+			export interface AccommodationType extends Model.AccommodationType {}
 		}
 	}
 
@@ -1248,10 +1230,13 @@ declare namespace Api {
 				}
 
 				export interface Create {
-					destinationId: number;
-					paymentMethodId?: number;
+					userId?: number;
+					signUp?: 0 | 1;
 					existingAddressId?: number;
 					newAddress?: UserAddressCreate;
+					paymentMethodId?: number;
+					payment?: Api.Payment.Req.Create;
+					destinationId: number;
 					stays: Stay[];
 				}
 			}
@@ -1844,11 +1829,17 @@ declare namespace Api {
 				emailNotification?: 0 | 1;
 			}
 
+			export interface GetOrCreate
+				extends Pick<Create, 'firstName' | 'lastName' | 'primaryEmail' | 'address' | 'phone'> {
+				enroll: 0 | 1;
+			}
+
 			export interface Update {
 				id?: number;
 				ids?: number[];
 				userRoleId?: number;
 				firstName?: string;
+				permissionLogin?: 0 | 1;
 				lastName?: string;
 				primaryEmail?: string;
 				phone?: string;
@@ -1930,6 +1921,11 @@ declare namespace Api {
 				pointsExpiring: number;
 				pointsExpiringOn: Date | string;
 				paymentMethods: PaymentMethod[];
+			}
+
+			export interface GetOrCreate {
+				id: number;
+				enrolled: boolean;
 			}
 
 			export interface Role extends Model.UserRole {}

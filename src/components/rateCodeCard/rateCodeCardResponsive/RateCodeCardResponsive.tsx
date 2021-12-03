@@ -15,10 +15,10 @@ const RateCodeCardResponsive: React.FC<RateCodeCardResponsiveProps> = (props) =>
 		<Box className={'rsRateCodeCardResponsive'}>
 			<Box>
 				<Label variant={'accommodationModalCustomSeven'} paddingBottom={13}>
-					{props.priceObj.title || 'Promotional Rate'}
+					{props.priceObj.rate.name || 'Promotional Rate'}
 				</Label>
 				<Label variant={'accommodationModalCustomEight'}>
-					{props.priceObj.description || 'Promotional Rate'}
+					{props.priceObj.rate.description || 'Promotional Rate'}
 				</Label>
 			</Box>
 			<PointsOrCentsBox

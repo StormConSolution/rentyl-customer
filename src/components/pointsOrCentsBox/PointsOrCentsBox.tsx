@@ -28,7 +28,7 @@ const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
 			arrivalDate: data.startDate,
 			departureDate: data.endDate,
 			packages: [],
-			rateCode: props.priceObj.rateCode
+			rateCode: props.priceObj.rate.code
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
 		popupController.close(AccommodationsPopup);
