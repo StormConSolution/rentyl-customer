@@ -11,6 +11,8 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import MaskedDateRangeSelector from '../maskedDateRangeSelector/MaskedDateRangeSelector';
 import Button from '@bit/redsky.framework.rs.button';
 import DateRangeSelector from '../dateRangeSelector/DateRangeSelector';
+import Counter from '../counter/Counter';
+import TitleLabel from '../topSearchBar/titleLabel/TitleLabel';
 
 export interface FilterBarProps {
 	destinationId?: number;
@@ -128,14 +130,31 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	return (
 		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
 			{renderDateRangeSelector()}
-			<LabelInput
-				control={filterForm.get('adultCount')}
-				updateControl={updateFilterForm}
-				className="guestsInput"
-				inputType="number"
-				title="Guests"
-				labelInputRef={labelInputRef}
+			<TitleLabel
+				className="guestInput"
+				title={'Guests'}
+				label={`${filterForm.get('adultCount').value} guests`}
+				popoutBoxContent={
+					<Counter
+						title={'Guests'}
+						className="guestsInput"
+						control={filterForm.get('adultCount')}
+						updateControl={updateFilterForm}
+						minCount={1}
+						maxCount={28}
+						labelMarginRight={84}
+					/>
+				}
+				titleLabelRef={labelInputRef}
 			/>
+			{/*<LabelInput*/}
+			{/*	control={filterForm.get('adultCount')}*/}
+			{/*	updateControl={updateFilterForm}*/}
+			{/*	className="guestsInput"*/}
+			{/*	inputType="number"*/}
+			{/*	title="Guests"*/}
+			{/*	labelInputRef={labelInputRef}*/}
+			{/*/>*/}
 			<Button look={'containedPrimary'} className={'updateButton'} onClick={updateSearchQuery}>
 				Update
 			</Button>
