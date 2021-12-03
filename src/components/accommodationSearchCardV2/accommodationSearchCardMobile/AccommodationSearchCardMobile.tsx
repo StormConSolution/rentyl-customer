@@ -140,6 +140,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 					{props.showInfoIcon && (
 						<Icon
 							iconImg={'icon-info-outline'}
+							cursorPointer
 							onClick={() => {
 								if (props.onClickInfoIcon) props.onClickInfoIcon(props.accommodation.id);
 							}}

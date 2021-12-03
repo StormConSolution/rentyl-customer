@@ -12,7 +12,6 @@ import CheckoutBreadcrumbs from '../../components/checkoutBreadcrumbs/CheckoutBr
 import PrintableQrCode from '../../components/printableQrCode/PrintableQrCode';
 import BookingSummaryCard from '../../components/bookingSummaryCard/BookingSummaryCard';
 import Button from '@bit/redsky.framework.rs.button';
-import { useReactToPrint } from 'react-to-print';
 import router from '../../utils/router';
 import CheckOutPaymentCard from '../../components/checkoutPaymentCard/CheckOutPaymentCard';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -26,12 +25,14 @@ import PaymentService from '../../services/payment/payment.service';
 import ReservationsService from '../../services/reservations/reservations.service';
 import debounce from 'lodash.debounce';
 import SigninPopup from '../../popups/signin/SigninPopup';
+import PackageService from '../../services/package/package.service';
 
 interface CheckoutFlowPageProps {}
 
 const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ stage: number; data: Misc.BookingParams }>([
 		{ key: 's', default: 0, type: 'integer', alias: 'stage' },
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
@@ -117,18 +118,31 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 					childCount: 0,
 					arrivalDate: stayParams.arrivalDate,
 					departureDate: stayParams.departureDate,
-					numberOfAccommodations: 1
+					numberOfAccommodations: 1,
+					upsellPackages: stayParams.packages.map((packageId) => {
+						return { id: packageId };
+					})
 				};
 				if (stayParams.rateCode) verifyData.rateCode = stayParams.rateCode;
 
 				let response = await reservationService.verifyAvailability(verifyData);
+
+				if (ObjectUtils.isArrayWithData(stayParams.packages) && params.data.newRoom) {
+					const request: Api.UpsellPackage.Req.Availability = {
+						destinationId: params.data.destinationId,
+						packageIds: stayParams.packages,
+						startDate: params.data.newRoom.arrivalDate,
+						endDate: params.data.newRoom.departureDate
+					};
+					const packageResponse = await packageService.getPackagesByIds(request);
+					response.upsellPackages = packageResponse.data;
+				}
 				setVerifiedAccommodation(response);
 			} catch (e) {
 				rsToastify.error(
 					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'
 				);
-				setVerifiedAccommodation(undefined);
 			}
 		}
 		verifyAvailability().catch(console.error);
