@@ -4,7 +4,71 @@
 		padding: 200px 26px 0;
 		.gallerySection {
 		}
+
 		.overviewSection {
+			margin-top: 46px;
+
+			.titleAndPriceContainer {
+				display: grid;
+				grid-template-columns: repeat(2, fit-content(100%));
+				justify-content: space-between;
+
+				.logoNameContainer {
+					display: grid;
+					grid-template-columns: repeat(2, fit-content(100%));
+					align-items: center;
+
+					.destinationLogo {
+						margin-right: 50px;
+						margin-left: 26px;
+						height: 61px;
+						width: auto;
+					}
+				}
+
+				.destinationPricingContainer {
+					text-align: end;
+					.price {
+						color: theme-var($yellowTextColor);
+					}
+				}
+			}
+			.destinationDetailsWrapper {
+				display: grid;
+				grid-auto-flow: column;
+				margin-top: 34px;
+				margin-bottom: 124px;
+
+				.minMaxContainer {
+					display: grid;
+					grid-auto-flow: column;
+					margin: 0 0 37px 0;
+
+					.cityStateContainer {
+						display: grid;
+						grid-template-columns: repeat(2, auto);
+						justify-content: flex-end;
+						align-items: center;
+
+						.rsLabel {
+							white-space: nowrap;
+						}
+
+						.locationIcon {
+							margin-right: 10px;
+							cursor: default;
+						}
+					}
+				}
+
+				.minMaxDescription {
+					margin: 0 50px 0 65px;
+					width: clamp(300px, 418px, 750px);
+				}
+				#GoogleMap {
+					border-radius: 20px;
+				}
+			}
 		}
 		.experienceSection {
 		}
@@ -31,74 +95,9 @@
 		}
 	}
 
-	.sectionOne {
-		position: relative;
-		margin-bottom: 386px;
-
-		.headerWrapper {
-			position: absolute;
-			display: flex;
-			align-items: flex-end;
-			bottom: -270px;
-			left: 80px;
-			width: 1359px;
-			.destinationInfoCardWrapper {
-				position: relative;
-				margin-right: 60px;
-				.rsDestinationInfoCard {
-				}
-			}
-		}
-		.featureSlider {
-			display: flex;
-			transition: transform 300ms;
-		}
-	}
-
-	.sectionTwo {
-		.rsLabel {
-			&.h1 {
-				text-align: center;
-				margin-bottom: 32px;
-			}
-		}
-		.rsLabelImage {
-			margin: 0 8px 16px;
-		}
-	}
-
-	.sectionFour {
-		iframe {
-			box-shadow: theme-var($primaryBoxShadowColor);
-			height: 100%;
-			width: 100%;
-			border: 0;
-		}
-
-		.rsLabel {
-			&.h1 {
-				margin-bottom: 22px;
-			}
-			&.body2 {
-				margin-bottom: 30px;
-			}
-			.rsIcon {
-				margin-right: 14px;
-			}
-		}
-	}
-
-	.sectionFive {
-		width: 1160px;
+	.availableStays {
+		//width: 1160px;
 		margin: 0 auto;
-		hr {
-			height: 1px;
-			width: 100%;
-			background: theme-var($greyLineColor);
-			border: none;
-			margin: 20px 0;
-		}
-
 		.accommodationCardWrapper {
 			box-sizing: border-box;
 			.rsAccommodationSearchResultCardMobile,
@@ -165,6 +164,13 @@
 						}
 					}
 				}
+			}
+		}
+
+		.sectionFour {
+			.minMaxDescription {
+				margin: 0;
+				width: 300px;
 			}
 		}
 

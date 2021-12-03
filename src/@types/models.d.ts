@@ -107,7 +107,7 @@ declare namespace Model {
 		extraBedPriceCents: number;
 		adaCompliant: 0 | 1;
 		heroUrl: string;
-		size: string; // of type {max: number; min: number; units: string}
+		size: { max: number; min: number; units: string };
 	}
 
 	export interface AccommodationAmenity {
@@ -319,6 +319,8 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
+		latitude: number | null;
+		longitude: number | null;
 		logoUrl: string;
 		heroUrl: string;
 		metaData: string;
@@ -517,6 +519,14 @@ declare namespace Model {
 	export interface PropertyType {
 		id: number;
 		name: string;
+	}
+
+	export interface Rate {
+		id: number;
+		destinationId: number;
+		code: string;
+		name: string;
+		description: string;
 	}
 
 	export interface Region {

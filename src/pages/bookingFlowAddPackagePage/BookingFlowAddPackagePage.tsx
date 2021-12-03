@@ -25,7 +25,7 @@ const BookingFlowAddPackagePage = () => {
 	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
 	]);
-	params.data = ObjectUtils.smartParse((params.data as unknown) as string);
+	params.data = ObjectUtils.smartParse(params.data as unknown as string);
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);
@@ -136,8 +136,6 @@ const BookingFlowAddPackagePage = () => {
 	function renderAvailablePackages() {
 		const packageIds = addedPackages.map((item) => item.id);
 		return availablePackages.map((item) => {
-			let isAdded = addedPackages.find((value) => value.id === item.id);
-			if (isAdded) return false;
 			return (
 				<DestinationPackageTile
 					key={item.id}
@@ -148,12 +146,16 @@ const BookingFlowAddPackagePage = () => {
 						return item.urls.imageKit;
 					})}
 					onAddPackage={() => {
-						let newPackages = [...addedPackages, item];
-						setAddedPackages(newPackages);
-						let available = availablePackages.filter((availablePackage) => availablePackage.id !== item.id);
-						setAvailablePackages(available);
+						if (packageIds.includes(item.id)) {
+							setAddedPackages((prevState) => {
+								return prevState.filter((p) => p.id !== item.id);
+							});
+						} else {
+							let newPackages = [...addedPackages, item];
+							setAddedPackages(newPackages);
+						}
 					}}
-					text={packageIds.includes(item.id) ? 'added to my stay' : 'Add to my stay'}
+					text={packageIds.includes(item.id) ? 'added to stay' : 'Add to my stay'}
 					isAdded={packageIds.includes(item.id)}
 				/>
 			);
@@ -206,7 +208,10 @@ const BookingFlowAddPackagePage = () => {
 				{verifiedAccommodation ? (
 					<Box className="bookingCardWrapper">
 						{renderContinueBtn()}
-						<BookingSummaryCard bookingData={verifiedAccommodation} canHide={smallSize} />
+						<BookingSummaryCard
+							bookingData={{ ...verifiedAccommodation, upsellPackages: addedPackages }}
+							canHide={smallSize}
+						/>
 					</Box>
 				) : (
 					<div className={'loader'} />
