@@ -10,6 +10,7 @@ import globalState from '../../../state/globalState';
 import IconLabel from '../../iconLabel/IconLabel';
 import router from '../../../utils/router';
 import AccommodationsPopup, { AccommodationsPopupProps } from '../../../popups/accommodationsPopup/AccommodationsPopup';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -151,6 +152,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 							{props.destinationObj.minBedroom} - {props.destinationObj.maxBedroom} Bedrooms
 						</Label>
 						<Label variant={'subtitle1'}>
+							<Icon iconImg="icon-pin" size={15} color="#FF6469" className="locationIcon" />
 							{StringUtils.buildAddressString({
 								city: props.destinationObj.city,
 								state: props.destinationObj.state
