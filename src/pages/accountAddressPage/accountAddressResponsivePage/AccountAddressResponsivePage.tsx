@@ -37,7 +37,6 @@ const AccountAddressResponsivePage: React.FC = () => {
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
 	const [newAddressObj, setNewAddressObj] = useState<RsFormGroup>(
 		new RsFormGroup([
-			new RsFormControl('full_name', '', [new RsValidator(RsValidatorEnum.REQ, 'Full name is required')]),
 			new RsFormControl('address1', '', [new RsValidator(RsValidatorEnum.REQ, 'Address is required')]),
 			new RsFormControl('address2', '', []),
 			new RsFormControl('city', '', [new RsValidator(RsValidatorEnum.REQ, 'City is required')]),
@@ -166,7 +165,6 @@ const AccountAddressResponsivePage: React.FC = () => {
 
 	function isFormFilledOut(): boolean {
 		return (
-			!!newAddressObj.get('full_name').value.toString().length &&
 			!!newAddressObj.get('address1').value.toString().length &&
 			!!newAddressObj.get('city').value.toString().length &&
 			!!newAddressObj.get('zip').value.toString().length &&
@@ -253,14 +251,6 @@ const AccountAddressResponsivePage: React.FC = () => {
 					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 30}>
 						Add new address
 					</Label>
-					<LabelInput
-						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
-						className={'inputStretched'}
-						title={'Full Name'}
-						inputType={'text'}
-						control={newAddressObj.get('full_name')}
-						updateControl={updateNewAddressObj}
-					/>
 					<LabelInput
 						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
 						className={'inputStretched'}
