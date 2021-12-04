@@ -26,12 +26,14 @@ import ReservationsService from '../../services/reservations/reservations.servic
 import debounce from 'lodash.debounce';
 import SigninPopup from '../../popups/signin/SigninPopup';
 import PackageService from '../../services/package/package.service';
+import UserService from '../../services/user/user.service';
 
 interface CheckoutFlowPageProps {}
 
 const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
+	const userService = serviceFactory.get<UserService>('UserService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ stage: number; data: Misc.BookingParams }>([
 		{ key: 's', default: 0, type: 'integer', alias: 'stage' },
@@ -63,7 +65,8 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 		},
 		shouldCreateUser: checkoutUser?.shouldCreateUser || false,
 		usePoints: checkoutUser?.usePoints || false,
-		useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false
+		useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false,
+		pmData: checkoutUser?.pmData
 	});
 
 	const [currentCheckoutUser, setCurrentCheckoutUser] = checkoutUserState;
@@ -90,7 +93,8 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 			},
 			shouldCreateUser: checkoutUser?.shouldCreateUser || false,
 			usePoints: checkoutUser?.usePoints || false,
-			useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false
+			useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false,
+			pmData: checkoutUser?.pmData
 		});
 		setUserPrimaryAddress(primaryUserAddress);
 		setUserPrimaryPaymentMethod(primaryPaymentMethod);
@@ -229,98 +233,26 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 		// Error response codes
 		// https://docs.spreedly.com/reference/api/v1/#response-codes
 		let errorId = paymentService.subscribeToSpreedlyError((errorMsg) => {
-			let errorMessages = errorMsg.map((item) => {
-				return item.message;
-			});
-			popupController.closeAll();
-			return rsToastify.error(errorMessages.join(' '), "Can't Contact Payment Provider");
+			rsToastify.error('Please verify the information you have entered.', 'Payment method invalid');
 		});
-
-		return () => {
-			paymentService.unsubscribeToSpreedlyError(errorId);
-			paymentService.unsubscribeToSpreedlyReady(readyId);
-			paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
-		};
-	}, []);
-
-	useEffect(() => {
-		if (!verifiedAccommodation) return;
-		let subscribeId = paymentService.subscribeToSpreedlyError(() => {});
 		let paymentMethodId = paymentService.subscribeToSpreedlyPaymentMethod(
 			async (token: string, pmData: Api.Payment.PmData) => {
-				const stays: Api.Reservation.Req.Itinerary.Stay[] = [
-					{
-						accommodationId: verifiedAccommodation.accommodationId,
-						numberOfAccommodations: 1,
-						arrivalDate: verifiedAccommodation.arrivalDate,
-						departureDate: verifiedAccommodation.departureDate,
-						adultCount: verifiedAccommodation.adultCount,
-						childCount: verifiedAccommodation.childCount,
-						rateCode: verifiedAccommodation.rateCode,
-						upsellPackages: verifiedAccommodation.upsellPackages,
-						guest: {
-							firstName: currentCheckoutUser.personal.firstName,
-							lastName: currentCheckoutUser.personal.lastName,
-							phone: currentCheckoutUser.personal.phone,
-							email: currentCheckoutUser.personal.email
-						},
-						additionalDetails: ''
-					}
-				];
-				const data: Api.Reservation.Req.Itinerary.Create = {
-					destinationId: destinationId,
-					stays
-				};
-
-				if (user) data.userId = user.id;
-				if (!user) data.signUp = currentCheckoutUser.shouldCreateUser ? 1 : 0;
-				if (userPrimaryAddress) {
-					data.existingAddressId = userPrimaryAddress.id;
-				} else {
-					data.newAddress = {
-						type: currentCheckoutUser.billing ? 'BILLING' : 'BOTH',
-						address1: currentCheckoutUser.billing?.address1 || currentCheckoutUser.personal.address1,
-						address2: currentCheckoutUser.billing?.address2 || currentCheckoutUser.personal.address2,
-						city: currentCheckoutUser.billing?.city || currentCheckoutUser.personal.city,
-						state: currentCheckoutUser.billing?.state || currentCheckoutUser.personal.state,
-						zip: Number(currentCheckoutUser.billing?.zip || currentCheckoutUser.personal.zip),
-						country: currentCheckoutUser.billing?.country || currentCheckoutUser.personal.country,
-						isDefault: 1
-					};
-				}
-				if (userPrimaryPaymentMethod) {
-					data.paymentMethodId = userPrimaryPaymentMethod.id;
-				} else {
-					data.payment = {
-						pmData: {
-							...pmData,
-							first_six_digits: Number(pmData.first_six_digits),
-							last_four_digits: Number(pmData.last_four_digits)
-						},
-						isPrimary: 1,
-						cardToken: token,
-						offsiteLoyaltyEnrollment: 0
-					};
-				}
-
-				try {
-					await reservationService.createItinerary(data);
-					popupController.close(SpinningLoaderPopup);
-
-					// used because the router isn't working in this callback
-					window.location.href = `/booking/checkout?s=3&data=${params.data}`;
-				} catch (e) {
-					rsToastify.error('Missing proper data or existing card is invalid', 'Error!');
-					popupController.close(SpinningLoaderPopup);
-				}
+				if (!checkoutUser) return;
+				const newCheckoutUser = { ...checkoutUser, pmData: pmData };
+				setCurrentCheckoutUser(newCheckoutUser);
+				await userService.setCheckoutUserInLocalStorage(newCheckoutUser);
+				await handleForwardButtonClick();
+				rsToastify.success('Payment method added successfully', 'Success');
 			}
 		);
 
 		return () => {
-			paymentService.unsubscribeToSpreedlyError(subscribeId);
+			paymentService.unsubscribeToSpreedlyFieldEvent(fieldEventId);
+			paymentService.unsubscribeToSpreedlyError(errorId);
 			paymentService.unsubscribeToSpreedlyPaymentMethod(paymentMethodId);
+			paymentService.unsubscribeToSpreedlyReady(readyId);
 		};
-	}, [currentCheckoutUser.paymentInfo, verifiedAccommodation]);
+	}, [currentCheckoutUser]);
 
 	function isMissingSubmissionData() {
 		return (
@@ -345,13 +277,65 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 		if (!verifiedAccommodation || params.stage !== 2) return;
 		popupController.open(SpinningLoaderPopup);
 
-		if (shouldTokenizePaymentInformation()) {
-			let paymentObj = {
-				full_name: currentCheckoutUser.paymentInfo!.nameOnCard,
-				month: Number(currentCheckoutUser.paymentInfo!.expiration.split('/')[0]),
-				year: Number(currentCheckoutUser.paymentInfo!.expiration.split('/')[1])
-			};
-			window.Spreedly.tokenizeCreditCard(paymentObj);
+		if (shouldTokenizePaymentInformation() && !!currentCheckoutUser.pmData) {
+			try {
+				const stays: Api.Reservation.Req.Itinerary.Stay[] = [
+					{
+						accommodationId: verifiedAccommodation.accommodationId,
+						numberOfAccommodations: 1,
+						arrivalDate: verifiedAccommodation.arrivalDate,
+						departureDate: verifiedAccommodation.departureDate,
+						adultCount: verifiedAccommodation.adultCount,
+						childCount: verifiedAccommodation.childCount,
+						rateCode: verifiedAccommodation.rateCode,
+						upsellPackages: verifiedAccommodation.upsellPackages,
+						guest: {
+							firstName: currentCheckoutUser.personal.firstName,
+							lastName: currentCheckoutUser.personal.lastName,
+							phone: currentCheckoutUser.personal.phone,
+							email: currentCheckoutUser.personal.email
+						},
+						additionalDetails: ''
+					}
+				];
+				const data: Api.Reservation.Req.Itinerary.Create = {
+					destinationId: destinationId,
+					stays,
+					payment: {
+						pmData: {
+							...currentCheckoutUser.pmData,
+							first_six_digits: Number(currentCheckoutUser.pmData.first_six_digits),
+							last_four_digits: Number(currentCheckoutUser.pmData.last_four_digits)
+						},
+						isPrimary: 1,
+						cardToken: currentCheckoutUser.pmData.token,
+						offsiteLoyaltyEnrollment: 0
+					}
+				};
+
+				if (user) data.userId = user.id;
+				if (!user) data.signUp = currentCheckoutUser.shouldCreateUser ? 1 : 0;
+				if (userPrimaryAddress) {
+					data.existingAddressId = userPrimaryAddress.id;
+				} else {
+					data.newAddress = {
+						type: currentCheckoutUser.billing ? 'BILLING' : 'BOTH',
+						address1: currentCheckoutUser.billing?.address1 || currentCheckoutUser.personal.address1,
+						address2: currentCheckoutUser.billing?.address2 || currentCheckoutUser.personal.address2,
+						city: currentCheckoutUser.billing?.city || currentCheckoutUser.personal.city,
+						state: currentCheckoutUser.billing?.state || currentCheckoutUser.personal.state,
+						zip: Number(currentCheckoutUser.billing?.zip || currentCheckoutUser.personal.zip),
+						country: currentCheckoutUser.billing?.country || currentCheckoutUser.personal.country,
+						isDefault: 1
+					};
+				}
+
+				await reservationService.createItinerary(data);
+				popupController.close(SpinningLoaderPopup);
+				await handleForwardButtonClick();
+			} catch (e) {
+				rsToastify.error('Missing proper data or existing card is invalid', 'Error!');
+			}
 		} else {
 			if (isMissingSubmissionData()) {
 				rsToastify.error('Missing proper data or existing card is invalid', 'Error!');

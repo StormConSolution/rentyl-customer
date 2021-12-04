@@ -33,6 +33,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	);
 	const userService = serviceFactory.get<UserService>('UserService');
 	const countryService = serviceFactory.get<CountryService>('CountryService');
+	const [isTimeToSubmit, setIsTimeToSubmit] = useState<boolean>(false);
 	const [differentBillingAddress, setDifferentBillingAddress] = useState<boolean>(false);
 	const [payWithPoints, setPayWithPoints] = useState<boolean>(checkoutUser.usePoints || false);
 	const [useExistingPaymentMethod, setUseExistingPaymentMethod] = useState<boolean>(
@@ -187,17 +188,34 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 		try {
 			if (!(await paymentForm.isValid())) {
 				setPaymentForm(paymentForm.clone());
+				rsToastify.error('Please verify the information you have entered.', 'Payment method invalid');
 				return;
 			}
 
 			const newCheckoutUser = buildCheckoutUser();
-			setCheckoutUser(newCheckoutUser);
 			await userService.setCheckoutUserInLocalStorage(newCheckoutUser);
-			props.onContinue();
+			setCheckoutUser(newCheckoutUser);
+			setIsTimeToSubmit(true);
 		} catch (e) {
 			rsToastify.error('Payment information is invalid', 'Missing or Incorrect Information');
 		}
 	}
+
+	useEffect(() => {
+		if (!isTimeToSubmit) return;
+
+		if (checkoutUser.paymentInfo) {
+			let paymentObj = {
+				full_name: checkoutUser.paymentInfo.nameOnCard,
+				month: Number(checkoutUser.paymentInfo.expiration.split('/')[0]),
+				year: Number(checkoutUser.paymentInfo.expiration.split('/')[1])
+			};
+			window.Spreedly.tokenizeCreditCard(paymentObj);
+		} else {
+			props.onContinue();
+		}
+		setIsTimeToSubmit(false);
+	}, [isTimeToSubmit]);
 
 	function renderBillingInfo() {
 		if (!differentBillingAddress) return null;
