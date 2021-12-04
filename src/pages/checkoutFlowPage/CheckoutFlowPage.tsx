@@ -62,8 +62,8 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 			phone: user?.phone || checkoutUser?.personal.phone || ''
 		},
 		shouldCreateUser: checkoutUser?.shouldCreateUser || false,
-		usePoints: checkoutUser?.usePoints || false,
-		useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false
+		usePoints: checkoutUser?.usePoints || false
+		// useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false
 	});
 
 	const [currentCheckoutUser, setCurrentCheckoutUser] = checkoutUserState;
@@ -89,8 +89,8 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				phone: user?.phone || checkoutUser?.personal.phone || ''
 			},
 			shouldCreateUser: checkoutUser?.shouldCreateUser || false,
-			usePoints: checkoutUser?.usePoints || false,
-			useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false
+			usePoints: checkoutUser?.usePoints || false
+			// useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false
 		});
 		setUserPrimaryAddress(primaryUserAddress);
 		setUserPrimaryPaymentMethod(primaryPaymentMethod);
