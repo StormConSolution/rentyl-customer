@@ -88,4 +88,23 @@
 			}
 		}
 	}
+
+	.carouselParent {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	.carouselParent::-webkit-scrollbar {
+		display: none;
+	}
+
+	.singleLayoutImg {
+		margin-bottom: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		img {
+			max-width: 640px;
+			width: 100%;
+		}
+	}
 }
