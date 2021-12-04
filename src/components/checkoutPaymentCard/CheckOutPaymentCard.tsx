@@ -36,7 +36,8 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	const [differentBillingAddress, setDifferentBillingAddress] = useState<boolean>(false);
 	const [payWithPoints, setPayWithPoints] = useState<boolean>(checkoutUser.usePoints || false);
 	const [useExistingPaymentMethod, setUseExistingPaymentMethod] = useState<boolean>(
-		checkoutUser.useExistingPaymentMethod || false
+		false
+		// checkoutUser.useExistingPaymentMethod || false
 	);
 	const [stateList, setStateList] = useState<Misc.OptionType[]>([]);
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
@@ -337,23 +338,23 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 						/>
 					</Box>
 				)}
-
-				{canUsePrimaryPaymentMethod() && (
-					<Box className={'fieldGroup stretchedInput leftSide'}>
-						<Switch
-							className={'isUsingExistingPaymentMethod'}
-							label={'{"right":"Use existing payment method"}'}
-							labelPosition={'right'}
-							checked={useExistingPaymentMethod}
-							onChange={(checked) => {
-								const newCheckoutUser = { ...checkoutUser };
-								newCheckoutUser.useExistingPaymentMethod = checked;
-								setCheckoutUser(newCheckoutUser);
-								setUseExistingPaymentMethod(checked);
-							}}
-						/>
-					</Box>
-				)}
+				{/*TODO: Commented out until we get some feedback and designs*/}
+				{/*{canUsePrimaryPaymentMethod() && (*/}
+				{/*	<Box className={'fieldGroup stretchedInput leftSide'}>*/}
+				{/*		<Switch*/}
+				{/*			className={'isUsingExistingPaymentMethod'}*/}
+				{/*			label={'{"right":"Use existing payment method"}'}*/}
+				{/*			labelPosition={'right'}*/}
+				{/*			checked={useExistingPaymentMethod}*/}
+				{/*			onChange={(checked) => {*/}
+				{/*				const newCheckoutUser = { ...checkoutUser };*/}
+				{/*				newCheckoutUser.useExistingPaymentMethod = checked;*/}
+				{/*				setCheckoutUser(newCheckoutUser);*/}
+				{/*				setUseExistingPaymentMethod(checked);*/}
+				{/*			}}*/}
+				{/*		/>*/}
+				{/*	</Box>*/}
+				{/*)}*/}
 				{canShowCardForm() && <CardInfoCard form={paymentForm} onUpdate={updateForm} />}
 				<Box className={'fieldGroup stretchedInput rightSide'}>
 					<LabelButton look={'containedPrimary'} variant={'body1'} label={'Continue'} buttonType={'submit'} />
