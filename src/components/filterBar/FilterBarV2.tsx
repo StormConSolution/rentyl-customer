@@ -281,8 +281,9 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 				}}
 				isChecked={(filterForm.get('propertyTypeIds').value as number[]).includes(item.id as number)}
 				onDeselect={() => {
-					filterForm.get('propertyTypeIds').value = (filterForm.get('propertyTypeIds')
-						.value as number[]).filter((type) => type !== item.id);
+					filterForm.get('propertyTypeIds').value = (
+						filterForm.get('propertyTypeIds').value as number[]
+					).filter((type) => type !== item.id);
 					updateFilterForm(filterForm.get('propertyTypeIds'));
 				}}
 				className="filterCheckbox"

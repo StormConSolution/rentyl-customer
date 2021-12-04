@@ -252,8 +252,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 				}}
 				isChecked={(filterForm.get('propertyTypeIds').value as number[]).includes(item.id as number)}
 				onDeselect={() => {
-					filterForm.get('propertyTypeIds').value = (filterForm.get('propertyTypeIds')
-						.value as number[]).filter((type) => type !== item.id);
+					filterForm.get('propertyTypeIds').value = (
+						filterForm.get('propertyTypeIds').value as number[]
+					).filter((type) => type !== item.id);
 					updateFilterForm(filterForm.get('propertyTypeIds'));
 				}}
 			/>
@@ -278,8 +279,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								item.value as number
 							)}
 							onDeselect={() => {
-								filterForm.get('experienceIds').value = (filterForm.get('experienceIds')
-									.value as number[]).filter((id) => id !== item.value);
+								filterForm.get('experienceIds').value = (
+									filterForm.get('experienceIds').value as number[]
+								).filter((id) => id !== item.value);
 								updateFilterForm(filterForm.get('propertyTypeIds'));
 							}}
 						/>
@@ -305,8 +307,9 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 							}}
 							isChecked={(filterForm.get('amenityIds').value as number[]).includes(item.value as number)}
 							onDeselect={() => {
-								filterForm.get('amenityIds').value = (filterForm.get('amenityIds')
-									.value as number[]).filter((id) => id !== item.value);
+								filterForm.get('amenityIds').value = (
+									filterForm.get('amenityIds').value as number[]
+								).filter((id) => id !== item.value);
 								updateFilterForm(filterForm.get('propertyTypeIds'));
 							}}
 						/>

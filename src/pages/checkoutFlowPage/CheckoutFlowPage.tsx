@@ -37,7 +37,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 		{ key: 's', default: 0, type: 'integer', alias: 'stage' },
 		{ key: 'data', default: 0, type: 'string', alias: 'data' }
 	]);
-	const paramsData = ObjectUtils.smartParse((params.data as unknown) as string) as Misc.BookingParams;
+	const paramsData = ObjectUtils.smartParse(params.data as unknown as string) as Misc.BookingParams;
 	const destinationId = paramsData.destinationId;
 	const stayParams = paramsData.stays[0];
 
