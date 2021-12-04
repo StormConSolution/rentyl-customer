@@ -77,18 +77,21 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Card Name is required', customRequired)
 			]),
 			new RsFormControl('expiration', checkoutUser.paymentInfo?.expiration || '', [
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration is required', customRequired),
-				new RsValidator(
-					RsValidatorEnum.CUSTOM,
-					'Expiration must be a valid date in the format MM/YY',
-					(control) => {
-						return (
-							isPayingWithPoints() ||
-							isUsingExistingPaymentMethod() ||
-							/^(0[1-9]|1[0-2])\/?(20[0-9]{2})$/.test(control.value.toString())
-						);
-					}
-				)
+				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
+				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 7),
+				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 7),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
+					if (!control.value.toString().includes('/')) return false;
+					const [month, year] = control.value
+						.toString()
+						.split('/')
+						.map((datePart) => Number(datePart));
+					let currentYear = new Date().getFullYear();
+					let currentMonth = new Date().getMonth() + 1;
+					if (month > 12) return false;
+					if (year === currentYear) return month >= currentMonth;
+					else return year > currentYear;
+				})
 			])
 		]);
 	}

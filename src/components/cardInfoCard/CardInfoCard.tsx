@@ -28,6 +28,16 @@ const CardInfoCard: React.FC<CardInfoCardProps> = (props) => {
 		init().catch(console.error);
 	}, []);
 
+	async function updateExpiration(control: RsFormControl) {
+		const controlValue = control.value.toString();
+		if (!controlValue.includes('/') && controlValue.length === 6) {
+			control.value = controlValue.slice(0, 2) + '/' + controlValue.slice(2);
+			control.clearErrors();
+		} else if (control.value.toString().length > 7) control.value = controlValue.slice(0, 7);
+
+		props.onUpdate(control);
+	}
+
 	const numberRef = useRef<HTMLElement>(null);
 	const cvvRef = useRef<HTMLElement>(null);
 
@@ -59,7 +69,7 @@ const CardInfoCard: React.FC<CardInfoCardProps> = (props) => {
 						title={'Expiration'}
 						inputType={'text'}
 						control={props.form.get('expiration')}
-						updateControl={props.onUpdate}
+						updateControl={updateExpiration}
 					/>
 					<div ref={cvvRef} id={'spreedly-cvv'}>
 						<Label id={'Cvv'} variant={'caption'} mb={10}>
