@@ -1,0 +1,45 @@
+@import '../../themes/themes';
+.rsImageLabel {
+	&.top {
+		width: fit-content;
+		width: -moz-fit-content;
+		.rsImg {
+			display: flex;
+			justify-content: center;
+			margin-bottom: 3px;
+		}
+	}
+
+	&.right {
+		width: fit-content;
+		width: -moz-fit-content;
+		display: flex;
+		flex-direction: row-reverse;
+		align-items: center;
+
+		.rsImg {
+			margin-left: 10px;
+		}
+	}
+
+	&.bottom {
+		width: fit-content;
+		width: -moz-fit-content;
+		display: flex;
+		flex-direction: column-reverse;
+
+		.rsImg {
+			align-self: center;
+			margin-top: 3px;
+		}
+	}
+
+	&.left {
+		display: flex;
+		align-items: center;
+
+		.label {
+			margin-left: 10px;
+		}
+	}
+}

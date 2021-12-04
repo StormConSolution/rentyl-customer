@@ -8,8 +8,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { popupController } from '@bit/redsky.framework.rs.996';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
-import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { ObjectUtils, WebUtils } from '../../utils/utils';
+import { ObjectUtils } from '../../utils/utils';
 
 export interface DestinationSearchResultCardProps {
 	className?: string;
