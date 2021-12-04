@@ -31,16 +31,9 @@
 		}
 	}
 
-	.accommodationCounts {
-		display: flex;
-		align-items: center;
-		.rsLabel {
-			margin: 0 16px;
-		}
-		.superScript {
-			vertical-align: super;
-			font-size: 12px;
-		}
+	.superScript {
+		vertical-align: super;
+		font-size: 12px;
 	}
 
 	.rsLabelButton {

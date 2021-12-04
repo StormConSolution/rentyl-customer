@@ -54,15 +54,15 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 
 			let newTabs = [
 				...tabsArray,
-				<Button key={'none'} look={'none'} className={'closeButtonTabs'}>
-					<Icon
-						iconImg={'icon-close'}
-						size={30}
-						color={'#797979'}
-						onClick={() => {
-							popupController.close(LightBoxCarouselPopup);
-						}}
-					/>
+				<Button
+					key={'none'}
+					look={'none'}
+					className={'closeButtonTabs'}
+					onClick={() => {
+						popupController.close(LightBoxCarouselPopup);
+					}}
+				>
+					<Icon iconImg={'icon-close'} size={30} color={'#797979'} />
 				</Button>
 			];
 
