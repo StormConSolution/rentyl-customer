@@ -17,6 +17,7 @@ import Switch from '@bit/redsky.framework.rs.switch';
 import CardInfoCard from '../cardInfoCard/CardInfoCard';
 import UserService from '../../services/user/user.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface CheckOutPaymentCardProps {
 	checkoutUserState: [Api.User.Req.Checkout, React.Dispatch<React.SetStateAction<Api.User.Req.Checkout>>];
@@ -26,6 +27,7 @@ export interface CheckOutPaymentCardProps {
 }
 
 const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	const [checkoutUser, setCheckoutUser] = props.checkoutUserState;
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
 	const verifiedAccommodation = useRecoilValue<Api.Reservation.Res.Verification | undefined>(
@@ -40,44 +42,48 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	);
 	const [stateList, setStateList] = useState<Misc.OptionType[]>([]);
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
+	const [phoneError, setPhoneError] = useState<boolean>(false);
 
 	const [paymentForm, setPaymentForm] = useState<RsFormGroup>(getPaymentForm);
 
 	function getPaymentForm() {
 		return new RsFormGroup([
 			new RsFormControl('firstName', checkoutUser.billing?.firstName || checkoutUser.personal.firstName, [
-				new RsValidator(RsValidatorEnum.REQ, 'First name is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'First name is required', customBillingRequired)
 			]),
 			new RsFormControl('lastName', checkoutUser.billing?.lastName || checkoutUser.personal.lastName, [
-				new RsValidator(RsValidatorEnum.REQ, 'Last name is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Last name is required', customBillingRequired)
 			]),
 			new RsFormControl('email', checkoutUser.billing?.email || checkoutUser.personal.email, [
-				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Enter a valid Email', customBillingEmail)
 			]),
 			new RsFormControl('phone', checkoutUser.billing?.phone || checkoutUser.personal.phone, [
-				new RsValidator(RsValidatorEnum.REQ, 'A phone number is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Enter a valid phone number', customBillingRequired),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Enter a valid phone number', (control: RsFormControl) => {
+					return !differentBillingAddress || control.value.toString().length > 5;
+				})
 			]),
 			new RsFormControl('address1', checkoutUser.billing?.address1 || checkoutUser.personal.address1, [
-				new RsValidator(RsValidatorEnum.REQ, 'Address is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Address is required', customBillingRequired)
 			]),
 			new RsFormControl('address2', checkoutUser.billing?.address2 || checkoutUser.personal.address2 || '', []),
 			new RsFormControl('city', checkoutUser.billing?.country || checkoutUser.personal.country, [
-				new RsValidator(RsValidatorEnum.REQ, 'City is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'City is required', customBillingRequired)
 			]),
 			new RsFormControl('zip', checkoutUser.billing?.zip || checkoutUser.personal.zip, [
-				new RsValidator(RsValidatorEnum.REQ, 'Zip is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Zip is required', customBillingRequired)
 			]),
 			new RsFormControl('state', checkoutUser.billing?.state || checkoutUser.personal.state, [
-				new RsValidator(RsValidatorEnum.REQ, 'State is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'State is required', customBillingRequired)
 			]),
 			new RsFormControl('country', checkoutUser.billing?.country || checkoutUser.personal.country, [
-				new RsValidator(RsValidatorEnum.REQ, 'Country is required')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Country is required', customBillingRequired)
 			]),
 			new RsFormControl('nameOnCard', checkoutUser.paymentInfo?.nameOnCard || '', [
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Card Name is required', customRequired)
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Card Name is required', customPaymentRequired)
 			]),
 			new RsFormControl('expiration', checkoutUser.paymentInfo?.expiration || '', [
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration is required', customRequired),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration is required', customPaymentRequired),
 				new RsValidator(
 					RsValidatorEnum.CUSTOM,
 					'Expiration must be a valid date in the format MM/YY',
@@ -95,7 +101,8 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 
 	useEffect(() => {
 		setPaymentForm(getPaymentForm());
-	}, [checkoutUser]);
+		setPhoneError(false);
+	}, [checkoutUser, differentBillingAddress]);
 
 	function isPayingWithPoints() {
 		// This is used because for some reason I can't access stateful variables from within form controls
@@ -110,8 +117,19 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 		);
 	}
 
-	function customRequired(control: RsFormControl) {
-		return isPayingWithPoints() || isUsingExistingPaymentMethod() || !!control.value;
+	function customBillingEmail(control: RsFormControl) {
+		return (
+			!differentBillingAddress ||
+			/^[a-zA-Z0-9#$%&'*.\-+/=?^_{}~]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(control.value.toString())
+		);
+	}
+
+	function customBillingRequired(control: RsFormControl) {
+		return !differentBillingAddress || !!control.value.toString();
+	}
+
+	function customPaymentRequired(control: RsFormControl) {
+		return isPayingWithPoints() || isUsingExistingPaymentMethod() || !!control.value.toString();
 	}
 
 	useEffect(() => {
@@ -186,7 +204,9 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 
 		try {
 			if (!(await paymentForm.isValid())) {
+				if (paymentForm.get('phone').errors.length > 0) setPhoneError(true);
 				setPaymentForm(paymentForm.clone());
+				rsToastify.error('Please ensure you have filled out all fields', 'Missing or Incorrect Information');
 				return;
 			}
 
@@ -277,16 +297,18 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 						updateControl={updateForm}
 					/>
 					<LabelInput
-						labelVariant={'h5'}
+						className={`phoneInput ${phoneError ? 'phoneError' : ''}`}
+						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
 						inputType={'tel'}
 						title={'Phone'}
 						isPhoneInput
 						onChange={(value) => {
-							let updatedPhone = paymentForm.getClone('phone');
+							let updatedPhone = paymentForm.get('phone');
 							updatedPhone.value = value;
-							updateForm(updatedPhone);
+							setPaymentForm(paymentForm.clone().update(updatedPhone));
+							setPhoneError(false);
 						}}
-						initialValue={user?.phone}
+						initialValue={paymentForm.get('phone').value.toString()}
 					/>
 				</Box>
 			</>
