@@ -1,9 +1,10 @@
 import * as React from 'react';
 import './PrintableQrCode.scss';
 import Label from '@bit/redsky.framework.rs.label';
+import QRCode from 'qrcode.react';
 
 interface PrintableQrCodeProps {
-	qrCode: string;
+	qrCodeValue: string;
 }
 
 const PrintableQrCode: React.FC<PrintableQrCodeProps> = (props) => {
@@ -14,7 +15,7 @@ const PrintableQrCode: React.FC<PrintableQrCodeProps> = (props) => {
 				When signing up for Spire Loyalty by Rentyl Resorts you are able to view your reservation, get exclusive
 				deal and earn points for your stay!
 			</Label>
-			<img className={'qrCode'} src={props.qrCode} alt={'qr code'} />
+			<QRCode className={'qrCode'} value={props.qrCodeValue} />
 			<div className={'scanMeWrapper'}>
 				<div className={'phoneIcon'} />
 				<Label className={'scanMeText'}>SCAN ME</Label>

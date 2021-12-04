@@ -9,6 +9,7 @@ import { popupController } from '@bit/redsky.framework.rs.996';
 import LightBoxCarouselPopup, {
 	TabbedCarouselPopupProps
 } from '../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
+import { ObjectUtils } from '../../utils/utils';
 
 interface DestinationImageGalleryProps {
 	onGalleryClick: () => void;
@@ -46,17 +47,26 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 		);
 	}
 
+	function renderNonPrimaryImageSrc(index: number):string {
+		if (!ObjectUtils.isArrayWithData(nonPrimaryImages) || nonPrimaryImages.length <= index) {
+			return require('../../images/noImageFound.png');
+		} else {
+			return nonPrimaryImages[index].urls.imageKit;
+		}
+	}
+
 	function renderNonPrimaryImages() {
 		if (!nonPrimaryImages || !primaryImage) return;
 		return (
 			<React.Fragment>
 				<Img
 					className={'imageTwo'}
-					src={nonPrimaryImages![0].urls.imageKit}
+					src={renderNonPrimaryImageSrc(0)}
 					alt={'Destination Image'}
 					width={'1920px'}
 					height={'auto'}
 					onClick={() => {
+						if(nonPrimaryImages.length <= 0) return;
 						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
 							imageData: [primaryImage, ...nonPrimaryImages],
 							defaultImageIndex: 1
@@ -65,11 +75,12 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 				/>
 				<div className={'imageThree'}>
 					<Img
-						src={nonPrimaryImages![1].urls.imageKit}
+						src={renderNonPrimaryImageSrc(1)}
 						alt={'Destination Image'}
 						width={'1920px'}
 						height={'auto'}
 						onClick={() => {
+							if(nonPrimaryImages.length <= 1) return;
 							popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
 								imageData: [primaryImage, ...nonPrimaryImages],
 								defaultImageIndex: 2
