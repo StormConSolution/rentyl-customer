@@ -26,6 +26,45 @@
 		}
 	}
 
+	.buttonAndPaperWrapper {
+		position: absolute;
+		width: 100%;
+		padding: 0 30px 30px;
+		box-sizing: border-box;
+		z-index: 10;
+		bottom: 0;
+		.rsPaper {
+			position: relative;
+			width: 100%;
+			padding: 20px 60px 20px 30px;
+			background: #ffffff;
+		}
+	}
+	.imageWrapper {
+		height: 100%;
+		display: flex;
+		overflow: auto;
+		overflow-x: hidden;
+		overflow-y: hidden;
+		-webkit-overflow-scrolling: touch;
+		-webkit-scroll-snap-type: mandatory;
+		scroll-snap-type: x mandatory;
+		-webkit-scroll-snap-points-x: repeat(100%);
+		scroll-snap-points-x: repeat(100%);
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+		.rsImg {
+			width: 100%;
+
+			object-fit: cover;
+			overflow: visible;
+			scroll-snap-align: center;
+		}
+	}
+
 	.closeButton {
 		position: absolute;
 		top: 40px;

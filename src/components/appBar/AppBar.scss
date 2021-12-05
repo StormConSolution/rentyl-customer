@@ -23,15 +23,14 @@
 	&.hide {
 		top: -110px;
 	}
-	.logo {
+
+	.rsNavDrawer,
+	.logo,
+	.menuContainer {
 		pointer-events: all;
 	}
 
-	.rsNavDrawer {
-		pointer-events: all;
-	}
 	.menuContainer {
-		pointer-events: all;
 		background-color: white;
 		border: 1px solid theme-var($greyLineColor);
 		border-radius: 10px;

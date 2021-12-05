@@ -24,6 +24,12 @@ const Carousel: React.FC<CarouselProps> = (props) => {
 		parentRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 	}, [props.imageIndex]);
 
+	useEffect(() => {
+		setTimeout(() => {
+			parentRef.current!.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+		}, 300);
+	}, []);
+
 	function renderChildren() {
 		return props.children.map((item, index) => {
 			return (

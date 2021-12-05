@@ -45,9 +45,13 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 						{StringUtils.addCommasToNumber(props.destinationObj.minAccommodationPoints)}
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
-					<Label variant={'italicBoldTwo'} className={'yellowText'}>
-						You could earn {props.pointsEarnable} points for this stay
-					</Label>
+					<Box className={'earnTextContainer'}>
+						{props.pointsEarnable !== 0 && props.pointsEarnable && (
+							<Label variant={'italicBoldTwo'} className={'yellowText'}>
+								You could earn {props.pointsEarnable} points for this stay
+							</Label>
+						)}
+					</Box>
 				</Box>
 			);
 		} else {
@@ -59,9 +63,13 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'h2'}>${StringUtils.formatMoney(props.destinationObj.minAccommodationPrice)}</Label>
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
-					<Label variant={'italicBoldTwo'} className={'yellowText'}>
-						You could earn {props.pointsEarnable} points for this stay
-					</Label>
+					<Box className={'earnTextContainer'}>
+						{props.pointsEarnable !== 0 && props.pointsEarnable && (
+							<Label variant={'italicBoldTwo'} className={'yellowText earnText'}>
+								You could earn {props.pointsEarnable} points for this stay
+							</Label>
+						)}
+					</Box>
 				</Box>
 			);
 		}
@@ -75,6 +83,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					flexDirection={'column'}
 					alignItems={'center'}
 					textAlign={'center'}
+					className={'iconContainer'}
 					key={experience.id}
 				>
 					<IconLabel

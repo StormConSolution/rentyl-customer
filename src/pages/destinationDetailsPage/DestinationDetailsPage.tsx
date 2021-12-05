@@ -65,6 +65,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	useEffect(() => {
 		(async () => {
 			if (!destinationDetails) return;
+			let address = `${destinationDetails.address1} ${destinationDetails.city} ${destinationDetails.state} ${destinationDetails.zip}`;
 
 			const poiToHide: google.maps.MapTypeStyle[] = [
 				{
@@ -75,39 +76,53 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 			const loader = new Loader('AIzaSyAU3SZ6DiPSbxHck1AKgG8nRDarltdep7g');
 			const google = await loader.load();
+			const geocoder = new google.maps.Geocoder();
 			let mapElement: HTMLElement | null = document.getElementById('GoogleMap');
 			if (!mapElement) return;
 
-			let destinationLocation = { lat: 28.289728, lng: -81.594499 }; // this needs to be dynamic.
+			let destinationLocation = {
+				lat: destinationDetails.latitude || 28.289728,
+				lng: destinationDetails.longitude || -81.594499
+			};
 
 			//Render Map
 			let googleMap = new google.maps.Map(mapElement, {
 				center: destinationLocation,
-				zoom: 16
+				zoom: 16,
+				disableDefaultUI: true
 			});
 
 			let infoWindowContent = renderInfoWindowContent();
 			//Hide All POI
 			googleMap.setOptions({ styles: poiToHide });
 
-			//Info Window
-			const infoWindow: any = new google.maps.InfoWindow({
-				content: infoWindowContent
-			});
+			//Get lat and lon based on the physical address.
+			if (geocoder) {
+				geocoder.geocode({ address: address }, function (results, status) {
+					if (status === google.maps.GeocoderStatus.OK) {
+						googleMap.setCenter(results[0].geometry.location);
 
-			//Place Marker;
-			const marker = new google.maps.Marker({
-				position: destinationLocation,
-				map: googleMap,
-				title: destinationDetails.name
-			});
+						//Info Window
+						const infoWindow: any = new google.maps.InfoWindow({
+							content: infoWindowContent
+						});
 
-			marker.addListener('click', () => {
-				infoWindow.open({
-					anchor: marker,
-					googleMap
+						//Place Marker;
+						const marker = new google.maps.Marker({
+							position: results[0].geometry.location,
+							map: googleMap,
+							title: destinationDetails.name
+						});
+
+						google.maps.event.addListener(marker, 'click', function () {
+							infoWindow.open(googleMap, marker);
+						});
+					} else {
+						rsToastify.error('Could not load google map location');
+						console.error(status);
+					}
 				});
-			});
+			}
 		})();
 	}, [destinationDetails]);
 
