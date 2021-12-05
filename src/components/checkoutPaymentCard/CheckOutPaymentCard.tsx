@@ -73,7 +73,8 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 				new RsValidator(RsValidatorEnum.CUSTOM, 'City is required', customBillingRequired)
 			]),
 			new RsFormControl('zip', checkoutUser.billing?.zip || checkoutUser.personal.zip, [
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Zip is required', customBillingRequired)
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Zip is required', customBillingRequired),
+				new RsValidator(RsValidatorEnum.NUM, 'Zip must be a number')
 			]),
 			new RsFormControl('state', checkoutUser.billing?.state || checkoutUser.personal.state, [
 				new RsValidator(RsValidatorEnum.CUSTOM, 'State is required', customBillingRequired)
@@ -283,7 +284,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 					<LabelInput
 						labelVariant={'h5'}
 						title={'Postal/Zip code'}
-						inputType={'text'}
+						inputType={'number'}
 						control={paymentForm.get('zip')}
 						updateControl={updateForm}
 					/>
