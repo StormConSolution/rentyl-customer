@@ -7,7 +7,7 @@ import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/r
 import LabelInput from '../labelInput/LabelInput';
 import LabelSelect from '../labelSelect/LabelSelect';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
-import { ObjectUtils, WebUtils } from '../../utils/utils';
+import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import CountryService from '../../services/country/country.service';
 import LabelButton from '../labelButton/LabelButton';
@@ -59,7 +59,8 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 				new RsValidator(RsValidatorEnum.REQ, 'City is required')
 			]),
 			new RsFormControl('zip', checkoutUser.personal.zip, [
-				new RsValidator(RsValidatorEnum.REQ, 'Zip is required')
+				new RsValidator(RsValidatorEnum.REQ, 'Zip is required'),
+				new RsValidator(RsValidatorEnum.NUM, 'Zip must be a number')
 			]),
 			new RsFormControl('state', checkoutUser.personal.state, [
 				new RsValidator(RsValidatorEnum.REQ, 'State is required')
@@ -201,7 +202,7 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 					<LabelInput
 						labelVariant={'h5'}
 						title={'Postal/Zip code'}
-						inputType={'text'}
+						inputType={'number'}
 						control={infoForm.get('zip')}
 						updateControl={updateForm}
 					/>
