@@ -3,7 +3,7 @@ declare module 'Banner';
 declare module 'window';
 
 interface Spreedly {
-	reload: ()=>void;
+	reload: () => void;
 }
 
 interface Window {

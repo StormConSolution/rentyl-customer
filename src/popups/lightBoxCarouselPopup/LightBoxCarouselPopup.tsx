@@ -27,9 +27,9 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 	const [largestImageIndex, setLargestImageIndex] = useState<number>(0);
 
 	useEffect(() => {
-		if (!props.tabs || !ObjectUtils.isArrayWithData(props.tabs)) return
-			if (props.activeTabName) setActiveTabName(props.activeTabName);
-			else setActiveTabName(props.tabs[0].name);
+		if (!props.tabs || !ObjectUtils.isArrayWithData(props.tabs)) return;
+		if (props.activeTabName) setActiveTabName(props.activeTabName);
+		else setActiveTabName(props.tabs[0].name);
 		setTimeout(() => {
 			imageWrapperRef.current!.scrollTo({ top: 0, left: 0 }); //Reset position to 0;
 		}, 300);

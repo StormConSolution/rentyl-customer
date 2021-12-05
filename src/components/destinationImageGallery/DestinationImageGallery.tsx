@@ -47,7 +47,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 		);
 	}
 
-	function renderNonPrimaryImageSrc(index: number):string {
+	function renderNonPrimaryImageSrc(index: number): string {
 		if (!ObjectUtils.isArrayWithData(nonPrimaryImages) || nonPrimaryImages.length <= index) {
 			return require('../../images/noImageFound.png');
 		} else {
@@ -66,7 +66,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 					width={'1920px'}
 					height={'auto'}
 					onClick={() => {
-						if(nonPrimaryImages.length <= 0) return;
+						if (nonPrimaryImages.length <= 0) return;
 						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
 							imageData: [primaryImage, ...nonPrimaryImages],
 							defaultImageIndex: 1
@@ -80,7 +80,7 @@ const DestinationImageGallery: React.FC<DestinationImageGalleryProps> = (props) 
 						width={'1920px'}
 						height={'auto'}
 						onClick={() => {
-							if(nonPrimaryImages.length <= 1) return;
+							if (nonPrimaryImages.length <= 1) return;
 							popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
 								imageData: [primaryImage, ...nonPrimaryImages],
 								defaultImageIndex: 2
