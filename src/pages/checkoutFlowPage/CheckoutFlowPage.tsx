@@ -565,7 +565,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				</div>
 				<div className={'bookingSummaryColumn'}>
 					{params.stage > 3 ? (
-						<PrintableQrCode qrCode={'../../images/checkoutPage/rentylResortsQR.jpg'} />
+						<PrintableQrCode qrCodeValue={'https://spireloyalty.com/'} />
 					) : (
 						<Button
 							className={`printConfirmButton ${handleButtonClass()}`}

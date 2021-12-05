@@ -16,7 +16,12 @@ const AppBar: React.FC = () => {
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
 	const [addWhiteBackground, setAddWhiteBackground] = useState<boolean>(false);
 	let scrollDirection = useWindowScrollChange();
-	const addWhiteBackgroundPagesUrl: string[] = ['/account', '/destination/details', '/reservation/details'];
+	const addWhiteBackgroundPagesUrl: string[] = [
+		'/account',
+		'/destination/details',
+		'/reservation/details',
+		'/booking/checkout'
+	];
 
 	useEffect(() => {
 		let id = router.subscribeToAfterRouterNavigate(() => {
