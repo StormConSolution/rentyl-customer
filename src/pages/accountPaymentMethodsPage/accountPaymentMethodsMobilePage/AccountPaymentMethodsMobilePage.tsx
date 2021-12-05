@@ -29,7 +29,7 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 	const cvvRef = useRef<HTMLElement>(null);
 	const paymentService = serviceFactory.get<PaymentService>('PaymentService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
-	const [primaryCard, setPrimaryCard] = useState<Api.User.PaymentMethod>();
+	const [primaryCard, setPrimaryCard] = useState<Api.User.PaymentMethod | undefined>();
 	const [nonPrimaryCardList, setNonPrimaryCardList] = useState<Api.User.PaymentMethod[]>([]);
 	const [isValidCard, setIsValidCard] = useState<boolean>(false);
 	const [isValidCvv, setIsValidCvv] = useState<boolean>(false);
@@ -174,6 +174,8 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 				try {
 					const result = await paymentService.addPaymentMethod(data);
 					if (result) rsToastify.success('Card successfully added.', 'Card Added!');
+					window.Spreedly.reload();
+					creditCardObj.resetToInitialValue();
 					let newExistingCardList = [
 						...existingCardList,
 						{
@@ -218,9 +220,8 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 	}, [user]);
 
 	useEffect(() => {
-		if (!existingCardList) return;
+		if (!ObjectUtils.isArrayWithData(existingCardList)) return;
 		let primaryCard = existingCardList.find((item) => item.isPrimary);
-		if (!primaryCard) primaryCard = existingCardList[0];
 
 		let nonPrimaryCards = existingCardList.filter((item) => !item.isPrimary);
 		setPrimaryCard(primaryCard);
@@ -279,7 +280,19 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 	}
 
 	function renderPaymentMethods() {
-		if (!ObjectUtils.isArrayWithData(nonPrimaryCardList)) return;
+		if (!ObjectUtils.isArrayWithData(nonPrimaryCardList) && !!primaryCard) {
+			return (
+				<OtherPaymentCard
+					key={primaryCard.id}
+					name={primaryCard.nameOnCard}
+					id={primaryCard.id}
+					last4={primaryCard.last4}
+					cardType={primaryCard.type}
+					isPrimary={primaryCard.isPrimary}
+				/>
+			);
+		} else if (!ObjectUtils.isArrayWithData(nonPrimaryCardList) || !primaryCard) return;
+
 		let cardList = nonPrimaryCardList.map((item, index) => {
 			return (
 				<OtherPaymentCard
@@ -347,6 +360,7 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 						control={creditCardObj.get('full_name')}
 						updateControl={updateCreditCardObj}
 					/>
+
 					<div ref={numberRef} id={'spreedly-number'}>
 						<Label variant={size === 'small' ? 'customSixteen' : 'body5'} mb={10}>
 							Card Number
@@ -403,6 +417,7 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 				/>
 
 				<LabelCheckbox
+					className={'isPrimaryCheckbox'}
 					value={'isPrimary'}
 					text={'Set as primary'}
 					isChecked={false}

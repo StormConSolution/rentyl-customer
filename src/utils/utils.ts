@@ -233,6 +233,14 @@ class DateUtils extends BaseDateUtils {
 					'-' +
 					date.getFullYear().toString().slice(2)
 				);
+			case 'MM-DD-YYYY':
+				return (
+					('0' + (date.getMonth() + 1)).slice(-2) +
+					'-' +
+					('0' + (date.getDate() + 1)).slice(-2) +
+					'-' +
+					date.getFullYear().toString()
+				);
 			default:
 				return date.toDateString();
 		}

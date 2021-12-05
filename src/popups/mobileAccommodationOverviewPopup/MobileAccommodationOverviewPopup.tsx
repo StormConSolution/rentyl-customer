@@ -7,6 +7,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLightBox';
 import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
+import ImageLabel from '../../components/imageLabel/ImageLabel';
 
 export interface MobileAccommodationOverviewPopupProps extends PopupProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
@@ -65,13 +66,10 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 			size = `${sizeObj.min} to ${sizeObj.max} ${sizeObj.units === 'SquareFeet' ? `ft` : sizeObj.units}`;
 		}
 		return (
-			<div className={'accommodationCounts'}>
-				<Icon iconImg={'cms-icon-0503'} size={30} />
-				<Label variant={'subtitle1'}>
-					{size}
-					{sizeObj?.units === 'SquareFeet' ? <span className={'superScript'}>2</span> : ''}
-				</Label>
-			</div>
+			<Label variant={'subtitle1'} className={'label'}>
+				{size}
+				{sizeObj?.units === 'SquareFeet' ? <span className={'superScript'}>2</span> : ''}
+			</Label>
 		);
 	}
 
@@ -90,22 +88,42 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 				</div>
 
 				<div className={'popupContent'}>
-					<CarouselV2 path={() => {}} imgPaths={getAccommodationImages()} />
+					<CarouselV2
+						path={() => {}}
+						imgPaths={getAccommodationImages()}
+						onGalleryClick={() => {
+							popupController.open<MobileLightBoxProps>(MobileLightBox, {
+								imageData: props.accommodationDetails.media
+							});
+						}}
+					/>
 
 					<Box
 						display={'flex'}
 						justifyContent={props.accommodationDetails.size ? 'space-between' : 'flex-start'}
 						marginTop={16}
 					>
-						<div className={'accommodationCounts'}>
-							<Icon iconImg={'cms-icon-0425'} size={30} />
-							<Label variant={'subtitle1'}>{props.accommodationDetails.bathroomCount}</Label>
-						</div>
-						<div className={'accommodationCounts'}>
-							<Icon iconImg={'cms-icon-0412'} size={30} />
-							<Label variant={'subtitle1'}>{props.accommodationDetails.bedroomCount}</Label>
-						</div>
-						{props.accommodationDetails.size ? renderAccommodationSize() : <></>}
+						<ImageLabel
+							labelName={props.accommodationDetails.bedroomCount.toString()}
+							imgSrc={'sleep.png'}
+							imgWidth={'30px'}
+							imgHeight={'20px'}
+							iconPosition={'left'}
+						/>
+						<ImageLabel
+							labelName={props.accommodationDetails.bathroomCount.toString()}
+							imgSrc={'shower.png'}
+							imgWidth={'30px'}
+							imgHeight={'20px'}
+							iconPosition={'left'}
+						/>
+						<ImageLabel
+							labelName={renderAccommodationSize()}
+							imgSrc={'square-foot.png'}
+							imgWidth={'30px'}
+							imgHeight={'20px'}
+							iconPosition={'left'}
+						/>
 					</Box>
 
 					<Label variant={'accommodationOverviewCustomOne'} margin={'24px auto'}>

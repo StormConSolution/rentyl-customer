@@ -16,7 +16,12 @@ const AppBar: React.FC = () => {
 	const [showSlideOutMenu, setShowSlideOutMenu] = useState<boolean>(false);
 	const [addWhiteBackground, setAddWhiteBackground] = useState<boolean>(false);
 	let scrollDirection = useWindowScrollChange();
-	const addWhiteBackgroundPagesUrl: string[] = ['/account', '/destination/details', '/reservation/details'];
+	const addWhiteBackgroundPagesUrl: string[] = [
+		'/account',
+		'/destination/details',
+		'/reservation/details',
+		'/booking/checkout'
+	];
 
 	useEffect(() => {
 		let id = router.subscribeToAfterRouterNavigate(() => {
@@ -51,7 +56,6 @@ const AppBar: React.FC = () => {
 					size={16}
 					color={'#767676'}
 					onClick={() => {
-						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
 						setShowSlideOutMenu(!showSlideOutMenu);
 					}}
 				/>
@@ -72,7 +76,6 @@ const AppBar: React.FC = () => {
 			<NavDrawer
 				isOpened={showSlideOutMenu}
 				onClose={() => {
-					document.getElementsByTagName('body')[0].style.overflow = '';
 					setShowSlideOutMenu(false);
 				}}
 			/>

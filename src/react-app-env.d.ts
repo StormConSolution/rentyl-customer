@@ -2,6 +2,10 @@
 declare module 'Banner';
 declare module 'window';
 
+interface Spreedly {
+	reload: () => void;
+}
+
 interface Window {
 	firstSearch: any;
 	firstPath: any;
@@ -15,7 +19,7 @@ interface Window {
 	PushNotification: any;
 	browserNavigation: any;
 	sf: any;
-	Spreedly: any;
+	Spreedly: Spreedly | any;
 }
 
 interface packageJson {

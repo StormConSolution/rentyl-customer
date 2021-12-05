@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './CheckoutReservationSummaryCard.scss';
 import Label from '@bit/redsky.framework.rs.label';
+import { StringUtils } from '../../utils/utils';
 
 export interface CheckoutReservationSummaryCardProps {
 	image: string;
@@ -23,7 +24,7 @@ const CheckoutReservationSummaryCard: React.FC<CheckoutReservationSummaryCardPro
 					<Label className={'resortName'}>Encore Resort</Label>
 				</div>
 				<Label className={'orderTitle'}>{props.title}</Label>
-				<Label className={'price'}>${props.price} total</Label>
+				<Label className={'price'}>${StringUtils.formatMoney(props.price)} total</Label>
 				<Label className={'dateBooked'}>Date booked: {props.dateBooked}</Label>
 			</div>
 		</div>
