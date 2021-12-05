@@ -40,10 +40,6 @@
 		.phoneInput {
 			max-width: 100%;
 			width: 100%;
-			padding-left: 10px;
-		}
-		.flag-dropdown {
-			display: none;
 		}
 		.rsSelect {
 			max-width: 100%;
@@ -54,6 +50,12 @@
 		}
 		.rsButton {
 			padding: 17px 63px;
+		}
+		.phoneError {
+			&:after {
+				content: 'Enter a valid phone number';
+				color: red;
+			}
 		}
 	}
 

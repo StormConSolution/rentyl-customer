@@ -9,6 +9,7 @@ import globalState, {
 	setRecoilExternalValue
 } from '../../state/globalState';
 import router from '../../utils/router';
+import { useRecoilState } from 'recoil';
 
 export default class UserService extends Service {
 	async loginUserByPassword(username: string, password: string) {
@@ -69,6 +70,7 @@ export default class UserService extends Service {
 	logout() {
 		setRecoilExternalValue<Api.User.Res.Detail | undefined>(globalState.user, undefined);
 		clearPersistentState();
+		this.clearCheckoutUserFromLocalStorage();
 		router.navigate('/').catch(console.error);
 	}
 
@@ -79,12 +81,16 @@ export default class UserService extends Service {
 		return response.data.data;
 	}
 
-	async setCheckoutUserInLocalStorage(checkoutUser: Api.User.Req.Checkout) {
+	setCheckoutUserInLocalStorage(checkoutUser: Api.User.Req.Checkout) {
 		setRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser, checkoutUser);
 	}
 
-	async clearCheckoutUserFromLocalStorage() {
-		if (!!getRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser)) {
+	clearCheckoutUserFromLocalStorage() {
+		const [recoilCheckoutUser, setRecoilCheckoutUser] = useRecoilState<Api.User.Req.Checkout | undefined>(
+			globalState.checkoutUser
+		);
+		if (!!recoilCheckoutUser) {
+			setRecoilCheckoutUser(undefined);
 			localStorage.removeItem(KEY_PREFIX + globalState.checkoutUser.key);
 		}
 	}

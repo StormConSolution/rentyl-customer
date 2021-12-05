@@ -4,6 +4,7 @@ import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
+import { DateUtils, StringUtils } from '../../utils/utils';
 interface BookingSummaryCardProps {
 	bookingData: Api.Reservation.Res.Verification;
 	canHide: boolean;
@@ -12,6 +13,14 @@ interface BookingSummaryCardProps {
 const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 	const [hideSummary, setHideSummary] = useState<boolean>(false);
 	const [hideTaxesAndFees, setHideTaxesAndFees] = useState<boolean>(false);
+
+	function calculateGrandTotalWithPackagesCents() {
+		let packagesTotalInCents = 0;
+		props.bookingData.upsellPackages.forEach(
+			(packageItem) => (packagesTotalInCents += packageItem.priceDetail.amountAfterTax)
+		);
+		return props.bookingData.prices.grandTotalCents + packagesTotalInCents;
+	}
 
 	function renderStayInfo() {
 		let date1 = new Date(props.bookingData.arrivalDate);
@@ -22,12 +31,12 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 		return (
 			<div>
 				<Label variant={'customThree'}>{props.bookingData.accommodationName}</Label>
-				<Box display={'flex'} justifyContent={'space-between'}>
+				<Box display={'flex'} justifyContent={'space-between'} marginTop={8}>
 					<Label variant={'bookingSummaryCustomThree'}>{`${numberOfNights} night${
 						numberOfNights > 1 ? 's' : ''
 					}`}</Label>
 					<Label variant={'customThree'}>
-						${(props.bookingData.prices.accommodationTotalInCents / 100).toFixed(2)}
+						${StringUtils.formatMoney(props.bookingData.prices.accommodationTotalInCents)}
 					</Label>
 				</Box>
 			</div>
@@ -43,12 +52,12 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 					<Label variant={'customThree'} marginTop={16}>
 						{packageItem.title}
 					</Label>
-					<Box display={'flex'} justifyContent={'space-between'}>
+					<Box display={'flex'} justifyContent={'space-between'} marginTop={8}>
 						<Label variant={'bookingSummaryCustomThree'}>
 							x{props.bookingData.upsellPackages.filter((value) => value.id === packageItem.id).length}
 						</Label>
 						<Label variant={'customThree'}>
-							${(packageItem.priceDetail.amountBeforeTax / 100).toFixed(2)}
+							${StringUtils.formatMoney(packageItem.priceDetail.amountBeforeTax)}
 						</Label>
 					</Box>
 				</div>
@@ -58,18 +67,34 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 	}
 
 	function renderTaxesAndFees() {
+		const packageSalesTaxCents = props.bookingData.upsellPackages.reduce(
+			(total, packageItem) =>
+				total + (packageItem.priceDetail.amountAfterTax - packageItem.priceDetail.amountBeforeTax),
+			0
+		);
+
 		return (
 			<div className={'taxesAndFees'}>
 				<div className={'taxBreakdown'}>
 					<Label variant={'customThree'}>Taxes</Label>
-					{props.bookingData.prices.taxTotalsInCents.forEach((value) => {
+					{packageSalesTaxCents > 0 && (
+						<Box display={'flex'} justifyContent={'space-between'} marginTop={8}>
+							<Label variant={'bookingSummaryCustomFour'} paddingLeft={5}>
+								Package Sales Tax
+							</Label>
+							<Label variant={'bookingSummaryCustomFour'} paddingLeft={5}>
+								{`$${StringUtils.formatMoney(packageSalesTaxCents)}`}
+							</Label>
+						</Box>
+					)}
+					{props.bookingData.prices.taxTotalsInCents.map((value, index) => {
 						return (
-							<Box display={'flex'} justifyContent={'space-between'}>
+							<Box display={'flex'} justifyContent={'space-between'} key={`tax_${index}`} marginTop={8}>
 								<Label variant={'bookingSummaryCustomFour'} paddingLeft={5}>
 									{value.name}
 								</Label>
 								<Label variant={'bookingSummaryCustomFour'} paddingLeft={5}>
-									{(value.amount / 100).toFixed(2)}
+									{`$${StringUtils.formatMoney(value.amount)}`}
 								</Label>
 							</Box>
 						);
@@ -77,14 +102,14 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 				</div>
 				<div className={'feeBreakdown'}>
 					<Label variant={'customThree'}>Fees</Label>
-					{props.bookingData.prices.feeTotalsInCents.forEach((value) => {
+					{props.bookingData.prices.feeTotalsInCents.map((value, index) => {
 						return (
-							<Box display={'flex'} justifyContent={'space-between'}>
+							<Box display={'flex'} justifyContent={'space-between'} key={`fee_${index}`} marginTop={8}>
 								<Label variant={'bookingSummaryCustomFour'} paddingLeft={5}>
 									{value.name}
 								</Label>
 								<Label variant={'bookingSummaryCustomFour'} paddingLeft={5}>
-									( value.amount / 100 ).toFixed(2)
+									{`$${StringUtils.formatMoney(value.amount)}`}
 								</Label>
 							</Box>
 						);
@@ -111,22 +136,25 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 				<></>
 			) : (
 				<>
-					<Label
-						variant={'caption3'}
-						marginTop={20}
-					>{`${props.bookingData.accommodationName} at ${props.bookingData.destinationName}`}</Label>
+					<Label variant={'caption3'} marginTop={20}>
+						{props.bookingData.destinationName}
+					</Label>
 					<div className={'checkInInfo'}>
 						<div className={'cell'}>
 							<Label variant={'bookingSummaryCustomOne'}>Check In</Label>
-							<Label variant={'bookingSummaryCustomTwo'}>{props.bookingData.arrivalDate}</Label>
+							<Label variant={'bookingSummaryCustomTwo'} marginTop={4}>
+								{DateUtils.formatDate(new Date(props.bookingData.arrivalDate), 'MM-DD-YYYY')}
+							</Label>
 						</div>
 						<div className={'cell'}>
 							<Label variant={'bookingSummaryCustomOne'}>Check Out</Label>
-							<Label variant={'bookingSummaryCustomTwo'}>{props.bookingData.departureDate}</Label>
+							<Label variant={'bookingSummaryCustomTwo'} marginTop={4}>
+								{DateUtils.formatDate(new Date(props.bookingData.departureDate), 'MM-DD-YYYY')}
+							</Label>
 						</div>
 						<div className={'cell'}>
 							<Label variant={'bookingSummaryCustomOne'}>Guests</Label>
-							<Label variant={'bookingSummaryCustomTwo'}>{`${
+							<Label variant={'bookingSummaryCustomTwo'} marginTop={4}>{`${
 								props.bookingData.adultCount + props.bookingData.childCount
 							} guest${
 								props.bookingData.adultCount + props.bookingData.childCount > 1 ? 's' : ''
@@ -146,7 +174,7 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							/>
 						</Box>
 						<Label variant={'customThree'} className={'totalTax'}>
-							${(props.bookingData.prices.taxAndFeeTotalInCents / 100).toFixed(2)}
+							${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
 						</Label>
 					</Box>
 					{hideTaxesAndFees ? <></> : renderTaxesAndFees()}
@@ -155,7 +183,7 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							Total
 						</Label>
 						<Label variant={'customThree'} marginTop={20}>
-							${(props.bookingData.prices.grandTotalCents / 100).toFixed(2)}
+							${StringUtils.formatMoney(calculateGrandTotalWithPackagesCents())}
 						</Label>
 					</Box>
 				</>

@@ -28,7 +28,7 @@
 	}
 
 	hr {
-		border-top: 1px solid #7070706e;
+		background-color: #7070706e;
 		margin-top: 16px;
 	}
 
@@ -45,6 +45,9 @@
 		border-radius: 20px;
 		padding: 16px;
 		margin-top: 20px;
+		.taxBreakdown {
+			margin-bottom: 16px;
+		}
 	}
 
 	.light {

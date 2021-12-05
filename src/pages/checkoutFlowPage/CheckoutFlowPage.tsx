@@ -17,7 +17,7 @@ import CheckOutPaymentCard from '../../components/checkoutPaymentCard/CheckOutPa
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import CheckOutInfoCard from '../../components/checkoutInfoCard/CheckOutInfoCard';
-import { ObjectUtils, WebUtils } from '../../utils/utils';
+import { DateUtils, ObjectUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import serviceFactory from '../../services/serviceFactory';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
@@ -67,6 +67,9 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	});
 
 	const [currentCheckoutUser, setCurrentCheckoutUser] = checkoutUserState;
+	const [bookedStays, setBookedStays] = useState<
+		{ image: string; title: string; price: number; dateBooked: string }[]
+	>([]);
 
 	const printRef = useRef(null);
 
@@ -404,6 +407,18 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 
 			try {
 				let res = await reservationService.createItinerary(data);
+				setBookedStays(
+					res.stays.map((stay) => {
+						return {
+							image:
+								stay.accommodation.media.find((image) => image.isPrimary)?.urls.imageKit ||
+								stay.accommodation.media[0].urls.imageKit,
+							title: stay.accommodation.name,
+							price: stay.priceDetail.grandTotalCents,
+							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY')
+						};
+					})
+				);
 				if (res) popupController.close(SpinningLoaderPopup);
 				return handleForwardButtonClick();
 			} catch (e) {
@@ -497,24 +512,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 						'all nights of the reservation. Changes may be permitted based on availability.'
 					}
 				/>
-				{params.stage > 2 && (
-					<CheckoutReservationSummary
-						orders={[
-							{
-								image: '../../images/featureAndBenefits/house.png',
-								title: 'VIP Suite',
-								price: 982.34,
-								dateBooked: '11-20-21'
-							},
-							{
-								image: '../../images/featureAndBenefits/house.png',
-								title: 'VIP Suite',
-								price: 1002.34,
-								dateBooked: '11-25-21'
-							}
-						]}
-					/>
-				)}
+				{params.stage > 2 && <CheckoutReservationSummary orders={bookedStays} />}
 			</>
 		);
 	}

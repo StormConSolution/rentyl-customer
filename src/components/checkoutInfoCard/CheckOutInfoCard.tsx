@@ -16,6 +16,7 @@ import UserService from '../../services/user/user.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface CheckOutInfoCardProps {
 	checkoutUserState: [Api.User.Req.Checkout, React.Dispatch<React.SetStateAction<Api.User.Req.Checkout>>];
@@ -23,6 +24,7 @@ export interface CheckOutInfoCardProps {
 }
 
 const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
+	const size = useWindowResizeChange();
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [checkoutUser, setCheckoutUser] = props.checkoutUserState;
 	const countryService = serviceFactory.get<CountryService>('CountryService');
@@ -32,6 +34,7 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
 	const [selectedCountry, setSelectedCountry] = useState<string>();
 	const [infoForm, setInfoForm] = useState<RsFormGroup>(getInfoForm);
+	const [phoneError, setPhoneError] = useState<boolean>(false);
 
 	function getInfoForm() {
 		return new RsFormGroup([
@@ -45,7 +48,8 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 				new RsValidator(RsValidatorEnum.EMAIL, 'Enter a valid Email')
 			]),
 			new RsFormControl('phone', checkoutUser.personal.phone, [
-				new RsValidator(RsValidatorEnum.REQ, 'A phone number is required')
+				new RsValidator(RsValidatorEnum.REQ, 'Enter a valid phone number'),
+				new RsValidator(RsValidatorEnum.MIN, 'Enter a valid phone number', 4)
 			]),
 			new RsFormControl('address1', checkoutUser.personal.address1, [
 				new RsValidator(RsValidatorEnum.REQ, 'Address is required')
@@ -134,7 +138,9 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 		event.preventDefault();
 		try {
 			if (!(await infoForm.isValid())) {
+				if (infoForm.get('phone').errors.length > 0) setPhoneError(true);
 				setInfoForm(infoForm.clone());
+				rsToastify.error('Please ensure you have filled out all fields', 'Missing or Incorrect Information');
 				return;
 			}
 
@@ -230,16 +236,18 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 						updateControl={updateForm}
 					/>
 					<LabelInput
-						labelVariant={'h5'}
+						className={`phoneInput ${phoneError ? 'phoneError' : ''}`}
+						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
 						inputType={'tel'}
 						title={'Phone'}
 						isPhoneInput
 						onChange={(value) => {
-							let updatedPhone = infoForm.getClone('phone');
+							let updatedPhone = infoForm.get('phone');
 							updatedPhone.value = value;
-							updateForm(updatedPhone);
+							setInfoForm(infoForm.clone().update(updatedPhone));
+							setPhoneError(false);
 						}}
-						initialValue={checkoutUser.personal.phone}
+						initialValue={infoForm.get('phone').value.toString()}
 					/>
 				</Box>
 				{!user && (

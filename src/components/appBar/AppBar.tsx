@@ -56,7 +56,6 @@ const AppBar: React.FC = () => {
 					size={16}
 					color={'#767676'}
 					onClick={() => {
-						document.getElementsByTagName('body')[0].style.overflow = 'hidden';
 						setShowSlideOutMenu(!showSlideOutMenu);
 					}}
 				/>
@@ -77,7 +76,6 @@ const AppBar: React.FC = () => {
 			<NavDrawer
 				isOpened={showSlideOutMenu}
 				onClose={() => {
-					document.getElementsByTagName('body')[0].style.overflow = '';
 					setShowSlideOutMenu(false);
 				}}
 			/>

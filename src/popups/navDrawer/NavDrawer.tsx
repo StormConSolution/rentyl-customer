@@ -24,8 +24,12 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 
 	useEffect(() => {
 		function handleClickOutside(event: any) {
-			if (popupRef && popupRef.current && !popupRef.current.contains(event.target)) {
-				document.getElementsByTagName('body')[0].style.overflow = '';
+			if (
+				popupRef &&
+				popupRef.current &&
+				!popupRef.current.contains(event.target) &&
+				!event.target.className.includes('hamburger')
+			) {
 				props.onClose();
 			}
 		}
@@ -71,7 +75,7 @@ const NavDrawer: React.FC<NavPopoutProps> = (props) => {
 								variant={'navDrawerCustomOne'}
 								onClick={() => {
 									props.onClose();
-									router.navigate('/account/personal-info');
+									router.navigate('/account');
 								}}
 							/>
 							<LabelLink
