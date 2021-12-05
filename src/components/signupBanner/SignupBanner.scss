@@ -1,3 +1,4 @@
+@import '../../themes/themes';
 .rsSignupBanner {
 	max-width: 1920px;
 	height: 237px;
@@ -23,6 +24,14 @@
 	}
 	.rsButton {
 		margin: 0 auto;
+		&.contained.primary {
+			padding: 13px 50px;
+		}
+		.rsLabel {
+			&.packagesCustomTwo {
+				font-weight: $regular;
+			}
+		}
 	}
 	.textTag {
 		color: #ffffff;
