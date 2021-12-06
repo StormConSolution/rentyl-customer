@@ -290,7 +290,7 @@ const AccountPaymentMethodsResponsivePage: React.FC = () => {
 					isPrimary={primaryCard.isPrimary}
 				/>
 			);
-		} else if (!ObjectUtils.isArrayWithData(nonPrimaryCardList) || !primaryCard) return;
+		}
 
 		let cardList = nonPrimaryCardList.map((item) => {
 			return (
