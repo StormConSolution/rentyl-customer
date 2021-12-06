@@ -94,14 +94,9 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 			]),
 			new RsFormControl('expiration', checkoutUser.paymentInfo?.expiration || '', [
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration required', customPaymentRequired),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration too short', (control: RsFormControl) => {
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid expiration', (control: RsFormControl) => {
 					return (
-						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length < 7
-					);
-				}),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration too long', (control: RsFormControl) => {
-					return (
-						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length > 7
+						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length === 7
 					);
 				}),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
