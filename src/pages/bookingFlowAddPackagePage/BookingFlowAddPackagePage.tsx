@@ -15,6 +15,7 @@ import BookingSummaryCard from '../../components/bookingSummaryCard/BookingSumma
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import ReservationsService from '../../services/reservations/reservations.service';
+import Label from '@bit/redsky.framework.rs.label/dist/Label';
 
 const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
@@ -206,6 +207,11 @@ const BookingFlowAddPackagePage = () => {
 					viewMore={(num) => {
 						setPage(num);
 					}}
+					text={
+						<Label variant="caption1" className="loadMoreButton">
+							Load More Packages
+						</Label>
+					}
 				/>
 			</Box>
 			<Box className="bookingSummarySection">
