@@ -16,7 +16,6 @@ enum GlobalStateKeys {
 	CHECKOUT_USER = 'CheckoutUser',
 	COMPANY = 'Company',
 	VERIFIED_ACCOMMODATION = 'VerifiedAccommodation',
-	USER_RATE_CODE = 'UserRateCode',
 	RESERVATION_FILTERS = 'ReservationFilter',
 	LAST_NAVIGATION_PATH = 'LastNavigationPath'
 }
@@ -31,7 +30,6 @@ class GlobalState {
 	checkoutUser: RecoilState<Api.User.Req.Checkout | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 	verifiedAccommodation: RecoilState<Api.Reservation.Res.Verification | undefined>;
-	userRateCode: RecoilState<string>;
 	reservationFilters: RecoilState<Misc.ReservationFilters>;
 	lastNavigationPath: RecoilState<string>;
 
@@ -89,11 +87,6 @@ class GlobalState {
 			GlobalStateKeys.COMPARISON_CARD,
 			GlobalStateKeys.CHECKOUT_USER
 		];
-
-		this.userRateCode = atom<string>({
-			key: GlobalStateKeys.USER_RATE_CODE,
-			default: ''
-		});
 
 		this.reservationFilters = atom<Misc.ReservationFilters>({
 			key: GlobalStateKeys.RESERVATION_FILTERS,

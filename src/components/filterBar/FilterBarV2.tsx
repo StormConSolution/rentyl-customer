@@ -287,6 +287,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 					updateFilterForm(filterForm.get('propertyTypeIds'));
 				}}
 				className="filterCheckbox"
+				textColor="#001933"
 			/>
 		));
 	}
@@ -310,6 +311,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 					updateFilterForm(filterForm.get('experienceIds'));
 				}}
 				className="filterCheckbox"
+				textColor="#001933"
 			/>
 		));
 	}
@@ -333,6 +335,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 					updateFilterForm(filterForm.get('amenityIds'));
 				}}
 				className="filterCheckbox"
+				textColor="#001933"
 			/>
 		));
 	}
@@ -471,11 +474,15 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 						updateFilterForm(tempControl);
 					}}
 					title={
-						!ObjectUtils.isArrayWithData(filterForm.get('amenityIds').value)
-							? 'Other Filters'
-							: `Other Filters( ${(filterForm.get('amenityIds').value as number[]).length} )`
+						<Label variant="destinationAvailabilityCustomOne">
+							{!ObjectUtils.isArrayWithData(filterForm.get('amenityIds').value)
+								? 'Other Filters'
+								: `Other Filters( ${(filterForm.get('amenityIds').value as number[]).length} )`}
+						</Label>
 					}
 					dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
+					icon="icon-slider"
+					removeFilterByLabel
 				>
 					<Label variant="body1" paddingTop={10} paddingLeft={10}>
 						In Unit Amenities

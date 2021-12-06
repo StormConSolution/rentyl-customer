@@ -35,7 +35,13 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					<Label variant={'customThree'} color={'#707070'}>
 						not you?
 					</Label>
-					<Label ml={3} variant={'customFour'} color={'#2C3C60'} onClick={props.onLogOut}>
+					<Label
+						ml={3}
+						variant={'customFour'}
+						color={'#2C3C60'}
+						onClick={props.onLogOut}
+						className={'clickable'}
+					>
 						Log Out
 					</Label>
 				</Box>
@@ -47,13 +53,13 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 						alt={'Tier Badge'}
 					/>
 					<Box ml={15}>
-						<Label variant={'customThree'}>{props.userData.tierTitle || ''}</Label>
+						<Label variant={'customThree'}>{props.userData.tierTitle || 'Bronze'}</Label>
 						<Label variant={'customThree'}>Account {props.userData.id}</Label>
 					</Box>
 				</Box>
 				<Box textAlign={'end'}>
 					<Label variant={'customThree'} mb={6}>
-						You have reached {props.userData.tierTitle} Spire! Hooray!
+						You have reached {props.userData.tierTitle || 'Bronze'} Spire! Hooray!
 					</Label>
 					<div className={'loadingBarContainer'}>
 						<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />

@@ -577,7 +577,11 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 						</Button>
 					)}
 					{!!verifiedAccommodation && (
-						<BookingSummaryCard bookingData={verifiedAccommodation} canHide={false} />
+						<BookingSummaryCard
+							bookingData={verifiedAccommodation}
+							canHide={false}
+							usePoints={currentCheckoutUser?.usePoints || false}
+						/>
 					)}
 				</div>
 			</div>
