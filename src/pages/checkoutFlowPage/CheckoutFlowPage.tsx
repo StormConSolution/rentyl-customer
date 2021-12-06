@@ -504,7 +504,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	function handleButtonClass() {
 		switch (params.stage) {
 			case 0:
-				return !!user ? 'none' : 'blue';
+				return !!user ? '' : 'yellow';
 			case 1:
 				return 'none';
 			default:

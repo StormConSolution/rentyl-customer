@@ -1,4 +1,4 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
@@ -118,11 +118,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					className={'filterResultsWrapper'}
 					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 20px 20px 20px'}
 				>
-					{size !== 'small' && (
-						<>
-							<FilterBarV2 />
-						</>
-					)}
+					{size !== 'small' && <FilterBarV2 />}
 				</Box>
 				{isLoaded && (
 					<Box className={'searchResultsWrapper'}>
