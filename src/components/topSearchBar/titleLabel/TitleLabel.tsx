@@ -2,13 +2,15 @@ import * as React from 'react';
 import './TitleLabel.scss';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import { Box } from '@bit/redsky.framework.rs.996';
-import { useEffect, useRef } from 'react';
+import { RefObject, useEffect, useRef } from 'react';
 
 interface TitleLabelProps {
 	title: string;
 	label: string;
 	popoutBoxContent: React.ReactNode;
 	popoutBoxPadding?: string;
+	className?: string;
+	titleLabelRef?: RefObject<any> | undefined;
 }
 
 const TitleLabel: React.FC<TitleLabelProps> = (props) => {
@@ -29,10 +31,11 @@ const TitleLabel: React.FC<TitleLabelProps> = (props) => {
 
 	return (
 		<div
-			className={'rsTitleLabel'}
+			className={`rsTitleLabel${props.className ? ` ${props.className}` : ''}`}
 			onClick={() => {
 				boxRef.current!.style.display = 'block';
 			}}
+			ref={props.titleLabelRef}
 		>
 			<Label variant={'caption3'} mb={10}>
 				{props.title}
