@@ -1851,6 +1851,7 @@ declare namespace Api {
 				personal: UserCheckoutInfo;
 				shouldCreateUser: boolean;
 				billing?: UserCheckoutInfo;
+				pmData?: Api.Payment.PmData;
 				paymentInfo?: UserCheckoutPaymentInfo;
 				userId?: number;
 				usePoints?: boolean;

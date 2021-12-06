@@ -38,14 +38,13 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 	function renderImages() {
 		return props.imgPaths.map((item, index) => {
 			return (
-				<div key={index}>
-					<Img
-						src={item}
-						alt={'img alt'}
-						width={size === 'small' ? 327 : 414}
-						height={size === 'small' ? 220 : 278}
-					/>
-				</div>
+				<Img
+					key={index}
+					src={item}
+					alt={'img alt'}
+					width={size === 'small' ? 327 : 414}
+					height={size === 'small' ? 220 : 278}
+				/>
 			);
 		});
 	}

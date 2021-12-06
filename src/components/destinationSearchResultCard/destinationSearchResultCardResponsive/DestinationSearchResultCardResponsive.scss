@@ -11,9 +11,10 @@
 	.featureIcons {
 		display: flex;
 		gap: 34px;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
 		align-items: center;
 		text-align: center;
+		overflow: hidden;
 	}
 	.featureTitle {
 		font-weight: $light;
@@ -56,6 +57,15 @@
 				object-fit: cover;
 				object-position: center;
 			}
+		}
+	}
+
+	.earnTextContainer {
+		min-width: 350px;
+		display: flex;
+		justify-content: flex-end;
+		.earnText {
+			width: fit-content;
 		}
 	}
 }

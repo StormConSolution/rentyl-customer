@@ -30,6 +30,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const perPage = 10;
+	const [isLoaded, setIsLoaded] = useState<boolean>(false);
 	const [page, setPage] = useState<number>(1);
 	const [availabilityTotal, setAvailabilityTotal] = useState<number>(0);
 	const [destinations, setDestinations] = useState<Api.Destination.Res.Availability[]>([]);
@@ -48,6 +49,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 				let res = await destinationService.searchAvailableReservations(searchQueryObj);
 				setDestinations(res.data);
 				setAvailabilityTotal(res.total || 0);
+				setIsLoaded(true);
 				popupController.close(SpinningLoaderPopup);
 			} catch (e) {
 				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot find available reservations.'), 'Server Error');
@@ -122,13 +124,15 @@ const ReservationAvailabilityPage: React.FC = () => {
 						</>
 					)}
 				</Box>
-				<Box className={'searchResultsWrapper'}>
-					{destinations.length <= 0 ? (
-						<Label variant={'h2'}>No available options.</Label>
-					) : (
-						renderDestinationSearchResultCards()
-					)}
-				</Box>
+				{isLoaded && (
+					<Box className={'searchResultsWrapper'}>
+						{destinations.length <= 0 ? (
+							<Label variant={'h2'}>No available options.</Label>
+						) : (
+							renderDestinationSearchResultCards()
+						)}
+					</Box>
+				)}
 				<PaginationViewMore
 					selectedRowsPerPage={perPage}
 					total={availabilityTotal}

@@ -76,7 +76,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			rateCode: displayLowestPrice?.rate.code || ''
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
-		popupController.close(AccommodationsPopup);
+		popupController.closeAll();
 		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 	}
 
@@ -101,15 +101,9 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 				imgPaths={urls}
 				hideCompareButton={true}
 				onGalleryClick={() => {
-					if (size === 'small') {
-						popupController.open<MobileLightBoxProps>(MobileLightBox, {
-							imageData: accommodationDetails?.media
-						});
-					} else {
-						popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
-							imageData: accommodationDetails?.media
-						});
-					}
+					popupController.open<MobileLightBoxProps>(MobileLightBox, {
+						imageData: accommodationDetails?.media
+					});
 				}}
 			/>
 		);

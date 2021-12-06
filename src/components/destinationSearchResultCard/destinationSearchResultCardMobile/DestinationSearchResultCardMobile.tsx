@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './DestinationSearchResultCardMobile.scss';
 import CarouselV2 from '../../carouselV2/CarouselV2';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import router from '../../../utils/router';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -9,8 +9,9 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { StringUtils } from '../../../utils/utils';
-import LabelButton from '../../labelButton/LabelButton';
-import { useEffect, useState } from 'react';
+import DestinationDetailsMobilePopup, {
+	DestinationDetailsMobilePopupProps
+} from '../../../popups/destinationDetailsMobilePopup/DestinationDetailsMobilePopup';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -51,7 +52,14 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 	return (
 		<Box className={'rsDestinationSearchResultCardMobile'}>
 			<CarouselV2
-				path={`/destination/details?di=${props.destinationObj.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`}
+				path={() => {
+					router.updateUrlParams({
+						di: props.destinationObj.id,
+						startDate: reservationFilters.startDate as string,
+						endDate: reservationFilters.endDate as string
+					});
+					popupController.open<DestinationDetailsMobilePopupProps>(DestinationDetailsMobilePopup);
+				}}
 				imgPaths={props.picturePaths}
 				onAddCompareClick={() => {
 					if (props.onAddCompareClick) props.onAddCompareClick();
@@ -68,11 +76,12 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Icon
 						iconImg={'icon-info-outline'}
 						onClick={() => {
-							router
-								.navigate(
-									`/destination/details?di=${props.destinationObj.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
-								)
-								.catch(console.error);
+							router.updateUrlParams({
+								di: props.destinationObj.id,
+								startDate: reservationFilters.startDate as string,
+								endDate: reservationFilters.endDate as string
+							});
+							popupController.open<DestinationDetailsMobilePopupProps>(DestinationDetailsMobilePopup);
 						}}
 						size={20}
 					/>
@@ -87,9 +96,11 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					</Label>
 				</Box>
 				<Box display={'flex'} justifyContent={'flex-end'}>
-					<Label className={'earnText'} variant={'italicBold'}>
-						You could earn from {props.pointsEarnable} points for this stay
-					</Label>
+					{!reservationFilters.redeemPoints && (
+						<Label className={'earnText'} variant={'italicBold'}>
+							You could earn from {props.pointsEarnable} points for this stay
+						</Label>
+					)}
 				</Box>
 			</Box>
 		</Box>
