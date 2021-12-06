@@ -110,7 +110,7 @@ const ReservationDetailsPage: React.FC = () => {
 							<BookingSummaryCard
 								bookingData={verifiedAccommodation}
 								canHide={smallSize}
-								usePoints={checkoutUser?.usePoints || false}
+								usePoints={!reservation.paymentMethod}
 							/>
 						</Box>
 					)}
