@@ -147,14 +147,6 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 				}
 				titleLabelRef={labelInputRef}
 			/>
-			{/*<LabelInput*/}
-			{/*	control={filterForm.get('adultCount')}*/}
-			{/*	updateControl={updateFilterForm}*/}
-			{/*	className="guestsInput"*/}
-			{/*	inputType="number"*/}
-			{/*	title="Guests"*/}
-			{/*	labelInputRef={labelInputRef}*/}
-			{/*/>*/}
 			<Button look={'containedPrimary'} className={'updateButton'} onClick={updateSearchQuery}>
 				Update
 			</Button>
