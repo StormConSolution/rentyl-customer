@@ -62,7 +62,12 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 			new RsFormControl('phone', checkoutUser.billing?.phone || checkoutUser.personal.phone, [
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Enter a valid phone number', customBillingRequired),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Enter a valid phone number', (control: RsFormControl) => {
-					return !differentBillingAddress || control.value.toString().length > 5;
+					return (
+						isPayingWithPoints() ||
+						isUsingExistingPaymentMethod() ||
+						!differentBillingAddress ||
+						control.value.toString().length > 5
+					);
 				})
 			]),
 			new RsFormControl('address1', checkoutUser.billing?.address1 || checkoutUser.personal.address1, [
@@ -74,7 +79,9 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 			]),
 			new RsFormControl('zip', checkoutUser.billing?.zip || checkoutUser.personal.zip, [
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Zip is required', customBillingRequired),
-				new RsValidator(RsValidatorEnum.NUM, 'Zip must be a number')
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Zip must be a number', (control: RsFormControl) => {
+					return isPayingWithPoints() || isUsingExistingPaymentMethod() || !isNaN(Number(control.value));
+				})
 			]),
 			new RsFormControl('state', checkoutUser.billing?.state || checkoutUser.personal.state, [
 				new RsValidator(RsValidatorEnum.CUSTOM, 'State is required', customBillingRequired)
@@ -86,10 +93,20 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Card Name is required', customPaymentRequired)
 			]),
 			new RsFormControl('expiration', checkoutUser.paymentInfo?.expiration || '', [
-				new RsValidator(RsValidatorEnum.REQ, 'Expiration required'),
-				new RsValidator(RsValidatorEnum.MIN, 'Expiration too short', 7),
-				new RsValidator(RsValidatorEnum.MAX, 'Expiration too long', 7),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration required', customPaymentRequired),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration too short', (control: RsFormControl) => {
+					return (
+						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length < 7
+					);
+				}),
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration too long', (control: RsFormControl) => {
+					return (
+						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length > 7
+					);
+				}),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
+					if (isPayingWithPoints() || isUsingExistingPaymentMethod()) return true;
+
 					if (!control.value.toString().includes('/')) return false;
 					const [month, year] = control.value
 						.toString()
@@ -125,13 +142,20 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 
 	function customBillingEmail(control: RsFormControl) {
 		return (
+			isPayingWithPoints() ||
+			isUsingExistingPaymentMethod() ||
 			!differentBillingAddress ||
 			/^[a-zA-Z0-9#$%&'*.\-+/=?^_{}~]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(control.value.toString())
 		);
 	}
 
 	function customBillingRequired(control: RsFormControl) {
-		return !differentBillingAddress || !!control.value.toString();
+		return (
+			isPayingWithPoints() ||
+			isUsingExistingPaymentMethod() ||
+			!differentBillingAddress ||
+			!!control.value.toString()
+		);
 	}
 
 	function customPaymentRequired(control: RsFormControl) {
