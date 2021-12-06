@@ -4,6 +4,9 @@
 	width: 100%;
 	height: fit-content;
 	min-width: 328px;
+	.rsAccordion {
+		filter: unset !important;
+	}
 	.accommodationDetailsContainer {
 		width: 100%;
 		max-width: 314px;
