@@ -99,18 +99,13 @@ const BookingFlowAddPackagePage = () => {
 				if (!params.data.newRoom) return;
 				const request: Api.UpsellPackage.Req.Availability = {
 					destinationId: params.data.destinationId,
-					excludePackageIds: addedPackages.map((item) => item.id),
 					startDate: params.data.newRoom.arrivalDate,
 					endDate: params.data.newRoom.departureDate,
 					pagination: { page, perPage }
 				};
-				if (addedPackages) {
-					request.excludePackageIds = addedPackages.map((item) => item.id);
-				}
-				if (request.excludePackageIds && request.excludePackageIds.length < 1) delete request.excludePackageIds;
 				const response = await packageService.getAvailable(request);
-				if (response.data.length < 1 && addedPackages.length < 1) {
-					throw new Error('No Packages to edit');
+				if (response.total === 0) {
+					throw new Error('no available packages');
 				}
 				setAvailablePackages((prevState) => {
 					return [...prevState, ...response.data];
