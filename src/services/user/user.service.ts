@@ -9,7 +9,6 @@ import globalState, {
 	setRecoilExternalValue
 } from '../../state/globalState';
 import router from '../../utils/router';
-import { useRecoilState } from 'recoil';
 
 export default class UserService extends Service {
 	async loginUserByPassword(username: string, password: string) {
@@ -86,11 +85,9 @@ export default class UserService extends Service {
 	}
 
 	clearCheckoutUserFromLocalStorage() {
-		const [recoilCheckoutUser, setRecoilCheckoutUser] = useRecoilState<Api.User.Req.Checkout | undefined>(
-			globalState.checkoutUser
-		);
+		const recoilCheckoutUser = getRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
 		if (!!recoilCheckoutUser) {
-			setRecoilCheckoutUser(undefined);
+			setRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser, undefined);
 			localStorage.removeItem(KEY_PREFIX + globalState.checkoutUser.key);
 		}
 	}
