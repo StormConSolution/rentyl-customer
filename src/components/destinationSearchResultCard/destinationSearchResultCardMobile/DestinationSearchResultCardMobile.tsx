@@ -76,11 +76,12 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					<Icon
 						iconImg={'icon-info-outline'}
 						onClick={() => {
-							router
-								.navigate(
-									`/destination/details?di=${props.destinationObj.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
-								)
-								.catch(console.error);
+							router.updateUrlParams({
+								di: props.destinationObj.id,
+								startDate: reservationFilters.startDate as string,
+								endDate: reservationFilters.endDate as string
+							});
+							popupController.open<DestinationDetailsMobilePopupProps>(DestinationDetailsMobilePopup);
 						}}
 						size={20}
 					/>
