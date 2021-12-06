@@ -46,7 +46,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					</Label>
 					<Label variant={'subtitle3'}>points per night</Label>
 					<Box className={'earnTextContainer'}>
-						{props.pointsEarnable !== 0 && props.pointsEarnable && (
+						{props.pointsEarnable !== 0 && props.pointsEarnable && !reservationFilters.redeemPoints && (
 							<Label variant={'italicBoldTwo'} className={'yellowText'}>
 								You could earn {props.pointsEarnable} points for this stay
 							</Label>
@@ -64,7 +64,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
 					<Box className={'earnTextContainer'}>
-						{props.pointsEarnable !== 0 && props.pointsEarnable && (
+						{props.pointsEarnable !== 0 && props.pointsEarnable && !reservationFilters.redeemPoints && (
 							<Label variant={'italicBoldTwo'} className={'yellowText earnText'}>
 								You could earn {props.pointsEarnable} points for this stay
 							</Label>

@@ -95,9 +95,11 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					</Label>
 				</Box>
 				<Box display={'flex'} justifyContent={'flex-end'}>
-					<Label className={'earnText'} variant={'italicBold'}>
-						You could earn from {props.pointsEarnable} points for this stay
-					</Label>
+					{!reservationFilters.redeemPoints && (
+						<Label className={'earnText'} variant={'italicBold'}>
+							You could earn from {props.pointsEarnable} points for this stay
+						</Label>
+					)}
 				</Box>
 			</Box>
 		</Box>

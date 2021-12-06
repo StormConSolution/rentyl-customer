@@ -123,15 +123,12 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	}, [checkoutUser, differentBillingAddress]);
 
 	function isPayingWithPoints() {
-		// console.log((document.querySelector('.isPayingWithPoints [id^="RsSwitch_"]') as HTMLInputElement)?.checked || false);
 		// This is used because for some reason I can't access stateful variables from within form controls
 		return (document.querySelector('.isPayingWithPoints [id^="RsSwitch_"]') as HTMLInputElement)?.checked || false;
 	}
 
 	function isUsingExistingPaymentMethod() {
 		// This is used because for some reason I can't access stateful variables from within form controls
-		// console.log((document.querySelector('.isUsingExistingPaymentMethod [id^="RsSwitch_"]') as HTMLInputElement)?.checked ||
-		// 	false);
 		return (
 			(document.querySelector('.isUsingExistingPaymentMethod [id^="RsSwitch_"]') as HTMLInputElement)?.checked ||
 			false
