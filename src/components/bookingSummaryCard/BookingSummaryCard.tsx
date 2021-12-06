@@ -8,18 +8,28 @@ import { DateUtils, StringUtils } from '../../utils/utils';
 interface BookingSummaryCardProps {
 	bookingData: Api.Reservation.Res.Verification;
 	canHide: boolean;
+	usePoints: boolean;
 }
 
 const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 	const [hideSummary, setHideSummary] = useState<boolean>(false);
 	const [hideTaxesAndFees, setHideTaxesAndFees] = useState<boolean>(false);
 
-	function calculateGrandTotalWithPackagesCents() {
+	function calculateGrandTotalWithPackagesCentsOrPoints() {
+		if (props.usePoints) {
+			let packagesTotalInPoints = 0;
+			props.bookingData.upsellPackages.forEach(
+				(packageItem) => (packagesTotalInPoints += packageItem.priceDetail.amountPoints)
+			);
+			return `${StringUtils.addCommasToNumber(
+				props.bookingData.prices.grandTotalPoints + packagesTotalInPoints
+			)} points`;
+		}
 		let packagesTotalInCents = 0;
 		props.bookingData.upsellPackages.forEach(
 			(packageItem) => (packagesTotalInCents += packageItem.priceDetail.amountAfterTax)
 		);
-		return props.bookingData.prices.grandTotalCents + packagesTotalInCents;
+		return `$${StringUtils.formatMoney(props.bookingData.prices.grandTotalCents + packagesTotalInCents)}`;
 	}
 
 	function renderStayInfo() {
@@ -36,7 +46,9 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 						numberOfNights > 1 ? 's' : ''
 					}`}</Label>
 					<Label variant={'customThree'}>
-						${StringUtils.formatMoney(props.bookingData.prices.accommodationTotalInCents)}
+						{props.usePoints
+							? StringUtils.addCommasToNumber(props.bookingData.prices.subtotalPoints)
+							: `$${StringUtils.formatMoney(props.bookingData.prices.accommodationTotalInCents)}`}
 					</Label>
 				</Box>
 			</div>
@@ -57,7 +69,9 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							x{props.bookingData.upsellPackages.filter((value) => value.id === packageItem.id).length}
 						</Label>
 						<Label variant={'customThree'}>
-							${StringUtils.formatMoney(packageItem.priceDetail.amountBeforeTax)}
+							{props.usePoints
+								? StringUtils.addCommasToNumber(packageItem.priceDetail.amountPoints)
+								: `$${StringUtils.formatMoney(packageItem.priceDetail.amountBeforeTax)}`}
 						</Label>
 					</Box>
 				</div>
@@ -164,26 +178,28 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 					{renderStayInfo()}
 					<hr />
 					{renderPackages()}
-					<Box display={'flex'} justifyContent={'space-between'} marginTop={20}>
-						<Box display={'flex'}>
-							<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
-							<Icon
-								iconImg={hideTaxesAndFees ? 'icon-chevron-up' : 'icon-chevron-down'}
-								onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
-								className={'taxIcon'}
-							/>
+					{!props.usePoints && (
+						<Box display={'flex'} justifyContent={'space-between'} marginTop={20}>
+							<Box display={'flex'}>
+								<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
+								<Icon
+									iconImg={hideTaxesAndFees ? 'icon-chevron-up' : 'icon-chevron-down'}
+									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
+									className={'taxIcon'}
+								/>
+							</Box>
+							<Label variant={'customThree'} className={'totalTax'}>
+								${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
+							</Label>
 						</Box>
-						<Label variant={'customThree'} className={'totalTax'}>
-							${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
-						</Label>
-					</Box>
-					{hideTaxesAndFees ? <></> : renderTaxesAndFees()}
+					)}
+					{props.usePoints || hideTaxesAndFees ? <></> : renderTaxesAndFees()}
 					<Box display={'flex'} justifyContent={'space-between'}>
 						<Label variant={'customFour'} marginTop={20}>
 							Total
 						</Label>
 						<Label variant={'customThree'} marginTop={20}>
-							${StringUtils.formatMoney(calculateGrandTotalWithPackagesCents())}
+							{calculateGrandTotalWithPackagesCentsOrPoints()}
 						</Label>
 					</Box>
 				</>
