@@ -12,7 +12,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import BookingSummaryCard from '../../components/bookingSummaryCard/BookingSummaryCard';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import ReservationsService from '../../services/reservations/reservations.service';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
@@ -30,6 +30,7 @@ const BookingFlowAddPackagePage = () => {
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);
+	const checkoutUser = useRecoilValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
@@ -221,6 +222,7 @@ const BookingFlowAddPackagePage = () => {
 						<BookingSummaryCard
 							bookingData={{ ...verifiedAccommodation, upsellPackages: addedPackages }}
 							canHide={smallSize}
+							usePoints={checkoutUser?.usePoints || false}
 						/>
 					</Box>
 				) : (

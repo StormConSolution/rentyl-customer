@@ -150,7 +150,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 							<Label variant={'customFifteen'} margin={'20px auto'}>
 								Floor Plan
 							</Label>
-							<Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+							<Box display={'flex'} alignItems={'center'} justifyContent={'center'} marginBottom={40}>
 								<img
 									className={'floorPlanImg'}
 									src={props.accommodationDetails.layout[0].media.urls.imageKit}
