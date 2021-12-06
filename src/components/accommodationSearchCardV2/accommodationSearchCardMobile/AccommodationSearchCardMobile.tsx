@@ -76,7 +76,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			rateCode: displayLowestPrice?.rate.code || ''
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
-		popupController.close(AccommodationsPopup);
+		popupController.closeAll();
 		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 	}
 
