@@ -341,7 +341,9 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 								stay.accommodation.media.find((image) => image.isPrimary)?.urls.imageKit ||
 								stay.accommodation.media[0].urls.imageKit,
 							title: stay.accommodation.name,
-							price: stay.priceDetail.grandTotalCents,
+							price: checkoutUser?.usePoints
+								? stay.priceDetail.grandTotalPoints
+								: stay.priceDetail.grandTotalCents,
 							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY')
 						};
 					})
