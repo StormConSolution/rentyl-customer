@@ -66,9 +66,7 @@
 			font-size: 20px;
 			line-height: 19px;
 			border-top: solid 1px theme-var($greyLineColor);
-			.hoverEffect:hover {
-				filter: none !important;
-			}
+			filter: unset !important;
 			.articleItemHeader {
 				padding: 0;
 			}
