@@ -94,14 +94,9 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 			]),
 			new RsFormControl('expiration', checkoutUser.paymentInfo?.expiration || '', [
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration required', customPaymentRequired),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration too short', (control: RsFormControl) => {
+				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid expiration', (control: RsFormControl) => {
 					return (
-						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length < 7
-					);
-				}),
-				new RsValidator(RsValidatorEnum.CUSTOM, 'Expiration too long', (control: RsFormControl) => {
-					return (
-						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length > 7
+						isPayingWithPoints() || isUsingExistingPaymentMethod() || control.value.toString().length === 7
 					);
 				}),
 				new RsValidator(RsValidatorEnum.CUSTOM, 'Invalid Expiration Date', (control) => {
@@ -128,12 +123,15 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	}, [checkoutUser, differentBillingAddress]);
 
 	function isPayingWithPoints() {
+		// console.log((document.querySelector('.isPayingWithPoints [id^="RsSwitch_"]') as HTMLInputElement)?.checked || false);
 		// This is used because for some reason I can't access stateful variables from within form controls
 		return (document.querySelector('.isPayingWithPoints [id^="RsSwitch_"]') as HTMLInputElement)?.checked || false;
 	}
 
 	function isUsingExistingPaymentMethod() {
 		// This is used because for some reason I can't access stateful variables from within form controls
+		// console.log((document.querySelector('.isUsingExistingPaymentMethod [id^="RsSwitch_"]') as HTMLInputElement)?.checked ||
+		// 	false);
 		return (
 			(document.querySelector('.isUsingExistingPaymentMethod [id^="RsSwitch_"]') as HTMLInputElement)?.checked ||
 			false
