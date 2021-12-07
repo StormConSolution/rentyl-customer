@@ -45,6 +45,11 @@ const ComparisonDrawer: React.FC = () => {
 						look={'containedPrimary'}
 						variant={'body1'}
 						label={'Compare'}
+						disabled={
+							size === 'small' &&
+							recoilComparisonState.showCompareButton &&
+							recoilComparisonState.destinationDetails.length < 2
+						}
 						onClick={() => {
 							if (
 								ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) &&
@@ -69,19 +74,18 @@ const ComparisonDrawer: React.FC = () => {
 							<Label variant={'caption1'}>{recoilComparisonState.destinationDetails.length}</Label>
 						)}
 					</LabelButton>
-					<Button
-						className={'clearButton'}
-						look={'none'}
-						onClick={() => {
-							setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
-						}}
-						disabled={
-							!ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ||
-							recoilComparisonState.destinationDetails.length < 1
-						}
-					>
-						<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
-					</Button>
+					{(recoilComparisonState.showCompareButton ||
+						ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails)) && (
+						<Button
+							className={'clearButton'}
+							look={'none'}
+							onClick={() => {
+								setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
+							}}
+						>
+							<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />
+						</Button>
+					)}
 				</Box>
 			) : (
 				<Button
