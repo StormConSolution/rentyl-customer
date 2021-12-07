@@ -4,7 +4,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { Box } from '@bit/redsky.framework.rs.996';
 
 interface ThankYouCardProps {
-	reservationNumber: number;
+	reservationNumber: string;
 }
 
 const ThankYouCard: React.FC<ThankYouCardProps> = (props) => {

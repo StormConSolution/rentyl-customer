@@ -19,7 +19,7 @@ import globalState from '../../state/globalState';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface CheckOutInfoCardProps {
-	checkoutUserState: [Api.User.Req.Checkout, React.Dispatch<React.SetStateAction<Api.User.Req.Checkout>>];
+	checkoutUserState: [Misc.Checkout, React.Dispatch<React.SetStateAction<Misc.Checkout>>];
 	onContinue: VoidFunction;
 }
 
@@ -116,7 +116,7 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 		setInfoForm(infoForm.clone().update(control));
 	}
 
-	function buildCheckoutUser(): Api.User.Req.Checkout {
+	function buildCheckoutUser(): Misc.Checkout {
 		return {
 			...checkoutUser,
 			personal: {

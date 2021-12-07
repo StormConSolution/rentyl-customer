@@ -23,7 +23,7 @@ const ReservationDetailsPage: React.FC = () => {
 	const smallSize = size === 'small';
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
-	const checkoutUser = useRecoilValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
+	const checkoutUser = useRecoilValue<Misc.Checkout | undefined>(globalState.checkoutUser);
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);

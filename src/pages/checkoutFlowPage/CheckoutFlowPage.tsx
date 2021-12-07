@@ -49,8 +49,8 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [userPrimaryAddress, setUserPrimaryAddress] = useState<Api.User.Address>();
 	const [userPrimaryPaymentMethod, setUserPrimaryPaymentMethod] = useState<Api.User.PaymentMethod>();
-	const checkoutUser = useRecoilValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
-	const checkoutUserState = useState<Api.User.Req.Checkout>({
+	const checkoutUser = useRecoilValue<Misc.Checkout | undefined>(globalState.checkoutUser);
+	const checkoutUserState = useState<Misc.Checkout>({
 		personal: {
 			firstName: user?.firstName || checkoutUser?.personal.firstName || '',
 			lastName: user?.lastName || checkoutUser?.personal.lastName || '',
@@ -71,7 +71,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 
 	const [currentCheckoutUser, setCurrentCheckoutUser] = checkoutUserState;
 	const [bookedStays, setBookedStays] = useState<
-		{ image: string; title: string; price: number; dateBooked: string }[]
+		{ images: Api.Media[]; title: string; price: number; dateBooked: string; reservationNumber: string }[]
 	>([]);
 
 	const printRef = useRef(null);
@@ -337,14 +337,13 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				setBookedStays(
 					res.stays.map((stay) => {
 						return {
-							image:
-								stay.accommodation.media.find((image) => image.isPrimary)?.urls.imageKit ||
-								stay.accommodation.media[0].urls.imageKit,
+							images: stay.accommodation.media,
 							title: stay.accommodation.name,
 							price: checkoutUser?.usePoints
 								? stay.priceDetail.grandTotalPoints
 								: stay.priceDetail.grandTotalCents,
-							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY')
+							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY'),
+							reservationNumber: stay.externalReservationId
 						};
 					})
 				);
@@ -408,12 +407,11 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				setBookedStays(
 					res.stays.map((stay) => {
 						return {
-							image:
-								stay.accommodation.media.find((image) => image.isPrimary)?.urls.imageKit ||
-								stay.accommodation.media[0].urls.imageKit,
+							images: stay.accommodation.media,
 							title: stay.accommodation.name,
 							price: stay.priceDetail.grandTotalCents,
-							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY')
+							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY'),
+							reservationNumber: stay.externalReservationId
 						};
 					})
 				);
@@ -470,13 +468,9 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				{params.stage > 2 && (
 					<>
 						<ConfirmationImageSummary
-							images={[
-								'../../images/featureAndBenefits/house.png',
-								'../../images/landingPage/travel2x.png',
-								'../../images/rewardItemPage/house2x.jpg'
-							]}
+							images={bookedStays[0].images.slice(0, 3).map((image) => image.urls.imageKit)}
 						/>
-						<ThankYouCard reservationNumber={182547194578923} />
+						<ThankYouCard reservationNumber={bookedStays[0].reservationNumber} />
 					</>
 				)}
 				<PersonalInformation
@@ -507,6 +501,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 						)}
 						bookingDescription={verifiedAccommodation.accommodationName}
 						guaranteePolicy={
+							verifiedAccommodation.policies.find((policy) => policy.type === 'Guarantee')?.value ||
 							'10% of the total price is required at the time of booking to guarantee the reservation.'
 						}
 						cancellationPolicy={
@@ -514,7 +509,20 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 						}
 					/>
 				)}
-				{params.stage > 2 && <CheckoutReservationSummary orders={bookedStays} />}
+				{params.stage > 2 && (
+					<CheckoutReservationSummary
+						orders={bookedStays.map((stay) => {
+							return {
+								image:
+									stay.images.find((image) => image.isPrimary)?.urls.imageKit ||
+									stay.images[0].urls.imageKit,
+								dateBooked: DateUtils.formatDate(new Date(stay.dateBooked), 'MM-DD-YY'),
+								price: stay.price,
+								title: stay.title
+							};
+						})}
+					/>
+				)}
 			</>
 		);
 	}

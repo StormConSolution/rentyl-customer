@@ -9,7 +9,7 @@ import LabelButton from '../../components/labelButton/LabelButton';
 import DestinationImageGallery from '../../components/destinationImageGallery/DestinationImageGallery';
 import LightBoxCarouselPopup, { TabbedCarouselPopupProps } from '../lightBoxCarouselPopup/LightBoxCarouselPopup';
 import router from '../../utils/router';
-import { StringUtils } from '../../utils/utils';
+import { ObjectUtils, StringUtils } from '../../utils/utils';
 import AccommodationsPopup from '../accommodationsPopup/AccommodationsPopup';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
@@ -42,7 +42,7 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 
 	function renderAccommodationSize() {
 		let size = '';
-		let sizeObj = props.accommodationDetails.size;
+		let sizeObj = ObjectUtils.smartParse(props.accommodationDetails.size);
 		if (sizeObj) {
 			size = `${sizeObj.min} to ${sizeObj.max} ${sizeObj.units === 'SquareFeet' ? `ft` : sizeObj.units}`;
 		}

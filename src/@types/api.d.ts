@@ -606,6 +606,7 @@ declare namespace Api {
 				sort: string;
 				filter: string;
 			}
+
 			export interface Availability extends AvailabilityFilter {
 				regionIds?: number[];
 			}
@@ -1827,35 +1828,6 @@ declare namespace Api {
 				birthDate?: Date | string;
 				address?: Api.UserAddress.Req.Create;
 				emailNotification?: 0 | 1;
-			}
-
-			export interface UserCheckoutInfo {
-				firstName: string;
-				lastName: string;
-				address1: string;
-				zip: string;
-				city: string;
-				state: string;
-				country: string;
-				email: string;
-				phone: string;
-				address2?: string;
-			}
-
-			export interface UserCheckoutPaymentInfo {
-				nameOnCard: string;
-				expiration: string;
-			}
-
-			export interface Checkout {
-				personal: UserCheckoutInfo;
-				shouldCreateUser: boolean;
-				billing?: UserCheckoutInfo;
-				pmData?: Api.Payment.PmData;
-				paymentInfo?: UserCheckoutPaymentInfo;
-				userId?: number;
-				usePoints?: boolean;
-				useExistingPaymentMethod?: boolean;
 			}
 
 			export interface GetOrCreate

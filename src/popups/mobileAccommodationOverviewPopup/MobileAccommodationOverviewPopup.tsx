@@ -8,6 +8,7 @@ import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLightBox';
 import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import ImageLabel from '../../components/imageLabel/ImageLabel';
+import { ObjectUtils } from '../../utils/utils';
 
 export interface MobileAccommodationOverviewPopupProps extends PopupProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
@@ -61,7 +62,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 
 	function renderAccommodationSize() {
 		let size = '';
-		let sizeObj = props.accommodationDetails.size;
+		let sizeObj = ObjectUtils.smartParse(props.accommodationDetails.size);
 		if (sizeObj) {
 			size = `${sizeObj.min} to ${sizeObj.max} ${sizeObj.units === 'SquareFeet' ? `ft` : sizeObj.units}`;
 		}

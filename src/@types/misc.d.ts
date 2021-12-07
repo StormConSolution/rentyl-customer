@@ -110,6 +110,35 @@ declare namespace Misc {
 		isoCode: string;
 	}
 
+	export interface UserCheckoutInfo {
+		firstName: string;
+		lastName: string;
+		address1: string;
+		zip: string;
+		city: string;
+		state: string;
+		country: string;
+		email: string;
+		phone: string;
+		address2?: string;
+	}
+
+	export interface UserCheckoutPaymentInfo {
+		nameOnCard: string;
+		expiration: string;
+	}
+
+	export interface Checkout {
+		personal: UserCheckoutInfo;
+		shouldCreateUser: boolean;
+		billing?: UserCheckoutInfo;
+		pmData?: Api.Payment.PmData;
+		paymentInfo?: UserCheckoutPaymentInfo;
+		userId?: number;
+		usePoints?: boolean;
+		useExistingPaymentMethod?: boolean;
+	}
+
 	export interface ReservationFilters extends Api.AvailabilityFilter {
 		redeemPoints: boolean;
 		regionIds?: number[];

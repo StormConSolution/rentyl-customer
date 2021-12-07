@@ -6,7 +6,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { StringUtils } from '../../utils/utils';
 
 interface PaymentMethodProps {
-	userCheckout: Api.User.Req.Checkout;
+	userCheckout: Misc.Checkout;
 	userPrimaryPaymentMethod: Api.User.PaymentMethod | undefined;
 	onEditClickCallback?: () => void;
 }
