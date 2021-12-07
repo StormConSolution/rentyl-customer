@@ -19,7 +19,6 @@ import DestinationService from '../../services/destination/destination.service';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LabelButton from '../labelButton/LabelButton';
-import Icon from '@bit/redsky.framework.rs.icon';
 
 interface FilterBarV2Props {}
 
@@ -535,6 +534,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 					<Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'flex-start'}>
 						<Label variant={'caption1'}>Redeem Points</Label>
 						<Switch
+							checked={reservationFilters.redeemPoints}
 							labelPosition={'top'}
 							className={'toggleButton'}
 							onChange={() =>

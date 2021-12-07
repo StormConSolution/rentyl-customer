@@ -14,6 +14,7 @@ import { popupController } from '@bit/redsky.framework.rs.996';
 import MobilePackageDescriptionPopup, {
 	MobilePackageDescriptionPopupProps
 } from '../../popups/mobilePackageDescriptionPopup/MobilePackageDescriptionPopup';
+import { useEffect, useState } from 'react';
 
 interface DestinationPackageTileProps {
 	title: string;
@@ -27,8 +28,46 @@ interface DestinationPackageTileProps {
 
 const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
+	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const size = useWindowResizeChange();
 	const smallSize = size === 'small';
+	const [disablePackage, setDisablePackage] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (reservationFilters.redeemPoints && company.allowPointBooking) {
+			setDisablePackage(false);
+		} else if (!reservationFilters.redeemPoints && company.allowCashBooking) {
+			setDisablePackage(false);
+		} else {
+			setDisablePackage(true);
+		}
+	}, [reservationFilters, company]);
+
+	function renderPointsOrCash() {
+		if (!reservationFilters.redeemPoints && company.allowCashBooking) {
+			return (
+				<Box className="priceAndTextLabelContainer">
+					<Label variant={smallSize ? 'packagesCustomThree' : 'packagesCustomOne'} marginBottom={9}>
+						<span className="priceFont">${StringUtils.formatMoney(props.prices.amountAfterTax)}</span>{' '}
+						{smallSize && '/ stay'}
+					</Label>
+					{!smallSize && <Label variant="customThree">Per Stay</Label>}
+				</Box>
+			);
+		} else if (reservationFilters.redeemPoints && company.allowPointBooking) {
+			return (
+				<Box className="priceAndTextLabelContainer">
+					<Label variant={smallSize ? 'packagesCustomThree' : 'packagesCustomOne'} marginBottom={9}>
+						<span className="priceFont yellowText">
+							{StringUtils.addCommasToNumber(props.prices.amountPoints)}pts
+						</span>{' '}
+						{smallSize && '/ stay'}
+					</Label>
+					{!smallSize && <Label variant="customThree">Per Stay</Label>}
+				</Box>
+			);
+		}
+	}
 
 	return (
 		<Paper className={'rsDestinationPackageTile'} borderRadius={'4px'} position={'relative'}>
@@ -91,18 +130,11 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 				)}
 			</Box>
 			<Box className="priceAndButtonContainer" width={smallSize ? '100%' : 'auto'}>
-				<Box className="priceAndTextLabelContainer">
-					{company.allowCashBooking && (
-						<Label variant={smallSize ? 'packagesCustomThree' : 'packagesCustomOne'} marginBottom={9}>
-							<span className="priceFont">${StringUtils.formatMoney(props.prices.amountAfterTax)}</span>{' '}
-							{smallSize && '/ stay'}
-						</Label>
-					)}
-					{!smallSize && <Label variant="customThree">Per Stay</Label>}
-				</Box>
+				{renderPointsOrCash()}
 				<LabelButton
 					look={'none'}
 					variant={'button'}
+					disabled={disablePackage}
 					label={
 						props.text && (
 							<Label display="flex" className="addPackButtonText" variant="customThree" color="#fff">
@@ -112,7 +144,8 @@ const DestinationPackageTile: React.FC<DestinationPackageTileProps> = (props) =>
 									color="#fff"
 									className="addPackageButtonIcon"
 								/>
-								{!smallSize && props.text}
+								{!smallSize && !disablePackage && props.text}
+								{!smallSize && disablePackage && 'Unavailable'}
 							</Label>
 						)
 					}
