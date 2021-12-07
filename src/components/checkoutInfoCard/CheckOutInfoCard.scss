@@ -43,6 +43,10 @@
 
 		&.stretchedInput {
 			grid-template-columns: 1fr;
+
+			.rsLabelCheckboxV2 {
+				height: max-content;
+			}
 		}
 
 		&.rightSide {
