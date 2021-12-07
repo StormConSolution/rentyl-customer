@@ -4,10 +4,24 @@
 
 	display: flex;
 	flex-wrap: nowrap;
+	margin: 0 auto;
+	max-width: 1920px;
 
 	.packageSection {
 		width: 65%;
 		padding-left: 50px;
+		position: relative;
+
+		.rsPaginationViewMore {
+			position: absolute;
+			bottom: 30px;
+		}
+
+		.loadMoreButton {
+			border: 1px solid #cc9e0d;
+			border-radius: 10px;
+			padding: 5px;
+		}
 	}
 	.bookingSummarySection {
 		width: 35%;
@@ -110,6 +124,11 @@
 				width: 278px;
 				margin: 0 auto;
 				display: none;
+			}
+			.rsPaginationViewMore {
+				position: unset;
+				bottom: unset;
+				margin: 0 auto;
 			}
 			order: 1;
 		}
