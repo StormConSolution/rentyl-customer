@@ -338,6 +338,30 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		return { minSquareFt: minSquareFt, maxSquareFt: maxSquareFt };
 	}
 
+	function renderPointsOrCash() {
+		if (!reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPrice) {
+			return (
+				<Box className={'destinationPricingContainer'}>
+					<Label variant={'destinationDetailsCustomFour'}>from</Label>
+					<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+						${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}
+					</Label>
+					<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+				</Box>
+			);
+		} else if (reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPoints) {
+			return (
+				<Box className={'destinationPricingContainer'}>
+					<Label variant={'destinationDetailsCustomFour'}>from</Label>
+					<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+						{StringUtils.addCommasToNumber(destinationAvailability.minAccommodationPoints)}pts
+					</Label>
+					<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+				</Box>
+			);
+		}
+	}
+
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -392,15 +416,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							/>
 							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
 						</Box>
-						{destinationDetails.lowestPriceInCents && (
-							<Box className={'destinationPricingContainer'}>
-								<Label variant={'destinationDetailsCustomFour'}>from</Label>
-								<Label className={'price'} variant={'destinationDetailsCustomFive'}>
-									${StringUtils.formatMoney(destinationDetails.lowestPriceInCents)}
-								</Label>
-								<Label variant={'destinationDetailsCustomFour'}>per night</Label>
-							</Box>
-						)}
+						{renderPointsOrCash()}
 					</Box>
 					<Box className={'destinationDetailsWrapper'}>
 						<Box className={'minMaxDescription'}>

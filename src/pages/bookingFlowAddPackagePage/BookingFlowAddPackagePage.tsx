@@ -20,6 +20,7 @@ const BookingFlowAddPackagePage = () => {
 	const filterRef = useRef<HTMLElement>(null);
 	const size = useWindowResizeChange();
 	const smallSize = size === 'small';
+	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const reservationService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const packageService = serviceFactory.get<PackageService>('PackageService');
 	const params = router.getPageUrlParams<{ data: Misc.BookingParams }>([
@@ -216,7 +217,7 @@ const BookingFlowAddPackagePage = () => {
 						<BookingSummaryCard
 							bookingData={{ ...verifiedAccommodation, upsellPackages: addedPackages }}
 							canHide={smallSize}
-							usePoints={checkoutUser?.usePoints || false}
+							usePoints={reservationFilters.redeemPoints}
 						/>
 					</Box>
 				) : (
