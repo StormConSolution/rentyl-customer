@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './ExistingItineraryPage.scss';
-import { Box, Link, Page, popupController } from '@bit/redsky.framework.rs.996';
+import { Box, Link, Page } from '@bit/redsky.framework.rs.996';
 import ItineraryCard from '../../components/itineraryCard/ItineraryCard';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
@@ -9,13 +9,9 @@ import { useEffect, useState } from 'react';
 import serviceFactory from '../../services/serviceFactory';
 import ReservationsService from '../../services/reservations/reservations.service';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
-import Footer from '../../components/footer/Footer';
-import { FooterLinks } from '../../components/footer/FooterLinks';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { DateUtils, StringUtils, WebUtils } from '../../utils/utils';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
-import DestinationSearchResultCard from '../../components/destinationSearchResultCard/DestinationSearchResultCard';
-import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 const ExistingItineraryPage: React.FC = () => {
@@ -45,8 +41,7 @@ const ExistingItineraryPage: React.FC = () => {
 					page: 1,
 					perPage: 500
 				},
-				//TODO when in a stable environment probably want to switch to arrivalDate to show what is coming up most recently.
-				//Or give a way to filter themselves.
+				//TODO when in a stable environment probably want to switch to arrivalDate to show what is coming up most recently. Or give a way to filter themselves.
 				sort: {
 					field: 'reservation.createdOn',
 					order: 'ASC'

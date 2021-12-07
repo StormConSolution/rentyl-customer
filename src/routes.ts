@@ -1,42 +1,26 @@
 import { RouteDetails } from '@bit/redsky.framework.rs.996';
+import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
+import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
+import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
+import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
+import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
+import CheckoutFlowPage from './pages/checkoutFlowPage/CheckoutFlowPage';
+import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
+import ExistingItineraryPage from './pages/existingItineraryPage/ExistingItineraryPage';
+import globalState, { getRecoilExternalValue } from './state/globalState';
+import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
-import LandingPage from './pages/landingPage/LandingPage';
-import SignInPage from './pages/signInPage/SignInPage';
+import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage';
 import ReservationAvailabilityPage from './pages/reservationAvailabilityPage/ReservationAvailabilityPage';
-import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
-import AccommodationDetailsPage from './pages/accommodationDetailsPage/AccommodationDetailsPage';
-import RewardItemPage from './pages/rewardItemPage/RewardItemPage';
-import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
-import AccountAddressPage from './pages/accountAddressPage/AccountAddressPage';
-import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
-import RewardDetailPage from './pages/rewardDetailPage/RewardDetailPage';
-import RewardPurchasePage from './pages/rewardPurchasePage/RewardPurchasePage';
-import FeaturesAndBenefitsPage from './pages/featuresAndBenefitsPage/FeaturesAndBenefitsPage';
-import AboutSpirePointsPage from './pages/aboutSpirePointsPage/AboutSpirePointsPage';
-import AboutSpireSignUpPage from './pages/aboutSpirePage/AboutSpireSignUpPage';
-import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
-import SuccessPage from './pages/successPage/SuccessPage';
-import ExistingItineraryPage from './pages/existingItineraryPage/ExistingItineraryPage';
 import ReservationDetailsPage from './pages/reservationDetailsPage/ReservationDetailsPage';
-import BookingFlowAddRoomPage from './pages/bookingFlowAddRoomPage/BookingFlowAddRoomPage';
-import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
-import EditFlowModifyRoomPage from './pages/editFlowModifyRoomPage/EditFlowModifyRoomPage';
-import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
-import EditExistingPackagesPage from './pages/editExistingPackagesPage/EditExistingPackagesPage';
-import OrderConfirmationPage from './pages/orderConfirmationPage/OrderConfirmationPage';
-import globalState, { getRecoilExternalValue } from './state/globalState';
-import DestinationReviewPage from './pages/destinationReviewPage/DestinationReviewPage';
-import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import TermsAndConditionsPage from './pages/termsAndConditionsPage/TermsAndConditionsPage';
 import TermsOfUsePage from './pages/termsOfUsePage/TermsOfUsePage';
-import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
-import CheckoutFlowPage from './pages/checkoutFlowPage/CheckoutFlowPage';
 
 export const routes: RouteDetails[] = [
 	{
 		path: '/',
-		page: LandingPage,
+		page: ReservationAvailabilityPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
@@ -67,27 +51,6 @@ export const routes: RouteDetails[] = [
 		}
 	},
 	{
-		path: '/success',
-		page: SuccessPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/signin',
-		page: SignInPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/signup',
-		page: AboutSpireSignUpPage,
-		routeGuard: verifyRoute
-	},
-	{
 		path: '/password-reset',
 		page: ResetPasswordPage,
 		routeGuard: verifyRoute
@@ -100,16 +63,6 @@ export const routes: RouteDetails[] = [
 	{
 		path: '/reservations',
 		page: ExistingItineraryPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reservations/edit-room',
-		page: EditFlowModifyRoomPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reservations/edit-services',
-		page: EditExistingPackagesPage,
 		routeGuard: verifyRoute
 	},
 	{
@@ -139,46 +92,8 @@ export const routes: RouteDetails[] = [
 		}
 	},
 	{
-		path: '/booking/add-room',
-		page: BookingFlowAddRoomPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/booking/packages',
-		page: BookingFlowAddPackagePage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reward',
-		page: RewardItemPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reward/details',
-		page: RewardDetailPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reward/purchase',
-		page: RewardPurchasePage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reward/confirm',
-		page: OrderConfirmationPage,
-		routeGuard: verifyRoute
-	},
-	{
 		path: '/destination/details',
 		page: DestinationDetailsPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/destination/reviews',
-		page: DestinationReviewPage,
 		routeGuard: verifyRoute,
 		options: {
 			view: 'landingPage'
@@ -220,29 +135,6 @@ export const routes: RouteDetails[] = [
 		options: {
 			view: 'landingPage'
 		}
-	},
-	{
-		path: '/accommodation/details',
-		page: AccommodationDetailsPage,
-		routeGuard: verifyRoute,
-		options: {
-			view: 'landingPage'
-		}
-	},
-	{
-		path: '/about-spire-points',
-		page: AboutSpirePointsPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/about-spire',
-		page: AboutSpireSignUpPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/features-and-benefits',
-		page: FeaturesAndBenefitsPage,
-		routeGuard: verifyRoute
 	},
 	{
 		path: '*',

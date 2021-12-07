@@ -245,27 +245,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				`;
 	}
 
-	function renderFeatureCarousel() {
-		if (!destinationDetails || !ObjectUtils.isArrayWithData(destinationDetails.experiences)) return;
-		let carouselItems: any = [];
-		for (let item of destinationDetails.experiences) {
-			let imagePath = '';
-			if (ObjectUtils.isArrayWithData(item.media)) {
-				const mainImg = item.media.find((image) => image.isPrimary);
-				imagePath = mainImg?.urls.imageKit || item.media[0].urls.imageKit;
-			}
-			carouselItems.push({
-				name: item.title,
-				title: item.title,
-				imagePath: imagePath,
-				description: item.description,
-				buttonLabel: 'View Photos',
-				otherMedia: item.media
-			});
-		}
-		return carouselItems;
-	}
-
 	function renderMapSource() {
 		if (!destinationDetails) return;
 		let address = `${destinationDetails.address1} ${destinationDetails.city} ${destinationDetails.state} ${destinationDetails.zip}`;
