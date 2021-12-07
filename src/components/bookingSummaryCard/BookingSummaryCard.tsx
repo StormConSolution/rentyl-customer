@@ -21,15 +21,18 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 			props.bookingData.upsellPackages.forEach(
 				(packageItem) => (packagesTotalInPoints += packageItem.priceDetail.amountPoints)
 			);
-			return `${StringUtils.addCommasToNumber(
-				props.bookingData.prices.grandTotalPoints + packagesTotalInPoints
-			)} points`;
+			const bookingPointsLessPackagePoints =
+				props.bookingData.prices.grandTotalPoints - props.bookingData.prices.upsellPackageTotalPoints || 0;
+			return `${StringUtils.addCommasToNumber(bookingPointsLessPackagePoints + packagesTotalInPoints)} points`;
 		}
+
 		let packagesTotalInCents = 0;
 		props.bookingData.upsellPackages.forEach(
 			(packageItem) => (packagesTotalInCents += packageItem.priceDetail.amountAfterTax)
 		);
-		return `$${StringUtils.formatMoney(props.bookingData.prices.grandTotalCents + packagesTotalInCents)}`;
+		const bookingPriceLessPackagePrice =
+			props.bookingData.prices.grandTotalCents - props.bookingData.prices.upsellPackageTotalInCents;
+		return `$${StringUtils.formatMoney(bookingPriceLessPackagePrice + packagesTotalInCents)}`;
 	}
 
 	function renderStayInfo() {
