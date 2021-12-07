@@ -1,5 +1,14 @@
 @import '../../themes/themes';
 
+.small .rsPersonalInformation {
+	flex-direction: column;
+	gap: 24px;
+
+	.billingAddressWrapper {
+		padding: 0;
+	}
+}
+
 .rsPersonalInformation {
 	position: relative;
 	display: flex;

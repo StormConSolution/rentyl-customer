@@ -1,5 +1,15 @@
 @import '../../themes/themes';
 
+.small .rsCheckoutReservationSummaryCard {
+	flex-direction: column;
+
+	.cardImage {
+		width: 100%;
+		object-fit: cover;
+		border-radius: 20px;
+	}
+}
+
 .rsCheckoutReservationSummaryCard {
 	display: flex;
 	margin-bottom: 76px;
