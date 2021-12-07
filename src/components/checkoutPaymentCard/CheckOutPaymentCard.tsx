@@ -5,7 +5,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import LabelInput from '../labelInput/LabelInput';
 import LabelSelect from '../labelSelect/LabelSelect';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import { WebUtils } from '../../utils/utils';
@@ -18,6 +18,7 @@ import CardInfoCard from '../cardInfoCard/CardInfoCard';
 import UserService from '../../services/user/user.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import Label from '@bit/redsky.framework.rs.label';
 
 export interface CheckOutPaymentCardProps {
 	checkoutUserState: [Misc.Checkout, React.Dispatch<React.SetStateAction<Misc.Checkout>>];
@@ -30,6 +31,9 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const [checkoutUser, setCheckoutUser] = props.checkoutUserState;
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const verifiedAccommodation = useRecoilValue<Api.Reservation.Res.Verification | undefined>(
 		globalState.verifiedAccommodation
 	);
@@ -37,7 +41,6 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	const countryService = serviceFactory.get<CountryService>('CountryService');
 	const [isTimeToSubmit, setIsTimeToSubmit] = useState<boolean>(false);
 	const [differentBillingAddress, setDifferentBillingAddress] = useState<boolean>(false);
-	const [payWithPoints, setPayWithPoints] = useState<boolean>(checkoutUser.usePoints || false);
 	const [useExistingPaymentMethod, setUseExistingPaymentMethod] = useState<boolean>(
 		false
 		// checkoutUser.useExistingPaymentMethod || false
@@ -121,6 +124,16 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 		setPaymentForm(getPaymentForm());
 		setPhoneError(false);
 	}, [checkoutUser, differentBillingAddress]);
+
+	useEffect(() => {
+		if (!canPayWithPoints() && reservationFilters.redeemPoints) {
+			setReservationFilters({
+				...reservationFilters,
+				redeemPoints: false
+			});
+			rsToastify.error('You do not have enough points required for this purchase.', 'Insufficient Points');
+		}
+	}, []);
 
 	function isPayingWithPoints() {
 		// This is used because for some reason I can't access stateful variables from within form controls
@@ -214,7 +227,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 			};
 		} else delete newCheckoutUser.billing;
 
-		if (!payWithPoints && !useExistingPaymentMethod) {
+		if (!reservationFilters.redeemPoints && !useExistingPaymentMethod) {
 			newCheckoutUser.paymentInfo = {
 				expiration: paymentForm.get('expiration').value.toString(),
 				nameOnCard: paymentForm.get('nameOnCard').value.toString()
@@ -228,7 +241,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 		event.preventDefault();
 
 		try {
-			if (!(await paymentForm.isValid())) {
+			if (!reservationFilters.redeemPoints && !(await paymentForm.isValid())) {
 				if (paymentForm.get('phone').errors.length > 0) setPhoneError(true);
 				setPaymentForm(paymentForm.clone());
 				rsToastify.error('Please ensure you have filled out all fields', 'Missing or Incorrect Information');
@@ -363,11 +376,11 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	}
 
 	function canUsePrimaryPaymentMethod() {
-		return !payWithPoints && !!props.userPrimaryPaymentMethod;
+		return !reservationFilters.redeemPoints && !!props.userPrimaryPaymentMethod;
 	}
 
 	function canShowCardForm() {
-		return !payWithPoints && !useExistingPaymentMethod;
+		return !reservationFilters.redeemPoints && !useExistingPaymentMethod;
 	}
 
 	return (
@@ -385,19 +398,20 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 				{renderBillingInfo()}
 
 				{canPayWithPoints() && (
-					<Box className={'fieldGroup stretchedInput leftSide'}>
+					<Box className={'fieldGroup stretchedInput leftSide toggleContainer'}>
 						<Switch
-							className={'isPayingWithPoints'}
-							label={'{"right":"Pay with points"}'}
-							labelPosition={'right'}
-							checked={payWithPoints}
-							onChange={(checked) => {
-								const newCheckoutUser = { ...checkoutUser };
-								newCheckoutUser.usePoints = checked;
-								setCheckoutUser(newCheckoutUser);
-								setPayWithPoints(checked);
+							className={'toggleButton checkoutToggle'}
+							labelPosition={'top'}
+							label={''}
+							checked={reservationFilters.redeemPoints}
+							onChange={() => {
+								setReservationFilters({
+									...reservationFilters,
+									redeemPoints: !reservationFilters.redeemPoints
+								});
 							}}
 						/>
+						<Label variant={'body1'}>Pay with points</Label>
 					</Box>
 				)}
 				{/*TODO: Commented out until we get some feedback and designs*/}

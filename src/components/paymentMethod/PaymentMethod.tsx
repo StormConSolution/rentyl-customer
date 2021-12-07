@@ -4,6 +4,8 @@ import Label from '@bit/redsky.framework.rs.label';
 import { Box } from '@bit/redsky.framework.rs.996';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { StringUtils } from '../../utils/utils';
+import { useRecoilValue } from 'recoil';
+import globalState from '../../state/globalState';
 
 interface PaymentMethodProps {
 	userCheckout: Misc.Checkout;
@@ -12,11 +14,13 @@ interface PaymentMethodProps {
 }
 
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
+	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
+
 	function renderPaymentType() {
 		if (props.userPrimaryPaymentMethod?.type && props.userCheckout.useExistingPaymentMethod)
 			return StringUtils.capitalizeFirst(props.userPrimaryPaymentMethod.type);
 		if (props.userCheckout.pmData) return StringUtils.capitalizeFirst(props.userCheckout.pmData.card_type);
-		if (props.userCheckout.usePoints) return 'Points';
+		if (reservationFilters.redeemPoints) return 'Points';
 		return 'None';
 	}
 	return (

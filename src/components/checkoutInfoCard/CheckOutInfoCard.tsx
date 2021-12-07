@@ -261,6 +261,7 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 							}
 							onSelect={() => setSignUp(true)}
 							onDeselect={() => setSignUp(false)}
+							lineClamp={10}
 						/>
 					</Box>
 				)}

@@ -13,7 +13,7 @@ interface BookingSummaryCardProps {
 
 const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 	const [hideSummary, setHideSummary] = useState<boolean>(false);
-	const [hideTaxesAndFees, setHideTaxesAndFees] = useState<boolean>(false);
+	const [hideTaxesAndFees, setHideTaxesAndFees] = useState<boolean>(true);
 
 	function calculateGrandTotalWithPackagesCentsOrPoints() {
 		if (props.usePoints) {

@@ -47,6 +47,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
+	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [userPrimaryAddress, setUserPrimaryAddress] = useState<Api.User.Address>();
 	const [userPrimaryPaymentMethod, setUserPrimaryPaymentMethod] = useState<Api.User.PaymentMethod>();
 	const checkoutUser = useRecoilValue<Misc.Checkout | undefined>(globalState.checkoutUser);
@@ -64,7 +65,6 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 			phone: user?.phone || checkoutUser?.personal.phone || ''
 		},
 		shouldCreateUser: checkoutUser?.shouldCreateUser || false,
-		usePoints: checkoutUser?.usePoints || false,
 		// useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false,
 		pmData: checkoutUser?.pmData
 	});
@@ -95,7 +95,6 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				phone: user?.phone || checkoutUser?.personal.phone || ''
 			},
 			shouldCreateUser: checkoutUser?.shouldCreateUser || false,
-			usePoints: checkoutUser?.usePoints || false,
 			// useExistingPaymentMethod: checkoutUser?.useExistingPaymentMethod || false,
 			pmData: checkoutUser?.pmData
 		});
@@ -146,6 +145,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				}
 				setVerifiedAccommodation(response);
 			} catch (e) {
+				router.navigate('/reservation/availability', { clearPreviousHistory: true });
 				rsToastify.error(
 					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'
@@ -262,7 +262,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 			!stayParams ||
 			!(
 				(currentCheckoutUser.useExistingPaymentMethod && !!userPrimaryPaymentMethod) ||
-				currentCheckoutUser.usePoints
+				reservationFilters.redeemPoints
 			) ||
 			!verifiedAccommodation
 		);
@@ -270,7 +270,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 
 	function shouldTokenizePaymentInformation() {
 		return (
-			!currentCheckoutUser.usePoints &&
+			!reservationFilters.redeemPoints &&
 			!currentCheckoutUser.useExistingPaymentMethod &&
 			currentCheckoutUser.paymentInfo
 		);
@@ -530,7 +530,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	function handleButtonClass() {
 		switch (params.stage) {
 			case 0:
-				return !!user ? 'none' : 'blue';
+				return !!user ? 'none' : 'yellow';
 			case 1:
 				return 'none';
 			default:
@@ -590,7 +590,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 						<BookingSummaryCard
 							bookingData={verifiedAccommodation}
 							canHide={false}
-							usePoints={currentCheckoutUser?.usePoints || false}
+							usePoints={reservationFilters.redeemPoints}
 						/>
 					)}
 				</div>

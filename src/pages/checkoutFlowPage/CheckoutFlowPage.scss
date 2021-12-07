@@ -1,5 +1,47 @@
 @import '../../themes/themes';
 
+.small .rsCheckoutFlowPage {
+	display: block;
+	width: 100%;
+	padding: 64px 0 75px;
+
+	.rsButton.contained.primary {
+		width: 100%;
+	}
+
+	.printableContentWrapper {
+		display: grid;
+		grid-template-areas: 'bookingSummaryColumn' 'leftColumn';
+		padding: 0;
+		margin: 0 13px;
+
+		.rsCheckOutInfoCard {
+			.rsBox.message {
+				display: none;
+			}
+		}
+
+		.bookingSummaryColumn {
+			width: 100%;
+			min-width: 0;
+			max-width: 100%;
+			margin-left: 0;
+		}
+
+		.leftColumn {
+			width: 100%;
+
+			.rsPersonalInformation {
+				width: 100%;
+			}
+		}
+	}
+
+	.rsPersonalInformation {
+		margin-top: 24px;
+	}
+}
+
 .rsCheckoutFlowPage {
 	display: flex;
 	flex-direction: column;
@@ -16,6 +58,7 @@
 			display: flex;
 			flex-direction: column;
 			width: 100%;
+			grid-area: leftColumn;
 
 			.rsConfirmationImageSummary,
 			.rsThankYouCard,
@@ -37,6 +80,7 @@
 			min-width: 497px;
 			max-width: 497px;
 			margin-left: 94px;
+			grid-area: bookingSummaryColumn;
 
 			.rsPrintableQrCode {
 				margin-bottom: 40px;

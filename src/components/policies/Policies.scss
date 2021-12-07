@@ -1,5 +1,17 @@
 @import '../../themes/themes';
 
+.small .rsPolicies {
+	.checkInOutContainer {
+		display: flex;
+		justify-content: space-between;
+		padding-bottom: 24px;
+
+		.checkOutWrapper {
+			padding: 0;
+		}
+	}
+}
+
 .rsPolicies {
 	display: flex;
 	flex-direction: column;
