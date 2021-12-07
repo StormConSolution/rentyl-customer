@@ -1,6 +1,7 @@
 @import '../../themes/themes';
 .rsLightBoxCarouselPopup {
 	width: 100vw;
+	max-width: 1920px;
 	height: 100vh;
 	background: #ffffff;
 	position: relative;
@@ -58,7 +59,7 @@
 		}
 		.rsImg {
 			width: 100%;
-
+			object-position: center;
 			object-fit: cover;
 			overflow: visible;
 			scroll-snap-align: center;
