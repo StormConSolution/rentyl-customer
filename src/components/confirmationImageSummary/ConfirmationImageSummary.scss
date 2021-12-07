@@ -1,3 +1,20 @@
+.small .rsConfirmationImageSummary {
+	grid-template-columns: auto;
+	grid-template-rows: auto auto auto;
+	max-height: none;
+
+	.confirmationImage {
+		width: 100%;
+		object-fit: contain;
+		border-radius: 20px;
+
+		&.hero {
+			grid-row-start: 1;
+			grid-row-end: 3;
+		}
+	}
+}
+
 .rsConfirmationImageSummary {
 	width: 100%;
 	display: grid;
