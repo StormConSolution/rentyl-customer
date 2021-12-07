@@ -340,25 +340,9 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	function renderPointsOrCash() {
 		if (!reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPrice) {
-			return (
-				<Box className={'destinationPricingContainer'}>
-					<Label variant={'destinationDetailsCustomFour'}>from</Label>
-					<Label className={'price'} variant={'destinationDetailsCustomFive'}>
-						${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}
-					</Label>
-					<Label variant={'destinationDetailsCustomFour'}>per night</Label>
-				</Box>
-			);
+			return `$${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}`;
 		} else if (reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPoints) {
-			return (
-				<Box className={'destinationPricingContainer'}>
-					<Label variant={'destinationDetailsCustomFour'}>from</Label>
-					<Label className={'price'} variant={'destinationDetailsCustomFive'}>
-						{StringUtils.addCommasToNumber(destinationAvailability.minAccommodationPoints)}pts
-					</Label>
-					<Label variant={'destinationDetailsCustomFour'}>per night</Label>
-				</Box>
-			);
+			return `${StringUtils.addCommasToNumber(destinationAvailability.minAccommodationPoints)}pts`;
 		}
 	}
 
@@ -416,7 +400,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							/>
 							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
 						</Box>
-						{renderPointsOrCash()}
+						<Box className={'destinationPricingContainer'}>
+							<Label variant={'destinationDetailsCustomFour'}>from</Label>
+							<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+								{renderPointsOrCash()}
+							</Label>
+							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+						</Box>
 					</Box>
 					<Box className={'destinationDetailsWrapper'}>
 						<Box className={'minMaxDescription'}>

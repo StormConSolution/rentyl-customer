@@ -126,7 +126,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	}, [checkoutUser, differentBillingAddress]);
 
 	useEffect(() => {
-		if (!canPayWithPoints()) {
+		if (!canPayWithPoints() && reservationFilters.redeemPoints) {
 			setReservationFilters({
 				...reservationFilters,
 				redeemPoints: false
