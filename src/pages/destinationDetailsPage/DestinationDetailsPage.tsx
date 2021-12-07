@@ -317,6 +317,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 		return { minSquareFt: minSquareFt, maxSquareFt: maxSquareFt };
 	}
 
+	function renderPointsOrCash() {
+		if (!reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPrice) {
+			return `$${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}`;
+		} else if (reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPoints) {
+			return `${StringUtils.addCommasToNumber(destinationAvailability.minAccommodationPoints)}pts`;
+		}
+	}
+
 	return !destinationDetails ? (
 		<LoadingPage />
 	) : (
@@ -371,15 +379,13 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							/>
 							<Label variant={'destinationDetailsCustomThree'}>{destinationDetails.name}</Label>
 						</Box>
-						{destinationDetails.lowestPriceInCents && (
-							<Box className={'destinationPricingContainer'}>
-								<Label variant={'destinationDetailsCustomFour'}>from</Label>
-								<Label className={'price'} variant={'destinationDetailsCustomFive'}>
-									${StringUtils.formatMoney(destinationDetails.lowestPriceInCents)}
-								</Label>
-								<Label variant={'destinationDetailsCustomFour'}>per night</Label>
-							</Box>
-						)}
+						<Box className={'destinationPricingContainer'}>
+							<Label variant={'destinationDetailsCustomFour'}>from</Label>
+							<Label className={'price'} variant={'destinationDetailsCustomFive'}>
+								{renderPointsOrCash()}
+							</Label>
+							<Label variant={'destinationDetailsCustomFour'}>per night</Label>
+						</Box>
 					</Box>
 					<Box className={'destinationDetailsWrapper'}>
 						<Box className={'minMaxDescription'}>
