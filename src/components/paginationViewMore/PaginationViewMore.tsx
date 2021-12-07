@@ -5,7 +5,7 @@ import { Box } from '@bit/redsky.framework.rs.996';
 
 export interface PaginationViewMoreProps {
 	className?: string;
-	text?: string;
+	text?: string | React.ReactNode;
 	selectedRowsPerPage: number;
 	total: number;
 	currentPageNumber: number;

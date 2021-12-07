@@ -17,7 +17,7 @@ import CheckOutPaymentCard from '../../components/checkoutPaymentCard/CheckOutPa
 import { useRecoilState, useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import CheckOutInfoCard from '../../components/checkoutInfoCard/CheckOutInfoCard';
-import { DateUtils, ObjectUtils, WebUtils } from '../../utils/utils';
+import { DateUtils, ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import serviceFactory from '../../services/serviceFactory';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
@@ -146,6 +146,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				}
 				setVerifiedAccommodation(response);
 			} catch (e) {
+				router.navigate('/reservation/availability', { clearPreviousHistory: true });
 				rsToastify.error(
 					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'
@@ -333,7 +334,21 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 					};
 				}
 
-				await reservationService.createItinerary(data);
+				const res = await reservationService.createItinerary(data);
+				setBookedStays(
+					res.stays.map((stay) => {
+						return {
+							image:
+								stay.accommodation.media.find((image) => image.isPrimary)?.urls.imageKit ||
+								stay.accommodation.media[0].urls.imageKit,
+							title: stay.accommodation.name,
+							price: checkoutUser?.usePoints
+								? stay.priceDetail.grandTotalPoints
+								: stay.priceDetail.grandTotalCents,
+							dateBooked: DateUtils.formatDate(new Date(), 'MM-DD-YY')
+						};
+					})
+				);
 				popupController.close(SpinningLoaderPopup);
 				await handleForwardButtonClick();
 			} catch (e) {
@@ -483,19 +498,23 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 							: undefined
 					}
 				/>
-				<Policies
-					checkInTime={'4:00pm'}
-					checkOutTime={'10:00am'}
-					bookingDescription={'ROOM 1 4 BEDROOM HOME, 4 BEDROOM HOME EASTSIDE'}
-					guaranteePolicy={
-						'10% of the total price is required at the time of booking to guarantee the reservation.'
-					}
-					cancellationPolicy={
-						'Reservations for 4 to 8-Bedroom Homes must be canceled at least 15 days prior to arrival ' +
-						'and 9 to 13 Bedroom Homes at least 31 days prior to arrival or guest will be charged for ' +
-						'all nights of the reservation. Changes may be permitted based on availability.'
-					}
-				/>
+				{verifiedAccommodation && (
+					<Policies
+						checkInTime={StringUtils.convertTwentyFourHourTime(
+							verifiedAccommodation.policies.find((policy) => policy.type === 'CheckIn')?.value || '1600'
+						)}
+						checkOutTime={StringUtils.convertTwentyFourHourTime(
+							verifiedAccommodation.policies.find((policy) => policy.type === 'CheckOut')?.value || '1000'
+						)}
+						bookingDescription={verifiedAccommodation.accommodationName}
+						guaranteePolicy={
+							'10% of the total price is required at the time of booking to guarantee the reservation.'
+						}
+						cancellationPolicy={
+							verifiedAccommodation.policies.find((policy) => policy.type === 'Cancellation')?.value || ''
+						}
+					/>
+				)}
 				{params.stage > 2 && <CheckoutReservationSummary orders={bookedStays} />}
 			</>
 		);
