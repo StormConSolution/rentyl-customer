@@ -10,7 +10,6 @@ import DestinationImageGallery from '../../components/destinationImageGallery/De
 import LightBoxCarouselPopup, { TabbedCarouselPopupProps } from '../lightBoxCarouselPopup/LightBoxCarouselPopup';
 import router from '../../utils/router';
 import { StringUtils } from '../../utils/utils';
-import AccommodationsPopup from '../accommodationsPopup/AccommodationsPopup';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import ImageLabel from '../../components/imageLabel/ImageLabel';

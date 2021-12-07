@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './LightBoxCarouselPopup.scss';
 import { Box, Popup, PopupProps } from '@bit/redsky.framework.rs.996';
-import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import Label from '@bit/redsky.framework.rs.label';
 import Button from '@bit/redsky.framework.rs.button';
 import { useEffect, useRef, useState } from 'react';
@@ -13,7 +12,7 @@ import Paper from '../../components/paper/Paper';
 import Img from '@bit/redsky.framework.rs.img';
 
 export interface TabbedCarouselPopupProps extends PopupProps {
-	tabs?: ImageTabProp[];
+	tabs?: Misc.ImageTabProp[];
 	imageData?: Api.Media[];
 	defaultImageIndex?: number;
 	activeTabName?: string;
@@ -55,7 +54,7 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 
 	useEffect(() => {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
-			let activeTab: ImageTabProp | undefined = props.tabs.find((item) => item.name === activeTabName);
+			let activeTab: Misc.ImageTabProp | undefined = props.tabs.find((item) => item.name === activeTabName);
 			if (!activeTab) return;
 			setMedia(activeTab.otherMedia);
 			setLargestImageIndex(activeTab.otherMedia.length - 1); //So it matches the index count for the images.
