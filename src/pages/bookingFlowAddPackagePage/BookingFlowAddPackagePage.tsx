@@ -84,10 +84,12 @@ const BookingFlowAddPackagePage = () => {
 				let response = await reservationService.verifyAvailability(verifyData);
 				setVerifiedAccommodation(response);
 			} catch (e) {
-				rsToastify.error(
-					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
-					'No Longer Available'
-				);
+				if (router.getCurrentPath() === '/booking/packages') {
+					rsToastify.error(
+						'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
+						'No Longer Available'
+					);
+				}
 				setVerifiedAccommodation(undefined);
 			}
 		}
