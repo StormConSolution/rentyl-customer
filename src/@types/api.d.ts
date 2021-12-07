@@ -1854,7 +1854,6 @@ declare namespace Api {
 				pmData?: Api.Payment.PmData;
 				paymentInfo?: UserCheckoutPaymentInfo;
 				userId?: number;
-				usePoints?: boolean;
 				useExistingPaymentMethod?: boolean;
 			}
 
