@@ -122,10 +122,6 @@
 		margin: 0 auto;
 		.accommodationCardWrapper {
 			box-sizing: border-box;
-			.rsAccommodationSearchResultCardMobile,
-			.rsAccommodationSearchResultCardResponsive {
-				margin-bottom: 25px;
-			}
 		}
 	}
 
@@ -176,14 +172,6 @@
 					position: relative;
 					margin-right: 60px;
 					.rsDestinationInfoCard {
-					}
-				}
-
-				.rsCarousel {
-					.carouselParent {
-						.carouselChild {
-							margin: 0 10px;
-						}
 					}
 				}
 			}

@@ -13,7 +13,6 @@ import 'aos/dist/aos.css';
 import useWindowResizeChange from './customHooks/useWindowResizeChange';
 import router from './utils/router';
 import useCompanyInfo from './customHooks/useCompanyInfo';
-import { useSetCustomToast } from './customHooks/useSetCustomToast';
 import { useUpdateExistingPages } from './customHooks/useUpdateExistingPages';
 import { ToastContainer } from '@bit/redsky.framework.rs.toastify';
 import Footer from './components/footer/Footer';
@@ -22,7 +21,6 @@ import globalState, { setRecoilExternalValue } from './state/globalState';
 import useAfterRouterNavigateSubscription from './customHooks/useAfterRouterNavigateSubscription';
 
 function App() {
-	useSetCustomToast();
 	const loginStatus = useLoginState();
 	const size = useWindowResizeChange();
 	const isCompanyLoaded = useCompanyInfo();
