@@ -110,7 +110,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 							{props.showInfoIcon && (
 								<Label
 									className={'viewMoreInfo'}
-									variant={'subtitle2'}
+									variant={'subtitle4'}
 									onClick={() => {
 										if (props.onClickInfoIcon) props.onClickInfoIcon(props.accommodation.id);
 									}}
