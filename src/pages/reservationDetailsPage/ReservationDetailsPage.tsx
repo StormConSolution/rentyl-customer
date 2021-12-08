@@ -23,7 +23,6 @@ const ReservationDetailsPage: React.FC = () => {
 	const smallSize = size === 'small';
 	const reservationsService = serviceFactory.get<ReservationsService>('ReservationsService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
-	const checkoutUser = useRecoilValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);
@@ -75,25 +74,6 @@ const ReservationDetailsPage: React.FC = () => {
 		});
 		if (time !== undefined) return time.value;
 		else return '';
-	}
-
-	async function updateReservation(data: Api.Reservation.Req.Update) {
-		if (!reservation) return;
-		try {
-			popupController.open(SpinningLoaderPopup);
-			let res = await reservationsService.update(data);
-			setReservation(res);
-			popupController.close(SpinningLoaderPopup);
-			popupController.closeAll();
-		} catch (e) {
-			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot modify this reservation.'), 'Error!');
-			} else {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failure to update.'), 'Server Error');
-				console.error(e.message, e.msg);
-			}
-			popupController.closeAll();
-		}
 	}
 
 	return !reservation || !user ? (

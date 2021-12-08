@@ -4,20 +4,14 @@ import './AccountPersonalInfoPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
-import AccountHeader from '../../components/accountHeader/AccountHeader';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import LoadingPage from '../loadingPage/LoadingPage';
-import Footer from '../../components/footer/Footer';
-import { FooterLinks } from '../../components/footer/FooterLinks';
 import LabelInput from '../../components/labelInput/LabelInput';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
 import LabelButton from '../../components/labelButton/LabelButton';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
-import UserPointStatusBar from '../../components/userPointStatusBar/UserPointStatusBar';
-import LabelCheckbox from '../../components/labelCheckbox/LabelCheckbox';
-import Icon from '@bit/redsky.framework.rs.icon';
 import router from '../../utils/router';
 import { WebUtils } from '../../utils/utils';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
@@ -34,9 +28,6 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 	const [user, setUser] = useRecoilState<Api.User.Res.Detail | undefined>(globalState.user);
 	const [accountInfoChanged, setAccountInfoChanged] = useState<boolean>(false);
 	const [isUserFormValid, setIsUserFormValid] = useState<boolean>(false);
-	const [hasEnoughCharacters, setHasEnoughCharacters] = useState<boolean>(false);
-	const [hasUpperCase, setHasUpperCase] = useState<boolean>(false);
-	const [hasSpecialCharacter, setHasSpecialCharacter] = useState<boolean>(false);
 	const [updateUserForm, setUpdateUserForm] = useState<RsFormGroup>(
 		new RsFormGroup([
 			new RsFormControl('firstName', user?.firstName || '', [
