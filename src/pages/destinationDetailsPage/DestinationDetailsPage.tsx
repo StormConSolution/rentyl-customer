@@ -89,7 +89,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			let googleMap = new google.maps.Map(mapElement, {
 				center: destinationLocation,
 				zoom: 16,
-				disableDefaultUI: true
+				disableDefaultUI: false
 			});
 
 			let infoWindowContent = renderInfoWindowContent();
