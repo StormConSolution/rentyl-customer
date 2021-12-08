@@ -127,13 +127,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		);
 	}
 
-	return (
-		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
-			{renderDateRangeSelector()}
+	function mobileGuestCounter() {
+		return (
 			<TitleLabel
-				className="guestInput"
+				className="guestInputMobile"
 				title={'Guests'}
-				label={`${filterForm.get('adultCount').value} guests`}
+				label={`${filterForm.get('adultCount').value}`}
 				popoutBoxContent={
 					<Counter
 						title={'Guests'}
@@ -146,7 +145,37 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 					/>
 				}
 				titleLabelRef={labelInputRef}
+				labelVariant="customFifteen"
+				titleMarginBottom={0}
+				popoutBoxPadding={'20px 10px'}
 			/>
+		);
+	}
+
+	return (
+		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
+			{renderDateRangeSelector()}
+			{props.isMobile ? (
+				mobileGuestCounter()
+			) : (
+				<TitleLabel
+					className="guestInput"
+					title={'Guests'}
+					label={`${filterForm.get('adultCount').value} guests`}
+					popoutBoxContent={
+						<Counter
+							title={'Guests'}
+							className="guestsInput"
+							control={filterForm.get('adultCount')}
+							updateControl={updateFilterForm}
+							minCount={1}
+							maxCount={28}
+							labelMarginRight={84}
+						/>
+					}
+					titleLabelRef={labelInputRef}
+				/>
+			)}
 			<Button look={'containedPrimary'} className={'updateButton'} onClick={updateSearchQuery}>
 				Update
 			</Button>
