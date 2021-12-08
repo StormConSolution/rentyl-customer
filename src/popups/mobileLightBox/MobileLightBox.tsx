@@ -5,7 +5,6 @@ import IconLabel from '../../components/iconLabel/IconLabel';
 import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
-import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import Button from '@bit/redsky.framework.rs.button';
 import { ObjectUtils } from '../../utils/utils';
 import { useEffect, useRef, useState } from 'react';
@@ -17,7 +16,7 @@ interface ObserverAttributes extends NamedNodeMap {
 
 export interface MobileLightBoxProps extends PopupProps {
 	imageData?: Api.Media[];
-	featureData?: ImageTabProp[];
+	featureData?: Misc.ImageTabProp[];
 	activeTabName?: string;
 	customOnBack?: () => void;
 	floorPlanClass?: boolean;
@@ -26,7 +25,7 @@ export interface MobileLightBoxProps extends PopupProps {
 const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 	const carouselButtonRef = useRef<HTMLDivElement>(null);
 	const imageContainerRef = useRef<HTMLDivElement>(null);
-	const [activeTab, setActiveTab] = useState<ImageTabProp | undefined>(
+	const [activeTab, setActiveTab] = useState<Misc.ImageTabProp | undefined>(
 		!!props.featureData ? props.featureData[0] : undefined
 	);
 	const [titleDescription, setTitleDescription] = useState<{ title: string; description: string }>();
