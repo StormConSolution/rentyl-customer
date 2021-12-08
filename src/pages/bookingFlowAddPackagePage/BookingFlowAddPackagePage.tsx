@@ -31,7 +31,6 @@ const BookingFlowAddPackagePage = () => {
 	const [verifiedAccommodation, setVerifiedAccommodation] = useRecoilState<
 		Api.Reservation.Res.Verification | undefined
 	>(globalState.verifiedAccommodation);
-	const checkoutUser = useRecoilValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
 	const [page, setPage] = useState<number>(1);
 	const perPage = 5;
 	const [total, setTotal] = useState<number>(0);
@@ -86,6 +85,13 @@ const BookingFlowAddPackagePage = () => {
 				setVerifiedAccommodation(response);
 			} catch (e) {
 				if (router.getCurrentPath() === '/booking/packages') {
+					const newRoom = params.data.newRoom;
+					await router.navigate(
+						`/destination/details?di=${params.data.destinationId}` +
+							`${!!newRoom ? `&startDate=${newRoom.arrivalDate}` : ''}` +
+							`${!!newRoom ? `&endDate=${newRoom.departureDate}` : ''}`,
+						{ clearPreviousHistory: true }
+					);
 					rsToastify.error(
 						'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 						'No Longer Available'
