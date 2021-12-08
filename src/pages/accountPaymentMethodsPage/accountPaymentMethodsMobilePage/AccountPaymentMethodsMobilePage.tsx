@@ -70,6 +70,14 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 			});
 		}
 		init().catch(console.error);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		if (!!primaryCard) return;
+
+		isPrimary = 1;
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -417,10 +425,11 @@ const AccountPaymentMethodsMobilePage: React.FC = () => {
 				/>
 
 				<LabelCheckbox
-					className={'isPrimaryCheckbox'}
+					className={`isPrimaryCheckbox ${!primaryCard ? 'disabled' : ''}`}
 					value={'isPrimary'}
 					text={'Set as primary'}
-					isChecked={false}
+					isChecked={!primaryCard}
+					isDisabled={!primaryCard}
 					onSelect={() => {
 						isPrimary = 1;
 					}}
