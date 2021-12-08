@@ -1,6 +1,6 @@
 @import '../../themes/themes.scss';
 
-.rsFilterBar {
+.rsFilterBarLimited {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-auto-rows: 1fr;
@@ -72,7 +72,7 @@
 	}
 }
 
-.rsFilterBar:not(.small) {
+.rsFilterBarLimited:not(.small) {
 	grid-template-columns: 2fr 1fr 1fr;
 	grid-auto-rows: 1fr;
 	gap: 20px;

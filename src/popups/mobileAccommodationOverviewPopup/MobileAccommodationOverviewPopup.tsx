@@ -153,6 +153,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 								<img
 									className={'floorPlanImg'}
 									src={props.accommodationDetails.layout[0].media.urls.imageKit}
+									alt={''}
 								/>
 							</Box>
 

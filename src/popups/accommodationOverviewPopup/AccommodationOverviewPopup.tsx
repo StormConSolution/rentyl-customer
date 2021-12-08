@@ -179,7 +179,7 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 								<Carousel className={'imageContainer'} showControls children={renderLayoutImages()} />
 							) : (
 								<div className={'singleLayoutImg'}>
-									<img src={props.accommodationDetails.layout[0].media.urls.imageKit} />
+									<img src={props.accommodationDetails.layout[0].media.urls.imageKit} alt={''} />
 								</div>
 							)}
 						</>

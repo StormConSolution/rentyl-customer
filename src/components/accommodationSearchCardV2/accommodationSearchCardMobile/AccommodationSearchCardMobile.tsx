@@ -55,7 +55,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			newAccommodationPrices.shift();
 			setAccommodationPrices(newAccommodationPrices);
 		}
-	}, []);
+	}, [props.accommodation]);
 
 	function onBookNow() {
 		let data: any = { ...reservationFilters };

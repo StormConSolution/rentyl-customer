@@ -8,8 +8,6 @@ interface TopSearchBarProps {
 	onFilterClick?: () => void;
 }
 
-interface DatePickerCardProps {}
-
 const TopSearchBar: React.FC<TopSearchBarProps> = (props) => {
 	const size = useWindowResizeChange();
 

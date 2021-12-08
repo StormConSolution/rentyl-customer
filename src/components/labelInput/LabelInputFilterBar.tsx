@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './LabelInputV2.scss';
+import './LabelInputFilterBar.scss';
 import debounce from 'lodash.debounce';
 import Label from '@bit/redsky.framework.rs.label';
 import Input from '@bit/redsky.framework.rs.input';
@@ -46,7 +46,7 @@ interface LabelInputV2Props {
 		| string;
 }
 
-const LabelInputV2: React.FC<LabelInputV2Props> = (props) => {
+const LabelInputFilterBar: React.FC<LabelInputV2Props> = (props) => {
 	const [isValid, setIsValid] = useState<boolean>(true);
 	const form = new RsFormGroup([
 		new RsFormControl(
@@ -82,7 +82,7 @@ const LabelInputV2: React.FC<LabelInputV2Props> = (props) => {
 	}
 
 	return (
-		<div className={`rsLabelInputV2 ${props.className || ''}`}>
+		<div className={`rsLabelInputFilterBar ${props.className || ''}`}>
 			<Label variant={props.labelVariant || 'caption'} className="titleLabel">
 				{props.title}
 			</Label>
@@ -124,4 +124,4 @@ const LabelInputV2: React.FC<LabelInputV2Props> = (props) => {
 	);
 };
 
-export default LabelInputV2;
+export default LabelInputFilterBar;

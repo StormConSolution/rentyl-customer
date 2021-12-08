@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import moment from 'moment';
-import LabelInput from '../labelInput/LabelInput';
-import './FilterBar.scss';
+import './FilterBarLimited.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
 import { RsFormControl, RsFormGroup, RsValidator, RsValidatorEnum } from '@bit/redsky.framework.rs.form';
@@ -20,7 +19,7 @@ export interface FilterBarProps {
 	isMobile?: boolean;
 }
 
-const FilterBar: React.FC<FilterBarProps> = (props) => {
+const FilterBarLimited: React.FC<FilterBarProps> = (props) => {
 	const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
@@ -128,7 +127,7 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	}
 
 	return (
-		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
+		<Box className={`rsFilterBarLimited ${props.isMobile ? 'small' : ''}`}>
 			{renderDateRangeSelector()}
 			<TitleLabel
 				className="guestInput"
@@ -154,4 +153,4 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	);
 };
 
-export default FilterBar;
+export default FilterBarLimited;

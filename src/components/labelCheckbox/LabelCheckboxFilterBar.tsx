@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './LabelCheckboxV2.scss';
+import './LabelCheckboxFilterBar.scss';
 import { ReactNode, useEffect, useState } from 'react';
 import Label from '@bit/redsky.framework.rs.label';
 
@@ -15,7 +15,7 @@ interface LabelCheckboxV2Props {
 	textColor?: string;
 }
 
-const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
+const LabelCheckboxFilterBar: React.FC<LabelCheckboxV2Props> = (props) => {
 	const [isChecked, setIsChecked] = useState<boolean>(props.isChecked || false);
 
 	useEffect(() => {
@@ -23,7 +23,7 @@ const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
 	}, [props.isChecked]);
 
 	return (
-		<div className={`rsLabelCheckboxV2 ${props.className || ''}`}>
+		<div className={`rsLabelCheckboxFilterBar ${props.className || ''}`}>
 			<label className={'checkboxContainer'}>
 				<input
 					value={props.value}
@@ -46,4 +46,4 @@ const LabelCheckboxV2: React.FC<LabelCheckboxV2Props> = (props) => {
 	);
 };
 
-export default LabelCheckboxV2;
+export default LabelCheckboxFilterBar;

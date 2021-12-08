@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View } from '@bit/redsky.framework.rs.996';
 import './App.scss';
 import './icons/siteIcons/style.css';

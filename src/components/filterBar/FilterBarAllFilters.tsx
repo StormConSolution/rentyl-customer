@@ -1,14 +1,14 @@
 import * as React from 'react';
-import './FilterBarV2.scss';
+import './FilterBarAllFilters.scss';
 import { ObjectUtils, StringUtils, WebUtils } from '../../utils/utils';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
 import FilterBarDropDown from '../filterBarDropDown/FilterBarDropDown';
-import LabelCheckboxV2 from '../labelCheckbox/LabelCheckboxV2';
+import LabelCheckboxFilterBar from '../labelCheckbox/LabelCheckboxFilterBar';
 import { useEffect, useState } from 'react';
 import Slider, { SliderMode } from '@bit/redsky.framework.rs.slider';
-import LabelInputV2 from '../labelInput/LabelInputV2';
+import LabelInputFilterBar from '../labelInput/LabelInputFilterBar';
 import Counter from '../counter/Counter';
 import LabelRadioButton from '../labelRadioButton/LabelRadioButton';
 import Label from '@bit/redsky.framework.rs.label';
@@ -24,7 +24,7 @@ interface FilterBarV2Props {}
 
 const TIMEOUT_INTERVAL = 500;
 
-const FilterBarV2: React.FC<FilterBarV2Props> = () => {
+const FilterBarAllFilters: React.FC<FilterBarV2Props> = () => {
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
@@ -269,7 +269,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 
 	function renderAccommodationList() {
 		return propertyTypes.map((item) => (
-			<LabelCheckboxV2
+			<LabelCheckboxFilterBar
 				key={item.name}
 				value={item.id}
 				text={item.name}
@@ -293,7 +293,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 
 	function renderResortExperiencesOptionsList() {
 		return experienceOptions.map((item) => (
-			<LabelCheckboxV2
+			<LabelCheckboxFilterBar
 				key={item.value}
 				value={item.value}
 				text={item.label}
@@ -317,7 +317,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 
 	function renderInUnitAmenitiesOptionsList() {
 		return amenityOptions.map((item) => (
-			<LabelCheckboxV2
+			<LabelCheckboxFilterBar
 				key={item.value}
 				value={item.value}
 				text={item.label}
@@ -340,7 +340,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 	}
 
 	return (
-		<div className="rsFilterBarV2">
+		<div className="rsFilterBarAllFilters">
 			<Box className={'filterRow'}>
 				<FilterBarDropDown
 					onChangeCallBack={onApplyClick}
@@ -371,7 +371,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 						sliderClass="priceSlider"
 					/>
 					<div className="minMaxDiv">
-						<LabelInputV2
+						<LabelInputFilterBar
 							className={`priceMin ${
 								Number(filterForm.get('priceRangeMin').value) >= 1000 ? 'andGreater' : ''
 							}`}
@@ -381,7 +381,7 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 							updateControl={sanitizePriceFieldsAndUpdate}
 						/>
 						<hr className="divider" />
-						<LabelInputV2
+						<LabelInputFilterBar
 							className={`priceMax ${
 								Number(filterForm.get('priceRangeMax').value) >= 1000 ? 'andGreater' : ''
 							}`}
@@ -562,4 +562,4 @@ const FilterBarV2: React.FC<FilterBarV2Props> = () => {
 	);
 };
 
-export default FilterBarV2;
+export default FilterBarAllFilters;
