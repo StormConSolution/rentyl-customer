@@ -77,6 +77,19 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 	const printRef = useRef(null);
 
 	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate(async (newPath) => {
+			let disableNavGate = newPath === '/booking/checkout' && params.stage === 3;
+			if (disableNavGate) rsToastify.info('You cannot go back after a successful checkout', 'Sorry!');
+
+			return disableNavGate;
+		});
+
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
+	}, [params.stage]);
+
+	useEffect(() => {
 		if (!user) return;
 		const primaryUserAddress = user.address.find((address) => address.isDefault === 1);
 		const primaryPaymentMethod = user.paymentMethods.find((paymentMethod) => paymentMethod.isPrimary === 1);
