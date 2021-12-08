@@ -59,7 +59,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 				</Box>
 				<Box textAlign={'end'}>
 					<Label variant={'customThree'} mb={6}>
-						You have reached {props.userData.tierTitle || 'Bronze'} Spire! Hooray!
+						You have reached {props.userData.tierTitle || 'Bronze'} Spire Level! Hooray!
 					</Label>
 					<div className={'loadingBarContainer'}>
 						<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
