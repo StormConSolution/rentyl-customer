@@ -42,7 +42,7 @@ const MaskedDateRangeSelector: React.FC<MaskedDateRangeSelectorProps> = (props) 
 				onFocusChange={(focus) => setFocusedInput(focus)}
 				monthsToShow={props.monthsToShow}
 			/>
-			<Box className={'startDateBox'}>
+			<Box className={'startDateBox'} onClick={() => openDateRangePicker('startDate')}>
 				{!!props.startDateLabel && <Label variant={props.labelVariant}>{props.startDateLabel}</Label>}
 				<Button
 					className={'startDateMask'}
@@ -52,7 +52,7 @@ const MaskedDateRangeSelector: React.FC<MaskedDateRangeSelectorProps> = (props) 
 					{props.startDate?.format('MM-DD-YY')}
 				</Button>
 			</Box>
-			<Box className={'endDateBox'}>
+			<Box className={'endDateBox'} onClick={() => openDateRangePicker('endDate')}>
 				{!!props.endDateLabel && <Label variant={props.labelVariant}>{props.endDateLabel}</Label>}
 				<Button className={'endDateMask'} onClick={() => openDateRangePicker('endDate')} look={'textPrimary'}>
 					{props.endDate?.format('MM-DD-YY')}
