@@ -77,25 +77,6 @@ const ReservationDetailsPage: React.FC = () => {
 		else return '';
 	}
 
-	async function updateReservation(data: Api.Reservation.Req.Update) {
-		if (!reservation) return;
-		try {
-			popupController.open(SpinningLoaderPopup);
-			let res = await reservationsService.update(data);
-			setReservation(res);
-			popupController.close(SpinningLoaderPopup);
-			popupController.closeAll();
-		} catch (e) {
-			if (e.response.data.msg.ErrorCode === 'ModificationNotAllowed') {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Cannot modify this reservation.'), 'Error!');
-			} else {
-				rsToastify.error(WebUtils.getRsErrorMessage(e, 'Failure to update.'), 'Server Error');
-				console.error(e.message, e.msg);
-			}
-			popupController.closeAll();
-		}
-	}
-
 	return !reservation || !user ? (
 		<LoadingPage />
 	) : (
