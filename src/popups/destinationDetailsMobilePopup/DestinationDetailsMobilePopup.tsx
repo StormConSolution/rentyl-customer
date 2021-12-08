@@ -7,13 +7,12 @@ import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import DestinationService from '../../services/destination/destination.service';
 import AccommodationService from '../../services/accommodation/accommodation.service';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLightBox';
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import ComparisonService from '../../services/comparison/comparison.service';
 import LoadingPage from '../../pages/loadingPage/LoadingPage';
-import Paper from '../../components/paper/Paper';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
@@ -36,7 +35,6 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [destinationAvailability, setDestinationAvailability] = useState<Api.Destination.Res.Availability>();

@@ -7,7 +7,6 @@ import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import LightBoxCarouselPopup, {
 	TabbedCarouselPopupProps
 } from '../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
-import { ImageTabProp } from '../tabbedImageCarousel/TabbedImageCarousel';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 import Button from '@bit/redsky.framework.rs.button';
 
@@ -31,7 +30,7 @@ const DestinationExperienceImageGallery: React.FC<DestinationExperienceImageGall
 	}
 
 	function formatCarouselTabs() {
-		let imageTabArray: ImageTabProp[] = [];
+		let imageTabArray: Misc.ImageTabProp[] = [];
 		props.experiences.forEach((item) => {
 			imageTabArray.push({
 				name: item.title,

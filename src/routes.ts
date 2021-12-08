@@ -9,7 +9,6 @@ import CheckoutFlowPage from './pages/checkoutFlowPage/CheckoutFlowPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import ExistingItineraryPage from './pages/existingItineraryPage/ExistingItineraryPage';
 import globalState, { getRecoilExternalValue } from './state/globalState';
-import ItineraryDetailsPage from './pages/itineraryDetailsPage/ItineraryDetailsPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import PrivacyPolicyPage from './pages/privacyPolicyPage/PrivacyPolicyPage';
 import ResetPasswordPage from './pages/resetPasswordPage/ResetPasswordPage';
@@ -64,11 +63,6 @@ export const routes: RouteDetails[] = [
 	{
 		path: '/reservations',
 		page: ExistingItineraryPage,
-		routeGuard: verifyRoute
-	},
-	{
-		path: '/reservations/itinerary/details',
-		page: ItineraryDetailsPage,
 		routeGuard: verifyRoute
 	},
 	{

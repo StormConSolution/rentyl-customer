@@ -124,4 +124,13 @@ declare namespace Misc {
 		rate: Api.Destination.Res.Rate;
 		minStay: number;
 	}
+
+	export interface ImageTabProp {
+		name: string;
+		title: string;
+		imagePath: string;
+		description: string;
+		buttonLabel?: string;
+		otherMedia: Api.Media[];
+	}
 }
