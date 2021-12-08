@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
-import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
@@ -41,6 +40,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	);
 
 	const labelInputRef = useRef<HTMLElement>(null);
+
+	// Refreshes the accommodations when this page is hit on a verified accommodation error.
+	useEffect(() => {
+		updateSearchQuery().catch(console.error);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	async function updateSearchQuery() {
 		let isFormValid = await filterForm.isValid();
