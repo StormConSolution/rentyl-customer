@@ -30,6 +30,7 @@ const AccountPointsPage: React.FC = () => {
 			try {
 				if (user) {
 					let res = await userPointService.getPointTransactionsByUserId();
+					res.reverse();
 					setPointHistory(res);
 				}
 			} catch (e) {
