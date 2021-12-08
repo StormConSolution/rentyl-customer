@@ -1,4 +1,4 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ReservationAvailabilityPage.scss';
 import { Box, Page, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
