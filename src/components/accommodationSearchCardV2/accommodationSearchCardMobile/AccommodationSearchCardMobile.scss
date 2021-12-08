@@ -4,7 +4,12 @@
 	width: 100%;
 	height: fit-content;
 	min-width: 328px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	.rsAccordion {
+		max-width: 295px;
+		margin: auto;
 		filter: unset !important;
 	}
 	.accommodationDetailsContainer {
