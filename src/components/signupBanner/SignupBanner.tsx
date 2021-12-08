@@ -18,7 +18,11 @@ const SignupBanner: React.FC = () => {
 				onClick={() => {
 					popupController.open<SignupPopupProps>(SignupPopup);
 				}}
-				children={<Label variant={'packagesCustomTwo'}>Sign up for spire Loyalty today!</Label>}
+				children={
+					<Label variant={size === 'small' ? 'caption1' : 'packagesCustomTwo'}>
+						Sign up for spire Loyalty today!
+					</Label>
+				}
 				look={'containedPrimary'}
 				className={'yellow'}
 			/>
