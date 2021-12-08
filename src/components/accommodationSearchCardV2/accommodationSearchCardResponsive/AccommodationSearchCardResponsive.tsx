@@ -106,15 +106,17 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 							<Label variant={'accommodationModalCustomTwo'} paddingRight={20}>
 								{props.accommodation.name}
 							</Label>
+
 							{props.showInfoIcon && (
-								<Icon
-									iconImg={'icon-info-outline'}
-									cursorPointer
+								<Label
+									className={'viewMoreInfo'}
+									variant={'subtitle2'}
 									onClick={() => {
 										if (props.onClickInfoIcon) props.onClickInfoIcon(props.accommodation.id);
 									}}
-									size={22}
-								/>
+								>
+									View More Info
+								</Label>
 							)}
 						</Box>
 						<Box className={'detailsTextContainer'}>
