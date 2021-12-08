@@ -4,6 +4,7 @@ import AccountLandingPage from './pages/accountLandingPage/AccountLandingPage';
 import AccountPaymentMethodsPage from './pages/accountPaymentMethodsPage/AccountPaymentMethodsPage';
 import AccountPersonalInfoPage from './pages/accountPersonalInfoPage/AccountPersonalInfoPage';
 import AccountPointsPage from './pages/accountPointsPage/AccountPointsPage';
+import BookingFlowAddPackagePage from './pages/bookingFlowAddPackagePage/BookingFlowAddPackagePage';
 import CheckoutFlowPage from './pages/checkoutFlowPage/CheckoutFlowPage';
 import DestinationDetailsPage from './pages/destinationDetailsPage/DestinationDetailsPage';
 import ExistingItineraryPage from './pages/existingItineraryPage/ExistingItineraryPage';
@@ -84,6 +85,11 @@ export const routes: RouteDetails[] = [
 		options: {
 			view: 'landingPage'
 		}
+	},
+	{
+		path: '/booking/packages',
+		page: BookingFlowAddPackagePage,
+		routeGuard: verifyRoute
 	},
 	{
 		path: '/destination/details',
