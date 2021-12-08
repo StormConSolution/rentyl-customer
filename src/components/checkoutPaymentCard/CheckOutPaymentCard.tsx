@@ -390,7 +390,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 					<LabelCheckboxFilterBar
 						value={''}
 						isChecked={differentBillingAddress}
-						text={'Use different billing address'}
+						text={'Use a Different Address for Billing'}
 						onSelect={() => setDifferentBillingAddress(true)}
 						onDeselect={() => setDifferentBillingAddress(false)}
 					/>

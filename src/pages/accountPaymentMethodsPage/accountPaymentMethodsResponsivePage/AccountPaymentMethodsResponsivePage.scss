@@ -46,6 +46,13 @@
 		margin-top: 10px;
 		&.isPrimaryCheckbox {
 			align-items: center;
+
+			&.disabled {
+				.checkbox .rsBox {
+					background-color: #7070706e !important;
+					cursor: not-allowed;
+				}
+			}
 		}
 
 		a {
