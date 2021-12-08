@@ -62,6 +62,8 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 			setMedia(props.imageData);
 			setLargestImageIndex(props.imageData.length - 1); //So it matches the index count for the images.
 		}
+		setImageIndex(0);
+		imageWrapperRef.current!.scrollTo({ top: 0, left: 0 });
 	}, [activeTabName, props.imageData]);
 
 	function renderTabs() {
@@ -73,7 +75,6 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 						look={'none'}
 						className={'tab' + (activeTabName === item.name ? ' selected' : '')}
 						onClick={() => {
-							setImageIndex(0);
 							setActiveTabName(item.name);
 						}}
 					>
@@ -141,20 +142,21 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 				right={'30px'}
 				onClickRight={() => {
 					let val = imageWrapperRef.current!.offsetWidth + imageWrapperRef.current!.scrollLeft;
-					setImageIndex(imageIndex + 1);
 					if (imageIndex >= largestImageIndex) {
 						val = 0;
 						setImageIndex(0);
-					}
+					} else setImageIndex(imageIndex + 1);
+
 					imageWrapperRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 				}}
 				onClickLeft={() => {
 					let val = imageWrapperRef.current!.scrollLeft - imageWrapperRef.current!.offsetWidth;
-					setImageIndex(imageIndex - 1);
-					if (imageIndex <= 1) {
+
+					if (imageIndex <= 0) {
 						val = imageWrapperRef.current!.offsetWidth * largestImageIndex;
 						setImageIndex(largestImageIndex);
-					}
+					} else setImageIndex(imageIndex - 1);
+
 					imageWrapperRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 				}}
 			/>
