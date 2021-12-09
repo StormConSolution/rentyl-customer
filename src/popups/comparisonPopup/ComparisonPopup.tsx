@@ -25,11 +25,9 @@ const ComparisonPopup: React.FC<ComparisonPopupProps> = (props) => {
 
 	useEffect(() => {
 		document.body.style.overflow = 'hidden';
-		document.body.style.position = 'unset';
 		document.body.style.top = '0';
 		return () => {
 			document.body.style.overflow = 'unset';
-			document.body.style.position = 'unset';
 			document.body.style.top = 'unset';
 		};
 	}, []);
