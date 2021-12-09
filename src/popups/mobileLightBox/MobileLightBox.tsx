@@ -67,7 +67,7 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 	useEffect(() => {
 		setTimeout(() => {
 			imageContainerRef.current!.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-		}, 300);
+		}, 500);
 	}, [activeTab]);
 
 	useEffect(() => {
@@ -142,13 +142,18 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 		});
 	}
 
+	function handleImageErrors(image: Api.Media) {
+		const imageElement = document.querySelector(`[src="${image.urls.imageKit}"]`) as HTMLImageElement;
+		if (imageElement) imageElement.style.display = 'none';
+	}
+
 	function renderImages() {
 		if (!!props.featureData) {
 			if (!activeTab) return;
 			return activeTab.otherMedia.map((image, index) => {
 				return (
 					<img
-						key={image.id}
+						key={index}
 						dataid={image.id}
 						dataindex={index}
 						className={'lightBoxImage'}
@@ -156,6 +161,7 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 						alt={image.title}
 						width={'100%'}
 						height={'auto'}
+						onError={() => handleImageErrors(image)}
 					/>
 				);
 			});
@@ -163,7 +169,7 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 			return props.imageData.map((image, index) => {
 				return (
 					<img
-						key={image.id}
+						key={index}
 						dataid={image.id}
 						dataindex={index}
 						className={'lightBoxImage'}
@@ -171,6 +177,7 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 						alt={image.title}
 						width={'100%'}
 						height={'auto'}
+						onError={() => handleImageErrors(image)}
 					/>
 				);
 			});
