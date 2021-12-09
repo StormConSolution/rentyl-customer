@@ -10,7 +10,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { StringUtils, WebUtils } from '../../utils/utils';
-import FilterBar from '../../components/filterBar/FilterBar';
+import FilterBarLimited from '../../components/filterBar/FilterBarLimited';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
@@ -47,7 +47,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const size = useWindowResizeChange();
+	const size = useWindowResizeChange({ small: 1160 });
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
@@ -89,7 +89,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			let googleMap = new google.maps.Map(mapElement, {
 				center: destinationLocation,
 				zoom: 16,
-				disableDefaultUI: true
+				disableDefaultUI: false
 			});
 
 			let infoWindowContent = renderInfoWindowContent();
@@ -432,7 +432,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							width={'clamp(300px, 100%, 766px)'}
 							height={size === 'small' ? '300px' : '430px'}
 							id={'GoogleMap'}
-						></Box>
+						/>
 					</Box>
 				</Box>
 				<hr />
@@ -458,7 +458,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						<Label variant={'h1'} className={'chooseYourAccommodation'}>
 							Choose your accommodation
 						</Label>
-						<FilterBar destinationId={destinationDetails.id} isMobile={size === 'small'} />
+						<FilterBarLimited destinationId={destinationDetails.id} isMobile={size === 'small'} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
 							{availabilityStayList.length <= 0 ? (

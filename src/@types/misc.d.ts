@@ -20,24 +20,6 @@ declare namespace Misc {
 		| 'error'
 		| string;
 
-	export interface FeaturedCategory {
-		categoryId: number;
-		imagePath: string;
-		name: string;
-	}
-
-	export interface AccommodationFeatures {
-		id: number;
-		title: string;
-		icon: string;
-	}
-
-	export interface RedeemableRewards {
-		allCategories: Api.Reward.Category.Res.Get[];
-		featuredCategories: FeaturedCategory[];
-		destinationSelect: SelectOptions[];
-	}
-
 	export interface SelectOptions {
 		value: number | string;
 		text: number | string;
@@ -47,17 +29,6 @@ declare namespace Misc {
 	export interface OptionType {
 		value: string | number;
 		label: string | number;
-	}
-	export interface GroupType {
-		label: string;
-		options: OptionType[];
-	}
-
-	export interface ReservationContactInfoDetails {
-		contactInfo: string;
-		email: string;
-		phone: string;
-		additionalDetails: string;
 	}
 
 	export interface BookingParams {
@@ -78,11 +49,6 @@ declare namespace Misc {
 		rateCode: string;
 	}
 
-	export interface DateRange {
-		startDate: string;
-		endDate: string;
-	}
-
 	export interface ComparisonCardInfo {
 		destinationId: number;
 		accommodationOptions: Misc.OptionType[];
@@ -93,16 +59,6 @@ declare namespace Misc {
 	export interface ComparisonState {
 		destinationDetails: ComparisonCardInfo[];
 		showCompareButton: boolean;
-	}
-
-	export interface FilterFormPopupOptions {
-		regionIds: number[];
-		propertyTypeIds: number[];
-		adultCount: number;
-		childCount: number;
-		priceRangeMax: string;
-		priceRangeMin: string;
-		rateCode: string;
 	}
 
 	interface IBaseCountry {
@@ -152,5 +108,14 @@ declare namespace Misc {
 		quantityAvailable: number;
 		rate: Api.Destination.Res.Rate;
 		minStay: number;
+	}
+
+	export interface ImageTabProp {
+		name: string;
+		title: string;
+		imagePath: string;
+		description: string;
+		buttonLabel?: string;
+		otherMedia: Api.Media[];
 	}
 }

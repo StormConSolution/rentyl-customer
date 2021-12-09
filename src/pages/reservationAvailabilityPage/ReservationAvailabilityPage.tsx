@@ -17,7 +17,7 @@ import ComparisonService from '../../services/comparison/comparison.service';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import TopSearchBar from '../../components/topSearchBar/TopSearchBar';
-import FilterBarV2 from '../../components/filterBar/FilterBarV2';
+import FilterBarAllFilters from '../../components/filterBar/FilterBarAllFilters';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import MobileLightBox, { MobileLightBoxProps } from '../../popups/mobileLightBox/MobileLightBox';
 import LightBoxCarouselPopup, {
@@ -118,11 +118,7 @@ const ReservationAvailabilityPage: React.FC = () => {
 					className={'filterResultsWrapper'}
 					padding={size === 'small' ? '0px 30px 20px 10px' : '20px 20px 20px 20px'}
 				>
-					{size !== 'small' && (
-						<>
-							<FilterBarV2 />
-						</>
-					)}
+					{size !== 'small' && <FilterBarAllFilters />}
 				</Box>
 				{isLoaded && (
 					<Box className={'searchResultsWrapper'}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './RateCodeCardResponsive.scss';
-import { Box, popupController } from '@bit/redsky.framework.rs.996';
+import { Box } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import PointsOrCentsBox from '../../pointsOrCentsBox/PointsOrCentsBox';
 

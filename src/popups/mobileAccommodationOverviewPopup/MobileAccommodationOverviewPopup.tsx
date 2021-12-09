@@ -6,7 +6,6 @@ import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
 import CarouselV2 from '../../components/carouselV2/CarouselV2';
 import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLightBox';
-import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import ImageLabel from '../../components/imageLabel/ImageLabel';
 import { ObjectUtils } from '../../utils/utils';
 
@@ -24,7 +23,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 	}
 
 	function handleFloorPlanExpand() {
-		let featureData: ImageTabProp[] = [];
+		let featureData: Misc.ImageTabProp[] = [];
 		props.accommodationDetails.layout.forEach((value) => {
 			featureData.push({
 				name: value.title,
@@ -155,6 +154,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 								<img
 									className={'floorPlanImg'}
 									src={props.accommodationDetails.layout[0].media.urls.imageKit}
+									alt={''}
 								/>
 							</Box>
 

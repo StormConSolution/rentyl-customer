@@ -54,7 +54,7 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 				{StringUtils.addCommasToNumber(props.userData.lifeTimePoints)}
 			</Label>
 			<Label variant={'customEight'} mb={6}>
-				You have reached {props.userData.tierTitle} Spire! Hooray!
+				You have reached {props.userData.tierTitle || 'Bronze'} Spire Level! Hooray!
 			</Label>
 			<div className={'loadingBarContainer'}>
 				<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />

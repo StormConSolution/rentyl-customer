@@ -42,6 +42,7 @@
 				.minMaxDescription {
 					max-width: 949px;
 					padding: 0 0 0 80px;
+					margin-right: 20px;
 					.locationDescription {
 						line-height: 40px;
 					}
@@ -122,10 +123,6 @@
 		margin: 0 auto;
 		.accommodationCardWrapper {
 			box-sizing: border-box;
-			.rsAccommodationSearchResultCardMobile,
-			.rsAccommodationSearchResultCardResponsive {
-				margin-bottom: 25px;
-			}
 		}
 	}
 
@@ -153,8 +150,34 @@
 				}
 			}
 			.overviewSection {
+				.titleAndPriceContainer {
+					display: block;
+					.logoNameContainer {
+						display: block;
+						.rsLabel {
+							margin: 10px 0;
+						}
+					}
+				}
+				.destinationDetailsWrapper {
+					display: block;
+					.minMaxDescription {
+						padding-left: 16px;
+					}
+					#GoogleMap {
+						margin: 30px auto 0;
+					}
+				}
 			}
 			.experienceSection {
+			}
+
+			.availableStays {
+				.accommodationCardWrapper {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
 			}
 		}
 
@@ -165,27 +188,6 @@
 				width: 100%;
 				flex-wrap: wrap;
 				bottom: -370px;
-			}
-
-			.destinationInfoCardWrapper {
-				margin: 0 auto 25px !important;
-			}
-
-			.headerWrapper {
-				.destinationInfoCardWrapper {
-					position: relative;
-					margin-right: 60px;
-					.rsDestinationInfoCard {
-					}
-				}
-
-				.rsCarousel {
-					.carouselParent {
-						.carouselChild {
-							margin: 0 10px;
-						}
-					}
-				}
 			}
 		}
 

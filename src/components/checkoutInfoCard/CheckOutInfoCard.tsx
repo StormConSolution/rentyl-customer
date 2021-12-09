@@ -11,7 +11,7 @@ import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import CountryService from '../../services/country/country.service';
 import LabelButton from '../labelButton/LabelButton';
-import LabelCheckboxV2 from '../labelCheckbox/LabelCheckboxV2';
+import LabelCheckboxFilterBar from '../labelCheckbox/LabelCheckboxFilterBar';
 import UserService from '../../services/user/user.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import { useRecoilValue } from 'recoil';
@@ -253,7 +253,7 @@ const CheckOutInfoCard: React.FC<CheckOutInfoCardProps> = (props) => {
 				</Box>
 				{!user && (
 					<Box className={'fieldGroup stretchedInput'}>
-						<LabelCheckboxV2
+						<LabelCheckboxFilterBar
 							value={''}
 							isChecked={signUp}
 							text={

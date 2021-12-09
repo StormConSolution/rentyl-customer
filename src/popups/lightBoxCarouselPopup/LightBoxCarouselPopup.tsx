@@ -1,7 +1,6 @@
 import * as React from 'react';
 import './LightBoxCarouselPopup.scss';
 import { Box, Popup, PopupProps } from '@bit/redsky.framework.rs.996';
-import { ImageTabProp } from '../../components/tabbedImageCarousel/TabbedImageCarousel';
 import Label from '@bit/redsky.framework.rs.label';
 import Button from '@bit/redsky.framework.rs.button';
 import { useEffect, useRef, useState } from 'react';
@@ -13,7 +12,7 @@ import Paper from '../../components/paper/Paper';
 import Img from '@bit/redsky.framework.rs.img';
 
 export interface TabbedCarouselPopupProps extends PopupProps {
-	tabs?: ImageTabProp[];
+	tabs?: Misc.ImageTabProp[];
 	imageData?: Api.Media[];
 	defaultImageIndex?: number;
 	activeTabName?: string;
@@ -55,7 +54,7 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 
 	useEffect(() => {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
-			let activeTab: ImageTabProp | undefined = props.tabs.find((item) => item.name === activeTabName);
+			let activeTab: Misc.ImageTabProp | undefined = props.tabs.find((item) => item.name === activeTabName);
 			if (!activeTab) return;
 			setMedia(activeTab.otherMedia);
 			setLargestImageIndex(activeTab.otherMedia.length - 1); //So it matches the index count for the images.
@@ -63,6 +62,8 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 			setMedia(props.imageData);
 			setLargestImageIndex(props.imageData.length - 1); //So it matches the index count for the images.
 		}
+		setImageIndex(0);
+		imageWrapperRef.current!.scrollTo({ top: 0, left: 0 });
 	}, [activeTabName, props.imageData]);
 
 	function renderTabs() {
@@ -74,7 +75,6 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 						look={'none'}
 						className={'tab' + (activeTabName === item.name ? ' selected' : '')}
 						onClick={() => {
-							setImageIndex(0);
 							setActiveTabName(item.name);
 						}}
 					>
@@ -142,20 +142,21 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 				right={'30px'}
 				onClickRight={() => {
 					let val = imageWrapperRef.current!.offsetWidth + imageWrapperRef.current!.scrollLeft;
-					setImageIndex(imageIndex + 1);
 					if (imageIndex >= largestImageIndex) {
 						val = 0;
 						setImageIndex(0);
-					}
+					} else setImageIndex(imageIndex + 1);
+
 					imageWrapperRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 				}}
 				onClickLeft={() => {
 					let val = imageWrapperRef.current!.scrollLeft - imageWrapperRef.current!.offsetWidth;
-					setImageIndex(imageIndex - 1);
-					if (imageIndex <= 1) {
+
+					if (imageIndex <= 0) {
 						val = imageWrapperRef.current!.offsetWidth * largestImageIndex;
 						setImageIndex(largestImageIndex);
-					}
+					} else setImageIndex(imageIndex - 1);
+
 					imageWrapperRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
 				}}
 			/>

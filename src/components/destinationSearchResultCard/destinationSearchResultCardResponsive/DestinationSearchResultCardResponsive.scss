@@ -38,34 +38,26 @@
 		margin-right: 7px;
 	}
 
-	.rsCarousel {
-		max-width: 414px;
-		width: 100%;
-		.carouselParent {
-			overflow-x: hidden;
-		}
-		.imageWrapper {
-			max-height: 278px;
-			max-width: 414px;
-			width: 100%;
-			height: 100%;
-			img {
-				max-width: 414px;
-				height: auto;
-				min-height: 278px;
-				max-height: 278px;
-				object-fit: cover;
-				object-position: center;
-			}
-		}
-	}
-
 	.earnTextContainer {
 		min-width: 350px;
 		display: flex;
 		justify-content: flex-end;
 		.earnText {
 			width: fit-content;
+		}
+	}
+}
+
+@media (min-width: 1160px) and (max-width: 1400px) {
+	.App {
+		.rsDestinationSearchResultCardResponsive {
+			.destinationDescription {
+				-webkit-line-clamp: 6 !important;
+			}
+
+			.featureIcons {
+				display: none;
+			}
 		}
 	}
 }

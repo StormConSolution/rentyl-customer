@@ -12,15 +12,10 @@ import { useEffect, useState } from 'react';
 import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LabelButton from '../../labelButton/LabelButton';
 import RateCodeCard from '../../rateCodeCard/RateCodeCard';
-import AccommodationsPopup from '../../../popups/accommodationsPopup/AccommodationsPopup';
 import router from '../../../utils/router';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
 import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
-import LightBoxCarouselPopup, {
-	TabbedCarouselPopupProps
-} from '../../../popups/lightBoxCarouselPopup/LightBoxCarouselPopup';
-import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 
 interface AccommodationSearchCardMobileProps {
 	accommodation: Api.Destination.Res.Accommodation;
@@ -32,7 +27,6 @@ interface AccommodationSearchCardMobileProps {
 }
 
 const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps> = (props) => {
-	const size = useWindowResizeChange();
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
@@ -61,7 +55,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			newAccommodationPrices.shift();
 			setAccommodationPrices(newAccommodationPrices);
 		}
-	}, []);
+	}, [props.accommodation]);
 
 	function onBookNow() {
 		let data: any = { ...reservationFilters };

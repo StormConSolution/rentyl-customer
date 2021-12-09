@@ -10,7 +10,6 @@ import DestinationImageGallery from '../../components/destinationImageGallery/De
 import LightBoxCarouselPopup, { TabbedCarouselPopupProps } from '../lightBoxCarouselPopup/LightBoxCarouselPopup';
 import router from '../../utils/router';
 import { ObjectUtils, StringUtils } from '../../utils/utils';
-import AccommodationsPopup from '../accommodationsPopup/AccommodationsPopup';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import ImageLabel from '../../components/imageLabel/ImageLabel';
@@ -180,7 +179,7 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 								<Carousel className={'imageContainer'} showControls children={renderLayoutImages()} />
 							) : (
 								<div className={'singleLayoutImg'}>
-									<img src={props.accommodationDetails.layout[0].media.urls.imageKit} />
+									<img src={props.accommodationDetails.layout[0].media.urls.imageKit} alt={''} />
 								</div>
 							)}
 						</>
