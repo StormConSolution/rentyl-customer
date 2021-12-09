@@ -107,7 +107,7 @@ const ReservationDetailsPaper: React.FC<ReservationDetailsPaperProps> = (props) 
 			<TitleDescription
 				title={'Amenities'}
 				description={
-					<Box display={'flex'} flexWrap={'wrap'}>
+					<Box display={'flex'} flexWrap={'wrap'} justifyContent={'space-between'} textAlign={'center'}>
 						{renderAmenities()}
 					</Box>
 				}
