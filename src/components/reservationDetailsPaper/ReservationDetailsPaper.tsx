@@ -6,7 +6,7 @@ import Img from '@bit/redsky.framework.rs.img';
 import { Box } from '@bit/redsky.framework.rs.996';
 import IconLabel from '../iconLabel/IconLabel';
 import TitleDescription from '../titleDescription/TitleDescription';
-import { DateUtils, ObjectUtils, StringUtils } from '../../utils/utils';
+import { DateUtils, StringUtils } from '../../utils/utils';
 
 interface ReservationDetailsPaperProps {
 	reservationData: Api.Reservation.Res.Get;

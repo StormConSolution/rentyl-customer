@@ -52,28 +52,12 @@
 		column-gap: 64px;
 		padding: 0 95px;
 		box-sizing: border-box;
-		.rsReservationDetailsAccordion {
-			margin-bottom: 40px;
-		}
-
-		.rsReservationDetailsCostSummaryCard {
-			margin-bottom: 40px;
-		}
 	}
 }
 
 .small {
 	.rsReservationDetailsPage {
 		padding: 145px 17px 100px;
-		.rsHeroImage {
-			padding: 0 16px;
-			box-sizing: border-box;
-			.rsItineraryInfoCard {
-				position: relative;
-				bottom: -85px;
-				left: auto;
-			}
-		}
 
 		.contentWrapper {
 			grid-template-columns: 100%;

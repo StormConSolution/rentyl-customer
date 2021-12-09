@@ -87,6 +87,14 @@ export const routes: RouteDetails[] = [
 		}
 	},
 	{
+		path: '/booking/checkout/pdf',
+		page: CheckoutFlowPage,
+		routeGuard: verifyRoute,
+		options: {
+			view: 'landingPage'
+		}
+	},
+	{
 		path: '/booking/packages',
 		page: BookingFlowAddPackagePage,
 		routeGuard: verifyRoute

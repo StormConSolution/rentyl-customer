@@ -8,7 +8,6 @@ import UserService from '../../services/user/user.service';
 import serviceFactory from '../../services/serviceFactory';
 import { HttpStatusCode } from '../../utils/http';
 import { axiosErrorHandler } from '../../utils/errorHandler';
-import HeroImage from '../../components/heroImage/HeroImage';
 import Paper from '../../components/paper/Paper';
 import { FooterLinks } from '../../components/footer/FooterLinks';
 import Footer from '../../components/footer/Footer';
@@ -136,36 +135,25 @@ const ResetPasswordPage: React.FC = () => {
 
 	return (
 		<Page className="rsResetPasswordPage">
-			<HeroImage
-				image={require('../../images/signInPage/signIn-background.png')}
-				height={'clamp(620px, 680px, 880px'}
-				mobileHeight={'clamp(620px, 680px, 880px'}
-			>
-				<div className="container" data-aos="fade-up">
-					<Paper
-						className={'passwordPaper'}
-						backgroundColor={'#FCFBF8'}
-						position={'relative'}
-						padding={size === 'small' ? '30px 20px' : '50px 85px'}
-					>
-						<Label className={'resetPasswordTitle'} variant={'h3'}>
-							Reset Password Center
+			<div className="container" data-aos="fade-up">
+				<Paper
+					className={'passwordPaper'}
+					backgroundColor={'#FCFBF8'}
+					position={'relative'}
+					padding={size === 'small' ? '30px 20px' : '50px 85px'}
+				>
+					<Label className={'resetPasswordTitle'} variant={'h3'}>
+						Reset Password Center
+					</Label>
+					{renderPasswordResetForm()}
+					{!!errorMessage.length && (
+						<Label className="errorText" variant={'body1'}>
+							{errorMessage}
 						</Label>
-						{renderPasswordResetForm()}
-						{!!errorMessage.length && (
-							<Label className="errorText" variant={'body1'}>
-								{errorMessage}
-							</Label>
-						)}
-						<LabelLink
-							className={'signInLink'}
-							path={'/signin'}
-							label={'Sign In Page'}
-							variant={'caption'}
-						/>
-					</Paper>
-				</div>
-			</HeroImage>
+					)}
+					<LabelLink className={'signInLink'} path={'/signin'} label={'Sign In Page'} variant={'caption'} />
+				</Paper>
+			</div>
 			<Footer links={FooterLinks} />
 		</Page>
 	);

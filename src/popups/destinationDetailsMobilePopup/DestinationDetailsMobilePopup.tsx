@@ -19,7 +19,7 @@ import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import DestinationExperienceImageGallery from '../../components/destinationExperienceImageGallery/DestinationExperienceImageGallery';
 import ImageLabel from '../../components/imageLabel/ImageLabel';
 import { Loader } from 'google-maps';
-import FilterBar from '../../components/filterBar/FilterBar';
+import FilterBarLimited from '../../components/filterBar/FilterBarLimited';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
 import MobileAccommodationOverviewPopup, {
@@ -378,7 +378,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 					</div>
 				) : (
 					<div className={'availableStays'}>
-						<FilterBar destinationId={destinationDetails.id} isMobile={true} />
+						<FilterBarLimited destinationId={destinationDetails.id} isMobile={true} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
 							{availabilityStayList.length <= 0 ? (

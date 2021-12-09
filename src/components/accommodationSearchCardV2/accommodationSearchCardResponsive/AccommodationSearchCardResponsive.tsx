@@ -57,7 +57,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 			newAccommodationPrices.shift();
 			setAccommodationPrices(newAccommodationPrices);
 		}
-	}, []);
+	}, [props.accommodation]);
 
 	function getImageUrls(): string[] {
 		if (accommodationDetails?.media) {

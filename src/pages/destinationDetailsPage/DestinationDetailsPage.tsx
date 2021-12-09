@@ -10,7 +10,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { ObjectUtils } from '@bit/redsky.framework.rs.utils';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import { StringUtils, WebUtils } from '../../utils/utils';
-import FilterBar from '../../components/filterBar/FilterBar';
+import FilterBarLimited from '../../components/filterBar/FilterBarLimited';
 import AccommodationService from '../../services/accommodation/accommodation.service';
 import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
@@ -458,7 +458,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 						<Label variant={'h1'} className={'chooseYourAccommodation'}>
 							Choose your accommodation
 						</Label>
-						<FilterBar destinationId={destinationDetails.id} isMobile={size === 'small'} />
+						<FilterBarLimited destinationId={destinationDetails.id} isMobile={size === 'small'} />
 						<hr />
 						<div className={'accommodationCardWrapper'}>
 							{availabilityStayList.length <= 0 ? (
