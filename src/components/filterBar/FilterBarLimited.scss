@@ -26,6 +26,9 @@
 		color: white;
 	}
 
+	.guestInputMobile {
+	}
+
 	.guestInput {
 		position: relative;
 		background: #fff;
@@ -153,5 +156,23 @@
 		line-height: 39px;
 		height: 100%;
 		border-radius: 20px;
+	}
+}
+
+.small {
+	.rsFilterBar {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		.guestInputMobile {
+			.popupBox {
+				transform: translateX(-50%);
+			}
+		}
+
+		.contained.primary.updateButton {
+			margin-bottom: 10px;
+		}
 	}
 }

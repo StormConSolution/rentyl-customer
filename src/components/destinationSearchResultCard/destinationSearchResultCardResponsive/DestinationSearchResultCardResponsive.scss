@@ -47,3 +47,17 @@
 		}
 	}
 }
+
+@media (min-width: 1160px) and (max-width: 1400px) {
+	.App {
+		.rsDestinationSearchResultCardResponsive {
+			.destinationDescription {
+				-webkit-line-clamp: 6 !important;
+			}
+
+			.featureIcons {
+				display: none;
+			}
+		}
+	}
+}

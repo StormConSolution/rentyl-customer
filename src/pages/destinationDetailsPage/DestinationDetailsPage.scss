@@ -42,6 +42,7 @@
 				.minMaxDescription {
 					max-width: 949px;
 					padding: 0 0 0 80px;
+					margin-right: 20px;
 					.locationDescription {
 						line-height: 40px;
 					}
@@ -149,8 +150,34 @@
 				}
 			}
 			.overviewSection {
+				.titleAndPriceContainer {
+					display: block;
+					.logoNameContainer {
+						display: block;
+						.rsLabel {
+							margin: 10px 0;
+						}
+					}
+				}
+				.destinationDetailsWrapper {
+					display: block;
+					.minMaxDescription {
+						padding-left: 16px;
+					}
+					#GoogleMap {
+						margin: 30px auto 0;
+					}
+				}
 			}
 			.experienceSection {
+			}
+
+			.availableStays {
+				.accommodationCardWrapper {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
 			}
 		}
 

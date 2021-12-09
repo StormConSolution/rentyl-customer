@@ -10,6 +10,37 @@
 		background: #fff;
 		gap: 55px;
 
+		.iconSpin {
+			animation-duration: 0.4s;
+			animation-fill-mode: forwards;
+			margin-left: auto;
+		}
+
+		.up {
+			animation-name: spinUp;
+		}
+		.down {
+			animation-name: spinDown;
+		}
+
+		@keyframes spinDown {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(-180deg);
+			}
+		}
+
+		@keyframes spinUp {
+			0% {
+				transform: rotate(-180deg);
+			}
+			100% {
+				transform: rotate(0deg);
+			}
+		}
+
 		.filterByLabel {
 			color: theme-var($secondaryTextColor);
 			opacity: 0.5;

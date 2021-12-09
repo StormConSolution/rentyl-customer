@@ -11,6 +11,9 @@ interface TitleLabelProps {
 	popoutBoxPadding?: string;
 	className?: string;
 	titleLabelRef?: RefObject<any> | undefined;
+	labelVariant?: string;
+	titleVariant?: string;
+	titleMarginBottom?: number;
 }
 
 const TitleLabel: React.FC<TitleLabelProps> = (props) => {
@@ -37,10 +40,13 @@ const TitleLabel: React.FC<TitleLabelProps> = (props) => {
 			}}
 			ref={props.titleLabelRef}
 		>
-			<Label variant={'caption3'} mb={10}>
+			<Label
+				variant={`${props.titleVariant ? ` ${props.titleVariant}` : 'caption3'}`}
+				marginBottom={props.titleMarginBottom ? props.titleMarginBottom : 10}
+			>
 				{props.title}
 			</Label>
-			<Label variant={'subtitle3'}>{props.label}</Label>
+			<Label variant={`${props.labelVariant ? `${props.labelVariant}` : 'subtitle3'}`}>{props.label}</Label>
 			<Box boxRef={boxRef} className={'popupBox'} padding={props.popoutBoxPadding || '40px 20px'}>
 				{props.popoutBoxContent}
 			</Box>

@@ -342,152 +342,154 @@ const FilterBarAllFilters: React.FC<FilterBarV2Props> = () => {
 	return (
 		<div className="rsFilterBarAllFilters">
 			<Box className={'filterRow'}>
-				<FilterBarDropDown
-					onChangeCallBack={onApplyClick}
-					onClearCallback={() => {
-						let minPrice = filterForm.get('priceRangeMin');
-						let maxPrice = filterForm.get('priceRangeMax');
-						minPrice.value = 10;
-						maxPrice.value = 1000;
-						let formCopy = filterForm.clone();
-						formCopy.update(minPrice);
-						formCopy.update(maxPrice);
-						setFilterForm(formCopy);
-					}}
-					title="Price"
-					dropdownContentClassName="destinationFilterDropdown"
-				>
-					<Slider
-						range={[10, 1000]}
-						minControl={filterForm.get('priceRangeMin')}
-						maxControl={filterForm.get('priceRangeMax')}
-						sliderIcons={'icon-hamburger-menu'}
-						rotate={90}
-						updateMinControl={updateFilterForm}
-						updateMaxControl={updateFilterForm}
-						mode={SliderMode.COLLISION}
-						handleStyle={{ border: '1px solid black', borderRadius: '50%' }}
-						railClass="priceSliderRail"
-						sliderClass="priceSlider"
-					/>
-					<div className="minMaxDiv">
-						<LabelInputFilterBar
-							className={`priceMin ${
-								Number(filterForm.get('priceRangeMin').value) >= 1000 ? 'andGreater' : ''
-							}`}
-							inputType="text"
-							title="min price"
-							control={filterForm.get('priceRangeMin')}
-							updateControl={sanitizePriceFieldsAndUpdate}
+				<Box className="filterDropdownArea">
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let minPrice = filterForm.get('priceRangeMin');
+							let maxPrice = filterForm.get('priceRangeMax');
+							minPrice.value = 10;
+							maxPrice.value = 1000;
+							let formCopy = filterForm.clone();
+							formCopy.update(minPrice);
+							formCopy.update(maxPrice);
+							setFilterForm(formCopy);
+						}}
+						title="Price"
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						<Slider
+							range={[10, 1000]}
+							minControl={filterForm.get('priceRangeMin')}
+							maxControl={filterForm.get('priceRangeMax')}
+							sliderIcons={'icon-hamburger-menu'}
+							rotate={90}
+							updateMinControl={updateFilterForm}
+							updateMaxControl={updateFilterForm}
+							mode={SliderMode.COLLISION}
+							handleStyle={{ border: '1px solid black', borderRadius: '50%' }}
+							railClass="priceSliderRail"
+							sliderClass="priceSlider"
 						/>
-						<hr className="divider" />
-						<LabelInputFilterBar
-							className={`priceMax ${
-								Number(filterForm.get('priceRangeMax').value) >= 1000 ? 'andGreater' : ''
-							}`}
-							inputType="text"
-							title="max price"
-							control={filterForm.get('priceRangeMax')}
-							updateControl={sanitizePriceFieldsAndUpdate}
+						<div className="minMaxDiv">
+							<LabelInputFilterBar
+								className={`priceMin ${
+									Number(filterForm.get('priceRangeMin').value) >= 1000 ? 'andGreater' : ''
+								}`}
+								inputType="text"
+								title="min price"
+								control={filterForm.get('priceRangeMin')}
+								updateControl={sanitizePriceFieldsAndUpdate}
+							/>
+							<hr className="divider" />
+							<LabelInputFilterBar
+								className={`priceMax ${
+									Number(filterForm.get('priceRangeMax').value) >= 1000 ? 'andGreater' : ''
+								}`}
+								inputType="text"
+								title="max price"
+								control={filterForm.get('priceRangeMax')}
+								updateControl={sanitizePriceFieldsAndUpdate}
+							/>
+						</div>
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let tempControl = filterForm.get('propertyTypeIds');
+							tempControl.value = [];
+							updateFilterForm(tempControl);
+						}}
+						title={
+							!ObjectUtils.isArrayWithData(filterForm.get('propertyTypeIds').value)
+								? 'Accommodations'
+								: `Accommodations( ${(filterForm.get('propertyTypeIds').value as number[]).length} )`
+						}
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						{renderAccommodationList()}
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let bedroom = filterForm.get('bedroomCount');
+							bedroom.value = 0;
+							let bathroom = filterForm.get('bathroomCount');
+							bathroom.value = 0;
+							let copyForm = filterForm.clone();
+							copyForm.update(bedroom);
+							copyForm.update(bathroom);
+							setFilterForm(copyForm);
+						}}
+						title={
+							(filterForm.get('bathroomCount').value || filterForm.get('bedroomCount').value)! > 0
+								? `Bedrooms( ${
+										(filterForm.get('bedroomCount').value as number) +
+										(filterForm.get('bathroomCount').value as number)
+								  } )`
+								: 'Bedrooms'
+						}
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						<Counter
+							title="Bedrooms"
+							control={filterForm.get('bedroomCount')}
+							updateControl={updateFilterForm}
+							className={'filterCounter'}
+							minCount={0}
+							maxCount={15}
+							labelMarginRight={5}
 						/>
-					</div>
-				</FilterBarDropDown>
-				<FilterBarDropDown
-					onChangeCallBack={onApplyClick}
-					onClearCallback={() => {
-						let tempControl = filterForm.get('propertyTypeIds');
-						tempControl.value = [];
-						updateFilterForm(tempControl);
-					}}
-					title={
-						!ObjectUtils.isArrayWithData(filterForm.get('propertyTypeIds').value)
-							? 'Accommodations'
-							: `Accommodations( ${(filterForm.get('propertyTypeIds').value as number[]).length} )`
-					}
-					dropdownContentClassName="destinationFilterDropdown"
-				>
-					{renderAccommodationList()}
-				</FilterBarDropDown>
-				<FilterBarDropDown
-					onChangeCallBack={onApplyClick}
-					onClearCallback={() => {
-						let bedroom = filterForm.get('bedroomCount');
-						bedroom.value = 0;
-						let bathroom = filterForm.get('bathroomCount');
-						bathroom.value = 0;
-						let copyForm = filterForm.clone();
-						copyForm.update(bedroom);
-						copyForm.update(bathroom);
-						setFilterForm(copyForm);
-					}}
-					title={
-						(filterForm.get('bathroomCount').value || filterForm.get('bedroomCount').value)! > 0
-							? `Bedrooms( ${
-									(filterForm.get('bedroomCount').value as number) +
-									(filterForm.get('bathroomCount').value as number)
-							  } )`
-							: 'Bedrooms'
-					}
-					dropdownContentClassName="destinationFilterDropdown"
-				>
-					<Counter
-						title="Bedrooms"
-						control={filterForm.get('bedroomCount')}
-						updateControl={updateFilterForm}
-						className={'filterCounter'}
-						minCount={0}
-						maxCount={15}
-						labelMarginRight={5}
-					/>
-					<Counter
-						title="Bathrooms"
-						control={filterForm.get('bathroomCount')}
-						updateControl={updateFilterForm}
-						className={'filterCounter'}
-						minCount={0}
-						maxCount={15}
-						labelMarginRight={5}
-					/>
-				</FilterBarDropDown>
-				<FilterBarDropDown
-					onChangeCallBack={onApplyClick}
-					onClearCallback={() => {
-						let tempControl = filterForm.get('experienceIds');
-						tempControl.value = [];
-						updateFilterForm(tempControl);
-					}}
-					title={
-						!ObjectUtils.isArrayWithData(filterForm.get('experienceIds').value)
-							? 'Resort Experiences'
-							: `Resort Experiences( ${(filterForm.get('experienceIds').value as number[]).length} )`
-					}
-					dropdownContentClassName="destinationFilterDropdown"
-				>
-					{renderResortExperiencesOptionsList()}
-				</FilterBarDropDown>
-				<FilterBarDropDown
-					onChangeCallBack={onApplyClick}
-					onClearCallback={() => {
-						let tempControl = filterForm.get('amenityIds');
-						tempControl.value = [];
-						updateFilterForm(tempControl);
-					}}
-					title={
-						<Label variant="destinationAvailabilityCustomOne">
-							{!ObjectUtils.isArrayWithData(filterForm.get('amenityIds').value)
-								? 'Other Filters'
-								: `Other Filters( ${(filterForm.get('amenityIds').value as number[]).length} )`}
+						<Counter
+							title="Bathrooms"
+							control={filterForm.get('bathroomCount')}
+							updateControl={updateFilterForm}
+							className={'filterCounter'}
+							minCount={0}
+							maxCount={15}
+							labelMarginRight={5}
+						/>
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let tempControl = filterForm.get('experienceIds');
+							tempControl.value = [];
+							updateFilterForm(tempControl);
+						}}
+						title={
+							!ObjectUtils.isArrayWithData(filterForm.get('experienceIds').value)
+								? 'Resort Experiences'
+								: `Resort Experiences( ${(filterForm.get('experienceIds').value as number[]).length} )`
+						}
+						dropdownContentClassName="destinationFilterDropdown"
+					>
+						{renderResortExperiencesOptionsList()}
+					</FilterBarDropDown>
+					<FilterBarDropDown
+						onChangeCallBack={onApplyClick}
+						onClearCallback={() => {
+							let tempControl = filterForm.get('amenityIds');
+							tempControl.value = [];
+							updateFilterForm(tempControl);
+						}}
+						title={
+							<Label variant="destinationAvailabilityCustomOne">
+								{!ObjectUtils.isArrayWithData(filterForm.get('amenityIds').value)
+									? 'Other Filters'
+									: `Other Filters( ${(filterForm.get('amenityIds').value as number[]).length} )`}
+							</Label>
+						}
+						dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
+						icon="icon-slider"
+						removeFilterByLabel
+					>
+						<Label variant="body1" paddingTop={10} paddingLeft={10}>
+							In Unit Amenities
 						</Label>
-					}
-					dropdownContentClassName="inUnitAmenitiesCheckboxContentBody"
-					icon="icon-slider"
-					removeFilterByLabel
-				>
-					<Label variant="body1" paddingTop={10} paddingLeft={10}>
-						In Unit Amenities
-					</Label>
-					<Box className="inUnitAmenitiesWrapper">{renderInUnitAmenitiesOptionsList()}</Box>
-				</FilterBarDropDown>
+						<Box className="inUnitAmenitiesWrapper">{renderInUnitAmenitiesOptionsList()}</Box>
+					</FilterBarDropDown>
+				</Box>
 				<hr />
 				<Box>
 					<FilterBarDropDown
