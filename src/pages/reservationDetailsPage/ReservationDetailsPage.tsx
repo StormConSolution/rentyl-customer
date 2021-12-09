@@ -99,18 +99,18 @@ const ReservationDetailsPage: React.FC = () => {
 						<Label variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}>
 							Policies
 						</Label>
-						<Box display={'flex'} justifyContent={smallSize ? 'space-between' : 'block'} mb={24}>
+						<Box display={'flex'} justifyContent={'space-between'} mb={24}>
 							<Box id="checkInContainer">
 								<Label
 									variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}
 									mb={8}
 								>
-									CHECK-IN
+									Check in
 								</Label>
 								<Label
 									variant={smallSize ? 'reservationDetailsCustomTwo' : 'reservationDetailsCustomTwo'}
 								>
-									{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
+									After {StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckIn'))}
 								</Label>
 							</Box>
 							<Box id="checkOutContainer">
@@ -118,12 +118,12 @@ const ReservationDetailsPage: React.FC = () => {
 									variant={smallSize ? 'reservationDetailsCustomOne' : 'reservationDetailsCustomOne'}
 									mb={8}
 								>
-									CHECK-OUT
+									Check out
 								</Label>
 								<Label
 									variant={smallSize ? 'reservationDetailsCustomTwo' : 'reservationDetailsCustomTwo'}
 								>
-									{StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
+									Before {StringUtils.convertTwentyFourHourTime(getPoliciesValue('CheckOut'))}
 								</Label>
 							</Box>
 						</Box>

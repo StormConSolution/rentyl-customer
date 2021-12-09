@@ -10,11 +10,13 @@
 			box-shadow: 0 0 8px #00000029;
 			border-radius: 20px;
 			padding: 25px;
+			overflow: hidden;
 		}
 		.bookingCard {
 			background-color: white;
 			border-radius: 20px;
 			margin-bottom: 30px;
+			max-width: 1090px;
 			.rsBookingSummaryCard {
 				border: unset;
 				box-shadow: 0 0 8px #00000029;
@@ -41,9 +43,6 @@
 				}
 			}
 		}
-		#checkInContainer {
-			margin-right: 156px;
-		}
 	}
 
 	.contentWrapper {
@@ -52,6 +51,9 @@
 		column-gap: 64px;
 		padding: 0 95px;
 		box-sizing: border-box;
+	}
+	.policyCard {
+		max-width: 1040px;
 	}
 }
 
