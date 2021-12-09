@@ -77,6 +77,19 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 
 	const printRef = useRef(null);
 
+	useEffect(() => {
+		let id = router.subscribeToBeforeRouterNavigate(async (newPath) => {
+			let disableNavGate = newPath === '/booking/checkout' && params.stage === 3;
+			if (disableNavGate) rsToastify.info('You cannot go back after a successful checkout', 'Sorry!');
+
+			return disableNavGate;
+		});
+
+		return () => {
+			router.unsubscribeFromBeforeRouterNavigate(id);
+		};
+	}, [params.stage]);
+
 	const handlePrint = useReactToPrint({
 		content: () => printRef.current,
 		pageStyle: '.leftColumn { min-height: 1800px; } body { zoom: 50%; } @page { margin: 10%; }'
@@ -446,10 +459,8 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 		if (params.stage === 0) {
 			await router.navigate('/');
 			return;
-		} else if (params.stage === 3) {
-			rsToastify.info('You cannot go back after a successful checkout', 'Sorry!');
-			return;
 		}
+
 		await router.navigate(`/booking/checkout?s=${params.stage - 1}&data=${params.data}`);
 	}
 
@@ -552,7 +563,7 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 			case 2:
 				return await completeBooking();
 			case 3:
-				await handleForwardButtonClick();
+				await router.navigate(`/booking/checkout/pdf?s=4&data=${params.data}`);
 				return !!handlePrint && (await handlePrint());
 			default:
 				return handleForwardButtonClick();
