@@ -80,14 +80,14 @@ export default class UserService extends Service {
 		return response.data.data;
 	}
 
-	setCheckoutUserInLocalStorage(checkoutUser: Api.User.Req.Checkout) {
-		setRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser, checkoutUser);
+	setCheckoutUserInLocalStorage(checkoutUser: Misc.Checkout) {
+		setRecoilExternalValue<Misc.Checkout | undefined>(globalState.checkoutUser, checkoutUser);
 	}
 
 	clearCheckoutUserFromLocalStorage() {
-		const recoilCheckoutUser = getRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser);
+		const recoilCheckoutUser = getRecoilExternalValue<Misc.Checkout | undefined>(globalState.checkoutUser);
 		if (!!recoilCheckoutUser) {
-			setRecoilExternalValue<Api.User.Req.Checkout | undefined>(globalState.checkoutUser, undefined);
+			setRecoilExternalValue<Misc.Checkout | undefined>(globalState.checkoutUser, undefined);
 			localStorage.removeItem(KEY_PREFIX + globalState.checkoutUser.key);
 		}
 	}

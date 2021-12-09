@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 
 interface PaymentMethodProps {
-	userCheckout: Api.User.Req.Checkout;
+	userCheckout: Misc.Checkout;
 	userPrimaryPaymentMethod: Api.User.PaymentMethod | undefined;
 	onEditClickCallback?: () => void;
 }

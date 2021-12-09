@@ -21,7 +21,7 @@ import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label';
 
 export interface CheckOutPaymentCardProps {
-	checkoutUserState: [Api.User.Req.Checkout, React.Dispatch<React.SetStateAction<Api.User.Req.Checkout>>];
+	checkoutUserState: [Misc.Checkout, React.Dispatch<React.SetStateAction<Misc.Checkout>>];
 	userPrimaryPaymentMethod: Api.User.PaymentMethod | undefined;
 	onContinue: VoidFunction;
 	isDisplayed: boolean;
@@ -210,7 +210,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 		setPaymentForm(paymentForm.clone().update(control));
 	}
 
-	function buildCheckoutUser(): Api.User.Req.Checkout {
+	function buildCheckoutUser(): Misc.Checkout {
 		const newCheckoutUser = { ...checkoutUser };
 		if (differentBillingAddress) {
 			newCheckoutUser.billing = {

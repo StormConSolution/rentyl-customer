@@ -27,7 +27,7 @@ class GlobalState {
 	destinationComparison: RecoilState<Misc.ComparisonState>;
 	userToken: RecoilState<string>;
 	user: RecoilState<Api.User.Res.Detail | undefined>;
-	checkoutUser: RecoilState<Api.User.Req.Checkout | undefined>;
+	checkoutUser: RecoilState<Misc.Checkout | undefined>;
 	company: RecoilState<Api.Company.Res.GetCompanyAndClientVariables>;
 	verifiedAccommodation: RecoilState<Api.Reservation.Res.Verification | undefined>;
 	reservationFilters: RecoilState<Misc.ReservationFilters>;
@@ -49,12 +49,9 @@ class GlobalState {
 			default: undefined
 		});
 
-		this.checkoutUser = atom<Api.User.Req.Checkout | undefined>({
+		this.checkoutUser = atom<Misc.Checkout | undefined>({
 			key: GlobalStateKeys.CHECKOUT_USER,
-			default: this.loadFromLocalStorage<Api.User.Req.Checkout | undefined>(
-				GlobalStateKeys.CHECKOUT_USER,
-				undefined
-			)
+			default: this.loadFromLocalStorage<Misc.Checkout | undefined>(GlobalStateKeys.CHECKOUT_USER, undefined)
 		});
 
 		this.userToken = atom<string>({
