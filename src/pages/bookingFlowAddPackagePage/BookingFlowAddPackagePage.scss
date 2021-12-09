@@ -2,16 +2,11 @@
 .rsBookingFlowAddPackagePage {
 	padding-top: 120px;
 
-	display: flex;
-	flex-wrap: nowrap;
-
 	.packageSection {
-		width: 65%;
-		padding-left: 50px;
+		width: 60%;
 	}
 	.bookingSummarySection {
 		width: 35%;
-		padding: 0 20px;
 		.bookingCardWrapper {
 			margin: 0 auto;
 			position: sticky;
