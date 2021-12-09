@@ -200,39 +200,43 @@ const BookingFlowAddPackagePage = () => {
 		<LoadingPage />
 	) : (
 		<Page className={'rsBookingFlowAddPackagePage'}>
-			<Box className="packageSection">
-				{smallSize ? renderContinueBtn() : null}
-				<div ref={filterRef} />
-				{renderAvailablePackages()}
-				{renderContinueBtn()}
-				<PaginationViewMore
-					selectedRowsPerPage={perPage}
-					total={total}
-					currentPageNumber={page}
-					viewMore={(num) => {
-						setPage(num);
-					}}
-					text={
-						<Label variant="caption1" className="loadMoreButton">
-							Load More Packages
-						</Label>
-					}
-				/>
-			</Box>
-			<Box className="bookingSummarySection">
-				{verifiedAccommodation ? (
-					<Box className="bookingCardWrapper">
+			<div className={'rs-page-content-wrapper'}>
+				<Box display="flex">
+					<Box className="packageSection">
+						{smallSize ? renderContinueBtn() : null}
+						<div ref={filterRef} />
+						{renderAvailablePackages()}
 						{renderContinueBtn()}
-						<BookingSummaryCard
-							bookingData={{ ...verifiedAccommodation, upsellPackages: addedPackages }}
-							canHide={smallSize}
-							usePoints={reservationFilters.redeemPoints}
+						<PaginationViewMore
+							selectedRowsPerPage={perPage}
+							total={total}
+							currentPageNumber={page}
+							viewMore={(num) => {
+								setPage(num);
+							}}
+							text={
+								<Label variant="caption1" className="loadMoreButton">
+									Load More Packages
+								</Label>
+							}
 						/>
 					</Box>
-				) : (
-					<div className={'loader'} />
-				)}
-			</Box>
+					<Box className="bookingSummarySection">
+						{verifiedAccommodation ? (
+							<Box className="bookingCardWrapper">
+								{renderContinueBtn()}
+								<BookingSummaryCard
+									bookingData={{ ...verifiedAccommodation, upsellPackages: addedPackages }}
+									canHide={smallSize}
+									usePoints={reservationFilters.redeemPoints}
+								/>
+							</Box>
+						) : (
+							<div className={'loader'} />
+						)}
+					</Box>
+				</Box>
+			</div>
 		</Page>
 	);
 };
