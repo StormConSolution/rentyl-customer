@@ -44,7 +44,7 @@ declare namespace Model {
 		| 'CAMPAIGN_ACTION'
 		| 'CAMPAIGN_COMPLETION'
 		| 'TRANSACTION_REFUND';
-	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation';
+	export type DestinationPolicyType = 'CheckIn' | 'CheckOut' | 'Cancellation' | 'Guarantee';
 	export type PaymentSystemProviders = 'adyen' | 'mock';
 	export type OffsiteLoyaltySystemProviders = 'fidel';
 	export type VaultSystemProviders = 'spreedly';
@@ -107,7 +107,7 @@ declare namespace Model {
 		extraBedPriceCents: number;
 		adaCompliant: 0 | 1;
 		heroUrl: string;
-		size: { max: number; min: number; units: string };
+		size: string; // of type {max: number; min: number; units: string}
 	}
 
 	export interface AccommodationAmenity {

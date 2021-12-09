@@ -2,7 +2,7 @@ import * as React from 'react';
 import './PersonalInformation.scss';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
-import UserCheckoutInfo = Api.User.Req.UserCheckoutInfo;
+import UserCheckoutInfo = Misc.UserCheckoutInfo;
 
 interface PersonalInformationProps {
 	personalInfo: UserCheckoutInfo;
