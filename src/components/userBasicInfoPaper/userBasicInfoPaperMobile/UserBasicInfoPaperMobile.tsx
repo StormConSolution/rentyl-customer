@@ -1,9 +1,11 @@
 import * as React from 'react';
 import './UserBasicInfoPaperMobile.scss';
 import Paper from '../../paper/Paper';
-import { Box } from '@bit/redsky.framework.rs.996';
+import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../../utils/utils';
+import LabelButton from '../../labelButton/LabelButton';
+import LoyaltyTierPopup from '../../../popups/loyaltyTierPopup/LoyaltyTierPopup';
 
 interface UserBasicInfoPaperMobileProps {
 	userData: Api.User.Res.Detail;
@@ -59,7 +61,16 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 			<div className={'loadingBarContainer'}>
 				<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
 			</div>
-
+			<Box paddingTop={10}>
+				<LabelButton
+					look={'containedPrimary'}
+					variant={'customThree'}
+					label={'See Loyalty Tiers'}
+					onClick={() => {
+						popupController.open(LoyaltyTierPopup);
+					}}
+				/>
+			</Box>
 			<Box display={'flex'} mt={30}>
 				<Label variant={'customThree'} color={'#707070'} ml={'auto'}>
 					not you?
