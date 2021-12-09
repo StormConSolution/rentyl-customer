@@ -51,30 +51,22 @@ const FilterBarDropDown: React.FC<FilterBarDropDownProps> = (props) => {
 					)}
 					<Label className="filterTitleLabel">{props.title}</Label>
 				</Box>
-				<Box id="chevronIcon" className="chevronIcon">
-					<Icon
-						iconImg={props.icon ? props.icon : `icon-chevron-thin-${toggleContent ? 'down' : 'up'}`}
-						size={25}
-						color={'#000000BD'}
-					/>
+				<Box id="chevronIcon" className={`chevronIcon iconSpin ${toggleContent ? 'down' : 'up'}`}>
+					<Icon iconImg={`icon-chevron-thin-down`} size={25} color={'#000000BD'} />
 				</Box>
 			</Box>
-			{toggleContent && (
-				<Box boxRef={modalRef} className={`dropdownContent ${props.dropdownContentClassName || ''}`}>
-					{props.children}
-					{!props.isSortField && (
-						<Box className="dropdownFooter">
-							<LabelButton variant="body1" label="Clear" look="none" onClick={onClearBtnCallBack} />
-							<LabelButton
-								variant="body2"
-								label="Apply"
-								look="containedPrimary"
-								onClick={applyBtnCallback}
-							/>
-						</Box>
-					)}
-				</Box>
-			)}
+			<Box
+				boxRef={modalRef}
+				className={`dropdownContent ${toggleContent ? 'show' : 'hide'} ${props.dropdownContentClassName || ''}`}
+			>
+				{props.children}
+				{!props.isSortField && (
+					<Box className="dropdownFooter">
+						<LabelButton variant="body1" label="Clear" look="none" onClick={onClearBtnCallBack} />
+						<LabelButton variant="body2" label="Apply" look="containedPrimary" onClick={applyBtnCallback} />
+					</Box>
+				)}
+			</Box>
 		</div>
 	);
 };

@@ -37,15 +37,19 @@ const MobileLightBox: React.FC<MobileLightBoxProps> = (props) => {
 	};
 
 	useEffect(() => {
-		let popup: HTMLDivElement | null = document.querySelector('.rs-popup');
-		if (!popup) return;
-		popup!.style.backgroundColor = 'rgba(0,0,0,.8)';
+		let popup: NodeListOf<HTMLDivElement> = document.querySelectorAll('.rs-popup');
+		if (!popup.length) return;
+		popup.forEach((item) => {
+			item!.style.backgroundColor = 'rgba(0,0,0,.8)';
+		});
 		document.body.style.overflow = 'hidden';
 		document.body.style.position = 'fixed';
 		document.body.style.top = '0';
 
 		return () => {
-			popup!.style.backgroundColor = 'rgba(0,0,0,.18)';
+			popup.forEach((item) => {
+				item!.style.backgroundColor = 'rgba(0,0,0,.18)';
+			});
 			document.body.style.overflow = 'unset';
 			document.body.style.position = 'unset';
 			document.body.style.top = 'unset';

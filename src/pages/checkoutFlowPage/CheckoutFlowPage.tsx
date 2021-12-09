@@ -151,7 +151,13 @@ const CheckoutFlowPage: React.FC<CheckoutFlowPageProps> = () => {
 				}
 				setVerifiedAccommodation(response);
 			} catch (e) {
-				router.navigate('/reservation/availability', { clearPreviousHistory: true });
+				const stay = paramsData.stays[0];
+				await router.navigate(
+					`/destination/details?di=${destinationId}` +
+						`${!!stay ? `&startDate=${stay.arrivalDate}` : ''}` +
+						`${!!stay ? `&endDate=${stay.departureDate}` : ''}`,
+					{ clearPreviousHistory: true }
+				);
 				rsToastify.error(
 					'Your selected accommodation is no longer available for these dates. Removed unavailable accommodation(s).',
 					'No Longer Available'

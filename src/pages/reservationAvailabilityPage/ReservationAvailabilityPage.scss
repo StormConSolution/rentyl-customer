@@ -14,10 +14,26 @@
 		.moreFiltersLink {
 			display: none;
 		}
+
 		.rsFilterBarDropDown {
 			.dropdownContent {
-				padding: 24px;
 				width: clamp(200px, 40vw, 397px);
+				transition-timing-function: cubic-bezier(1, 0.99, 0.83, 0.67);
+				transition: 0.5s;
+				overflow: auto;
+				&.hide {
+					height: 0;
+					> div {
+						display: none;
+					}
+				}
+				&.show {
+					padding: 24px;
+					height: fit-content;
+					> div {
+						display: flex;
+					}
+				}
 			}
 		}
 	}
@@ -39,8 +55,10 @@
 	.rsAccordion {
 		width: fit-content;
 		width: -moz-fit-content;
+
 		.articleItemHeader {
 			padding: 0;
+
 			.rsLabel {
 				&:hover {
 					text-decoration: underline;

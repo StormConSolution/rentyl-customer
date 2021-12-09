@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import moment from 'moment';
-import LabelInput from '../labelInput/LabelInput';
 import './FilterBar.scss';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { formatFilterDateForServer, ObjectUtils, StringUtils } from '../../utils/utils';
@@ -41,6 +40,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 	);
 
 	const labelInputRef = useRef<HTMLElement>(null);
+
+	// Refreshes the accommodations when this page is hit on a verified accommodation error.
+	useEffect(() => {
+		updateSearchQuery().catch(console.error);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	async function updateSearchQuery() {
 		let isFormValid = await filterForm.isValid();
@@ -127,13 +132,12 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 		);
 	}
 
-	return (
-		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
-			{renderDateRangeSelector()}
+	function mobileGuestCounter() {
+		return (
 			<TitleLabel
-				className="guestInput"
+				className="guestInputMobile"
 				title={'Guests'}
-				label={`${filterForm.get('adultCount').value} guests`}
+				label={`${filterForm.get('adultCount').value}`}
 				popoutBoxContent={
 					<Counter
 						title={'Guests'}
@@ -146,7 +150,37 @@ const FilterBar: React.FC<FilterBarProps> = (props) => {
 					/>
 				}
 				titleLabelRef={labelInputRef}
+				labelVariant="customFifteen"
+				titleMarginBottom={0}
+				popoutBoxPadding={'20px 10px'}
 			/>
+		);
+	}
+
+	return (
+		<Box className={`rsFilterBar ${props.isMobile ? 'small' : ''}`}>
+			{renderDateRangeSelector()}
+			{props.isMobile ? (
+				mobileGuestCounter()
+			) : (
+				<TitleLabel
+					className="guestInput"
+					title={'Guests'}
+					label={`${filterForm.get('adultCount').value} guests`}
+					popoutBoxContent={
+						<Counter
+							title={'Guests'}
+							className="guestsInput"
+							control={filterForm.get('adultCount')}
+							updateControl={updateFilterForm}
+							minCount={1}
+							maxCount={28}
+							labelMarginRight={84}
+						/>
+					}
+					titleLabelRef={labelInputRef}
+				/>
+			)}
 			<Button look={'containedPrimary'} className={'updateButton'} onClick={updateSearchQuery}>
 				Update
 			</Button>

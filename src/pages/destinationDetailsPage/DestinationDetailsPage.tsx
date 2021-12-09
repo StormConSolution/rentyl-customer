@@ -47,7 +47,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
-	const size = useWindowResizeChange();
+	const size = useWindowResizeChange({ small: 1160 });
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
@@ -89,7 +89,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 			let googleMap = new google.maps.Map(mapElement, {
 				center: destinationLocation,
 				zoom: 16,
-				disableDefaultUI: true
+				disableDefaultUI: false
 			});
 
 			let infoWindowContent = renderInfoWindowContent();
@@ -432,7 +432,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 							width={'clamp(300px, 100%, 766px)'}
 							height={size === 'small' ? '300px' : '430px'}
 							id={'GoogleMap'}
-						></Box>
+						/>
 					</Box>
 				</Box>
 				<hr />
