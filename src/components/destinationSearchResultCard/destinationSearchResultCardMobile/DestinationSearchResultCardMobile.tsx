@@ -7,7 +7,6 @@ import router from '../../../utils/router';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
-import { DestinationSummaryTab } from '../../tabbedDestinationSummary/TabbedDestinationSummary';
 import { StringUtils } from '../../../utils/utils';
 import DestinationDetailsMobilePopup, {
 	DestinationDetailsMobilePopupProps

@@ -12,7 +12,7 @@ import { WebUtils } from '../../utils/utils';
 import serviceFactory from '../../services/serviceFactory';
 import CountryService from '../../services/country/country.service';
 import LabelButton from '../labelButton/LabelButton';
-import LabelCheckboxV2 from '../labelCheckbox/LabelCheckboxV2';
+import LabelCheckboxFilterBar from '../labelCheckbox/LabelCheckboxFilterBar';
 import Switch from '@bit/redsky.framework.rs.switch';
 import CardInfoCard from '../cardInfoCard/CardInfoCard';
 import UserService from '../../services/user/user.service';
@@ -387,7 +387,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 		<Box className={`rsCheckOutPaymentCard ${props.isDisplayed ? '' : 'hidden'}`}>
 			<form onSubmit={submitInfo}>
 				<Box className={'fieldGroup stretchedInput'}>
-					<LabelCheckboxV2
+					<LabelCheckboxFilterBar
 						value={''}
 						isChecked={differentBillingAddress}
 						text={'Use a Different Address for Billing'}

@@ -16,9 +16,9 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import LabelRadioButton from '../../components/labelRadioButton/LabelRadioButton';
 import Counter from '../../components/counter/Counter';
 import Switch from '@bit/redsky.framework.rs.switch';
-import LabelCheckboxV2 from '../../components/labelCheckbox/LabelCheckboxV2';
+import LabelCheckboxFilterBar from '../../components/labelCheckbox/LabelCheckboxFilterBar';
 import Slider, { SliderMode } from '@bit/redsky.framework.rs.slider';
-import LabelInputV2 from '../../components/labelInput/LabelInputV2';
+import LabelInputFilterBar from '../../components/labelInput/LabelInputFilterBar';
 import globalState from '../../state/globalState';
 import { useRecoilState } from 'recoil';
 import AccommodationService from '../../services/accommodation/accommodation.service';
@@ -240,7 +240,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 
 	function renderAccommodationCheckboxes() {
 		return propertyTypes.map((item) => (
-			<LabelCheckboxV2
+			<LabelCheckboxFilterBar
 				className="listCheckboxes"
 				key={item.id}
 				value={item.id}
@@ -266,7 +266,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			<>
 				{experienceOptions.map((item) => (
 					<Box marginY={10}>
-						<LabelCheckboxV2
+						<LabelCheckboxFilterBar
 							key={item.value}
 							value={item.value}
 							text={item.label}
@@ -296,7 +296,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 			<>
 				{amenityOptions.map((item) => (
 					<Box marginY={10}>
-						<LabelCheckboxV2
+						<LabelCheckboxFilterBar
 							key={item.value}
 							value={item.value}
 							text={item.label}
@@ -428,7 +428,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 								sliderClass="priceSlider"
 							/>
 							<div className={'minMaxDiv'}>
-								<LabelInputV2
+								<LabelInputFilterBar
 									className={`priceMin ${
 										Number(filterForm.get('priceRangeMin').value) >= 1000 ? 'andGreater' : ''
 									}`}
@@ -438,7 +438,7 @@ const FilterReservationPopup: React.FC<FilterReservationPopupProps> = (props) =>
 									updateControl={sanitizePriceFieldsAndUpdate}
 								/>
 								<hr className="divider" />
-								<LabelInputV2
+								<LabelInputFilterBar
 									className={`priceMax ${
 										Number(filterForm.get('priceRangeMax').value) >= 1000 ? 'andGreater' : ''
 									}`}

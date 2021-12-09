@@ -1,0 +1,19 @@
+@import '../../themes/themes';
+.rsLabelInputFilterBar {
+	border: 0.5px solid theme-var($greyLineColor);
+	border-radius: 10px;
+	background: theme-var($primaryBackgroundColor);
+	padding: 4px 6px;
+
+	.titleLabel {
+		font-size: 14px;
+		color: theme-var($disableTextColor);
+	}
+
+	.rsInput {
+		border: unset;
+		background: theme-var($primaryBackgroundColor);
+		height: 30px;
+		padding: 0 0;
+	}
+}

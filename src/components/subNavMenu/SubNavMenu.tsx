@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './SubNavMenu.scss';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 import Button from '@bit/redsky.framework.rs.button';
 import Icon from '@bit/redsky.framework.rs.icon';
