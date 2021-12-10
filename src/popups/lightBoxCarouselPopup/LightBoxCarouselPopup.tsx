@@ -9,7 +9,6 @@ import popupController from '@bit/redsky.framework.rs.996/dist/popupController';
 import { ObjectUtils } from '../../utils/utils';
 import CarouselButtons from '../../components/carouselButtons/CarouselButtons';
 import Paper from '../../components/paper/Paper';
-import Img from '@bit/redsky.framework.rs.img';
 
 export interface TabbedCarouselPopupProps extends PopupProps {
 	tabs?: Misc.ImageTabProp[];
@@ -19,6 +18,7 @@ export interface TabbedCarouselPopupProps extends PopupProps {
 }
 
 const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
+	const IMAGE_WIDTH = 1920;
 	const imageWrapperRef = useRef<HTMLDivElement>(null);
 	const [activeTabName, setActiveTabName] = useState<string>('');
 	const [imageIndex, setImageIndex] = useState<number>(props.defaultImageIndex || 0);
@@ -31,7 +31,7 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 		else setActiveTabName(props.tabs[0].name);
 		setTimeout(() => {
 			imageWrapperRef.current!.scrollTo({ top: 0, left: 0 }); //Reset position to 0;
-		}, 300);
+		}, 500);
 	}, [props.activeTabName]);
 
 	useEffect(() => {
@@ -65,6 +65,16 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 		setImageIndex(0);
 		imageWrapperRef.current!.scrollTo({ top: 0, left: 0 });
 	}, [activeTabName, props.imageData]);
+
+	function getImageOffsetIndex(currentWidth: number) {
+		const lowerIndex = Math.floor(currentWidth / IMAGE_WIDTH);
+		const upperIndex = lowerIndex + 1;
+		const lowerWidth = lowerIndex * IMAGE_WIDTH;
+		const upperWidth = lowerWidth + IMAGE_WIDTH;
+		const isCloserToUpper = currentWidth - lowerWidth > upperWidth - currentWidth;
+
+		return isCloserToUpper ? upperIndex : lowerIndex;
+	}
 
 	function renderTabs() {
 		if (props.tabs && ObjectUtils.isArrayWithData(props.tabs)) {
@@ -115,7 +125,21 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 
 	function renderImages() {
 		return media.map((item, index) => {
-			return <Img key={item.id} src={item.urls.imageKit} alt={item.type} width={'1920px'} height={'auto'} />;
+			return (
+				<img
+					key={index}
+					src={item.urls.imageKit}
+					alt={item.type}
+					width={`${IMAGE_WIDTH}px`}
+					height={'auto'}
+					onError={() => {
+						const imageElement = document.querySelector(
+							`[src="${item.urls.imageKit}"]`
+						) as HTMLImageElement;
+						if (imageElement) imageElement.style.display = 'none';
+					}}
+				/>
+			);
 		});
 	}
 
@@ -133,6 +157,20 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 		);
 	}
 
+	function handleCarouselButtonsClick(direction: 1 | -1) {
+		let imageOffsetIndex = getImageOffsetIndex(imageWrapperRef.current!.scrollLeft) + direction;
+
+		if (imageOffsetIndex > largestImageIndex) imageOffsetIndex = 0;
+		else if (imageOffsetIndex < 0) imageOffsetIndex = largestImageIndex;
+
+		setImageIndex(imageOffsetIndex);
+		imageWrapperRef.current!.scrollTo({
+			top: 0,
+			left: imageOffsetIndex * IMAGE_WIDTH,
+			behavior: 'smooth'
+		});
+	}
+
 	function renderCarouselButtons() {
 		if (media.length === 1) return;
 		return (
@@ -140,25 +178,8 @@ const LightBoxCarouselPopup: React.FC<TabbedCarouselPopupProps> = (props) => {
 				position={'absolute'}
 				top={'-75px'}
 				right={'30px'}
-				onClickRight={() => {
-					let val = imageWrapperRef.current!.offsetWidth + imageWrapperRef.current!.scrollLeft;
-					if (imageIndex >= largestImageIndex) {
-						val = 0;
-						setImageIndex(0);
-					} else setImageIndex(imageIndex + 1);
-
-					imageWrapperRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-				}}
-				onClickLeft={() => {
-					let val = imageWrapperRef.current!.scrollLeft - imageWrapperRef.current!.offsetWidth;
-
-					if (imageIndex <= 0) {
-						val = imageWrapperRef.current!.offsetWidth * largestImageIndex;
-						setImageIndex(largestImageIndex);
-					} else setImageIndex(imageIndex - 1);
-
-					imageWrapperRef.current!.scrollTo({ top: 0, left: val, behavior: 'smooth' });
-				}}
+				onClickRight={() => handleCarouselButtonsClick(1)}
+				onClickLeft={() => handleCarouselButtonsClick(-1)}
 			/>
 		);
 	}
