@@ -220,6 +220,7 @@ const AccountAddressMobilePage: React.FC = () => {
 			}
 			newAddressObj.resetToInitialValue();
 			setAddressList(newAddressList);
+			setIsValidForm(isFormFilledOut());
 		} catch (e) {
 			rsToastify.error(WebUtils.getRsErrorMessage(e, 'Unable to save address, try again'), 'Server Error');
 		}

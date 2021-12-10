@@ -34,7 +34,6 @@
 	}
 	hr {
 		margin: 0 70px;
-		max-height: 58px;
 	}
 	.minMaxDiv {
 		display: flex;
@@ -127,7 +126,7 @@
 		}
 	}
 
-	@media screen and (max-width: 1440px) {
+	@media screen and (max-width: 1600px) {
 		hr {
 			margin: unset;
 		}
@@ -138,6 +137,20 @@
 		.rsFilterBarDropDown {
 			.rsDropdownBtn {
 				gap: 30px;
+			}
+		}
+	}
+
+	@media screen and (max-width: 1300px) {
+		.rsFilterBarDropDown {
+			max-width: 170px;
+
+			.rsDropdownBtn {
+				.rsLabel.filterTitleLabel {
+					max-width: 80px;
+					text-overflow: ellipsis;
+					overflow: hidden;
+				}
 			}
 		}
 	}
