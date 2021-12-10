@@ -98,38 +98,33 @@ const UpdatePasswordPopup: React.FC<UpdatePasswordPopupProps> = (props) => {
 					className={'closeBtn'}
 				/>
 				<div className={'popupTitle'}>
-					<Label variant={'h5'}>Update Password</Label>
+					<Label variant={'h4'}>Update Password</Label>
 				</div>
 				<div className={'popupBody'}>
-					<div className={'passwordInput'}>
-						<LabelInput
-							title={'Current Password'}
-							inputType={'password'}
-							labelVariant={'h6'}
-							control={passwordResetFormGroup.get('oldPassword')}
-							updateControl={updateForm}
-						/>
-					</div>
-
-					<div className={'passwordInput'}>
-						<LabelInput
-							title={'Create New Password'}
-							inputType={'password'}
-							labelVariant={'h6'}
-							control={passwordResetFormGroup.get('newPassword')}
-							updateControl={updateFormAndVerifyPassword}
-						/>
-					</div>
-
-					<div className={'passwordInput'}>
-						<LabelInput
-							title={'Confirm New Password'}
-							inputType={'password'}
-							labelVariant={'h6'}
-							control={passwordResetFormGroup.get('confirmPassword')}
-							updateControl={updateForm}
-						/>
-					</div>
+					<LabelInput
+						className={'passwordInput'}
+						title={'Current Password'}
+						inputType={'password'}
+						labelVariant={'h6'}
+						control={passwordResetFormGroup.get('oldPassword')}
+						updateControl={updateForm}
+					/>
+					<LabelInput
+						className={'passwordInput'}
+						title={'Create New Password'}
+						inputType={'password'}
+						labelVariant={'h6'}
+						control={passwordResetFormGroup.get('newPassword')}
+						updateControl={updateFormAndVerifyPassword}
+					/>
+					<LabelInput
+						className={'passwordInput'}
+						title={'Confirm New Password'}
+						inputType={'password'}
+						labelVariant={'h6'}
+						control={passwordResetFormGroup.get('confirmPassword')}
+						updateControl={updateForm}
+					/>
 					<div>
 						<IconLabel
 							iconImg={
@@ -167,7 +162,7 @@ const UpdatePasswordPopup: React.FC<UpdatePasswordPopupProps> = (props) => {
 
 					<LabelButton
 						look={'containedPrimary'}
-						variant={'button'}
+						variant={'buttonTwo'}
 						label={'Update'}
 						className={'yellow'}
 						disabled={!isPassingAllTests()}
