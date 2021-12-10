@@ -61,7 +61,7 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 			<div className={'loadingBarContainer'}>
 				<div className={'loadingBar'} style={{ width: renderLoadingBarPercent() }} />
 			</div>
-			<Box paddingTop={10}>
+			<Box marginTop={10}>
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'customThree'}
