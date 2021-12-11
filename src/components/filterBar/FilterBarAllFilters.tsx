@@ -44,16 +44,8 @@ const FilterBarAllFilters: React.FC<FilterBarV2Props> = () => {
 			new RsFormControl('bathroomCount', reservationFilters.bathroomCount || 0, [
 				new RsValidator(RsValidatorEnum.REQ, '# Of Bathrooms Required')
 			]),
-			new RsFormControl(
-				'priceRangeMax',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMax) || 1000,
-				[]
-			),
-			new RsFormControl(
-				'priceRangeMin',
-				StringUtils.addCommasToNumber(reservationFilters.priceRangeMin) || 1,
-				[]
-			),
+			new RsFormControl('priceRangeMax', reservationFilters.priceRangeMax || 1000, []),
+			new RsFormControl('priceRangeMin', reservationFilters.priceRangeMin || 1, []),
 			new RsFormControl('experienceIds', reservationFilters.experienceIds || [], []),
 			new RsFormControl('amenityIds', reservationFilters.amenityIds || [], []),
 			new RsFormControl('sortOrder', reservationFilters.sortOrder || 'ASC', [])
