@@ -10,17 +10,33 @@
 		padding: 63px 70px 41px;
 		background: #ffffff;
 
+		.emailAddressTitle {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 8px;
+		}
+
 		.fakeEmailInput {
 			border-radius: 5px;
 			height: 40px;
 			background: #dedede;
 			padding: 8px 10px;
 			box-sizing: border-box;
-			margin-bottom: 9px;
 			display: flex;
 			align-items: center;
+			margin-bottom: 26px;
+
 			.rsLabel {
 				color: #1e180b6e;
+			}
+		}
+
+		.nameEntries {
+			display: flex;
+			gap: 32px;
+
+			.rsLabelInput {
+				width: 100%;
 			}
 		}
 
@@ -32,7 +48,7 @@
 
 		.rsLabelInput {
 			.rsInput {
-				max-width: 280px;
+				max-width: 100%;
 			}
 		}
 
@@ -61,9 +77,15 @@
 			}
 		}
 
-		.rsLabelLink {
-			margin-left: auto;
-			margin-bottom: 32px;
+		.phonePasswordRow {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 32px;
+
+			.updatePasswordButton {
+				margin-top: 8px;
+				margin-left: 45px;
+			}
 		}
 	}
 }
@@ -86,6 +108,11 @@
 						min-width: 100%;
 					}
 				}
+			}
+
+			.updatePasswordButton {
+				margin-top: 8px;
+				margin-left: 0;
 			}
 		}
 	}
