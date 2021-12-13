@@ -43,6 +43,18 @@ body {
 	}
 }
 
+body {
+	&.bodyLock {
+		overflow-y: hidden;
+
+		.App.small {
+			position: fixed;
+			top: 0;
+			width: 100%;
+		}
+	}
+}
+
 .rsFooter {
 	margin: 0 auto;
 }

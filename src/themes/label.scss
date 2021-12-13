@@ -33,6 +33,11 @@ html {
 		line-height: 24px;
 		font-weight: $light;
 	}
+	&.h6 {
+		font-size: 18px;
+		line-height: 22px;
+		font-weight: $regular;
+	}
 	&.button {
 		color: #fcfbf8;
 		font-size: 19px;

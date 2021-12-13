@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import './AccountPersonalInfoPage.scss';
-import { Page } from '@bit/redsky.framework.rs.996';
+import { Page, popupController } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
 import UserService from '../../services/user/user.service';
 import Box from '@bit/redsky.framework.rs.996/dist/box/Box';
@@ -18,7 +18,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Paper from '../../components/paper/Paper';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
-import LabelLink from '../../components/labelLink/LabelLink';
+import UpdatePasswordPopup, { UpdatePasswordPopupProps } from '../../popups/updatePasswordPopup/UpdatePasswordPopup';
 
 interface AccountPersonalInfoPageProps {}
 
@@ -87,18 +87,15 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 50}>
 						Account Info
 					</Label>
-					<Label variant={size === 'small' ? 'customSixteen' : 'body5'} mb={9}>
-						Email Address
-					</Label>
+					<div className={'emailAddressTitle'}>
+						<Label variant={size === 'small' ? 'customSixteen' : 'body5'}>Email Address</Label>
+						<Label variant={'customFourteen'}>Please contact support to update your email.</Label>
+					</div>
 					<Box className={'fakeEmailInput'}>
 						<Label>{user.primaryEmail}</Label>
 					</Box>
-					<Label variant={'customFourteen'} mb={26}>
-						Please contact support to update your email.
-					</Label>
 					<Box
-						display={'flex'}
-						justifyContent={'space-between'}
+						className={'nameEntries'}
 						mb={size === 'small' ? 0 : 26}
 						flexDirection={size === 'small' ? 'column' : ''}
 					>
@@ -118,20 +115,35 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						/>
 					</Box>
 
-					<LabelInput
-						className={'phoneInput'}
-						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
-						inputType={'tel'}
-						title={'Phone'}
-						isPhoneInput
-						onChange={(value) => {
-							let updatedPhone = updateUserForm.get('phone');
-							updatedPhone.value = value;
-							setUpdateUserForm(updateUserForm.clone().update(updatedPhone));
-						}}
-						initialValue={updateUserForm.get('phone').value.toString()}
-					/>
-					<LabelLink path={'/'} label={'Update my password'} variant={'customThirteen'} />
+					<Box
+						className={'phonePasswordRow'}
+						mb={size === 'small' ? 0 : 26}
+						flexDirection={size === 'small' ? 'column' : ''}
+					>
+						<LabelInput
+							className={'phoneInput'}
+							labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+							inputType={'tel'}
+							title={'Phone'}
+							isPhoneInput
+							onChange={(value) => {
+								let updatedPhone = updateUserForm.get('phone');
+								updatedPhone.value = value;
+								setUpdateUserForm(updateUserForm.clone().update(updatedPhone));
+							}}
+							initialValue={updateUserForm.get('phone').value.toString()}
+						/>
+						<Box>
+							<Label variant={size === 'small' ? 'customSixteen' : 'body5'}>Password</Label>
+							<LabelButton
+								className={'updatePasswordButton'}
+								onClick={() => popupController.open<UpdatePasswordPopupProps>(UpdatePasswordPopup)}
+								variant={'customThirteen'}
+								label={'Update my password'}
+								look={'none'}
+							/>
+						</Box>
+					</Box>
 					<LabelButton
 						className={'saveBtn'}
 						look={'containedPrimary'}
