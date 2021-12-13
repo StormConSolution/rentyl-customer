@@ -317,14 +317,50 @@ declare namespace Api {
 
 	export namespace Brand {
 		export namespace Req {
+			export interface Get {
+				id: number;
+			}
+
 			export interface Location {
-				brandId: number;
+				id: number;
+			}
+
+			export interface Update extends Partial<Omit<Model.Brand, 'createdOn' | 'externalId' | 'modifiedOn'>> {
+				id: number;
+			}
+
+			export namespace Location {
+				export interface Get {
+					id: number;
+				}
+				export interface Update extends Partial<Omit<Model.BrandLocation, 'brandId' | 'externalId'>> {
+					id: number;
+				}
 			}
 		}
 		export namespace Res {
-			export interface Location extends Model.BrandLocation {}
-
+			export interface brandLocation {
+				id: number;
+				name: string;
+				loyaltyStatus: string;
+				city: string;
+				state: string;
+			}
 			export interface Get extends Model.Brand {}
+			export interface Details extends Get {
+				companyName: string;
+				locations: brandLocation[];
+				pointsPerDollar: number;
+				costPerPoint: number;
+			}
+			export interface Location extends Model.BrandLocation {}
+			export namespace Location {
+				export interface Get extends Model.BrandLocation {}
+				export interface Details extends Model.BrandLocation {
+					pointsPerDollar: number;
+					costPerPoint: number;
+				}
+			}
 		}
 	}
 
@@ -420,6 +456,10 @@ declare namespace Api {
 				newAdminPassword: string;
 			}
 
+			export interface Details {
+				id: number;
+			}
+
 			export interface Get {
 				id?: number;
 				ids?: number[];
@@ -448,6 +488,8 @@ declare namespace Api {
 			export interface Update extends Model.Company {}
 
 			export interface Get extends Model.Company {}
+
+			export interface Details extends Get {}
 
 			export interface GetCompanyAndClientVariables
 				extends Pick<Model.Company, 'id' | 'name' | 'squareLogoUrl' | 'wideLogoUrl'> {
@@ -571,6 +613,7 @@ declare namespace Api {
 				heroUrl?: string;
 				mediaIds?: MediaDetails[];
 				isActive?: 0 | 1;
+				loyaltyStatus?: Model.LoyaltyStatus;
 			}
 
 			export interface AccommodationType {
@@ -629,6 +672,8 @@ declare namespace Api {
 					| 'country'
 					| 'logoUrl'
 					| 'heroUrl'
+					| 'loyaltyStatus'
+					| 'isActive'
 				> {
 				media: Media[];
 				latitude?: number;

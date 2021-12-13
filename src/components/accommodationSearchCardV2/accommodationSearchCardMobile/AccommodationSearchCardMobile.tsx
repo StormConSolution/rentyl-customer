@@ -13,7 +13,7 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import LabelButton from '../../labelButton/LabelButton';
 import RateCodeCard from '../../rateCodeCard/RateCodeCard';
 import router from '../../../utils/router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
 import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
 
@@ -24,11 +24,14 @@ interface AccommodationSearchCardMobileProps {
 	showInfoIcon?: boolean;
 	onClickInfoIcon?: (accommodationId: number) => void;
 	pointsEarnable: number;
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps> = (props) => {
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
-	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [displayLowestPrice, setDisplayLowestPrice] = useState<Misc.Pricing>();
 	const [accommodationPrices, setAccommodationPrices] = useState<Misc.Pricing[]>([]);
@@ -58,7 +61,10 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 	}, [props.accommodation]);
 
 	function onBookNow() {
-		let data: any = { ...reservationFilters };
+		if (props.loyaltyStatus !== 'ACTIVE') {
+			setReservationFilters({ ...reservationFilters, redeemPoints: false });
+		}
+		let data: any = { ...reservationFilters, redeemPoints: props.loyaltyStatus === 'ACTIVE' };
 		let newRoom: Misc.StayParams = {
 			uuid: Date.now(),
 			adults: data.adultCount,
@@ -104,7 +110,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 	}
 
 	function renderPointsOrCash() {
-		if (reservationFilters.redeemPoints) {
+		if (reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE') {
 			return (
 				<Box className={'pricePerNight'}>
 					<Label variant={'accommodationModalCustomEleven'} className={'yellowText'}>
@@ -166,9 +172,11 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 					{displayLowestPrice?.rate.description ? displayLowestPrice.rate.description : 'Promotional Rate'}
 				</Label>
 				{renderPointsOrCash()}
-				<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
-					You will earn {props.pointsEarnable} points for this stay
-				</Label>
+				{!reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE' && (
+					<Label variant={'accommodationModalCustomTwelve'} className={'earnText'}>
+						You will earn {props.pointsEarnable} points for this stay
+					</Label>
+				)}
 				<Box className={'buttonContainer'}>
 					<LabelButton
 						look={'containedPrimary'}
@@ -190,6 +198,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 									destinationId={props.destinationId}
 									accommodationId={props.accommodation.id}
 									pointsEarnable={props.pointsEarnable}
+									loyaltyStatus={props.loyaltyStatus}
 								/>
 							);
 						})}

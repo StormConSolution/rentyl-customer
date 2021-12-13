@@ -4,7 +4,7 @@ import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../utils/utils';
 import LabelButton from '../labelButton/LabelButton';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import globalState from '../../state/globalState';
 import router from '../../utils/router';
 import AccommodationsPopup from '../../popups/accommodationsPopup/AccommodationsPopup';
@@ -13,13 +13,19 @@ interface PointsOrCentsBoxProps {
 	priceObj: Misc.Pricing;
 	accommodationId: number;
 	destinationId: number;
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
-	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
+	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
+		globalState.reservationFilters
+	);
 
 	function onBookNow() {
-		let data: any = { ...reservationFilters };
+		if (props.loyaltyStatus !== 'ACTIVE') {
+			setReservationFilters({ ...reservationFilters, redeemPoints: false });
+		}
+		let data: any = { ...reservationFilters, redeemPoints: props.loyaltyStatus === 'ACTIVE' };
 		let newRoom: Misc.StayParams = {
 			uuid: Date.now(),
 			adults: data.adultCount,
@@ -36,7 +42,7 @@ const PointsOrCentsBox: React.FC<PointsOrCentsBoxProps> = (props) => {
 	}
 
 	function renderPriceOrPoints() {
-		if (reservationFilters.redeemPoints) {
+		if (reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE') {
 			return (
 				<Box className={'pointsContainer'}>
 					<Label variant={'accommodationModalCustomSix'}>from</Label>

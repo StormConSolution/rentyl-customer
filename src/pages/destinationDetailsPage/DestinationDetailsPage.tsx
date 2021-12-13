@@ -71,6 +71,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [destinationAvailability, setDestinationAvailability] = useState<Api.Destination.Res.Availability>();
 	const [totalResults, setTotalResults] = useState<number>(0);
+	const [loyaltyStatus, setLoyaltyStatus] = useState<Model.LoyaltyStatus>('PENDING');
 	const [page, setPage] = useState<number>(1);
 	const perPage = 10;
 
@@ -157,6 +158,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 					reservationFilters.endDate
 				);
 				setDestinationDetails(dest);
+				setLoyaltyStatus(dest.loyaltyStatus);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
@@ -337,8 +339,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	function renderPointsOrCash() {
 		if (!reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPrice) {
 			return `$${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}`;
-		} else if (reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPoints) {
+		} else if (
+			reservationFilters.redeemPoints &&
+			destinationAvailability?.minAccommodationPoints &&
+			loyaltyStatus === 'ACTIVE'
+		) {
 			return `${StringUtils.addCommasToNumber(destinationAvailability.minAccommodationPoints)}pts`;
+		} else if (destinationAvailability) {
+			return `$${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}`;
 		}
 	}
 

@@ -21,13 +21,14 @@ interface DestinationSearchResultCardMobileProps {
 	onRemoveCompareClick?: () => void;
 	pointsEarnable: number;
 	availabilityStayList: Api.Accommodation.Res.Availability[];
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
 
 	function renderPricePerNight() {
-		if (reservationFilters.redeemPoints) {
+		if (reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE') {
 			return (
 				<Box display={'flex'}>
 					<Label variant={'boldCaption1'} className={'yellowText'}>
@@ -95,7 +96,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					</Label>
 				</Box>
 				<Box display={'flex'} justifyContent={'flex-end'}>
-					{!reservationFilters.redeemPoints && (
+					{!reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE' && (
 						<Label className={'earnText'} variant={'italicBold'}>
 							You could earn from {props.pointsEarnable} points for this stay
 						</Label>

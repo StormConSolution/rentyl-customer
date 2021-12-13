@@ -25,6 +25,7 @@ interface AccommodationSearchCardResponsiveProps {
 	showInfoIcon?: boolean;
 	onClickInfoIcon?: (accommodationId: number) => void;
 	pointsEarnable: number;
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardResponsiveProps> = (props) => {
@@ -164,6 +165,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 								priceObj={displayLowestPrice}
 								accommodationId={props.accommodation.id}
 								destinationId={props.destinationId}
+								loyaltyStatus={props.loyaltyStatus}
 							/>
 						)}
 					</Box>
@@ -183,6 +185,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}
 										pointsEarnable={props.pointsEarnable}
+										loyaltyStatus={props.loyaltyStatus}
 									/>
 								);
 							})}

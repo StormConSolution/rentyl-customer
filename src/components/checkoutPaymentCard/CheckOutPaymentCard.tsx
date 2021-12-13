@@ -19,6 +19,8 @@ import UserService from '../../services/user/user.service';
 import { OptionType } from '@bit/redsky.framework.rs.select';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import Label from '@bit/redsky.framework.rs.label';
+import router from '../../utils/router';
+import DestinationService from '../../services/destination/destination.service';
 
 export interface CheckOutPaymentCardProps {
 	checkoutUserState: [Misc.Checkout, React.Dispatch<React.SetStateAction<Misc.Checkout>>];
@@ -29,8 +31,12 @@ export interface CheckOutPaymentCardProps {
 
 const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	const size = useWindowResizeChange();
+	const params = router.getPageUrlParams<{ destinationId: number }>([
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' }
+	]);
 	const [checkoutUser, setCheckoutUser] = props.checkoutUserState;
 	const user = useRecoilValue<Api.User.Res.Get | undefined>(globalState.user);
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
@@ -48,7 +54,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	const [stateList, setStateList] = useState<Misc.OptionType[]>([]);
 	const [countryList, setCountryList] = useState<OptionType[]>([]);
 	const [phoneError, setPhoneError] = useState<boolean>(false);
-
+	const [loyaltyStatus, setLoyaltyStatus] = useState<Model.LoyaltyStatus>('PENDING');
 	const [paymentForm, setPaymentForm] = useState<RsFormGroup>(getPaymentForm);
 
 	function getPaymentForm() {
@@ -126,13 +132,24 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 	}, [checkoutUser, differentBillingAddress]);
 
 	useEffect(() => {
-		if (!canPayWithPoints() && reservationFilters.redeemPoints) {
-			setReservationFilters({
-				...reservationFilters,
-				redeemPoints: false
-			});
-			rsToastify.error('You do not have enough points required for this purchase.', 'Insufficient Points');
+		async function getDestination() {
+			const res = await destinationService.getDestinationById({ id: params.destinationId });
+			setLoyaltyStatus(res.loyaltyStatus);
+			if (!canPayWithPoints() && reservationFilters.redeemPoints) {
+				setReservationFilters({
+					...reservationFilters,
+					redeemPoints: false
+				});
+				rsToastify.error('You do not have enough points required for this purchase.', 'Insufficient Points');
+			}
+			if (res.loyaltyStatus !== 'ACTIVE') {
+				setReservationFilters({
+					...reservationFilters,
+					redeemPoints: false
+				});
+			}
 		}
+		getDestination().catch(console.error);
 	}, []);
 
 	function isPayingWithPoints() {
@@ -397,7 +414,7 @@ const CheckOutPaymentCard: React.FC<CheckOutPaymentCardProps> = (props) => {
 				</Box>
 				{renderBillingInfo()}
 
-				{canPayWithPoints() && (
+				{canPayWithPoints() && loyaltyStatus === 'ACTIVE' && (
 					<Box className={'fieldGroup stretchedInput leftSide toggleContainer'}>
 						<Switch
 							className={'toggleButton checkoutToggle'}
