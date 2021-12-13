@@ -59,7 +59,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 		return sections.map((section: FooterSection, index) => {
 			return (
 				<Box className={'footerSection'} key={index} display={'flex'} flexDirection={'column'}>
-					<Label variant={'h3'} mb={7}>
+					<Label variant={'reservationDetailsCustomOne'} mb={7}>
 						{section.title}
 					</Label>
 					{renderLinks(section.links)}
@@ -74,7 +74,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 				{!user && <SignupBanner />}
 				<Box className={'footerNavigation'}>
 					<Box className={'companyFooterLogo'}>
-						<Link path={`https://rentylresorts.com/`} external target={'blank'}>
+						<Link path={`https://rentylresorts.com/`} external target={'blank'} className="logoContainer">
 							<img src={company.wideLogoUrl} alt={company.name} />
 						</Link>
 					</Box>
