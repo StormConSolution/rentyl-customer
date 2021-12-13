@@ -6,6 +6,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import LoyaltyTierPopup from '../../../popups/loyaltyTierPopup/LoyaltyTierPopup';
+import { useState } from 'react';
 import Icon from '@bit/redsky.framework.rs.icon';
 
 interface UserBasicInfoPaperMobileProps {
@@ -14,6 +15,7 @@ interface UserBasicInfoPaperMobileProps {
 }
 
 const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props) => {
+	const [visibilityToggle, setVisibilityToggle] = useState<boolean>(true);
 	function renderLoadingBarPercent(): string {
 		return `${Math.min(
 			100,
@@ -23,6 +25,15 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 			)
 		)}%`;
 	}
+	function replaceLettersWithStars(accountNumber: any): string {
+		let asteriskString = '';
+		let accountNumberLength = accountNumber.toString().length;
+		for (let i = 0; i < accountNumberLength; i++) {
+			asteriskString += '*';
+		}
+		return asteriskString;
+	}
+
 	return (
 		<Paper className={'rsUserBasicInfoPaperMobile'} boxShadow borderRadius={'20px'}>
 			<Label variant={'customOne'} mr={3}>
@@ -34,17 +45,19 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 			<Box display={'flex'} alignItems={'center'} mb={25}>
 				<img src={`../../images/tierIcons/${props.userData.tierTitle || 'Bronze'}.png`} alt={'Tier Badge'} />
 				<Box ml={15}>
-					<Label variant={'customThree'}>{props.userData.tierTitle || ''}</Label>
-					<Label variant={'customThree'}>
-						Account {props.userData.id}
+					<Label variant={'customThree'}>{props.userData.tierTitle || 'Bronze'}</Label>
+					<Box display={'flex'} alignItems={'center'}>
+						<Label variant={'customThree'} marginRight={'16px'}>
+							Account {visibilityToggle ? props.userData.id : replaceLettersWithStars(props.userData.id)}
+						</Label>
 						<Icon
-							className={'visibilityIcon'}
-							iconImg={'icon-solid-question-circle'}
+							iconImg={visibilityToggle ? 'icon-visibility-false' : 'icon-visibility-true'}
 							onClick={() => {
-								alert('This will hide your account number');
+								setVisibilityToggle(!visibilityToggle);
 							}}
-						></Icon>
-					</Label>
+							cursorPointer
+						/>
+					</Box>
 				</Box>
 			</Box>
 			<Label variant={'customFive'} mb={8}>

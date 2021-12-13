@@ -7,6 +7,7 @@ import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import LoyaltyTierPopup from '../../../popups/loyaltyTierPopup/LoyaltyTierPopup';
 import Icon from '@bit/redsky.framework.rs.icon';
+import { useState } from 'react';
 
 interface UserBasicInfoPaperResponsiveProps {
 	userData: Api.User.Res.Detail;
@@ -14,6 +15,7 @@ interface UserBasicInfoPaperResponsiveProps {
 }
 
 const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> = (props) => {
+	const [visibilityToggle, setVisibilityToggle] = useState<boolean>(true);
 	function renderLoadingBarPercent(): string {
 		return `${Math.min(
 			100,
@@ -22,6 +24,14 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					(props.userData.nextTierThreshold ? props.userData.nextTierThreshold / 100 : 100)
 			)
 		)}%`;
+	}
+	function replaceLettersWithStars(accountNumber: any): string {
+		let asteriskString = '';
+		let accountNumberLength = accountNumber.toString().length;
+		for (let i = 0; i < accountNumberLength; i++) {
+			asteriskString += '*';
+		}
+		return asteriskString;
 	}
 	return (
 		<Paper className={'rsUserBasicInfoPaperResponsive'} boxShadow borderRadius={'20px'}>
@@ -55,16 +65,19 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					/>
 					<Box ml={15}>
 						<Label variant={'customThree'}>{props.userData.tierTitle || 'Bronze'}</Label>
-						<Label variant={'customThree'}>
-							Account {props.userData.id}
+						<Box display={'flex'} alignItems={'center'}>
+							<Label variant={'customThree'} marginRight={'16px'}>
+								Account{' '}
+								{visibilityToggle ? props.userData.id : replaceLettersWithStars(props.userData.id)}
+							</Label>
 							<Icon
-								className={'visibilityIcon'}
-								iconImg={'icon-solid-question-circle'}
+								iconImg={visibilityToggle ? 'icon-visibility-false' : 'icon-visibility-true'}
 								onClick={() => {
-									alert('This will hide your account number');
+									setVisibilityToggle(!visibilityToggle);
 								}}
-							></Icon>
-						</Label>
+								cursorPointer
+							/>
+						</Box>
 					</Box>
 				</Box>
 				<Box textAlign={'end'}>
