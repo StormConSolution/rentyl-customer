@@ -18,6 +18,10 @@ import SpinningLoaderPopup, { SpinningLoaderPopupProps } from '../spinningLoader
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 import LabelButton from '../../components/labelButton/LabelButton';
 
+interface ISignUpForm extends Api.User.Req.Create {
+	confirmPassword?: string;
+}
+
 export interface SignupPopupProps extends PopupProps {
 	primaryEmail?: string;
 	password?: string;
@@ -74,18 +78,15 @@ const SignupPopup: React.FC<SignupPopupProps> = (props) => {
 			setErrorMessage('Missing information');
 			return;
 		}
+		let createUserModel: ISignUpForm = signUpForm.toModel();
+		delete createUserModel.confirmPassword;
 		try {
-			popupController.open<SpinningLoaderPopupProps>(SpinningLoaderPopup, {});
-			const userToCreate: Api.Customer.Req.Create = {
-				name: `${signUpForm.get('firstName').value} ${signUpForm.get('lastName').value}`,
-				password: signUpForm.get('password').value as string,
-				primaryEmail: signUpForm.get('primaryEmail').value as string
-			};
-			await userService.createNewCustomer(userToCreate);
+			popupController.open(SpinningLoaderPopup);
+			await userService.createNewUser(createUserModel);
 			rsToastify.success('Account created successfully', 'Success!');
 			popupController.close(SignupPopup);
 			popupController.close(SpinningLoaderPopup);
-			popupController.open<SigninPopupProps>(SigninPopup, {});
+			popupController.open(SigninPopup);
 		} catch (e) {
 			popupController.close(SpinningLoaderPopup);
 			setErrorMessage(WebUtils.getRsErrorMessage(e, 'Unexpected Server error'));
