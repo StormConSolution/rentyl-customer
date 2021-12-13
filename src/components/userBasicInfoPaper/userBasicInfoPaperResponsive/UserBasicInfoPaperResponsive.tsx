@@ -6,6 +6,7 @@ import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import LoyaltyTierPopup from '../../../popups/loyaltyTierPopup/LoyaltyTierPopup';
+import Icon from '@bit/redsky.framework.rs.icon';
 
 interface UserBasicInfoPaperResponsiveProps {
 	userData: Api.User.Res.Detail;
@@ -33,7 +34,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 				</Box>
 				<Box display={'flex'}>
 					<Label variant={'customThree'} color={'#707070'}>
-						not you?
+						Not you?
 					</Label>
 					<Label
 						ml={3}
@@ -54,7 +55,16 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					/>
 					<Box ml={15}>
 						<Label variant={'customThree'}>{props.userData.tierTitle || 'Bronze'}</Label>
-						<Label variant={'customThree'}>Account {props.userData.id}</Label>
+						<Label variant={'customThree'}>
+							Account {props.userData.id}
+							<Icon
+								className={'visibilityIcon'}
+								iconImg={'icon-solid-question-circle'}
+								onClick={() => {
+									alert('This will hide your account number');
+								}}
+							></Icon>
+						</Label>
 					</Box>
 				</Box>
 				<Box textAlign={'end'}>
@@ -94,7 +104,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 				<div className={'loyaltyTierButtonContainer'}>
 					<LabelButton
 						look={'containedPrimary'}
-						variant={'customTwelve'}
+						variant={'customTwentyThree'}
 						label={'See Loyalty Tiers'}
 						onClick={() => {
 							popupController.open(LoyaltyTierPopup);

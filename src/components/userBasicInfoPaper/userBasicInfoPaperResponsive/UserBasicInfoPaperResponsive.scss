@@ -1,6 +1,9 @@
 @import '../../../themes/themes';
 .rsUserBasicInfoPaperResponsive {
 	padding: 24px 26px;
+	.visibilityIcon {
+		padding-left: 16px;
+	}
 	.loadingBarContainer {
 		height: 35px;
 		border-radius: 20px;
@@ -20,7 +23,7 @@
 				padding: 16px 46px;
 				box-sizing: border-box;
 				.rsLabel {
-					color: #2c3c60;
+					color: #222222;
 				}
 				&:hover {
 					background-color: theme-var($yellowTextColor);
