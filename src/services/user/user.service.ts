@@ -48,9 +48,9 @@ export default class UserService extends Service {
 		return response.data.data;
 	}
 
-	async createNewCustomer(customer: Api.Customer.Req.Create): Promise<Api.Customer.Res.Create> {
-		customer.password = SparkMD5.hash(customer.password);
-		let response = await http.post<RsResponseData<Api.Customer.Res.Create>>('customer', customer);
+	async createNewUser(user: Api.User.Req.Create): Promise<Api.User.Res.Detail> {
+		user.password = SparkMD5.hash(user.password);
+		let response = await http.post<RsResponseData<Api.User.Res.Detail>>('user', user);
 		return response.data.data;
 	}
 
