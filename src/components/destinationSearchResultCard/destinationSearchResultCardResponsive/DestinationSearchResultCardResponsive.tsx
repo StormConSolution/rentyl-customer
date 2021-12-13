@@ -147,7 +147,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					onClick={() => {
 						router
 							.navigate(
-								`/destination/details?di=${props.destinationObj.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}`
+								`/destination/details?di=${props.destinationObj.id}&startDate=${reservationFilters.startDate}&endDate=${reservationFilters.endDate}&guests=${reservationFilters.adultCount}`
 							)
 							.catch(console.error);
 						setReservationFilters({ ...reservationFilters, destinationId: props.destinationObj.id });

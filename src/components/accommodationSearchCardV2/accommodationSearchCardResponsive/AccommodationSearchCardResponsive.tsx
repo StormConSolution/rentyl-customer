@@ -10,7 +10,6 @@ import AccommodationService from '../../../services/accommodation/accommodation.
 import LoadingPage from '../../../pages/loadingPage/LoadingPage';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
 import LightBoxCarouselPopup, {
@@ -34,6 +33,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [displayLowestPrice, setDisplayLowestPrice] = useState<Misc.Pricing>();
 	const [accommodationPrices, setAccommodationPrices] = useState<Misc.Pricing[]>([]);
+	const [isOpen, setIsOpen] = useState<boolean>(props.openAccordion || false);
 
 	useEffect(() => {
 		async function getAccommodationDetails() {
@@ -92,6 +92,14 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 				}}
 			/>
 		);
+	}
+
+	function renderAccordionTitle() {
+		if (isOpen) {
+			return 'View less rates';
+		} else {
+			return 'View more rates';
+		}
 	}
 
 	return !props.accommodation ? (
@@ -162,7 +170,11 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 				</Box>
 				<Box className={'accordionContainer'}>
 					{ObjectUtils.isArrayWithData(accommodationPrices) && (
-						<Accordion title={'View more rates'} isOpen={props.openAccordion}>
+						<Accordion
+							title={renderAccordionTitle()}
+							isOpen={props.openAccordion}
+							onClick={() => setIsOpen(!isOpen)}
+						>
 							{accommodationPrices.map((priceObj) => {
 								return (
 									<RateCodeCard
