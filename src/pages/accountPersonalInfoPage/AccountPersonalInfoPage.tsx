@@ -84,12 +84,12 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 			<SubNavMenu title={'Personal Information'} />
 			<div className={'rs-page-content-wrapper'}>
 				<Paper borderRadius={'20px'} boxShadow>
-					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 50}>
+					<Label variant={'customTwentyFive'} mb={size === 'small' ? 25 : 50}>
 						Account Info
 					</Label>
 					<div className={'emailAddressTitle'}>
-						<Label variant={size === 'small' ? 'customSixteen' : 'body5'}>Email Address</Label>
-						<Label variant={'customFourteen'}>Please contact support to update your email.</Label>
+						<Label variant={size === 'small' ? 'customTwentyFour' : 'body5'}>Email Address</Label>
+						<Label variant={'customTwentySixSpecific'}>Please contact support to update your email.</Label>
 					</div>
 					<Box className={'fakeEmailInput'}>
 						<Label>{user.primaryEmail}</Label>
@@ -100,14 +100,14 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 						flexDirection={size === 'small' ? 'column' : ''}
 					>
 						<LabelInput
-							labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+							labelVariant={size === 'small' ? 'customTwentyFour' : 'body5'}
 							title={'First Name'}
 							inputType={'text'}
 							control={updateUserForm.get('firstName')}
 							updateControl={updateUserObjForm}
 						/>
 						<LabelInput
-							labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+							labelVariant={size === 'small' ? 'customTwentyFour' : 'body5'}
 							title={'Last Name'}
 							inputType={'text'}
 							control={updateUserForm.get('lastName')}
@@ -122,7 +122,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 					>
 						<LabelInput
 							className={'phoneInput'}
-							labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+							labelVariant={size === 'small' ? 'customTwentyFour' : 'body5'}
 							inputType={'tel'}
 							title={'Phone'}
 							isPhoneInput
@@ -134,11 +134,11 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 							initialValue={updateUserForm.get('phone').value.toString()}
 						/>
 						<Box>
-							<Label variant={size === 'small' ? 'customSixteen' : 'body5'}>Password</Label>
+							<Label variant={size === 'small' ? 'customTwentyFour' : 'body5'}>Password</Label>
 							<LabelButton
 								className={'updatePasswordButton'}
 								onClick={() => popupController.open<UpdatePasswordPopupProps>(UpdatePasswordPopup)}
-								variant={'customThirteen'}
+								variant={'customTwentyThree'}
 								label={'Update my password'}
 								look={'none'}
 							/>
@@ -147,7 +147,7 @@ const AccountPersonalInfoPage: React.FC<AccountPersonalInfoPageProps> = () => {
 					<LabelButton
 						className={'saveBtn'}
 						look={'containedPrimary'}
-						variant={'customTwelve'}
+						variant={'customTwentyFive'}
 						label={'Save'}
 						disabled={!isUserFormValid}
 						onClick={saveAccountInfo}

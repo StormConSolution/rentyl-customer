@@ -100,7 +100,6 @@ const LabelInput: React.FC<LabelInputProps> = (props) => {
 			) : (
 				<PhoneInput
 					inputClass={'phoneInput'}
-					country={'us'}
 					onChange={(value) => {
 						if (props.onChange) props.onChange(value);
 					}}
