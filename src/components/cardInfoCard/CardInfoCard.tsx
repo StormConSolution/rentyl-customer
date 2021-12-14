@@ -49,7 +49,7 @@ const CardInfoCard: React.FC<CardInfoCardProps> = (props) => {
 			<Box className={'cardBody'}>
 				<Box className={'cardInfoGroup stretchedInput'}>
 					<div ref={numberRef} id={'spreedly-number'}>
-						<Label id={'Number'} variant={'caption'} mb={10}>
+						<Label id={'Number'} variant={'h5'} mb={10}>
 							Card number
 						</Label>
 					</div>
@@ -72,7 +72,7 @@ const CardInfoCard: React.FC<CardInfoCardProps> = (props) => {
 						updateControl={updateExpiration}
 					/>
 					<div ref={cvvRef} id={'spreedly-cvv'}>
-						<Label id={'Cvv'} variant={'caption'} mb={10}>
+						<Label id={'Cvv'} variant={'h5'} mb={6}>
 							CVC{' '}
 							<span title={'The 3 digits on the back of your credit card.'}>
 								<Icon className={'helpIcon'} iconImg={'icon-solid-question-circle'} size={21} />

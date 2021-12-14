@@ -9,6 +9,7 @@ import { useRecoilValue } from 'recoil';
 import globalState from '../../state/globalState';
 import { isRouteUnauthorized } from '../../utils/utils';
 import SignupBanner from '../signupBanner/SignupBanner';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 interface FooterLink {
 	text: string;
@@ -27,6 +28,7 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = (props) => {
 	const company = useRecoilValue<Api.Company.Res.GetCompanyAndClientVariables>(globalState.company);
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
+	const size = useWindowResizeChange();
 	useEffect(() => {
 		let id = router.subscribeToBeforeRouterNavigate(() => {
 			setTimeout(() => {
@@ -59,7 +61,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 		return sections.map((section: FooterSection, index) => {
 			return (
 				<Box className={'footerSection'} key={index} display={'flex'} flexDirection={'column'}>
-					<Label variant={'h3'} mb={7}>
+					<Label variant={size === 'small' ? 'reservationDetailsCustomOne' : 'h4'} mb={7}>
 						{section.title}
 					</Label>
 					{renderLinks(section.links)}
@@ -74,7 +76,7 @@ const Footer: React.FC<FooterProps> = (props) => {
 				{!user && <SignupBanner />}
 				<Box className={'footerNavigation'}>
 					<Box className={'companyFooterLogo'}>
-						<Link path={`https://rentylresorts.com/`} external target={'blank'}>
+						<Link path={`https://rentylresorts.com/`} external target={'blank'} className="logoContainer">
 							<img src={company.wideLogoUrl} alt={company.name} />
 						</Link>
 					</Box>
