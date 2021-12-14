@@ -35,6 +35,7 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [displayLowestPrice, setDisplayLowestPrice] = useState<Misc.Pricing>();
 	const [accommodationPrices, setAccommodationPrices] = useState<Misc.Pricing[]>([]);
+	const [isOpen, setIsOpen] = useState<boolean>(props.openAccordion || false);
 
 	useEffect(() => {
 		async function getAccommodationDetails() {
@@ -189,7 +190,11 @@ const AccommodationSearchCardMobile: React.FC<AccommodationSearchCardMobileProps
 			</Box>
 			<Box className={'accordionContainer'}>
 				{ObjectUtils.isArrayWithData(accommodationPrices) && (
-					<Accordion title={'View more rates'} isOpen={props.openAccordion}>
+					<Accordion
+						title={isOpen ? 'View less rates' : 'View more rates'}
+						isOpen={props.openAccordion}
+						onClick={() => setIsOpen(!isOpen)}
+					>
 						{accommodationPrices.map((priceObj) => {
 							return (
 								<RateCodeCard

@@ -95,14 +95,6 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 		);
 	}
 
-	function renderAccordionTitle() {
-		if (isOpen) {
-			return 'View less rates';
-		} else {
-			return 'View more rates';
-		}
-	}
-
 	return !props.accommodation ? (
 		<LoadingPage />
 	) : (
@@ -173,7 +165,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 				<Box className={'accordionContainer'}>
 					{ObjectUtils.isArrayWithData(accommodationPrices) && (
 						<Accordion
-							title={renderAccordionTitle()}
+							title={isOpen ? 'View less rates' : 'View more rates'}
 							isOpen={props.openAccordion}
 							onClick={() => setIsOpen(!isOpen)}
 						>
