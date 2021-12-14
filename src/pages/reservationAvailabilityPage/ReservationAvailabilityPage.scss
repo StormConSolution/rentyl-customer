@@ -75,6 +75,8 @@
 .small {
 	.rsReservationAvailabilityPage {
 		.rs-page-content-wrapper {
+			min-height: 850px;
+
 			.searchResultsWrapper {
 				padding: 30px;
 				display: grid;
