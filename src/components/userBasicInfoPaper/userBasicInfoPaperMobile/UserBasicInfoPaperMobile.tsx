@@ -26,12 +26,8 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 		)}%`;
 	}
 	function replaceLettersWithStars(accountNumber: any): string {
-		let asteriskString = '';
-		let accountNumberLength = accountNumber.toString().length;
-		for (let i = 0; i < accountNumberLength; i++) {
-			asteriskString += '*';
-		}
-		return asteriskString;
+		let lastFour = accountNumber.slice(-4);
+		return accountNumber.replace(/\d/g, '*').slice(0, -4) + lastFour;
 	}
 
 	return (
@@ -48,7 +44,10 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 					<Label variant={'customThree'}>{props.userData.tierTitle || 'Bronze'}</Label>
 					<Box display={'flex'} alignItems={'center'}>
 						<Label variant={'customThree'} marginRight={'16px'}>
-							Account {visibilityToggle ? props.userData.id : replaceLettersWithStars(props.userData.id)}
+							Account{' '}
+							{visibilityToggle
+								? props.userData.accountNumber
+								: replaceLettersWithStars(props.userData.accountNumber)}
 						</Label>
 						<Icon
 							iconImg={visibilityToggle ? 'icon-visibility-false' : 'icon-visibility-true'}
@@ -95,10 +94,10 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 					}}
 				/>
 				<Box display={'flex'} ml={10}>
-					<Label variant={'customThree'} color={'#707070'} ml={'auto'}>
+					<Label variant={'customTwentyFive'} color={'#707070'} ml={'auto'}>
 						Not you?
 					</Label>
-					<Label ml={3} variant={'customFour'} color={'#2C3C60'} onClick={props.onLogOut}>
+					<Label ml={3} variant={'customTwentyFour'} color={'#2C3C60'} onClick={props.onLogOut}>
 						Log Out
 					</Label>
 				</Box>

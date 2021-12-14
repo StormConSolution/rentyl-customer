@@ -26,12 +26,8 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 		)}%`;
 	}
 	function replaceLettersWithStars(accountNumber: any): string {
-		let asteriskString = '';
-		let accountNumberLength = accountNumber.toString().length;
-		for (let i = 0; i < accountNumberLength; i++) {
-			asteriskString += '*';
-		}
-		return asteriskString;
+		let lastFour = accountNumber.slice(-4);
+		return accountNumber.replace(/\d/g, '*').slice(0, -4) + lastFour;
 	}
 	return (
 		<Paper className={'rsUserBasicInfoPaperResponsive'} boxShadow borderRadius={'20px'}>
@@ -43,12 +39,12 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					<Label variant={'customTwo'}>{props.userData.primaryEmail}</Label>
 				</Box>
 				<Box display={'flex'}>
-					<Label variant={'customThree'} color={'#707070'}>
+					<Label variant={'customTwentyFive'} color={'#707070'}>
 						Not you?
 					</Label>
 					<Label
 						ml={3}
-						variant={'customFour'}
+						variant={'customTwentyFour'}
 						color={'#2C3C60'}
 						onClick={props.onLogOut}
 						className={'clickable'}
@@ -68,7 +64,9 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 						<Box display={'flex'} alignItems={'center'}>
 							<Label variant={'customThree'} marginRight={'16px'}>
 								Account{' '}
-								{visibilityToggle ? props.userData.id : replaceLettersWithStars(props.userData.id)}
+								{visibilityToggle
+									? props.userData.accountNumber
+									: replaceLettersWithStars(props.userData.accountNumber)}
 							</Label>
 							<Icon
 								iconImg={visibilityToggle ? 'icon-visibility-false' : 'icon-visibility-true'}
