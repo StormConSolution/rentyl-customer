@@ -1,19 +1,21 @@
 @import '../../themes/themes';
 
 .small .rsCheckoutFlowPage {
-	display: block;
 	width: 100%;
-	padding: 64px 0 75px;
+	padding: 64px 0 32px;
 
 	.rsButton.contained.primary {
 		width: 100%;
 	}
 
 	.printableContentWrapper {
-		display: grid;
-		grid-template-areas: 'bookingSummaryColumn' 'leftColumn';
-		padding: 0;
-		margin: 0 13px;
+		display: flex;
+		flex-direction: column-reverse;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
+		padding: 0 24px;
 
 		.rsCheckOutInfoCard {
 			.rsBox.message {
@@ -21,24 +23,24 @@
 			}
 		}
 
-		.bookingSummaryColumn {
-			width: 100%;
-			min-width: 0;
-			max-width: 100%;
-			margin-left: 0;
+		.leftColumn {
+			margin-top: 32px;
 		}
 
-		.leftColumn {
+		.bookingSummaryColumn {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 			width: 100%;
+			min-width: 100%;
+			box-sizing: border-box;
+			margin-left: 0;
 
-			.rsPersonalInformation {
+			.rsBookingSummaryCard {
 				width: 100%;
+				box-sizing: border-box;
 			}
 		}
-	}
-
-	.rsPersonalInformation {
-		margin-top: 24px;
 	}
 }
 
@@ -50,6 +52,10 @@
 	padding: 100px 0 75px;
 	margin: auto;
 
+	@media screen and (max-width: 1230px) {
+		padding: 64px 0 75px;
+	}
+
 	.printableContentWrapper {
 		display: flex;
 		padding: 0 85px;
@@ -58,7 +64,6 @@
 			display: flex;
 			flex-direction: column;
 			width: 100%;
-			grid-area: leftColumn;
 
 			.rsConfirmationImageSummary,
 			.rsThankYouCard,
@@ -73,6 +78,17 @@
 				font-size: 40px;
 				font-weight: 800;
 			}
+
+			@media screen and (max-width: 1432px) {
+				.rsCheckoutReservationSummaryCard {
+					flex-direction: column;
+					margin-bottom: 32px;
+
+					.cardImage {
+						width: 100%;
+					}
+				}
+			}
 		}
 
 		.bookingSummaryColumn {
@@ -80,7 +96,6 @@
 			min-width: 497px;
 			max-width: 497px;
 			margin-left: 94px;
-			grid-area: bookingSummaryColumn;
 
 			.rsPrintableQrCode {
 				margin-bottom: 40px;
@@ -88,6 +103,7 @@
 
 			.printConfirmButton {
 				width: 100%;
+				max-width: 500px;
 				font-family: Montserrat, serif;
 				height: 57px;
 				min-height: 57px;
@@ -119,6 +135,14 @@
 				&.none {
 					display: none;
 				}
+			}
+		}
+	}
+
+	@media screen and (max-width: 1270px) {
+		.rsPersonalInformation {
+			.billingAddressWrapper {
+				padding-left: 40px;
 			}
 		}
 	}
