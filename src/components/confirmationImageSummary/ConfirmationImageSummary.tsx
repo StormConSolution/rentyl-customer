@@ -13,8 +13,8 @@ const ConfirmationImageSummary: React.FC<ConfirmationImageSummaryProps> = (props
 	return (
 		<div className={'rsConfirmationImageSummary'}>
 			<img className={'confirmationImage hero'} src={props.images[0]} alt={'hero Image'} />
-			<img className={'confirmationImage'} src={props.images[1]} alt={'secondary image'} />
-			<img className={'confirmationImage'} src={props.images[2]} alt={'secondary image'} />
+			<img className={'confirmationImage secondary'} src={props.images[1]} alt={'secondary image'} />
+			<img className={'confirmationImage secondary'} src={props.images[2]} alt={'secondary image'} />
 		</div>
 	);
 };
