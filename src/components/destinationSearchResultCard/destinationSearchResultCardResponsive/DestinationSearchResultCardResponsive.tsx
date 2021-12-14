@@ -11,6 +11,9 @@ import IconLabel from '../../iconLabel/IconLabel';
 import router from '../../../utils/router';
 import AccommodationsPopup, { AccommodationsPopupProps } from '../../../popups/accommodationsPopup/AccommodationsPopup';
 import Icon from '@bit/redsky.framework.rs.icon';
+import { useEffect, useState } from 'react';
+import serviceFactory from '../../../services/serviceFactory';
+import DestinationService from '../../../services/destination/destination.service';
 
 interface DestinationSearchResultCardResponsiveProps {
 	className?: string;
@@ -21,6 +24,7 @@ interface DestinationSearchResultCardResponsiveProps {
 	onRemoveCompareClick?: () => void;
 	pointsEarnable: number;
 	availabilityStayList: Api.Accommodation.Res.Availability[];
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCardResponsiveProps> = (props) => {
@@ -35,7 +39,7 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 	}
 
 	function renderPricePerNight() {
-		if (reservationFilters.redeemPoints) {
+		if (reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE') {
 			return (
 				<Box display={'flex'} alignItems={'flex-end'} justifyContent={'flex-end'} flexDirection={'column'}>
 					<Label variant={'subtitle3'} className={'fromText'}>
@@ -64,11 +68,14 @@ const DestinationSearchResultCardResponsive: React.FC<DestinationSearchResultCar
 					<Label variant={'subtitle3'}>per night</Label>
 					<Label variant={'subtitle2'}>+taxes & fees</Label>
 					<Box className={'earnTextContainer'}>
-						{props.pointsEarnable !== 0 && props.pointsEarnable && !reservationFilters.redeemPoints && (
-							<Label variant={'italicBoldTwo'} className={'yellowText earnText'}>
-								You could earn {props.pointsEarnable} points for this stay
-							</Label>
-						)}
+						{props.pointsEarnable !== 0 &&
+							props.pointsEarnable &&
+							!reservationFilters.redeemPoints &&
+							props.loyaltyStatus === 'ACTIVE' && (
+								<Label variant={'italicBoldTwo'} className={'yellowText earnText'}>
+									You could earn {props.pointsEarnable} points for this stay
+								</Label>
+							)}
 					</Box>
 				</Box>
 			);

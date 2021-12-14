@@ -4,6 +4,7 @@ declare namespace Model {
 	export type AccommodationTypes = 'HOTEL' | 'RENTAL';
 	export type AccommodationStatusType = 'ACTIVE' | 'INACTIVE' | 'DELETED';
 	export type AccommodationRoomClassType = 'Deluxe';
+	export type LoyaltyStatus = 'PENDING' | 'ACTIVE' | 'FROZEN';
 	export type UserAddressType = 'SHIPPING' | 'BILLING' | 'BOTH';
 	export type UserAccessScopeTypes =
 		| 'USER'
@@ -191,7 +192,9 @@ declare namespace Model {
 		description: string;
 		createdOn: Date | string;
 		modifiedOn: Date | string;
-		externalId: string;
+		loyaltyStatus: LoyaltyStatus;
+		isActive: 0 | 1;
+		externalId: string | number;
 		metaData: any;
 	}
 
@@ -206,6 +209,7 @@ declare namespace Model {
 		zip: string;
 		country: string;
 		isActive: 0 | 1;
+		loyaltyStatus: LoyaltyStatus;
 		externalId: string;
 		metaData: any;
 	}
@@ -274,6 +278,8 @@ declare namespace Model {
 		state: string;
 		zip: string;
 		country: string;
+		isActive: 0 | 1;
+		loyaltyStatus: LoyaltyStatus;
 	}
 
 	export interface CompanyGateway {
@@ -330,6 +336,7 @@ declare namespace Model {
 		reviewRating: number;
 		reviewCount: number;
 		isActive: 0 | 1;
+		loyaltyStatus: LoyaltyStatus;
 	}
 
 	export interface DestinationExperience {
