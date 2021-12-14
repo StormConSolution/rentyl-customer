@@ -325,19 +325,41 @@ declare namespace Api {
 				id: number;
 			}
 
+			export interface Update extends Partial<Omit<Model.Brand, 'createdOn' | 'externalId' | 'modifiedOn'>> {
+				id: number;
+			}
+
 			export namespace Location {
 				export interface Get {
+					id: number;
+				}
+				export interface Update extends Partial<Omit<Model.BrandLocation, 'brandId' | 'externalId'>> {
 					id: number;
 				}
 			}
 		}
 		export namespace Res {
+			export interface brandLocation {
+				id: number;
+				name: string;
+				loyaltyStatus: string;
+				city: string;
+				state: string;
+			}
 			export interface Get extends Model.Brand {}
-			export interface Details extends Get {}
+			export interface Details extends Get {
+				companyName: string;
+				locations: brandLocation[];
+				pointsPerDollar: number;
+				costPerPoint: number;
+			}
 			export interface Location extends Model.BrandLocation {}
 			export namespace Location {
 				export interface Get extends Model.BrandLocation {}
-				export interface Details extends Model.BrandLocation {}
+				export interface Details extends Model.BrandLocation {
+					pointsPerDollar: number;
+					costPerPoint: number;
+				}
 			}
 		}
 	}
@@ -550,6 +572,23 @@ declare namespace Api {
 		}
 	}
 
+	export namespace Customer {
+		export namespace Req {
+			export interface Create {
+				name: string;
+				primaryEmail: string;
+				password: string;
+			}
+
+			export interface Get {}
+		}
+		export namespace Res {
+			export interface Create extends User.Filtered {}
+
+			export interface Get extends User.Res.Detail {}
+		}
+	}
+
 	export namespace Destination {
 		export namespace Req {
 			export interface Get {
@@ -574,6 +613,7 @@ declare namespace Api {
 				heroUrl?: string;
 				mediaIds?: MediaDetails[];
 				isActive?: 0 | 1;
+				loyaltyStatus?: Model.LoyaltyStatus;
 			}
 
 			export interface AccommodationType {
@@ -632,6 +672,8 @@ declare namespace Api {
 					| 'country'
 					| 'logoUrl'
 					| 'heroUrl'
+					| 'loyaltyStatus'
+					| 'isActive'
 				> {
 				media: Media[];
 				latitude?: number;

@@ -3,6 +3,9 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import AccommodationSearchCardMobile from './accommodationSearchCardMobile/AccommodationSearchCardMobile';
 import AccommodationSearchCardResponsive from './accommodationSearchCardResponsive/AccommodationSearchCardResponsive';
 import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
+import { useEffect, useState } from 'react';
+import serviceFactory from '../../services/serviceFactory';
+import DestinationService from '../../services/destination/destination.service';
 
 interface AccommodationSearchCardProps {
 	accommodation: Api.Destination.Res.Accommodation;
@@ -15,6 +18,20 @@ interface AccommodationSearchCardProps {
 
 const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) => {
 	const size = useWindowResizeChange();
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
+	const [loyaltyStatus, setLoyaltyStatus] = useState<Model.LoyaltyStatus>('PENDING');
+
+	useEffect(() => {
+		async function getDestination() {
+			try {
+				const res = await destinationService.getDestinationById({ id: props.destinationId });
+				setLoyaltyStatus(res.loyaltyStatus);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		getDestination().catch(console.error);
+	}, []);
 
 	return (
 		<Box className={'rsAccommodationSearchCard'}>
@@ -26,6 +43,7 @@ const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) 
 					showInfoIcon={props.showInfoIcon}
 					onClickInfoIcon={props.onClickInfoIcon}
 					pointsEarnable={props.pointsEarnable}
+					loyaltyStatus={loyaltyStatus}
 				/>
 			) : (
 				<AccommodationSearchCardResponsive
@@ -35,6 +53,7 @@ const AccommodationSearchCard: React.FC<AccommodationSearchCardProps> = (props) 
 					showInfoIcon={props.showInfoIcon}
 					onClickInfoIcon={props.onClickInfoIcon}
 					pointsEarnable={props.pointsEarnable}
+					loyaltyStatus={loyaltyStatus}
 				/>
 			)}
 		</Box>
