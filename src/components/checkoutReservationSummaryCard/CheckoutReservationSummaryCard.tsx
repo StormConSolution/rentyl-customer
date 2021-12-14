@@ -21,11 +21,11 @@ const CheckoutReservationSummaryCard: React.FC<CheckoutReservationSummaryCardPro
 						src={'../../images/checkoutPage/encore-reunion-logo-color.png'}
 						alt={'encore resort'}
 					/>
-					<Label className={'resortName'}>Encore Resort</Label>
+					<Label variant={'customSeven'}>Encore Resort</Label>
 				</div>
-				<Label className={'orderTitle'}>{props.title}</Label>
-				<Label className={'price'}>${StringUtils.formatMoney(props.price)} total</Label>
-				<Label className={'dateBooked'}>Date booked: {props.dateBooked}</Label>
+				<Label variant={'newDesignFont1'}>{props.title}</Label>
+				<Label variant={'newDesignFont2'}>${StringUtils.formatMoney(props.price)} Total</Label>
+				<Label variant={'customSeven'}>Date Booked: {props.dateBooked}</Label>
 			</div>
 		</div>
 	);
