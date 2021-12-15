@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './AccountPointsPage.scss';
 import { Page } from '@bit/redsky.framework.rs.996';
 import serviceFactory from '../../services/serviceFactory';
@@ -16,9 +16,13 @@ import { rsToastify } from '@bit/redsky.framework.rs.toastify';
 import SubNavMenu from '../../components/subNavMenu/SubNavMenu';
 import UserBasicInfoPaper from '../../components/userBasicInfoPaper/UserBasicInfoPaper';
 import UserService from '../../services/user/user.service';
+import Button from '@bit/redsky.framework.rs.button';
+import Icon from '@bit/redsky.framework.rs.icon';
+import useWindowScrollChange from '../../customHooks/useWindowScrollChange';
 
 const AccountPointsPage: React.FC = () => {
 	const size = useWindowResizeChange();
+	const scrollToTopButtonRef = useRef<HTMLButtonElement>(null);
 	const userService = serviceFactory.get<UserService>('UserService');
 	const user = useRecoilValue<Api.User.Res.Detail | undefined>(globalState.user);
 	const userPointService = serviceFactory.get<UserPointService>('UserPointService');
@@ -40,6 +44,14 @@ const AccountPointsPage: React.FC = () => {
 		getUserPoints().catch(console.error);
 	}, [user]);
 
+	useEffect(() => {
+		window.addEventListener('scroll', getTopOffset);
+
+		return () => {
+			window.removeEventListener('scroll', getTopOffset);
+		};
+	}, []);
+
 	function getPointAmount(point: Api.UserPoint.Res.Verbose) {
 		if (point.status === 'PENDING' || point.status === 'RECEIVED' || point.status === 'REFUNDED') {
 			return StringUtils.addCommasToNumber(point.pointAmount);
@@ -53,6 +65,15 @@ const AccountPointsPage: React.FC = () => {
 		} else {
 			return '';
 		}
+	}
+	function getTopOffset() {
+		if (!scrollToTopButtonRef.current) return;
+		if (window.pageYOffset > window.screen.availHeight) {
+			scrollToTopButtonRef.current.classList.add('show');
+		} else {
+			scrollToTopButtonRef.current.classList.remove('show');
+		}
+		// console.log(window.pageYOffset)
 	}
 
 	function renderPoints(type: string) {
@@ -184,6 +205,18 @@ const AccountPointsPage: React.FC = () => {
 						<div className={'completed pointTableContainer'}>{renderPoints('completed')}</div>
 					</div>
 				</Paper>
+				{size === 'small' && (
+					<Button
+						buttonRef={scrollToTopButtonRef}
+						className={`scrollToTopButton`}
+						look={'none'}
+						onClick={() => {
+							window.scrollTo({ top: 0, behavior: 'smooth' });
+						}}
+					>
+						<Icon iconImg={'icon-chevron-up'} size={24} />{' '}
+					</Button>
+				)}
 			</div>
 		</Page>
 	);
