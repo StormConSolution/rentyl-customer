@@ -571,4 +571,14 @@ html {
 		line-height: 30px;
 		font-weight: $light;
 	}
+	&.newDesignFont1 {
+		font-size: 36px;
+		line-height: 44px;
+		font-weight: $regular;
+	}
+	&.newDesignFont2 {
+		font-size: 30px;
+		line-height: 38px;
+		font-weight: $light;
+	}
 }

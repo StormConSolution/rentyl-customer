@@ -10,4 +10,14 @@
 	.yellowText {
 		color: theme-var($yellowTextColor);
 	}
+	.buttonContainer {
+		display: flex;
+		flex-wrap: wrap;
+		.accommodationButton {
+			margin: 8px 16px 8px 0;
+		}
+	}
+	.locationIcon {
+		margin-right: 10px;
+	}
 }

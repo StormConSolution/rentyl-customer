@@ -31,6 +31,13 @@
 		width: fit-content;
 		align-self: end;
 		margin-right: clamp(0px, 10vw, 125px);
+
+		.clearAllButton {
+			border-bottom: solid;
+			border-bottom-width: thin;
+			border-bottom-color: #888888;
+			padding-bottom: 4px;
+		}
 	}
 	hr {
 		margin: 0 70px;

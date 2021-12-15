@@ -9,6 +9,7 @@ import globalState from '../../state/globalState';
 import { popupController } from '@bit/redsky.framework.rs.996';
 import SpinningLoaderPopup from '../../popups/spinningLoaderPopup/SpinningLoaderPopup';
 import { ObjectUtils } from '../../utils/utils';
+import DestinationService from '../../services/destination/destination.service';
 
 export interface DestinationSearchResultCardProps {
 	className?: string;
@@ -22,9 +23,23 @@ export interface DestinationSearchResultCardProps {
 const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = (props) => {
 	const size = useWindowResizeChange();
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [pointsEarnable, setPointsEarnable] = useState<number>(0);
+	const [loyaltyStatus, setLoyaltyStatus] = useState<Model.LoyaltyStatus>('PENDING');
+
+	useEffect(() => {
+		async function getDestination() {
+			try {
+				const res = await destinationService.getDestinationById({ id: props.destinationObj.id });
+				setLoyaltyStatus(res.loyaltyStatus);
+			} catch (e) {
+				console.error(e);
+			}
+		}
+		getDestination().catch(console.error);
+	}, []);
 
 	useEffect(() => {
 		async function getAccommodationAvailability() {
@@ -75,6 +90,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			onAddCompareClick={props.onAddCompareClick}
 			onRemoveCompareClick={props.onRemoveCompareClick}
 			onGalleryClick={props.onGalleryClick}
+			loyaltyStatus={loyaltyStatus}
 		/>
 	) : (
 		<DestinationSearchResultCardResponsive
@@ -85,6 +101,7 @@ const DestinationSearchResultCard: React.FC<DestinationSearchResultCardProps> = 
 			onAddCompareClick={props.onAddCompareClick}
 			onRemoveCompareClick={props.onRemoveCompareClick}
 			onGalleryClick={props.onGalleryClick}
+			loyaltyStatus={loyaltyStatus}
 		/>
 	);
 };
