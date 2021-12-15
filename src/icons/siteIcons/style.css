@@ -1,9 +1,9 @@
 @font-face {
 	font-family: 'icomoon';
-	src: url('fonts/icomoon.eot?ry70sw');
-	src: url('fonts/icomoon.eot?ry70sw#iefix') format('embedded-opentype'),
-		url('fonts/icomoon.woff2?ry70sw') format('woff2'), url('fonts/icomoon.ttf?ry70sw') format('truetype'),
-		url('fonts/icomoon.woff?ry70sw') format('woff'), url('fonts/icomoon.svg?ry70sw#icomoon') format('svg');
+	src: url('fonts/icomoon.eot?4v4exg');
+	src: url('fonts/icomoon.eot?4v4exg#iefix') format('embedded-opentype'),
+		url('fonts/icomoon.woff2?4v4exg') format('woff2'), url('fonts/icomoon.ttf?4v4exg') format('truetype'),
+		url('fonts/icomoon.woff?4v4exg') format('woff'), url('fonts/icomoon.svg?4v4exg#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -25,6 +25,12 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-visibility-false:before {
+	content: '\e940';
+}
+.icon-visibility-true:before {
+	content: '\e941';
+}
 .icon-solid-question-circle:before {
 	content: '\e93f';
 }
