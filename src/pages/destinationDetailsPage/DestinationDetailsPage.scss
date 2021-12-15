@@ -205,6 +205,29 @@
 			padding: 0 10px;
 			box-sizing: border-box;
 		}
+		.yellowButton {
+			&.contained {
+				&.primary {
+					background-color: theme-var($yellowTextColor);
+					padding: 16px 46px;
+					box-sizing: border-box;
+					margin: auto;
+					margin-top: 24px;
+					width: 310px;
+					height: 48px;
+					.rsLabel {
+						color: #222222;
+						font-family: 'Montserrat';
+						font-weight: 500;
+						font-size: 20px;
+						line-height: 24px;
+					}
+					&:hover {
+						background-color: theme-var($yellowTextColor);
+					}
+				}
+			}
+		}
 	}
 
 	.chooseYourAccommodation {
