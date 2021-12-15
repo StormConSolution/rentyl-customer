@@ -29,9 +29,6 @@ import DestinationExperienceImageGallery from '../../components/destinationExper
 import Icon from '@bit/redsky.framework.rs.icon';
 import { Loader } from 'google-maps';
 import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
-import MobileAccommodationOverviewPopup, {
-	MobileAccommodationOverviewPopupProps
-} from '../../popups/mobileAccommodationOverviewPopup/MobileAccommodationOverviewPopup';
 import AccommodationOverviewPopup, {
 	AccommodationOverviewPopupProps
 } from '../../popups/accommodationOverviewPopup/AccommodationOverviewPopup';
@@ -217,16 +214,10 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	async function handleOnInfoClick(accommodationId: number) {
 		let accommodationDetails = await accommodationService.getAccommodationDetails(accommodationId);
-		if (size === 'small') {
-			popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
-				accommodationDetails: accommodationDetails
-			});
-		} else {
-			popupController.open<AccommodationOverviewPopupProps>(AccommodationOverviewPopup, {
-				accommodationDetails: accommodationDetails,
-				destinationName: destinationDetails?.name || ''
-			});
-		}
+		popupController.open<AccommodationOverviewPopupProps>(AccommodationOverviewPopup, {
+			accommodationDetails: accommodationDetails,
+			destinationName: destinationDetails?.name || ''
+		});
 	}
 
 	function renderInfoWindowContent() {
