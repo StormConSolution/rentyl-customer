@@ -79,8 +79,9 @@
 
 			.searchResultsWrapper {
 				padding: 30px;
-				display: grid;
+				display: flex;
 				justify-content: center;
+				flex-wrap: wrap;
 			}
 
 			.filterResultsWrapper {

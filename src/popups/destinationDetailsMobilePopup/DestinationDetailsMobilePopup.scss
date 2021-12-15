@@ -35,4 +35,17 @@
 	#GoogleMap {
 		border-radius: 20px;
 	}
+
+	.availableStays {
+		.accommodationCardWrapper {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+		@media screen and (max-width: 992px) {
+			.accommodationCardWrapper {
+				gap: 40px;
+			}
+		}
+	}
 }
