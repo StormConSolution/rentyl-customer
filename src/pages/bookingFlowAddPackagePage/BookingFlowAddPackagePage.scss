@@ -1,17 +1,23 @@
 @import '../../themes/themes';
 .rsBookingFlowAddPackagePage {
-	padding-top: 120px;
-
+	padding: 120px 37px 0 37px;
 	.packageSection {
 		width: 60%;
+
+		.loadMoreButton {
+			padding: 13px;
+			border: 1px solid #cc9e0d;
+			border-radius: 7px;
+			position: absolute;
+			bottom: 19px;
+		}
 	}
 	.bookingSummarySection {
 		width: 35%;
 		.bookingCardWrapper {
-			margin: 0 auto;
 			position: sticky;
 			top: 30px;
-
+			margin-bottom: 22px;
 			.continueButton {
 				width: 100%;
 				margin-bottom: 20px;
@@ -20,7 +26,7 @@
 	}
 
 	.rsButton {
-		margin: 20px 0 20px auto;
+		margin: 0 0 20px auto;
 	}
 
 	.continueButton {
@@ -87,6 +93,16 @@
 		.packageSection {
 			width: 55%;
 			padding-left: 20px;
+			.loadMoreButton {
+				padding: 13px;
+				border: 1px solid #cc9e0d;
+				border-radius: 7px;
+				margin: 0 auto;
+				position: absolute;
+				bottom: 10px;
+				left: 0;
+				right: 0;
+			}
 		}
 		.bookingSummarySection {
 			width: 45%;
