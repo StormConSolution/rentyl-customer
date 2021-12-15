@@ -206,7 +206,7 @@ const BookingFlowAddPackagePage = () => {
 						{smallSize ? renderContinueBtn() : null}
 						<div ref={filterRef} />
 						{renderAvailablePackages()}
-						{renderContinueBtn()}
+						{verifiedAccommodation && renderContinueBtn()}
 						<PaginationViewMore
 							selectedRowsPerPage={perPage}
 							total={total}

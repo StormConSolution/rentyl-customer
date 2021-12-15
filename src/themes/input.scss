@@ -1,12 +1,14 @@
 .rsInput {
-	font-family: 'MrsEavesXL', sans-serif;
+	font-family: 'Montserrat';
+	font-style: normal;
 	font-size: 16px;
+	line-height: 20px;
 	height: 40px;
 	padding: 0 10px;
 	box-sizing: border-box;
 	border-radius: 0;
 	border: 1px solid theme-var($greyLineColor);
-	color: theme-var($primaryTextColor) !important;
+	color: #222222 !important;
 	outline: none !important;
 	transition: border-color 300ms;
 	input {

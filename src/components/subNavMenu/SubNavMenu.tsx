@@ -14,7 +14,6 @@ import { Box } from '@bit/redsky.framework.rs.996';
 import { StringUtils } from '../../utils/utils';
 
 type PageRefs = {
-	galleryRef: React.RefObject<HTMLElement>;
 	overviewRef: React.RefObject<HTMLElement>;
 	experiencesRef: React.RefObject<HTMLElement>;
 	availableStaysRef: React.RefObject<HTMLElement>;
