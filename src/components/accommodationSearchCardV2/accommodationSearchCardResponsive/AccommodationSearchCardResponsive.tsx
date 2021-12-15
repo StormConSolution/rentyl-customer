@@ -10,7 +10,6 @@ import AccommodationService from '../../../services/accommodation/accommodation.
 import LoadingPage from '../../../pages/loadingPage/LoadingPage';
 import CarouselV2 from '../../carouselV2/CarouselV2';
 import Accordion from '@bit/redsky.framework.rs.accordion';
-import Icon from '@bit/redsky.framework.rs.icon';
 import useWindowResizeChange from '../../../customHooks/useWindowResizeChange';
 import MobileLightBox, { MobileLightBoxProps } from '../../../popups/mobileLightBox/MobileLightBox';
 import LightBoxCarouselPopup, {
@@ -26,6 +25,7 @@ interface AccommodationSearchCardResponsiveProps {
 	showInfoIcon?: boolean;
 	onClickInfoIcon?: (accommodationId: number) => void;
 	pointsEarnable: number;
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardResponsiveProps> = (props) => {
@@ -34,6 +34,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 	const [accommodationDetails, setAccommodationDetails] = useState<Api.Accommodation.Res.Details>();
 	const [displayLowestPrice, setDisplayLowestPrice] = useState<Misc.Pricing>();
 	const [accommodationPrices, setAccommodationPrices] = useState<Misc.Pricing[]>([]);
+	const [isOpen, setIsOpen] = useState<boolean>(props.openAccordion || false);
 
 	useEffect(() => {
 		async function getAccommodationDetails() {
@@ -156,13 +157,18 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 								priceObj={displayLowestPrice}
 								accommodationId={props.accommodation.id}
 								destinationId={props.destinationId}
+								loyaltyStatus={props.loyaltyStatus}
 							/>
 						)}
 					</Box>
 				</Box>
 				<Box className={'accordionContainer'}>
 					{ObjectUtils.isArrayWithData(accommodationPrices) && (
-						<Accordion title={'View more rates'} isOpen={props.openAccordion}>
+						<Accordion
+							title={isOpen ? 'View less rates' : 'View more rates'}
+							isOpen={props.openAccordion}
+							onClick={() => setIsOpen(!isOpen)}
+						>
 							{accommodationPrices.map((priceObj) => {
 								return (
 									<RateCodeCard
@@ -171,6 +177,7 @@ const AccommodationSearchCardResponsive: React.FC<AccommodationSearchCardRespons
 										destinationId={props.destinationId}
 										accommodationId={props.accommodation.id}
 										pointsEarnable={props.pointsEarnable}
+										loyaltyStatus={props.loyaltyStatus}
 									/>
 								);
 							})}

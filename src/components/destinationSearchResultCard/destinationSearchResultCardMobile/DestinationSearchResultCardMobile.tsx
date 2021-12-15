@@ -7,10 +7,12 @@ import router from '../../../utils/router';
 import Icon from '@bit/redsky.framework.rs.icon';
 import { useRecoilValue } from 'recoil';
 import globalState from '../../../state/globalState';
-import { StringUtils } from '../../../utils/utils';
+import { ObjectUtils, StringUtils } from '../../../utils/utils';
 import DestinationDetailsMobilePopup, {
 	DestinationDetailsMobilePopupProps
 } from '../../../popups/destinationDetailsMobilePopup/DestinationDetailsMobilePopup';
+import LabelButton from '../../labelButton/LabelButton';
+import AccommodationsPopup, { AccommodationsPopupProps } from '../../../popups/accommodationsPopup/AccommodationsPopup';
 
 interface DestinationSearchResultCardMobileProps {
 	className?: string;
@@ -21,13 +23,20 @@ interface DestinationSearchResultCardMobileProps {
 	onRemoveCompareClick?: () => void;
 	pointsEarnable: number;
 	availabilityStayList: Api.Accommodation.Res.Availability[];
+	loyaltyStatus: Model.LoyaltyStatus;
 }
 
 const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMobileProps> = (props) => {
 	const reservationFilters = useRecoilValue(globalState.reservationFilters);
 
+	function handleAccommodations(propertyTypeId: number) {
+		return props.destinationObj.accommodations.filter(
+			(accommodation) => accommodation.propertyTypeId === propertyTypeId
+		);
+	}
+
 	function renderPricePerNight() {
-		if (reservationFilters.redeemPoints) {
+		if (reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE') {
 			return (
 				<Box display={'flex'}>
 					<Label variant={'boldCaption1'} className={'yellowText'}>
@@ -46,6 +55,33 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				</Box>
 			);
 		}
+	}
+
+	function renderButtons() {
+		return props.destinationObj.propertyTypes.map((button) => {
+			const accommodations: Api.Destination.Res.Accommodation[] = handleAccommodations(button.id);
+			if (ObjectUtils.isArrayWithData(accommodations)) {
+				return (
+					<LabelButton
+						key={button.id}
+						look={'containedPrimary'}
+						variant={'button'}
+						label={button.name}
+						className={'accommodationButton'}
+						onClick={(event) => {
+							popupController.open<AccommodationsPopupProps>(AccommodationsPopup, {
+								availabilityStayList: props.availabilityStayList,
+								propertyTypeName: button.name,
+								destinationId: props.destinationObj.id,
+								destinationName: props.destinationObj.name,
+								accommodations: accommodations
+							});
+							event.stopPropagation();
+						}}
+					/>
+				);
+			}
+		});
 	}
 
 	return (
@@ -70,7 +106,7 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 				destinationId={props.destinationObj.id}
 			/>
 			<Box className={'mobileCardInfo'}>
-				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'10px'} paddingBottom={'18px'}>
+				<Box display={'flex'} justifyContent={'space-between'} paddingTop={'16px'} paddingBottom={'10px'}>
 					<Label variant={'subtitle1'}>{props.destinationObj.name}</Label>
 					<Icon
 						iconImg={'icon-info-outline'}
@@ -86,8 +122,11 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					/>
 				</Box>
 				<Box display={'flex'} justifyContent={'space-between'} paddingBottom={'16px'}>
-					{renderPricePerNight()}
+					<Label variant={'caption1'} paddingRight={'74px'}>
+						{props.destinationObj.minBedroom} - {props.destinationObj.maxBedroom} Bedrooms
+					</Label>
 					<Label variant={'caption1'} className={'addressLabel'}>
+						<Icon iconImg="icon-pin" size={12} color="#FF6469" className="locationIcon" />
 						{StringUtils.buildAddressString({
 							city: props.destinationObj.city,
 							state: props.destinationObj.state
@@ -95,13 +134,14 @@ const DestinationSearchResultCardMobile: React.FC<DestinationSearchResultCardMob
 					</Label>
 				</Box>
 				<Box display={'flex'} justifyContent={'flex-end'}>
-					{!reservationFilters.redeemPoints && (
+					{!reservationFilters.redeemPoints && props.loyaltyStatus === 'ACTIVE' && (
 						<Label className={'earnText'} variant={'italicBold'}>
 							You could earn from {props.pointsEarnable} points for this stay
 						</Label>
 					)}
 				</Box>
 			</Box>
+			<Box className={'buttonContainer'}>{renderButtons()}</Box>
 		</Box>
 	);
 };

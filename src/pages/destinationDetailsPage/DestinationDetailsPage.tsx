@@ -32,6 +32,7 @@ import AccommodationSearchCard from '../../components/accommodationSearchCardV2/
 import AccommodationOverviewPopup, {
 	AccommodationOverviewPopupProps
 } from '../../popups/accommodationOverviewPopup/AccommodationOverviewPopup';
+import router from '../../utils/router';
 
 interface DestinationDetailsPageProps {}
 
@@ -40,23 +41,45 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	const overviewRef = useRef<HTMLElement>(null);
 	const experiencesRef = useRef<HTMLElement>(null);
 	const availableStaysRef = useRef<HTMLElement>(null);
-	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const [reservationFilters, setReservationFilters] = useRecoilState<Misc.ReservationFilters>(
 		globalState.reservationFilters
 	);
 	const size = useWindowResizeChange({ small: 1160 });
+	const comparisonService = serviceFactory.get<ComparisonService>('ComparisonService');
 	const destinationService = serviceFactory.get<DestinationService>('DestinationService');
 	const accommodationService = serviceFactory.get<AccommodationService>('AccommodationService');
+	const params = router.getPageUrlParams<{
+		destinationId: number;
+		startDate?: string;
+		endDate?: string;
+		guests: number;
+	}>([
+		{ key: 'di', default: 0, type: 'integer', alias: 'destinationId' },
+		{
+			key: 'startDate',
+			default: reservationFilters.startDate.toString() || '',
+			type: 'string',
+			alias: 'startDate'
+		},
+		{ key: 'endDate', default: reservationFilters.endDate.toString() || '', type: 'string', alias: 'endDate' },
+		{ key: 'guests', default: reservationFilters.adultCount || 1, type: 'integer', alias: 'guests' }
+	]);
 	const [destinationDetails, setDestinationDetails] = useState<Api.Destination.Res.Details>();
 	const [availabilityStayList, setAvailabilityStayList] = useState<Api.Accommodation.Res.Availability[]>([]);
 	const [destinationAvailability, setDestinationAvailability] = useState<Api.Destination.Res.Availability>();
 	const [totalResults, setTotalResults] = useState<number>(0);
+	const [loyaltyStatus, setLoyaltyStatus] = useState<Model.LoyaltyStatus>('PENDING');
 	const [page, setPage] = useState<number>(1);
 	const perPage = 10;
 
 	useEffect(() => {
-		const filtersFromUrl = WebUtils.parseURLParamsToFilters();
-		setReservationFilters(filtersFromUrl);
+		setReservationFilters({
+			...reservationFilters,
+			destinationId: params.destinationId || reservationFilters.destinationId,
+			startDate: params.startDate || reservationFilters.startDate,
+			endDate: params.endDate || reservationFilters.endDate,
+			adultCount: params.guests || reservationFilters.adultCount
+		});
 	}, []);
 
 	useEffect(() => {
@@ -124,20 +147,15 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	}, [destinationDetails]);
 
 	useEffect(() => {
-		if (!reservationFilters.destinationId) return;
 		async function getDestinationDetails(id: number) {
-			let dest;
 			try {
-				if (!reservationFilters.startDate || !reservationFilters.endDate) {
-					dest = await destinationService.getDestinationDetails(id);
-				} else {
-					dest = await destinationService.getDestinationDetails(
-						id,
-						reservationFilters.startDate,
-						reservationFilters.endDate
-					);
-				}
+				const dest = await destinationService.getDestinationDetails(
+					id,
+					reservationFilters.startDate,
+					reservationFilters.endDate
+				);
 				setDestinationDetails(dest);
+				setLoyaltyStatus(dest.loyaltyStatus);
 			} catch (e) {
 				rsToastify.error(
 					WebUtils.getRsErrorMessage(e, 'Cannot get details for this destination.'),
@@ -145,7 +163,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				);
 			}
 		}
-		getDestinationDetails(reservationFilters.destinationId).catch(console.error);
+		getDestinationDetails(reservationFilters.destinationId || params.destinationId).catch(console.error);
 	}, [reservationFilters.destinationId]);
 
 	useEffect(() => {
@@ -245,7 +263,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 
 	function renderAccommodations() {
 		if (!ObjectUtils.isArrayWithData(availabilityStayList) && destinationAvailability) return;
-		return availabilityStayList.map((accommodationAvailability) => {
+		return availabilityStayList.map((accommodationAvailability, index) => {
 			const destinationAccommodation: Api.Destination.Res.Accommodation | undefined =
 				destinationAvailability?.accommodations.find(
 					(accommodation) => accommodation.id === accommodationAvailability.id
@@ -254,6 +272,7 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				return (
 					<AccommodationSearchCard
 						key={accommodationAvailability.id}
+						openAccordion={index === 0}
 						accommodation={destinationAccommodation}
 						destinationId={reservationFilters.destinationId}
 						pointsEarnable={accommodationAvailability.pointsEarned}
@@ -311,8 +330,14 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 	function renderPointsOrCash() {
 		if (!reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPrice) {
 			return `$${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}`;
-		} else if (reservationFilters.redeemPoints && destinationAvailability?.minAccommodationPoints) {
+		} else if (
+			reservationFilters.redeemPoints &&
+			destinationAvailability?.minAccommodationPoints &&
+			loyaltyStatus === 'ACTIVE'
+		) {
 			return `${StringUtils.addCommasToNumber(destinationAvailability.minAccommodationPoints)}pts`;
+		} else if (destinationAvailability) {
+			return `$${StringUtils.formatMoney(destinationAvailability.minAccommodationPrice)}`;
 		}
 	}
 

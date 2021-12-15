@@ -11,12 +11,22 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import Button from '@bit/redsky.framework.rs.button';
 import Label from '@bit/redsky.framework.rs.label/dist/Label';
 import ComparisonPopup, { ComparisonPopupProps } from '../comparisonPopup/ComparisonPopup';
+import { useEffect } from 'react';
 
 const ComparisonDrawer: React.FC = () => {
 	const size = useWindowResizeChange();
 	const [recoilComparisonState, setRecoilComparisonState] = useRecoilState<Misc.ComparisonState>(
 		globalState.destinationComparison
 	);
+
+	useEffect(() => {
+		setRecoilComparisonState((prev) => {
+			return {
+				destinationDetails: prev.destinationDetails,
+				showCompareButton: true
+			};
+		});
+	}, []);
 
 	function renderComparisonCard() {
 		if (size === 'small') return;
@@ -35,7 +45,7 @@ const ComparisonDrawer: React.FC = () => {
 	return (
 		<Box
 			className={`rsComparisonDrawer ${
-				size === 'small' || ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ? 'show' : ''
+				ObjectUtils.isArrayWithData(recoilComparisonState.destinationDetails) ? 'show' : ''
 			}`}
 		>
 			{!!recoilComparisonState && <Box display={'flex'}>{renderComparisonCard()}</Box>}
@@ -56,13 +66,6 @@ const ComparisonDrawer: React.FC = () => {
 								recoilComparisonState.destinationDetails.length > 1
 							) {
 								popupController.open<ComparisonPopupProps>(ComparisonPopup, {});
-							} else {
-								setRecoilComparisonState((prev) => {
-									return {
-										destinationDetails: prev.destinationDetails,
-										showCompareButton: true
-									};
-								});
 							}
 						}}
 					>
@@ -80,7 +83,7 @@ const ComparisonDrawer: React.FC = () => {
 							className={'clearButton'}
 							look={'none'}
 							onClick={() => {
-								setRecoilComparisonState({ destinationDetails: [], showCompareButton: false });
+								setRecoilComparisonState({ ...recoilComparisonState, destinationDetails: [] });
 							}}
 						>
 							<Icon iconImg={'icon-solid-plus'} color={'#ffffff'} />

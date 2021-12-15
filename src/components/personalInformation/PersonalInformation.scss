@@ -2,10 +2,9 @@
 
 .small .rsPersonalInformation {
 	flex-direction: column;
-	gap: 24px;
 
 	.billingAddressWrapper {
-		padding: 0;
+		padding: 40px 0 0;
 	}
 }
 
@@ -14,7 +13,7 @@
 	display: flex;
 	width: 100%;
 	border: 0.5px solid theme-var($thinGreyLineColor);
-	padding: 34px 34px 43px;
+	padding: 34px 64px 43px 34px;
 	box-sizing: border-box;
 	border-radius: 20px;
 
