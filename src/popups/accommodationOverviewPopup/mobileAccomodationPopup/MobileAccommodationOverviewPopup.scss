@@ -1,4 +1,5 @@
 @import 'src/themes/themes';
+@import 'src/themes/variables';
 
 .rsMobileAccommodationOverviewPopup {
 	max-width: 400px;
@@ -84,9 +85,7 @@
 	width: clamp(168px, 100%, 368px);
 }
 
-$breakpoint-tablet: 1160px;
-
-@media (min-width: 1160px) {
+@media (min-width: $breakpoint-tablet) {
 	.rsMobileAccommodationOverviewPopup {
 		display: none;
 	}
