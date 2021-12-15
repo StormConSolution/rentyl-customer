@@ -21,8 +21,22 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	.rsBox {
+		margin-right: 16px;
+		align-items: flex-start;
+	}
+	@media screen and (max-width: 370px) {
+		.rsBox {
+			flex-wrap: wrap;
+			margin-right: 79px;
+			margin-bottom: 16px;
+		}
+	}
 	.rsCarouselV2 {
 		margin: 78px auto 25px;
+		width: 100%;
+		aspect-ratio: auto;
+		height: unset;
 	}
 	hr {
 		background: #7070706e;

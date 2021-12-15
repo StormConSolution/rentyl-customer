@@ -331,7 +331,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 					}}
 				/>
 				<Label variant={'destinationDetailsMobileCustomTwo'}>{destinationDetails.name}</Label>
-				<Box display={'flex'} m={'15px 0'} justifyContent={'space-between'}>
+				<Box display={'flex'} m={'15px 0'}>
 					<ImageLabel
 						labelName={renderMinMaxLabels(destinationDetails.minBedroom, destinationDetails.maxBedroom)}
 						imgSrc={'sleep.png'}
