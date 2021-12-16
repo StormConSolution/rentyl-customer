@@ -77,7 +77,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 						: props.accommodationDetails.longDescription}
 				</Label>
 
-				{props.accommodationDetails.amenities.length !== 0 ? (
+				{!!props.accommodationDetails.amenities.length && (
 					<div className={'amenitiesList'}>
 						<Label variant={'customFifteen'} marginTop={20}>
 							Amenities
@@ -86,11 +86,9 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 							{props.renderAmenities()}
 						</Box>
 					</div>
-				) : (
-					<></>
 				)}
 
-				{props.accommodationDetails.layout.length !== 0 ? (
+				{!!props.accommodationDetails.layout.length ? (
 					<>
 						<Label variant={'customFifteen'} margin={'20px auto'}>
 							Floor Plan
@@ -103,7 +101,7 @@ const MobileAccommodationOverviewPopup: React.FC<MobileAccommodationOverviewPopu
 							/>
 						</Box>
 
-						{props.accommodationDetails.layout.length > 1 ? (
+						{!!props.accommodationDetails.layout.length ? (
 							<div className={'expandFloorPlanDiv'} onClick={props.handleFloorPlanExpand}>
 								<Label>Expand floor plans</Label>
 								<Icon iconImg={'cms-icon-0055'} size={22} />

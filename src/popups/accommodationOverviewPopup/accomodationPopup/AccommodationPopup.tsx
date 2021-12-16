@@ -13,9 +13,9 @@ import ImageLabel from '../../../components/imageLabel/ImageLabel';
 export interface AccommodationPopupPopupProps extends PopupProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
 	destinationName?: string | undefined;
-	renderAccommodationSize: () => JSX.Element;
+	renderAccommodationSize: () => React.ReactNode;
 	handleReserveStay: () => void;
-	renderAmenities: () => JSX.Element | JSX.Element[];
+	renderAmenities: () => React.ReactNode | React.ReactNodeArray;
 	renderLayoutImages: () => React.ReactNodeArray;
 	popUp: React.ReactNode;
 }
@@ -37,7 +37,7 @@ const AccommodationPopup: React.FC<AccommodationPopupPopupProps> = (props) => {
 			</div>
 
 			<Box padding={'34px 57px'} maxWidth={1644} margin={'auto'}>
-				{props.accommodationDetails.media ? (
+				{!!props.accommodationDetails.media && (
 					<DestinationImageGallery
 						onGalleryClick={() => {
 							popupController.open<TabbedCarouselPopupProps>(LightBoxCarouselPopup, {
@@ -46,8 +46,6 @@ const AccommodationPopup: React.FC<AccommodationPopupPopupProps> = (props) => {
 						}}
 						imageData={props.accommodationDetails.media}
 					/>
-				) : (
-					<></>
 				)}
 
 				<Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} marginBottom={48}>
@@ -100,7 +98,7 @@ const AccommodationPopup: React.FC<AccommodationPopupPopupProps> = (props) => {
 					</Label>
 				</div>
 
-				{props.accommodationDetails.amenities.length !== 0 ? (
+				{!!props.accommodationDetails.amenities.length && (
 					<div className={'amenitiesList'}>
 						<Label variant={'tabbedImageCarouselCustomOne'} marginTop={20}>
 							Amenities
@@ -109,17 +107,15 @@ const AccommodationPopup: React.FC<AccommodationPopupPopupProps> = (props) => {
 							{props.renderAmenities()}
 						</Box>
 					</div>
-				) : (
-					<></>
 				)}
 
-				{props.accommodationDetails.layout.length !== 0 ? (
+				{!!props.accommodationDetails.layout.length && (
 					<>
 						<Label variant={'tabbedImageCarouselCustomOne'} margin={'60px auto'}>
 							Floor Plan
 						</Label>
 
-						{props.accommodationDetails.layout && props.accommodationDetails.layout.length > 1 ? (
+						{!!props.accommodationDetails?.layout.length ? (
 							<Carousel className={'imageContainer'} showControls children={props.renderLayoutImages()} />
 						) : (
 							<div className={'singleLayoutImg'}>
@@ -127,8 +123,6 @@ const AccommodationPopup: React.FC<AccommodationPopupPopupProps> = (props) => {
 							</div>
 						)}
 					</>
-				) : (
-					<></>
 				)}
 			</Box>
 		</Paper>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import './AccommodationPopup.scss';
 import { Popup, popupController, PopupProps } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import Icon from '@bit/redsky.framework.rs.icon';
@@ -22,25 +21,30 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 
 	function getAccommodationImages() {
 		let images: string[] = [];
-		props.accommodationDetails.media.forEach((value) => {
-			images.push(value.urls.imageKit);
-		});
+		images = props.accommodationDetails.media.map(({ urls: { imageKit } }) => imageKit);
 		return images;
 	}
 
 	function handleFloorPlanExpand() {
 		let featureData: Misc.ImageTabProp[] = [];
-		props.accommodationDetails.layout.forEach((value) => {
-			featureData.push({
-				name: value.title,
-				title: value.media.title,
-				imagePath: value.media.urls.imageKit,
-				description: value.media.description,
-				buttonLabel: value.media.title,
-				otherMedia: [value.media]
-			});
-		});
-
+		featureData = props.accommodationDetails.layout.map(
+			({
+				title,
+				media,
+				media: {
+					title: mediaTitle,
+					description,
+					urls: { imageKit: imagePath }
+				}
+			}) => ({
+				name: title,
+				title: mediaTitle,
+				imagePath,
+				description,
+				buttonLabel: mediaTitle,
+				otherMedia: [media]
+			})
+		);
 		popupController.close(AccommodationOverviewPopup);
 		popupController.open<MobileLightBoxProps>(MobileLightBox, {
 			featureData: featureData,
