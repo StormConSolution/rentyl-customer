@@ -59,11 +59,27 @@
 			}
 		}
 	}
+
+	.scrollToTopButton {
+		display: none;
+		&.show {
+			display: block;
+			position: sticky;
+			bottom: 8px;
+			right: 8px;
+			width: 48px;
+			height: 48px;
+			margin-left: auto;
+			border-radius: 50%;
+			background-color: #ffa022;
+			box-shadow: theme-var($primaryBoxShadowColor);
+		}
+	}
 }
 
 .small {
 	.rsAccountPointsPage {
-		padding: 145px 17px 100px;
+		padding: 145px 17px 8px;
 
 		.rsUserBasicInfoPaperMobile {
 			margin-bottom: 25px;
