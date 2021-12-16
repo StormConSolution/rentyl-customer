@@ -44,7 +44,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 
 	return (
 		<div
-			className={`rsCarouselV2${props.className ? ` ${props.className}` : ''}`}
+			className={`rsCarouselV2 ${props.className || ''}`}
 			onClick={() => {
 				if (typeof props.path === 'string') router.navigate(props.path).catch(console.error);
 				else props.path();
