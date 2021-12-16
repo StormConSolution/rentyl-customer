@@ -186,7 +186,7 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							<Box display={'flex'}>
 								<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
 								<Icon
-									iconImg={hideTaxesAndFees ? 'icon-chevron-down' : 'icon-chevron-up'}
+									iconImg={hideTaxesAndFees ? 'icon-chevron-up' : 'icon-chevron-down'}
 									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
 									className={'taxIcon'}
 									cursorPointer
