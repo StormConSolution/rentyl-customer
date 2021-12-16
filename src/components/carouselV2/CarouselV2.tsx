@@ -19,6 +19,7 @@ interface CarouselV2Props {
 	onGalleryClick?: () => void;
 	destinationId?: number;
 	hideCompareButton?: boolean;
+	className?: string;
 }
 
 const CarouselV2: React.FC<CarouselV2Props> = (props) => {
@@ -43,7 +44,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 
 	return (
 		<div
-			className={'rsCarouselV2'}
+			className={`rsCarouselV2${props.className ? ` ${props.className}` : ''}`}
 			onClick={() => {
 				if (typeof props.path === 'string') router.navigate(props.path).catch(console.error);
 				else props.path();
