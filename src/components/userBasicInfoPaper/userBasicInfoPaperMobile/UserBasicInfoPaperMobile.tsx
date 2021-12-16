@@ -49,13 +49,6 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 								? props.userData.accountNumber
 								: replaceLettersWithStars(props.userData.accountNumber)}
 						</Label>
-						<Icon
-							iconImg={visibilityToggle ? 'icon-visibility-false' : 'icon-visibility-true'}
-							onClick={() => {
-								setVisibilityToggle(!visibilityToggle);
-							}}
-							cursorPointer
-						/>
 					</Box>
 				</Box>
 			</Box>
@@ -88,7 +81,7 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 				<LabelButton
 					look={'containedPrimary'}
 					variant={'customTwentyThree'}
-					label={'See Loyalty Tiers'}
+					label={'Loyalty Tiers'}
 					onClick={() => {
 						popupController.open(LoyaltyTierPopup);
 					}}
