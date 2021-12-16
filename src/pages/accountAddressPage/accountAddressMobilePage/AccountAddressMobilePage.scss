@@ -39,6 +39,11 @@
 				.rsLabel {
 					color: #2c3c60;
 				}
+				@media screen and (max-width: 360px) {
+					.rsLabel {
+						font-size: 14px;
+					}
+				}
 				&:hover {
 					background-color: theme-var($yellowTextColor);
 				}
