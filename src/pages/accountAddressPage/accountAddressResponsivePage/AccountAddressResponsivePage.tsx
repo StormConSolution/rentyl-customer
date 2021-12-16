@@ -250,8 +250,16 @@ const AccountAddressResponsivePage: React.FC = () => {
 				<hr />
 				<Box className={'newAddress'}>
 					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 30}>
-						Add new address
+						Add a New Address
 					</Label>
+					<LabelInput
+						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
+						className={'inputStretched'}
+						title={'Full Name'}
+						inputType={'text'}
+						control={newAddressObj.get('full_name')}
+						updateControl={updateNewAddressObj}
+					/>
 					<LabelInput
 						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
 						className={'inputStretched'}

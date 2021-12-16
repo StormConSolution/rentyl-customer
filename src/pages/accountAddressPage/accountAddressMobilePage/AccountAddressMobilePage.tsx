@@ -251,7 +251,7 @@ const AccountAddressMobilePage: React.FC = () => {
 			<Paper boxShadow borderRadius={'20px'}>
 				<Box className={'newAddress'}>
 					<Label variant={'customEleven'} mb={size === 'small' ? 25 : 30}>
-						Add new address
+						Add a New Address
 					</Label>
 					<LabelInput
 						labelVariant={size === 'small' ? 'customSixteen' : 'body5'}
