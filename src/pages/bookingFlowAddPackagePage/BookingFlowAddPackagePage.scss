@@ -117,6 +117,8 @@
 		.packageSection {
 			width: 100%;
 			padding-left: 0;
+			display: flex;
+			flex-wrap: wrap;
 			.continueButton {
 				width: 278px;
 				margin: 0 auto;
