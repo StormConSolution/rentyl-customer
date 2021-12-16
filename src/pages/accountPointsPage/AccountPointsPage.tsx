@@ -73,7 +73,6 @@ const AccountPointsPage: React.FC = () => {
 		} else {
 			scrollToTopButtonRef.current.classList.remove('show');
 		}
-		// console.log(window.pageYOffset)
 	}
 
 	function renderPoints(type: string) {
