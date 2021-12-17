@@ -9,13 +9,12 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		padding-left: 42px;
-		padding-right: 85px;
+		margin-left: 42px;
 		.accommodationDetails {
 			width: 100%;
 			height: 265px;
 			display: flex;
-			padding-bottom: 24px;
+			margin-bottom: 24px;
 			.priceBox {
 				display: flex;
 				justify-content: flex-end;

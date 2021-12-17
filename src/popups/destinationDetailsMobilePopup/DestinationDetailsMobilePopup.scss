@@ -21,15 +21,17 @@
 		align-items: center;
 		justify-content: space-between;
 	}
-	.rsBox {
-		margin-right: 16px;
-		align-items: flex-start;
+	.imagesBox {
+		.infoImages {
+			margin-right: 15px;
+		}
 	}
 	@media screen and (max-width: 370px) {
-		.rsBox {
+		.imagesBox {
 			flex-wrap: wrap;
-			margin-right: 79px;
-			margin-bottom: 16px;
+			.infoImages {
+				margin-bottom: 16px;
+			}
 		}
 	}
 	.detailsOverviewCarousel {

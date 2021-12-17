@@ -332,13 +332,14 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 					className="detailsOverviewCarousel"
 				/>
 				<Label variant={'destinationDetailsMobileCustomTwo'}>{destinationDetails.name}</Label>
-				<Box display={'flex'} m={'15px 0'}>
+				<Box display={'flex'} m={'15px 0'} className={'imagesBox'}>
 					<ImageLabel
 						labelName={renderMinMaxLabels(destinationDetails.minBedroom, destinationDetails.maxBedroom)}
 						imgSrc={'sleep.png'}
 						imgWidth={'30px'}
 						imgHeight={'20px'}
 						iconPosition={'left'}
+						className={'infoImages'}
 					/>
 					<ImageLabel
 						labelName={renderMinMaxLabels(destinationDetails.minBathroom, destinationDetails.maxBathroom)}
@@ -346,6 +347,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 						imgWidth={'30px'}
 						imgHeight={'20px'}
 						iconPosition={'left'}
+						className={'infoImages'}
 					/>
 					<ImageLabel
 						labelName={renderDestinationSize()}
@@ -353,6 +355,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 						imgWidth={'30px'}
 						imgHeight={'20px'}
 						iconPosition={'left'}
+						className={'infoImages'}
 					/>
 				</Box>
 				<Label variant={'destinationDetailsMobileCustomThree'}>{destinationDetails.description}</Label>
