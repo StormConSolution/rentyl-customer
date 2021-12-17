@@ -5,6 +5,7 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { DateUtils, StringUtils } from '../../utils/utils';
+import Accordion from '@bit/redsky.framework.rs.accordion';
 interface BookingSummaryCardProps {
 	bookingData: Api.Reservation.Res.Verification;
 	canHide: boolean;
@@ -14,7 +15,6 @@ interface BookingSummaryCardProps {
 const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 	const [hideSummary, setHideSummary] = useState<boolean>(false);
 	const [hideTaxesAndFees, setHideTaxesAndFees] = useState<boolean>(true);
-
 	function calculateGrandTotalWithPackagesCentsOrPoints() {
 		if (props.usePoints) {
 			let packagesTotalInPoints = 0;
@@ -183,21 +183,30 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 					{renderPackages()}
 					{!props.usePoints && (
 						<Box display={'flex'} justifyContent={'space-between'} marginTop={20}>
-							<Box display={'flex'}>
-								<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
-								<Icon
-									iconImg={hideTaxesAndFees ? 'icon-chevron-up' : 'icon-chevron-down'}
+							<Box display={'flex'} className={'accordionContainerBookingSummary'}>
+								<Accordion
+									hideChevron
+									titleReact={
+										<Box display={'flex'}>
+											<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
+											<Icon
+												iconImg={'icon-chevron-up'}
+												className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
+												cursorPointer
+											/>
+										</Box>
+									}
 									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
-									className={'taxIcon'}
-									cursorPointer
-								/>
+								>
+									{(!props.usePoints || !hideTaxesAndFees) && renderTaxesAndFees()}
+								</Accordion>
 							</Box>
 							<Label variant={'customThree'} className={'totalTax'}>
 								${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
 							</Label>
 						</Box>
 					)}
-					{props.usePoints || hideTaxesAndFees ? <></> : renderTaxesAndFees()}
+					{/*{props.usePoints || hideTaxesAndFees ? <></> : renderTaxesAndFees()}*/}
 					<Box display={'flex'} justifyContent={'space-between'}>
 						<Label variant={'customFour'} marginTop={20}>
 							Total
