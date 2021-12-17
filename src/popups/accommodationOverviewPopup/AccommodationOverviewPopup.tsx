@@ -10,6 +10,7 @@ import globalState from '../../state/globalState';
 import AccommodationPopup from './accomodationPopup/AccommodationPopup';
 import MobileLightBox, { MobileLightBoxProps } from '../mobileLightBox/MobileLightBox';
 import MobileAccommodationOverviewPopup from './mobileAccomodationPopup/MobileAccommodationOverviewPopup';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 
 export interface AccommodationOverviewPopupProps extends PopupProps {
 	accommodationDetails: Api.Accommodation.Res.Details;
@@ -18,16 +19,14 @@ export interface AccommodationOverviewPopupProps extends PopupProps {
 
 const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (props) => {
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
+	const size = useWindowResizeChange();
 
 	function getAccommodationImages() {
-		let images: string[] = [];
-		images = props.accommodationDetails.media.map(({ urls: { imageKit } }) => imageKit);
-		return images;
+		return props.accommodationDetails.media.map(({ urls: { imageKit } }) => imageKit);
 	}
 
 	function handleFloorPlanExpand() {
-		let featureData: Misc.ImageTabProp[] = [];
-		featureData = props.accommodationDetails.layout.map(
+		let featureData: Misc.ImageTabProp[] = props.accommodationDetails.layout.map(
 			({
 				title,
 				media,
@@ -45,16 +44,8 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 				otherMedia: [media]
 			})
 		);
-		popupController.close(AccommodationOverviewPopup);
 		popupController.open<MobileLightBoxProps>(MobileLightBox, {
 			featureData: featureData,
-			customOnBack: () => {
-				popupController.close(MobileLightBox);
-				popupController.open<AccommodationOverviewPopupProps>(AccommodationOverviewPopup, {
-					accommodationDetails: props.accommodationDetails,
-					destinationName: props.destinationName
-				});
-			},
 			floorPlanClass: true
 		});
 	}
@@ -115,24 +106,27 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 
 	return (
 		<Popup opened={props.opened}>
-			<AccommodationPopup
-				renderLayoutImages={renderLayoutImages}
-				renderAmenities={renderAmenities}
-				renderAccommodationSize={renderAccommodationSize}
-				handleReserveStay={handleReserveStay}
-				popUp={AccommodationOverviewPopup}
-				destinationName={props.destinationName}
-				accommodationDetails={props.accommodationDetails}
-			/>
-			<MobileAccommodationOverviewPopup
-				getAccommodationImages={getAccommodationImages}
-				destinationName={props.destinationName}
-				accommodationDetails={props.accommodationDetails}
-				handleFloorPlanExpand={handleFloorPlanExpand}
-				renderAmenities={renderAmenities}
-				renderAccommodationSize={renderAccommodationSize}
-				popUp={AccommodationOverviewPopup}
-			/>
+			{size ? (
+				<MobileAccommodationOverviewPopup
+					getAccommodationImages={getAccommodationImages}
+					destinationName={props.destinationName}
+					accommodationDetails={props.accommodationDetails}
+					handleFloorPlanExpand={handleFloorPlanExpand}
+					renderAmenities={renderAmenities}
+					renderAccommodationSize={renderAccommodationSize}
+					popUp={AccommodationOverviewPopup}
+				/>
+			) : (
+				<AccommodationPopup
+					renderLayoutImages={renderLayoutImages}
+					renderAmenities={renderAmenities}
+					renderAccommodationSize={renderAccommodationSize}
+					handleReserveStay={handleReserveStay}
+					popUp={AccommodationOverviewPopup}
+					destinationName={props.destinationName}
+					accommodationDetails={props.accommodationDetails}
+				/>
+			)}
 		</Popup>
 	);
 };

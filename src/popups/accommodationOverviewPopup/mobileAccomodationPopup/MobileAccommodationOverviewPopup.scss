@@ -84,9 +84,3 @@
 .small .rsMobileAccommodationOverviewPopup .rsCarouselV2 {
 	width: clamp(168px, 100%, 368px);
 }
-
-@media (min-width: $breakpoint-tablet) {
-	.rsMobileAccommodationOverviewPopup {
-		display: none;
-	}
-}
