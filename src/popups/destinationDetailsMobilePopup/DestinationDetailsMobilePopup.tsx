@@ -329,7 +329,8 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 							imageData: destinationDetails.media
 						});
 					}}
-					className="detailsOverviewCarousel"
+					className={'detailsOverviewCarousel'}
+					hideCompareButton={true}
 				/>
 				<Label variant={'destinationDetailsMobileCustomTwo'}>{destinationDetails.name}</Label>
 				<Box display={'flex'} m={'15px 0'} className={'imagesBox'}>
