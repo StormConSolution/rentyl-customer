@@ -21,8 +21,22 @@
 		align-items: center;
 		justify-content: space-between;
 	}
+	.rsBox {
+		margin-right: 16px;
+		align-items: flex-start;
+	}
+	@media screen and (max-width: 370px) {
+		.rsBox {
+			flex-wrap: wrap;
+			margin-right: 79px;
+			margin-bottom: 16px;
+		}
+	}
 	.rsCarouselV2 {
 		margin: 78px auto 25px;
+		width: 100%;
+		aspect-ratio: auto;
+		height: unset;
 	}
 	hr {
 		background: #7070706e;
@@ -34,5 +48,18 @@
 
 	#GoogleMap {
 		border-radius: 20px;
+	}
+
+	.availableStays {
+		.accommodationCardWrapper {
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+		@media screen and (max-width: 992px) {
+			.accommodationCardWrapper {
+				gap: 40px;
+			}
+		}
 	}
 }

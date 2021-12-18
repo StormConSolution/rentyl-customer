@@ -545,7 +545,7 @@ const FilterBarAllFilters: React.FC<FilterBarV2Props> = () => {
 				{checkForFilters() && (
 					<LabelButton
 						look={'none'}
-						label={'Clear all filters'}
+						label={'Clear All Filters'}
 						className={'clearAllButton'}
 						variant={'body1'}
 						onClick={clearAll}

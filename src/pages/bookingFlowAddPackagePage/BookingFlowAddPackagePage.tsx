@@ -201,12 +201,12 @@ const BookingFlowAddPackagePage = () => {
 	) : (
 		<Page className={'rsBookingFlowAddPackagePage'}>
 			<div className={'rs-page-content-wrapper'}>
-				<Box display="flex">
+				<Box display="flex" gap={76} flexDirection={smallSize ? 'column' : 'row'}>
 					<Box className="packageSection">
 						{smallSize ? renderContinueBtn() : null}
 						<div ref={filterRef} />
 						{renderAvailablePackages()}
-						{renderContinueBtn()}
+						{verifiedAccommodation && renderContinueBtn()}
 						<PaginationViewMore
 							selectedRowsPerPage={perPage}
 							total={total}

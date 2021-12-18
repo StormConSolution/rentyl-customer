@@ -33,6 +33,8 @@ import AccommodationOverviewPopup, {
 	AccommodationOverviewPopupProps
 } from '../../popups/accommodationOverviewPopup/AccommodationOverviewPopup';
 import router from '../../utils/router';
+import Button from '@bit/redsky.framework.rs.button';
+import LabelButton from '../../components/labelButton/LabelButton';
 
 interface DestinationDetailsPageProps {}
 
@@ -349,7 +351,6 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 				{size !== 'small' && (
 					<SubNavMenu
 						pageRefs={{
-							galleryRef: galleryRef,
 							overviewRef: overviewRef,
 							experiencesRef: experiencesRef,
 							availableStaysRef: availableStaysRef
@@ -444,6 +445,21 @@ const DestinationDetailsPage: React.FC<DestinationDetailsPageProps> = () => {
 								<div />
 							)}
 						</Box>
+						{size === 'small' && (
+							<LabelButton
+								className={'yellowButton'}
+								look={'containedPrimary'}
+								variant={'customTwelve'}
+								label={'Reserve Stay'}
+								onClick={() => {
+									if (!availableStaysRef) return;
+									let ref = availableStaysRef.current;
+									if (!ref) return;
+									window.scrollTo({ top: ref.offsetTop, behavior: 'smooth' });
+								}}
+							/>
+						)}
+
 						<Box
 							width={'clamp(300px, 100%, 766px)'}
 							height={size === 'small' ? '300px' : '430px'}

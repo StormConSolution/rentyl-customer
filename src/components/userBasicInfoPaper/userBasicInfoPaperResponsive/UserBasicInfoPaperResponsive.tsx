@@ -6,6 +6,8 @@ import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
 import LoyaltyTierPopup from '../../../popups/loyaltyTierPopup/LoyaltyTierPopup';
+import Icon from '@bit/redsky.framework.rs.icon';
+import { useState } from 'react';
 
 interface UserBasicInfoPaperResponsiveProps {
 	userData: Api.User.Res.Detail;
@@ -13,6 +15,7 @@ interface UserBasicInfoPaperResponsiveProps {
 }
 
 const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> = (props) => {
+	const [visibilityToggle, setVisibilityToggle] = useState<boolean>(true);
 	function renderLoadingBarPercent(): string {
 		return `${Math.min(
 			100,
@@ -21,6 +24,10 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					(props.userData.nextTierThreshold ? props.userData.nextTierThreshold / 100 : 100)
 			)
 		)}%`;
+	}
+	function replaceLettersWithStars(accountNumber: any): string {
+		let lastFour = accountNumber.slice(-4);
+		return accountNumber.replace(/\d/g, '*').slice(0, -4) + lastFour;
 	}
 	return (
 		<Paper className={'rsUserBasicInfoPaperResponsive'} boxShadow borderRadius={'20px'}>
@@ -32,12 +39,12 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					<Label variant={'customTwo'}>{props.userData.primaryEmail}</Label>
 				</Box>
 				<Box display={'flex'}>
-					<Label variant={'customThree'} color={'#707070'}>
-						not you?
+					<Label variant={'customTwentyFive'} color={'#707070'}>
+						Not you?
 					</Label>
 					<Label
 						ml={3}
-						variant={'customFour'}
+						variant={'customTwentyFour'}
 						color={'#2C3C60'}
 						onClick={props.onLogOut}
 						className={'clickable'}
@@ -54,7 +61,21 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 					/>
 					<Box ml={15}>
 						<Label variant={'customThree'}>{props.userData.tierTitle || 'Bronze'}</Label>
-						<Label variant={'customThree'}>Account {props.userData.id}</Label>
+						<Box display={'flex'} alignItems={'center'}>
+							<Label variant={'customThree'} marginRight={'16px'}>
+								Account{' '}
+								{visibilityToggle
+									? props.userData.accountNumber
+									: replaceLettersWithStars(props.userData.accountNumber)}
+							</Label>
+							<Icon
+								iconImg={visibilityToggle ? 'icon-visibility-false' : 'icon-visibility-true'}
+								onClick={() => {
+									setVisibilityToggle(!visibilityToggle);
+								}}
+								cursorPointer
+							/>
+						</Box>
 					</Box>
 				</Box>
 				<Box textAlign={'end'}>
@@ -94,7 +115,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 				<div className={'loyaltyTierButtonContainer'}>
 					<LabelButton
 						look={'containedPrimary'}
-						variant={'customTwelve'}
+						variant={'customTwentyThree'}
 						label={'See Loyalty Tiers'}
 						onClick={() => {
 							popupController.open(LoyaltyTierPopup);
