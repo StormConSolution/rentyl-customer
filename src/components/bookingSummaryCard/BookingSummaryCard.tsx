@@ -5,6 +5,8 @@ import Icon from '@bit/redsky.framework.rs.icon';
 import { useState } from 'react';
 import { Box } from '@bit/redsky.framework.rs.996';
 import { DateUtils, StringUtils } from '../../utils/utils';
+import Accordion from '@bit/redsky.framework.rs.accordion';
+import useWindowResizeChange from '../../customHooks/useWindowResizeChange';
 interface BookingSummaryCardProps {
 	bookingData: Api.Reservation.Res.Verification;
 	canHide: boolean;
@@ -12,9 +14,8 @@ interface BookingSummaryCardProps {
 }
 
 const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
-	const [hideSummary, setHideSummary] = useState<boolean>(false);
 	const [hideTaxesAndFees, setHideTaxesAndFees] = useState<boolean>(true);
-
+	const size = useWindowResizeChange();
 	function calculateGrandTotalWithPackagesCentsOrPoints() {
 		if (props.usePoints) {
 			let packagesTotalInPoints = 0;
@@ -138,21 +139,15 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 
 	return (
 		<div className={'rsBookingSummaryCard'}>
-			<Box display={'flex'} justifyContent={'space-between'}>
-				<Label variant={'customFive'}>Booking Summary</Label>
-				{props.canHide ? (
-					<Icon
-						iconImg={hideSummary ? 'icon-chevron-up' : 'icon-chevron-down'}
-						onClick={() => setHideSummary(!hideSummary)}
-					/>
-				) : (
-					<></>
-				)}
-			</Box>
-			{hideSummary ? (
-				<></>
-			) : (
-				<>
+			{size === 'small' ? (
+				<Accordion
+					isOpen={true}
+					titleReact={
+						<Box display={'flex'}>
+							<Label variant={'customFive'}>Booking Summary</Label>
+						</Box>
+					}
+				>
 					<Label variant={'caption3'} marginTop={20}>
 						{props.bookingData.destinationName}
 					</Label>
@@ -178,26 +173,35 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							}`}</Label>
 						</div>
 					</div>
+
 					{renderStayInfo()}
 					<hr />
 					{renderPackages()}
 					{!props.usePoints && (
 						<Box display={'flex'} justifyContent={'space-between'} marginTop={20}>
-							<Box display={'flex'}>
-								<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
-								<Icon
-									iconImg={hideTaxesAndFees ? 'icon-chevron-up' : 'icon-chevron-down'}
+							<Box display={'flex'} className={'accordionContainerBookingSummary'}>
+								<Accordion
+									hideChevron
+									titleReact={
+										<Box display={'flex'}>
+											<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
+											<Icon
+												iconImg={'icon-chevron-up'}
+												className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
+												cursorPointer
+											/>
+										</Box>
+									}
 									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
-									className={'taxIcon'}
-									cursorPointer
-								/>
+								>
+									{(!props.usePoints || !hideTaxesAndFees) && renderTaxesAndFees()}
+								</Accordion>
 							</Box>
 							<Label variant={'customThree'} className={'totalTax'}>
 								${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
 							</Label>
 						</Box>
 					)}
-					{props.usePoints || hideTaxesAndFees ? <></> : renderTaxesAndFees()}
 					<Box display={'flex'} justifyContent={'space-between'}>
 						<Label variant={'customFour'} marginTop={20}>
 							Total
@@ -206,7 +210,75 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 							{calculateGrandTotalWithPackagesCentsOrPoints()}
 						</Label>
 					</Box>
-				</>
+				</Accordion>
+			) : (
+				<div>
+					<Box display={'flex'}>
+						<Label variant={'customFive'}>Booking Summary</Label>
+					</Box>
+					<Label variant={'caption3'} marginTop={20}>
+						{props.bookingData.destinationName}
+					</Label>
+					<div className={'checkInInfo'}>
+						<div className={'cell'}>
+							<Label variant={'bookingSummaryCustomOne'}>Check In</Label>
+							<Label variant={'bookingSummaryCustomTwo'} marginTop={4}>
+								{DateUtils.formatDate(new Date(props.bookingData.arrivalDate), 'MM-DD-YYYY')}
+							</Label>
+						</div>
+						<div className={'cell'}>
+							<Label variant={'bookingSummaryCustomOne'}>Check Out</Label>
+							<Label variant={'bookingSummaryCustomTwo'} marginTop={4}>
+								{DateUtils.formatDate(new Date(props.bookingData.departureDate), 'MM-DD-YYYY')}
+							</Label>
+						</div>
+						<div className={'cell'}>
+							<Label variant={'bookingSummaryCustomOne'}>Guests</Label>
+							<Label variant={'bookingSummaryCustomTwo'} marginTop={4}>{`${
+								props.bookingData.adultCount + props.bookingData.childCount
+							} guest${
+								props.bookingData.adultCount + props.bookingData.childCount > 1 ? 's' : ''
+							}`}</Label>
+						</div>
+					</div>
+
+					{renderStayInfo()}
+					<hr />
+					{renderPackages()}
+					{!props.usePoints && (
+						<Box display={'flex'} justifyContent={'space-between'} marginTop={20}>
+							<Box display={'flex'} className={'accordionContainerBookingSummary'}>
+								<Accordion
+									hideChevron
+									titleReact={
+										<Box display={'flex'}>
+											<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
+											<Icon
+												iconImg={'icon-chevron-up'}
+												className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
+												cursorPointer
+											/>
+										</Box>
+									}
+									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
+								>
+									{(!props.usePoints || !hideTaxesAndFees) && renderTaxesAndFees()}
+								</Accordion>
+							</Box>
+							<Label variant={'customThree'} className={'totalTax'}>
+								${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
+							</Label>
+						</Box>
+					)}
+					<Box display={'flex'} justifyContent={'space-between'}>
+						<Label variant={'customFour'} marginTop={20}>
+							Total
+						</Label>
+						<Label variant={'customThree'} marginTop={20}>
+							{calculateGrandTotalWithPackagesCentsOrPoints()}
+						</Label>
+					</Box>
+				</div>
 			)}
 		</div>
 	);
