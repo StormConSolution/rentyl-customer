@@ -90,7 +90,13 @@ const UserBasicInfoPaperMobile: React.FC<UserBasicInfoPaperMobileProps> = (props
 					<Label variant={'customTwentyFive'} color={'#707070'} ml={'auto'}>
 						Not you?
 					</Label>
-					<Label ml={3} variant={'customTwentyFour'} color={'#2C3C60'} onClick={props.onLogOut}>
+					<Label
+						ml={3}
+						variant={'customTwentyFour'}
+						className={'logOut'}
+						color={'#2C3C60'}
+						onClick={props.onLogOut}
+					>
 						Log Out
 					</Label>
 				</Box>

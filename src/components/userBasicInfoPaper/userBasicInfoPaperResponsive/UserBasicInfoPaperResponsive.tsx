@@ -47,7 +47,7 @@ const UserBasicInfoPaperResponsive: React.FC<UserBasicInfoPaperResponsiveProps> 
 						variant={'customTwentyFour'}
 						color={'#2C3C60'}
 						onClick={props.onLogOut}
-						className={'clickable'}
+						className={'logOut'}
 					>
 						Log Out
 					</Label>
