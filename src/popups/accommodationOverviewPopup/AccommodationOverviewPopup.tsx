@@ -22,7 +22,7 @@ const AccommodationOverviewPopup: React.FC<AccommodationOverviewPopupProps> = (p
 	const size = useWindowResizeChange();
 
 	function getAccommodationImages() {
-		return props.accommodationDetails.media.map(({ urls: { imageKit } }) => imageKit);
+		return props.accommodationDetails.media.map((item) => item.urls.imageKit);
 	}
 
 	function handleFloorPlanExpand() {
