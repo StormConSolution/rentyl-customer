@@ -26,7 +26,35 @@
 			border-radius: 0 0 20px 20px;
 		}
 	}
-
+	.accordionContainerBookingSummary {
+		width: 100%;
+	}
+	.rsAccordion {
+		width: 100%;
+		color: #2c3c60;
+		font-family: Montserrat;
+		font-weight: $bold;
+		font-size: 20px;
+		line-height: 19px;
+		filter: unset !important;
+		-webkit-tap-highlight-color: transparent;
+		.articleItemHeader {
+			padding: 0;
+			min-height: 20px;
+			.rsIcon {
+				&.up {
+					animation-name: spinUp;
+					animation-duration: 0.4s;
+					transform: rotate(0deg);
+				}
+				&.down {
+					animation-name: spinDown;
+					animation-duration: 0.4s;
+					transform: rotate(-180deg);
+				}
+			}
+		}
+	}
 	hr {
 		background-color: #7070706e;
 		margin-top: 16px;
@@ -55,5 +83,23 @@
 	}
 	.medium {
 		font-weight: 500;
+	}
+
+	@keyframes spinDown {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(-180deg);
+		}
+	}
+
+	@keyframes spinUp {
+		0% {
+			transform: rotate(-180deg);
+		}
+		100% {
+			transform: rotate(0deg);
+		}
 	}
 }
