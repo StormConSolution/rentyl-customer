@@ -316,6 +316,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 					/>
 				</div>
 				<CarouselV2
+					destinationId={destinationDetails.id}
 					path={window.location.href}
 					imgPaths={getImageUrls(destinationDetails)}
 					onAddCompareClick={() => {
