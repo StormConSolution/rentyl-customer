@@ -22,8 +22,6 @@ const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
 		globalState.reservationFilters
 	);
 
-	console.log('priceObj', props.priceObj);
-
 	function onBookNow() {
 		if (props.loyaltyStatus !== 'ACTIVE') {
 			setReservationFilters({ ...reservationFilters, redeemPoints: false });
