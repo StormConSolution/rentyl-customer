@@ -4,10 +4,10 @@ import { Box, popupController } from '@bit/redsky.framework.rs.996';
 import Label from '@bit/redsky.framework.rs.label';
 import { StringUtils } from '../../../utils/utils';
 import LabelButton from '../../labelButton/LabelButton';
-import AccommodationsPopup from '../../../popups/accommodationsPopup/AccommodationsPopup';
 import router from '../../../utils/router';
 import { useRecoilState } from 'recoil';
 import globalState from '../../../state/globalState';
+import DestinationDetailsMobilePopup from '../../../popups/destinationDetailsMobilePopup/DestinationDetailsMobilePopup';
 
 interface RateCodeCardMobileProps {
 	priceObj: Misc.Pricing;
@@ -22,11 +22,19 @@ const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
 		globalState.reservationFilters
 	);
 
+	console.log('priceObj', props.priceObj);
+
 	function onBookNow() {
 		if (props.loyaltyStatus !== 'ACTIVE') {
 			setReservationFilters({ ...reservationFilters, redeemPoints: false });
 		}
 		let data: any = { ...reservationFilters, redeemPoints: props.loyaltyStatus === 'ACTIVE' };
+		let rateCode = '';
+		if (typeof props.priceObj.rate === 'string') {
+			rateCode = props.priceObj.rate;
+		} else if (typeof props.priceObj.rate === 'object') {
+			rateCode = props.priceObj.rate.code;
+		}
 		let newRoom: Misc.StayParams = {
 			uuid: Date.now(),
 			adults: data.adultCount,
@@ -35,10 +43,10 @@ const RateCodeCardMobile: React.FC<RateCodeCardMobileProps> = (props) => {
 			arrivalDate: data.startDate,
 			departureDate: data.endDate,
 			packages: [],
-			rateCode: props.priceObj.rate.code
+			rateCode: rateCode
 		};
 		data = StringUtils.setAddPackagesParams({ destinationId: props.destinationId, newRoom });
-		popupController.close(AccommodationsPopup);
+		popupController.close(DestinationDetailsMobilePopup);
 		router.navigate(`/booking/packages?data=${data}`).catch(console.error);
 	}
 
