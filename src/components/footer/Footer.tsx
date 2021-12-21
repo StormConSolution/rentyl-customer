@@ -61,7 +61,10 @@ const Footer: React.FC<FooterProps> = (props) => {
 		return sections.map((section: FooterSection, index) => {
 			return (
 				<Box className={'footerSection'} key={index} display={'flex'} flexDirection={'column'}>
-					<Label variant={size === 'small' ? 'reservationDetailsCustomOne' : 'h4'} mb={7}>
+					<Label
+						variant={size === 'small' ? 'reservationDetailsCustomOneFooter' : 'h4'}
+						mb={index === 2 && size === 'small' ? -13 : 7}
+					>
 						{section.title}
 					</Label>
 					{renderLinks(section.links)}

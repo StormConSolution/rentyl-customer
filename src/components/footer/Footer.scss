@@ -79,7 +79,6 @@
 
 		.footerNavigation {
 			width: 100%;
-
 			color: unset;
 			display: unset;
 			padding-bottom: unset;
@@ -94,7 +93,6 @@
 
 				.logoContainer {
 					width: 50%;
-
 					img {
 						width: 100%;
 						height: auto;
@@ -111,6 +109,7 @@
 				gap: unset;
 
 				.footerSection {
+					gap: 32px;
 					width: 33%;
 				}
 			}
