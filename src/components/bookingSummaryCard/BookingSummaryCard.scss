@@ -53,6 +53,13 @@
 					transform: rotate(-180deg);
 				}
 			}
+			> div:first-child {
+				width: 100%;
+				> div {
+					width: 100%;
+					justify-content: space-between;
+				}
+			}
 		}
 	}
 	hr {
