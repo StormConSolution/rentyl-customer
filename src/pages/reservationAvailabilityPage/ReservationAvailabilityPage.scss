@@ -92,5 +92,11 @@
 				display: none;
 			}
 		}
+		@media screen and (max-width: 365px) {
+			.rsCarouselV2 {
+				width: 260px;
+				margin: 0 auto;
+			}
+		}
 	}
 }
