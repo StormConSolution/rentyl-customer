@@ -22,9 +22,9 @@ import { Loader } from 'google-maps';
 import FilterBarLimited from '../../components/filterBar/FilterBarLimited';
 import PaginationViewMore from '../../components/paginationViewMore/PaginationViewMore';
 import AccommodationSearchCard from '../../components/accommodationSearchCardV2/AccommodationSearchCard';
-import MobileAccommodationOverviewPopup, {
-	MobileAccommodationOverviewPopupProps
-} from '../mobileAccommodationOverviewPopup/MobileAccommodationOverviewPopup';
+import AccommodationOverviewPopup, {
+	AccommodationOverviewPopupProps
+} from '../../popups/accommodationOverviewPopup/AccommodationOverviewPopup';
 
 export interface DestinationDetailsMobilePopupProps extends PopupProps {}
 
@@ -270,8 +270,9 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 
 	async function handleOnInfoClick(accommodationId: number) {
 		let accommodationDetails = await accommodationService.getAccommodationDetails(accommodationId);
-		popupController.open<MobileAccommodationOverviewPopupProps>(MobileAccommodationOverviewPopup, {
-			accommodationDetails: accommodationDetails
+		popupController.open<AccommodationOverviewPopupProps>(AccommodationOverviewPopup, {
+			accommodationDetails: accommodationDetails,
+			destinationName: ''
 		});
 	}
 
@@ -316,6 +317,7 @@ const DestinationDetailsMobilePopup: React.FC<DestinationDetailsMobilePopupProps
 					/>
 				</div>
 				<CarouselV2
+					destinationId={destinationDetails.id}
 					path={window.location.href}
 					imgPaths={getImageUrls(destinationDetails)}
 					onAddCompareClick={() => {
