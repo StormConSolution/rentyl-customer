@@ -16,10 +16,31 @@ interface PaymentMethodProps {
 const PaymentMethod: React.FC<PaymentMethodProps> = (props) => {
 	const reservationFilters = useRecoilValue<Misc.ReservationFilters>(globalState.reservationFilters);
 
+	function getPaymentLogo(cardType: string) {
+		let logo = '';
+		switch (cardType.toLowerCase()) {
+			case 'visa':
+				logo = '../../images/creditCardLogos/Visa.svg';
+				break;
+			case 'mastercard':
+				logo = '../../images/creditCardLogos/MasterCard.svg';
+				break;
+			case 'discover':
+				logo = '../../images/creditCardLogos/Discover.svg';
+				break;
+			case 'amex':
+				logo = '../../images/creditCardLogos/AmEx.svg';
+				break;
+		}
+		if (!logo) return StringUtils.capitalizeFirst(cardType);
+		// else return logo;
+		else return <img src={logo} alt={'credit Card Logo'} width={104} height={64} />;
+	}
+
 	function renderPaymentType() {
 		if (props.userPrimaryPaymentMethod?.type && props.userCheckout.useExistingPaymentMethod)
 			return StringUtils.capitalizeFirst(props.userPrimaryPaymentMethod.type);
-		if (props.userCheckout.pmData) return StringUtils.capitalizeFirst(props.userCheckout.pmData.card_type);
+		if (props.userCheckout.pmData) return getPaymentLogo(props.userCheckout.pmData.card_type);
 		if (reservationFilters.redeemPoints) return 'Points';
 		return 'None';
 	}
