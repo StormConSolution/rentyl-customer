@@ -37,6 +37,8 @@
 			display: flex;
 			gap: 210px;
 			.footerSection {
+				display: flex;
+				flex-direction: column;
 				gap: 22px;
 			}
 		}
@@ -111,6 +113,13 @@
 				.footerSection {
 					gap: 32px;
 					width: 33%;
+					display: flex;
+					flex-direction: column;
+					@media screen and (max-width: 523px) {
+						&.termsAndPolicies {
+							gap: 15px;
+						}
+					}
 				}
 			}
 		}
