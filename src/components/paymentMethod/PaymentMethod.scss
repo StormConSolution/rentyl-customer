@@ -23,16 +23,18 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 0.5px solid theme-var($thinGreyLineColor);
 		width: 115px;
 		height: 64px;
 		box-sizing: border-box;
 		border-radius: 10px;
+		img {
+			box-shadow: theme-var($primaryBoxShadowColor);
+		}
 	}
 	.paymentInfoWrapper {
 		display: flex;
 		flex-direction: column;
-		padding-left: 22px;
+		margin-left: 10px;
 		font-size: 18px;
 		font-weight: 400;
 
