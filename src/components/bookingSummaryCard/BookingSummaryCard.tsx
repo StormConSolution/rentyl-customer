@@ -184,12 +184,22 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 									hideChevron
 									titleReact={
 										<Box display={'flex'}>
-											<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
-											<Icon
-												iconImg={'icon-chevron-up'}
-												className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
-												cursorPointer
-											/>
+											<Box display={'flex'}>
+												<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
+												<Icon
+													iconImg={'icon-chevron-up'}
+													className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
+													cursorPointer
+												/>
+											</Box>
+											<Box className={'totalTax'}>
+												<Label variant={'customThree'}>
+													$
+													{StringUtils.formatMoney(
+														props.bookingData.prices.taxAndFeeTotalInCents
+													)}
+												</Label>
+											</Box>
 										</Box>
 									}
 									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
@@ -197,9 +207,6 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 									{(!props.usePoints || !hideTaxesAndFees) && renderTaxesAndFees()}
 								</Accordion>
 							</Box>
-							<Label variant={'customThree'} className={'totalTax'}>
-								${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
-							</Label>
 						</Box>
 					)}
 					<Box display={'flex'} justifyContent={'space-between'}>
@@ -252,12 +259,22 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 									hideChevron
 									titleReact={
 										<Box display={'flex'}>
-											<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
-											<Icon
-												iconImg={'icon-chevron-up'}
-												className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
-												cursorPointer
-											/>
+											<Box display={'flex'}>
+												<Label variant={'bookingSummaryCustomThree'}>Taxes and fees</Label>
+												<Icon
+													iconImg={'icon-chevron-up'}
+													className={`taxIcon ${hideTaxesAndFees ? 'up' : 'down'}`}
+													cursorPointer
+												/>
+											</Box>
+											<Box className={'totalTax'}>
+												<Label variant={'customThree'}>
+													$
+													{StringUtils.formatMoney(
+														props.bookingData.prices.taxAndFeeTotalInCents
+													)}
+												</Label>
+											</Box>
 										</Box>
 									}
 									onClick={() => setHideTaxesAndFees(!hideTaxesAndFees)}
@@ -265,9 +282,6 @@ const BookingSummaryCard: React.FC<BookingSummaryCardProps> = (props) => {
 									{(!props.usePoints || !hideTaxesAndFees) && renderTaxesAndFees()}
 								</Accordion>
 							</Box>
-							<Label variant={'customThree'} className={'totalTax'}>
-								${StringUtils.formatMoney(props.bookingData.prices.taxAndFeeTotalInCents)}
-							</Label>
 						</Box>
 					)}
 					<Box display={'flex'} justifyContent={'space-between'}>
