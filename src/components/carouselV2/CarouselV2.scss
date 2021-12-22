@@ -151,5 +151,15 @@
 		.imageCountContainer {
 			opacity: 1;
 		}
+
+		.compareToolTip {
+			right: 36px;
+			left: unset;
+			.toolTipTriangle {
+				right: -9px;
+				left: unset;
+				transform: rotate(180deg);
+			}
+		}
 	}
 }

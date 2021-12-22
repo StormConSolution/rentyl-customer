@@ -85,7 +85,7 @@ const CarouselV2: React.FC<CarouselV2Props> = (props) => {
 			>
 				<Icon iconImg={'icon-chevron-right'} color={'#001933'} size={8} />
 			</Button>
-			{((size !== 'small' && !props.hideCompareButton) || comparisonState.showCompareButton) && (
+			{!props.hideCompareButton && (
 				<Button
 					className={'addToCompareButton'}
 					look={'none'}
